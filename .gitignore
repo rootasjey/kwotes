@@ -63,3 +63,9 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+
+# macOS files
+.DS_Store
+
+# Private config files
+assets/api.json
