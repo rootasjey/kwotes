@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/types/quotidian.dart';
 
+enum QuoteAction { addList, like, share }
+
 class QuotidianWidget extends StatelessWidget {
   final String fetchQuotidian = """
     query {
@@ -78,14 +80,46 @@ class QuotidianWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.more_horiz),
-                      color: Colors.white,
-                      iconSize: 40.0,
-                      onPressed: () {
-                        print('show quotidian actions');
-                      },
-                    ),
+                    PopupMenuButton(
+                      icon: Icon(
+                        Icons.more_horiz,
+                        color: Colors.white,
+                        size: 40,
+                        semanticLabel: 'Open quote actions',
+                      ),
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<QuoteAction>>[
+                        const PopupMenuItem<QuoteAction>(
+                          value: QuoteAction.like,
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.favorite_border,
+                              size: 25,
+                            ),
+                            title: Text('Favorite'),
+                          )
+                        ),
+                        const PopupMenuItem<QuoteAction>(
+                          value: QuoteAction.addList,
+                          child: ListTile(
+                              leading: Icon(
+                              Icons.list,
+                              size: 25,
+                            ),
+                            title: Text('Add to...'),
+                          )
+                        ),
+                        const PopupMenuItem<QuoteAction>(
+                          value: QuoteAction.share,
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.share,
+                              size: 25,
+                            ),
+                            title: Text('Share'),
+                          )
+                        ),
+                      ],
+                    )
                   ],
                 )
               ],
