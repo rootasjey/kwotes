@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/quotidian.dart';
 
 void main() => runApp(App());
 
@@ -131,61 +131,6 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFF56498),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class QuotidianWidget extends StatelessWidget {
-  final String fetchQuotidian = """
-    query {
-      quotidian {
-        id
-        quote {
-          name
-        }
-      }
-    }
-  """;
-
-  @override
-  Widget build(BuildContext context) {
-    return Query(
-      options: QueryOptions(
-        document: fetchQuotidian
-        ),
-      builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.errors != null) {
-          return Text(result.errors.toString());
-        }
-
-        if (result.loading) {
-          return Text('Loading...');
-        }
-
-        var quotidian = Quotidian.fromJSON(result.data['quotidian']);
-
-        return Expanded(
-          child: Container(
-            decoration: BoxDecoration(color: Color(0xFF706FD3)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  '${quotidian.quote.name}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    // fontFamily: 'Comfortaa',
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-              ],
-            ),
-            padding: EdgeInsets.only(top: 60.0, left: 20.0, right: 20.0),
-          )
-        );
-      },
     );
   }
 }
