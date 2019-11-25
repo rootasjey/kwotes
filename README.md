@@ -6,7 +6,7 @@ Official Memorare mobile (Android & iOS) app.
 
 ## Getting Started
 
-1.Pre-requisites
+* Pre-requisites
 
 Make sure you have Flutter dev tools installed.
 You can test that by running the following command in a terminal:
@@ -19,13 +19,13 @@ This will check that everything is alright.
 
 If you don't have the flutter dev tools yet, please visit the official page.
 
-2.Clone the project
+* Clone the project
 
 ```bash
 git clone https://github.com/memorare/mobile.git
 ```
 
-3.Add the file `assets/api.json` containing the api endpoint with your private key:
+* Add the file `assets/api.json` containing the api endpoint with your private key:
 
 ```json
 {
@@ -34,7 +34,7 @@ git clone https://github.com/memorare/mobile.git
 }
 ```
 
-3.Run the app using Android Studio, VSCode or the Command line interface
+* Run the app using Android Studio, VSCode or the Command line interface
 
 ```bash
 flutter run lib/main.dart
