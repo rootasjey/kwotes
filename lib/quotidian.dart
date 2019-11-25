@@ -13,6 +13,7 @@ class QuotidianWidget extends StatelessWidget {
         quote {
           author {
             id
+            imgUrl
             name
           }
           id
@@ -55,7 +56,6 @@ class QuotidianWidget extends StatelessWidget {
                           '${quotidian.quote.name}',
                           style: TextStyle(
                             color: Colors.white,
-                            // fontFamily: 'Comfortaa',
                             fontSize: 35,
                             fontWeight: FontWeight.bold
                           ),
@@ -69,6 +69,9 @@ class QuotidianWidget extends StatelessWidget {
                                 padding: EdgeInsets.only(right: 10.0),
                                 child: CircleAvatar(
                                   backgroundColor: Color(0xFFF56098),
+                                  backgroundImage: quotidian.quote.author.imgUrl.length > 1 ?
+                                    NetworkImage(quotidian.quote.author.imgUrl) :
+                                    AssetImage('assets/images/monk.png'),
                                   child: Text('${quotidian.quote.author.name.substring(0,1)}'),
                                 ),
                               ),

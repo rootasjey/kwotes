@@ -29,7 +29,7 @@ git clone https://github.com/memorare/mobile.git
 
 ```json
 {
-  "apikey": "My_api_key",
+  "apikey": "my_api_key",
   "url": "api_endpoint_url"
 }
 ```
