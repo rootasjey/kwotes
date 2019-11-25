@@ -18,6 +18,10 @@ class QuotidianWidget extends StatelessWidget {
           }
           id
           name
+          references {
+            id
+            name
+          }
         }
       }
     }
@@ -81,6 +85,18 @@ class QuotidianWidget extends StatelessWidget {
                                   color: Colors.white,
                                   fontSize: 20,
                                 ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                '${quotidian.quote.references.length > 0 ? quotidian.quote.references[0].name : ""}',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ],
                           ),
