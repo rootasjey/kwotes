@@ -8,11 +8,12 @@ class RecentWidget extends StatefulWidget {
 
 class RecentWidgetState extends State<RecentWidget> {
   String lang;
+  int limit;
   int order;
 
   final String fetchRecent = """
-    query (\$lang: String, \$order: Float) {
-      quotes (lang: \$lang, order: \$order) {
+    query (\$lang: String, \$limit: Float, \$order: Float) {
+      quotes (lang: \$lang, limit: \$limit, order: \$order) {
         pagination {
           hasNext
           limit
@@ -36,6 +37,7 @@ class RecentWidgetState extends State<RecentWidget> {
     super.initState();
     setState(() {
       lang = 'en';
+      limit = 10;
       order = -1;
     });
   }
