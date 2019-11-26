@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/quotidian.dart';
+import 'package:memorare/recent.dart';
 
 void main() => runApp(App());
 
@@ -81,7 +82,7 @@ class AppState extends State<App> {
             body: TabBarView(
               children: <Widget>[
                 QuotidianWidget(),
-                Icon(Icons.list),
+                RecentWidget(),
                 Icon(Icons.person),
               ],
             ),

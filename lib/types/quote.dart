@@ -1,4 +1,3 @@
-
 import 'author.dart';
 import 'reference.dart';
 
