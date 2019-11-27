@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/account.dart';
 import 'package:memorare/quotidian.dart';
 import 'package:memorare/randomQuote.dart';
 import 'package:memorare/recent.dart';
@@ -71,6 +72,7 @@ class AppState extends State<App> {
           child: Scaffold(
             appBar: AppBar(
               bottom: TabBar(
+                indicatorColor: Colors.white,
                 tabs: <Widget>[
                   Tab(icon: Icon(Icons.wb_sunny),),
                   Tab(icon: Icon(Icons.list),),
@@ -85,7 +87,7 @@ class AppState extends State<App> {
                 QuotidianWidget(),
                 RecentWidget(),
                 RandomQuoteWidget(),
-                Icon(Icons.person),
+                AccountWidget(),
               ],
             ),
           ),
