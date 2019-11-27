@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/quotidian.dart';
+import 'package:memorare/randomQuote.dart';
 import 'package:memorare/recent.dart';
 
 void main() => runApp(App());
@@ -66,13 +67,14 @@ class AppState extends State<App> {
           primarySwatch: MaterialColor(0xFFF56498, accentSwatchColor),
         ),
         home: DefaultTabController(
-          length: 3,
+          length: 4,
           child: Scaffold(
             appBar: AppBar(
               bottom: TabBar(
                 tabs: <Widget>[
                   Tab(icon: Icon(Icons.wb_sunny),),
                   Tab(icon: Icon(Icons.list),),
+                  Tab(icon: Icon(Icons.not_listed_location),),
                   Tab(icon: Icon(Icons.person_pin),),
                 ],
               ),
@@ -82,6 +84,7 @@ class AppState extends State<App> {
               children: <Widget>[
                 QuotidianWidget(),
                 RecentWidget(),
+                RandomQuoteWidget(),
                 Icon(Icons.person),
               ],
             ),
