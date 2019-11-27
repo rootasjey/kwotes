@@ -44,11 +44,9 @@ class QuotidianWidget extends StatelessWidget {
         var quotidian = Quotidian.fromJSON(result.data['quotidian']);
 
         return Scaffold(
-          backgroundColor: Color(0xFF706FD3),
           body: ListView(
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(color: Color(0xFF706FD3)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,7 +54,6 @@ class QuotidianWidget extends StatelessWidget {
                     Text(
                       '${quotidian.quote.name}',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 35,
                         fontWeight: FontWeight.bold
                       ),
@@ -64,7 +61,6 @@ class QuotidianWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(right: 10.0),
@@ -79,7 +75,6 @@ class QuotidianWidget extends StatelessWidget {
                           Text(
                             '${quotidian.quote.author.name}',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 20,
                             ),
                           ),
@@ -89,22 +84,18 @@ class QuotidianWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           Text(
                             '${quotidian.quote.references.length > 0 ? quotidian.quote.references[0].name : ""}',
-                            style: TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         PopupMenuButton(
                           icon: Icon(
                             Icons.more_horiz,
-                            color: Colors.white,
                             size: 40,
                             semanticLabel: 'Open quote actions',
                           ),
@@ -145,7 +136,12 @@ class QuotidianWidget extends StatelessWidget {
                     )
                   ],
                 ),
-                padding: EdgeInsets.only(top: 60.0, left: 20.0, right: 20.0),
+                padding: EdgeInsets.only(
+                  bottom: 20.0,
+                  left: 20.0,
+                  top: 60.0,
+                  right: 20.0
+                ),
               )
             ],
           ),
