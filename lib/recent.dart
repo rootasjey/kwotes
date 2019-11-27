@@ -74,71 +74,66 @@ class RecentWidgetState extends State<RecentWidget> {
         var quotes = response.entries;
 
         return Scaffold(
-          backgroundColor: Color(0xFF706FD3),
-          body: ListView.builder(
+          body: ListView.separated(
             itemCount: quotes.length,
             itemBuilder: (context, index) {
-              return Card(
-                color: Color(0xFF706FD3),
-                child: InkWell(
-                  child: Padding(
-                    padding: EdgeInsets.all(25.0),
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          onLongPress: () {
-                            print('Copy quote name to clipboard.');
-                          },
-                          onTap: () {
-                            print('quote tapped: ${quotes[index].id}');
-                          },
-                          title: Text(
-                            quotes[index].name,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+              return InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(25.0),
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onLongPress: () {
+                          print('Copy quote name to clipboard.');
+                        },
+                        onTap: () {
+                          print('quote tapped: ${quotes[index].id}');
+                        },
+                        title: Text(
+                          quotes[index].name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        InkWell(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 20.0, left: 15.0),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: Color(0xFFF56098),
-                                    backgroundImage: quotes[index].author.imgUrl.length > 1 ?
-                                      NetworkImage(quotes[index].author.imgUrl) :
-                                      AssetImage('assets/images/monk.png'),
-                                    child: Text('${quotes[index].author.name.substring(0,1)}'),
-                                  ),
+                      ),
+                      InkWell(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20.0, left: 15.0),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: CircleAvatar(
+                                  backgroundColor: Color(0xFFF56098),
+                                  backgroundImage: quotes[index].author.imgUrl.length > 1 ?
+                                    NetworkImage(quotes[index].author.imgUrl) :
+                                    AssetImage('assets/images/monk.png'),
+                                  child: Text('${quotes[index].author.name.substring(0,1)}'),
                                 ),
-                                Text(
-                                  '${quotes[index].author.name}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
+                              ),
+                              Text(
+                                '${quotes[index].author.name}',
+                                style: TextStyle(
+                                  fontSize: 15,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          onTap: () {
-                            print('Navigate to author ${quotes[index].author.id}');
-                          },
-                        )
-                      ],
-                    ),
+                        ),
+                        onTap: () {
+                          print('Navigate to author ${quotes[index].author.id}');
+                        },
+                      ),
+                    ],
                   ),
-                  onLongPress: () {
-                    print('show actions ui');
-                  },
-                )
+                ),
+                onLongPress: () {
+                  print('show actions ui');
+                },
               );
             },
+            separatorBuilder: (BuildContext context, int index) => Divider(),
           ),
         );
       },
