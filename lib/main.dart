@@ -65,7 +65,7 @@ class AppState extends State<App> {
         title: 'Memorare',
         theme: ThemeData(
           fontFamily: 'Comfortaa',
-          primarySwatch: MaterialColor(0xFFF56498, accentSwatchColor),
+          primarySwatch: MaterialColor(0xFF706FD2, accentSwatchColor),
         ),
         home: DefaultTabController(
           length: 4,
@@ -98,14 +98,14 @@ class AppState extends State<App> {
 }
 
 Map<int, Color> accentSwatchColor = {
-  50: Color.fromRGBO(245, 100, 152, .1),
-  100: Color.fromRGBO(245, 100, 152, .2),
-  200: Color.fromRGBO(245, 100, 152, .3),
-  300: Color.fromRGBO(245, 100, 152, .4),
-  400: Color.fromRGBO(245, 100, 152, .5),
-  500: Color.fromRGBO(245, 100, 152, .6),
-  600: Color.fromRGBO(245, 100, 152, .7),
-  700: Color.fromRGBO(245, 100, 152, .8),
-  800: Color.fromRGBO(245, 100, 152, .9),
-  900: Color.fromRGBO(245, 100, 152, 1),
+  50: Color.fromRGBO(112, 111, 210, .1),
+  100: Color.fromRGBO(112, 111, 210, .2),
+  200: Color.fromRGBO(112, 111, 210, .3),
+  300: Color.fromRGBO(112, 111, 210, .4),
+  400: Color.fromRGBO(112, 111, 210, .5),
+  500: Color.fromRGBO(112, 111, 210, .6),
+  600: Color.fromRGBO(112, 111, 210, .7),
+  700: Color.fromRGBO(112, 111, 210, .8),
+  800: Color.fromRGBO(112, 111, 210, .9),
+  900: Color.fromRGBO(112, 111, 210, 1),
 };
