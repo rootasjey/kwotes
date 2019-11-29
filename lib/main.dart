@@ -62,6 +62,7 @@ class AppState extends State<App> {
     return GraphQLProvider(
       client: client,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Memorare',
         theme: ThemeData(
           fontFamily: 'Comfortaa',
