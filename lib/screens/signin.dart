@@ -104,6 +104,7 @@ class SigninScreenState extends State<SigninScreen> {
                     return Padding(
                       padding: EdgeInsets.only(top: 30.0),
                       child: RaisedButton(
+                        color: Color(0xFF2ECC71),
                         onPressed: () {
                           runMutation({
                             'email': email,
@@ -111,10 +112,11 @@ class SigninScreenState extends State<SigninScreen> {
                           });
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(15.0),
                           child: Text(
-                            'Sign in',
+                            'Let me in',
                             style: TextStyle(
+                              color: Colors.white,
                               fontSize: 20.0,
                             ),
                           )
@@ -127,12 +129,11 @@ class SigninScreenState extends State<SigninScreen> {
                   ),
                   onCompleted: (dynamic resultData) {
                     if (resultData == null) { return; }
-                    print('connected');
 
                     var userData = UserData.fromJSON(resultData['signin']);
                     Provider.of<UserDataModel>(context)
                       ..update(userData)
-                      ..setAuthenticated(true);
+                      .setAuthenticated(true);
 
                     Provider.of<HttpClientsModel>(context).setToken(userData.token);
 

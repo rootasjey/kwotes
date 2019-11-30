@@ -49,8 +49,23 @@ class UserDataModel extends ChangeNotifier {
   }
 
   /// Update data on user signin/signup.
-  void update(UserData data) {
-    if (data == null) { return; }
+  UserDataModel update(UserData data) {
+    if (data == null) { return this; }
+
+    if (_userData == null) {
+      _userData = UserData(
+        email: data.email,
+        id: data.id,
+        imgUrl: data.imgUrl,
+        lang: data.lang,
+        name: data.name,
+        rights: data.rights,
+        token: data.token,
+      );
+
+      notifyListeners();
+      return this;
+    }
 
     _userData.email   = data.email  ?? _userData.email;
     _userData.id      = data.id     ?? _userData.id;
@@ -61,5 +76,6 @@ class UserDataModel extends ChangeNotifier {
     _userData.token   = data.token  ?? _userData.token;
 
     notifyListeners();
+    return this;
   }
 }
