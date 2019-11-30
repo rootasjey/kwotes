@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
+import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quotesResp.dart';
 
 class RecentWidget extends StatefulWidget {
@@ -56,13 +57,7 @@ class RecentWidgetState extends State<RecentWidget> {
         }
 
         if (result.loading) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('Loading...'),
-            ],
-          );
+          return LoadingComponent();
         }
 
         var response = QuotesResp.fromJSON(result.data['quotes']);
