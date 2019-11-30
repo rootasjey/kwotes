@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/error.dart';
 import 'package:memorare/types/quotesResp.dart';
 
 class RecentWidget extends StatefulWidget {
@@ -51,13 +52,7 @@ class RecentWidgetState extends State<RecentWidget> {
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
         if (result.errors != null) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(result.errors.toString()),
-            ],
-          );
+          return ErrorComponent(description: result.errors.toString(),);
         }
 
         if (result.loading) {
