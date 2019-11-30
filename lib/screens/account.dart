@@ -1,12 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:memorare/login.dart';
+import 'package:memorare/models/userData.dart';
+import 'package:memorare/screens/login.dart';
 import 'package:memorare/models/httpClients.dart';
 import 'package:provider/provider.dart';
 
-import 'models/userData.dart';
-
-class AccountWidget extends StatelessWidget {
+class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +36,7 @@ class AccountWidget extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
-                              return Login();
+                              return LoginScreen();
                             }
                           )
                         );

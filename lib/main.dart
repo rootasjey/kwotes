@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/account.dart';
+import 'package:memorare/screens/account.dart';
 import 'package:memorare/models/httpClients.dart';
 import 'package:memorare/models/userData.dart';
-import 'package:memorare/quotidian.dart';
-import 'package:memorare/randomQuote.dart';
-import 'package:memorare/recent.dart';
+import 'package:memorare/screens/quotidian.dart';
+import 'package:memorare/screens/randomQuote.dart';
+import 'package:memorare/screens/recent.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(App());
@@ -98,10 +98,10 @@ class MainState extends State<Main> {
             ),
             body: TabBarView(
               children: <Widget>[
-                QuotidianWidget(),
-                RecentWidget(),
-                RandomQuoteWidget(),
-                AccountWidget(),
+                QuotidianScreen(),
+                RecentScreen(),
+                RandomQuoteScreen(),
+                AccountScreen(),
               ],
             ),
           ),

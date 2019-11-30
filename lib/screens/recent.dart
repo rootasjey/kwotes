@@ -4,11 +4,11 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quotesResp.dart';
 
-class RecentWidget extends StatefulWidget {
-  RecentWidgetState createState() => RecentWidgetState();
+class RecentScreen extends StatefulWidget {
+  RecentScreenState createState() => RecentScreenState();
 }
 
-class RecentWidgetState extends State<RecentWidget> {
+class RecentScreenState extends State<RecentScreen> {
   String lang;
   int limit;
   int order;

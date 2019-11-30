@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/httpClients.dart';
 import 'package:memorare/models/userData.dart';
+import 'package:memorare/types/userData.dart';
 import 'package:provider/provider.dart';
 
-import 'types/userData.dart';
-
-class Signin extends StatefulWidget {
+class SigninScreen extends StatefulWidget {
   @override
-  SigninSate createState() => SigninSate();
+  SigninScreenState createState() => SigninScreenState();
 }
 
-class SigninSate extends State<Signin> {
+class SigninScreenState extends State<SigninScreen> {
   final _formKey = GlobalKey<FormState>();
   String email = '';
   String password = '';

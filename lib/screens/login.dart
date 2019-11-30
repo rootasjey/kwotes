@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/signup.dart';
 
-import 'signin.dart';
-import 'signup.dart';
-
-class Login extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -22,8 +21,8 @@ class Login extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            Signin(),
-            Signup(),
+            SigninScreen(),
+            SignupScreen(),
           ],
         ),
       ),

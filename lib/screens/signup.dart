@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Signup extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  SignupSate createState() => SignupSate();
+  SignupScreenState createState() => SignupScreenState();
 }
 
-class SignupSate extends State<Signup> {
+class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override

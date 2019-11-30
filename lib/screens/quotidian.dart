@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'types/quotidian.dart';
+import 'package:memorare/types/quotidian.dart';
 
 enum QuoteAction { addList, like, share }
 
-class QuotidianWidget extends StatelessWidget {
+class QuotidianScreen extends StatelessWidget {
   final String fetchQuotidian = """
     query {
       quotidian {
