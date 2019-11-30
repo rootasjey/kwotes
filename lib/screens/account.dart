@@ -52,6 +52,17 @@ class AccountScreen extends StatelessWidget {
               ..setAuthenticated(false);
 
             Provider.of<HttpClientsModel>(context).clearToken();
+
+            Scaffold.of(context)
+              .showSnackBar(
+                SnackBar(
+                  backgroundColor: Color(0xFF2ECC71),
+                  content: Text(
+                    'You have been successfully disconnected.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              );
           },
           child: Padding(
             padding: EdgeInsets.all(10.0),
