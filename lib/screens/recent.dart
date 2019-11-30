@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/quoteRow.dart';
 import 'package:memorare/types/quotesResp.dart';
 
 class RecentScreen extends StatefulWidget {
@@ -67,61 +68,7 @@ class RecentScreenState extends State<RecentScreen> {
           body: ListView.separated(
             itemCount: quotes.length,
             itemBuilder: (context, index) {
-              return InkWell(
-                child: Padding(
-                  padding: EdgeInsets.all(25.0),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onLongPress: () {
-                          print('Copy quote name to clipboard.');
-                        },
-                        onTap: () {
-                          print('quote tapped: ${quotes[index].id}');
-                        },
-                        title: Text(
-                          quotes[index].name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 20.0, left: 15.0),
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(right: 10.0),
-                                child: CircleAvatar(
-                                  backgroundColor: Color(0xFFF56098),
-                                  backgroundImage: quotes[index].author.imgUrl.length > 1 ?
-                                    NetworkImage(quotes[index].author.imgUrl) :
-                                    AssetImage('assets/images/monk.png'),
-                                  child: Text('${quotes[index].author.name.substring(0,1)}'),
-                                ),
-                              ),
-                              Text(
-                                '${quotes[index].author.name}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          print('Navigate to author ${quotes[index].author.id}');
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                onLongPress: () {
-                  print('show actions ui');
-                },
-              );
+              return QuoteRowComponent(quote: quotes[index]);
             },
             separatorBuilder: (BuildContext context, int index) => Divider(),
           ),
