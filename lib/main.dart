@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/account.dart';
+import 'package:memorare/models/httpClients.dart';
+import 'package:memorare/models/userData.dart';
 import 'package:memorare/quotidian.dart';
 import 'package:memorare/randomQuote.dart';
 import 'package:memorare/recent.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(App());
 
@@ -14,17 +17,47 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  bool isAuth = false;
-  ValueNotifier<GraphQLClient> client;
+  Map<String, dynamic> _apiConfig;
 
   @override
   void initState() {
     super.initState();
+  }
 
-    createClient()
-      .then((newClient) {
+  Future<Map<String, dynamic>> getApiConfig() async {
+    var jsonFile = await DefaultAssetBundle.of(context)
+      .loadString('assets/api.json');
+
+    Map<String, dynamic> apiConfig = jsonDecode(jsonFile);
+    return apiConfig;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserDataModel>(create: (context) => UserDataModel(),),
+        ChangeNotifierProvider<HttpClientsModel>(create: (context) => HttpClientsModel(apiConfig: _apiConfig),),
+      ],
+      child: Main(),
+    );
+  }
+}
+
+class Main extends StatefulWidget {
+  @override
+  MainState createState() => MainState();
+}
+
+class MainState extends State<Main> {
+  @override
+  void initState() {
+    super.initState();
+
+    getApiConfig()
+      .then((apiConfig) {
         setState(() {
-          client = newClient;
+          Provider.of<HttpClientsModel>(context).setApiConfig(apiConfig);
         });
       });
   }
@@ -37,30 +70,10 @@ class AppState extends State<App> {
     return apiConfig;
   }
 
-  Future<ValueNotifier<GraphQLClient>> createClient() async {
-    var apiConfig = await getApiConfig();
-
-    final HttpLink httpLink = HttpLink(
-      uri: apiConfig['url'],
-      headers: {
-        'apikey': apiConfig['apikey'],
-      }
-    );
-
-    ValueNotifier<GraphQLClient> graphQLClient = ValueNotifier(
-      GraphQLClient(
-        cache: InMemoryCache(),
-        link: httpLink,
-        ),
-    );
-
-    return graphQLClient;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(
-      client: client,
+      client: Provider.of<HttpClientsModel>(context).defaultClient,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Memorare',
