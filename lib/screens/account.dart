@@ -30,27 +30,7 @@ class AccountScreen extends StatelessWidget {
                 if (Provider.of<UserDataModel>(context).isAuthenticated)
                   ...authWidgets(context),
                 if (!Provider.of<UserDataModel>(context).isAuthenticated)
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return LoginScreen();
-                            }
-                          )
-                        );
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                    ),
-                  ),
+                  ...nonAuthWidgets(context),
               ],
             ),
             padding: EdgeInsets.only(left: 20.0, top: 80.0, right: 20.0),
@@ -109,6 +89,32 @@ class AccountScreen extends StatelessWidget {
           ],
         ),
       ),
+    ];
+  }
+
+  List<Widget> nonAuthWidgets(BuildContext context) {
+    return [
+      Padding(
+        padding: EdgeInsets.only(top: 30.0),
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return LoginScreen();
+                }
+              )
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Sign In',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
+        ),
+      )
     ];
   }
 }
