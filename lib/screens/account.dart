@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:memorare/models/userData.dart';
+import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/login.dart';
-import 'package:memorare/models/httpClients.dart';
-import 'package:memorare/screens/publishedQuotes.dart';
+import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/screens/published_quotes.dart';
 import 'package:provider/provider.dart';
 
 class AccountScreen extends StatelessWidget {

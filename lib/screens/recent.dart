@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/quoteRow.dart';
-import 'package:memorare/types/quotesResp.dart';
+import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/types/quotes_response.dart';
 
 class RecentScreen extends StatefulWidget {
   RecentScreenState createState() => RecentScreenState();
@@ -61,7 +61,7 @@ class RecentScreenState extends State<RecentScreen> {
           return LoadingComponent();
         }
 
-        var response = QuotesResp.fromJSON(result.data['quotes']);
+        var response = QuotesResponse.fromJSON(result.data['quotes']);
         var quotes = response.entries;
 
         return Scaffold(

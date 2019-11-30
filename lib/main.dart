@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/screens/account.dart';
-import 'package:memorare/models/httpClients.dart';
-import 'package:memorare/models/userData.dart';
+import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/quotidian.dart';
-import 'package:memorare/screens/randomQuote.dart';
+import 'package:memorare/screens/random_quote.dart';
 import 'package:memorare/screens/recent.dart';
 import 'package:provider/provider.dart';
 

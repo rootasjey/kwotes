@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../types/userData.dart';
+import '../types/user_data.dart';
 
 class UserDataModel extends ChangeNotifier {
   UserData _userData;

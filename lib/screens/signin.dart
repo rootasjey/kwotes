@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/models/httpClients.dart';
-import 'package:memorare/models/userData.dart';
-import 'package:memorare/types/userData.dart';
+import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/models/user_data.dart';
+import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 
 class SigninScreen extends StatefulWidget {

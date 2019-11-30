@@ -4,7 +4,7 @@ import 'package:memorare/components/QuoteRow.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/quotesResp.dart';
+import 'package:memorare/types/quotes_response.dart';
 
 class MyPublishedQuotesScreen extends StatefulWidget {
   @override
@@ -55,7 +55,7 @@ class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
           return LoadingComponent();
         }
 
-        var response = QuotesResp.fromJSON(result.data['publishedQuotes']);
+        var response = QuotesResponse.fromJSON(result.data['publishedQuotes']);
         quotes = response.entries;
 
         return Scaffold(

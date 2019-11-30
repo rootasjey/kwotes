@@ -1,13 +1,13 @@
 import 'pagination.dart';
 import 'quote.dart';
 
-class QuotesResp {
+class QuotesResponse {
   Pagination pagination;
   List<Quote> entries;
 
-  QuotesResp({this.entries, this.pagination});
+  QuotesResponse({this.entries, this.pagination});
 
-  factory QuotesResp.fromJSON(Map<String, dynamic> json) {
+  factory QuotesResponse.fromJSON(Map<String, dynamic> json) {
     List<Quote> quotes = [];
 
     if (json['entries'] != null) {
@@ -16,7 +16,7 @@ class QuotesResp {
       }
     }
 
-    return QuotesResp(
+    return QuotesResponse(
       pagination: json['pagination'] != null ? Pagination.fromJSON(json['pagination']) : null,
       entries: quotes,
     );
