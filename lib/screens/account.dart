@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/models/userData.dart';
 import 'package:memorare/screens/login.dart';
 import 'package:memorare/models/httpClients.dart';
+import 'package:memorare/screens/publishedQuotes.dart';
 import 'package:provider/provider.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -95,7 +96,15 @@ class AccountScreen extends StatelessWidget {
                 leading: Icon(Icons.list, size: 30.0,),
                 title: Text('Published quotes', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return MyPublishedQuotesScreen();
+                    }
+                  )
+                );
+              },
             ),
           ],
         ),

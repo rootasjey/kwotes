@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/QuoteRow.dart';
+import 'package:memorare/components/error.dart';
+import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotesResp.dart';
 
@@ -45,9 +48,12 @@ class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
         if (result.errors != null) {
+          return ErrorComponent(description: result.errors.toString());
         }
 
-        if (result.loading) {}
+        if (result.loading) {
+          return LoadingComponent();
+        }
 
         var response = QuotesResp.fromJSON(result.data['publishedQuotes']);
         quotes = response.entries;
@@ -58,7 +64,7 @@ class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
           ),
           body: ListView.separated(
             itemBuilder: (context, index) {
-
+              return QuoteRowComponent(quote: quotes[index]);
             },
             itemCount: quotes.length,
             separatorBuilder: (BuildContext context, int index) => Divider(),
