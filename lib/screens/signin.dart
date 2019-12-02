@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/credentials.dart';
 import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
@@ -154,7 +155,7 @@ class SigninScreenState extends State<SigninScreen> {
                         Scaffold.of(context)
                           .showSnackBar(
                             SnackBar(
-                              backgroundColor: Color(0xFFE74C3C),
+                              backgroundColor: ThemeColor.validation,
                               content: Text(
                                 '${error.message}',
                                 style: TextStyle(color: Colors.white),
