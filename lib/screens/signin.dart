@@ -138,7 +138,7 @@ class SigninScreenState extends State<SigninScreen> {
 
                     Provider.of<UserDataModel>(context)
                       ..update(userData)
-                      .setAuthenticated(true);
+                      ..setAuthenticated(true);
 
                     userDataModel.saveToFile(signinJson);
 

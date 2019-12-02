@@ -91,8 +91,8 @@ class UserDataModel extends ChangeNotifier {
   }
 
   /// Update data on user signin/signup.
-  UserDataModel update(UserData data) {
-    if (data == null) { return this; }
+  void update(UserData data) {
+    if (data == null) { return; }
 
     if (_userData == null) {
       _userData = UserData(
@@ -106,7 +106,7 @@ class UserDataModel extends ChangeNotifier {
       );
 
       notifyListeners();
-      return this;
+      return;
     }
 
     _userData.email   = data.email  ?? _userData.email;
@@ -118,6 +118,5 @@ class UserDataModel extends ChangeNotifier {
     _userData.token   = data.token  ?? _userData.token;
 
     notifyListeners();
-    return this;
   }
 }
