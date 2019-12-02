@@ -18,6 +18,9 @@ class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
   int skip = 0;
   List<Quote> quotes = [];
 
+  int attempts = 1;
+  int maxAttempts = 2;
+
   final String fetchPublishedQuotes = """
     query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
       publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
@@ -47,8 +50,25 @@ class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
         variables: {'lang': lang, 'order': order},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.errors != null) {
-          return ErrorComponent(description: result.errors.toString());
+        if (result.hasErrors) {
+          if (attempts < maxAttempts &&
+            ErrorComponent.isJWTRelated(result.errors.first.toString())) {
+
+            attempts++;
+
+            ErrorComponent.trySignin(context)
+              .then((errorReason) {
+                if (errorReason.hasErrors) { return; }
+                refetch();
+              });
+
+            return LoadingComponent();
+          }
+
+          return ErrorComponent(
+            description: result.errors.first.toString(),
+            title: 'My Published Quotes',
+          );
         }
 
         if (result.loading) {
