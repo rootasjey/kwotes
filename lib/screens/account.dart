@@ -4,6 +4,7 @@ import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/login.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/types/credentials.dart';
 import 'package:provider/provider.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -50,6 +51,8 @@ class AccountScreen extends StatelessWidget {
             Provider.of<UserDataModel>(context)
               ..clear()
               ..setAuthenticated(false);
+
+            Credentials.clearFile();
 
             Provider.of<HttpClientsModel>(context).clearToken();
 

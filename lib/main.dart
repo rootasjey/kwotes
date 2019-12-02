@@ -59,6 +59,8 @@ class MainState extends State<Main> {
         setState(() {
           Provider.of<HttpClientsModel>(context).setApiConfig(apiConfig);
         });
+
+        Provider.of<UserDataModel>(context).readFromFile();
       });
   }
 

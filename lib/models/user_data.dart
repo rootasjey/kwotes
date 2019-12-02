@@ -1,15 +1,31 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../types/user_data.dart';
 
 class UserDataModel extends ChangeNotifier {
-  UserData _userData;
-  bool _isAuthenticated = false;
-
   UserDataModel({UserData data}) {
     if (data == null) {
       _userData = new UserData();
     }
+  }
+
+  final String _accountFileName = 'account';
+
+  UserData _userData;
+  bool _isAuthenticated = false;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/$_accountFileName');
   }
 
   /// True if the current user is authenticated.
@@ -39,7 +55,33 @@ class UserDataModel extends ChangeNotifier {
   void clear() {
     _userData = null;
     _isAuthenticated = false;
+    clearFile();
     notifyListeners();
+  }
+
+  void clearFile() async {
+    final file = await _localFile;
+    if (file != null) { await file.delete(); }
+  }
+
+  void readFromFile() async {
+    try {
+      final file = await _localFile;
+      final str = file.readAsStringSync();
+
+      _userData = UserData.fromString(str);
+
+      if (_userData != null) {
+        setAuthenticated(true);
+      }
+
+    } catch (e) {}
+  }
+
+  void saveToFile(Map<String, dynamic> json) async {
+    final file = await _localFile;
+    final str = jsonEncode(json);
+    await file.writeAsString(str);
   }
 
   /// Update user's authentication status.

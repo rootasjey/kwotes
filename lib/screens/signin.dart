@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
+import 'package:memorare/types/credentials.dart';
 import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 
@@ -130,10 +131,18 @@ class SigninScreenState extends State<SigninScreen> {
                   onCompleted: (dynamic resultData) {
                     if (resultData == null) { return; }
 
-                    var userData = UserData.fromJSON(resultData['signin']);
+                    Map<String, dynamic> signinJson = resultData['signin'];
+
+                    var userData = UserData.fromJSON(signinJson);
+                    var userDataModel = Provider.of<UserDataModel>(context);
+
                     Provider.of<UserDataModel>(context)
                       ..update(userData)
                       .setAuthenticated(true);
+
+                    userDataModel.saveToFile(signinJson);
+
+                    Credentials(email: email, password: password).saveToFile();
 
                     Provider.of<HttpClientsModel>(context).setToken(userData.token);
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class UserData {
   String email;
   String id;
@@ -35,5 +37,10 @@ class UserData {
       rights: rightsList,
       token: json['token'],
     );
+  }
+
+  factory UserData.fromString(String str) {
+    final json = jsonDecode(str);
+    return UserData.fromJSON(json);
   }
 }
