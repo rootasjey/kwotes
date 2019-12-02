@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UserDataModel>(context);
+
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -17,20 +19,22 @@ class AccountScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/monk.png'),
+                  backgroundImage: userData.data.imgUrl.length > 0 ?
+                    NetworkImage('${userData.data.imgUrl}') :
+                    AssetImage('assets/images/monk.png'),
                   maxRadius: 50.0,
                 ),
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Text(
-                    Provider.of<UserDataModel>(context).data?.name ??
+                    userData.data?.name ??
                     'Hi Anonymous!',
                     style: TextStyle(fontSize: 20.0),
                   ),
                 ),
-                if (Provider.of<UserDataModel>(context).isAuthenticated)
+                if (userData.isAuthenticated)
                   ...authWidgets(context),
-                if (!Provider.of<UserDataModel>(context).isAuthenticated)
+                if (!userData.isAuthenticated)
                   ...nonAuthWidgets(context),
               ],
             ),
