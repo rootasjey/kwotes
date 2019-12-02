@@ -7,12 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import '../types/user_data.dart';
 
 class UserDataModel extends ChangeNotifier {
-  UserDataModel({UserData data}) {
-    if (data == null) {
-      _userData = new UserData();
-    }
-  }
-
   final String _accountFileName = 'account';
 
   UserData _userData;
@@ -33,6 +27,12 @@ class UserDataModel extends ChangeNotifier {
 
   /// User's data.
   UserData get data => _userData;
+
+  UserDataModel({UserData data}) {
+    if (data == null) {
+      _userData = new UserData();
+    }
+  }
 
   bool canI(String action) {
     if (_userData == null) { return false; }
