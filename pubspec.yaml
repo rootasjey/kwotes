@@ -20,6 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   graphql_flutter: 2.1.0
+  path_provider: 1.4.5
   provider: 3.2.0
 
   # The following adds the Cupertino Icons font to your application.
