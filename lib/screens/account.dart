@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:memorare/models/user_data.dart';
+import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/login.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
@@ -82,7 +83,15 @@ class AccountScreen extends StatelessWidget {
       ),
       IconButton(
         icon: Icon(Icons.settings),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return AccountSettingsScreen();
+              }
+            )
+          );
+        },
       ),
       Padding(
         padding: EdgeInsets.only(top: 20.0),
