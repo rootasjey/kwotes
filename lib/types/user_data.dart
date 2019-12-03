@@ -43,4 +43,23 @@ class UserData {
     final json = jsonDecode(str);
     return UserData.fromJSON(json);
   }
+
+  Map<String, dynamic> toJSON() {
+    Map<String, dynamic> json = Map();
+    List<String> jsonRights = [];
+
+    for (var right in rights) {
+      jsonRights.add(right);
+    }
+
+    json['email']   = email;
+    json['id']      = id;
+    json['imgUrl']  = imgUrl;
+    json['lang']    = lang;
+    json['name']    = name;
+    json['rights']  = jsonRights;
+    json['token']   = token;
+
+    return json;
+  }
 }

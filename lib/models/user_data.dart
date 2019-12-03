@@ -90,6 +90,14 @@ class UserDataModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setImgUrl(String imgUrl) {
+    _userData.imgUrl = imgUrl;
+
+    saveToFile(_userData.toJSON());
+
+    notifyListeners();
+  }
+
   /// Update data on user signin/signup.
   void update(UserData data) {
     if (data == null) { return; }
