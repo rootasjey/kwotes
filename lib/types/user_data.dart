@@ -10,13 +10,13 @@ class UserData {
   String token;
 
   UserData({
-    this.email,
-    this.id,
-    this.imgUrl,
-    this.lang,
-    this.name,
-    this.rights,
-    this.token
+    this.email  = '',
+    this.id     = '',
+    this.imgUrl = '',
+    this.lang   = '',
+    this.name   = '',
+    this.rights = const[],
+    this.token  = '',
   });
 
   factory UserData.fromJSON(Map<String, dynamic> json) {
