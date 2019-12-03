@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/models/user_data.dart';
+import 'package:memorare/screens/avatar_settings.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -26,28 +27,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: Stack(
-                        children: <Widget>[
-                          CircleAvatar(
-                            backgroundImage: userData.data.imgUrl.length > 0 ?
-                              NetworkImage('${userData.data.imgUrl}') :
-                              AssetImage('assets/images/monk.png'),
-                            maxRadius: 50.0,
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Icon(
-                              Icons.settings,
-                              color: Color(0xFF34495E),
-                              size: 30.0,
-                            ),
-                          )
-                        ],
-                      )
-                    ),
+                    AvatarSettingsComponent(),
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: FlatButton(
