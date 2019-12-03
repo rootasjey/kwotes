@@ -64,7 +64,7 @@ class UserDataModel extends ChangeNotifier {
     if (file != null) { await file.delete(); }
   }
 
-  void readFromFile() async {
+  Future readFromFile() async {
     try {
       final file = await _localFile;
       final str = file.readAsStringSync();
