@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/name_field.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/boolean_message.dart';
@@ -15,15 +16,7 @@ class SignupScreen extends StatefulWidget {
 
 class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameFieldKey = GlobalKey<FormFieldState>();
-
-  bool _serverValidator = true;
-  String _serverValidatorMessage = '';
-
-  final String _defaultErrorMessage = """
-    Please enter an alphanumerical name containing at least 3 characters.
-    Name can only contain alphanumerical characters, dots, spaces, hyphens and underscores.
-  """;
+  final _nameFieldKey = GlobalKey<NameFieldState>();
 
   String confirmPassword = '';
   String email = '';
@@ -69,47 +62,7 @@ class SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      TextFormField(
-                        key: _nameFieldKey,
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.perm_identity),
-                          labelText: 'Name',
-                        ),
-                        onChanged: (value) async {
-                          name = value;
-
-                          var booleanMessage = await isNameValid(value);
-
-                          if (booleanMessage.boolean) {
-                            _serverValidator = true;
-                            _serverValidatorMessage = booleanMessage.message;
-                            _nameFieldKey.currentState.validate();
-                            return;
-                          }
-
-                          _serverValidator = false;
-                          _serverValidatorMessage = booleanMessage.message;
-
-                          _nameFieldKey.currentState.validate();
-                        },
-                        validator: (value) {
-                          if (name.isEmpty) {
-                            return 'Name cannot be empty';
-                          }
-
-                          if (name.length < 3) {
-                            return 'Name must contain at least 3 characters';
-                          }
-
-                          if (!_serverValidator) {
-                            return _serverValidatorMessage.isNotEmpty ?
-                              _serverValidatorMessage :
-                              _defaultErrorMessage;
-                          }
-
-                          return null;
-                        },
-                      ),
+                      NameField(key: _nameFieldKey,),
                     ],
                   ),
                 ),
@@ -203,8 +156,11 @@ class SignupScreenState extends State<SignupScreen> {
                             return;
                           }
 
+                          name = _nameFieldKey.currentState.fieldValue;
+
                           runMutation({
                             'email': email,
+                            'name': name,
                             'password': password,
                           });
                         },
