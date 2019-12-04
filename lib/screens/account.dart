@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/account_settings.dart';
-import 'package:memorare/screens/login.dart';
+import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/types/credentials.dart';
@@ -129,7 +129,7 @@ class AccountScreen extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return LoginScreen();
+                  return ConnectScreen();
                 }
               )
             );
