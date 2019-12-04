@@ -44,7 +44,7 @@ class SigninScreenState extends State<SigninScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    'Signin into your existing account.',
+                    'Sign in into your existing account.',
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
