@@ -21,6 +21,8 @@ class NameFieldState extends State<NameField> {
   String _serverValidatorMessage = '';
   String _name = '';
 
+  bool isChecking = false;
+
   final _duration = Duration(milliseconds: 500);
   Timer _timer;
 
@@ -35,53 +37,74 @@ class NameFieldState extends State<NameField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      key: _nameFieldKey,
-      decoration: InputDecoration(
-        icon: Icon(Icons.perm_identity),
-        labelText: 'Name',
-      ),
-      onChanged: (value) async {
-        _name = value;
+    return Stack(
+      children: <Widget>[
+        TextFormField(
+          key: _nameFieldKey,
+          decoration: InputDecoration(
+            icon: Icon(Icons.perm_identity),
+            labelText: 'Name',
+            errorMaxLines: 2,
+          ),
+          onChanged: (value) async {
+            _name = value;
 
-        _timer?.cancel();
+            _timer?.cancel();
 
-        _timer = Timer(
-          _duration,
-          () async {
-          var booleanMessage = await isNameValid(value);
+            _timer = Timer(
+              _duration,
+              () async {
+                setState(() {
+                  isChecking = true;
+                });
 
-          if (booleanMessage.boolean) {
-            _serverValidator = true;
-            _serverValidatorMessage = booleanMessage.message;
-            _nameFieldKey.currentState.validate();
-            return;
-          }
+                var booleanMessage = await isNameValid(value);
 
-          _serverValidator = false;
-          _serverValidatorMessage = booleanMessage.message;
+                setState(() {
+                  isChecking = false;
+                });
 
-          _nameFieldKey.currentState.validate();
-          }
-        );
-      },
-      validator: (value) {
-        if (_name.isEmpty) {
-          return 'Name cannot be empty';
-        }
+                if (booleanMessage.boolean) {
+                  _serverValidator = true;
+                  _serverValidatorMessage = booleanMessage.message;
+                  _nameFieldKey.currentState.validate();
+                  return;
+                }
 
-        if (_name.length < 3) {
-          return 'Name must contain at least 3 characters';
-        }
+                _serverValidator = false;
+                _serverValidatorMessage = booleanMessage.message;
 
-        if (!_serverValidator) {
-          return _serverValidatorMessage.isNotEmpty ?
-            _serverValidatorMessage :
-            _defaultErrorMessage;
-        }
+                _nameFieldKey.currentState.validate();
+              }
+            );
+          },
+          validator: (value) {
+            if (_name.isEmpty) {
+              return 'Name cannot be empty';
+            }
 
-        return null;
-      },
+            if (_name.length < 3) {
+              return 'Name must contain at least 3 characters';
+            }
+
+            if (!_serverValidator) {
+              return _serverValidatorMessage.isNotEmpty ?
+                _serverValidatorMessage :
+                _defaultErrorMessage;
+            }
+
+            return null;
+          },
+        ),
+        if (isChecking)
+          Positioned(
+            width: 15.0,
+            height: 15.0,
+            right: 0,
+            bottom: _nameFieldKey.currentState.errorText == null ? 15 : 45,
+            child: CircularProgressIndicator(),
+          ),
+      ],
     );
   }
 
