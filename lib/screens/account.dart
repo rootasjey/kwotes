@@ -28,7 +28,8 @@ class AccountScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Text(
-                    userData.data?.name ??
+                    userData.data.name.length > 0 ?
+                     userData.data.name :
                     'Hi Anonymous!',
                     style: TextStyle(fontSize: 20.0),
                   ),

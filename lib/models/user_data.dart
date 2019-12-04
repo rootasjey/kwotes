@@ -53,7 +53,7 @@ class UserDataModel extends ChangeNotifier {
 
   /// Clear user's data.
   void clear() {
-    _userData = null;
+    _userData = new UserData();
     _isAuthenticated = false;
     clearFile();
     notifyListeners();

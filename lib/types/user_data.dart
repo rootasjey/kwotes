@@ -29,13 +29,13 @@ class UserData {
     }
 
     return UserData(
-      email: json['email'],
-      id: json['id'],
+      email : json['email'],
+      id    : json['id'],
       imgUrl: json['imgUrl'],
-      lang: json['lang'],
-      name: json['name'],
+      lang  : json['lang'],
+      name  : json['name'],
       rights: rightsList,
-      token: json['token'],
+      token : json['token'],
     );
   }
 
