@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/http_clients.dart';
@@ -19,13 +21,15 @@ class NameFieldState extends State<NameField> {
   String _serverValidatorMessage = '';
   String _name = '';
 
+  final _duration = Duration(milliseconds: 500);
+  Timer _timer;
+
   final String _defaultErrorMessage = """
     Please enter an alphanumerical name containing at least 3 characters.
     Name can only contain alphanumerical characters, dots, spaces, hyphens and underscores.
   """;
 
   // Public props.
-
   /// Field's value.
   String get fieldValue => _name;
 
@@ -40,19 +44,26 @@ class NameFieldState extends State<NameField> {
       onChanged: (value) async {
         _name = value;
 
-        var booleanMessage = await isNameValid(value);
+        _timer?.cancel();
 
-        if (booleanMessage.boolean) {
-          _serverValidator = true;
+        _timer = Timer(
+          _duration,
+          () async {
+          var booleanMessage = await isNameValid(value);
+
+          if (booleanMessage.boolean) {
+            _serverValidator = true;
+            _serverValidatorMessage = booleanMessage.message;
+            _nameFieldKey.currentState.validate();
+            return;
+          }
+
+          _serverValidator = false;
           _serverValidatorMessage = booleanMessage.message;
+
           _nameFieldKey.currentState.validate();
-          return;
-        }
-
-        _serverValidator = false;
-        _serverValidatorMessage = booleanMessage.message;
-
-        _nameFieldKey.currentState.validate();
+          }
+        );
       },
       validator: (value) {
         if (_name.isEmpty) {
@@ -73,7 +84,6 @@ class NameFieldState extends State<NameField> {
       },
     );
   }
-
 
   Future<BooleanMessage> isNameValid(String nameValue) {
     if (nameValue == null || nameValue.isEmpty) {
