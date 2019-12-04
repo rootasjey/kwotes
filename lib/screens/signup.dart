@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/email_field.dart';
 import 'package:memorare/components/name_field.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
@@ -17,6 +18,7 @@ class SignupScreen extends StatefulWidget {
 class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameFieldKey = GlobalKey<NameFieldState>();
+  final _emailFieldKey = GlobalKey<EmailFieldState>();
 
   String confirmPassword = '';
   String email = '';
@@ -62,7 +64,7 @@ class SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      NameField(key: _nameFieldKey,),
+                      NameField(key: _nameFieldKey),
                     ],
                   ),
                 ),
@@ -71,23 +73,7 @@ class SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.email),
-                          labelText: 'Email',
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (value) {
-                          email = value;
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Email login cannot be empty';
-                          }
-
-                          return null;
-                        },
-                      ),
+                      EmailField(key: _emailFieldKey),
                     ],
                   ),
                 ),
@@ -157,6 +143,7 @@ class SignupScreenState extends State<SignupScreen> {
                           }
 
                           name = _nameFieldKey.currentState.fieldValue;
+                          email = _emailFieldKey.currentState.fieldValue;
 
                           runMutation({
                             'email': email,
