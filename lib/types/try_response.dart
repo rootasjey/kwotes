@@ -4,5 +4,5 @@ class TryResponse {
   bool hasErrors;
   ErrorReason reason;
 
-  TryResponse({this.hasErrors, this.reason});
+  TryResponse({this.hasErrors, this.reason = ErrorReason.unknown});
 }
