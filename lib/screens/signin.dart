@@ -104,7 +104,7 @@ class SigninScreenState extends State<SigninScreen> {
                 Mutation(
                   builder: (RunMutation runMutation, QueryResult result) {
                     return Padding(
-                      padding: EdgeInsets.only(top: 30.0),
+                      padding: EdgeInsets.only(top: 60.0),
                       child: RaisedButton(
                         color: Color(0xFF2ECC71),
                         onPressed: () {
@@ -115,12 +115,21 @@ class SigninScreenState extends State<SigninScreen> {
                         },
                         child: Padding(
                           padding: EdgeInsets.all(15.0),
-                          child: Text(
-                            'Let me in',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Sign in',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Icon(Icons.arrow_forward, color: Colors.white,),
+                              )
+                            ],
                           )
                         ),
                       ),
