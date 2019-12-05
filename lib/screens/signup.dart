@@ -6,7 +6,6 @@ import 'package:memorare/components/name_field.dart';
 import 'package:memorare/components/password_field.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
-import 'package:memorare/types/boolean_message.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/credentials.dart';
 import 'package:memorare/types/user_data.dart';
@@ -230,63 +229,6 @@ class SignupScreenState extends State<SignupScreen> {
           ],
         ),
       ],
-    );
-  }
-
-  Future<BooleanMessage> isNameValid(String nameValue) {
-    if (nameValue == null || nameValue.isEmpty) {
-      return Future.value(
-        BooleanMessage(
-          boolean: false,
-          message: 'Name cannot be null or empty.'
-        )
-      );
-    }
-
-    if (nameValue.length < 3) {
-      return Future.value(
-        BooleanMessage(
-          boolean: false,
-          message: 'Name must contain at least 3 characters.'
-        )
-      );
-    }
-
-    final String isNameValid = """
-      query IsNameValid(\$name: String!) {
-        isNameValid(name: \$name) {
-          bool
-          message
-        }
-      }
-    """;
-
-    var client = Provider.of<HttpClientsModel>(context).defaultClient;
-
-    return client.value.mutate(
-      MutationOptions(
-        document: isNameValid,
-        variables: {'name': nameValue},
-      ))
-      .then((queryResult) {
-        if (queryResult.hasErrors) {
-          return BooleanMessage(
-            boolean: false,
-            message: queryResult.errors.first.toString(),
-          );
-        }
-
-        Map<String, dynamic> json = queryResult.data['isNameValid'];
-        var booleanMessage = BooleanMessage.fromJSON(json);
-
-        return booleanMessage;
-      })
-      .catchError((onError) {
-        return BooleanMessage(
-          boolean: false,
-          message: 'There was an issue while communicating with the server.'
-        );
-      }
     );
   }
 }
