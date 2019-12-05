@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/email_field.dart';
 import 'package:memorare/components/name_field.dart';
+import 'package:memorare/components/password_field.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/boolean_message.dart';
@@ -19,6 +20,8 @@ class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameFieldKey = GlobalKey<NameFieldState>();
   final _emailFieldKey = GlobalKey<EmailFieldState>();
+  final _passwordFieldKey = GlobalKey<PasswordFieldState>();
+  final _confirmPasswordFieldKey = GlobalKey<FormFieldState>();
 
   String confirmPassword = '';
   String email = '';
@@ -82,23 +85,7 @@ class SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.lock_outline),
-                          labelText: 'Password',
-                        ),
-                        obscureText: true,
-                        onChanged: (value) {
-                          password = value;
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Password cannot be empty';
-                          }
-
-                          return null;
-                        },
-                      ),
+                      PasswordField(key: _passwordFieldKey),
                     ],
                   ),
                 ),
@@ -108,20 +95,23 @@ class SignupScreenState extends State<SignupScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       TextFormField(
+                        key: _confirmPasswordFieldKey,
                         decoration: InputDecoration(
                           icon: Icon(Icons.lock_outline),
                           labelText: 'Confirm Password',
+                          errorMaxLines: 2
                         ),
                         obscureText: true,
                         onChanged: (value) {
                           confirmPassword = value;
+                          _confirmPasswordFieldKey.currentState.validate();
                         },
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (confirmPassword.isEmpty) {
                             return 'Password confirmation cannot be empty';
                           }
 
-                          if (confirmPassword != password) {
+                          if (confirmPassword != _passwordFieldKey.currentState.fieldValue) {
                             return 'Password and confirm password must match.';
                           }
 
@@ -144,6 +134,7 @@ class SignupScreenState extends State<SignupScreen> {
 
                           name = _nameFieldKey.currentState.fieldValue;
                           email = _emailFieldKey.currentState.fieldValue;
+                          password = _passwordFieldKey.currentState.fieldValue;
 
                           runMutation({
                             'email': email,
