@@ -163,7 +163,7 @@ class SigninScreenState extends State<SigninScreen> {
                         Scaffold.of(context)
                           .showSnackBar(
                             SnackBar(
-                              backgroundColor: ThemeColor.validation,
+                              backgroundColor: ThemeColor.error,
                               content: Text(
                                 '${error.message}',
                                 style: TextStyle(color: Colors.white),
