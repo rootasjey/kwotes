@@ -225,7 +225,7 @@ class SignupScreenState extends State<SignupScreen> {
             ),
 
             if (_isCompleted)
-              CompletionScreen(),
+              completionScreen(),
 
             if (_isLoading)
               LoadingComponent(title: 'Creating your account...'),
@@ -234,11 +234,8 @@ class SignupScreenState extends State<SignupScreen> {
       ],
     );
   }
-}
 
-class CompletionScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget completionScreen() {
     return Container(
       color: Colors.white,
       height: MediaQuery.of(context).size.height,
