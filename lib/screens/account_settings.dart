@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/delete_account.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/avatar_settings.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
@@ -85,27 +85,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20.0),
-                  child: FlatButton(
-                    color: ThemeColor.secondary,
-                    child: Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(Icons.lock_open, color: Colors.white,),
-                          ),
-                          Text('Delete account',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.white
-                            )
-                          ),
-                        ],
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
+                  child: DeleteAccount(),
                 ),
               ],
             )
