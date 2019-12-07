@@ -24,6 +24,7 @@ class SignupScreenState extends State<SignupScreen> {
   final _confirmPasswordFieldKey = GlobalKey<FormFieldState>();
 
   bool _isLoading = false;
+  bool _isCompleted = false;
 
   String confirmPassword = '';
   String email = '';
@@ -176,27 +177,26 @@ class SignupScreenState extends State<SignupScreen> {
                         document: signupMutation,
                       ),
                       onCompleted: (dynamic resultData) {
-                        setState(() {
-                          _isLoading = false;
-                        });
-
                         if (resultData == null) { return; }
 
-                        Map<String, dynamic> signinJson = resultData['signin'];
+                        Map<String, dynamic> signupJson = resultData['signup'];
 
-                        var userData = UserData.fromJSON(signinJson);
+                        var userData = UserData.fromJSON(signupJson);
                         var userDataModel = Provider.of<UserDataModel>(context);
 
                         userDataModel
                           ..update(userData)
                           ..setAuthenticated(true)
-                          ..saveToFile(signinJson);
+                          ..saveToFile(signupJson);
 
                         Credentials(email: email, password: password).saveToFile();
 
                         Provider.of<HttpClientsModel>(context).setToken(userData.token);
 
-                        Navigator.of(context).pop();
+                        setState(() {
+                          _isLoading = false;
+                          _isCompleted = true;
+                        });
                       },
                       update: (Cache cache, QueryResult result) {
                         setState(() {
@@ -208,7 +208,7 @@ class SignupScreenState extends State<SignupScreen> {
                             Scaffold.of(context)
                               .showSnackBar(
                                 SnackBar(
-                                  backgroundColor: ThemeColor.validation,
+                                  backgroundColor: ThemeColor.error,
                                   content: Text(
                                     '${error.message}',
                                     style: TextStyle(color: Colors.white),
@@ -224,11 +224,65 @@ class SignupScreenState extends State<SignupScreen> {
               )
             ),
 
+            if (_isCompleted)
+              CompletionScreen(),
+
             if (_isLoading)
               LoadingComponent(title: 'Creating your account...'),
           ],
         ),
       ],
+    );
+  }
+}
+
+class CompletionScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      height: MediaQuery.of(context).size.height,
+      padding: EdgeInsets.all(30.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 30.0),
+            child: Icon(
+              Icons.check_circle,
+              color: ThemeColor.success,
+              size: 90.0,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 30.0, bottom: 20.0),
+            child: Text(
+              'Your account has been successfully created!',
+              style: TextStyle(fontSize: 25.0),
+            ),
+          ),
+          Text(
+            'Check your mail box and your spam folder to validate your account.',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 60),
+            child: FlatButton(
+              color: ThemeColor.success,
+              onPressed: () { Navigator.of(context).pop(); },
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(right: 10.0), child: Icon(Icons.check, color: Colors.white,),),
+                    Text('Alright', style: TextStyle(color: Colors.white, fontSize: 20.0),),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
