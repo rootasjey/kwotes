@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/models/user_data.dart';
-import 'package:memorare/screens/avatar_settings.dart';
+import 'package:memorare/screens/edit_avatar.dart';
 import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
