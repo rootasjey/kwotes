@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 class LoadingComponent extends StatelessWidget {
   final String title;
+  final EdgeInsets padding;
 
-  LoadingComponent({this.title = 'Loading...'});
+  LoadingComponent({this.title = 'Loading...', this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
+      padding: padding,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.6),
+        color: Color.fromRGBO(0, 0, 0, 0.8),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
