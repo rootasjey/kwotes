@@ -20,46 +20,204 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      color: ThemeColor.secondary,
-      child: Padding(
-        padding: EdgeInsets.all(15.0),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(Icons.lock_open, color: Colors.white,),
-            ),
-            Text('Delete account',
-              style: TextStyle(
-                fontSize: 20.0,
-                color: Colors.white
-              )
-            ),
-          ],
-        ),
-      ),
-      onPressed: () async {
-        final success = await showDialog();
-        if (success == null) { return; }
+    return Scaffold(
+      appBar: AppBar(title: Text('Delete Account'),),
+      body: ListView(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 25.0),
+                      child: Text('Are you sure?',
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                    ),
 
-        if (success == false) {
-          Scaffold.of(context)
-          .showSnackBar(
-            SnackBar(
-              backgroundColor: ThemeColor.error,
-              content: Text(
-                'There was an error while deleting your account. Try again later.',
-                style: TextStyle(color: Colors.white),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: ListTile(
+                        leading: Container(
+                          width: 10.0,
+                          height: 10.0,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        title: Text(
+                          'You will not be able to connect anymore',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                      )
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: ListTile(
+                        leading: Container(
+                          width: 10.0,
+                          height: 10.0,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        title: Text(
+                          'All your pubished quotes will not be deleted but will be disassociated with your account',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                      )
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: ListTile(
+                        leading: Container(
+                          width: 10.0,
+                          height: 10.0,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        title: Text('All other data will be erased',
+                        style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                      )
+                    ),
+
+                    Container(
+                      padding: EdgeInsets.only(top: 40.0),
+                      child: Text(
+                        'Enter your password to confirm this action.',
+                        style: TextStyle(color: ThemeColor.primary),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.lock),
+                          labelText: 'Password'
+                        ),
+                        obscureText: true,
+                        onChanged: (value) {
+                          password = value;
+                        },
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Your password cannot be empty.';
+                          }
+
+                          return null;
+                        },
+                      ),
+                    ),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 60),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: RaisedButton(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: RaisedButton(
+                                  color: ThemeColor.secondary,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    setState(() { _isLoading = true; });
+                                    var tryResponse = await deleteAccount();
+                                    setState(() { _isLoading = false; });
+
+                                    var success = tryResponse.hasErrors ? false : true;
+
+                                    if (!success) {
+                                      Scaffold.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'There was a problem while deleting your account. Please try again later.',
+                                              style: TextStyle(color: Colors.white),
+                                            )
+                                          )
+                                        );
+
+                                      return;
+                                    }
+
+                                    Provider.of<UserDataModel>(context).clear();
+                                    Provider.of<HttpClientsModel>(context).clearToken();
+
+                                    setState(() {
+                                      _isCompleted = true;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            )
-          );
 
-          return;
-        }
+              if (_isCompleted)
+                completionScreen(),
 
-        Navigator.of(context).pop();
-      },
+              if (_isLoading)
+                LoadingComponent(
+                  padding: EdgeInsets.all(30.0),
+                  title: 'Deleting your data...',
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -88,216 +246,6 @@ class DeleteAccountState extends State<DeleteAccount> {
     .catchError((error) {
       return TryResponse(hasErrors: true, reason: ErrorReason.unknown);
     });
-  }
-
-  Future<bool> showDialog() {
-    return showGeneralDialog(
-      barrierDismissible: true,
-      barrierLabel: 'Delete Account',
-      context: context,
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (
-        BuildContext context,
-        Animation animation,
-        Animation secondaryAnimation) {
-        return Scaffold(
-          appBar: AppBar(title: Text('Delete Account'),),
-          body: ListView(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: Text('Are you sure?',
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                          child: ListTile(
-                            leading: Container(
-                              width: 10.0,
-                              height: 10.0,
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            title: Text(
-                              'You will not be able to connect anymore',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          )
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                          child: ListTile(
-                            leading: Container(
-                              width: 10.0,
-                              height: 10.0,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            title: Text(
-                              'All your pubished quotes will not be deleted but will be disassociated with your account',
-                              style: TextStyle(
-                                fontSize: 20,
-                                // fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: ListTile(
-                            leading: Container(
-                              width: 10.0,
-                              height: 10.0,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            title: Text('All other data will be erased',
-                            style: TextStyle(
-                                fontSize: 20,
-                                // fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 40.0),
-                          child: Text('Enter your password to confirm this action.')
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.lock),
-                              labelText: 'Password'
-                            ),
-                            obscureText: true,
-                            onChanged: (value) {
-                              password = value;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Your password cannot be empty.';
-                              }
-
-                              return null;
-                            },
-                          ),
-                        ),
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 60),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: RaisedButton(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: RaisedButton(
-                                      color: ThemeColor.secondary,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Delete',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () async {
-                                        setState(() { _isLoading = true; });
-                                        var tryResponse = await deleteAccount();
-
-                                        var success = tryResponse.hasErrors ? false : true;
-
-                                        if (!success) {
-                                          Scaffold.of(context)
-                                            .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'There was a problem while deleting your account. Please try again later.',
-                                                  style: TextStyle(color: Colors.white),
-                                                )
-                                              )
-                                            );
-
-                                          return;
-                                        }
-
-                                        Provider.of<UserDataModel>(context).clear();
-                                        Provider.of<HttpClientsModel>(context).clearToken();
-
-                                        setState(() {
-                                          _isLoading = false;
-                                          _isCompleted = true;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-
-                  if (_isCompleted)
-                    completionScreen(),
-
-                  if (_isLoading)
-                    LoadingComponent(title: 'Deleting your data...',),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
   }
 
   Widget completionScreen() {
@@ -347,4 +295,5 @@ class DeleteAccountState extends State<DeleteAccount> {
       ),
     );
   }
+
 }
