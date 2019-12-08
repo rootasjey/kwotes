@@ -15,183 +15,146 @@ class AvatarSettingsComponent extends StatefulWidget {
 
 class _AvatarSettingsComponentState extends State<AvatarSettingsComponent> {
   String newImgUrl = '';
-  bool isLoading = false;
+  bool _isLoading = false;
+  bool _isCompleted = false;
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserDataModel>(context);
-
-    return Padding(
-      padding: EdgeInsets.only(top: 20.0),
-      child: IconButton(
-        icon: Stack(
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: userData.data.imgUrl.length > 0 ?
-                NetworkImage('${userData.data.imgUrl}') :
-                AssetImage('assets/images/monk.png'),
-              maxRadius: 50.0,
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Icon(
-                Icons.settings,
-                color: Color(0xFF34495E),
-                size: 30.0,
-              ),
-            )
-          ],
-        ),
-        onPressed: () async {
-          var success = await showAvatarDialog();
-          if (success == null) { return; }
-
-          Scaffold.of(context)
-            .showSnackBar(
-              SnackBar(
-                backgroundColor: success ? ThemeColor.success : ThemeColor.error,
-                content: Text(
-                  success ?
-                  'Your image has been successfully updated.' :
-                  'There was an error while updating your image. Try again later.',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            );
-        },
-        iconSize: 100.0,
-      ),
-    );
-  }
-
-  Future<bool> showAvatarDialog() {
-    return showGeneralDialog(
-      barrierDismissible: true,
-      barrierLabel: 'Update avatar',
-      context: context,
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (
-        BuildContext context,
-        Animation animation,
-        Animation secondaryAnimation) {
-        return Scaffold(
-          appBar: AppBar(title: Text('Update avatar'),),
-          body: ListView(
+    return Scaffold(
+      appBar: AppBar(title: Text('Update avatar'),),
+      body: ListView(
+        children: <Widget>[
+          Stack(
             children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20.0),
-                    child: Column(
+              Container(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: Text(
+                        'Enter the URL of your new avatar.',
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 40.0),
+                      child: CircleAvatar(
+                        backgroundImage: newImgUrl.isEmpty ?
+                          AssetImage('assets/images/monk.png') :
+                          NetworkImage(newImgUrl),
+                        maxRadius: 50.0,
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 40.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.link),
+                          labelText: 'URL'
+                        ),
+                        onChanged: (value) {
+                          newImgUrl = value;
+                        },
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'The new URL cannot be empty';
+                          }
+
+                          return null;
+                        },
+                      ),
+                    ),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: Text(
-                            'Enter the URL of your new avatar.',
-                            style: TextStyle(
-                              fontSize: 35,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 40.0),
-                          child: CircleAvatar(
-                            backgroundImage: newImgUrl.isEmpty ?
-                              AssetImage('assets/images/monk.png') :
-                              NetworkImage(newImgUrl),
-                            maxRadius: 50.0,
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 40.0),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.link),
-                              labelText: 'URL'
-                            ),
-                            onChanged: (value) {
-                              newImgUrl = value;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'The new URL cannot be empty';
-                              }
-
-                              return null;
-                            },
-                          ),
-                        ),
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 60),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: RaisedButton(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ),
+                          padding: EdgeInsets.only(top: 60),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: RaisedButton(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontSize: 20,
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: RaisedButton(
-                                      color: Color(0xFF02ECC7),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Update',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () async {
-                                        setState(() { isLoading = true; });
-                                        var tryResponse = await updateAvatar();
-                                        setState(() { isLoading = false; });
-
-                                        var success = tryResponse.hasErrors ? false : true;
-                                        Navigator.of(context).pop(success);
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: RaisedButton(
+                                  color: ThemeColor.success,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Text(
+                                      'Update',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    setState(() { _isLoading = true; });
+                                    var tryResponse = await updateAvatar();
+                                    setState(() { _isLoading = false; });
+
+                                    var success = tryResponse.hasErrors ? false : true;
+
+                                    if (!success) {
+                                      Scaffold.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: ThemeColor.error,
+                                            content: Text(
+                                              'There was an error while updating your image. Try again later.',
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                          )
+                                        );
+
+                                      return;
+                                    }
+
+                                    setState(() {
+                                      _isCompleted = true;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         )
                       ],
-                    ),
-                  ),
-
-                  if (isLoading)
-                    LoadingComponent(title: 'Saving...',),
-                ],
+                    )
+                  ],
+                ),
               ),
+
+              if (_isLoading)
+                LoadingComponent(title: 'Saving...',),
+
+              if (_isCompleted)
+                completionScreen(),
             ],
           ),
-        );
-      }
+        ],
+      ),
     );
   }
 
@@ -229,4 +192,58 @@ class _AvatarSettingsComponentState extends State<AvatarSettingsComponent> {
       return TryResponse(hasErrors: true, reason: ErrorReason.unknown);
     });
   }
+
+  Widget completionScreen() {
+    return Container(
+      color: Colors.white,
+      height: MediaQuery.of(context).size.height,
+      padding: EdgeInsets.all(30.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 30.0),
+            child: Icon(
+              Icons.check_circle,
+              color: ThemeColor.success,
+              size: 90.0,
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
+            child: Text(
+              'Your avatar has been successfully updated.',
+              style: TextStyle(fontSize: 25.0,),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          Text(
+            'Everything is new and shine.',
+            style: TextStyle(fontSize: 20.0),
+          ),
+
+          Padding(
+            padding: EdgeInsets.only(top: 60),
+            child: FlatButton(
+              color: ThemeColor.success,
+              onPressed: () { Navigator.of(context).pop(true); },
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(right: 10.0), child: Icon(Icons.check, color: Colors.white,),),
+                    Text('Alright', style: TextStyle(color: Colors.white, fontSize: 20.0),),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
