@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/types/quote.dart';
 
-class QuoteRowComponent extends StatelessWidget {
+class QuoteRow extends StatelessWidget {
   final Quote quote;
 
-  QuoteRowComponent({this.quote});
+  QuoteRow({this.quote});
 
   @override
   Widget build(BuildContext context) {

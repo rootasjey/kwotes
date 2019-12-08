@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/types/quote.dart';
 
-class RandomQuoteScreen extends StatefulWidget {
-  RandomQuoteScreenState createState() => RandomQuoteScreenState();
+class RandomQuotes extends StatefulWidget {
+  RandomQuotesState createState() => RandomQuotesState();
 }
 
-class RandomQuoteScreenState extends State<RandomQuoteScreen> {
+class RandomQuotesState extends State<RandomQuotes> {
   Quote quote;
   String lang = 'en';
   bool loaded = false;

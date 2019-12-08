@@ -8,12 +8,12 @@ import 'package:memorare/types/error_reason.dart';
 import 'package:memorare/types/try_response.dart';
 import 'package:provider/provider.dart';
 
-class AvatarSettingsComponent extends StatefulWidget {
+class EditAvatar extends StatefulWidget {
   @override
-  _AvatarSettingsComponentState createState() => _AvatarSettingsComponentState();
+  _EditAvatarState createState() => _EditAvatarState();
 }
 
-class _AvatarSettingsComponentState extends State<AvatarSettingsComponent> {
+class _EditAvatarState extends State<EditAvatar> {
   String newImgUrl = '';
   bool _isLoading = false;
   bool _isCompleted = false;

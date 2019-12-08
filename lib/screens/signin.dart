@@ -8,12 +8,12 @@ import 'package:memorare/types/credentials.dart';
 import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 
-class SigninScreen extends StatefulWidget {
+class Signin extends StatefulWidget {
   @override
-  SigninScreenState createState() => SigninScreenState();
+  SigninState createState() => SigninState();
 }
 
-class SigninScreenState extends State<SigninScreen> {
+class SigninState extends State<Signin> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String email = '';

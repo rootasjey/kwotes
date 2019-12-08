@@ -5,11 +5,11 @@ import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/types/quotes_response.dart';
 
-class RecentScreen extends StatefulWidget {
-  RecentScreenState createState() => RecentScreenState();
+class RecentQuotes extends StatefulWidget {
+  RecentQuotesState createState() => RecentQuotesState();
 }
 
-class RecentScreenState extends State<RecentScreen> {
+class RecentQuotesState extends State<RecentQuotes> {
   String lang;
   int limit;
   int order;
@@ -68,7 +68,7 @@ class RecentScreenState extends State<RecentScreen> {
           body: ListView.separated(
             itemCount: quotes.length,
             itemBuilder: (context, index) {
-              return QuoteRowComponent(quote: quotes[index]);
+              return QuoteRow(quote: quotes[index]);
             },
             separatorBuilder: (BuildContext context, int index) => Divider(),
           ),

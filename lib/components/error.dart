@@ -101,7 +101,7 @@ class ErrorComponent extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            ReportButtonComponent(),
+            ReportButton(),
           ],
         ),
       ),
@@ -111,7 +111,7 @@ class ErrorComponent extends StatelessWidget {
 
 // Because cannot use Scaffold.of(context).showSnackBar
 // on the ErrorComponent.
-class ReportButtonComponent extends StatelessWidget {
+class ReportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 
-class ConnectScreen extends StatelessWidget {
+class Connect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -21,8 +21,8 @@ class ConnectScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            SigninScreen(),
-            SignupScreen(),
+            Signin(),
+            Signup(),
           ],
         ),
       ),

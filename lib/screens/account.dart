@@ -8,7 +8,7 @@ import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/types/credentials.dart';
 import 'package:provider/provider.dart';
 
-class AccountScreen extends StatelessWidget {
+class Account extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserDataModel>(context);
@@ -88,7 +88,7 @@ class AccountScreen extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return AccountSettingsScreen();
+                return AccountSettings();
               }
             )
           );
@@ -108,7 +108,7 @@ class AccountScreen extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return MyPublishedQuotesScreen();
+                      return MyPublishedQuotes();
                     }
                   )
                 );
@@ -129,7 +129,7 @@ class AccountScreen extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return ConnectScreen();
+                  return Connect();
                 }
               )
             );

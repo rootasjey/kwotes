@@ -5,9 +5,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
-import 'package:memorare/screens/quotidian.dart';
-import 'package:memorare/screens/random_quote.dart';
-import 'package:memorare/screens/recent.dart';
+import 'package:memorare/screens/quotidians.dart';
+import 'package:memorare/screens/random_quotes.dart';
+import 'package:memorare/screens/recent_quotes.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(App());
@@ -105,10 +105,10 @@ class MainState extends State<Main> {
             ),
             body: TabBarView(
               children: <Widget>[
-                QuotidianScreen(),
-                RecentScreen(),
-                RandomQuoteScreen(),
-                AccountScreen(),
+                Quotidians(),
+                RecentQuotes(),
+                RandomQuotes(),
+                Account(),
               ],
             ),
           ),

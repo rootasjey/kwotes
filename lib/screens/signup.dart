@@ -11,12 +11,12 @@ import 'package:memorare/types/credentials.dart';
 import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 
-class SignupScreen extends StatefulWidget {
+class Signup extends StatefulWidget {
   @override
-  SignupScreenState createState() => SignupScreenState();
+  SignupState createState() => SignupState();
 }
 
-class SignupScreenState extends State<SignupScreen> {
+class SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   final _nameFieldKey = GlobalKey<NameFieldState>();
   final _emailFieldKey = GlobalKey<EmailFieldState>();

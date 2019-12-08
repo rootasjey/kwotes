@@ -7,12 +7,12 @@ import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
-class AccountSettingsScreen extends StatefulWidget {
+class AccountSettings extends StatefulWidget {
   @override
-  _AccountSettingsScreenState createState() => _AccountSettingsScreenState();
+  _AccountSettingsState createState() => _AccountSettingsState();
 }
 
-class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
+class _AccountSettingsState extends State<AccountSettings> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserDataModel>(context);
@@ -56,7 +56,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return AvatarSettingsComponent();
+                                return EditAvatar();
                               }
                             )
                           );

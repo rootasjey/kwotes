@@ -4,7 +4,7 @@ import 'package:memorare/types/quotidian.dart';
 
 enum QuoteAction { addList, like, share }
 
-class QuotidianScreen extends StatelessWidget {
+class Quotidians extends StatelessWidget {
   final String fetchQuotidian = """
     query {
       quotidian {

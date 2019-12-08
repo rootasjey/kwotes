@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/components/Quote_row.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_response.dart';
 
-class MyPublishedQuotesScreen extends StatefulWidget {
+class MyPublishedQuotes extends StatefulWidget {
   @override
-  MyPublishedQuotesScreenState createState() => MyPublishedQuotesScreenState();
+  MyPublishedQuotesState createState() => MyPublishedQuotesState();
 }
 
-class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
+class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   String lang = 'en';
   int limit = 10;
   int order = 1;
@@ -84,7 +84,7 @@ class MyPublishedQuotesScreenState extends State<MyPublishedQuotesScreen> {
           ),
           body: ListView.separated(
             itemBuilder: (context, index) {
-              return QuoteRowComponent(quote: quotes[index]);
+              return QuoteRow(quote: quotes[index]);
             },
             itemCount: quotes.length,
             separatorBuilder: (BuildContext context, int index) => Divider(),
