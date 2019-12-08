@@ -3,6 +3,7 @@ import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/edit_avatar.dart';
 import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -125,7 +126,15 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                       ],
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return EditPassword();
+                        }
+                      )
+                    );
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20.0),
