@@ -8,10 +8,12 @@ import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
 class PasswordField extends StatefulWidget {
+  final String label;
+
   @override
   PasswordFieldState createState() => PasswordFieldState();
 
-  PasswordField({ Key key }): super(key: key);
+  PasswordField({ Key key, this.label = 'Password' }): super(key: key);
 }
 
 class PasswordFieldState extends State<PasswordField> {
@@ -44,7 +46,7 @@ class PasswordFieldState extends State<PasswordField> {
           key: _passwordFieldKey,
           decoration: InputDecoration(
             icon: Icon(Icons.lock_outline),
-            labelText: 'Password',
+            labelText: widget.label,
             errorMaxLines: 2,
           ),
           obscureText: true,
