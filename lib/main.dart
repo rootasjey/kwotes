@@ -8,6 +8,7 @@ import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/random_quotes.dart';
 import 'package:memorare/screens/recent_quotes.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(App());
@@ -50,6 +51,15 @@ class Main extends StatefulWidget {
 }
 
 class MainState extends State<Main> {
+  int _selectedIndex = 0;
+
+  static List<Widget> _listScreens = <Widget>[
+    Quotidians(),
+    RecentQuotes(),
+    RandomQuotes(),
+    Account(),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +87,12 @@ class MainState extends State<Main> {
     return apiConfig;
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(
@@ -88,31 +104,38 @@ class MainState extends State<Main> {
           fontFamily: 'Comfortaa',
           primarySwatch: MaterialColor(0xFF706FD2, accentSwatchColor),
         ),
-        home: DefaultTabController(
-          length: 4,
-          child: Scaffold(
-            appBar: AppBar(
-              bottom: TabBar(
-                indicatorColor: Colors.white,
-                tabs: <Widget>[
-                  Tab(icon: Icon(Icons.wb_sunny),),
-                  Tab(icon: Icon(Icons.list),),
-                  Tab(icon: Icon(Icons.not_listed_location),),
-                  Tab(icon: Icon(Icons.person_pin),),
-                ],
-              ),
-              title: Text('Good Morning!'),
-            ),
-            body: TabBarView(
-              children: <Widget>[
-                Quotidians(),
-                RecentQuotes(),
-                RandomQuotes(),
-                Account(),
-              ],
-            ),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('Good Morning'),
           ),
-        )
+          body: Container(
+            child: _listScreens.elementAt(_selectedIndex),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.wb_sunny,),
+                title: Text('Today',),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.list,),
+                title: Text('Recent',),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.format_quote,),
+                title: Text('Random',),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.perm_identity,),
+                title: Text('Account',),
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            selectedItemColor: ThemeColor.primary,
+            unselectedItemColor: Colors.black54,
+          ),
+        ),
       ),
     );
   }
