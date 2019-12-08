@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/error.dart';
+import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quotidian.dart';
 
 enum QuoteAction { addList, like, share }
@@ -34,11 +36,15 @@ class Quotidians extends StatelessWidget {
         ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
         if (result.errors != null) {
-          return Text(result.errors.toString());
+          if (result.errors.first.message.contains('No host specified in URI')) {
+            return LoadingComponent(title: 'Loading quotidians',padding: EdgeInsets.all(30.0),);
+          }
+
+          return ErrorComponent(description: result.errors.first.message, title: 'Quotidians',);
         }
 
         if (result.loading) {
-          return Text('Loading...');
+          return LoadingComponent(title: 'Loading quotidians',padding: EdgeInsets.all(30.0),);
         }
 
         var quotidian = Quotidian.fromJSON(result.data['quotidian']);
