@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quote.dart';
 
 class RandomQuotes extends StatefulWidget {
@@ -9,7 +10,6 @@ class RandomQuotes extends StatefulWidget {
 class RandomQuotesState extends State<RandomQuotes> {
   Quote quote;
   String lang = 'en';
-  bool loaded = false;
 
   final String fetchRandom = """
     query (\$lang: String) {
@@ -48,12 +48,9 @@ class RandomQuotesState extends State<RandomQuotes> {
         }
 
         if (result.loading) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('Loading...'),
-            ],
+          return LoadingComponent(
+            title: 'Loading a random quote...',
+            padding: EdgeInsets.all(30.0),
           );
         }
 
