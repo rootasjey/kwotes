@@ -178,6 +178,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                                       Scaffold.of(context)
                                         .showSnackBar(
                                           SnackBar(
+                                            backgroundColor: ThemeColor.error,
                                             content: Text(
                                               'There was a problem while deleting your account. Please try again later.',
                                               style: TextStyle(color: Colors.white),
