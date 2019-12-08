@@ -92,9 +92,7 @@ class UserDataModel extends ChangeNotifier {
 
   void setImgUrl(String imgUrl) {
     _userData.imgUrl = imgUrl;
-
     saveToFile(_userData.toJSON());
-
     notifyListeners();
   }
 
