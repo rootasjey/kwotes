@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class ThemeColor {
@@ -7,4 +6,15 @@ class ThemeColor {
   static Color validation = Color(0xFF02ECC7);
   static Color success = Color(0xFF2ECC71);
   static Color error = Color(0xFFE74C3C);
+
+  static Color topicColor(String topic) {
+    switch (topic) {
+      case 'feelings':
+        return Color(0xFFE74C3C);
+      case 'motivation':
+        return Color(0xFF1E90FF);
+      default:
+        return primary;
+    }
+  }
 }
