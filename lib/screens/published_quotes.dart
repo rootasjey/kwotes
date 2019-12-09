@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
+import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/small_quote_card.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_response.dart';
 
@@ -14,7 +15,7 @@ class MyPublishedQuotes extends StatefulWidget {
 class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   String lang = 'en';
   int limit = 10;
-  int order = 1;
+  int order = -1;
   int skip = 0;
   List<Quote> quotes = [];
 
@@ -47,7 +48,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     return Query(
       options: QueryOptions(
         document: fetchPublishedQuotes,
-        variables: {'lang': lang, 'order': order},
+        variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
         if (result.hasErrors) {
@@ -62,7 +63,9 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                 refetch();
               });
 
-            return LoadingComponent();
+            return Scaffold(
+              body: LoadingComponent(),
+            );
           }
 
           return ErrorComponent(
@@ -72,7 +75,9 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         }
 
         if (result.loading) {
-          return LoadingComponent();
+          return Scaffold(
+            body: LoadingComponent(),
+          );
         }
 
         var response = QuotesResponse.fromJSON(result.data['publishedQuotes']);
@@ -82,12 +87,21 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           appBar: AppBar(
             title: Text('My Published Quotes'),
           ),
-          body: ListView.separated(
-            itemBuilder: (context, index) {
-              return QuoteRow(quote: quotes[index]);
+          floatingActionButton: FilterFab(
+            onOrderChanged: (int newOrder) {
+              setState(() {
+                order = newOrder;
+              });
             },
+            order: order,
+          ),
+          body: GridView.builder(
             itemCount: quotes.length,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemBuilder: (BuildContext context, int index) {
+              return SmallQuoteCard(quote: quotes.elementAt(index),);
+            },
           ),
         );
       },
