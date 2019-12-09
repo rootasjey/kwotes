@@ -6,15 +6,23 @@ class Quote {
   final String id;
   final String name;
   final List<Reference> references;
+  final List<String> topics;
 
-  Quote({this.author, this.id, this.name, this.references});
+  Quote({this.author, this.id, this.name, this.references, this.topics});
 
   factory Quote.fromJSON(Map<String, dynamic> json) {
     List<Reference> refs = [];
+    List<String> topicsList = [];
 
     if (json['references'] != null) {
       for (var ref in json['references']) {
         refs.add(Reference.fromJSON(ref));
+      }
+    }
+
+    if (json['topics'] != null) {
+      for (var tag in json['topics']) {
+        topicsList.add(tag);
       }
     }
 
@@ -23,6 +31,7 @@ class Quote {
       id: json['id'],
       name: json['name'],
       references: refs,
+      topics: topicsList,
     );
   }
 }
