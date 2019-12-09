@@ -13,6 +13,18 @@ class ThemeColor {
         return Color(0xFFE74C3C);
       case 'motivation':
         return Color(0xFF1E90FF);
+      case 'fun':
+        return Color(0xFFF5CD79);
+      case 'reflexion':
+        return Color(0xFFEA8685);
+      case 'philosophy':
+        return Color(0xFF574B90);
+      case 'fact':
+        return Color(0xFFF19066);
+      case 'beliefs':
+        return Color(0xFF303952);
+      case 'poetry':
+        return Color(0xFF546DE5);
       default:
         return primary;
     }
