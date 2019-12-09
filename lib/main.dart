@@ -105,9 +105,6 @@ class MainState extends State<Main> {
           primarySwatch: MaterialColor(0xFF706FD2, accentSwatchColor),
         ),
         home: Scaffold(
-          appBar: AppBar(
-            title: Text('Good Morning'),
-          ),
           body: Container(
             child: _listScreens.elementAt(_selectedIndex),
           ),
