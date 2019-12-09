@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
 
 enum QuoteAction { addList, like, share }
@@ -85,7 +86,7 @@ class Quotidians extends StatelessWidget {
                           '${quotidian.quote.name}',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 35,
+                            fontSize: FontSize.bigCard(quotidian.quote.name),
                             fontWeight: FontWeight.bold
                           ),
                         ),
