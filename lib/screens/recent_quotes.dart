@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/medium_quote_card.dart';
 import 'package:memorare/types/quotes_response.dart';
 
 class RecentQuotes extends StatefulWidget {
@@ -30,6 +31,7 @@ class RecentQuotesState extends State<RecentQuotes> {
           }
           id
           name
+          topics
         }
       }
     }
@@ -65,12 +67,15 @@ class RecentQuotesState extends State<RecentQuotes> {
         var quotes = response.entries;
 
         return Scaffold(
-          body: ListView.separated(
+          body: Swiper(
             itemCount: quotes.length,
-            itemBuilder: (context, index) {
-              return QuoteRow(quote: quotes[index]);
+            scale: 0.9,
+            viewportFraction: 0.8,
+            itemBuilder: (BuildContext context, int index) {
+              return Center(
+                child: MediumQuoteCard(quote: quotes.elementAt(index),)
+              );
             },
-            separatorBuilder: (BuildContext context, int index) => Divider(),
           ),
         );
       },
