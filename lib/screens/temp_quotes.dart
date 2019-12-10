@@ -4,8 +4,12 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_temp_quote_card.dart';
+import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/types/boolean_message.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
+import 'package:provider/provider.dart';
 
 class MyTempQuotes extends StatefulWidget {
   @override
@@ -96,11 +100,66 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             padding: EdgeInsets.symmetric(vertical: 20.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
             itemBuilder: (BuildContext context, int index) {
-              return SmallTempQuoteCard(quote: quotes.elementAt(index),);
+              return SmallTempQuoteCard(
+                quote: quotes.elementAt(index),
+                onLongPress: (String id) async {
+                  final booleanMessage = await validateTempQuote(id);
+
+                  if (booleanMessage.boolean) {
+                    refetch();
+                  }
+
+                  Scaffold.of(context)
+                    .showSnackBar(
+                      SnackBar(
+                        backgroundColor: booleanMessage.boolean ?
+                          ThemeColor.success :
+                          ThemeColor.error,
+
+                        content: Text(
+                          booleanMessage.boolean ?
+                          'The quote has been successfully validated' :
+                          booleanMessage.message,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    );
+                },
+              );
             },
           ),
         );
       },
     );
+  }
+
+  Future<BooleanMessage> validateTempQuote(String id) {
+    final String mutationValidateTempQuote = """
+      mutation (\$id: String!, \$ignoreStatus: Boolean) {
+        validateTempQuoteAdmin (id: \$id, ignoreStatus: \$ignoreStatus) {
+          id
+        }
+      }
+    """;
+
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+      document: mutationValidateTempQuote,
+      variables: {'id': id, 'ignoreStatus':  true},
+    ))
+    .then((queryResult) {
+      if (queryResult.hasErrors) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.errors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
   }
 }
