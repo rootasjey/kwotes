@@ -70,7 +70,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
           return ErrorComponent(
             description: result.errors.first.toString(),
-            title: 'My Published Quotes',
+            title: 'Published Quotes',
           );
         }
 
@@ -85,7 +85,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('My Published Quotes'),
+            title: Text('Published Quotes'),
           ),
           floatingActionButton: FilterFab(
             onOrderChanged: (int newOrder) {
