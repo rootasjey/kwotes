@@ -5,6 +5,7 @@ import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/types/credentials.dart';
 import 'package:provider/provider.dart';
 
@@ -109,6 +110,21 @@ class Account extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return MyPublishedQuotes();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.timelapse, size: 30.0,),
+                title: Text('Temporary quotes', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return MyTempQuotes();
                     }
                   )
                 );
