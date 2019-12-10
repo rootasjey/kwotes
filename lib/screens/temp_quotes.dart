@@ -3,7 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/small_temp_quote.dart';
+import 'package:memorare/components/small_temp_quote_card.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
 
