@@ -42,4 +42,8 @@ flutter run lib/main.dart
 
 ## Licence
 
-MIT
+Mozilla Public License 2.0.
+
+Please read the [LICENSE](./LICENSE) for more information.
+
+Please [ask](mailto:github@memorare.app) if you have any doubt.
