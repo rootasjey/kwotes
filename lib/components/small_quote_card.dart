@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/quote.dart';
 
 class SmallQuoteCard extends StatelessWidget {
@@ -19,6 +20,15 @@ class SmallQuoteCard extends StatelessWidget {
             child: Card(
               color: Color(0xFFF1F2F6),
               child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return QuotePage(quoteId: quote.id,);
+                      }
+                    )
+                  );
+                },
                 child: Padding(
                   padding: EdgeInsets.all(25.0),
                   child: Center(
