@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
@@ -61,95 +62,106 @@ class Quotidians extends StatelessWidget {
 
         final quotidian = Quotidian.fromJSON(result.data['quotidian']);
 
+        final topicColor = quotidian.quote.topics.length > 0 ?
+          ThemeColor.topicColor(quotidian.quote.topics.first) :
+          ThemeColor.primary;
+
         return Scaffold(
-          body: ListView(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 20.0,
-                  top: 60.0,
-                  right: 20.0
-                ),
-                child: Card(
-                  color: quotidian.quote.topics.length > 0 ?
-                    ThemeColor.topicColor(quotidian.quote.topics.first) :
-                    ThemeColor.primary,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 50.0
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          '${quotidian.quote.name}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: FontSize.bigCard(quotidian.quote.name),
-                            fontWeight: FontWeight.bold
-                          ),
+          body: Center(
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Card(
+                    color: topicColor,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return QuotePage(quoteId: quotidian.quote.id,);
+                            }
+                          )
+                        );
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 50.0
                         ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 40.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                '${quotidian.quote.author.name}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              '${quotidian.quote.name}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: FontSize.bigCard(quotidian.quote.name),
+                                fontWeight: FontWeight.bold
                               ),
-                            ],
-                          ),
-                        ),
-
-                        if (quotidian.quote.references.length > 0)
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  quotidian.quote.references.first.name,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
                             ),
-                          ),
 
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.favorite_border, color: Colors.white60,),
-                                onPressed: () {},
+                            Padding(
+                              padding: EdgeInsets.only(top: 40.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    '${quotidian.quote.author.name}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                icon: Icon(Icons.playlist_add, color: Colors.white60,),
-                                onPressed: () {},
+                            ),
+
+                            if (quotidian.quote.references.length > 0)
+                              Padding(
+                                padding: EdgeInsets.only(top: 10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      quotidian.quote.references.first.name,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              IconButton(
-                                icon: Icon(Icons.share, color: Colors.white60,),
-                                onPressed: () {},
+
+                            Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.favorite_border, color: Colors.white60,),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.playlist_add, color: Colors.white60,),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.share, color: Colors.white60,),
+                                    onPressed: () {},
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
                   ),
                 ),
-              )
-            ],
+              ],
+            ),
           ),
         );
       },
