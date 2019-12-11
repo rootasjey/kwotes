@@ -211,12 +211,15 @@ class _QuotePageState extends State<QuotePage> {
                   Positioned(
                     left: 5.0,
                     top: 20.0,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                       },
-                      icon: Icon(Icons.arrow_back, color: Colors.white,),
-                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.arrow_back, color: Colors.white,),
+                      ),
+                    )
                   ),
                 ],
               ),
