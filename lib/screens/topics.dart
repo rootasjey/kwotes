@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
 
 class Topics extends StatefulWidget {
@@ -14,8 +15,7 @@ class _TopicsState extends State<Topics> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryTopic(),
-        variables: {'lang': 'en'}
+        document: queryTopics(),
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
         if (result.hasErrors) {
@@ -27,7 +27,7 @@ class _TopicsState extends State<Topics> {
 
         if (result.loading) {
           return LoadingComponent(
-            title: 'Loading a random quote...',
+            title: 'Loading topics...',
             padding: EdgeInsets.all(30.0),
           );
         }
@@ -35,8 +35,8 @@ class _TopicsState extends State<Topics> {
         List<Widget> topicChips = [];
 
         Map<String, dynamic> json = result.data;
-        for (var str in json['randomTopics']) {
-          final chipColor = ThemeColor.topicColor(str);
+        for (var topic in json['randomTopics']) {
+          final chipColor = ThemeColor.topicColor(topic);
 
           topicChips.add(
             Padding(
@@ -45,10 +45,16 @@ class _TopicsState extends State<Topics> {
                 backgroundColor: chipColor,
                 labelPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                 onPressed: () {
-                  print(str);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return QuotesByTopics(topic: topic,);
+                      }
+                    )
+                  );
                 },
                 label: Text(
-                  str,
+                  topic,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -83,7 +89,7 @@ class _TopicsState extends State<Topics> {
     );
   }
 
-  String queryTopic() {
+  String queryTopics() {
     return """
       query {
         randomTopics
