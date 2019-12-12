@@ -80,6 +80,7 @@ class ErrorComponent extends StatelessWidget {
         title: Text('$title'),
       ),
       body: Container(
+        padding: EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -207,7 +207,6 @@ class _QuotePageState extends State<QuotePage> {
                     ],
                   ),
 
-
                   Positioned(
                     left: 5.0,
                     top: 20.0,
