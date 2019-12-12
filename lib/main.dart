@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/quotidians.dart';
-import 'package:memorare/screens/random_quotes.dart';
 import 'package:memorare/screens/recent_quotes.dart';
+import 'package:memorare/screens/topics.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,7 @@ class MainState extends State<Main> {
   static List<Widget> _listScreens = <Widget>[
     Quotidians(),
     RecentQuotes(),
-    RandomQuotes(),
+    Topics(),
     Account(),
   ];
 
@@ -119,8 +120,8 @@ class MainState extends State<Main> {
                 title: Text('Recent',),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.format_quote,),
-                title: Text('Random',),
+                icon: Icon(IconsMore.tags,),
+                title: Text('Topics',),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.perm_identity,),
