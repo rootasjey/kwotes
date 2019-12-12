@@ -85,3 +85,6 @@ flutter:
       fonts:
         - asset: assets/fonts/Comfortaa-Medium.ttf
           weight: 400
+    - family: IconsMore
+      fonts:
+        - asset: assets/fonts/IconsMore.ttf
