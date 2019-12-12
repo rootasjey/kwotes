@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
@@ -6,14 +5,20 @@ import 'package:memorare/types/quote.dart';
 
 class MediumQuoteCard extends StatelessWidget {
   final Quote quote;
+  final Color color;
 
-  MediumQuoteCard({this.quote});
+  MediumQuoteCard({this.color, this.quote});
 
   @override
   Widget build(BuildContext context) {
-    final topicColor = quote.topics.length > 0 ?
-      ThemeColor.topicColor(quote.topics.first) :
-      ThemeColor.primary;
+    Color topicColor;
+
+    if (color != null) { topicColor = color; }
+    else {
+      topicColor = quote.topics.length > 0 ?
+        ThemeColor.topicColor(quote.topics.first) :
+        ThemeColor.primary;
+    }
 
     return SizedBox(
       height: 330.0,
