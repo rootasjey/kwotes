@@ -22,32 +22,11 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   int attempts = 1;
   int maxAttempts = 2;
 
-  final String fetchPublishedQuotes = """
-    query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
-      publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
-        pagination {
-          hasNext
-          limit
-          nextSkip
-          skip
-        }
-        entries {
-          author {
-            id
-            name
-          }
-          id
-          name
-        }
-      }
-    }
-  """;
-
   @override
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: fetchPublishedQuotes,
+        document: queryPublishedQuotes(),
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -106,5 +85,28 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         );
       },
     );
+  }
+
+  String queryPublishedQuotes() {
+    return """
+      query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
+        publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
+          entries {
+            author {
+              id
+              name
+            }
+            id
+            name
+          }
+        }
+      }
+    """;
   }
 }

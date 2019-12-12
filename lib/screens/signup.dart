@@ -31,20 +31,6 @@ class SignupState extends State<Signup> {
   String name = '';
   String password = '';
 
-  final String signupMutation = """
-    mutation Signup(\$email: String!, \$name: String!, \$password: String!) {
-      signup(email: \$email, name: \$name password: \$password) {
-        id
-        imgUrl
-        email
-        lang
-        name
-        rights
-        token
-      }
-    }
-  """;
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -174,7 +160,7 @@ class SignupState extends State<Signup> {
                         );
                       },
                       options: MutationOptions(
-                        document: signupMutation,
+                        document: mutationSignup(),
                       ),
                       onCompleted: (dynamic resultData) {
                         if (resultData == null) { return; }
@@ -281,5 +267,21 @@ class SignupState extends State<Signup> {
         ],
       ),
     );
+  }
+
+  String mutationSignup() {
+    return """
+      mutation Signup(\$email: String!, \$name: String!, \$password: String!) {
+        signup(email: \$email, name: \$name password: \$password) {
+          id
+          imgUrl
+          email
+          lang
+          name
+          rights
+          token
+        }
+      }
+    """;
   }
 }

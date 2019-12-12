@@ -19,29 +19,11 @@ class _QuotePageState extends State<QuotePage> {
   Quote quote;
   Color topicColor;
 
-  final String fetchQuote = """
-    query (\$id: String!) {
-      quote (id: \$id) {
-        author {
-          id
-          name
-        }
-        id
-        name
-        references {
-          id
-          name
-        }
-        topics
-      }
-    }
-  """;
-
   @override
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: fetchQuote,
+        document: queryQuote(),
         variables: {'id': widget.quoteId},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -227,5 +209,25 @@ class _QuotePageState extends State<QuotePage> {
         );
       },
     );
+  }
+
+  String queryQuote() {
+    return """
+      query (\$id: String!) {
+        quote (id: \$id) {
+          author {
+            id
+            name
+          }
+          id
+          name
+          references {
+            id
+            name
+          }
+          topics
+        }
+      }
+    """;
   }
 }

@@ -10,33 +10,12 @@ import 'package:memorare/types/quotidian.dart';
 enum QuoteAction { addList, like, share }
 
 class Quotidians extends StatelessWidget {
-  final String fetchQuotidian = """
-    query {
-      quotidian {
-        id
-        quote {
-          author {
-            id
-            imgUrl
-            name
-          }
-          id
-          name
-          references {
-            id
-            name
-          }
-          topics
-        }
-      }
-    }
-  """;
 
   @override
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: fetchQuotidian
+        document: queryQuotidians(),
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
         if (result.errors != null) {
@@ -166,5 +145,29 @@ class Quotidians extends StatelessWidget {
         );
       },
     );
+  }
+
+  String queryQuotidians() {
+    return """
+      query {
+        quotidian {
+          id
+          quote {
+            author {
+              id
+              imgUrl
+              name
+            }
+            id
+            name
+            references {
+              id
+              name
+            }
+            topics
+          }
+        }
+      }
+    """;
   }
 }

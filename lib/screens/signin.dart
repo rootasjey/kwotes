@@ -19,20 +19,6 @@ class SigninState extends State<Signin> {
   String email = '';
   String password = '';
 
-  final String signinMutation = """
-    mutation Signin(\$email: String!, \$password: String!) {
-      signin(email: \$email, password: \$password) {
-        id
-        imgUrl
-        email
-        lang
-        name
-        rights
-        token
-      }
-    }
-  """;
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -144,7 +130,7 @@ class SigninState extends State<Signin> {
                         );
                       },
                       options: MutationOptions(
-                        document: signinMutation,
+                        document: mutationSignin(),
                       ),
                       onCompleted: (dynamic resultData) {
                         setState(() {
@@ -200,5 +186,21 @@ class SigninState extends State<Signin> {
         ),
       ],
     );
+  }
+
+  String mutationSignin() {
+    return """
+      mutation Signin(\$email: String!, \$password: String!) {
+        signin(email: \$email, password: \$password) {
+          id
+          imgUrl
+          email
+          lang
+          name
+          rights
+          token
+        }
+      }
+    """;
   }
 }

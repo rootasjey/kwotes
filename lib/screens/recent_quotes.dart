@@ -15,28 +15,6 @@ class RecentQuotesState extends State<RecentQuotes> {
   int limit;
   int order;
 
-  final String fetchRecent = """
-    query (\$lang: String, \$limit: Float, \$order: Float) {
-      quotes (lang: \$lang, limit: \$limit, order: \$order) {
-        pagination {
-          hasNext
-          limit
-          nextSkip
-          skip
-        }
-        entries {
-          author {
-            id
-            name
-          }
-          id
-          name
-          topics
-        }
-      }
-    }
-  """;
-
   @override
   void initState() {
     super.initState();
@@ -51,7 +29,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: fetchRecent,
+        document: queryRecentQuotes(),
         variables: {'lang': lang, 'order': order},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -80,5 +58,29 @@ class RecentQuotesState extends State<RecentQuotes> {
         );
       },
     );
+  }
+
+  String queryRecentQuotes() {
+    return """
+      query (\$lang: String, \$limit: Float, \$order: Float) {
+        quotes (lang: \$lang, limit: \$limit, order: \$order) {
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
+          entries {
+            author {
+              id
+              name
+            }
+            id
+            name
+            topics
+          }
+        }
+      }
+    """;
   }
 }

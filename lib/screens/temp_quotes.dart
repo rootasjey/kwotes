@@ -26,28 +26,11 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   int attempts = 1;
   int maxAttempts = 2;
 
-  final String fetchPublishedQuotes = """
-    query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
-      tempQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
-        pagination {
-          hasNext
-          limit
-          nextSkip
-          skip
-        }
-        entries {
-          id
-          name
-        }
-      }
-    }
-  """;
-
   @override
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: fetchPublishedQuotes,
+        document: queryTempQuotes(),
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -131,6 +114,25 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         );
       },
     );
+  }
+
+  String queryTempQuotes() {
+    return """
+      query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
+        tempQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
+          entries {
+            id
+            name
+          }
+        }
+      }
+    """;
   }
 
   Future<BooleanMessage> validateTempQuote(String id) {

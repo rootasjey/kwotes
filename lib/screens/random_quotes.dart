@@ -11,19 +11,6 @@ class RandomQuotesState extends State<RandomQuotes> {
   Quote quote;
   String lang = 'en';
 
-  final String fetchRandom = """
-    query (\$lang: String) {
-      randomQuote (lang: \$lang) {
-        author {
-          id
-          name
-        }
-        id
-        name
-      }
-    }
-  """;
-
   @override
   void initState() {
     super.initState();
@@ -33,7 +20,7 @@ class RandomQuotesState extends State<RandomQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: fetchRandom,
+        document: queryRandomQuotes(),
         variables: {'lang': lang},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -129,5 +116,20 @@ class RandomQuotesState extends State<RandomQuotes> {
         );
       },
     );
+  }
+
+  String queryRandomQuotes() {
+    return """
+      query (\$lang: String) {
+        randomQuote (lang: \$lang) {
+          author {
+            id
+            name
+          }
+          id
+          name
+        }
+      }
+    """;
   }
 }
