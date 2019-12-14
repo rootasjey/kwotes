@@ -14,44 +14,44 @@ class Quotidians extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Query(
-      options: QueryOptions(
-        documentNode: parseString(queryQuotidians()),
-      ),
-      builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.hasException) {
-          final exception = result.exception;
+    return Scaffold(
+      body: Query(
+        options: QueryOptions(
+          documentNode: parseString(queryQuotidians()),
+        ),
+        builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
+          if (result.hasException) {
+            final exception = result.exception;
 
-          if (exception.clientException
-            .message.contains('No host specified in URI')) {
+            if (exception.clientException
+              .message.contains('No host specified in URI')) {
 
+              return LoadingComponent(
+                title: 'Loading quotidians',
+                padding: EdgeInsets.all(30.0),
+              );
+            }
+
+            return ErrorComponent(
+              description: exception.graphqlErrors.first.message,
+              title: 'Quotidians',
+            );
+          }
+
+          if (result.loading) {
             return LoadingComponent(
               title: 'Loading quotidians',
               padding: EdgeInsets.all(30.0),
             );
           }
 
-          return ErrorComponent(
-            description: exception.graphqlErrors.first.message,
-            title: 'Quotidians',
-          );
-        }
+          final quotidian = Quotidian.fromJSON(result.data['quotidian']);
 
-        if (result.loading) {
-          return LoadingComponent(
-            title: 'Loading quotidians',
-            padding: EdgeInsets.all(30.0),
-          );
-        }
+          final topicColor = quotidian.quote.topics.length > 0 ?
+            ThemeColor.topicColor(quotidian.quote.topics.first) :
+            ThemeColor.primary;
 
-        final quotidian = Quotidian.fromJSON(result.data['quotidian']);
-
-        final topicColor = quotidian.quote.topics.length > 0 ?
-          ThemeColor.topicColor(quotidian.quote.topics.first) :
-          ThemeColor.primary;
-
-        return Scaffold(
-          body: Center(
+          return Center(
             child: ListView(
               shrinkWrap: true,
               children: <Widget>[
@@ -146,9 +146,9 @@ class Quotidians extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
