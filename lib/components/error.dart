@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
@@ -41,11 +42,11 @@ class ErrorComponent extends StatelessWidget {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
     return httpClientModel.client.value.mutate(MutationOptions(
-        document: signinMutation,
+        documentNode: parseString(signinMutation),
         variables: {'email': credentials.email, 'password': credentials.password},
       ))
       .then((queryResult) {
-        if (queryResult.hasErrors) {
+        if (queryResult.hasException) {
           return TryResponse(hasErrors: true, reason: ErrorReason.server);
         }
 

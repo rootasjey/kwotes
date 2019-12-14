@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
@@ -26,13 +27,13 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryPublishedQuotes(),
+        documentNode: parseString(queryPublishedQuotes()),
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.hasErrors) {
+        if (result.hasException) {
           if (attempts < maxAttempts &&
-            ErrorComponent.isJWTRelated(result.errors.first.toString())) {
+            ErrorComponent.isJWTRelated(result.exception.graphqlErrors.first.toString())) {
 
             attempts++;
 
@@ -48,7 +49,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           }
 
           return ErrorComponent(
-            description: result.errors.first.toString(),
+            description: result.exception.graphqlErrors.first.toString(),
             title: 'Published Quotes',
           );
         }

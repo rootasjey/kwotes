@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/email_field.dart';
 import 'package:memorare/components/loading.dart';
@@ -160,37 +161,36 @@ class SignupState extends State<Signup> {
                         );
                       },
                       options: MutationOptions(
-                        document: mutationSignup(),
-                      ),
-                      onCompleted: (dynamic resultData) {
-                        if (resultData == null) { return; }
+                        documentNode: parseString(mutationSignup()),
+                        onCompleted: (dynamic resultData) {
+                          if (resultData == null) { return; }
 
-                        Map<String, dynamic> signupJson = resultData['signup'];
+                          Map<String, dynamic> signupJson = resultData['signup'];
 
-                        var userData = UserData.fromJSON(signupJson);
-                        var userDataModel = Provider.of<UserDataModel>(context);
+                          var userData = UserData.fromJSON(signupJson);
+                          var userDataModel = Provider.of<UserDataModel>(context);
 
-                        userDataModel
-                          ..update(userData)
-                          ..setAuthenticated(true)
-                          ..saveToFile(signupJson);
+                          userDataModel
+                            ..update(userData)
+                            ..setAuthenticated(true)
+                            ..saveToFile(signupJson);
 
-                        Credentials(email: email, password: password).saveToFile();
+                          Credentials(email: email, password: password).saveToFile();
 
-                        Provider.of<HttpClientsModel>(context).setToken(userData.token);
+                          Provider.of<HttpClientsModel>(context).setToken(userData.token);
 
-                        setState(() {
-                          _isLoading = false;
-                          _isCompleted = true;
-                        });
-                      },
-                      update: (Cache cache, QueryResult result) {
-                        setState(() {
-                          _isLoading = false;
-                        });
+                          setState(() {
+                            _isLoading = false;
+                            _isCompleted = true;
+                          });
+                        },
 
-                        if (result.hasErrors) {
-                          for (var error in result.errors) {
+                        onError: (OperationException error) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+
+                          for (var error in error.graphqlErrors) {
                             Scaffold.of(context)
                               .showSnackBar(
                                 SnackBar(
@@ -202,8 +202,8 @@ class SignupState extends State<Signup> {
                                 ),
                               );
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
                   ],
                 ),

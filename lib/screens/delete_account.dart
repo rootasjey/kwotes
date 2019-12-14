@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/models/http_clients.dart';
@@ -234,11 +235,11 @@ class DeleteAccountState extends State<DeleteAccount> {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
     return httpClientModel.defaultClient.value.mutate(MutationOptions(
-      document: deleteAccount,
+      documentNode: parseString(deleteAccount),
       variables: {'password': password},
     ))
     .then((queryResult) {
-      if (queryResult.hasErrors) {
+      if (queryResult.hasException) {
         return TryResponse(hasErrors: true, reason: ErrorReason.unknown);
       }
 

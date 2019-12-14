@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/boolean_message.dart';
@@ -140,14 +141,14 @@ class NameFieldState extends State<NameField> {
 
     return client.value.mutate(
       MutationOptions(
-        document: isNameValid,
+        documentNode: parseString(isNameValid),
         variables: {'name': nameValue},
       ))
       .then((queryResult) {
-        if (queryResult.hasErrors) {
+        if (queryResult.hasException) {
           return BooleanMessage(
             boolean: false,
-            message: queryResult.errors.first.toString(),
+            message: queryResult.exception.graphqlErrors.first.toString(),
           );
         }
 

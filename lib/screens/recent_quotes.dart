@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
@@ -29,12 +30,12 @@ class RecentQuotesState extends State<RecentQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryRecentQuotes(),
+        documentNode: parseString(queryRecentQuotes()),
         variables: {'lang': lang, 'order': order},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.errors != null) {
-          return ErrorComponent(description: result.errors.toString(),);
+        if (result.hasException) {
+          return ErrorComponent(description: result.exception.graphqlErrors.toString(),);
         }
 
         if (result.loading) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/models/http_clients.dart';
@@ -130,38 +131,36 @@ class SigninState extends State<Signin> {
                         );
                       },
                       options: MutationOptions(
-                        document: mutationSignin(),
-                      ),
-                      onCompleted: (dynamic resultData) {
-                        setState(() {
-                          _isLoading = false;
-                        });
+                        documentNode: parseString(mutationSignin()),
+                        onCompleted: (dynamic resultData) {
+                          setState(() {
+                            _isLoading = false;
+                          });
 
-                        if (resultData == null) { return; }
+                          if (resultData == null) { return; }
 
-                        Map<String, dynamic> signinJson = resultData['signin'];
+                          Map<String, dynamic> signinJson = resultData['signin'];
 
-                        var userData = UserData.fromJSON(signinJson);
-                        var userDataModel = Provider.of<UserDataModel>(context);
+                          var userData = UserData.fromJSON(signinJson);
+                          var userDataModel = Provider.of<UserDataModel>(context);
 
-                        userDataModel
-                          ..update(userData)
-                          ..setAuthenticated(true)
-                          ..saveToFile(signinJson);
+                          userDataModel
+                            ..update(userData)
+                            ..setAuthenticated(true)
+                            ..saveToFile(signinJson);
 
-                        Credentials(email: email, password: password).saveToFile();
+                          Credentials(email: email, password: password).saveToFile();
 
-                        Provider.of<HttpClientsModel>(context).setToken(userData.token);
+                          Provider.of<HttpClientsModel>(context).setToken(userData.token);
 
-                        Navigator.of(context).pop();
-                      },
-                      update: (Cache cache, QueryResult result) {
-                        setState(() {
-                          _isLoading = false;
-                        });
+                          Navigator.of(context).pop();
+                        },
+                        onError: (OperationException error) {
+                          setState(() {
+                            _isLoading = false;
+                          });
 
-                        if (result.hasErrors) {
-                          for (var error in result.errors) {
+                          for (var error in error.graphqlErrors) {
                             Scaffold.of(context)
                               .showSnackBar(
                                 SnackBar(
@@ -174,7 +173,7 @@ class SigninState extends State<Signin> {
                               );
                           }
                         }
-                      },
+                      ),
                     ),
                   ],
                 ),

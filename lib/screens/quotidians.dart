@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
@@ -15,11 +16,15 @@ class Quotidians extends StatelessWidget {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryQuotidians(),
+        documentNode: parseString(queryQuotidians()),
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.errors != null) {
-          if (result.errors.first.message.contains('No host specified in URI')) {
+        if (result.hasException) {
+          final exception = result.exception;
+
+          if (exception.clientException
+            .message.contains('No host specified in URI')) {
+
             return LoadingComponent(
               title: 'Loading quotidians',
               padding: EdgeInsets.all(30.0),
@@ -27,7 +32,7 @@ class Quotidians extends StatelessWidget {
           }
 
           return ErrorComponent(
-            description: result.errors.first.message,
+            description: exception.graphqlErrors.first.message,
             title: 'Quotidians',
           );
         }
@@ -149,7 +154,7 @@ class Quotidians extends StatelessWidget {
 
   String queryQuotidians() {
     return """
-      query {
+      query Quotidian {
         quotidian {
           id
           quote {

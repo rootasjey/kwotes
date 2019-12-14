@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/boolean_message.dart';
@@ -152,14 +153,14 @@ class PasswordFieldState extends State<PasswordField> {
 
     return client.value.mutate(
       MutationOptions(
-        document: isPasswordValid,
+        documentNode: parseString(isPasswordValid),
         variables: {'password': passwordValue},
       ))
       .then((queryResult) {
-        if (queryResult.hasErrors) {
+        if (queryResult.hasException) {
           return BooleanMessage(
             boolean: false,
-            message: queryResult.errors.first.toString(),
+            message: queryResult.exception.graphqlErrors.first.toString(),
           );
         }
 

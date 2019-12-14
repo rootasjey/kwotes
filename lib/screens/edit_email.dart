@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/email_field.dart';
 import 'package:memorare/components/loading.dart';
@@ -162,15 +163,15 @@ class _EditEmailState extends State<EditEmail> {
 
     return httpClientModel.defaultClient.value.mutate(
       MutationOptions(
-        document: updateEmail,
+        documentNode: parseString(updateEmail),
         variables: {'newEmail': newEmail},
       )
     )
     .then((queryResult) {
-      if (queryResult.hasErrors) {
+      if (queryResult.hasException) {
         return BooleanMessage(
           boolean: false,
-          message: queryResult.errors.first.message
+          message: queryResult.exception.graphqlErrors.first.message
         );
       }
 

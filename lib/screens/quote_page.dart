@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
@@ -23,12 +24,14 @@ class _QuotePageState extends State<QuotePage> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryQuote(),
+        documentNode: parseString(queryQuote()),
         variables: {'id': widget.quoteId},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.errors != null) {
-          if (result.errors.first.message.contains('No host specified in URI')) {
+        if (result.hasException) {
+          if (result.exception.graphqlErrors
+            .first.message.contains('No host specified in URI')) {
+
             return LoadingComponent(
               title: 'Loading quotidians',
               padding: EdgeInsets.all(30.0),
@@ -36,7 +39,7 @@ class _QuotePageState extends State<QuotePage> {
           }
 
           return ErrorComponent(
-            description: result.errors.first.message,
+            description: result.exception.graphqlErrors.first.message,
             title: 'Quotidians',
           );
         }

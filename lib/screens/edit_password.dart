@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/password_field.dart';
@@ -211,15 +212,15 @@ class _EditPasswordState extends State<EditPassword> {
 
     return httpClientModel.defaultClient.value.mutate(
       MutationOptions(
-      document: updatePassword,
+      documentNode: parseString(updatePassword),
       variables: {
         'oldPassword': _oldPassword,
         'newPassword': _confirmPassword,
       },
     ))
     .then((queryResult) {
-      if (queryResult.hasErrors) {
-        return BooleanMessage(boolean: false, message: queryResult.errors.first.message);
+      if (queryResult.hasException) {
+        return BooleanMessage(boolean: false, message: queryResult.exception.graphqlErrors.first.message);
       }
 
       return BooleanMessage(boolean: true,);

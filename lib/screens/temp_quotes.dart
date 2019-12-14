@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
@@ -30,13 +31,13 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryTempQuotes(),
+        documentNode: parseString(queryTempQuotes()),
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.hasErrors) {
+        if (result.hasException) {
           if (attempts < maxAttempts &&
-            ErrorComponent.isJWTRelated(result.errors.first.toString())) {
+            ErrorComponent.isJWTRelated(result.exception.graphqlErrors.first.message)) {
 
             attempts++;
 
@@ -52,7 +53,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           }
 
           return ErrorComponent(
-            description: result.errors.first.toString(),
+            description: result.exception.graphqlErrors.first.message,
             title: 'Proposed Quotes',
           );
         }
@@ -147,14 +148,14 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
     return httpClientModel.defaultClient.value.mutate(MutationOptions(
-      document: mutationValidateTempQuote,
+      documentNode: parseString(mutationValidateTempQuote),
       variables: {'id': id, 'ignoreStatus':  true},
     ))
     .then((queryResult) {
-      if (queryResult.hasErrors) {
+      if (queryResult.hasException) {
         return BooleanMessage(
           boolean: false,
-          message: queryResult.errors.first.message
+          message: queryResult.exception.graphqlErrors.first.message
         );
       }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
@@ -15,12 +16,12 @@ class _TopicsState extends State<Topics> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryTopics(),
+        documentNode: parseString(queryTopics()),
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.hasErrors) {
+        if (result.hasException) {
           return ErrorComponent(
-            description: result.errors.first.message,
+            description: result.exception.graphqlErrors.first.message,
             title: 'topics',
           );
         }

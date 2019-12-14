@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/error.dart';
@@ -27,13 +28,13 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
     return Scaffold(
       body: Query(
         options: QueryOptions(
-          document: queryQuotes(),
+          documentNode: parseString(queryQuotes()),
           variables: {'topics': [widget.topic]},
         ),
         builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore}) {
-          if (result.hasErrors) {
+          if (result.hasException) {
             return ErrorComponent(
-              description: result.errors.first.message,
+              description: result.exception.graphqlErrors.first.message,
             );
           }
 

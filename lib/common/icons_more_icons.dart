@@ -16,6 +16,14 @@
 ///         Author:    Aristeides Stathopoulos
 ///         License:   SIL (http://scripts.sil.org/OFL)
 ///         Homepage:  http://aristeides.com/
+/// * Linearicons Free, Copyright (C) Linearicons.com
+///         Author:    Perxis
+///         License:   CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+///         Homepage:  https://linearicons.com
+/// * Font Awesome, Copyright (C) 2016 by Dave Gandy
+///         Author:    Dave Gandy
+///         License:   SIL ()
+///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
 import 'package:flutter/widgets.dart';
 
@@ -25,4 +33,6 @@ class IconsMore {
   static const _kFontFam = 'IconsMore';
 
   static const IconData tags = const IconData(0xe802, fontFamily: _kFontFam);
+  static const IconData earth = const IconData(0xe853, fontFamily: _kFontFam);
+  static const IconData wikipedia_w = const IconData(0xf266, fontFamily: _kFontFam);
 }

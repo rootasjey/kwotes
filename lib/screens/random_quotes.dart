@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/types/quote.dart';
@@ -20,16 +21,16 @@ class RandomQuotesState extends State<RandomQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        document: queryRandomQuotes(),
+        documentNode: parseString(queryRandomQuotes()),
         variables: {'lang': lang},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.errors != null) {
+        if (result.hasException) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(result.errors.toString()),
+              Text(result.exception.graphqlErrors.first.message),
             ],
           );
         }
