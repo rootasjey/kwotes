@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 
 class MediumQuoteCard extends StatelessWidget {
@@ -36,7 +37,7 @@ class MediumQuoteCard extends StatelessWidget {
                     child: Text(
                       '${quote.name}',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: FontSize.mediumCard(quote.name),
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
