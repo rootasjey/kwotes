@@ -170,7 +170,7 @@ class _AuthorPageState extends State<AuthorPage> {
                             Padding(
                               padding: EdgeInsets.only(top: 40.0),
                               child: SizedBox(
-                                height: 300.0,
+                                height: 330.0,
                                 child: Swiper(
                                   itemCount: quotes.length,
                                   itemBuilder: (BuildContext context, int index) {
