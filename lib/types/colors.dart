@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
 
-class ThemeColor {
+class ThemeColor extends ChangeNotifier {
   static Color primary = Color(0xFF706FD3);
   static Color secondary = Color(0xFFF56498);
   static Color validation = Color(0xFF02ECC7);
   static Color success = Color(0xFF2ECC71);
   static Color error = Color(0xFFE74C3C);
+
+  Color prime = Color(0xFF706FD3);
+
+  void updatePrimary(String topic) {
+    final Color color = topicColor(topic);
+    prime = color;
+    notifyListeners();
+  }
+
+  Map<int, Color> swatchColor() {
+    Map<int, Color> accentSwatchColor = {
+      50: Color.fromRGBO(prime.red, prime.green, prime.blue, .1),
+      100: Color.fromRGBO(prime.red, prime.green, prime.blue, .2),
+      200: Color.fromRGBO(prime.red, prime.green, prime.blue, .3),
+      300: Color.fromRGBO(prime.red, prime.green, prime.blue, .4),
+      400: Color.fromRGBO(prime.red, prime.green, prime.blue, .5),
+      500: Color.fromRGBO(prime.red, prime.green, prime.blue, .6),
+      600: Color.fromRGBO(prime.red, prime.green, prime.blue, .7),
+      700: Color.fromRGBO(prime.red, prime.green, prime.blue, .8),
+      800: Color.fromRGBO(prime.red, prime.green, prime.blue, .9),
+      900: Color.fromRGBO(prime.red, prime.green, prime.blue, 1),
+    };
+
+    return accentSwatchColor;
+  }
+
+  MaterialColor materialColor() {
+    return MaterialColor(prime.value, swatchColor());
+  }
 
   static Color topicColor(String topic) {
     switch (topic) {

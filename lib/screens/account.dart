@@ -6,6 +6,7 @@ import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/temp_quotes.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/credentials.dart';
 import 'package:provider/provider.dart';
 
@@ -53,7 +54,7 @@ class Account extends StatelessWidget {
       Padding(
         padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
         child: RaisedButton(
-          color: Color(0xFFF56498),
+          color: Provider.of<ThemeColor>(context).prime,
           onPressed: () {
             Provider.of<UserDataModel>(context)
               ..clear()

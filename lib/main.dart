@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/screens/account.dart';
@@ -10,6 +11,7 @@ import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/quotidian.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(App());
@@ -40,6 +42,7 @@ class AppState extends State<App> {
       providers: [
         ChangeNotifierProvider<UserDataModel>(create: (context) => UserDataModel(),),
         ChangeNotifierProvider<HttpClientsModel>(create: (context) => HttpClientsModel(apiConfig: _apiConfig),),
+        ChangeNotifierProvider<ThemeColor>(create: (context) => ThemeColor(),),
       ],
       child: Main(),
     );
@@ -76,6 +79,12 @@ class MainState extends State<Main> {
           .then((_) {
             Provider.of<HttpClientsModel>(context)
               .setToken(userDataModel.data.token);
+          })
+          .then((_) {
+            fetchTodayColor()
+              .then((topic) {
+                Provider.of<ThemeColor>(context).updatePrimary(topic);
+              });
           });
       });
   }
@@ -86,6 +95,28 @@ class MainState extends State<Main> {
 
     Map<String, dynamic> apiConfig = jsonDecode(jsonFile);
     return apiConfig;
+  }
+
+  Future<String> fetchTodayColor() async {
+    final String queryQuotidianTopic = """
+      query {
+        quotidian {
+          quote {
+            topics
+          }
+        }
+      }
+    """;
+
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: parseString(queryQuotidianTopic),
+        )
+      ).then((QueryResult queryResult) {
+        final quotidian = Quotidian.fromJSON(queryResult.data['quotidian']);
+        return quotidian.quote.topics.first;
+      });
   }
 
   void _onItemTapped(int index) {
@@ -103,7 +134,7 @@ class MainState extends State<Main> {
         title: 'Memorare',
         theme: ThemeData(
           fontFamily: 'Comfortaa',
-          primarySwatch: MaterialColor(0xFF706FD2, accentSwatchColor),
+          primarySwatch: Provider.of<ThemeColor>(context).materialColor(),
         ),
         home: Scaffold(
           body: Container(

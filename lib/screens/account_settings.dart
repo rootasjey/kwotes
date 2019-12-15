@@ -19,7 +19,7 @@ class _AccountSettingsState extends State<AccountSettings> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account Settings'),
+        title: Text('Account Settings', style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
