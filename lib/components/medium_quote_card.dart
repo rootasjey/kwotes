@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
@@ -54,20 +55,63 @@ class MediumQuoteCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 30.0,
-            child: Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Text(
-                quote.author.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700
-                ),
-              ),
-            )
-          )
+
+          if (quote.author != null)
+            authorElement(context),
+
+          if (quote.references != null && quote.references.length > 0)
+            referenceElement(context),
         ],
       ),
+    );
+  }
+
+  Widget authorElement(BuildContext context) {
+    return SizedBox(
+      height: 30.0,
+      child: InkWell(
+        child: Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Text(
+            quote.author.name,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontWeight: FontWeight.w700
+            ),
+          ),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return AuthorPage(
+                  authorId: quote.author.id,
+                  authorName: quote.author.name,
+                );
+              }
+            )
+          );
+        },
+      )
+    );
+  }
+
+  Widget referenceElement(BuildContext context) {
+    return SizedBox(
+      height: 30.0,
+      child: InkWell(
+        child: Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Text(
+            quote.references.first.name,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontWeight: FontWeight.w700
+            ),
+          ),
+        ),
+        onTap: () {},
+      )
     );
   }
 }
