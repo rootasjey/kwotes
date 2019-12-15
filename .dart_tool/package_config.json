@@ -86,6 +86,12 @@
       "languageVersion": "2.2"
     },
     {
+      "name": "flutter_web_plugins",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "gql",
       "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/gql-0.11.1",
       "packageUri": "lib/",
@@ -170,6 +176,12 @@
       "languageVersion": "1.24"
     },
     {
+      "name": "plugin_platform_interface",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "provider",
       "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/provider-3.2.0",
       "packageUri": "lib/",
@@ -242,6 +254,30 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "url_launcher",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_macos-0.0.1+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_platform_interface-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_web-0.1.0+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "uuid_enhanced",
       "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/uuid_enhanced-3.0.2",
       "packageUri": "lib/",
@@ -272,7 +308,7 @@
       "languageVersion": "2.2"
     }
   ],
-  "generated": "2019-12-15T12:28:09.576427Z",
+  "generated": "2019-12-15T14:06:05.978433Z",
   "generator": "pub",
   "generatorVersion": "2.7.0"
 }

@@ -1,3 +1,6 @@
 # This is a generated file; do not edit or check into version control.
 connectivity=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.6+1/
 path_provider=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.5.1/
+url_launcher=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.4.1/
+url_launcher_macos=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_macos-0.0.1+2/
+url_launcher_web=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_web-0.1.0+2/
