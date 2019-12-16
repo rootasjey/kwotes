@@ -19,7 +19,8 @@ class _AccountSettingsState extends State<AccountSettings> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account Settings', style: TextStyle(color: Colors.white)),
+        backgroundColor: Provider.of<ThemeColor>(context).accent,
+        title: Text('Account Settings'),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
@@ -139,7 +140,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 Padding(
                   padding: EdgeInsets.only(top: 20.0),
                   child: FlatButton(
-                    color: ThemeColor.secondary,
+                    color: ThemeColor.error,
                     child: Padding(
                       padding: EdgeInsets.all(15.0),
                       child: Row(

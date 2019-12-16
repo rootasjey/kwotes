@@ -69,7 +69,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Proposed Quotes'),
+            backgroundColor: Provider.of<ThemeColor>(context).accent,
+            title: Text('Temporary Quotes'),
           ),
           floatingActionButton: FilterFab(
             onOrderChanged: (int newOrder) {

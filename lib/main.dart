@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -44,12 +46,25 @@ class AppState extends State<App> {
         ChangeNotifierProvider<HttpClientsModel>(create: (context) => HttpClientsModel(apiConfig: _apiConfig),),
         ChangeNotifierProvider<ThemeColor>(create: (context) => ThemeColor(),),
       ],
-      child: Main(),
+      child: DynamicTheme(
+        defaultBrightness: Brightness.light,
+        data: (brightness) => ThemeData(
+          fontFamily: 'Comfortaa',
+          brightness: brightness,
+        ),
+        themedWidgetBuilder: (context, theme) {
+          return Main(theme: theme,);
+        },
+      ),
     );
   }
 }
 
 class Main extends StatefulWidget {
+  final ThemeData theme;
+
+  Main({this.theme});
+
   @override
   MainState createState() => MainState();
 }
@@ -83,7 +98,7 @@ class MainState extends State<Main> {
           .then((_) {
             fetchTodayColor()
               .then((topic) {
-                Provider.of<ThemeColor>(context).updatePrimary(topic);
+                Provider.of<ThemeColor>(context).updatePalette(context, topic);
               });
           });
       });
@@ -127,15 +142,14 @@ class MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = Provider.of<ThemeColor>(context);
+
     return GraphQLProvider(
       client: Provider.of<HttpClientsModel>(context).defaultClient,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Memorare',
-        theme: ThemeData(
-          fontFamily: 'Comfortaa',
-          primarySwatch: Provider.of<ThemeColor>(context).materialColor(),
-        ),
+        theme: widget.theme,
         home: Scaffold(
           body: Container(
             child: _listScreens.elementAt(_selectedIndex),
@@ -161,24 +175,11 @@ class MainState extends State<Main> {
             ],
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
-            selectedItemColor: ThemeColor.primary,
-            unselectedItemColor: Colors.black54,
+            selectedItemColor: themeColor.accent,
+            unselectedItemColor: themeColor.background,
           ),
         ),
       ),
     );
   }
 }
-
-Map<int, Color> accentSwatchColor = {
-  50: Color.fromRGBO(112, 111, 210, .1),
-  100: Color.fromRGBO(112, 111, 210, .2),
-  200: Color.fromRGBO(112, 111, 210, .3),
-  300: Color.fromRGBO(112, 111, 210, .4),
-  400: Color.fromRGBO(112, 111, 210, .5),
-  500: Color.fromRGBO(112, 111, 210, .6),
-  600: Color.fromRGBO(112, 111, 210, .7),
-  700: Color.fromRGBO(112, 111, 210, .8),
-  800: Color.fromRGBO(112, 111, 210, .9),
-  900: Color.fromRGBO(112, 111, 210, 1),
-};

@@ -5,8 +5,10 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_quote_card.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_response.dart';
+import 'package:provider/provider.dart';
 
 class MyPublishedQuotes extends StatefulWidget {
   @override
@@ -65,6 +67,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Provider.of<ThemeColor>(context).accent,
             title: Text('Published Quotes'),
           ),
           floatingActionButton: FilterFab(

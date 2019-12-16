@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/account_settings.dart';
+import 'package:memorare/screens/app_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
@@ -54,7 +55,7 @@ class Account extends StatelessWidget {
       Padding(
         padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
         child: RaisedButton(
-          color: Provider.of<ThemeColor>(context).prime,
+          color: Provider.of<ThemeColor>(context).accent,
           onPressed: () {
             Provider.of<UserDataModel>(context)
               ..clear()
@@ -126,6 +127,21 @@ class Account extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return MyTempQuotes();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.settings, size: 30.0,),
+                title: Text('App settings', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AppPageSettings();
                     }
                   )
                 );

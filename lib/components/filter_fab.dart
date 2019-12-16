@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:provider/provider.dart';
 
 class FilterFab extends StatefulWidget {
   final int order;
@@ -73,7 +74,7 @@ class _FilterFabState extends State<FilterFab> {
         );
       },
       child: Icon(Icons.filter_list),
-      backgroundColor: ThemeColor.secondary,
+      backgroundColor: Provider.of<ThemeColor>(context).accent,
     );
   }
 }
