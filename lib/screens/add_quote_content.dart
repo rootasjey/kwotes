@@ -14,17 +14,16 @@ class AddQuoteContent extends StatefulWidget {
   }): super(key: key);
 
   @override
-  AddQuoteContentState createState() => AddQuoteContentState();
+  _AddQuoteContentState createState() => _AddQuoteContentState();
 }
 
-class AddQuoteContentState extends State<AddQuoteContent> {
-  String _lang = 'en';
-  String _name = '';
-
-  String get lang => _lang;
-  String get name => _name;
+class _AddQuoteContentState extends State<AddQuoteContent> {
+  String lang = 'en';
+  String name = '';
 
   List<String> langs = ['en', 'fr'];
+
+  final _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +53,14 @@ class AddQuoteContentState extends State<AddQuoteContent> {
             ),
 
             Padding(
-              padding: EdgeInsets.all(40.0),
+              padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 40.0),
               child: TextField(
                 maxLines: null,
                 autofocus: true,
+                controller: _nameController,
                 keyboardType: TextInputType.multiline,
                 onChanged: (newValue) {
-                  _name = newValue;
+                  name = newValue;
                   AddQuoteInputs.name = newValue;
                 },
                 decoration: InputDecoration(
@@ -76,8 +76,27 @@ class AddQuoteContentState extends State<AddQuoteContent> {
               ),
             ),
 
+            Padding(
+              padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      AddQuoteInputs.clearQuoteName();
+                      _nameController.clear();
+                    },
+                    child: Text(
+                      'Clear quote content',
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             DropdownButton<String>(
-              value: _lang,
+              value: lang,
               style: TextStyle(
                 color: color,
                 fontSize: 20.0,
@@ -89,7 +108,7 @@ class AddQuoteContentState extends State<AddQuoteContent> {
               ),
               onChanged: (newValue) {
                 setState(() {
-                  _lang = newValue;
+                  lang = newValue;
                   AddQuoteInputs.lang = newValue;
                 });
               },
