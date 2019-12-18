@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:provider/provider.dart';
 
 class AddQuoteAuthor extends StatefulWidget {
   final int step;
@@ -14,26 +15,25 @@ class AddQuoteAuthor extends StatefulWidget {
 }
 
 class AddQuoteAuthorState extends State<AddQuoteAuthor> {
-  String _imgUrl  = '';
-  String _name    = '';
-  String _job     = '';
-  String _summary = '';
-  String _url     = '';
-  String _wikiUrl = '';
+  String imgUrl  = '';
+  String name    = '';
+  String job     = '';
+  String summary = '';
+  String url     = '';
+  String wikiUrl = '';
 
   String _tempImgUrl = '';
 
-  String get imgUrl   => _imgUrl;
-  String get name     => _name;
-  String get job      => _job;
-  String get summary  => _summary;
-  String get url      => _url;
-  String get wikiUrl  => _wikiUrl;
+  final _nameController = TextEditingController();
+  final _summaryController = TextEditingController();
+  final _jobController = TextEditingController();
+  final _urlController = TextEditingController();
+  final _wikiController = TextEditingController();
 
   @override
   void initState() {
     setState(() {
-      _imgUrl = AddQuoteInputs.authorImgUrl;
+      imgUrl = AddQuoteInputs.authorImgUrl;
     });
 
     super.initState();
@@ -41,7 +41,7 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   dispose() {
-    AddQuoteInputs.authorImgUrl = _imgUrl;
+    AddQuoteInputs.authorImgUrl = imgUrl;
     super.dispose();
   }
 
@@ -87,7 +87,7 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           autofocus: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: _imgUrl.length > 0 ? _imgUrl : 'Type a new URL',
+                            labelText: imgUrl.length > 0 ? imgUrl : 'Type a new URL',
                           ),
                           onChanged: (newValue) {
                             _tempImgUrl = newValue;
@@ -104,10 +104,10 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             child: Text('Save',),
                             onPressed: () {
                               setState(() {
-                                _imgUrl = _tempImgUrl;
+                                imgUrl = _tempImgUrl;
                               });
 
-                              AddQuoteInputs.authorImgUrl = _imgUrl;
+                              AddQuoteInputs.authorImgUrl = imgUrl;
                               Navigator.of(context).pop();
                             },
                           ),
@@ -116,13 +116,18 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     }
                   );
                 },
-                child: _imgUrl.length > 0 ?
+                child: imgUrl.length > 0 ?
                 CircleAvatar(
-                  backgroundImage: NetworkImage(_imgUrl),
+                  backgroundImage: NetworkImage(imgUrl),
                   radius: 80.0,
                 ) :
                 CircleAvatar(
-                  child: Icon(Icons.add, size: 50.0,),
+                  child: Icon(
+                    Icons.add,
+                    size: 50.0,
+                    color: Provider.of<ThemeColor>(context).accent,
+                  ),
+                  backgroundColor: Colors.black12,
                   radius: 80.0,
                 ),
               )
@@ -131,11 +136,12 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
             SizedBox(
               width: 200.0,
               child: TextField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
                 onChanged: (newValue) {
-                  _name = newValue;
+                  name = newValue;
                   AddQuoteInputs.authorName = newValue;
                 },
               ),
@@ -143,11 +149,12 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
             SizedBox(
               width: 200.0,
               child: TextField(
+                controller: _jobController,
                 decoration: InputDecoration(
                   labelText: 'Job',
                 ),
                 onChanged: (newValue) {
-                  _job = newValue;
+                  job = newValue;
                   AddQuoteInputs.authorJob = newValue;
                 },
               ),
@@ -158,6 +165,7 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
               child: SizedBox(
                 width: 300,
                 child: TextField(
+                  controller: _summaryController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Summary',
@@ -166,7 +174,7 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   minLines: 4,
                   maxLines: null,
                   onChanged: (newValue) {
-                    _summary = newValue;
+                    summary = newValue;
                     AddQuoteInputs.authorSummary = newValue;
                   },
                 ),
@@ -176,34 +184,56 @@ class AddQuoteAuthorState extends State<AddQuoteAuthor> {
             SizedBox(
               width: 300,
               child: TextField(
+                controller: _wikiController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(IconsMore.wikipedia_w),
                   labelText: 'Wikipedia URL'
                 ),
                 onChanged: (newValue) {
-                  _wikiUrl = newValue;
+                  wikiUrl = newValue;
                   AddQuoteInputs.authorWikiUrl = newValue;
                 },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 100.0),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: SizedBox(
                 width: 300,
                 child: TextField(
+                  controller: _urlController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(IconsMore.earth),
                     labelText: 'Website URL'
                   ),
                   onChanged: (newValue) {
-                    _url = newValue;
+                    url = newValue;
                     AddQuoteInputs.authorUrl = newValue;
                   },
                 ),
               ),
             ),
+
+            FlatButton(
+              onPressed: () {
+                AddQuoteInputs.clearAuthor();
+
+                imgUrl = '';
+
+                _nameController.clear();
+                _summaryController.clear();
+                _jobController.clear();
+                _urlController.clear();
+                _wikiController.clear();
+              },
+              child: Text(
+                'Clear author information',
+                style: TextStyle(color: Colors.black54)
+              ),
+            ),
+
+            Padding(padding: EdgeInsets.only(bottom: 100.0),)
           ],
         ),
       ],
