@@ -17,21 +17,19 @@ class AddQuoteTopics extends StatefulWidget {
   }): super(key: key);
 
   @override
-  AddQuoteTopicsState createState() => AddQuoteTopicsState();
+  _AddQuoteTopicsState createState() => _AddQuoteTopicsState();
 }
 
-class AddQuoteTopicsState extends State<AddQuoteTopics> {
-  List<String> _topics = [];
-  List<String> _sampleTopics = [];
+class _AddQuoteTopicsState extends State<AddQuoteTopics> {
+  List<String> topics = [];
+  List<String> sampleTopics = [];
 
   TextEditingController _textEditingController = TextEditingController();
-
-  List<String> get topics => _topics;
 
   @override
   void initState() {
     setState(() {
-      _topics.addAll(AddQuoteInputs.topics);
+      topics.addAll(AddQuoteInputs.topics);
     });
 
     super.initState();
@@ -39,12 +37,12 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   @override
   void didChangeDependencies() {
-    if (_sampleTopics.length > 0) { return; }
+    if (sampleTopics.length > 0) { return; }
 
     fetchSampleTopics()
       .then((sampleResults) {
         setState(() {
-          _sampleTopics = sampleResults;
+          sampleTopics = sampleResults;
         });
       });
 
@@ -53,7 +51,7 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   @override
   void dispose() {
-    AddQuoteInputs.topics = _topics;
+    AddQuoteInputs.topics = topics;
 
     _textEditingController.dispose();
     super.dispose();
@@ -126,11 +124,12 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
               )
             ),
 
-            if (_topics.length == 0)
+            if (topics.length == 0)
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
                 child: Text(
                   'You have not added any topic yet.',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18.0,
                     color: themeColor.background,
@@ -138,29 +137,50 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
                 ),
               ),
 
-            if (_topics.length > 0)
-              Wrap(
-                children: _topics.map<Widget>((topic) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: 5.0),
-                    child: Chip(
-                      backgroundColor: ThemeColor.topicColor(topic),
-                      padding: EdgeInsets.all(5.0),
-                      label: Text(topic, style: TextStyle(color: Colors.white),),
-                      deleteIconColor: Colors.white,
-                      onDeleted: () {
-                        setState(() {
-                          _topics.removeWhere((entry) => entry == topic);
-                        });
+            if (topics.length > 0)
+              Column(
+                children: <Widget>[
+                  Wrap(
+                    children: topics.map<Widget>((topic) {
+                      return Padding(
+                        padding: EdgeInsets.only(right: 5.0),
+                        child: Chip(
+                          backgroundColor: ThemeColor.topicColor(topic),
+                          padding: EdgeInsets.all(5.0),
+                          label: Text(topic, style: TextStyle(color: Colors.white),),
+                          deleteIconColor: Colors.white,
+                          onDeleted: () {
+                            setState(() {
+                              topics.removeWhere((entry) => entry == topic);
+                            });
 
-                        AddQuoteInputs.topics = _topics;
+                            AddQuoteInputs.topics = topics;
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: FlatButton(
+                      padding: EdgeInsets.all(10.0),
+                      onPressed: () {
+                        setState(() {
+                          AddQuoteInputs.clearTopics();
+                          topics.clear();
+                        });
                       },
+                      child: Text(
+                        'Clear all topics',
+                        style: TextStyle(color: Colors.black54),
+                      ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                ],
               ),
 
-            if (_sampleTopics.length > 0)
+            if (sampleTopics.length > 0)
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
@@ -190,7 +210,7 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40.0),
                       child: Wrap(
-                        children: _sampleTopics.map<Widget>((topic) {
+                        children: sampleTopics.map<Widget>((topic) {
                           return Padding(
                             padding: EdgeInsets.only(right: 5.0),
                             child: ActionChip(
@@ -198,11 +218,11 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
                               label: Text(topic),
                               onPressed: () {
                                 setState(() {
-                                  _topics.add(topic);
-                                  _sampleTopics.removeWhere((entry) => entry == topic);
+                                  topics.add(topic);
+                                  sampleTopics.removeWhere((entry) => entry == topic);
                                 });
 
-                                AddQuoteInputs.topics = _topics;
+                                AddQuoteInputs.topics = topics;
                               },
                             ),
                           );
@@ -223,10 +243,10 @@ class AddQuoteTopicsState extends State<AddQuoteTopics> {
       return;
     }
 
-    if (_topics.contains(topic)) { return; }
+    if (topics.contains(topic)) { return; }
 
     setState(() {
-      _topics.add(topic);
+      topics.add(topic);
     });
   }
 
