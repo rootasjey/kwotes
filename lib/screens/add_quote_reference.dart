@@ -14,36 +14,34 @@ class AddQuoteReference extends StatefulWidget {
   }): super(key: key);
 
   @override
-  AddQuoteReferenceState createState() => AddQuoteReferenceState();
+  _AddQuoteReferenceState createState() => _AddQuoteReferenceState();
 }
 
-class AddQuoteReferenceState extends State<AddQuoteReference> {
-  String _imgUrl  = '';
-  String _lang    = 'en';
-  String _name    = '';
-  String _type     = '';
-  String _subType = '';
-  String _summary = '';
-  String _url     = '';
-  String _wikiUrl = '';
+class _AddQuoteReferenceState extends State<AddQuoteReference> {
+  String imgUrl  = '';
+  String lang    = 'en';
+  String name    = '';
+  String type    = '';
+  String subType = '';
+  String summary = '';
+  String url     = '';
+  String wikiUrl = '';
 
-  String _tempImgUrl = '';
+  String tempImgUrl = '';
 
   List<String> langs = ['en', 'fr'];
 
-  String get imgUrl   => _imgUrl;
-  String get lang     => _lang;
-  String get name     => _name;
-  String get type     => _type;
-  String get subType  => _subType;
-  String get summary  => _summary;
-  String get url      => _url;
-  String get wikiUrl  => _wikiUrl;
+  final _nameController = TextEditingController();
+  final _typeController = TextEditingController();
+  final _subTypeController = TextEditingController();
+  final _summaryController = TextEditingController();
+  final _urlController = TextEditingController();
+  final _wikiUrlController = TextEditingController();
 
   @override
   void initState() {
     setState(() {
-      _imgUrl = AddQuoteInputs.refImgUrl;
+      imgUrl = AddQuoteInputs.refImgUrl;
     });
 
     super.initState();
@@ -51,7 +49,7 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
 
   @override
   dispose() {
-    AddQuoteInputs.refImgUrl = _imgUrl;
+    AddQuoteInputs.refImgUrl = imgUrl;
     super.dispose();
   }
 
@@ -97,10 +95,10 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
                           autofocus: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: _imgUrl.length > 0 ? _imgUrl : 'Type a new URL',
+                            labelText: imgUrl.length > 0 ? imgUrl : 'Type a new URL',
                           ),
                           onChanged: (newValue) {
-                            _tempImgUrl = newValue;
+                            tempImgUrl = newValue;
                           },
                         ),
                         actions: <Widget>[
@@ -114,10 +112,10 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
                             child: Text('Save',),
                             onPressed: () {
                               setState(() {
-                                _imgUrl = _tempImgUrl;
+                                imgUrl = tempImgUrl;
                               });
 
-                              AddQuoteInputs.refImgUrl = _imgUrl;
+                              AddQuoteInputs.refImgUrl = imgUrl;
                               Navigator.of(context).pop();
                             },
                           ),
@@ -126,9 +124,9 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
                     }
                   );
                 },
-                child: _imgUrl.length > 0 ?
+                child: imgUrl.length > 0 ?
                 CircleAvatar(
-                  backgroundImage: NetworkImage(_imgUrl),
+                  backgroundImage: NetworkImage(imgUrl),
                   radius: 80.0,
                 ) :
                 Card(
@@ -144,11 +142,12 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
             SizedBox(
               width: 200.0,
               child: TextField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
                 onChanged: (newValue) {
-                  _name = newValue;
+                  name = newValue;
                   AddQuoteInputs.refName = newValue;
                 },
               ),
@@ -156,11 +155,12 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
             SizedBox(
               width: 200.0,
               child: TextField(
+                controller: _typeController,
                 decoration: InputDecoration(
                   labelText: 'Type',
                 ),
                 onChanged: (newValue) {
-                  _type = newValue;
+                  type = newValue;
                   AddQuoteInputs.refType = newValue;
                 },
               ),
@@ -168,11 +168,12 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
             SizedBox(
               width: 200.0,
               child: TextField(
+                controller: _subTypeController,
                 decoration: InputDecoration(
                   labelText: 'Sub-Type',
                 ),
                 onChanged: (newValue) {
-                  _subType = newValue;
+                  subType = newValue;
                   AddQuoteInputs.refSubType = newValue;
                 },
               ),
@@ -181,7 +182,7 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
             Padding(
               padding: EdgeInsets.only(top: 20.0),
               child: DropdownButton<String>(
-                value: _lang,
+                value: lang,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20.0,
@@ -193,7 +194,7 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
                 ),
                 onChanged: (newValue) {
                   setState(() {
-                    _lang = newValue;
+                    lang = newValue;
                     AddQuoteInputs.refLang = newValue;
                   });
                 },
@@ -211,6 +212,7 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
               child: SizedBox(
                 width: 300,
                 child: TextField(
+                  controller: _summaryController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Summary',
@@ -219,7 +221,7 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
                   minLines: 4,
                   maxLines: null,
                   onChanged: (newValue) {
-                    _summary = newValue;
+                    summary = newValue;
                     AddQuoteInputs.refSummary = newValue;
                   },
                 ),
@@ -229,34 +231,58 @@ class AddQuoteReferenceState extends State<AddQuoteReference> {
             SizedBox(
               width: 300,
               child: TextField(
+                controller: _wikiUrlController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(IconsMore.wikipedia_w),
                   labelText: 'Wikipedia URL'
                 ),
                 onChanged: (newValue) {
-                  _wikiUrl = newValue;
+                  wikiUrl = newValue;
                   AddQuoteInputs.refUrl = newValue;
                 },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 100.0),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: SizedBox(
                 width: 300,
                 child: TextField(
+                  controller: _urlController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(IconsMore.earth),
                     labelText: 'Website URL'
                   ),
                   onChanged: (newValue) {
-                    _url = newValue;
+                    url = newValue;
                     AddQuoteInputs.refPromoUrl = newValue;
                   },
                 ),
               ),
             ),
+
+            FlatButton(
+              padding: EdgeInsets.all(10.0),
+              onPressed: () {
+                AddQuoteInputs.clearReference();
+
+                imgUrl = '';
+
+                _nameController.clear();
+                _typeController.clear();
+                _subTypeController.clear();
+                _summaryController.clear();
+                _urlController.clear();
+                _wikiUrlController.clear();
+              },
+              child: Text(
+                'Clear reference information',
+                style: TextStyle(color: Colors.black54),
+              ),
+            ),
+
+            Padding(padding: EdgeInsets.only(bottom: 100.0)),
           ],
         ),
       ],
