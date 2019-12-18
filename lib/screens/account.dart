@@ -1,7 +1,9 @@
 
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/account_settings.dart';
+import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/app_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
@@ -65,19 +67,16 @@ class Account extends StatelessWidget {
 
             Provider.of<HttpClientsModel>(context).clearToken();
 
-            Scaffold.of(context)
-              .showSnackBar(
-                SnackBar(
-                  backgroundColor: Color(0xFF2ECC71),
-                  content: Text(
-                    'You have been successfully disconnected.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              );
+            Flushbar(
+              backgroundColor: ThemeColor.error,
+              messageText: Text(
+                'You have been successfully disconnected.',
+                style: TextStyle(color: Colors.white),
+              ),
+            )..show(context);
           },
           child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(15.0),
             child: Text(
               'Sign Out',
               style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -127,6 +126,21 @@ class Account extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return MyTempQuotes();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.add, size: 30.0,),
+                title: Text('Add quote', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AddQuote();
                     }
                   )
                 );

@@ -19,6 +19,7 @@ environment:
 
 dependencies:
   dynamic_theme: 1.0.1
+  flushbar: 1.9.1
   flutter:
     sdk: flutter
   flutter_swiper: 1.1.6

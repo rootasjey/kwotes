@@ -68,6 +68,12 @@
       "languageVersion": "1.20"
     },
     {
+      "name": "flushbar",
+      "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/flushbar-1.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///usr/local/Caskroom/flutter/latest/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -338,7 +344,7 @@
       "languageVersion": "2.2"
     }
   ],
-  "generated": "2019-12-16T12:38:36.293471Z",
+  "generated": "2019-12-18T00:25:07.293317Z",
   "generator": "pub",
   "generatorVersion": "2.7.0"
 }
