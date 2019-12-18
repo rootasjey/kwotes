@@ -8,13 +8,13 @@ class AddQuoteComment extends StatefulWidget {
   AddQuoteComment({Key key, this.maxSteps, this.step}): super(key: key);
 
   @override
-  AddQuoteCommentState createState() => AddQuoteCommentState();
+  _AddQuoteCommentState createState() => _AddQuoteCommentState();
 }
 
-class AddQuoteCommentState extends State<AddQuoteComment> {
-  String _comment = '';
+class _AddQuoteCommentState extends State<AddQuoteComment> {
+  String comment = '';
 
-  String get comment => _comment;
+  final _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +46,28 @@ class AddQuoteCommentState extends State<AddQuoteComment> {
               child: SizedBox(
                 width: 300.0,
                 child: TextField(
+                  controller: _commentController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Add a comment about the quote'
                   ),
                   onChanged: (newValue) {
-                    _comment = newValue;
+                    comment = newValue;
                     AddQuoteInputs.comment = newValue;
                   },
                 ),
               ),
-            )
+            ),
+
+            FlatButton(
+              onPressed: () {
+                _commentController.clear();
+              },
+              child: Text(
+                'Clear comment',
+                style: TextStyle(color: Colors.black54),
+              ),
+            ),
           ],
         )
       ],
