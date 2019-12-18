@@ -11,10 +11,10 @@ class AddQuoteAuthor extends StatefulWidget {
   AddQuoteAuthor({Key key, this.maxSteps, this.step}): super(key: key);
 
   @override
-  AddQuoteAuthorState createState() => AddQuoteAuthorState();
+  _AddQuoteAuthorState createState() => _AddQuoteAuthorState();
 }
 
-class AddQuoteAuthorState extends State<AddQuoteAuthor> {
+class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   String imgUrl  = '';
   String name    = '';
   String job     = '';
