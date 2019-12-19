@@ -66,17 +66,17 @@ class _SmallTempQuoteCardState extends State<SmallTempQuoteCard> {
               child: PopupMenuButton<String>(
                 icon: Icon(Icons.more_vert),
                 onSelected: (value) {
-                  if (widget.onDelete != null) {
+                  if (value == 'delete' && widget.onDelete != null) {
                     widget.onDelete(widget.quote.id);
                     return;
                   }
 
-                  if (widget.onEdit != null) {
+                  if (value == 'edit' && widget.onEdit != null) {
                     widget.onEdit(widget.quote.id);
                     return;
                   }
 
-                  if (widget.onValidate != null) {
+                  if (value == 'validate' && widget.onValidate != null) {
                     widget.onValidate(widget.quote.id);
                     return;
                   }
