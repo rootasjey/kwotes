@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -146,9 +147,18 @@ class _QuotePageState extends State<QuotePage> {
 
                                 return Padding(
                                   padding: EdgeInsets.all(5.0),
-                                  child: Chip(
+                                  child: ActionChip(
                                     backgroundColor: chipColor,
                                     labelPadding: EdgeInsets.all(5.0),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return QuotesByTopics(topic: topic,);
+                                          }
+                                        )
+                                      );
+                                    },
                                     label: Text(
                                       topic,
                                       style: TextStyle(
