@@ -1,11 +1,15 @@
 import 'package:gql/language.dart';
 import 'package:gql/ast.dart';
 
-class Mutations {
-  static MutationsQuote quote;
-}
+class QuoteMutations {
+  static DocumentNode deleteTempQuote = parseString("""
+    mutation (\$id: String!) {
+      deleteTempQuoteAdmin (id: \$id) {
+        id
+      }
+    }
+  """);
 
-class MutationsQuote {
   static DocumentNode propose = parseString("""
     mutation (
       \$authorImgUrl: String
@@ -29,26 +33,35 @@ class MutationsQuote {
       \$topics: [String!]
     ) {
       createTempQuote(
-      authorImgUrl: \$authorImgUrl
-      authorName: \$authorName
-      authorJob: \$authorJob
-      authorSummary: \$authorSummary
-      authorUrl: \$authorUrl
-      authorWikiUrl: \$authorWikiUrl
-      comment: \$comment
-      lang: \$lang
-      name:\$name
-      origin: \$origin
-      refImgUrl: \$refImgUrl
-      refLang:\$refLang
-      refName:\$refName
-      refPromoUrl:\$refPromoUrl
-      refSummary:\$refSummary
-      refSubType:\$refSubType
-      refType:\$refType
-      refUrl:\$refUrl
-      topics: \$topics
+        authorImgUrl: \$authorImgUrl
+        authorName: \$authorName
+        authorJob: \$authorJob
+        authorSummary: \$authorSummary
+        authorUrl: \$authorUrl
+        authorWikiUrl: \$authorWikiUrl
+        comment: \$comment
+        lang: \$lang
+        name:\$name
+        origin: \$origin
+        refImgUrl: \$refImgUrl
+        refLang:\$refLang
+        refName:\$refName
+        refPromoUrl:\$refPromoUrl
+        refSummary:\$refSummary
+        refSubType:\$refSubType
+        refType:\$refType
+        refUrl:\$refUrl
+        topics: \$topics
       ) {
+        id
+      }
+    }
+  """
+  );
+
+  static DocumentNode validateTempQuote = parseString("""
+    mutation (\$id: String!, \$ignoreStatus: Boolean) {
+      validateTempQuoteAdmin (id: \$id, ignoreStatus: \$ignoreStatus) {
         id
       }
     }

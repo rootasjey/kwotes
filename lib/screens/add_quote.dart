@@ -154,7 +154,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     return client.mutate(
       MutationOptions(
-        documentNode: MutationsQuote.propose,
+        documentNode: QuoteMutations.propose,
         variables: {
           'name'          : AddQuoteInputs.name,
           'lang'          : AddQuoteInputs.lang,

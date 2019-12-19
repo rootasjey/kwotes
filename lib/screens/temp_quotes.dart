@@ -1,10 +1,12 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_temp_quote_card.dart';
+import 'package:memorare/data/mutations.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/boolean_message.dart';
 import 'package:memorare/types/colors.dart';
@@ -31,7 +33,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: parseString(queryTempQuotes()),
+        documentNode: QuoteQueries.queryTempQuotes,
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -87,28 +89,54 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             itemBuilder: (BuildContext context, int index) {
               return SmallTempQuoteCard(
                 quote: quotes.elementAt(index),
-                onLongPress: (String id) async {
+                onDelete: (String id) async {
+                  final booleanMessage = await deleteTempQuote(id);
+
+                  if (booleanMessage.boolean) {
+                    refetch();
+                  }
+
+                  Flushbar(
+                    duration: Duration(seconds: 3),
+                    backgroundColor: booleanMessage.boolean ?
+                      ThemeColor.success :
+                      ThemeColor.error,
+                    message: booleanMessage.boolean ?
+                      'The temporary quote has successfully been deleted.' :
+                      booleanMessage.message,
+                  )..show(context);
+                },
+                onDoubleTap: (String id) async {
                   final booleanMessage = await validateTempQuote(id);
 
                   if (booleanMessage.boolean) {
                     refetch();
                   }
 
-                  Scaffold.of(context)
-                    .showSnackBar(
-                      SnackBar(
-                        backgroundColor: booleanMessage.boolean ?
-                          ThemeColor.success :
-                          ThemeColor.error,
+                  Flushbar(
+                    backgroundColor: booleanMessage.boolean ?
+                        ThemeColor.success :
+                        ThemeColor.error,
+                    message: booleanMessage.boolean ?
+                      'The quote has been successfully validated' :
+                      booleanMessage.message,
+                  )..show(context);
+                },
+                onValidate: (String id) async {
+                  final booleanMessage = await validateTempQuote(id);
 
-                        content: Text(
-                          booleanMessage.boolean ?
-                          'The quote has been successfully validated' :
-                          booleanMessage.message,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    );
+                  if (booleanMessage.boolean) {
+                    refetch();
+                  }
+
+                  Flushbar(
+                    backgroundColor: booleanMessage.boolean ?
+                        ThemeColor.success :
+                        ThemeColor.error,
+                    message: booleanMessage.boolean ?
+                      'The quote has been successfully validated' :
+                      booleanMessage.message,
+                  )..show(context);
                 },
               );
             },
@@ -118,38 +146,33 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     );
   }
 
-  String queryTempQuotes() {
-    return """
-      query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
-        tempQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
-          pagination {
-            hasNext
-            limit
-            nextSkip
-            skip
-          }
-          entries {
-            id
-            name
-          }
-        }
-      }
-    """;
-  }
-
-  Future<BooleanMessage> validateTempQuote(String id) {
-    final String mutationValidateTempQuote = """
-      mutation (\$id: String!, \$ignoreStatus: Boolean) {
-        validateTempQuoteAdmin (id: \$id, ignoreStatus: \$ignoreStatus) {
-          id
-        }
-      }
-    """;
-
+  Future<BooleanMessage> deleteTempQuote(String id) {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
     return httpClientModel.defaultClient.value.mutate(MutationOptions(
-      documentNode: parseString(mutationValidateTempQuote),
+      documentNode: QuoteMutations.deleteTempQuote,
+      variables: {'id': id},
+    ))
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  Future<BooleanMessage> validateTempQuote(String id) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+      documentNode: QuoteMutations.validateTempQuote,
       variables: {'id': id, 'ignoreStatus':  true},
     ))
     .then((queryResult) {
