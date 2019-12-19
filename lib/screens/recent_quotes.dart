@@ -7,6 +7,8 @@ import 'package:memorare/components/medium_quote_card.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/quotes_response.dart';
 
+int _savedIndex = 0;
+
 class RecentQuotes extends StatefulWidget {
   RecentQuotesState createState() => RecentQuotesState();
 }
@@ -50,6 +52,10 @@ class RecentQuotesState extends State<RecentQuotes> {
             itemCount: quotes.length,
             scale: 0.9,
             viewportFraction: 0.8,
+            index: _savedIndex,
+            onIndexChanged: (index) {
+              _savedIndex = index;
+            },
             itemBuilder: (BuildContext context, int index) {
               return Center(
                 child: MediumQuoteCard(quote: quotes.elementAt(index),)
