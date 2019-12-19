@@ -60,6 +60,38 @@ class _QuotePageState extends State<QuotePage> {
           ThemeColor.topicColor(quote.topics.first) :
           ThemeColor.primary;
 
+        List<Widget> topicChips = [];
+
+        for (var topic in quote.topics) {
+          final chipColor = ThemeColor.topicColor(topic);
+
+          topicChips.add(
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child: ActionChip(
+                backgroundColor: chipColor,
+                labelPadding: EdgeInsets.all(5.0),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return QuotesByTopics(topic: topic,);
+                      }
+                    )
+                  );
+                },
+                label: Text(
+                  topic,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            )
+          );
+        }
+
         return Scaffold(
           body: ListView(
             padding: EdgeInsets.only(bottom: 70.0),
@@ -132,44 +164,10 @@ class _QuotePageState extends State<QuotePage> {
                         ),
 
                       if (quote.topics.length > 0)
-                        SizedBox(
-                          height: 150,
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              padding: EdgeInsets.all(10.0),
-                              itemCount: quote.topics.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final topic = quote.topics.elementAt(index);
-                                final chipColor = ThemeColor.topicColor(topic);
-
-                                return Padding(
-                                  padding: EdgeInsets.all(5.0),
-                                  child: ActionChip(
-                                    backgroundColor: chipColor,
-                                    labelPadding: EdgeInsets.all(5.0),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return QuotesByTopics(topic: topic,);
-                                          }
-                                        )
-                                      );
-                                    },
-                                    label: Text(
-                                      topic,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40.0),
+                          child: Wrap(
+                            children: topicChips,
                           ),
                         ),
 
