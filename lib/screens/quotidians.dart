@@ -55,10 +55,16 @@ class Quotidians extends StatelessWidget {
           return Center(
             child: ListView(
               shrinkWrap: true,
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(25.0),
               children: <Widget>[
                 Card(
-                  color: topicColor,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: topicColor,
+                      width: 5.0,
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
                   child: Column(
                     children: <Widget>[
                       InkWell(
@@ -72,11 +78,10 @@ class Quotidians extends StatelessWidget {
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+                          padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
                           child: Text(
                             '${quotidian.quote.name}',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: FontSize.bigCard(quotidian.quote.name),
                               fontWeight: FontWeight.bold
                             ),
@@ -105,7 +110,6 @@ class Quotidians extends StatelessWidget {
                               Text(
                                 '${quotidian.quote.author.name}',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -124,7 +128,6 @@ class Quotidians extends StatelessWidget {
                               Text(
                                 quotidian.quote.references.first.name,
                                 style: TextStyle(
-                                  color: Colors.white,
                                 ),
                               ),
                             ],
@@ -139,7 +142,7 @@ class Quotidians extends StatelessWidget {
                             IconButton(
                               icon: Icon(
                                 Icons.playlist_add,
-                                color: Colors.white60,
+                                // color: Colors.white60,
                                 size: 30.0,
                               ),
                               onPressed: () {},
@@ -147,7 +150,7 @@ class Quotidians extends StatelessWidget {
                             IconButton(
                               icon: Icon(
                                 Icons.share,
-                                color: Colors.white60,
+                                // color: Colors.white60,
                                 size: 30.0,
                               ),
                               onPressed: () {},
@@ -155,7 +158,7 @@ class Quotidians extends StatelessWidget {
                             IconButton(
                               icon: Icon(
                                 Icons.favorite_border,
-                                color: Colors.white60,
+                                // color: Colors.white60,
                                 size: 30.0,
                               ),
                               onPressed: () {},
