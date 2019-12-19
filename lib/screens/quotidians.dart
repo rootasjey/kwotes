@@ -59,11 +59,11 @@ class Quotidians extends StatelessWidget {
               children: <Widget>[
                 Card(
                   shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
                     side: BorderSide(
                       color: topicColor,
                       width: 5.0,
                     ),
-                    borderRadius: BorderRadius.circular(4.0),
                   ),
                   child: Column(
                     children: <Widget>[

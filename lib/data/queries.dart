@@ -20,6 +20,28 @@ class QuoteQueries {
     }
   """);
 
+  static DocumentNode quotes = parseString("""
+    query (\$lang: String, \$limit: Float, \$order: Float) {
+      quotes (lang: \$lang, limit: \$limit, order: \$order) {
+        pagination {
+          hasNext
+          limit
+          nextSkip
+          skip
+        }
+        entries {
+          author {
+            id
+            name
+          }
+          id
+          name
+          topics
+        }
+      }
+    }
+  """);
+
   static DocumentNode tempQuotes = parseString("""
     query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
       tempQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {

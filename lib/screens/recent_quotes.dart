@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/medium_quote_card.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/quotes_response.dart';
 
 class RecentQuotes extends StatefulWidget {
@@ -30,7 +30,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: parseString(queryRecentQuotes()),
+        documentNode: QuoteQueries.quotes,
         variables: {'lang': lang, 'order': order},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -59,29 +59,5 @@ class RecentQuotesState extends State<RecentQuotes> {
         );
       },
     );
-  }
-
-  String queryRecentQuotes() {
-    return """
-      query (\$lang: String, \$limit: Float, \$order: Float) {
-        quotes (lang: \$lang, limit: \$limit, order: \$order) {
-          pagination {
-            hasNext
-            limit
-            nextSkip
-            skip
-          }
-          entries {
-            author {
-              id
-              name
-            }
-            id
-            name
-            topics
-          }
-        }
-      }
-    """;
   }
 }

@@ -29,7 +29,14 @@ class MediumQuoteCard extends StatelessWidget {
           SizedBox(
             height: 300.0,
             child: Card(
-              color: topicColor,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                side: BorderSide(
+                  color: topicColor,
+                  width: 5.0,
+                )
+              ),
               child: InkWell(
                 child: Padding(
                   padding: EdgeInsets.all(25.0),
@@ -39,7 +46,6 @@ class MediumQuoteCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: FontSize.mediumCard(quote.name),
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
                       ),
                     ),
                   ),
