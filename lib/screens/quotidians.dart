@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
@@ -18,7 +18,7 @@ class Quotidians extends StatelessWidget {
     return Scaffold(
       body: Query(
         options: QueryOptions(
-          documentNode: parseString(queryQuotidians()),
+          documentNode: QuotidianQueries.quotidians,
         ),
         builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
           if (result.hasException) {
@@ -177,26 +177,4 @@ class Quotidians extends StatelessWidget {
     );
   }
 
-  String queryQuotidians() {
-    return """
-      query Quotidian {
-        quotidian {
-          id
-          quote {
-            author {
-              id
-              name
-            }
-            id
-            name
-            references {
-              id
-              name
-            }
-            topics
-          }
-        }
-      }
-    """;
-  }
 }
