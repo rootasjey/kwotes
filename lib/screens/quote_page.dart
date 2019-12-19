@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -24,7 +24,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: parseString(queryQuote()),
+        documentNode: QuoteQueries.quote,
         variables: {'id': widget.quoteId},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -212,25 +212,5 @@ class _QuotePageState extends State<QuotePage> {
         );
       },
     );
-  }
-
-  String queryQuote() {
-    return """
-      query (\$id: String!) {
-        quote (id: \$id) {
-          author {
-            id
-            name
-          }
-          id
-          name
-          references {
-            id
-            name
-          }
-          topics
-        }
-      }
-    """;
   }
 }

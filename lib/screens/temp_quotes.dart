@@ -33,7 +33,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: QuoteQueries.queryTempQuotes,
+        documentNode: QuoteQueries.tempQuotes,
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
