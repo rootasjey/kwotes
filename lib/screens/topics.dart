@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
@@ -160,9 +160,11 @@ class _TopicsState extends State<Topics> {
   Future<List<String>> fetchTopics() {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(MutationOptions(
-      documentNode: QuoteQueries.topics,
-    ))
+    return httpClientModel.defaultClient.value.query(
+      QueryOptions(
+        documentNode: QueriesOperations.topics,
+      )
+    )
     .then((queryResult) {
       List<String> topics = [];
 

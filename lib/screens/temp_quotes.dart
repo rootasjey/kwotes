@@ -5,8 +5,8 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_temp_quote_card.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/data/mutationsOperations.dart';
+import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/boolean_message.dart';
 import 'package:memorare/types/colors.dart';
@@ -33,7 +33,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: QuoteQueries.tempQuotes,
+        documentNode: QueriesOperations.tempQuotes,
         variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
@@ -150,7 +150,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
     return httpClientModel.defaultClient.value.mutate(MutationOptions(
-      documentNode: QuoteMutations.deleteTempQuote,
+      documentNode: MutationsOperations.deleteTempQuote,
       variables: {'id': id},
     ))
     .then((queryResult) {
@@ -172,7 +172,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
     return httpClientModel.defaultClient.value.mutate(MutationOptions(
-      documentNode: QuoteMutations.validateTempQuote,
+      documentNode: MutationsOperations.validateTempQuote,
       variables: {'id': id, 'ignoreStatus':  true},
     ))
     .then((queryResult) {

@@ -1,69 +1,32 @@
-import 'package:gql/language.dart';
-import 'package:gql/ast.dart';
+import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/data/mutationsOperations.dart';
+import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/types/boolean_message.dart';
+import 'package:provider/provider.dart';
 
-class QuoteMutations {
-  static DocumentNode deleteTempQuote = parseString("""
-    mutation (\$id: String!) {
-      deleteTempQuoteAdmin (id: \$id) {
-        id
-      }
-    }
-  """);
+class UserMutations {
+  static Future<BooleanMessage> star(BuildContext context, String quoteId) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-  static DocumentNode propose = parseString("""
-    mutation (
-      \$authorImgUrl: String
-      \$authorName: String
-      \$authorJob: String
-      \$authorSummary: String
-      \$authorUrl: String
-      \$authorWikiUrl: String
-      \$comment: String
-      \$lang: String
-      \$name: String!
-      \$origin: String
-      \$refImgUrl: String
-      \$refLang: String
-      \$refName: String
-      \$refPromoUrl: String
-      \$refSummary: String
-      \$refSubType: String
-      \$refType: String
-      \$refUrl: String
-      \$topics: [String!]
-    ) {
-      createTempQuote(
-        authorImgUrl: \$authorImgUrl
-        authorName: \$authorName
-        authorJob: \$authorJob
-        authorSummary: \$authorSummary
-        authorUrl: \$authorUrl
-        authorWikiUrl: \$authorWikiUrl
-        comment: \$comment
-        lang: \$lang
-        name:\$name
-        origin: \$origin
-        refImgUrl: \$refImgUrl
-        refLang:\$refLang
-        refName:\$refName
-        refPromoUrl:\$refPromoUrl
-        refSummary:\$refSummary
-        refSubType:\$refSubType
-        refType:\$refType
-        refUrl:\$refUrl
-        topics: \$topics
-      ) {
-        id
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.star,
+        variables: {'quoteId': quoteId},
+      )
+    )
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
       }
-    }
-  """
-  );
 
-  static DocumentNode validateTempQuote = parseString("""
-    mutation (\$id: String!, \$ignoreStatus: Boolean) {
-      validateTempQuoteAdmin (id: \$id, ignoreStatus: \$ignoreStatus) {
-        id
-      }
-    }
-  """);
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
 }

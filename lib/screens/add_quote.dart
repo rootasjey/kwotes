@@ -2,7 +2,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/data/mutations.dart';
+import 'package:memorare/data/mutationsOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/add_quote_author.dart';
 import 'package:memorare/screens/add_quote_comment.dart';
@@ -154,7 +154,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     return client.mutate(
       MutationOptions(
-        documentNode: QuoteMutations.propose,
+        documentNode: MutationsOperations.propose,
         variables: {
           'name'          : AddQuoteInputs.name,
           'lang'          : AddQuoteInputs.lang,

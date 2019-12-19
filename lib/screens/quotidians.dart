@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
@@ -18,7 +18,7 @@ class Quotidians extends StatelessWidget {
     return Scaffold(
       body: Query(
         options: QueryOptions(
-          documentNode: QuotidianQueries.quotidians,
+          documentNode: QueriesOperations.quotidians,
         ),
         builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
           if (result.hasException) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
@@ -25,7 +25,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: QuoteQueries.quote,
+        documentNode: QueriesOperations.quote,
         variables: {'id': widget.quoteId},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {

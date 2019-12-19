@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/medium_quote_card.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/types/quotes_response.dart';
 
 int _savedIndex = 0;
@@ -32,7 +32,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: QuoteQueries.quotes,
+        documentNode: QueriesOperations.quotes,
         variables: {'lang': lang, 'order': order},
       ),
       builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {

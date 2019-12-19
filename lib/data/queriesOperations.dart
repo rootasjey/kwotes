@@ -1,7 +1,7 @@
 import 'package:gql/language.dart';
 import 'package:gql/ast.dart';
 
-class QuoteQueries {
+class QueriesOperations {
   static DocumentNode quote = parseString("""
     query (\$id: String!) {
       quote (id: \$id) {
@@ -42,6 +42,38 @@ class QuoteQueries {
     }
   """);
 
+  static DocumentNode quotidians = parseString("""
+    query Quotidian {
+      quotidian {
+        id
+        quote {
+          author {
+            id
+            name
+          }
+          id
+          name
+          references {
+            id
+            name
+          }
+          topics
+        }
+      }
+    }
+  """);
+
+  static DocumentNode starred = parseString("""
+    query (\$limit: Float, \$skip: Float) {
+      userData {
+        starred (limit: \$limit, skip: \$skip) {
+          id
+          name
+        }
+      }
+    }
+  """);
+
   static DocumentNode tempQuotes = parseString("""
     query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
       tempQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
@@ -66,25 +98,3 @@ class QuoteQueries {
   """);
 }
 
-class QuotidianQueries {
-  static DocumentNode quotidians = parseString("""
-    query Quotidian {
-      quotidian {
-        id
-        quote {
-          author {
-            id
-            name
-          }
-          id
-          name
-          references {
-            id
-            name
-          }
-          topics
-        }
-      }
-    }
-  """);
-}
