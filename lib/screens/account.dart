@@ -8,6 +8,7 @@ import 'package:memorare/screens/app_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/starred.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/credentials.dart';
@@ -103,8 +104,8 @@ class Account extends StatelessWidget {
             Divider(),
             FlatButton(
               child: ListTile(
-                leading: Icon(Icons.list, size: 30.0,),
-                title: Text('Published quotes', style: TextStyle(fontSize: 20.0),),
+                leading: Icon(Icons.check, size: 30.0,),
+                title: Text('Published', style: TextStyle(fontSize: 20.0),),
               ),
               onPressed: () {
                 Navigator.of(context).push(
@@ -119,7 +120,7 @@ class Account extends StatelessWidget {
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.timelapse, size: 30.0,),
-                title: Text('Temporary quotes', style: TextStyle(fontSize: 20.0),),
+                title: Text('In validation', style: TextStyle(fontSize: 20.0),),
               ),
               onPressed: () {
                 Navigator.of(context).push(
@@ -133,8 +134,23 @@ class Account extends StatelessWidget {
             ),
             FlatButton(
               child: ListTile(
+                leading: Icon(Icons.favorite, size: 30.0,),
+                title: Text('Favorites', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Starred();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
                 leading: Icon(Icons.add, size: 30.0,),
-                title: Text('Add quote', style: TextStyle(fontSize: 20.0),),
+                title: Text('Add a new quote', style: TextStyle(fontSize: 20.0),),
               ),
               onPressed: () {
                 Navigator.of(context).push(

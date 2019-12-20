@@ -29,4 +29,28 @@ class UserMutations {
       return BooleanMessage(boolean: false, message: error.toString());
     });
   }
+
+  static Future<BooleanMessage> unstar(BuildContext context, String quoteId) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.unstar,
+        variables: {'quoteId': quoteId},
+      )
+    )
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
 }

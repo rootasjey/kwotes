@@ -6,9 +6,17 @@ class Quote {
   final String id;
   final String name;
   final List<Reference> references;
+  bool starred;
   final List<String> topics;
 
-  Quote({this.author, this.id, this.name, this.references, this.topics});
+  Quote({
+    this.author,
+    this.id,
+    this.name,
+    this.references,
+    this.starred = false,
+    this.topics,
+  });
 
   factory Quote.fromJSON(Map<String, dynamic> json) {
     List<Reference> refs = [];
@@ -31,6 +39,7 @@ class Quote {
       id: json['id'],
       name: json['name'],
       references: refs,
+      starred: json['starred'] ?? false,
       topics: topicsList,
     );
   }

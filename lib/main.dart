@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/common/icons_more_icons.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
@@ -13,7 +13,6 @@ import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/quotidian.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(App());
@@ -96,7 +95,7 @@ class MainState extends State<Main> {
               .setToken(userDataModel.data.token);
           })
           .then((_) {
-            fetchTodayColor()
+            Queries.todayTopic(context)
               .then((topic) {
                 Provider.of<ThemeColor>(context).updatePalette(context, topic);
               });
@@ -110,28 +109,6 @@ class MainState extends State<Main> {
 
     Map<String, dynamic> apiConfig = jsonDecode(jsonFile);
     return apiConfig;
-  }
-
-  Future<String> fetchTodayColor() async {
-    final String queryQuotidianTopic = """
-      query {
-        quotidian {
-          quote {
-            topics
-          }
-        }
-      }
-    """;
-
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
-      .query(
-        QueryOptions(
-          documentNode: parseString(queryQuotidianTopic),
-        )
-      ).then((QueryResult queryResult) {
-        final quotidian = Quotidian.fromJSON(queryResult.data['quotidian']);
-        return quotidian.quote.topics.first;
-      });
   }
 
   void _onItemTapped(int index) {

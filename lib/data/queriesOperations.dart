@@ -64,11 +64,13 @@ class QueriesOperations {
   """);
 
   static DocumentNode starred = parseString("""
-    query (\$limit: Float, \$skip: Float) {
+    query (\$limit: Float, \$order: Float, \$skip: Float) {
       userData {
-        starred (limit: \$limit, skip: \$skip) {
-          id
-          name
+        starred (limit: \$limit, order: \$order, skip: \$skip) {
+          entries {
+            id
+            name
+          }
         }
       }
     }
@@ -86,6 +88,16 @@ class QueriesOperations {
         entries {
           id
           name
+        }
+      }
+    }
+  """);
+
+  static DocumentNode todayTopics = parseString("""
+    query {
+      quotidian {
+        quote {
+          topics
         }
       }
     }
