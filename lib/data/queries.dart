@@ -8,6 +8,21 @@ import 'package:memorare/types/quotidian.dart';
 import 'package:provider/provider.dart';
 
 class Queries {
+  static Future<QuotesResponse> myPublihshedQuotes(
+    BuildContext context, String lang, int limit, int order, int skip,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.publishedQuotes,
+          variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return QuotesResponse.fromJSON(queryResult.data['publishedQuotes']);
+      });
+  }
+
   static Future<List<Quote>> quotesByTopics(
     BuildContext context, String topic,
   ) {

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_quote_card.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/quotes_response.dart';
 import 'package:provider/provider.dart';
 
 class MyPublishedQuotes extends StatefulWidget {
@@ -25,92 +23,90 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   int attempts = 1;
   int maxAttempts = 2;
 
+  bool isLoading = false;
+  bool hasErrors = false;
+  Error error;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchQuotes();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Query(
-      options: QueryOptions(
-        documentNode: parseString(queryPublishedQuotes()),
-        variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
+    final accent = Provider.of<ThemeColor>(context).accent;
+
+    if (isLoading) {
+      return Scaffold(
+        body: LoadingComponent(
+          title: 'Loading my published quotes...',
+        ),
+      );
+    }
+
+    if (!isLoading && hasErrors) {
+      return ErrorComponent(
+        description: error != null ? error.toString() : '',
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
+        title: Text(
+          'Published quotes',
+          style: TextStyle(
+            color: accent,
+            fontSize: 25.0,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back, color: accent,),
+        ),
       ),
-      builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-        if (result.hasException) {
-          if (attempts < maxAttempts &&
-            ErrorComponent.isJWTRelated(result.exception.graphqlErrors.first.toString())) {
-
-            attempts++;
-
-            ErrorComponent.trySignin(context)
-              .then((errorReason) {
-                if (errorReason.hasErrors) { return; }
-                refetch();
-              });
-
-            return Scaffold(
-              body: LoadingComponent(),
-            );
-          }
-
-          return ErrorComponent(
-            description: result.exception.graphqlErrors.first.toString(),
-            title: 'Published Quotes',
-          );
-        }
-
-        if (result.loading) {
-          return Scaffold(
-            body: LoadingComponent(),
-          );
-        }
-
-        var response = QuotesResponse.fromJSON(result.data['publishedQuotes']);
-        quotes = response.entries;
-
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Provider.of<ThemeColor>(context).accent,
-            title: Text('Published Quotes'),
-          ),
-          floatingActionButton: FilterFab(
-            onOrderChanged: (int newOrder) {
-              setState(() {
-                order = newOrder;
-              });
-            },
-            order: order,
-          ),
-          body: GridView.builder(
-            itemCount: quotes.length,
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemBuilder: (BuildContext context, int index) {
-              return SmallQuoteCard(quote: quotes.elementAt(index),);
-            },
-          ),
-        );
-      },
+      floatingActionButton: FilterFab(
+        onOrderChanged: (int newOrder) {
+          setState(() {
+            order = newOrder;
+          });
+        },
+        order: order,
+      ),
+      body: GridView.builder(
+        itemCount: quotes.length,
+        padding: EdgeInsets.symmetric(vertical: 20.0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemBuilder: (BuildContext context, int index) {
+          return SmallQuoteCard(quote: quotes.elementAt(index),);
+        },
+      ),
     );
   }
 
-  String queryPublishedQuotes() {
-    return """
-      query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
-        publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
-          pagination {
-            hasNext
-            limit
-            nextSkip
-            skip
-          }
-          entries {
-            author {
-              id
-              name
-            }
-            id
-            name
-          }
-        }
-      }
-    """;
+  void fetchQuotes() {
+    setState(() {
+      isLoading = true;
+    });
+
+    Queries.myPublihshedQuotes(context, lang, limit, order, skip)
+      .then((quotesResp) {
+        setState(() {
+          isLoading = false;
+          quotes = quotesResp.entries;
+        });
+      })
+      .catchError((err) {
+        setState(() {
+          isLoading = false;
+          hasErrors = true;
+          error = err;
+        });
+      });
   }
 }

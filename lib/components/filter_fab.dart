@@ -75,6 +75,7 @@ class _FilterFabState extends State<FilterFab> {
       },
       child: Icon(Icons.filter_list),
       backgroundColor: Provider.of<ThemeColor>(context).accent,
+      foregroundColor: Colors.white,
     );
   }
 }

@@ -2,6 +2,27 @@ import 'package:gql/language.dart';
 import 'package:gql/ast.dart';
 
 class QueriesOperations {
+  static DocumentNode publishedQuotes = parseString("""
+    query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
+      publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
+        pagination {
+          hasNext
+          limit
+          nextSkip
+          skip
+        }
+        entries {
+          author {
+            id
+            name
+          }
+          id
+          name
+        }
+      }
+    }
+  """);
+
   static DocumentNode quote = parseString("""
     query (\$id: String!) {
       quote (id: \$id) {
