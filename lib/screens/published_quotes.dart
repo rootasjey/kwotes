@@ -75,6 +75,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           setState(() {
             order = newOrder;
           });
+
+          fetchQuotes();
         },
         order: order,
       ),

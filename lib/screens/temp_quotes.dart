@@ -77,6 +77,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           setState(() {
             order = newOrder;
           });
+
+          fetchTempQuotes();
         },
         order: order,
       ),
