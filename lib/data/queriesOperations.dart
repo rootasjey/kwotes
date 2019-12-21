@@ -12,12 +12,9 @@ class QueriesOperations {
           skip
         }
         entries {
-          author {
-            id
-            name
-          }
           id
           name
+          topics
         }
       }
     }

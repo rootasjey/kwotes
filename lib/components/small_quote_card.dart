@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:memorare/screens/quote_page.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:provider/provider.dart';
 
 class SmallQuoteCard extends StatelessWidget {
   final Quote quote;
@@ -10,6 +11,12 @@ class SmallQuoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = Provider.of<ThemeColor>(context);
+
+    final topicColor = quote.topics.length > 0 ?
+      ThemeColor.topicColor(quote.topics.first) :
+      themeColor.accent;
+
     return SizedBox(
       height: 200.0,
       child: Column(
@@ -18,6 +25,13 @@ class SmallQuoteCard extends StatelessWidget {
             height: 195.0,
             width: 200.0,
             child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                side: BorderSide(
+                  color: topicColor,
+                  width: 2.0,
+                )
+              ),
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).push(
