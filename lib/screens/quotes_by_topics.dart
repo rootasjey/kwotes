@@ -103,7 +103,7 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    icon: Icon(Icons.arrow_back, color: Colors.black,),
+                    icon: Icon(Icons.arrow_back, color: topicColor,),
                   ),
                 )
               ),
