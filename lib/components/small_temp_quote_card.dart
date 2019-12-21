@@ -29,7 +29,6 @@ class _SmallTempQuoteCardState extends State<SmallTempQuoteCard> {
       height: 195.0,
       width: 200.0,
       child: Card(
-        color: Color(0xFFF1F2F6),
         child: Stack(
           children: [
             InkWell(

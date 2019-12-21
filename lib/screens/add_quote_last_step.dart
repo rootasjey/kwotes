@@ -64,14 +64,16 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 60.0),
-                  child: Text(
-                    'Alright! \n If you are satisfied with the data you provided, you can now propose your quote to moderators.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 24.0,
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      'Alright! \n If you are satisfied with the data you provided, you can now propose your quote to moderators.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                      ),
                     ),
-                  ),
+                  )
                 ),
 
                 if (_isSending == false)
@@ -115,11 +117,13 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
                             widget.onPreviousPage();
                           }
                         },
-                        child: Text(
-                          'Previous',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
+                        child: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Previous',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       )

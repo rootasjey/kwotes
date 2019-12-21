@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:provider/provider.dart';
 
 class AddQuoteReference extends StatefulWidget {
   final int step;
@@ -55,6 +56,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = Provider.of<ThemeColor>(context);
+
     return ListView(
       children: <Widget>[
         Column(
@@ -184,12 +187,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               child: DropdownButton<String>(
                 value: lang,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: themeColor.accent,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
                 underline: Container(
-                  color: Colors.black,
+                  color: themeColor.accent,
                   height: 2.0,
                 ),
                 onChanged: (newValue) {
@@ -276,9 +279,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 _urlController.clear();
                 _wikiUrlController.clear();
               },
-              child: Text(
-                'Clear reference information',
-                style: TextStyle(color: Colors.black54),
+              child: Opacity(
+                opacity: 0.6,
+                child: Text(
+                  'Clear reference information',
+                ),
               ),
             ),
 

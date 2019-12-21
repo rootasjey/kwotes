@@ -227,9 +227,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 _urlController.clear();
                 _wikiController.clear();
               },
-              child: Text(
-                'Clear author information',
-                style: TextStyle(color: Colors.black54)
+              child: Opacity(
+                opacity: 0.6,
+                child: Text(
+                  'Clear author information',
+                ),
               ),
             ),
 

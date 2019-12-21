@@ -18,7 +18,6 @@ class SmallQuoteCard extends StatelessWidget {
             height: 195.0,
             width: 200.0,
             child: Card(
-              color: Color(0xFFF1F2F6),
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).push(

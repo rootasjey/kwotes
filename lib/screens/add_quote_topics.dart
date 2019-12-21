@@ -173,7 +173,9 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       },
                       child: Text(
                         'Clear all topics',
-                        style: TextStyle(color: Colors.black54),
+                        style: TextStyle(
+                          color: themeColor.background,
+                        ),
                       ),
                     ),
                   ),
@@ -202,7 +204,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       'Select some of the following sample topics to categorize the quote.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: themeColor.background,
                         fontSize: 20.0,
                       ),
                     ),

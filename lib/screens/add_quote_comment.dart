@@ -63,10 +63,12 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               onPressed: () {
                 _commentController.clear();
               },
-              child: Text(
-                'Clear comment',
-                style: TextStyle(color: Colors.black54),
-              ),
+              child: Opacity(
+                opacity: 0.6,
+                child: Text(
+                  'Clear comment',
+                ),
+              )
             ),
           ],
         )

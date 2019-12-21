@@ -57,6 +57,7 @@ class _AddQuoteState extends State<AddQuote> {
     return Scaffold(
       floatingActionButton: _isFabVisible ?
         FloatingActionButton(
+          foregroundColor: Colors.white,
           backgroundColor: ThemeColor.success,
           onPressed: () {
             validateQuote();

@@ -86,10 +86,12 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                       AddQuoteInputs.clearQuoteName();
                       _nameController.clear();
                     },
-                    child: Text(
-                      'Clear quote content',
-                      style: TextStyle(color: Colors.black54),
-                    ),
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Clear quote content',
+                      ),
+                    )
                   ),
                 ],
               ),
