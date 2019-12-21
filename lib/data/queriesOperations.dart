@@ -71,6 +71,7 @@ class QueriesOperations {
           entries {
             id
             name
+            topics
           }
         }
       }
