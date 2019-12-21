@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 
 class LoadingComponent extends StatelessWidget {
-  final String title;
+  final Color backgroundColor;
+  final Color color;
   final EdgeInsets padding;
+  final String title;
 
-  LoadingComponent({this.title = 'Loading...', this.padding});
+  LoadingComponent({
+    this.backgroundColor = const Color.fromRGBO(0, 0, 0, 0.8),
+    this.color = Colors.white,
+    this.title = 'Loading...',
+    this.padding
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height - 100,
       padding: padding,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.8),
+        color: backgroundColor,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -22,14 +29,14 @@ class LoadingComponent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 20.0),
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Colors.white),
+              valueColor: AlwaysStoppedAnimation(color),
             ),
           ),
           Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: color,
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),

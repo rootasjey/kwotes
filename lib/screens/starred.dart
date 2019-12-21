@@ -1,14 +1,12 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/components/error.dart';
+import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/medium_quote_card.dart';
 import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queriesOperations.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/quotes_response.dart';
 import 'package:provider/provider.dart';
 
 class Starred extends StatefulWidget {
@@ -22,9 +20,21 @@ class _StarredState extends State<Starred> {
   int skip = 0;
   List<Quote> quotes = [];
 
+  bool isLoading = false;
+  bool hasErrors = false;
+  FlutterError error;
+
+  @override
+  didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchStarred();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final color = Provider.of<ThemeColor>(context).accent;
+    final themeColor = Provider.of<ThemeColor>(context);
+    final color = themeColor.accent;
+    final backgroundColor = themeColor.background;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,65 +55,132 @@ class _StarredState extends State<Starred> {
           icon: Icon(Icons.arrow_back, color: color,),
         ),
       ),
-      body: Query(
-        options: QueryOptions(
-          documentNode: QueriesOperations.starred,
-          variables: {'limit': limit, 'order': order, 'skip': skip}
-        ),
-        builder: (QueryResult result, { VoidCallback refetch, FetchMore fetchMore }) {
-          if (result.hasException) {
-            final exception = result.exception;
-
-            return ErrorComponent(
-              description: exception.graphqlErrors.first.message,
-              title: 'Liked',
-            );
-          }
-
-          if (result.loading) {
-            return LoadingComponent(
+      body: ListView(
+        padding: isLoading ?
+          EdgeInsets.zero :
+          EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+        children: <Widget>[
+          if (isLoading)
+            LoadingComponent(
               title: 'Loading liked quotes',
-              padding: EdgeInsets.all(30.0),
-            );
-          }
+              padding: EdgeInsets.symmetric(horizontal: 30.0),
+              color: backgroundColor,
+              backgroundColor: Colors.transparent,
+            ),
 
-          final quotesResponse = QuotesResponse.fromJSON(result.data['userData']['starred']);
-          quotes = quotesResponse.entries;
+          if (!isLoading && quotes.length == 0)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+              child: Column(
+                children: <Widget>[
+                  Icon(IconsMore.heart_broken, size: 80.0,),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      'This place is empty',
+                      style: TextStyle(
+                        fontSize: 30.0,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Your favorites quotes will show up here.',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-          List<Widget> quotesCards = [];
+          if (hasErrors)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'An error occurred',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
 
-          for (var quote in quotes) {
-            quote.starred = true;
-            quotesCards.add(
-              MediumQuoteCard(
-                quote: quote,
-                onUnlike: () async {
-                  final booleanMessage = await UserMutations.unstar(context, quote.id);
+                  FlatButton(
+                    onPressed: () { fetchStarred(); },
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Retry',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  )
+                ],
+              ),
+            ),
 
-                  setState(() {
-                    quotes.removeWhere((q) => q.id == quote.id );
-                  });
+          if (!isLoading && quotes.length > 0)
+            ...quotes.map<Widget>((quote) {
+                quote.starred = true;
 
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: booleanMessage.boolean ?
-                      ThemeColor.success :
-                      ThemeColor.error,
-                    message: booleanMessage.boolean ?
-                      'This quote has been removed from your loved ones.':
-                      booleanMessage.message,
-                  )..show(context);
-                },
-              )
-            );
-          }
+                return MediumQuoteCard(
+                  quote: quote,
+                  onUnlike: () async {
+                    setState(() { // optimistic
+                      quotes.removeWhere((q) => q.id == quote.id );
+                    });
 
-          return ListView(
-            padding: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-            children: quotesCards,
-          );
-        },
+                    final booleanMessage = await UserMutations.unstar(context, quote.id);
+
+                    if (!booleanMessage.boolean) {
+                      setState(() { // rollback
+                        quotes.add(quote);
+                      });
+
+                      Flushbar(
+                        duration: Duration(seconds: 2),
+                        backgroundColor: ThemeColor.error,
+                        message: booleanMessage.message,
+                      )..show(context);
+                    }
+                  },
+                );
+              }),
+        ],
       ),
     );
+  }
+
+  void fetchStarred() {
+    setState(() {
+      isLoading = true;
+    });
+
+    Queries.starred(context, limit, order, skip)
+      .then((quotesResponse) {
+        setState(() {
+          quotes = quotesResponse.entries;
+          isLoading = false;
+        });
+      })
+      .catchError((err) {
+        setState(() {
+          error = err;
+          hasErrors = true;
+          isLoading = false;
+        });
+      });
   }
 }

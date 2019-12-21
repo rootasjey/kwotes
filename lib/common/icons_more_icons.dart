@@ -20,6 +20,10 @@
 ///         Author:    Perxis
 ///         License:   CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
 ///         Homepage:  https://linearicons.com
+/// * MFG Labs, Copyright (C) 2012 by Daniel Bruce
+///         Author:    MFG Labs
+///         License:   SIL (http://scripts.sil.org/OFL)
+///         Homepage:  http://www.mfglabs.com/
 /// * Font Awesome, Copyright (C) 2016 by Dave Gandy
 ///         Author:    Dave Gandy
 ///         License:   SIL ()
@@ -34,5 +38,6 @@ class IconsMore {
 
   static const IconData tags = const IconData(0xe802, fontFamily: _kFontFam);
   static const IconData earth = const IconData(0xe853, fontFamily: _kFontFam);
+  static const IconData heart_broken = const IconData(0xf028, fontFamily: _kFontFam);
   static const IconData wikipedia_w = const IconData(0xf266, fontFamily: _kFontFam);
 }

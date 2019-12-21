@@ -43,7 +43,7 @@ class QueriesOperations {
     }
   """);
 
-  static DocumentNode quotidians = parseString("""
+  static DocumentNode quotidian = parseString("""
     query Quotidian {
       quotidian {
         id
