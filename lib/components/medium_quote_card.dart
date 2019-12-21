@@ -1,6 +1,4 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/data/mutations.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
@@ -9,10 +7,16 @@ import 'package:memorare/types/quote.dart';
 
 class MediumQuoteCard extends StatelessWidget {
   final Color color;
+  final Function onLike;
   final Function onUnlike;
   final Quote quote;
 
-  MediumQuoteCard({this.color, this.onUnlike, this.quote});
+  MediumQuoteCard({
+    this.color,
+    this.onLike,
+    this.onUnlike,
+    this.quote,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -123,23 +127,13 @@ class MediumQuoteCard extends StatelessWidget {
         icon: Icon(Icons.more_horiz),
         onSelected: (value) async {
           if (value == 'like') {
-            final booleanMessage = await UserMutations.star(context, quote.id);
-
-            Flushbar(
-              duration: Duration(seconds: 2),
-              backgroundColor: booleanMessage.boolean ?
-                ThemeColor.success :
-                ThemeColor.error,
-              message: booleanMessage.boolean ?
-                'The quote has been successfully liked.':
-                booleanMessage.message,
-            )..show(context);
-
+            if (onLike != null) { onLike(); }
             return;
           }
 
           if (value == 'unlike') {
             if (onUnlike != null) { onUnlike(); }
+            return;
           }
 
           if (value == 'addTo') {
