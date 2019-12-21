@@ -5,6 +5,7 @@ import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/types/temp_quotes_response.dart';
 import 'package:provider/provider.dart';
 
 class Queries {
@@ -20,6 +21,21 @@ class Queries {
         )
       ).then((QueryResult queryResult) {
         return QuotesResponse.fromJSON(queryResult.data['publishedQuotes']);
+      });
+  }
+
+  static Future<TempQuotesResponse> myTempQuotes(
+    BuildContext context, String lang, int limit, int order, int skip,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.tempQuotes,
+          variables: {'lang': lang, 'limit': limit, 'order': order, 'skip': skip},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return TempQuotesResponse.fromJSON(queryResult.data['tempQuotes']);
       });
   }
 
