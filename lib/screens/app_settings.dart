@@ -9,16 +9,31 @@ class AppPageSettings extends StatefulWidget {
 }
 
 class _AppPageSettingsState extends State<AppPageSettings> {
-  Brightness _brightness;
+  Brightness brightness;
 
   @override
   Widget build(BuildContext context) {
-    _brightness = DynamicTheme.of(context).brightness;
+    brightness = DynamicTheme.of(context).brightness;
+    final accent = Provider.of<ThemeColor>(context).accent;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Provider.of<ThemeColor>(context).accent,
-        title: Text('App settings'),
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
+        title: Text(
+          'App settings',
+          style: TextStyle(
+            color: accent,
+            fontSize: 30.0,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back, color: accent,),
+        ),
       ),
       body: ListView(
         children: <Widget>[
@@ -31,34 +46,46 @@ class _AppPageSettingsState extends State<AppPageSettings> {
                   'Theme',
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    fontSize: 30.0,
+                    fontSize: 25.0,
                   ),
                 ),
               ),
               RadioListTile(
-                title: Text('Light'),
+                activeColor: accent,
+                title: Text(
+                  'Light',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
                 value: Brightness.light,
-                groupValue: _brightness,
+                groupValue: brightness,
                 onChanged: (Brightness value) {
                   setState(() {
-                    _brightness = value;
+                    brightness = value;
                   });
 
-                  DynamicTheme.of(context).setBrightness(_brightness);
-                  Provider.of<ThemeColor>(context).updateBackground(_brightness);
+                  DynamicTheme.of(context).setBrightness(brightness);
+                  Provider.of<ThemeColor>(context).updateBackground(brightness);
                 },
               ),
               RadioListTile(
-                title: Text('Dark'),
+                activeColor: accent,
+                title: Text(
+                  'Dark',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
                 value: Brightness.dark,
-                groupValue: _brightness,
+                groupValue: brightness,
                 onChanged: (Brightness value) {
                   setState(() {
-                    _brightness = value;
+                    brightness = value;
                   });
 
-                  DynamicTheme.of(context).setBrightness(_brightness);
-                  Provider.of<ThemeColor>(context).updateBackground(_brightness);
+                  DynamicTheme.of(context).setBrightness(brightness);
+                  Provider.of<ThemeColor>(context).updateBackground(brightness);
                 },
               ),
             ],
