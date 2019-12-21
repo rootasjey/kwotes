@@ -63,7 +63,9 @@ class _TopicsState extends State<Topics> {
         Padding(
           padding: EdgeInsets.all(5.0),
           child: ActionChip(
-            backgroundColor: chipColor,
+            elevation: 2.0,
+            backgroundColor: Colors.transparent,
+            shape: StadiumBorder(side: BorderSide(color: chipColor, width: 3.0)),
             labelPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             onPressed: () {
               Navigator.of(context).push(
@@ -77,7 +79,6 @@ class _TopicsState extends State<Topics> {
             label: Text(
               topic,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 18,
               ),
             ),

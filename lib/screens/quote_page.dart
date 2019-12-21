@@ -69,7 +69,8 @@ class _QuotePageState extends State<QuotePage> {
             Padding(
               padding: EdgeInsets.all(5.0),
               child: ActionChip(
-                backgroundColor: chipColor,
+                shape: StadiumBorder(side: BorderSide(color: chipColor, width: 3.0)),
+                backgroundColor: Colors.transparent,
                 labelPadding: EdgeInsets.all(5.0),
                 onPressed: () {
                   Navigator.of(context).push(
@@ -83,7 +84,6 @@ class _QuotePageState extends State<QuotePage> {
                 label: Text(
                   topic,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 18,
                   ),
                 ),
