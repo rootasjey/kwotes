@@ -10,6 +10,7 @@ class ThemeColor extends ChangeNotifier {
 
   Color accent = Color(0xFF706FD3);
   Color background = Colors.black54;
+  Color blackOrWhite = Colors.black;
 
   bool isColorLoaded = false;
 
@@ -21,6 +22,9 @@ class ThemeColor extends ChangeNotifier {
 
     background = dynamicTheme.brightness == Brightness.dark ?
       Colors.white54 : Colors.black54;
+
+    blackOrWhite = dynamicTheme.brightness == Brightness.dark ?
+      Colors.white : Colors.black;
   }
 
   void updateAccent(String topic) {
