@@ -9,6 +9,7 @@ import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_response.dart';
+import 'package:provider/provider.dart';
 
 class Starred extends StatefulWidget {
   @override
@@ -23,6 +24,8 @@ class _StarredState extends State<Starred> {
 
   @override
   Widget build(BuildContext context) {
+    final color = Provider.of<ThemeColor>(context).accent;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -31,7 +34,7 @@ class _StarredState extends State<Starred> {
         title: Text(
           'favorites',
           style: TextStyle(
-            color: Colors.black,
+            color: color,
             fontSize: 30.0,
           ),
         ),
@@ -39,7 +42,7 @@ class _StarredState extends State<Starred> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: Colors.black,),
+          icon: Icon(Icons.arrow_back, color: color,),
         ),
       ),
       body: Query(
