@@ -25,7 +25,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   bool isLoading = false;
   bool hasErrors = false;
-  FlutterError error;
+  Error error;
 
   @override
   void didChangeDependencies() {
@@ -51,7 +51,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     if (!isLoading && hasErrors) {
       return ErrorComponent(
         title: 'Recent',
-        description: error != null ? error.message : '',
+        description: error != null ? error.toString() : '',
       );
     }
 

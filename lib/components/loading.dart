@@ -7,7 +7,7 @@ class LoadingComponent extends StatelessWidget {
   final String title;
 
   LoadingComponent({
-    this.backgroundColor = const Color.fromRGBO(0, 0, 0, 0.8),
+    this.backgroundColor = Colors.transparent,
     this.color = Colors.white,
     this.title = 'Loading...',
     this.padding

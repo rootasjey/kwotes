@@ -22,7 +22,7 @@ class _StarredState extends State<Starred> {
 
   bool isLoading = false;
   bool hasErrors = false;
-  FlutterError error;
+  Error error;
 
   @override
   didChangeDependencies() {

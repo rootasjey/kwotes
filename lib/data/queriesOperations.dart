@@ -43,6 +43,19 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode quotesByTopics = parseString("""
+    query (\$topics: [String!]!) {
+      quotesByTopics (topics: \$topics) {
+        id
+        name
+        author {
+          id
+          name
+        }
+      }
+    }
+  """);
+
   static DocumentNode quotidian = parseString("""
     query Quotidian {
       quotidian {

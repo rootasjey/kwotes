@@ -23,7 +23,7 @@ class _QuotidiansState extends State<Quotidians> {
   Quotidian quotidian;
   bool isLoading = false;
   bool hasErrors = false;
-  NoSuchMethodError error;
+  Error error;
 
   @override
   void didChangeDependencies() {
