@@ -1,7 +1,9 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
@@ -11,7 +13,13 @@ import 'package:memorare/types/quotidian.dart';
 
 enum QuoteAction { addList, like, share }
 
-class Quotidians extends StatelessWidget {
+class Quotidians extends StatefulWidget {
+  @override
+  _QuotidiansState createState() => _QuotidiansState();
+}
+
+class _QuotidiansState extends State<Quotidians> {
+  Quotidian quotidian;
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +54,11 @@ class Quotidians extends StatelessWidget {
             );
           }
 
-          final quotidian = Quotidian.fromJSON(result.data['quotidian']);
+          quotidian = Quotidian.fromJSON(result.data['quotidian']);
+          final quote = quotidian.quote;
 
-          final topicColor = quotidian.quote.topics.length > 0 ?
-            ThemeColor.topicColor(quotidian.quote.topics.first) :
+          final topicColor = quote.topics.length > 0 ?
+            ThemeColor.topicColor(quote.topics.first) :
             ThemeColor.primary;
 
           return Center(
@@ -72,7 +81,7 @@ class Quotidians extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return QuotePage(quoteId: quotidian.quote.id,);
+                                return QuotePage(quoteId: quote.id,);
                               }
                             )
                           );
@@ -80,9 +89,9 @@ class Quotidians extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
                           child: Text(
-                            '${quotidian.quote.name}',
+                            '${quote.name}',
                             style: TextStyle(
-                              fontSize: FontSize.bigCard(quotidian.quote.name),
+                              fontSize: FontSize.bigCard(quote.name),
                               fontWeight: FontWeight.bold
                             ),
                           ),
@@ -95,8 +104,8 @@ class Quotidians extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) {
                                 return AuthorPage(
-                                  authorId: quotidian.quote.author.id,
-                                  authorName: quotidian.quote.author.name,
+                                  authorId: quote.author.id,
+                                  authorName: quote.author.name,
                                 );
                               }
                             )
@@ -108,7 +117,7 @@ class Quotidians extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                '${quotidian.quote.author.name}',
+                                '${quote.author.name}',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -119,14 +128,14 @@ class Quotidians extends StatelessWidget {
                         ),
                       ),
 
-                      if (quotidian.quote.references.length > 0)
+                      if (quote.references.length > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 10.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                quotidian.quote.references.first.name,
+                                quote.references.first.name,
                                 style: TextStyle(
                                 ),
                               ),
@@ -142,7 +151,6 @@ class Quotidians extends StatelessWidget {
                             IconButton(
                               icon: Icon(
                                 Icons.playlist_add,
-                                // color: Colors.white60,
                                 size: 30.0,
                               ),
                               onPressed: () {},
@@ -150,19 +158,64 @@ class Quotidians extends StatelessWidget {
                             IconButton(
                               icon: Icon(
                                 Icons.share,
-                                // color: Colors.white60,
                                 size: 30.0,
                               ),
                               onPressed: () {},
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.favorite_border,
-                                // color: Colors.white60,
-                                size: 30.0,
+
+                            if (!quote.starred)
+                              IconButton(
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  size: 30.0,
+                                ),
+                                onPressed: () async {
+                                  final booleanMessage = await UserMutations.star(context, quote.id);
+
+                                  if (booleanMessage.boolean) {
+                                    setState(() {
+                                      quotidian.quote.starred = true;
+                                    });
+                                  }
+
+                                  Flushbar(
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: booleanMessage.boolean ?
+                                      ThemeColor.success :
+                                      ThemeColor.error,
+                                    message: booleanMessage.boolean ?
+                                      'This quote has been added to your loved ones.':
+                                      booleanMessage.message,
+                                  )..show(context);
+                                },
                               ),
-                              onPressed: () {},
-                            ),
+
+                            if (quote.starred)
+                              IconButton(
+                                icon: Icon(
+                                  Icons.favorite,
+                                  size: 30.0,
+                                ),
+                                onPressed: () async {
+                                  final booleanMessage = await UserMutations.unstar(context, quote.id);
+
+                                  if (booleanMessage.boolean) {
+                                    setState(() {
+                                      quotidian.quote.starred = false;
+                                    });
+                                  }
+
+                                  Flushbar(
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: booleanMessage.boolean ?
+                                      ThemeColor.success :
+                                      ThemeColor.error,
+                                    message: booleanMessage.boolean ?
+                                      'This quote has been removed from your loved ones.':
+                                      booleanMessage.message,
+                                  )..show(context);
+                                },
+                              ),
                           ],
                         ),
                       )
@@ -176,5 +229,4 @@ class Quotidians extends StatelessWidget {
       ),
     );
   }
-
 }

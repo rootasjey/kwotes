@@ -57,6 +57,7 @@ class QueriesOperations {
             id
             name
           }
+          starred
           topics
         }
       }
