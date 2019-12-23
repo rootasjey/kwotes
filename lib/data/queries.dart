@@ -55,6 +55,23 @@ class Queries {
       });
   }
 
+  static Future<Quote> quote(BuildContext context, String id) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.quote,
+          variables: {'id': id},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        if(queryResult.hasException && queryResult.exception?.clientException != null) {
+          return null;
+        }
+
+        return Quote.fromJSON(queryResult.data['quote']);
+      });
+  }
+
   static Future<QuotesResponse> quotesByAuthor(
     BuildContext context, String id,
   ) {
