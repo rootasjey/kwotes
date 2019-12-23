@@ -190,7 +190,7 @@ class _AuthorPageState extends State<AuthorPage> {
 
   Widget summary() {
     return Padding(
-      padding: EdgeInsets.only(top: 60.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0),
       child: Text(
         author.summary,
         textAlign: TextAlign.justify,
@@ -209,9 +209,6 @@ class _AuthorPageState extends State<AuthorPage> {
 
     return Column(
       children: <Widget>[
-        if (wikiUrlDefined || urlDefined)
-          Padding(padding: EdgeInsets.only(top: 50),),
-
         if (wikiUrlDefined)
           ButtonLink(
             icon: Icon(IconsMore.wikipedia_w, color: Colors.white,),
