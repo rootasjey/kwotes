@@ -1,6 +1,8 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
@@ -196,7 +198,7 @@ class _QuotePageState extends State<QuotePage> {
           IconButton(
             padding: EdgeInsets.all(16.0),
             iconSize: 40.0,
-            icon: Icon(Icons.favorite_border,),
+            icon: Icon(Icons.share,),
             onPressed: () {},
           ),
           IconButton(
@@ -205,12 +207,58 @@ class _QuotePageState extends State<QuotePage> {
             icon: Icon(Icons.playlist_add,),
             onPressed: () {},
           ),
-          IconButton(
-            padding: EdgeInsets.all(16.0),
-            iconSize: 40.0,
-            icon: Icon(Icons.share,),
-            onPressed: () {},
-          ),
+
+          if (!quote.starred)
+            IconButton(
+              padding: EdgeInsets.all(16.0),
+              iconSize: 40.0,
+              icon: Icon(Icons.favorite_border,),
+              onPressed: () async {
+                setState(() { // optimistic
+                  quote.starred = true;
+                });
+
+                final booleanMessage = await UserMutations.star(context, quote.id);
+
+                if (!booleanMessage.boolean) {
+                  setState(() { // rollback
+                    quote.starred = false;
+                  });
+
+                  Flushbar(
+                    duration: Duration(seconds: 2),
+                    backgroundColor: ThemeColor.error,
+                    message: booleanMessage.message,
+                  )..show(context);
+                }
+              },
+            ),
+
+          if (quote.starred)
+            IconButton(
+              padding: EdgeInsets.all(16.0),
+              iconSize: 40.0,
+              icon: Icon(Icons.favorite,),
+              onPressed: () async {
+                setState(() { // optimistic
+                  quote.starred = false;
+                });
+
+                final booleanMessage = await UserMutations.unstar(context, quote.id);
+
+                if (!booleanMessage.boolean) {
+                  setState(() { // rollback
+                    quote.starred = true;
+                  });
+
+                  Flushbar(
+                    duration: Duration(seconds: 2),
+                    backgroundColor: ThemeColor.error,
+                    message: booleanMessage.message,
+                  )..show(context);
+                }
+              },
+            ),
         ],
       ),
     );
