@@ -177,7 +177,7 @@ class _QuotidiansState extends State<Quotidians> {
           MaterialPageRoute(
             builder: (context) {
               return AuthorPage(
-                authorId: quote.author.id,
+                id: quote.author.id,
                 authorName: quote.author.name,
               );
             }
@@ -266,14 +266,5 @@ class _QuotidiansState extends State<Quotidians> {
           isLoading = false;
         });
       });
-
-      // if (exception.clientException
-      //   .message.contains('No host specified in URI')) {
-
-      //   return LoadingComponent(
-      //     title: 'Loading quotidians',
-      //     padding: EdgeInsets.all(30.0),
-      //   );
-      // }
   }
 }

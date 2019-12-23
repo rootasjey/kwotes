@@ -2,6 +2,20 @@ import 'package:gql/language.dart';
 import 'package:gql/ast.dart';
 
 class QueriesOperations {
+  static DocumentNode author = parseString("""
+    query (\$id: String!) {
+      author (id: \$id) {
+        id
+        imgUrl
+        job
+        name
+        summary
+        url
+        wikiUrl
+      }
+    }
+  """);
+
   static DocumentNode publishedQuotes = parseString("""
     query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
       publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
@@ -61,6 +75,26 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode quotesByAuthorId = parseString("""
+    query (\$id: String!) {
+      quotesByAuthorId (id: \$id) {
+        entries {
+          id
+          name
+          references {
+            name
+          }
+          topics
+        }
+        pagination {
+          limit
+          nextSkip
+          skip
+        }
+      }
+    }
+  """);
+
   static DocumentNode quotesByTopics = parseString("""
     query (\$topics: [String!]!) {
       quotesByTopics (topics: \$topics) {
@@ -91,6 +125,19 @@ class QueriesOperations {
           }
           starred
           topics
+        }
+      }
+    }
+  """);
+
+  static DocumentNode lists = parseString("""
+    query (\$limit: Float, \$order: Float, \$skip: Float) {
+      userData {
+        lists (limit: \$limit, order: \$order, skip: \$skip) {
+          entries {
+            id
+            name
+          }
         }
       }
     }

@@ -106,7 +106,7 @@ class MediumQuoteCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 return AuthorPage(
-                  authorId: quote.author.id,
+                  id: quote.author.id,
                   authorName: quote.author.name,
                 );
               }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
@@ -9,6 +10,21 @@ import 'package:memorare/types/temp_quotes_response.dart';
 import 'package:provider/provider.dart';
 
 class Queries {
+  static Future<Author> author(
+    BuildContext context, String id,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.author,
+          variables: {'id': id},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return Author.fromJSON(queryResult.data['author']);
+      });
+  }
+
   static Future<QuotesResponse> myPublihshedQuotes(
     BuildContext context, String lang, int limit, int order, int skip,
   ) {
@@ -36,6 +52,21 @@ class Queries {
         )
       ).then((QueryResult queryResult) {
         return TempQuotesResponse.fromJSON(queryResult.data['tempQuotes']);
+      });
+  }
+
+  static Future<QuotesResponse> quotesByAuthor(
+    BuildContext context, String id,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.quotesByAuthorId,
+          variables: {'id': id },
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return QuotesResponse.fromJSON(queryResult.data['quotesByAuthorId']);
       });
   }
 
