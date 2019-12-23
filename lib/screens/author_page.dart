@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:memorare/common/icons_more_icons.dart';
@@ -5,6 +6,7 @@ import 'package:memorare/components/button_link.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/medium_quote_card.dart';
+import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/colors.dart';
@@ -239,7 +241,53 @@ class _AuthorPageState extends State<AuthorPage> {
             itemCount: quotes.length,
             itemBuilder: (BuildContext context, int index) {
               return Center(
-                child: MediumQuoteCard(quote: quotes.elementAt(index),),
+                child: MediumQuoteCard(
+                  quote: quotes.elementAt(index),
+                  onLike: () async {
+                  setState(() { // optimistic
+                    quotes.elementAt(index).starred = true;
+                  });
+
+                  final booleanMessage = await UserMutations.star(
+                    context,
+                    quotes.elementAt(index).id
+                  );
+
+                  if (!booleanMessage.boolean) {
+                    setState(() { // rollback
+                      quotes.elementAt(index).starred = false;
+                    });
+
+                    Flushbar(
+                      duration: Duration(seconds: 2),
+                      backgroundColor: ThemeColor.error,
+                      message: booleanMessage.message,
+                    )..show(context);
+                  }
+                },
+                onUnlike: () async {
+                  setState(() { // optimistic
+                    quotes.elementAt(index).starred = false;
+                  });
+
+                  final booleanMessage = await UserMutations.unstar(
+                    context,
+                    quotes.elementAt(index).id
+                  );
+
+                  if (!booleanMessage.boolean) {
+                    setState(() { // rollback
+                      quotes.elementAt(index).starred = true;
+                    });
+
+                    Flushbar(
+                      duration: Duration(seconds: 2),
+                      backgroundColor: ThemeColor.error,
+                      message: booleanMessage.message,
+                    )..show(context);
+                  }
+                },
+                ),
               );
             },
           ),
