@@ -145,6 +145,23 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode listById = parseString("""
+    query (\$id: String!) {
+      listById(id: \$id) {
+        id
+        name
+        description
+        quotes {
+          entries {
+            id
+            name
+            topics
+          }
+        }
+      }
+    }
+  """);
+
   static DocumentNode starred = parseString("""
     query (\$limit: Float, \$order: Float, \$skip: Float) {
       userData {

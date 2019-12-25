@@ -5,6 +5,7 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quotes_list.dart';
 import 'package:provider/provider.dart';
@@ -84,6 +85,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
         if (lists.length == 0) {
           return EmptyView(
+            title: 'Lists',
             description: 'You have no list yet.',
           );
         }
@@ -98,7 +100,19 @@ class _QuotesListsState extends State<QuotesLists> {
             final item = lists.elementAt(index);
 
             return ListTile(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return QuotesListScreen(
+                        id: item.id,
+                        name: item.name,
+                        description: item.description,
+                      );
+                    }
+                  )
+                );
+              },
               trailing: moreButton(quotesList: item, index: index),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,6 +270,7 @@ class _QuotesListsState extends State<QuotesLists> {
                   },
                   child: Text(
                     'Create',
+                    style: TextStyle(color: Colors.white),
                   ),
                 )
               ],

@@ -17,7 +17,7 @@ class QuotesList {
     List<Quote> _quotes = [];
 
     if (json['quotes'] != null) {
-      for (var jsonQuote in json['quotes']) {
+      for (var jsonQuote in json['quotes']['entries']) {
         _quotes.add(Quote.fromJSON(jsonQuote));
       }
     }
