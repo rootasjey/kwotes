@@ -1,4 +1,3 @@
-
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/models/user_data.dart';
@@ -8,6 +7,7 @@ import 'package:memorare/screens/app_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/starred.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/types/colors.dart';
@@ -23,6 +23,7 @@ class Account extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0,),
             child: Column(
               children: <Widget>[
                 CircleAvatar(
@@ -46,7 +47,6 @@ class Account extends StatelessWidget {
                   ...nonAuthWidgets(context),
               ],
             ),
-            padding: EdgeInsets.only(left: 20.0, top: 80.0, right: 20.0),
           ),
         ],
       ),
@@ -142,6 +142,21 @@ class Account extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return Starred();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.list, size: 30.0,),
+                title: Text('Lists', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return QuotesLists();
                     }
                   )
                 );

@@ -134,9 +134,10 @@ class QueriesOperations {
   static DocumentNode lists = parseString("""
     query (\$limit: Float, \$order: Float, \$skip: Float) {
       userData {
-        lists (limit: \$limit, order: \$order, skip: \$skip) {
+        quotesLists (limit: \$limit, order: \$order, skip: \$skip) {
           entries {
             id
+            description
             name
           }
         }

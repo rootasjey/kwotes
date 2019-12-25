@@ -4,6 +4,7 @@ import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:memorare/types/quotes_lists_response.dart';
 import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
@@ -22,6 +23,21 @@ class Queries {
         )
       ).then((QueryResult queryResult) {
         return Author.fromJSON(queryResult.data['author']);
+      });
+  }
+
+  static Future<QuotesListsResponse> lists(
+    BuildContext context, int limit, int order, int skip,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.lists,
+          variables: {'limit': limit, 'order': order, 'skip': skip},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return QuotesListsResponse.fromJSON(queryResult.data['userData']['quotesLists']);
       });
   }
 

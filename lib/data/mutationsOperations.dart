@@ -2,6 +2,28 @@ import 'package:gql/language.dart';
 import 'package:gql/ast.dart';
 
 class MutationsOperations {
+  static DocumentNode createList = parseString("""
+    mutation (\$name: String!, \$description: String, \$quoteId: String) {
+      createList (name: \$name, description: \$description, quoteId: \$quoteId) {
+        quotesLists {
+          entries {
+            id
+            name
+            description
+          }
+        }
+      }
+    }
+  """);
+
+  static DocumentNode deleteList = parseString("""
+    mutation (\$id: String!) {
+      deleteList (id: \$id) {
+        id
+      }
+    }
+  """);
+
   static DocumentNode deleteTempQuote = parseString("""
     mutation (\$id: String!) {
       deleteTempQuoteAdmin (id: \$id) {
@@ -70,6 +92,14 @@ class MutationsOperations {
   static DocumentNode unstar = parseString("""
     mutation (\$quoteId: String!) {
       unstar (quoteId: \$quoteId) {
+        id
+      }
+    }
+  """);
+
+  static DocumentNode updateList = parseString("""
+    mutation (\$id: String!, \$name: String, \$description: String) {
+      updateList (id: \$id, name: \$name, description: \$description) {
         id
       }
     }

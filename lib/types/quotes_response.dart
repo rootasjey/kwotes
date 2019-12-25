@@ -1,4 +1,3 @@
-
 import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/quote.dart';
 
