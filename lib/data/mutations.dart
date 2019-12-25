@@ -117,6 +117,33 @@ class UserMutations {
     });
   }
 
+  static Future<BooleanMessage> removeFromList(
+    BuildContext context,
+    String listId,
+    String quoteId,
+  ) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.removeFromList,
+        variables: {'listId': listId, 'quoteId': quoteId},
+      )
+    ).then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+
+    }).catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
   static Future<BooleanMessage> updateList(
     BuildContext context,
     String id,

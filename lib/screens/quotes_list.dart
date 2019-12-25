@@ -103,12 +103,14 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
 
         List<Widget> quotesCards = [];
 
-        for (var quote in quotesList.quotes) {
+        for (var i = 0; i < quotesList.quotes.length; i++) {
+          final quote = quotesList.quotes.elementAt(i);
           quotesCards.add(
             MediumQuoteCard(
               quote: quote,
               onRemove: () {
                 print('remove');
+                removeFromList(i);
               },
               onRemoveText: 'Remove from $displayedName',
             ),
@@ -143,6 +145,40 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           isLoading = false;
           hasErrors = true;
         });
+      });
+  }
+
+  void removeFromList(int index) {
+    final quote = quotesList.quotes.elementAt(index);
+
+    setState(() { // optimistic
+      quotesList.quotes.removeAt(index);
+    });
+
+    UserMutations.removeFromList(context, widget.id, quote.id)
+      .then((booleanMessage) {
+        if (!booleanMessage.boolean) {
+          setState(() {
+            quotesList.quotes.insert(index, quote);
+          });
+
+          Flushbar(
+            backgroundColor: ThemeColor.error,
+            message: booleanMessage.message,
+          )..show(context);
+        }
+      })
+      .catchError((err) {
+        setState(() {
+            quotesList.quotes.insert(index, quote);
+          });
+
+          Flushbar(
+            backgroundColor: ThemeColor.error,
+            message: err != null ?
+              err.toString() :
+              'Could not remove the quote. Try again or contact us.',
+          )..show(context);
       });
   }
 

@@ -10,9 +10,13 @@ class MediumQuoteCard extends StatelessWidget {
   final Function onLike;
   final Function onUnlike;
   final Quote quote;
+  final Function onRemove;
+  final String onRemoveText;
 
   MediumQuoteCard({
     this.color,
+    this.onRemove,
+    this.onRemoveText,
     this.onLike,
     this.onUnlike,
     this.quote,
@@ -143,6 +147,11 @@ class MediumQuoteCard extends StatelessWidget {
           if (value == 'share') {
             return;
           }
+
+          if (value == 'remove') {
+            if (onRemove != null) { onRemove(); }
+            return;
+          }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           const PopupMenuItem(
@@ -189,6 +198,20 @@ class MediumQuoteCard extends StatelessWidget {
                 leading: Icon(Icons.favorite),
                 title: Text(
                   'Unlike',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+            ),
+          if (onRemove != null)
+            PopupMenuItem(
+              value: 'remove',
+              child: ListTile(
+                leading: Icon(Icons.delete),
+                title: Text(
+                  onRemoveText ?? 'Remove',
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold
                   ),

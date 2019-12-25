@@ -81,6 +81,14 @@ class MutationsOperations {
   """
   );
 
+  static DocumentNode removeFromList = parseString("""
+    mutation (\$listId: String!, \$quoteId: String!) {
+      removeFromList (listId:\$listId, quoteId: \$quoteId) {
+        id
+      }
+    }
+  """);
+
   static DocumentNode star = parseString("""
     mutation (\$quoteId: String!) {
       star (quoteId: \$quoteId) {
