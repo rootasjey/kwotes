@@ -71,6 +71,11 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                 showDeleteListDialog();
                 return;
               }
+
+              if (value == 'edit') {
+                showEditListDialog();
+                return;
+              }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
@@ -80,15 +85,41 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                   title: Text('Delete'),
                 )
               ),
+              PopupMenuItem(
+                value: 'edit',
+                child: ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text('Edit'),
+                )
+              ),
             ],
           ),
         ],
-        title: Text(
-          displayedName,
-          style: TextStyle(
-            color: accent,
-            fontSize: 30.0,
-          ),
+        title: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                displayedName,
+                style: TextStyle(
+                  color: accent,
+                  fontSize: 30.0,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  displayedDescription,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  )
+                ),
+              ),
+            )
+          ],
         ),
         leading: IconButton(
           onPressed: () {
@@ -211,15 +242,12 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       });
   }
 
-  void showEditListDialog({QuotesList quotesList, int index}) {
+  void showEditListDialog() {
     final themeColor = Provider.of<ThemeColor>(context);
     final accent = themeColor.accent;
 
-    final name = quotesList.name;
-    final description = quotesList.description;
-
-    updateListName = name;
-    updateListDescription = description;
+    updateListName = quotesList.name;
+    updateListDescription = quotesList.description;
 
     showDialog(
       context: context,
@@ -227,7 +255,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       builder: (BuildContext context) {
         return SimpleDialog(
           title: Text(
-            'Edit $name',
+            'Edit ${quotesList.name}',
             overflow: TextOverflow.ellipsis,
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
@@ -237,7 +265,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               decoration: InputDecoration(
                 labelText: 'Name',
                 labelStyle: TextStyle(color: accent),
-                hintText: name,
+                hintText: quotesList.name,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: accent,
@@ -254,7 +282,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               decoration: InputDecoration(
                 labelText: 'Description',
                 labelStyle: TextStyle(color: accent),
-                hintText: description,
+                hintText: updateListDescription,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: accent,
@@ -285,7 +313,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                 RaisedButton(
                   color: accent,
                   onPressed: () {
-                    updateList(quotesList: quotesList, index: index);
+                    updateList();
                     Navigator.of(context).pop();
                   },
                   child: Text(
@@ -309,7 +337,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete $name list?'),
+          title: Text('Delete $name?'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -383,11 +411,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       });
   }
 
-  void updateList({QuotesList quotesList, int index}) {
-    final name = updateListName;
-    final description = updateListDescription;
-
-
+  void updateList() {
     setState(() {
       oldName = displayedName;
       oldDescription = displayedDescription;
@@ -396,33 +420,37 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       displayedDescription = updateListDescription;
     });
 
-    UserMutations.updateList(context, widget.id, name, description)
-      .then((resp) {
-        if (!resp.boolean) {
-          setState(() {
-            displayedName = oldName;
-            displayedDescription = oldDescription;
-          });
-
-          Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: resp.message,
-          )..show(context);
-        }
-      }).catchError((err) {
+    UserMutations.updateList(
+      context,
+      widget.id,
+      updateListName,
+      updateListDescription
+    ).then((resp) {
+      if (!resp.boolean) {
         setState(() {
           displayedName = oldName;
           displayedDescription = oldDescription;
         });
 
         Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: err != null ?
-              err.toString() :
-              'Could not update your list. Try again later or contact us.',
-          )..show(context);
+          duration: Duration(seconds: 3),
+          backgroundColor: ThemeColor.error,
+          message: resp.message,
+        )..show(context);
+      }
+    }).catchError((err) {
+      setState(() {
+        displayedName = oldName;
+        displayedDescription = oldDescription;
       });
+
+      Flushbar(
+          duration: Duration(seconds: 3),
+          backgroundColor: ThemeColor.error,
+          message: err != null ?
+            err.toString() :
+            'Could not update your list. Try again later or contact us.',
+        )..show(context);
+    });
   }
 }
