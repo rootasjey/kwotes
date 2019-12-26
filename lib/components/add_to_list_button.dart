@@ -12,10 +12,17 @@ enum ButtonType {
 }
 
 class AddToListButton extends StatefulWidget {
+  final BuildContext context;
+  final Function onBeforeShowSheet;
   final String quoteId;
   final ButtonType type;
 
-  AddToListButton({this.quoteId, this.type = ButtonType.icon});
+  AddToListButton({
+    this.context,
+    this.onBeforeShowSheet,
+    this.quoteId,
+    this.type = ButtonType.icon
+  });
 
   @override
   _AddToListButtonState createState() => _AddToListButtonState();
@@ -43,10 +50,22 @@ class _AddToListButtonState extends State<AddToListButton> {
           Icons.playlist_add,
           size: 30.0,
         ),
-        onPressed: () { showBottomSheetList(); },
+        onPressed: () {
+          if (widget.onBeforeShowSheet != null) {
+            widget.onBeforeShowSheet();
+          }
+
+          showBottomSheetList();
+        },
       ):
       ListTile(
-        onTap: () { showBottomSheetList(); },
+        onTap: () {
+          if (widget.onBeforeShowSheet != null) {
+            widget.onBeforeShowSheet();
+          }
+
+          showBottomSheetList();
+        },
         leading: Icon(Icons.playlist_add),
         title: Text(
           'Add to...',
@@ -65,7 +84,7 @@ class _AddToListButtonState extends State<AddToListButton> {
           builder: (BuildContext context, StateSetter setSheetState) {
             final newListButton = ListTile(
               onTap: () async {
-                final res = await showNewListDialog();
+                final res = await showNewListDialog(context);
                 if (res) { Navigator.pop(context); }
               },
               leading: Icon(Icons.add),
@@ -130,7 +149,12 @@ class _AddToListButtonState extends State<AddToListButton> {
                 tiles.add(
                   ListTile(
                     onTap: () {
-                      addQuoteToList(list.id, list.name);
+                      addQuoteToList(
+                        context: context,
+                        listId: list.id,
+                        listName: list.name
+                      );
+
                       Navigator.pop(context);
                     },
                     title: Text(
@@ -169,7 +193,7 @@ class _AddToListButtonState extends State<AddToListButton> {
     });
   }
 
-  Future<bool> showNewListDialog() {
+  Future<bool> showNewListDialog(BuildContext context) {
     final accent = Provider.of<ThemeColor>(context).accent;
 
     return showDialog(
@@ -231,7 +255,7 @@ class _AddToListButtonState extends State<AddToListButton> {
                 RaisedButton(
                   color: accent,
                   onPressed: () {
-                    createNewList();
+                    createNewList(context);
                     return Navigator.of(context).pop(true);
                   },
                   child: Text(
@@ -247,7 +271,9 @@ class _AddToListButtonState extends State<AddToListButton> {
     );
   }
 
-  void addQuoteToList(String listId, String listName) {
+  void addQuoteToList({BuildContext context, String listId, String listName}) {
+    final _context = widget.context ?? context;
+
     UserMutations
     .addUniqToList(context, listId, widget.quoteId)
     .then((resp) {
@@ -256,7 +282,7 @@ class _AddToListButtonState extends State<AddToListButton> {
           duration: Duration(seconds: 3),
           backgroundColor: ThemeColor.success,
           message: 'Added to the list $listName.',
-        )..show(context);
+        )..show(_context);
         return;
       }
 
@@ -264,11 +290,13 @@ class _AddToListButtonState extends State<AddToListButton> {
         duration: Duration(seconds: 3),
         backgroundColor: ThemeColor.error,
         message: resp.message,
-      )..show(context);
+      )..show(_context);
     });
   }
 
-  void createNewList() {
+  void createNewList(BuildContext context) {
+    final _context = widget.context ?? context;
+
     UserMutations
     .createList(
       context: context,
@@ -280,14 +308,14 @@ class _AddToListButtonState extends State<AddToListButton> {
         duration: Duration(seconds: 3),
         backgroundColor: ThemeColor.success,
         message: 'Your new list $newListName has been created.',
-      )..show(context);
+      )..show(_context);
     })
     .catchError((err) {
       Flushbar(
         duration: Duration(seconds: 3),
         backgroundColor: ThemeColor.error,
         message: 'Could not create your new list. Try again later or contact us.',
-      )..show(context);
+      )..show(_context);
     });
   }
 }

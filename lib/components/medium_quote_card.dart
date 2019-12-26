@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
@@ -154,16 +155,13 @@ class MediumQuoteCard extends StatelessWidget {
           }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'addTo',
-            child: ListTile(
-              leading: Icon(Icons.playlist_add),
-              title: Text(
-                'Add to...',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
+            child: AddToListButton(
+              context: context,
+              quoteId: quote.id,
+              type: ButtonType.tile,
+              onBeforeShowSheet: () => Navigator.pop(context),
             ),
           ),
           const PopupMenuItem(
