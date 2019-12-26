@@ -23,13 +23,16 @@ class EmptyView extends StatelessWidget {
 
           Padding(
             padding: EdgeInsets.only(top: 20.0),
-            child: Text(
-              description,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 25.0,
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25.0,
+                ),
               ),
-            ),
+            )
           )
         ],
       ),
