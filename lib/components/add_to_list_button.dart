@@ -16,11 +16,13 @@ class AddToListButton extends StatefulWidget {
   final Function onBeforeShowSheet;
   final String quoteId;
   final ButtonType type;
+  final double size;
 
   AddToListButton({
     this.context,
     this.onBeforeShowSheet,
     this.quoteId,
+    this.size = 30.0,
     this.type = ButtonType.icon
   });
 
@@ -46,9 +48,9 @@ class _AddToListButtonState extends State<AddToListButton> {
   Widget build(BuildContext context) {
     return widget.type == ButtonType.icon ?
       IconButton(
+        iconSize: widget.size,
         icon: Icon(
           Icons.playlist_add,
-          size: 30.0,
         ),
         onPressed: () {
           if (widget.onBeforeShowSheet != null) {
@@ -85,7 +87,7 @@ class _AddToListButtonState extends State<AddToListButton> {
             final newListButton = ListTile(
               onTap: () async {
                 final res = await showNewListDialog(context);
-                if (res) { Navigator.pop(context); }
+                if (res != null && res) { Navigator.pop(context); }
               },
               leading: Icon(Icons.add),
               title: Text(

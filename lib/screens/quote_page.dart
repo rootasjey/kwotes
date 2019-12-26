@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
@@ -29,6 +30,7 @@ class _QuotePageState extends State<QuotePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (quote != null) { return; }
     fetchQuote();
   }
 
@@ -201,11 +203,11 @@ class _QuotePageState extends State<QuotePage> {
             icon: Icon(Icons.share,),
             onPressed: () {},
           ),
-          IconButton(
-            padding: EdgeInsets.all(16.0),
-            iconSize: 40.0,
-            icon: Icon(Icons.playlist_add,),
-            onPressed: () {},
+
+          AddToListButton(
+            context: context,
+            quoteId: quote.id,
+            size: 40.0,
           ),
 
           if (!quote.starred)
