@@ -3,14 +3,42 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/data/mutationsOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/boolean_message.dart';
-import 'package:memorare/types/quotes_lists_response.dart';
+import 'package:memorare/types/quotes_list.dart';
 import 'package:provider/provider.dart';
 
 class UserMutations {
-  static Future<QuotesListsResponse> createList({
+  static Future<BooleanMessage> addUniqToList(
+    BuildContext context,
+    String listId,
+    String quoteId,
+  ) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.addUniqToList,
+        variables: {'listId': listId, 'quoteId': quoteId},
+      )
+    ).then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+
+    }).catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  static Future<QuotesList> createList({
     BuildContext context,
     String name,
-    String description = ''
+    String description = '',
+    String quoteId,
   }) {
 
     final httpClientModel = Provider.of<HttpClientsModel>(context);
@@ -18,10 +46,14 @@ class UserMutations {
     return httpClientModel.defaultClient.value.mutate(
       MutationOptions(
       documentNode: MutationsOperations.createList,
-      variables: {'name': name, 'description': description},
+      variables: {
+        'name': name,
+        'description': description,
+        'quoteId': quoteId,
+      },
     ))
     .then((queryResult) {
-      return QuotesListsResponse.fromJSON(queryResult.data['createList']['quotesLists']);
+      return QuotesList.fromJSON(queryResult.data['createList']);
     });
   }
 

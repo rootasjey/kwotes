@@ -2,16 +2,21 @@ import 'package:gql/language.dart';
 import 'package:gql/ast.dart';
 
 class MutationsOperations {
+
+  static DocumentNode addUniqToList = parseString("""
+    mutation (\$listId: String!, \$quoteId: String!) {
+      addUniqToList (listId:\$listId, quoteId: \$quoteId) {
+        isUniq
+      }
+    }
+  """);
+
   static DocumentNode createList = parseString("""
     mutation (\$name: String!, \$description: String, \$quoteId: String) {
       createList (name: \$name, description: \$description, quoteId: \$quoteId) {
-        quotesLists {
-          entries {
-            id
-            name
-            description
-          }
-        }
+        id
+        name
+        description
       }
     }
   """);

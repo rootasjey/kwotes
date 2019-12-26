@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
@@ -97,13 +98,7 @@ class _QuotidiansState extends State<Quotidians> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.playlist_add,
-              size: 30.0,
-            ),
-            onPressed: () {},
-          ),
+          AddToListButton(quoteId: quote.id,),
           IconButton(
             icon: Icon(
               Icons.share,
