@@ -24,6 +24,7 @@ class QuotesListScreen extends StatefulWidget {
 class _QuotesListScreenState extends State<QuotesListScreen> {
   QuotesList quotesList;
 
+  bool isDeletingList = false;
   bool isLoading = false;
   bool hasErrors = false;
   Error error;
@@ -63,6 +64,25 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'delete') {
+                showDeleteListDialog();
+                return;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                value: 'delete',
+                child: ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text('Delete'),
+                )
+              ),
+            ],
+          ),
+        ],
         title: Text(
           displayedName,
           style: TextStyle(
@@ -98,6 +118,14 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               title: 'Empty',
               description: 'You have no quotes in this list yet.',
             ),
+          );
+        }
+
+        if (isDeletingList == true) {
+          return LoadingComponent(
+            title: 'Deleting $displayedName list...',
+            color: themeColor.background,
+            padding: EdgeInsets.all(30.0),
           );
         }
 
@@ -273,6 +301,88 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     );
   }
 
+  void showDeleteListDialog() {
+    final name = quotesList.name;
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete $name list?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'This action is irreversible.',
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  'Cancel',
+                ),
+              ),
+            ),
+            RaisedButton(
+              color: ThemeColor.error,
+              onPressed: () {
+                deleteList();
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  void deleteList() {
+    setState(() {
+      isDeletingList = true;
+    });
+
+    UserMutations.deleteList(context, widget.id)
+      .then((booleanMessage) {
+        if (booleanMessage.boolean) { // rollback
+          Navigator.of(context).pop();
+          return;
+        }
+
+        Flushbar(
+            duration: Duration(seconds: 3),
+            backgroundColor: ThemeColor.error,
+            message: booleanMessage.message,
+          )..show(context);
+      })
+      .catchError((err) {
+        Flushbar(
+          duration: Duration(seconds: 3),
+          backgroundColor: ThemeColor.error,
+          message: err != null ?
+            err.toString() :
+            'Could not update your list. Try again later or contact us.',
+        )..show(context);
+      });
+  }
+
   void updateList({QuotesList quotesList, int index}) {
     final name = updateListName;
     final description = updateListDescription;
@@ -297,7 +407,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           Flushbar(
             duration: Duration(seconds: 3),
             backgroundColor: ThemeColor.error,
-            message: 'Could not update your list. Try again later or contact us.',
+            message: resp.message,
           )..show(context);
         }
       }).catchError((err) {
@@ -309,7 +419,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         Flushbar(
             duration: Duration(seconds: 3),
             backgroundColor: ThemeColor.error,
-            message: 'Could not update your list. Try again later or contact us.',
+            message: err != null ?
+              err.toString() :
+              'Could not update your list. Try again later or contact us.',
           )..show(context);
       });
   }
