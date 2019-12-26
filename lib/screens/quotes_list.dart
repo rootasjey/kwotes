@@ -109,7 +109,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             MediumQuoteCard(
               quote: quote,
               onRemove: () {
-                print('remove');
                 removeFromList(i);
               },
               onRemoveText: 'Remove from $displayedName',
@@ -163,6 +162,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           });
 
           Flushbar(
+            duration: Duration(seconds: 3),
             backgroundColor: ThemeColor.error,
             message: booleanMessage.message,
           )..show(context);
@@ -174,6 +174,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           });
 
           Flushbar(
+            duration: Duration(seconds: 3),
             backgroundColor: ThemeColor.error,
             message: err != null ?
               err.toString() :
