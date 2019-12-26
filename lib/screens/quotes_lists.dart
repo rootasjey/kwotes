@@ -433,7 +433,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
     ).then((quotesListResp) {
       setState(() {
-        lists = quotesListResp.entries;
+        lists.add(quotesListResp);
       });
     })
     .catchError((err) {
