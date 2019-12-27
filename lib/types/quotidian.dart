@@ -1,4 +1,3 @@
-
 import 'package:memorare/types/quote.dart';
 
 class Quotidian {

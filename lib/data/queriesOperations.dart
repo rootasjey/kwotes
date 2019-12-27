@@ -16,6 +16,37 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode listById = parseString("""
+    query (\$id: String!) {
+      listById(id: \$id) {
+        id
+        name
+        description
+        quotes {
+          entries {
+            id
+            name
+            topics
+          }
+        }
+      }
+    }
+  """);
+
+  static DocumentNode lists = parseString("""
+    query (\$limit: Float, \$order: Float, \$skip: Float) {
+      userData {
+        quotesLists (limit: \$limit, order: \$order, skip: \$skip) {
+          entries {
+            id
+            description
+            name
+          }
+        }
+      }
+    }
+  """);
+
   static DocumentNode publishedQuotes = parseString("""
     query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
       publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
@@ -131,30 +162,23 @@ class QueriesOperations {
     }
   """);
 
-  static DocumentNode lists = parseString("""
-    query (\$limit: Float, \$order: Float, \$skip: Float) {
-      userData {
-        quotesLists (limit: \$limit, order: \$order, skip: \$skip) {
-          entries {
-            id
-            description
-            name
-          }
-        }
-      }
-    }
-  """);
-
-  static DocumentNode listById = parseString("""
-    query (\$id: String!) {
-      listById(id: \$id) {
-        id
-        name
-        description
-        quotes {
-          entries {
+  static DocumentNode quotidians = parseString("""
+    query {
+      quotidians {
+        entries {
+          id
+          quote {
+            author {
+              id
+              name
+            }
             id
             name
+            references {
+              id
+              name
+            }
+            starred
             topics
           }
         }

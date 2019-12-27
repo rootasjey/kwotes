@@ -1,6 +1,8 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:memorare/components/add_to_list_button.dart';
+import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
@@ -21,7 +23,9 @@ class Quotidians extends StatefulWidget {
 }
 
 class _QuotidiansState extends State<Quotidians> {
-  Quotidian quotidian;
+  List<Quotidian> quotidians = [];
+  List<String> days = ['today', 'yesterday', '2 days ago'];
+
   bool isLoading = false;
   bool hasErrors = false;
   Error error;
@@ -29,7 +33,9 @@ class _QuotidiansState extends State<Quotidians> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    fetchQuotidian();
+
+    if (quotidians.length > 0) { return; }
+    fetchQuotidians();
   }
 
   @override
@@ -55,40 +61,84 @@ class _QuotidiansState extends State<Quotidians> {
       );
     }
 
-    final quote = quotidian.quote;
-
-    final topicColor = quote.topics.length > 0 ?
-      ThemeColor.topicColor(quote.topics.first) :
-      ThemeColor.primary;
-
-    return Center(
-      child: ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.all(25.0),
+    if (quotidians.length == 0) {
+      return Column(
         children: <Widget>[
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-              side: BorderSide(
-                color: topicColor,
-                width: 5.0,
+          EmptyView(
+            title: 'Quotidians',
+            description: 'It is odd. There is no quotidians for today 🤔. ',
+          ),
+          Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text(
+                'Try again'
               ),
-            ),
-            child: Column(
-              children: <Widget>[
-                content(quote),
-
-                author(quote),
-
-                if (quote.references.length > 0)
-                  reference(quote),
-
-                actionIcons(quote),
-              ],
             ),
           ),
         ],
-      ),
+      );
+    }
+
+    return Swiper(
+      itemWidth: MediaQuery.of(context).size.width - 20.0,
+      itemCount: quotidians.length,
+      layout: SwiperLayout.STACK,
+      itemBuilder: (BuildContext context, int index) {
+        final quote = quotidians.elementAt(index).quote;
+
+        final topicColor = quote.topics.length > 0 ?
+          ThemeColor.topicColor(quote.topics.first) :
+          ThemeColor.primary;
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 550.0,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Card(
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      side: BorderSide(
+                        color: topicColor,
+                        width: 5.0,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        content(quote),
+
+                        author(quote),
+
+                        if (quote.references.length > 0)
+                          reference(quote),
+
+                        actionIcons(quote),
+                      ],
+                    ),
+                  ),
+                )
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Opacity(
+                  opacity: .6,
+                  child: Text(
+                    days.elementAt(index),
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -237,29 +287,28 @@ class _QuotidiansState extends State<Quotidians> {
     );
   }
 
-  void fetchQuotidian() {
+  void fetchQuotidians() {
     setState(() {
       isLoading = true;
     });
 
-    Queries.quotidian(context)
-      .then((quotidianResponse) {
-        // http client not ready
-        if (quotidianResponse == null) {
-          return;
-        }
+    Queries.quotidians(context)
+    .then((resp) {
+      if (resp == null) {
+        return;
+      }
 
-        setState(() {
-          quotidian = quotidianResponse;
-          isLoading = false;
-        });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          hasErrors = true;
-          isLoading = false;
-        });
+      setState(() {
+        quotidians = resp.entries;
+        isLoading = false;
       });
+    })
+    .catchError((err) {
+      setState(() {
+        error = err;
+        hasErrors = true;
+        isLoading = false;
+      });
+    });
   }
 }

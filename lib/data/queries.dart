@@ -8,6 +8,7 @@ import 'package:memorare/types/quotes_list.dart';
 import 'package:memorare/types/quotes_lists_response.dart';
 import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/types/quotodians_response.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
 import 'package:provider/provider.dart';
 
@@ -154,6 +155,22 @@ class Queries {
         }
 
         return Quotidian.fromJSON(queryResult.data['quotidian']);
+      });
+  }
+
+  static Future<QuotidiansResponse> quotidians(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.quotidians,
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        if(queryResult.hasException && queryResult.exception?.clientException != null) {
+          return null;
+        }
+
+        return QuotidiansResponse.fromJSON(queryResult.data['quotidians']);
       });
   }
 
