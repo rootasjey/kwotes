@@ -186,6 +186,26 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode randomAuthors = parseString("""
+    query (\$quoteLang: String) {
+      randomAuthors (quoteLang: \$quoteLang) {
+        id
+        imgUrl
+        name
+      }
+    }
+  """);
+
+  static DocumentNode randomReferences = parseString("""
+    query (\$quoteLang: String) {
+      randomReferences (quoteLang: \$quoteLang) {
+        id
+        imgUrl
+        name
+      }
+    }
+  """);
+
   static DocumentNode starred = parseString("""
     query (\$limit: Float, \$order: Float, \$skip: Float) {
       userData {

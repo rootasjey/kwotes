@@ -9,8 +9,8 @@ import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
+import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/quotidians.dart';
-import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
@@ -73,7 +73,7 @@ class MainState extends State<Main> {
 
   static List<Widget> _listScreens = <Widget>[
     Quotidians(),
-    RecentQuotes(),
+    Discover(),
     Topics(),
     Account(),
   ];
@@ -138,8 +138,8 @@ class MainState extends State<Main> {
                 title: Text('Today',),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.list,),
-                title: Text('Recent',),
+                icon: Icon(Icons.lightbulb_outline,),
+                title: Text('Discover',),
               ),
               BottomNavigationBarItem(
                 icon: Icon(IconsMore.tags,),

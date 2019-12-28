@@ -9,6 +9,7 @@ import 'package:memorare/types/quotes_lists_response.dart';
 import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/types/quotodians_response.dart';
+import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
 import 'package:provider/provider.dart';
 
@@ -171,6 +172,52 @@ class Queries {
         }
 
         return QuotidiansResponse.fromJSON(queryResult.data['quotidians']);
+      });
+  }
+
+  static Future<List<Author>> randomAuthors(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.randomAuthors,
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        if(queryResult.hasException && queryResult.exception?.clientException != null) {
+          return null;
+        }
+
+        List<Author> authors = [];
+        Map<String, dynamic> json = queryResult.data;
+
+        for (var authorData in json['randomAuthors']) {
+          authors.add(Author.fromJSON(authorData));
+        }
+
+        return authors;
+      });
+  }
+
+  static Future<List<Reference>> randomReferences(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.randomReferences,
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        if(queryResult.hasException && queryResult.exception?.clientException != null) {
+          return null;
+        }
+
+        List<Reference> references = [];
+        Map<String, dynamic> json = queryResult.data;
+
+        for (var refenreceData in json['randomReferences']) {
+          references.add(Reference.fromJSON(refenreceData));
+        }
+
+        return references;
       });
   }
 
