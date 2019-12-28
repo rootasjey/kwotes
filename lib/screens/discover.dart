@@ -3,6 +3,7 @@ import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/reference.dart';
@@ -49,9 +50,9 @@ class _DiscoverState extends State<Discover> {
 
   @override
   void dispose() {
-    super.dispose();
     _references = references;
     _authors = authors;
+    super.dispose();
   }
 
   @override
@@ -98,17 +99,35 @@ class _DiscoverState extends State<Discover> {
             );
           }
 
-          List<Widget> circles = [];
+          List<Widget> cards = [];
 
           for (var reference in references) {
-            circles.add(
-              discoverCard(reference.name, reference.imgUrl)
+            cards.add(
+              discoverCard(
+                title: reference.name,
+                imgUrl: reference.imgUrl,
+              )
             );
           }
 
           for (var author in authors) {
-            circles.add(
-              discoverCard(author.name, author.imgUrl)
+            cards.add(
+              discoverCard(
+                title: author.name,
+                imgUrl: author.imgUrl,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return AuthorPage(
+                          id: author.id,
+                          authorName: author.name,
+                        );
+                      }
+                    )
+                  );
+                }
+              )
             );
           }
 
@@ -142,7 +161,7 @@ class _DiscoverState extends State<Discover> {
               Divider(height: 60.0,),
               Wrap(
                 alignment: WrapAlignment.center,
-                children: circles,
+                children: cards,
               ),
             ],
           );
@@ -151,7 +170,7 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
-  Widget discoverCard(String title, String imgUrl) {
+  Widget discoverCard({String title, String imgUrl, Function onTap}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: SizedBox(
@@ -165,7 +184,11 @@ class _DiscoverState extends State<Discover> {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              if (onTap != null) {
+                onTap();
+              }
+            },
             child: Stack(
               children: <Widget>[
                 if (imgUrl != null && imgUrl.length > 0)
