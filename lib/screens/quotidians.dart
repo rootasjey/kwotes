@@ -51,10 +51,6 @@ class _QuotidiansState extends State<Quotidians> {
     }
 
     if (hasErrors) {
-      if (error.toString().contains('No host specified in URI')) {
-        print('rrrr');
-      }
-
       return ErrorComponent(
         description: error != null ? error.toString() : '',
         title: 'Quotidians',
