@@ -107,10 +107,11 @@ class _AuthorPageState extends State<AuthorPage> {
 
                         buttonsLinks(),
 
-                        Padding(padding: EdgeInsets.only(top: 40.0),),
-
                         if (areQuotesLoading)
-                          LinearProgressIndicator(),
+                          Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: LinearProgressIndicator(),
+                          ),
 
                         Divider(),
 
@@ -131,10 +132,12 @@ class _AuthorPageState extends State<AuthorPage> {
 
   Widget avatar() {
     return Padding(
-      padding: EdgeInsets.only(top: 20.0),
+      padding: EdgeInsets.only(top: 70.0),
       child: InkWell(
         onTap: () {
-          if (author.imgUrl == null) { return; }
+          if (author.imgUrl == null || author.imgUrl.length == 0) {
+            return;
+          }
 
           showDialog(
             context: context,
@@ -148,20 +151,29 @@ class _AuthorPageState extends State<AuthorPage> {
             }
           );
         },
-        child: CircleAvatar(
-          radius: 90.0,
-          backgroundColor: ThemeColor.primary,
-          backgroundImage: author.imgUrl != null ?
-            NetworkImage(author.imgUrl) :
-            AssetImage('assets/images/monk.png'),
-        ),
+        child: author.imgUrl != null && author.imgUrl.length > 0 ?
+          CircleAvatar(
+            radius: 90.0,
+            backgroundColor: ThemeColor.primary,
+            backgroundImage: NetworkImage(author.imgUrl)
+          ):
+          CircleAvatar(
+            radius: 90.0,
+            backgroundColor: ThemeColor.primary,
+            child: Text(
+              author.name.substring(0, 2).toUpperCase(),
+              style: TextStyle(
+                fontSize: 50.0,
+              ),
+            ),
+          ),
       )
     );
   }
 
   Widget name() {
     return Padding(
-      padding: EdgeInsets.only(top: 30.0),
+      padding: EdgeInsets.only(top: 50.0),
       child: Text(
         author.name,
         overflow: TextOverflow.ellipsis,
@@ -189,8 +201,12 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget summary() {
+    final padding = author.summary != null && author.summary.length > 0 ?
+      EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0):
+      EdgeInsets.zero;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0),
+      padding: padding,
       child: Text(
         author.summary,
         textAlign: TextAlign.justify,
