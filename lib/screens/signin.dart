@@ -151,7 +151,7 @@ class SigninState extends State<Signin> {
 
                           Credentials(email: email, password: password).saveToFile();
 
-                          Provider.of<HttpClientsModel>(context).setToken(userData.token);
+                          Provider.of<HttpClientsModel>(context).setToken(token: userData.token);
 
                           Navigator.of(context).pop();
                         },

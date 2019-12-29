@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/components/error.dart';
 
 class HttpClientsModel extends ChangeNotifier {
   ValueNotifier<GraphQLClient> _client;
@@ -55,7 +57,7 @@ class HttpClientsModel extends ChangeNotifier {
   }
 
   /// Provide a user's token to make auth requests.
-  void setToken(String token) {
+  void setToken({String token, BuildContext context}) {
     _token = token;
 
     final HttpLink httpLink = HttpLink(
@@ -66,10 +68,31 @@ class HttpClientsModel extends ChangeNotifier {
       },
     );
 
+    final errorLink = ErrorLink(
+      errorHandler: (response) {
+        if (response.exception.graphqlErrors != null) {
+          for (var error in response.exception.graphqlErrors) {
+            if (error.message.contains('jwt expired')) {
+              print('refetch');
+              return ErrorComponent.trySignin(context)
+              .then((tryResponse) {
+                if (!tryResponse.hasErrors) {
+                  return response.operation;
+                }
+                return null;
+              });
+            }
+          }
+        }
+
+        return null;
+      }
+    );
+
     _authClient = ValueNotifier(
       GraphQLClient(
         cache: InMemoryCache(),
-        link: httpLink,
+        link: errorLink.concat(httpLink),
         ),
     );
 

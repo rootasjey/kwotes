@@ -92,7 +92,10 @@ class MainState extends State<Main> {
         userDataModel.readFromFile()
           .then((_) {
             Provider.of<HttpClientsModel>(context)
-              .setToken(userDataModel.data.token);
+              .setToken(
+                token: userDataModel.data.token,
+                context: context
+              );
           })
           .then((_) {
             Queries.todayTopic(context)

@@ -295,6 +295,7 @@ class _QuotidiansState extends State<Quotidians> {
       }
 
       setState(() {
+        hasErrors = false;
         quotidians = resp.entries;
         isLoading = false;
       });

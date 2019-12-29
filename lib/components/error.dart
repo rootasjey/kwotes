@@ -61,7 +61,8 @@ class ErrorComponent extends StatelessWidget {
           ..setAuthenticated(true)
           ..saveToFile(signinJson);
 
-        Provider.of<HttpClientsModel>(context).setToken(userData.token);
+        Provider.of<HttpClientsModel>(context).setToken(token: userData.token);
+
         return TryResponse(hasErrors: false, reason: ErrorReason.none);
       })
       .catchError((onError) {

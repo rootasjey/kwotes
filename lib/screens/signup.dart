@@ -177,7 +177,7 @@ class SignupState extends State<Signup> {
 
                           Credentials(email: email, password: password).saveToFile();
 
-                          Provider.of<HttpClientsModel>(context).setToken(userData.token);
+                          Provider.of<HttpClientsModel>(context).setToken(token: userData.token);
 
                           setState(() {
                             _isLoading = false;
