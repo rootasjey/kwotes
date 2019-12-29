@@ -24,7 +24,7 @@ class Quotidians extends StatefulWidget {
 
 class _QuotidiansState extends State<Quotidians> {
   List<Quotidian> quotidians = [];
-  List<String> days = ['today', 'yesterday', '2 days ago'];
+  List<String> days = ['today', '2 days ago', 'yesterday'];
 
   bool isLoading = false;
   bool hasErrors = false;
@@ -293,6 +293,8 @@ class _QuotidiansState extends State<Quotidians> {
       if (resp == null) {
         return;
       }
+
+      resp.entries.insert(1, resp.entries.removeLast());
 
       setState(() {
         hasErrors = false;
