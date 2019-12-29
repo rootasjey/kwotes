@@ -16,8 +16,8 @@ class AddQuoteInputs {
   static String refSummary  = '';
   static String refType     = '';
   static String refSubType  = '';
-  static String refPromoUrl = '';
   static String refUrl      = '';
+  static String refWikiUrl  = '';
 
   static String comment = '';
 
@@ -48,8 +48,8 @@ class AddQuoteInputs {
     refSummary  = '';
     refType     = '';
     refSubType  = '';
-    refPromoUrl = '';
-    refUrl      = '';
+    refUrl = '';
+    refWikiUrl      = '';
   }
 
   static void clearStatus() {

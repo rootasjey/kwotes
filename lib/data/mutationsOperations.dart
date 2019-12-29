@@ -52,10 +52,10 @@ class MutationsOperations {
       \$refImgUrl: String
       \$refLang: String
       \$refName: String
-      \$refPromoUrl: String
       \$refSummary: String
       \$refSubType: String
       \$refType: String
+      \$refWikiUrl: String
       \$refUrl: String
       \$topics: [String!]
     ) {
@@ -73,10 +73,10 @@ class MutationsOperations {
         refImgUrl: \$refImgUrl
         refLang:\$refLang
         refName:\$refName
-        refPromoUrl:\$refPromoUrl
         refSummary:\$refSummary
         refSubType:\$refSubType
         refType:\$refType
+        refWikiUrl:\$refWikiUrl
         refUrl:\$refUrl
         topics: \$topics
       ) {

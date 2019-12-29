@@ -4,11 +4,11 @@ class Reference {
   final String lang;
   final List<Reference> linkedRefs;
   final String name;
-  final String promoUrl;
   final String subType;
   final String summary;
   final String type;
   final String url;
+  final String wikiUrl;
 
   Reference({
     this.id,
@@ -16,11 +16,11 @@ class Reference {
     this.lang,
     this.linkedRefs,
     this.name,
-    this.promoUrl,
     this.subType,
     this.summary,
     this.type,
     this.url,
+    this.wikiUrl,
   });
 
   factory Reference.fromJSON(Map<String, dynamic> json) {
@@ -38,11 +38,11 @@ class Reference {
       lang        : json['lang'],
       linkedRefs  : _linkedRefs,
       name        : json['name'],
-      promoUrl    : json['promoUrl'],
       subType     : json['subType'],
       summary     : json['summary'],
       type        : json['type'],
       url         : json['url'],
+      wikiUrl     : json['wikiUrl'],
     );
   }
 }

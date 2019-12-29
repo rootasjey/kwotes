@@ -242,7 +242,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 ),
                 onChanged: (newValue) {
                   wikiUrl = newValue;
-                  AddQuoteInputs.refUrl = newValue;
+                  AddQuoteInputs.refWikiUrl = newValue;
                 },
               ),
             ),
@@ -259,7 +259,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   ),
                   onChanged: (newValue) {
                     url = newValue;
-                    AddQuoteInputs.refPromoUrl = newValue;
+                    AddQuoteInputs.refUrl = newValue;
                   },
                 ),
               ),

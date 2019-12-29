@@ -172,8 +172,8 @@ class _AddQuoteState extends State<AddQuote> {
           'refSubType'    : AddQuoteInputs.refSubType,
           'refSummary'    : AddQuoteInputs.refSummary,
           'refType'       : AddQuoteInputs.refType,
-          'refPromoUrl'   : AddQuoteInputs.refPromoUrl,
           'refUrl'        : AddQuoteInputs.refUrl,
+          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
           'comment'       : AddQuoteInputs.comment,
         }
       )
