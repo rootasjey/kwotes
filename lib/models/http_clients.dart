@@ -70,22 +70,26 @@ class HttpClientsModel extends ChangeNotifier {
 
     final errorLink = ErrorLink(
       errorHandler: (response) {
-        if (response.exception.graphqlErrors != null) {
-          for (var error in response.exception.graphqlErrors) {
-            if (error.message.contains('jwt expired')) {
-              print('refetch');
-              return ErrorComponent.trySignin(context)
-              .then((tryResponse) {
-                if (!tryResponse.hasErrors) {
-                  return response.operation;
-                }
-                return null;
-              });
-            }
-          }
+        if (response.exception.graphqlErrors == null) {
+          return null;
         }
 
-        return null;
+        final isJwtExpired = response.exception.graphqlErrors
+          .any((error) {
+            return error.message.contains('jwt expired');
+          });
+
+        if (!isJwtExpired) { return null; }
+
+        return ErrorComponent
+          .trySignin(context)
+          .then((tryResponse) {
+            if (tryResponse.hasErrors) {
+              return null;
+            }
+
+            return response.operation;
+          });
       }
     );
 
