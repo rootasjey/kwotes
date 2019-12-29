@@ -296,4 +296,24 @@ class Queries {
         return quotidian.quote.topics.first;
       });
   }
+
+  static Future<List<String>> topics(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    .query(
+      QueryOptions(
+        documentNode: QueriesOperations.topics,
+        fetchPolicy: FetchPolicy.networkOnly,
+      )
+    )
+    .then((queryResult) {
+      final json = queryResult.data;
+      List<String> topics = [];
+
+      for (var str in json['randomTopics']) {
+        topics.add(str);
+      }
+
+      return topics;
+    });
+  }
 }

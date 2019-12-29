@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/queriesOperations.dart';
-import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
 
 List<String> _topicsList = [];
 
@@ -18,32 +15,23 @@ class Topics extends StatefulWidget {
 class _TopicsState extends State<Topics> {
   List<String> topicsList = [];
   bool isLoading = false;
-  bool hasExceptions = false;
+  bool hasErrors = false;
   String exceptionMessage =  '';
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      topicsList = _topicsList;
+    });
+  }
 
   @override
   didChangeDependencies () {
     super.didChangeDependencies();
 
-    setState(() {
-      isLoading = true;
-    });
-
-    if (_topicsList.length > 0) {
-      setState(() {
-        topicsList = _topicsList;
-        isLoading = false;
-      });
-
-    } else {
-      fetchTopics()
-        .then((topics) {
-          setState(() {
-            topicsList = topics;
-            isLoading = false;
-          });
-        });
-    }
+    if (topicsList.length > 0) { return; }
+    fetchTopics();
   }
 
   @override
@@ -57,38 +45,15 @@ class _TopicsState extends State<Topics> {
     List<Widget> topicChips = [];
 
     for (var topic in topicsList) {
-      final chipColor = ThemeColor.topicColor(topic);
-
-      topicChips.add(
-        Padding(
-          padding: EdgeInsets.all(5.0),
-          child: ActionChip(
-            elevation: 2.0,
-            backgroundColor: Colors.transparent,
-            shape: StadiumBorder(side: BorderSide(color: chipColor, width: 3.0)),
-            labelPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return QuotesByTopics(topic: topic,);
-                  }
-                )
-              );
-            },
-            label: Text(
-              topic,
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-          ),
-        )
-      );
+      topicChips.add(topicChip(topic));
     }
 
-    return Scaffold(
-      body: ListView(
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetchTopics();
+        return null;
+      },
+      child: ListView(
         padding: EdgeInsets.all(20.0),
         children: <Widget>[
           Padding(
@@ -103,7 +68,7 @@ class _TopicsState extends State<Topics> {
           if (isLoading)
             LoadingComponent(),
 
-          if (!isLoading && hasExceptions)
+          if (!isLoading && hasErrors)
             ErrorComponent(description: exceptionMessage, title: 'Topics',),
 
           if (topicChips.length == 0)
@@ -148,7 +113,7 @@ class _TopicsState extends State<Topics> {
               ),
             ),
 
-          if (isLoading == false && hasExceptions == false && topicChips.length > 0)
+          if (isLoading == false && hasErrors == false && topicChips.length > 0)
             Wrap(
               alignment: WrapAlignment.center,
               children: topicChips,
@@ -158,39 +123,53 @@ class _TopicsState extends State<Topics> {
     );
   }
 
-  Future<List<String>> fetchTopics() {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
+  Widget topicChip(String topic) {
+    final chipColor = ThemeColor.topicColor(topic);
 
-    return httpClientModel.defaultClient.value.query(
-      QueryOptions(
-        documentNode: QueriesOperations.topics,
-      )
-    )
-    .then((queryResult) {
-      List<String> topics = [];
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: ActionChip(
+        elevation: 2.0,
+        backgroundColor: Colors.transparent,
+        shape: StadiumBorder(side: BorderSide(color: chipColor, width: 3.0)),
+        labelPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return QuotesByTopics(topic: topic,);
+              }
+            )
+          );
+        },
+        label: Text(
+          topic,
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      ),
+    );
+  }
 
-      if (queryResult.hasException) {
-        hasExceptions = true;
-
-        exceptionMessage = queryResult.exception.graphqlErrors.length > 0 ?
-          queryResult.exception.graphqlErrors.first.message :
-          queryResult.exception.clientException.message;
-
-        return topics;
-      }
-
-      final json = queryResult.data;
-
-      for (var str in json['randomTopics']) {
-        topics.add(str);
-      }
-
-      return topics;
-    })
-    .catchError((error) {
-      hasExceptions = true;
-      exceptionMessage = error.toString();
-      return List<String>();
+  Future fetchTopics() {
+    setState(() {
+      isLoading = true;
+      hasErrors = false;
     });
+
+    return Queries.topics(context)
+      .then((topicsResp) {
+        setState(() {
+          topicsList = topicsResp;
+          isLoading = false;
+        });
+      })
+      .catchError((err) {
+        setState(() {
+          hasErrors = true;
+          isLoading = false;
+        });
+      });
   }
  }
