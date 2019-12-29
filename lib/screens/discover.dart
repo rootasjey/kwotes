@@ -3,7 +3,9 @@ import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/reference.dart';
@@ -39,12 +41,15 @@ class _DiscoverState extends State<Discover> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    final userData = Provider.of<UserDataModel>(context);
+    final lang = userData.data.lang;
+
     if (authors.length == 0) {
-      fetchRandomAuthors();
+      fetchRandomAuthors(lang);
     }
 
     if (references.length == 0) {
-      fetchRandomReferences();
+      fetchRandomReferences(lang);
     }
   }
 
@@ -106,6 +111,18 @@ class _DiscoverState extends State<Discover> {
               discoverCard(
                 title: reference.name,
                 imgUrl: reference.imgUrl,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return ReferencePage(
+                          id: reference.id,
+                          referenceName: reference.name,
+                        );
+                      }
+                    )
+                  );
+                }
               )
             );
           }
@@ -222,15 +239,15 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
-  void fetchRandomAuthors() {
+  void fetchRandomAuthors(String lang) {
     setState(() {
       isLoading = true;
     });
 
-    Queries.randomAuthors(context)
+    Queries.randomAuthors(context, lang)
     .then((authorsResp) {
       setState(() {
-        authors = authorsResp;
+        authors = authorsResp.toSet().toList();
         isLoading = false;
       });
     })
@@ -243,11 +260,11 @@ class _DiscoverState extends State<Discover> {
     });
   }
 
-  void fetchRandomReferences() {
-    Queries.randomReferences(context)
+  void fetchRandomReferences(String lang) {
+    Queries.randomReferences(context, lang)
     .then((referencesResp) {
       setState(() {
-        references = referencesResp;
+        references = referencesResp.toSet().toList();
         isLoading = false;
       });
     })

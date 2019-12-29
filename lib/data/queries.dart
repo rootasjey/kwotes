@@ -121,6 +121,21 @@ class Queries {
       });
   }
 
+  static Future<QuotesResponse> quotesByReference(
+    BuildContext context, String id,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.quotesByReferenceId,
+          variables: {'id': id },
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return QuotesResponse.fromJSON(queryResult.data['quotesByReferenceId']);
+      });
+  }
+
   static Future<List<Quote>> quotesByTopics(
     BuildContext context, String topic,
   ) {
@@ -175,11 +190,12 @@ class Queries {
       });
   }
 
-  static Future<List<Author>> randomAuthors(BuildContext context) {
+  static Future<List<Author>> randomAuthors(BuildContext context, String quoteLang) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
           documentNode: QueriesOperations.randomAuthors,
+          variables: {'quoteLang': quoteLang},
           fetchPolicy: FetchPolicy.networkOnly,
         )
       ).then((QueryResult queryResult) {
@@ -198,11 +214,12 @@ class Queries {
       });
   }
 
-  static Future<List<Reference>> randomReferences(BuildContext context) {
+  static Future<List<Reference>> randomReferences(BuildContext context, String quoteLang) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
           documentNode: QueriesOperations.randomReferences,
+          variables: {'quoteLang': quoteLang},
           fetchPolicy: FetchPolicy.networkOnly,
         )
       ).then((QueryResult queryResult) {
@@ -233,6 +250,21 @@ class Queries {
         )
       ).then((QueryResult queryResult) {
         return QuotesResponse.fromJSON(queryResult.data['quotes']);
+      });
+  }
+
+  static Future<Reference> reference(
+    BuildContext context, String id,
+  ) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.reference,
+          variables: {'id': id},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return Reference.fromJSON(queryResult.data['reference']);
       });
   }
 

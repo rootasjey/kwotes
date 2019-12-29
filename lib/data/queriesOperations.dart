@@ -127,6 +127,27 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode quotesByReferenceId = parseString("""
+    query (\$id: String!) {
+      quotesByReferenceId (id: \$id) {
+        entries {
+          author {
+            id
+            name
+          }
+          id
+          name
+          topics
+        }
+        pagination {
+          limit
+          nextSkip
+          skip
+        }
+      }
+    }
+  """);
+
   static DocumentNode quotesByTopics = parseString("""
     query (\$topics: [String!]!) {
       quotesByTopics (topics: \$topics) {
@@ -202,6 +223,26 @@ class QueriesOperations {
         id
         imgUrl
         name
+      }
+    }
+  """);
+
+  static DocumentNode reference = parseString("""
+    query (\$id: String!) {
+      reference (id: \$id) {
+        id
+        imgUrl
+        lang
+        linkedRefs {
+          id
+          name
+        }
+        name
+        subType
+        summary
+        type
+        url
+        wikiUrl
       }
     }
   """);
