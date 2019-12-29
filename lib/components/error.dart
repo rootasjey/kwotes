@@ -54,7 +54,7 @@ class ErrorComponent extends StatelessWidget {
 
         var userData = UserData.fromJSON(signinJson);
 
-        var userDataModel = Provider.of<UserDataModel>(context);
+        final userDataModel = Provider.of<UserDataModel>(context);
 
         userDataModel
           ..update(userData)

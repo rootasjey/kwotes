@@ -26,7 +26,7 @@ class _AuthorPageState extends State<AuthorPage> {
   Author author;
   List<Quote> quotes = [];
   bool areQuotesLoading = false;
-  bool hasQuotesErrors = false;
+  bool areQuotesLoaded = false;
 
   bool isLoading = false;
   bool hasErrors = false;
@@ -63,25 +63,28 @@ class _AuthorPageState extends State<AuthorPage> {
               return false;
             }
 
-            if (!areQuotesLoading && !hasQuotesErrors) {
+            if (!areQuotesLoading && !areQuotesLoaded) {
               if (quotes.length > 0) { return false; }
 
-              setState(() {
-                areQuotesLoading = true;
-              });
+              areQuotesLoading = true;
 
               Queries.quotesByAuthor(context, widget.id)
                 .then((quotesResp) {
-                  setState(() {
-                    quotes = quotesResp.entries;
-                    areQuotesLoading = false;
+                  WidgetsBinding.instance.addPostFrameCallback((duration) {
+                    setState(() {
+                      quotes = quotesResp.entries;
+                      areQuotesLoading = false;
+                      areQuotesLoaded = true;
+                    });
                   });
                 })
                 .catchError((err) {
-                  setState(() {
-                    error = err;
-                    areQuotesLoading = false;
-                    hasQuotesErrors = true;
+                  WidgetsBinding.instance.addPostFrameCallback((duration) {
+                    setState(() {
+                      error = err;
+                      areQuotesLoading = false;
+                      areQuotesLoaded = true;
+                    });
                   });
                 });
             }
