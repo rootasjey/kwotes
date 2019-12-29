@@ -16,12 +16,27 @@ class _AccountSettingsState extends State<AccountSettings> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserDataModel>(context);
+    final accent = Provider.of<ThemeColor>(context).accent;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Provider.of<ThemeColor>(context).accent,
-        title: Text('Account Settings'),
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      elevation: 0,
+      title: Text(
+        'Account settings',
+        style: TextStyle(
+          color: accent,
+          fontSize: 30.0,
+        ),
       ),
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.arrow_back, color: accent,),
+      ),
+    ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: ListView(
