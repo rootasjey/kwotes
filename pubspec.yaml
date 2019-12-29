@@ -22,6 +22,7 @@ dependencies:
   flushbar: 1.9.1
   flutter:
     sdk: flutter
+  flutter_svg: 0.15.0
   flutter_swiper: 1.1.6
   graphql_flutter: 2.1.1-beta.5
   path_provider: 1.5.1
