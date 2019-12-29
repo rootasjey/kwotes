@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 
 enum QuoteAction { addList, like, share }
 
+List<Quotidian> _quotidians = [];
+
 class Quotidians extends StatefulWidget {
   @override
   _QuotidiansState createState() => _QuotidiansState();
@@ -31,11 +33,26 @@ class _QuotidiansState extends State<Quotidians> {
   Error error;
 
   @override
+  initState() {
+    super.initState();
+
+    setState(() {
+      quotidians = _quotidians;
+    });
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     if (quotidians.length > 0) { return; }
     fetchQuotidians();
+  }
+
+  @override
+  void dispose() {
+    _quotidians = quotidians;
+    super.dispose();
   }
 
   @override
