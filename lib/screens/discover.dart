@@ -148,39 +148,49 @@ class _DiscoverState extends State<Discover> {
             );
           }
 
-          return ListView(
-            padding: EdgeInsets.symmetric(vertical: 50.0),
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  'Discover',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Opacity(
-                  opacity: .6,
+          return RefreshIndicator(
+            onRefresh: () async {
+              final userData = Provider.of<UserDataModel>(context);
+              final lang = userData.data.lang;
+
+              await fetchRandomReferences(lang);
+              await fetchRandomAuthors(lang);
+              return null;
+            },
+            child: ListView(
+              padding: EdgeInsets.symmetric(vertical: 50.0),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    'Uncover new authors and references.',
+                    'Discover',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
-              ),
-              Divider(height: 60.0,),
-              Wrap(
-                alignment: WrapAlignment.center,
-                children: cards,
-              ),
-            ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      'Uncover new authors and references.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  )
+                ),
+                Divider(height: 60.0,),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: cards,
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -239,12 +249,12 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
-  void fetchRandomAuthors(String lang) {
+  Future fetchRandomAuthors(String lang) {
     setState(() {
       isLoading = true;
     });
 
-    Queries.randomAuthors(context, lang)
+    return Queries.randomAuthors(context, lang)
     .then((authorsResp) {
       setState(() {
         authors = authorsResp.toSet().toList();
@@ -260,8 +270,8 @@ class _DiscoverState extends State<Discover> {
     });
   }
 
-  void fetchRandomReferences(String lang) {
-    Queries.randomReferences(context, lang)
+  Future fetchRandomReferences(String lang) {
+    return Queries.randomReferences(context, lang)
     .then((referencesResp) {
       setState(() {
         references = referencesResp.toSet().toList();
