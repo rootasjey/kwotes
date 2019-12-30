@@ -6,6 +6,7 @@ import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_temp_quote_card.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:provider/provider.dart';
@@ -72,60 +73,128 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           icon: Icon(Icons.arrow_back, color: accent,),
         ),
       ),
-      floatingActionButton: FilterFab(
-        onOrderChanged: (int newOrder) {
-          setState(() {
-            order = newOrder;
-          });
+      floatingActionButton: quotes.length > 0 ?
+        FilterFab(
+          onOrderChanged: (int newOrder) {
+            setState(() {
+              order = newOrder;
+            });
 
-          fetchTempQuotes();
-        },
-        order: order,
-      ),
-      body: GridView.builder(
-        itemCount: quotes.length,
-        padding: EdgeInsets.symmetric(vertical: 20.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return SmallTempQuoteCard(
-            quote: quotes.elementAt(index),
-            onDelete: (String id) async {
-              final quoteToDelete = quotes.elementAt(index);
+            fetchTempQuotes();
+          },
+          order: order,
+        ):
+        Padding(padding: EdgeInsets.zero,),
+      body: Builder(
+        builder: (BuildContext context) {
+          if (quotes.length ==  0) {
+            return emptyView();
+          }
 
-              setState(() {
-                quotes.removeWhere((q) => q.id == id);
-              });
+          return GridView.builder(
+            itemCount: quotes.length,
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemBuilder: (BuildContext context, int index) {
+              return SmallTempQuoteCard(
+                quote: quotes.elementAt(index),
+                onDelete: (String id) async {
+                  final quoteToDelete = quotes.elementAt(index);
 
-              final booleanMessage = await Mutations.deleteTempQuote(context, id);
+                  setState(() {
+                    quotes.removeWhere((q) => q.id == id);
+                  });
 
-              if (!booleanMessage.boolean) {
-                quotes.insert(index, quoteToDelete);
+                  final booleanMessage = await Mutations.deleteTempQuote(context, id);
 
-                Flushbar(
-                  duration: Duration(seconds: 3),
-                  backgroundColor: ThemeColor.error,
-                  message: booleanMessage.message,
-                )..show(context);
-              }
-            },
-            onDoubleTap: (String id) async {
-              tryValidateQuote(index, id);
-            },
-            onValidate: (String id) async {
-              tryValidateQuote(index, id);
+                  if (!booleanMessage.boolean) {
+                    quotes.insert(index, quoteToDelete);
+
+                    Flushbar(
+                      duration: Duration(seconds: 3),
+                      backgroundColor: ThemeColor.error,
+                      message: booleanMessage.message,
+                    )..show(context);
+                  }
+                },
+                onDoubleTap: (String id) async {
+                  tryValidateQuote(index, id);
+                },
+                onValidate: (String id) async {
+                  tryValidateQuote(index, id);
+                },
+              );
             },
           );
         },
+      )
+    );
+  }
+
+
+  Widget emptyView() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetchTempQuotes();
+        return null;
+      },
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 40.0),
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 100.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.speaker_notes_off, size: 60.0),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    'No quotes',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30.0,
+                    ),
+                  ),
+                ),
+
+                Opacity(
+                  opacity: .6,
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AddQuote();
+                          }
+                        )
+                      );
+                    },
+                    child: Text(
+                      'You have quotes in validation. Go to the Add Quote page to start sharing your thoughts with others.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  )
+                ),
+              ],
+            ),
+          )
+
+        ],
       ),
     );
   }
 
-  void fetchTempQuotes() {
+  Future fetchTempQuotes() {
     setState(() {
       isLoading = true;
     });
 
-    Queries.myTempQuotes(context, lang, limit, order, skip)
+    return Queries.myTempQuotes(context, lang, limit, order, skip)
       .then((quotesResp) {
         setState(() {
           quotes = quotesResp.entries;
