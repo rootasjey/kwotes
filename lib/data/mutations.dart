@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/data/mutationsOperations.dart';
 import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/boolean_message.dart';
+import 'package:memorare/types/error_reason.dart';
 import 'package:memorare/types/quotes_list.dart';
+import 'package:memorare/types/try_response.dart';
 import 'package:provider/provider.dart';
 
 class UserMutations {
@@ -173,6 +176,33 @@ class UserMutations {
 
     }).catchError((error) {
       return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  static Future<TryResponse> updateImgUrl(
+    BuildContext context,
+    String imgUrl,
+  ) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.updateImgUrl,
+        variables: {'imgUrl': imgUrl},
+      )
+    ).then((queryResult) {
+      Map<String, dynamic> jsonMap = queryResult.data['updateImgUrl'];
+
+      final String imgUrl = jsonMap['imgUrl'];
+
+      var userDataModel = Provider.of<UserDataModel>(context);
+
+      userDataModel.setImgUrl(imgUrl);
+
+      return TryResponse(hasErrors: false, reason: ErrorReason.none);
+
+    }).catchError((error) {
+      return TryResponse(hasErrors: true, reason: ErrorReason.unknown);
     });
   }
 

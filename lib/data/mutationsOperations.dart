@@ -110,6 +110,14 @@ class MutationsOperations {
     }
   """);
 
+  static DocumentNode updateImgUrl = parseString("""
+    mutation (\$imgUrl: String!) {
+      updateImgUrl(imgUrl: \$imgUrl) {
+        imgUrl
+      }
+    }
+  """);
+
   static DocumentNode updateList = parseString("""
     mutation (\$id: String!, \$name: String, \$description: String) {
       updateList (id: \$id, name: \$name, description: \$description) {
