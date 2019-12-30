@@ -8,10 +8,13 @@ import 'package:memorare/types/boolean_message.dart';
 import 'package:provider/provider.dart';
 
 class NameField extends StatefulWidget {
+  final bool autofocus;
+
+  NameField({ Key key, this.autofocus = false }): super(key: key);
+
   @override
   NameFieldState createState() => NameFieldState();
 
-  NameField({ Key key }): super(key: key);
 }
 
 class NameFieldState extends State<NameField> {
@@ -42,6 +45,7 @@ class NameFieldState extends State<NameField> {
       children: <Widget>[
         TextFormField(
           key: _nameFieldKey,
+          autofocus: widget.autofocus,
           decoration: InputDecoration(
             icon: Icon(Icons.perm_identity),
             labelText: 'Name',
