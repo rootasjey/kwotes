@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/author.dart';
+import 'package:memorare/types/boolean_message.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_list.dart';
 import 'package:memorare/types/quotes_lists_response.dart';
@@ -314,6 +315,29 @@ class Queries {
       }
 
       return topics;
+    });
+  }
+
+  static Future<BooleanMessage> updateEmailStepOne(BuildContext context, String newEmail) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .mutate(
+      MutationOptions(
+        documentNode: QueriesOperations.updateEmailStepOne,
+        variables: {'newEmail': newEmail},
+      )
+    )
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
     });
   }
 }

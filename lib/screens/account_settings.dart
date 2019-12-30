@@ -37,7 +37,7 @@ class _AccountSettingsState extends State<AccountSettings> {
           icon: Icon(Icons.arrow_back, color: accent,),
         ),
       ),
-        body: Padding(
+      body: Padding(
         padding: EdgeInsets.all(20.0),
         child: ListView(
           children: <Widget>[

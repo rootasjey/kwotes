@@ -1,11 +1,8 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/email_field.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/models/http_clients.dart';
-import 'package:memorare/types/boolean_message.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -137,24 +134,7 @@ class _EditEmailState extends State<EditEmail> {
                     ),
                   ),
                   onPressed: () async {
-                    setState(() { isLoading = true; });
-                    final booleanMessage = await updateEmail();
-
-                    final success = booleanMessage.boolean ? true : false;
-                    setState(() { isLoading = false; });
-
-                    if (!success) {
-                      Flushbar(
-                        backgroundColor: ThemeColor.error,
-                        message: booleanMessage.message,
-                      )..show(context);
-
-                      return;
-                    }
-
-                    setState(() {
-                      isCompleted = true;
-                    });
+                    updateEmail();
                   },
                 ),
               ),
@@ -228,36 +208,30 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
+  Future updateEmail() async {
+    setState(() {
+      isLoading = true;
+    });
 
-  Future<BooleanMessage> updateEmail() {
-    final String updateEmail = """
-      query UpdateEmail(\$newEmail: String!) {
-        updateEmailStepOne(newEmail: \$newEmail)
-      }
-    """;
+    final booleanMessage = await Queries.updateEmailStepOne(context, newEmail);
 
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
+    setState(() {
+      isLoading = false;
+    });
 
-    newEmail = emailFieldKey.currentState.fieldValue;
+    final success = booleanMessage.boolean ? true : false;
 
-    return httpClientModel.defaultClient.value.mutate(
-      MutationOptions(
-        documentNode: parseString(updateEmail),
-        variables: {'newEmail': newEmail},
-      )
-    )
-    .then((queryResult) {
-      if (queryResult.hasException) {
-        return BooleanMessage(
-          boolean: false,
-          message: queryResult.exception.graphqlErrors.first.message
-        );
-      }
+    if (!success) {
+      Flushbar(
+        backgroundColor: ThemeColor.error,
+        message: booleanMessage.message,
+      )..show(context);
 
-      return BooleanMessage(boolean: true);
-    })
-    .catchError((error) {
-      return BooleanMessage(boolean: false, message: error.toString());
+      return;
+    }
+
+    setState(() {
+      isCompleted = true;
     });
   }
 }

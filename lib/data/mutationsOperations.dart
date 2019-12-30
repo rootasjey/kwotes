@@ -21,6 +21,14 @@ class MutationsOperations {
     }
   """);
 
+  static DocumentNode deleteAccount = parseString("""
+    mutation (\$password: String!) {
+        deleteAccount(password: \$password) {
+          id
+        }
+      }
+  """);
+
   static DocumentNode deleteList = parseString("""
     mutation (\$id: String!) {
       deleteList (id: \$id) {
@@ -121,6 +129,14 @@ class MutationsOperations {
   static DocumentNode updateList = parseString("""
     mutation (\$id: String!, \$name: String, \$description: String) {
       updateList (id: \$id, name: \$name, description: \$description) {
+        id
+      }
+    }
+  """);
+
+  static DocumentNode updatePassword = parseString("""
+    mutation (\$oldPassword: String!, \$newPassword: String!) {
+      updatePassword(oldPassword: \$oldPassword, newPassword: \$newPassword) {
         id
       }
     }

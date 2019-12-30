@@ -60,6 +60,24 @@ class UserMutations {
     });
   }
 
+  static Future<TryResponse> deleteAccount(BuildContext context, String password) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    .mutate(MutationOptions(
+      documentNode: MutationsOperations.deleteAccount,
+      variables: {'password': password},
+    ))
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return TryResponse(hasErrors: true, reason: ErrorReason.unknown);
+      }
+
+      return TryResponse(hasErrors: false, reason: ErrorReason.none);
+    })
+    .catchError((error) {
+      return TryResponse(hasErrors: true, reason: ErrorReason.unknown);
+    });
+  }
+
   static Future<BooleanMessage> deleteList(BuildContext context, String id) {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
@@ -231,6 +249,40 @@ class UserMutations {
 
     }).catchError((error) {
       return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  static Future<BooleanMessage> updatePassword(
+    BuildContext context,
+    String oldPassword,
+    String confirmPassword,
+  ) {
+
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    .mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.updatePassword,
+        variables: {
+          'oldPassword': oldPassword,
+          'newPassword': confirmPassword,
+        },
+      )
+    )
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(
+        boolean: false,
+        message: error.toString()
+      );
     });
   }
 

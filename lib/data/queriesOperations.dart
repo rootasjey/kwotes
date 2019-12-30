@@ -293,5 +293,11 @@ class QueriesOperations {
       randomTopics
     }
   """);
+
+  static DocumentNode updateEmailStepOne = parseString("""
+    query (\$newEmail: String!) {
+      updateEmailStepOne(newEmail: \$newEmail)
+    }
+  """);
 }
 
