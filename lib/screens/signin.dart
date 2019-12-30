@@ -15,19 +15,23 @@ class Signin extends StatefulWidget {
 }
 
 class SigninState extends State<Signin> {
-  final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
+  final formKey = GlobalKey<FormState>();
+  bool isLoading = false;
   String email = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return LoadingComponent(title: 'Signing in...',);
+    }
+
     return ListView(
       children: <Widget>[
         Stack(
           children: <Widget>[
             Form(
-              key: _formKey,
+              key: formKey,
               child: Padding(
                 padding: EdgeInsets.all(40.0),
                 child: Column(
@@ -48,6 +52,7 @@ class SigninState extends State<Signin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           TextFormField(
+                            autofocus: true,
                             decoration: InputDecoration(
                               icon: Icon(Icons.email),
                               labelText: 'Email',
@@ -100,7 +105,7 @@ class SigninState extends State<Signin> {
                             color: Color(0xFF2ECC71),
                             onPressed: () {
                               setState(() {
-                                _isLoading = true;
+                                isLoading = true;
                               });
 
                               runMutation({
@@ -134,7 +139,7 @@ class SigninState extends State<Signin> {
                         documentNode: parseString(mutationSignin()),
                         onCompleted: (dynamic resultData) {
                           setState(() {
-                            _isLoading = false;
+                            isLoading = false;
                           });
 
                           if (resultData == null) { return; }
@@ -157,7 +162,7 @@ class SigninState extends State<Signin> {
                         },
                         onError: (OperationException error) {
                           setState(() {
-                            _isLoading = false;
+                            isLoading = false;
                           });
 
                           for (var error in error.graphqlErrors) {
@@ -179,8 +184,6 @@ class SigninState extends State<Signin> {
                 ),
               )
             ),
-            if (_isLoading)
-              LoadingComponent(title: 'Signing in...',)
           ],
         ),
       ],

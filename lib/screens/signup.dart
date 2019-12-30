@@ -59,7 +59,7 @@ class SignupState extends State<Signup> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          NameField(key: _nameFieldKey),
+                          NameField(key: _nameFieldKey, autofocus: true,),
                         ],
                       ),
                     ),
