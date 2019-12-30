@@ -13,7 +13,7 @@ class Connect extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: accent,
           bottom: TabBar(
             indicatorColor: Colors.white,
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -25,7 +25,7 @@ class Connect extends StatelessWidget {
           title: Text(
             'Connect',
             style: TextStyle(
-              color: accent,
+              color: Colors.white,
               fontSize: 30.0,
             ),
           ),
@@ -33,7 +33,7 @@ class Connect extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back, color: accent,),
+            icon: Icon(Icons.arrow_back, color: Colors.white,),
           ),
         ),
         body: TabBarView(
