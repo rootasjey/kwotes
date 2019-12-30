@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -14,135 +15,80 @@ class EditEmail extends StatefulWidget {
 }
 
 class _EditEmailState extends State<EditEmail> {
-  bool _isLoading = false;
-  bool _isCompleted = false;
+  bool isLoading = false;
+  bool isCompleted = false;
   String newEmail = '';
 
-  final _emailFieldKey = GlobalKey<EmailFieldState>();
+  final emailFieldKey = GlobalKey<EmailFieldState>();
 
   @override
   Widget build(BuildContext context) {
+    final accent = Provider.of<ThemeColor>(context).accent;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Email'),),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
+        title: Text(
+          'Edit email',
+          style: TextStyle(
+            color: accent,
+            fontSize: 30.0,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back, color: accent,),
+        ),
+      ),
       body: Builder(
         builder: (context) {
+          if (isCompleted) {
+            return completionScreen();
+          }
+
+          if (isLoading){
+            return LoadingComponent(
+              padding: EdgeInsets.all(30.0),
+              title: 'Sending you a message to your new email address...',
+            );
+          }
+
           return ListView(
+            padding: EdgeInsets.all(30.0),
             children: <Widget>[
-              Stack(
+              Column(
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(30.0),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 25.0),
-                          child: Text(
-                            'You will receive a message to your new email address inbox.',
-                            style: TextStyle(fontSize: 25.0),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 25.0),
-                          child: Text(
-                            'Click on the link inside this email to validate the change.',
-                            style: TextStyle(fontSize: 17.0),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 40.0),
-                          child: EmailField(key: _emailFieldKey,),
-                        ),
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 60),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: RaisedButton(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: RaisedButton(
-                                      color: ThemeColor.success,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Update',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () async {
-                                        setState(() { _isLoading = true; });
-                                        final booleanMessage = await updateEmail();
-
-                                        final success = booleanMessage.boolean ? true : false;
-                                        setState(() { _isLoading = false; });
-
-                                        if (!success) {
-                                          Scaffold.of(context)
-                                            .showSnackBar(
-                                              SnackBar(
-                                                backgroundColor: ThemeColor.secondary,
-                                                content: Text(
-                                                  '${booleanMessage.message}',
-                                                  style: TextStyle(color: Colors.white),
-                                                )
-                                              )
-                                            );
-
-                                          return;
-                                        }
-
-                                        setState(() {
-                                          _isCompleted = true;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-
-                      ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 25.0),
+                    child: Text(
+                      'You will receive a message to your new email address inbox.',
+                      style: TextStyle(fontSize: 25.0),
                     ),
                   ),
 
-                  if (_isCompleted)
-                    completionScreen(),
-
-                  if (_isLoading)
-                    LoadingComponent(
-                      padding: EdgeInsets.all(30.0),
-                      title: 'Sending you a message to your new email address...',
+                  Opacity(
+                    opacity: 0.6,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 25.0),
+                      child: Text(
+                        'Click on the link inside this email to validate the change.',
+                        style: TextStyle(fontSize: 17.0),
+                      ),
                     ),
+                  ),
 
+                  Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: EmailField(key: emailFieldKey,),
+                  ),
+
+                  buttons(),
                 ],
-              )
+              ),
             ],
           );
         },
@@ -150,36 +96,73 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Future<BooleanMessage> updateEmail() {
-    final String updateEmail = """
-      query UpdateEmail(\$newEmail: String!) {
-        updateEmailStepOne(newEmail: \$newEmail)
-      }
-    """;
+  Widget buttons() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 60),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: FlatButton(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  color: ThemeColor.success,
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      'Update',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
+                    setState(() { isLoading = true; });
+                    final booleanMessage = await updateEmail();
 
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
+                    final success = booleanMessage.boolean ? true : false;
+                    setState(() { isLoading = false; });
 
-    newEmail = _emailFieldKey.currentState.fieldValue;
+                    if (!success) {
+                      Flushbar(
+                        backgroundColor: ThemeColor.error,
+                        message: booleanMessage.message,
+                      )..show(context);
 
-    return httpClientModel.defaultClient.value.mutate(
-      MutationOptions(
-        documentNode: parseString(updateEmail),
-        variables: {'newEmail': newEmail},
-      )
-    )
-    .then((queryResult) {
-      if (queryResult.hasException) {
-        return BooleanMessage(
-          boolean: false,
-          message: queryResult.exception.graphqlErrors.first.message
-        );
-      }
+                      return;
+                    }
 
-      return BooleanMessage(boolean: true);
-    })
-    .catchError((error) {
-      return BooleanMessage(boolean: false, message: error.toString());
-    });
+                    setState(() {
+                      isCompleted = true;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 
   Widget completionScreen() {
@@ -232,7 +215,7 @@ class _EditEmailState extends State<EditEmail> {
             padding: EdgeInsets.only(top: 10),
             child: FlatButton(
               onPressed: () {
-                setState(() { _isCompleted = false; });
+                setState(() { isCompleted = false; });
               },
               child: Padding(
                 padding: EdgeInsets.all(15.0),
@@ -245,4 +228,36 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
+
+  Future<BooleanMessage> updateEmail() {
+    final String updateEmail = """
+      query UpdateEmail(\$newEmail: String!) {
+        updateEmailStepOne(newEmail: \$newEmail)
+      }
+    """;
+
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    newEmail = emailFieldKey.currentState.fieldValue;
+
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: parseString(updateEmail),
+        variables: {'newEmail': newEmail},
+      )
+    )
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
 }

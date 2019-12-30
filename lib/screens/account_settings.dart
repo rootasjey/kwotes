@@ -20,24 +20,24 @@ class _AccountSettingsState extends State<AccountSettings> {
 
     return Scaffold(
       appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      centerTitle: true,
-      elevation: 0,
-      title: Text(
-        'Account settings',
-        style: TextStyle(
-          color: accent,
-          fontSize: 30.0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
+        title: Text(
+          'Account settings',
+          style: TextStyle(
+            color: accent,
+            fontSize: 30.0,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back, color: accent,),
         ),
       ),
-      leading: IconButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        icon: Icon(Icons.arrow_back, color: accent,),
-      ),
-    ),
-      body: Padding(
+        body: Padding(
         padding: EdgeInsets.all(20.0),
         child: ListView(
           children: <Widget>[
