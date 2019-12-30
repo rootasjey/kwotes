@@ -23,15 +23,18 @@ class Account extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0,),
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0,),
             child: Column(
               children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: userData.data.imgUrl.length > 0 ?
-                    NetworkImage('${userData.data.imgUrl}') :
-                    AssetImage('assets/images/monk.png'),
-                  maxRadius: 50.0,
-                ),
+                userData.data.imgUrl.length > 0 ?
+                  CircleAvatar(
+                    backgroundImage: NetworkImage('${userData.data.imgUrl}'),
+                    radius: 70.0,
+                  ):
+                  CircleAvatar(
+                    radius: 70.0,
+                    child: Icon(Icons.person_outline, size: 50.0,),
+                  ),
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Text(
@@ -69,6 +72,7 @@ class Account extends StatelessWidget {
             Provider.of<HttpClientsModel>(context).clearToken();
 
             Flushbar(
+              duration: Duration(seconds: 3),
               backgroundColor: ThemeColor.error,
               messageText: Text(
                 'You have been successfully disconnected.',
@@ -214,10 +218,13 @@ class Account extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.all(10.0),
-            child: Text(
-              'Sign In',
-              style: TextStyle(fontSize: 20.0),
-            ),
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text(
+                'Sign In',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            )
           ),
         ),
       )
