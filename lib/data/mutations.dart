@@ -213,7 +213,7 @@ class Mutations {
 
       final String imgUrl = jsonMap['imgUrl'];
 
-      var userDataModel = Provider.of<UserDataModel>(context);
+      final userDataModel = Provider.of<UserDataModel>(context);
 
       userDataModel.setImgUrl(imgUrl);
 
@@ -249,6 +249,25 @@ class Mutations {
 
     }).catchError((error) {
       return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  static Future<String> updateName(
+    BuildContext context,
+    String name,
+  ) {
+
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    .mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.updateName,
+        variables: {
+          'name': name,
+        },
+      )
+    )
+    .then((queryResult) {
+      return queryResult.data['updateName']['name'];
     });
   }
 

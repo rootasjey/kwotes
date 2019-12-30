@@ -3,6 +3,7 @@ import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/edit_avatar.dart';
 import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/edit_name.dart';
 import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +89,15 @@ class _AccountSettingsState extends State<AccountSettings> {
                           userData.data.name,
                           style: TextStyle(fontSize: 20.0),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return EditName();
+                              }
+                            )
+                          );
+                        },
                       )
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 20.0),),

@@ -134,6 +134,14 @@ class MutationsOperations {
     }
   """);
 
+  static DocumentNode updateName = parseString("""
+    mutation (\$name: String!) {
+      updateName(name: \$name) {
+        name
+      }
+    }
+  """);
+
   static DocumentNode updatePassword = parseString("""
     mutation (\$oldPassword: String!, \$newPassword: String!) {
       updatePassword(oldPassword: \$oldPassword, newPassword: \$newPassword) {

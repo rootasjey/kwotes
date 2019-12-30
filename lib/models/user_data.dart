@@ -96,6 +96,12 @@ class UserDataModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setName(String name) {
+    _userData.name = name;
+    saveToFile(_userData.toJSON());
+    notifyListeners();
+  }
+
   /// Update data on user signin/signup.
   void update(UserData data) {
     if (data == null) { return; }
