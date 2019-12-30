@@ -15,35 +15,33 @@ class LoadingComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height - 100,
-        padding: padding,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: 20.0),
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(color),
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height - 100,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(color),
             ),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: color,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: color,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
