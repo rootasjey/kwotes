@@ -118,7 +118,7 @@ class _QuotidiansState extends State<Quotidians> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                      height: 550.0,
+                      height: 580.0,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: Card(
