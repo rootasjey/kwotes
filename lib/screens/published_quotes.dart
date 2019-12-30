@@ -31,6 +31,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    if (quotes.length > 0) { return; }
     fetchQuotes();
   }
 
@@ -89,13 +91,19 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
             return emptyView();
           }
 
-          return GridView.builder(
-            itemCount: quotes.length,
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemBuilder: (BuildContext context, int index) {
-              return SmallQuoteCard(quote: quotes.elementAt(index),);
+          return RefreshIndicator(
+            onRefresh: () async {
+              await fetchQuotes();
+              return null;
             },
+            child: GridView.builder(
+              itemCount: quotes.length,
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              itemBuilder: (BuildContext context, int index) {
+                return SmallQuoteCard(quote: quotes.elementAt(index),);
+              },
+            ),
           );
         },
       )
@@ -103,55 +111,68 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget emptyView() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetchQuotes();
+        return null;
+      },
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 40.0),
         children: <Widget>[
-          Icon(Icons.speaker_notes_off, size: 60.0),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 100.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.speaker_notes_off, size: 60.0),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-            child: Text(
-              'No quotes',
-              style: TextStyle(
-                fontSize: 30.0,
-              ),
-            ),
-          ),
-
-          Opacity(
-            opacity: .6,
-            child: FlatButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return AddQuote();
-                    }
-                  )
-                );
-              },
-              child: Text(
-                'You have not published any quotes yet. Go to the Add Quote page to start sharing your thoughts with others.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20.0,
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    'No quotes',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30.0,
+                    ),
+                  ),
                 ),
-              ),
-            )
-          ),
+
+                Opacity(
+                  opacity: .6,
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AddQuote();
+                          }
+                        )
+                      );
+                    },
+                    child: Text(
+                      'You have not published any quotes yet. Go to the Add Quote page to start sharing your thoughts with others.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  )
+                ),
+              ],
+            ),
+          )
+
         ],
       ),
     );
   }
 
-  void fetchQuotes() {
+  Future fetchQuotes() {
     setState(() {
       isLoading = true;
     });
 
-    Queries.myPublihshedQuotes(context, lang, limit, order, skip)
+    return Queries.myPublihshedQuotes(context, lang, limit, order, skip)
       .then((quotesResp) {
         setState(() {
           isLoading = false;
