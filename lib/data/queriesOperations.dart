@@ -299,5 +299,19 @@ class QueriesOperations {
       updateEmailStepOne(newEmail: \$newEmail)
     }
   """);
+
+  static DocumentNode userData = parseString("""
+    query {
+      userData {
+        email
+        id
+        imgUrl
+        lang
+        name
+        rights
+        token
+      }
+    }
+  """);
 }
 

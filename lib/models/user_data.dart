@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:memorare/data/queries.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../types/user_data.dart';
@@ -78,6 +79,14 @@ class UserDataModel extends ChangeNotifier {
     } catch (e) {}
   }
 
+  Future fetchAndUpdate(BuildContext context) {
+    return Queries.userData(context)
+    .then((dataResp) {
+      update(dataResp);
+      saveToFile(_userData.toJSON());
+    });
+  }
+
   void saveToFile(Map<String, dynamic> json) async {
     final file = await _localFile;
     final str = jsonEncode(json);
@@ -103,31 +112,31 @@ class UserDataModel extends ChangeNotifier {
   }
 
   /// Update data on user signin/signup.
-  void update(UserData data) {
-    if (data == null) { return; }
+  void update(UserData dataResp) {
+    if (dataResp == null) { return; }
 
     if (_userData == null) {
       _userData = UserData(
-        email: data.email,
-        id: data.id,
-        imgUrl: data.imgUrl,
-        lang: data.lang,
-        name: data.name,
-        rights: data.rights,
-        token: data.token,
+        email: dataResp.email,
+        id: dataResp.id,
+        imgUrl: dataResp.imgUrl,
+        lang: dataResp.lang,
+        name: dataResp.name,
+        rights: dataResp.rights,
+        token: dataResp.token,
       );
 
       notifyListeners();
       return;
     }
 
-    _userData.email   = data.email  ?? _userData.email;
-    _userData.id      = data.id     ?? _userData.id;
-    _userData.imgUrl  = data.imgUrl ?? _userData.imgUrl;
-    _userData.lang    = data.lang   ?? _userData.lang;
-    _userData.name    = data.name   ?? _userData.name;
-    _userData.rights  = data.rights ?? _userData.rights;
-    _userData.token   = data.token  ?? _userData.token;
+    _userData.email   = dataResp.email  ?? _userData.email;
+    _userData.id      = dataResp.id     ?? _userData.id;
+    _userData.imgUrl  = dataResp.imgUrl ?? _userData.imgUrl;
+    _userData.lang    = dataResp.lang   ?? _userData.lang;
+    _userData.name    = dataResp.name   ?? _userData.name;
+    _userData.rights  = dataResp.rights ?? _userData.rights;
+    _userData.token   = dataResp.token  ?? _userData.token;
 
     notifyListeners();
   }

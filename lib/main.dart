@@ -89,6 +89,7 @@ class MainState extends State<Main> {
         });
 
         final userDataModel = Provider.of<UserDataModel>(context);
+
         userDataModel.readFromFile()
           .then((_) {
             Provider.of<HttpClientsModel>(context)
@@ -102,6 +103,9 @@ class MainState extends State<Main> {
               .then((topic) {
                 Provider.of<ThemeColor>(context).updatePalette(context, topic);
               });
+          })
+          .then((_) {
+            userDataModel.fetchAndUpdate(context);
           });
       });
   }

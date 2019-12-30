@@ -12,6 +12,7 @@ import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/types/quotodians_response.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
+import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 
 class Queries {
@@ -338,6 +339,18 @@ class Queries {
     })
     .catchError((error) {
       return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  static Future<UserData> userData(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .mutate(
+      MutationOptions(
+        documentNode: QueriesOperations.userData,
+      )
+    )
+    .then((queryResult) {
+      return UserData.fromJSON(queryResult.data['userData']);
     });
   }
 }
