@@ -4,6 +4,7 @@ import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_quote_card.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:provider/provider.dart';
@@ -70,23 +71,77 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           icon: Icon(Icons.arrow_back, color: accent,),
         ),
       ),
-      floatingActionButton: FilterFab(
-        onOrderChanged: (int newOrder) {
-          setState(() {
-            order = newOrder;
-          });
+      floatingActionButton: quotes.length > 0 ?
+        FilterFab(
+          onOrderChanged: (int newOrder) {
+            setState(() {
+              order = newOrder;
+            });
 
-          fetchQuotes();
+            fetchQuotes();
+          },
+          order: order,
+        ):
+        Padding(padding: EdgeInsets.zero,),
+      body: Builder(
+        builder: (BuildContext context) {
+          if (quotes.length == 0) {
+            return emptyView();
+          }
+
+          return GridView.builder(
+            itemCount: quotes.length,
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemBuilder: (BuildContext context, int index) {
+              return SmallQuoteCard(quote: quotes.elementAt(index),);
+            },
+          );
         },
-        order: order,
-      ),
-      body: GridView.builder(
-        itemCount: quotes.length,
-        padding: EdgeInsets.symmetric(vertical: 20.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return SmallQuoteCard(quote: quotes.elementAt(index),);
-        },
+      )
+    );
+  }
+
+  Widget emptyView() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.speaker_notes_off, size: 60.0),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Text(
+              'No quotes',
+              style: TextStyle(
+                fontSize: 30.0,
+              ),
+            ),
+          ),
+
+          Opacity(
+            opacity: .6,
+            child: FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return AddQuote();
+                    }
+                  )
+                );
+              },
+              child: Text(
+                'You have not published any quotes yet. Go to the Add Quote page to start sharing your thoughts with others.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            )
+          ),
+        ],
       ),
     );
   }
