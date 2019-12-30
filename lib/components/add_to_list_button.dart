@@ -276,7 +276,7 @@ class _AddToListButtonState extends State<AddToListButton> {
   void addQuoteToList({BuildContext context, String listId, String listName}) {
     final _context = widget.context ?? context;
 
-    UserMutations
+    Mutations
     .addUniqToList(context, listId, widget.quoteId)
     .then((resp) {
       if (resp.boolean) {
@@ -299,7 +299,7 @@ class _AddToListButtonState extends State<AddToListButton> {
   void createNewList(BuildContext context) {
     final _context = widget.context ?? context;
 
-    UserMutations
+    Mutations
     .createList(
       context: context,
       name: newListName,

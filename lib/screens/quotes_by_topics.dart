@@ -89,7 +89,7 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
                   quotes.elementAt(index).starred = true;
                 });
 
-                final booleanMessage = await UserMutations.star(
+                final booleanMessage = await Mutations.star(
                   context,
                   quotes.elementAt(index).id
                 );
@@ -112,7 +112,7 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
                   quotes.elementAt(index).starred = false;
                 });
 
-                final booleanMessage = await UserMutations.unstar(
+                final booleanMessage = await Mutations.unstar(
                   context,
                   quotes.elementAt(index).id
                 );

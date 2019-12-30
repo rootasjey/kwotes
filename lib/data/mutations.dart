@@ -9,7 +9,7 @@ import 'package:memorare/types/quotes_list.dart';
 import 'package:memorare/types/try_response.dart';
 import 'package:provider/provider.dart';
 
-class UserMutations {
+class Mutations {
   static Future<BooleanMessage> addUniqToList(
     BuildContext context,
     String listId,

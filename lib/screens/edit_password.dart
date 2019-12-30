@@ -238,7 +238,7 @@ class _EditPasswordState extends State<EditPassword> {
   Future updatePassword() async {
     setState(() { isLoading = true; });
 
-    final booleanMessage = await UserMutations
+    final booleanMessage = await Mutations
       .updatePassword(context, oldPassword, confirmPassword);
 
     setState(() {

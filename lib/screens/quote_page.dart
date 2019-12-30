@@ -220,7 +220,7 @@ class _QuotePageState extends State<QuotePage> {
                   quote.starred = true;
                 });
 
-                final booleanMessage = await UserMutations.star(context, quote.id);
+                final booleanMessage = await Mutations.star(context, quote.id);
 
                 if (!booleanMessage.boolean) {
                   setState(() { // rollback
@@ -246,7 +246,7 @@ class _QuotePageState extends State<QuotePage> {
                   quote.starred = false;
                 });
 
-                final booleanMessage = await UserMutations.unstar(context, quote.id);
+                final booleanMessage = await Mutations.unstar(context, quote.id);
 
                 if (!booleanMessage.boolean) {
                   setState(() { // rollback

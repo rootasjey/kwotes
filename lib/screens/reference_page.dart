@@ -273,7 +273,7 @@ class ReferencePageState extends State<ReferencePage> {
                       quotes.elementAt(index).starred = true;
                     });
 
-                    final booleanMessage = await UserMutations.star(
+                    final booleanMessage = await Mutations.star(
                       context,
                       quotes.elementAt(index).id
                     );
@@ -295,7 +295,7 @@ class ReferencePageState extends State<ReferencePage> {
                       quotes.elementAt(index).starred = false;
                     });
 
-                    final booleanMessage = await UserMutations.unstar(
+                    final booleanMessage = await Mutations.unstar(
                       context,
                       quotes.elementAt(index).id
                     );

@@ -213,7 +213,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       quotesList.quotes.removeAt(index);
     });
 
-    UserMutations.removeFromList(context, widget.id, quote.id)
+    Mutations.removeFromList(context, widget.id, quote.id)
       .then((booleanMessage) {
         if (!booleanMessage.boolean) {
           setState(() {
@@ -387,7 +387,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       isDeletingList = true;
     });
 
-    UserMutations.deleteList(context, widget.id)
+    Mutations.deleteList(context, widget.id)
       .then((booleanMessage) {
         if (booleanMessage.boolean) { // rollback
           Navigator.of(context).pop();
@@ -420,7 +420,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       displayedDescription = updateListDescription;
     });
 
-    UserMutations.updateList(
+    Mutations.updateList(
       context,
       widget.id,
       updateListName,

@@ -142,7 +142,7 @@ class _StarredState extends State<Starred> {
                       quotes.removeWhere((q) => q.id == quote.id );
                     });
 
-                    final booleanMessage = await UserMutations.unstar(context, quote.id);
+                    final booleanMessage = await Mutations.unstar(context, quote.id);
 
                     if (!booleanMessage.boolean) {
                       setState(() { // rollback

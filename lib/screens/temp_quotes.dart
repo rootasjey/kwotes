@@ -96,7 +96,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 quotes.removeWhere((q) => q.id == id);
               });
 
-              final booleanMessage = await UserMutations.deleteTempQuote(context, id);
+              final booleanMessage = await Mutations.deleteTempQuote(context, id);
 
               if (!booleanMessage.boolean) {
                 quotes.insert(index, quoteToDelete);
@@ -148,7 +148,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       quotes.removeWhere((q) => q.id == id);
     });
 
-    final booleanMessage = await UserMutations.validateTempQuote(context, id);
+    final booleanMessage = await Mutations.validateTempQuote(context, id);
 
     if (!booleanMessage.boolean) {
       quotes.insert(index, quoteToValidate);

@@ -212,7 +212,7 @@ class _EditAvatarState extends State<EditAvatar> {
       isLoading = true;
     });
 
-    final tryResponse = await UserMutations.updateImgUrl(context, newImgUrl);
+    final tryResponse = await Mutations.updateImgUrl(context, newImgUrl);
 
     setState(() {
       isLoading = false;

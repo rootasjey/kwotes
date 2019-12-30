@@ -426,7 +426,7 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   void createNewList() {
-    UserMutations.createList(
+    Mutations.createList(
       context: context,
       name: newListName,
       description: newListDescription
@@ -452,7 +452,7 @@ class _QuotesListsState extends State<QuotesLists> {
       lists.removeAt(index);
     });
 
-    UserMutations.deleteList(context, id)
+    Mutations.deleteList(context, id)
       .then((booleanMessage) {
         if (booleanMessage.boolean) { // rollback
           return;
@@ -484,7 +484,7 @@ class _QuotesListsState extends State<QuotesLists> {
       listToUpdate.description = updateListDescription;
     });
 
-    UserMutations.updateList(context, id, name, description)
+    Mutations.updateList(context, id, name, description)
       .then((resp) {
         if (!resp.boolean) {
           setState(() {
