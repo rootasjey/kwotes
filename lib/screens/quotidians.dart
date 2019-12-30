@@ -102,7 +102,7 @@ class _QuotidiansState extends State<Quotidians> {
       child: ListView(
         children: <Widget>[
           Swiper(
-            itemHeight: MediaQuery.of(context).size.height,
+            itemHeight: MediaQuery.of(context).size.height - 80.0,
             itemWidth: MediaQuery.of(context).size.width - 20.0,
             itemCount: quotidians.length,
             layout: SwiperLayout.STACK,
