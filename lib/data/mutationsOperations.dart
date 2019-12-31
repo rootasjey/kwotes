@@ -39,7 +39,7 @@ class MutationsOperations {
 
   static DocumentNode deleteTempQuote = parseString("""
     mutation (\$id: String!) {
-      deleteTempQuoteAdmin (id: \$id) {
+      deleteTempQuote (id: \$id) {
         id
       }
     }
