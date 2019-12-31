@@ -39,12 +39,17 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   @override
   Widget build(BuildContext context) {
-    final accent = Provider.of<ThemeColor>(context).accent;
+    final themeColor = Provider.of<ThemeColor>(context);
+    final accent = themeColor.accent;
+    final backgroundColor = themeColor.background;
 
     if (isLoading) {
       return Scaffold(
         body: LoadingComponent(
           title: 'Loading my quotes in validation...',
+          padding: EdgeInsets.symmetric(horizontal: 30.0),
+          color: backgroundColor,
+          backgroundColor: Colors.transparent,
         ),
       );
     }
@@ -109,7 +114,12 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             );
           }
 
-          return GridView.builder(
+          return RefreshIndicator(
+            onRefresh: () async {
+              await fetchTempQuotes();
+              return null;
+            },
+            child: GridView.builder(
             itemCount: quotes.length,
             padding: EdgeInsets.symmetric(vertical: 20.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
@@ -145,6 +155,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 },
               );
             },
+          ),
           );
         },
       )
