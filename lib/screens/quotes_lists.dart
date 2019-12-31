@@ -65,7 +65,7 @@ class _QuotesListsState extends State<QuotesLists> {
         onPressed: () {
           showCreateListDialog();
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: accent,
       ),
       body: Builder(builder: (BuildContext context) {
@@ -85,8 +85,15 @@ class _QuotesListsState extends State<QuotesLists> {
 
         if (lists.length == 0) {
           return EmptyView(
-            title: 'Lists',
-            description: 'You have no list yet.',
+            icon: Icon(Icons.list, size: 60.0),
+            title: 'No personalized lists',
+            description: 'You have no list yet. You can create a thematic one.',
+            onRefresh: () {
+              fetchLists();
+            },
+            onTapDescription: () {
+              showCreateListDialog();
+            },
           );
         }
 
