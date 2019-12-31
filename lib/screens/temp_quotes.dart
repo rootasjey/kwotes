@@ -113,7 +113,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             itemCount: quotes.length,
             padding: EdgeInsets.symmetric(vertical: 20.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (BuildContext gridViewContext, int index) {
               return SmallTempQuoteCard(
                 quote: quotes.elementAt(index),
                 onDelete: (String id) async {
@@ -126,7 +126,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   final booleanMessage = await Mutations.deleteTempQuote(context, id);
 
                   if (!booleanMessage.boolean) {
-                    quotes.insert(index, quoteToDelete);
+                    setState(() {
+                      quotes.insert(index, quoteToDelete);
+                    });
 
                     Flushbar(
                       duration: Duration(seconds: 3),
@@ -180,7 +182,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     final booleanMessage = await Mutations.validateTempQuote(context, id);
 
     if (!booleanMessage.boolean) {
-      quotes.insert(index, quoteToValidate);
+      setState(() {
+        quotes.insert(index, quoteToValidate);
+      });
 
       Flushbar(
         duration: Duration(seconds: 3),
