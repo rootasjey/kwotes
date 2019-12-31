@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
@@ -88,7 +89,24 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       body: Builder(
         builder: (BuildContext context) {
           if (quotes.length == 0) {
-            return emptyView();
+            return EmptyView(
+              title: 'No quotes',
+              icon: Icon(Icons.speaker_notes_off, size: 60.0),
+              description: 'You have no quotes published yet. Go to the Add Quote page to start sharing your thoughts with others.',
+              onRefresh: () async {
+                await fetchQuotes();
+                return null;
+              },
+              onTapDescription: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return AddQuote();
+                    }
+                  )
+                );
+              },
+            );
           }
 
           return RefreshIndicator(
@@ -107,63 +125,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           );
         },
       )
-    );
-  }
-
-  Widget emptyView() {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await fetchQuotes();
-        return null;
-      },
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 40.0),
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 100.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.speaker_notes_off, size: 60.0),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Text(
-                    'No quotes',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30.0,
-                    ),
-                  ),
-                ),
-
-                Opacity(
-                  opacity: .6,
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return AddQuote();
-                          }
-                        )
-                      );
-                    },
-                    child: Text(
-                      'You have not published any quotes yet. Go to the Add Quote page to start sharing your thoughts with others.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  )
-                ),
-              ],
-            ),
-          )
-
-        ],
-      ),
     );
   }
 

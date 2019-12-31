@@ -88,8 +88,9 @@ class _QuotesListsState extends State<QuotesLists> {
             icon: Icon(Icons.list, size: 60.0),
             title: 'No personalized lists',
             description: 'You have no list yet. You can create a thematic one.',
-            onRefresh: () {
-              fetchLists();
+            onRefresh: () async {
+              await fetchLists();
+              return null;
             },
             onTapDescription: () {
               showCreateListDialog();
@@ -189,12 +190,12 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
-  void fetchLists() {
+  Future fetchLists() {
     setState(() {
       isLoading = true;
     });
 
-    Queries.lists(context, limit, order, skip)
+    return Queries.lists(context, limit, order, skip)
       .then((quotesListsResp) {
         setState(() {
           isLoading = false;

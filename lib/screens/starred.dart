@@ -1,6 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
+import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/medium_quote_card.dart';
 import 'package:memorare/data/mutations.dart';
@@ -55,54 +56,10 @@ class _StarredState extends State<Starred> {
           icon: Icon(Icons.arrow_back, color: color,),
         ),
       ),
-      body: ListView(
-        padding: isLoading ?
-          EdgeInsets.zero :
-          EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
-        children: <Widget>[
-          if (isLoading)
-            LoadingComponent(
-              title: 'Loading liked quotes',
-              padding: EdgeInsets.symmetric(horizontal: 30.0),
-              color: backgroundColor,
-              backgroundColor: Colors.transparent,
-            ),
-
-          if (!isLoading && quotes.length == 0)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
-              child: Column(
-                children: <Widget>[
-                  Icon(IconsMore.heart_broken, size: 80.0,),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Text(
-                      'This place is empty',
-                      style: TextStyle(
-                        fontSize: 30.0,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Your favorites quotes will show up here.',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-          if (hasErrors)
-            Padding(
+      body: Builder(
+        builder: (BuildContext context) {
+          if (hasErrors) {
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
               child: Column(
                 children: <Widget>[
@@ -129,46 +86,74 @@ class _StarredState extends State<Starred> {
                   )
                 ],
               ),
-            ),
+            );
+          }
 
-          if (!isLoading && quotes.length > 0)
-            ...quotes.map<Widget>((quote) {
-                quote.starred = true;
+          if (isLoading) {
+            return LoadingComponent(
+              title: 'Loading liked quotes',
+              padding: EdgeInsets.symmetric(horizontal: 30.0),
+              color: backgroundColor,
+              backgroundColor: Colors.transparent,
+            );
+          }
 
-                return MediumQuoteCard(
-                  quote: quote,
-                  onUnlike: () async {
-                    setState(() { // optimistic
-                      quotes.removeWhere((q) => q.id == quote.id );
-                    });
+          if (!isLoading && quotes.length == 0) {
+            return EmptyView(
+              icon: Icon(IconsMore.heart_broken, size: 80.0,),
+              title: 'This place is empty',
+              description: 'Your favorites quotes will show up here.',
+              onRefresh: () async {
+                await fetchStarred();
+                return null;
+              },
+            );
+          }
 
-                    final booleanMessage = await Mutations.unstar(context, quote.id);
+          return ListView(
+            padding: isLoading ?
+              EdgeInsets.zero :
+              EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+            children: <Widget>[
+              ...quotes.map<Widget>((quote) {
+                  quote.starred = true;
 
-                    if (!booleanMessage.boolean) {
-                      setState(() { // rollback
-                        quotes.add(quote);
+                  return MediumQuoteCard(
+                    quote: quote,
+                    onUnlike: () async {
+                      setState(() { // optimistic
+                        quotes.removeWhere((q) => q.id == quote.id );
                       });
 
-                      Flushbar(
-                        duration: Duration(seconds: 2),
-                        backgroundColor: ThemeColor.error,
-                        message: booleanMessage.message,
-                      )..show(context);
-                    }
-                  },
-                );
-              }),
-        ],
+                      final booleanMessage = await Mutations.unstar(context, quote.id);
+
+                      if (!booleanMessage.boolean) {
+                        setState(() { // rollback
+                          quotes.add(quote);
+                        });
+
+                        Flushbar(
+                          duration: Duration(seconds: 2),
+                          backgroundColor: ThemeColor.error,
+                          message: booleanMessage.message,
+                        )..show(context);
+                      }
+                    },
+                  );
+                }),
+            ],
+          );
+        },
       ),
     );
   }
 
-  void fetchStarred() {
+  Future fetchStarred() {
     setState(() {
       isLoading = true;
     });
 
-    Queries.starred(context, limit, order, skip)
+    return Queries.starred(context, limit, order, skip)
       .then((quotesResponse) {
         setState(() {
           quotes = quotesResponse.entries;

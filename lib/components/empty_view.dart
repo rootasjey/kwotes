@@ -8,11 +8,11 @@ class EmptyView extends StatelessWidget {
   final Function onTapDescription;
 
   EmptyView({
-    this.description,
+    this.description = '',
     this.icon,
     this.onRefresh,
     this.onTapDescription,
-    this.title,
+    this.title = '',
   });
 
   @override
@@ -20,8 +20,7 @@ class EmptyView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {
         if (onRefresh != null) {
-          await onRefresh();
-          return null;
+          return await onRefresh();
         }
       },
       child: ListView(
