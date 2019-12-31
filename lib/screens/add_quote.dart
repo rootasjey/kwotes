@@ -34,9 +34,9 @@ class _AddQuoteState extends State<AddQuote> {
     super.dispose();
   }
 
-  void onNextPage() {
+  void onNextPage() async {
     if (_pageController.page < (maxSteps - 1)) {
-      _pageController.nextPage(
+      await _pageController.nextPage(
         curve: ElasticInCurve(),
         duration: Duration(milliseconds: 300),
       );
@@ -64,7 +64,7 @@ class _AddQuoteState extends State<AddQuote> {
           },
           child: Icon(Icons.check,),
         ) :
-        Padding(padding: EdgeInsets.all(0),),
+        Padding(padding: EdgeInsets.zero,),
 
       body: PageView(
         controller: _pageController,
@@ -82,7 +82,7 @@ class _AddQuoteState extends State<AddQuote> {
           });
         },
         children: <Widget>[
-          AddQuoteContent(step: 1, maxSteps: maxSteps),
+          AddQuoteContent(step: 1, maxSteps: maxSteps, onNextStepTap: () { onNextPage(); },),
           AddQuoteTopics(step: 2, maxSteps: maxSteps,),
           AddQuoteAuthor(step: 3, maxSteps: maxSteps,),
           AddQuoteReference(step: 4, maxSteps: maxSteps,),

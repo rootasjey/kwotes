@@ -6,10 +6,12 @@ import 'package:provider/provider.dart';
 class AddQuoteContent extends StatefulWidget {
   final int maxSteps;
   final int step;
+  final Function onNextStepTap;
 
   AddQuoteContent({
     Key key,
     this.maxSteps,
+    this.onNextStepTap,
     this.step
   }): super(key: key);
 
@@ -101,6 +103,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                 ),
 
                 langSelect(accent),
+
+                nextStepButton(),
               ],
             ),
 
@@ -140,6 +144,33 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           child: Text(value.toUpperCase()),
         );
       }).toList(),
+    );
+  }
+
+  Widget nextStepButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: FlatButton(
+        padding: EdgeInsets.all(10.0),
+        onPressed: () {
+          if (widget.onNextStepTap != null) {
+            widget.onNextStepTap();
+          }
+        },
+        child: Opacity(
+          opacity: 0.6,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Next step'),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Icon(Icons.arrow_forward),
+              )
+            ],
+          ),
+        )
+      ),
     );
   }
 }
