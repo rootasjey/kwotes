@@ -22,7 +22,7 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final int maxSteps = 6;
   String mainTopic = '';
-  bool _isFabVisible = true;
+  bool isFabVisible = true;
 
   final _pageController = PageController(
     initialPage: 0,
@@ -55,7 +55,7 @@ class _AddQuoteState extends State<AddQuote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _isFabVisible ?
+      floatingActionButton: isFabVisible ?
         FloatingActionButton(
           foregroundColor: Colors.white,
           backgroundColor: ThemeColor.success,
@@ -71,14 +71,14 @@ class _AddQuoteState extends State<AddQuote> {
         onPageChanged: (pageIndex) {
           if (pageIndex == (maxSteps - 1)) {
             setState(() {
-              _isFabVisible = false;
+              isFabVisible = false;
             });
 
             return;
           }
 
           setState(() {
-            _isFabVisible = true;
+            isFabVisible = true;
           });
         },
         children: <Widget>[

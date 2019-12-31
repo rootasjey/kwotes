@@ -111,9 +111,7 @@ class _StarredState extends State<Starred> {
           }
 
           return ListView(
-            padding: isLoading ?
-              EdgeInsets.zero :
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
             children: <Widget>[
               ...quotes.map<Widget>((quote) {
                   quote.starred = true;
