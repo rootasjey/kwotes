@@ -106,6 +106,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                 child: TextField(
                   keyboardType: TextInputType.multiline,
                   controller: _textEditingController,
+                  textInputAction: TextInputAction.go,
                   decoration: InputDecoration(
                     hintText: 'Add a new topic',
                     border: OutlineInputBorder(),
@@ -116,6 +117,13 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       )
                     ),
                   ),
+                  onChanged: (value) {
+                    if (value.endsWith(',') || value.endsWith(';') || value.endsWith(' ')) {
+                      final computed = value.trim().replaceAll(',', '').replaceAll(';', '');
+                      onAddTopic(computed);
+                      _textEditingController.clear();
+                    }
+                  },
                   onSubmitted: (value) {
                     onAddTopic(value);
                     _textEditingController.clear();
