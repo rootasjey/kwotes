@@ -91,7 +91,7 @@ class _StarredState extends State<Starred> {
 
           if (isLoading) {
             return LoadingComponent(
-              title: 'Loading liked quotes',
+              title: 'Loading favorites quotes',
               padding: EdgeInsets.symmetric(horizontal: 30.0),
               color: backgroundColor,
               backgroundColor: Colors.transparent,
@@ -110,36 +110,42 @@ class _StarredState extends State<Starred> {
             );
           }
 
-          return ListView(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
-            children: <Widget>[
-              ...quotes.map<Widget>((quote) {
-                  quote.starred = true;
+          return RefreshIndicator(
+            onRefresh: () async {
+              await fetchStarred();
+              return null;
+            },
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+              children: <Widget>[
+                ...quotes.map<Widget>((quote) {
+                    quote.starred = true;
 
-                  return MediumQuoteCard(
-                    quote: quote,
-                    onUnlike: () async {
-                      setState(() { // optimistic
-                        quotes.removeWhere((q) => q.id == quote.id );
-                      });
-
-                      final booleanMessage = await Mutations.unstar(context, quote.id);
-
-                      if (!booleanMessage.boolean) {
-                        setState(() { // rollback
-                          quotes.add(quote);
+                    return MediumQuoteCard(
+                      quote: quote,
+                      onUnlike: () async {
+                        setState(() { // optimistic
+                          quotes.removeWhere((q) => q.id == quote.id );
                         });
 
-                        Flushbar(
-                          duration: Duration(seconds: 2),
-                          backgroundColor: ThemeColor.error,
-                          message: booleanMessage.message,
-                        )..show(context);
-                      }
-                    },
-                  );
-                }),
-            ],
+                        final booleanMessage = await Mutations.unstar(context, quote.id);
+
+                        if (!booleanMessage.boolean) {
+                          setState(() { // rollback
+                            quotes.add(quote);
+                          });
+
+                          Flushbar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: ThemeColor.error,
+                            message: booleanMessage.message,
+                          )..show(context);
+                        }
+                      },
+                    );
+                  }),
+              ],
+            ),
           );
         },
       ),
