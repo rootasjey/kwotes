@@ -98,50 +98,56 @@ class _QuotesListsState extends State<QuotesLists> {
           );
         }
 
-        return ListView.separated(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
-          itemCount: lists.length,
-          separatorBuilder: (context, index) {
-            return Divider();
+        return RefreshIndicator(
+          onRefresh: () async {
+            await fetchLists();
+            return null;
           },
-          itemBuilder: (BuildContext context, int index) {
-            final item = lists.elementAt(index);
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
+            itemCount: lists.length,
+            separatorBuilder: (context, index) {
+              return Divider();
+            },
+            itemBuilder: (BuildContext context, int index) {
+              final item = lists.elementAt(index);
 
-            return ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return QuotesListScreen(
-                        id: item.id,
-                        name: item.name,
-                        description: item.description,
-                      );
-                    }
-                  )
-                );
-              },
-              trailing: moreButton(quotesList: item, index: index),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    item.name,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  if (item.description != null)
-                    Opacity(
-                      opacity: .6,
-                      child: Text(
-                        item.description,
+              return ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return QuotesListScreen(
+                          id: item.id,
+                          name: item.name,
+                          description: item.description,
+                        );
+                      }
+                    )
+                  );
+                },
+                trailing: moreButton(quotesList: item, index: index),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      item.name,
+                      style: TextStyle(
+                        fontSize: 20.0,
                       ),
                     ),
-                ],
-              )
-            );
-          },
+                    if (item.description != null)
+                      Opacity(
+                        opacity: .6,
+                        child: Text(
+                          item.description,
+                        ),
+                      ),
+                  ],
+                )
+              );
+            },
+          ),
         );
       }),
     );
