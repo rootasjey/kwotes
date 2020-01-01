@@ -105,6 +105,10 @@ class MainState extends State<Main> {
               });
           })
           .then((_) {
+            if (userDataModel.data.id == null || userDataModel.data.id.isEmpty) {
+              return;
+            }
+
             userDataModel.fetchAndUpdate(context);
           });
       });
