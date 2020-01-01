@@ -41,16 +41,16 @@ class _DiscoverState extends State<Discover> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    if (authors.length > 0 || references.length > 0) {
+      return;
+    }
+
     final userData = Provider.of<UserDataModel>(context);
-    final lang = userData.data.lang;
+    final lang = userData.data.lang != null && userData.data.lang.isNotEmpty ?
+      userData.data.lang : 'en';
 
-    if (authors.length == 0) {
-      fetchRandomAuthors(lang);
-    }
-
-    if (references.length == 0) {
-      fetchRandomReferences(lang);
-    }
+    fetchRandomAuthors(lang);
+    fetchRandomReferences(lang);
   }
 
   @override
