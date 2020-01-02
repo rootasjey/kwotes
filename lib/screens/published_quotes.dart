@@ -24,6 +24,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   Pagination pagination = Pagination();
   bool isLoadingMoreQuotes = false;
 
+  ScrollController gridViewScrollController = ScrollController();
+
   int attempts = 1;
   int maxAttempts = 2;
 
@@ -62,11 +64,20 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,
-        title: Text(
-          'Published quotes',
-          style: TextStyle(
-            color: accent,
-            fontSize: 25.0,
+        title: InkWell(
+          onTap: () {
+            gridViewScrollController.animateTo(
+              0,
+              duration: Duration(seconds: 2),
+              curve: Curves.easeOutQuint
+            );
+          },
+          child: Text(
+            'Published quotes',
+            style: TextStyle(
+              color: accent,
+              fontSize: 25.0,
+            ),
           ),
         ),
         leading: IconButton(
@@ -132,6 +143,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
               child: GridView.builder(
                 itemCount: quotes.length,
                 padding: EdgeInsets.symmetric(vertical: 20.0),
+                controller: gridViewScrollController,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                 itemBuilder: (BuildContext context, int index) {
                   return SmallQuoteCard(quote: quotes.elementAt(index),);
