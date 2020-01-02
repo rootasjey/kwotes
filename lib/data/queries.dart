@@ -61,9 +61,9 @@ class Queries {
       });
   }
 
-  static Future<QuotesResponse> myPublihshedQuotes(
+  static Future<QuotesResponse> myPublihshedQuotes({
     BuildContext context, String lang, int limit, int order, int skip,
-  ) {
+  }) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
