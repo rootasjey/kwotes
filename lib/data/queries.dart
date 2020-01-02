@@ -76,9 +76,13 @@ class Queries {
       });
   }
 
-  static Future<TempQuotesResponse> myTempQuotes(
-    BuildContext context, String lang, int limit, int order, int skip,
-  ) {
+  static Future<TempQuotesResponse> myTempQuotes({
+    BuildContext context,
+    String lang,
+    int limit,
+    int order,
+    int skip,
+  }) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
