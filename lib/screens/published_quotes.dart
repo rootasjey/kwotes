@@ -7,6 +7,7 @@ import 'package:memorare/components/small_quote_card.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:provider/provider.dart';
 
@@ -17,10 +18,11 @@ class MyPublishedQuotes extends StatefulWidget {
 
 class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   String lang = 'en';
-  int limit = 10;
   int order = -1;
-  int skip = 0;
   List<Quote> quotes = [];
+
+  Pagination pagination = Pagination();
+  bool isLoadingMoreQuotes = false;
 
   int attempts = 1;
   int maxAttempts = 2;
@@ -114,14 +116,28 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
               await fetchQuotes();
               return null;
             },
-            child: GridView.builder(
-              itemCount: quotes.length,
-              padding: EdgeInsets.symmetric(vertical: 20.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (BuildContext context, int index) {
-                return SmallQuoteCard(quote: quotes.elementAt(index),);
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollNotif) {
+                if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+                  return false;
+                }
+
+                if (pagination.hasNext && !isLoadingMoreQuotes) {
+                  isLoadingMoreQuotes = true;
+                  fetchMoreQuotes();
+                }
+
+                return false;
               },
-            ),
+              child: GridView.builder(
+                itemCount: quotes.length,
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                itemBuilder: (BuildContext context, int index) {
+                  return SmallQuoteCard(quote: quotes.elementAt(index),);
+                },
+              ),
+            )
           );
         },
       )
@@ -133,19 +149,54 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       isLoading = true;
     });
 
-    return Queries.myPublihshedQuotes(context, lang, limit, order, skip)
-      .then((quotesResp) {
-        setState(() {
-          isLoading = false;
-          quotes = quotesResp.entries;
-        });
-      })
-      .catchError((err) {
-        setState(() {
-          isLoading = false;
-          hasErrors = true;
-          error = err;
-        });
+    pagination = Pagination();
+
+    return Queries.myPublihshedQuotes(
+      context: context,
+      lang: lang,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.skip,
+
+    ).then((quotesResp) {
+      setState(() {
+        isLoading = false;
+        quotes = quotesResp.entries;
+        pagination = quotesResp.pagination;
       });
+    })
+    .catchError((err) {
+      setState(() {
+        isLoading = false;
+        hasErrors = true;
+        error = err;
+      });
+    });
+  }
+
+  Future fetchMoreQuotes() {
+    setState(() {
+      isLoadingMoreQuotes = true;
+    });
+
+    return Queries.myPublihshedQuotes(
+      context: context,
+      lang: lang,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.nextSkip,
+
+    ).then((quotesResp) {
+      setState(() {
+        isLoadingMoreQuotes = false;
+        quotes.addAll(quotesResp.entries);
+        pagination = quotesResp.pagination;
+      });
+    })
+    .catchError((err) {
+      setState(() {
+        isLoadingMoreQuotes = false;
+      });
+    });
   }
 }
