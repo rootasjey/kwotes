@@ -4,7 +4,12 @@ class Pagination {
   final int nextSkip;
   final int skip;
 
-  Pagination({this.hasNext, this.limit, this.nextSkip, this.skip});
+  Pagination({
+    this.hasNext = true,
+    this.limit = 10,
+    this.nextSkip = 0,
+    this.skip = 0,
+  });
 
   factory Pagination.fromJSON(Map<String, dynamic> json) {
     return Pagination(
