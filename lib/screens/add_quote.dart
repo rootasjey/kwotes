@@ -36,19 +36,13 @@ class _AddQuoteState extends State<AddQuote> {
 
   void onNextPage() async {
     if (_pageController.page < (maxSteps - 1)) {
-      await _pageController.nextPage(
-        curve: ElasticInCurve(),
-        duration: Duration(milliseconds: 300),
-      );
+      _pageController.jumpToPage(_pageController.page.toInt() + 1);
     }
   }
 
   void onPreviousPage() async {
     if (_pageController.page > 0) {
-      await _pageController.previousPage(
-        curve: ElasticInCurve(),
-        duration: Duration(milliseconds: 300),
-      );
+      _pageController.jumpToPage(_pageController.page.toInt() - 1);
     }
   }
 
