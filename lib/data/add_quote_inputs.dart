@@ -23,6 +23,7 @@ class AddQuoteInputs {
 
   static bool isCompleted = false;
   static bool hasExceptions = false;
+  static String exceptionMessage = '';
 
   static void clearAuthor() {
     authorImgUrl  = '';

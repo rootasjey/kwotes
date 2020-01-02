@@ -60,6 +60,7 @@ class _AddQuoteState extends State<AddQuote> {
           foregroundColor: Colors.white,
           backgroundColor: ThemeColor.success,
           onPressed: () {
+            FocusScope.of(context).requestFocus(FocusNode());
             validateQuote();
           },
           child: Icon(Icons.check,),
@@ -90,7 +91,9 @@ class _AddQuoteState extends State<AddQuote> {
           AddQuoteLastStep(
             step: 6,
             maxSteps: maxSteps,
-            onPreviousPage: () { onPreviousPage(); },
+            onPreviousPage: () {
+              onPreviousPage();
+            },
             onValidate: () async {
               validateQuote();
             },
@@ -130,6 +133,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     AddQuoteInputs.isCompleted = true;
     AddQuoteInputs.hasExceptions = true;
+    AddQuoteInputs.exceptionMessage = booleanMessage.message;
 
     Flushbar(
       backgroundColor: ThemeColor.error,
