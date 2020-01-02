@@ -9,6 +9,7 @@ import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +20,11 @@ class MyTempQuotes extends StatefulWidget {
 
 class MyTempQuotesState extends State<MyTempQuotes> {
   String lang = 'en';
-  int limit = 10;
   int order = -1;
-  int skip = 0;
   List<TempQuote> quotes = [];
+
+  Pagination pagination = Pagination();
+  bool isLoadingMoreQuotes = false;
 
   int attempts = 1;
   int maxAttempts = 2;
@@ -119,43 +121,57 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               await fetchTempQuotes();
               return null;
             },
-            child: GridView.builder(
-            itemCount: quotes.length,
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemBuilder: (BuildContext gridViewContext, int index) {
-              return SmallTempQuoteCard(
-                quote: quotes.elementAt(index),
-                onDelete: (String id) async {
-                  final quoteToDelete = quotes.elementAt(index);
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollNotif) {
+                if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+                  return false;
+                }
 
-                  setState(() {
-                    quotes.removeWhere((q) => q.id == id);
-                  });
+                if (pagination.hasNext && !isLoadingMoreQuotes) {
+                  isLoadingMoreQuotes = true;
+                  fetchMoreTempQuotes();
+                }
 
-                  final booleanMessage = await Mutations.deleteTempQuote(context, id);
+                return false;
+              },
+              child: GridView.builder(
+                itemCount: quotes.length,
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                itemBuilder: (BuildContext gridViewContext, int index) {
+                  return SmallTempQuoteCard(
+                    quote: quotes.elementAt(index),
+                    onDelete: (String id) async {
+                      final quoteToDelete = quotes.elementAt(index);
 
-                  if (!booleanMessage.boolean) {
-                    setState(() {
-                      quotes.insert(index, quoteToDelete);
-                    });
+                      setState(() {
+                        quotes.removeWhere((q) => q.id == id);
+                      });
 
-                    Flushbar(
-                      duration: Duration(seconds: 3),
-                      backgroundColor: ThemeColor.error,
-                      message: booleanMessage.message,
-                    )..show(context);
-                  }
+                      final booleanMessage = await Mutations.deleteTempQuote(context, id);
+
+                      if (!booleanMessage.boolean) {
+                        setState(() {
+                          quotes.insert(index, quoteToDelete);
+                        });
+
+                        Flushbar(
+                          duration: Duration(seconds: 3),
+                          backgroundColor: ThemeColor.error,
+                          message: booleanMessage.message,
+                        )..show(context);
+                      }
+                    },
+                    onDoubleTap: (String id) async {
+                      tryValidateQuote(index, id);
+                    },
+                    onValidate: (String id) async {
+                      tryValidateQuote(index, id);
+                    },
+                  );
                 },
-                onDoubleTap: (String id) async {
-                  tryValidateQuote(index, id);
-                },
-                onValidate: (String id) async {
-                  tryValidateQuote(index, id);
-                },
-              );
-            },
-          ),
+              ),
+            )
           );
         },
       )
@@ -167,20 +183,53 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       isLoading = true;
     });
 
-    return Queries.myTempQuotes(context, lang, limit, order, skip)
-      .then((quotesResp) {
-        setState(() {
-          quotes = quotesResp.entries;
-          isLoading = false;
-        });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          isLoading = false;
-          hasErrors = true;
-        });
+    return Queries.myTempQuotes(
+      context: context,
+      lang: lang,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.skip,
+
+    ).then((quotesResp) {
+    setState(() {
+        quotes = quotesResp.entries;
+        pagination = quotesResp.pagination;
+        isLoading = false;
       });
+    })
+    .catchError((err) {
+      setState(() {
+        error = err;
+        isLoading = false;
+        hasErrors = true;
+      });
+    });
+  }
+
+  Future fetchMoreTempQuotes() {
+    setState(() {
+      isLoadingMoreQuotes = true;
+    });
+
+    return Queries.myTempQuotes(
+      context: context,
+      lang: lang,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.nextSkip,
+
+    ).then((quotesResp) {
+      setState(() {
+        quotes.addAll(quotesResp.entries);
+        pagination = quotesResp.pagination;
+        isLoadingMoreQuotes = false;
+      });
+    })
+    .catchError((err) {
+      setState(() {
+        isLoadingMoreQuotes = false;
+      });
+    });
   }
 
   void tryValidateQuote(int index, String id) async {
