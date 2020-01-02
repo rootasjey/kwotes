@@ -194,6 +194,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       isLoading = true;
     });
 
+    pagination = Pagination();
+
     return Queries.myTempQuotes(
       context: context,
       lang: lang,
