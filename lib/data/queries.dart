@@ -274,9 +274,12 @@ class Queries {
       });
   }
 
-  static Future<QuotesResponse> starred(
-    BuildContext context, int limit, int order, int skip,
-  ) {
+  static Future<QuotesResponse> starred({
+    BuildContext context,
+    int limit,
+    int order,
+    int skip,
+  }) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(

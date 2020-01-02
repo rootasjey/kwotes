@@ -256,6 +256,12 @@ class QueriesOperations {
             name
             topics
           }
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
         }
       }
     }

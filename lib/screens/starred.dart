@@ -7,6 +7,7 @@ import 'package:memorare/components/medium_quote_card.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:provider/provider.dart';
 
@@ -16,10 +17,11 @@ class Starred extends StatefulWidget {
 }
 
 class _StarredState extends State<Starred> {
-  int limit = 10;
-  int order = 1;
-  int skip = 0;
+  int order = -1;
   List<Quote> quotes = [];
+
+  Pagination pagination = Pagination();
+  bool isLoadingMoreQuotes = false;
 
   bool isLoading = false;
   bool hasErrors = false;
@@ -115,37 +117,51 @@ class _StarredState extends State<Starred> {
               await fetchStarred();
               return null;
             },
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
-              children: <Widget>[
-                ...quotes.map<Widget>((quote) {
-                    quote.starred = true;
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollNotif) {
+                if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+                  return false;
+                }
 
-                    return MediumQuoteCard(
-                      quote: quote,
-                      onUnlike: () async {
-                        setState(() { // optimistic
-                          quotes.removeWhere((q) => q.id == quote.id );
-                        });
+                if (pagination.hasNext && !isLoadingMoreQuotes) {
+                  isLoadingMoreQuotes = true;
+                  fetchMoreStarred();
+                }
 
-                        final booleanMessage = await Mutations.unstar(context, quote.id);
+                return false;
+              },
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
+                children: <Widget>[
+                  ...quotes.map<Widget>((quote) {
+                      quote.starred = true;
 
-                        if (!booleanMessage.boolean) {
-                          setState(() { // rollback
-                            quotes.add(quote);
+                      return MediumQuoteCard(
+                        quote: quote,
+                        onUnlike: () async {
+                          setState(() { // optimistic
+                            quotes.removeWhere((q) => q.id == quote.id );
                           });
 
-                          Flushbar(
-                            duration: Duration(seconds: 2),
-                            backgroundColor: ThemeColor.error,
-                            message: booleanMessage.message,
-                          )..show(context);
-                        }
-                      },
-                    );
-                  }),
-              ],
-            ),
+                          final booleanMessage = await Mutations.unstar(context, quote.id);
+
+                          if (!booleanMessage.boolean) {
+                            setState(() { // rollback
+                              quotes.add(quote);
+                            });
+
+                            Flushbar(
+                              duration: Duration(seconds: 2),
+                              backgroundColor: ThemeColor.error,
+                              message: booleanMessage.message,
+                            )..show(context);
+                          }
+                        },
+                      );
+                    }),
+                ],
+              ),
+            )
           );
         },
       ),
@@ -157,19 +173,52 @@ class _StarredState extends State<Starred> {
       isLoading = true;
     });
 
-    return Queries.starred(context, limit, order, skip)
-      .then((quotesResponse) {
-        setState(() {
-          quotes = quotesResponse.entries;
-          isLoading = false;
-        });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          hasErrors = true;
-          isLoading = false;
-        });
+    pagination = Pagination();
+
+    return Queries.starred(
+      context: context,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.skip,
+
+    ).then((quotesResponse) {
+      setState(() {
+        quotes = quotesResponse.entries;
+        pagination= quotesResponse.pagination;
+        isLoading = false;
       });
+    })
+    .catchError((err) {
+      setState(() {
+        error = err;
+        hasErrors = true;
+        isLoading = false;
+      });
+    });
+  }
+
+  Future fetchMoreStarred() {
+    setState(() {
+      isLoadingMoreQuotes = true;
+    });
+
+    return Queries.starred(
+      context: context,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.nextSkip,
+
+    ).then((quotesResponse) {
+      setState(() {
+        quotes.addAll(quotesResponse.entries);
+        pagination= quotesResponse.pagination;
+        isLoadingMoreQuotes = false;
+      });
+    })
+    .catchError((err) {
+      setState(() {
+        isLoadingMoreQuotes = false;
+      });
+    });
   }
 }
