@@ -41,6 +41,7 @@ class _AddToListButtonState extends State<AddToListButton> {
   int skip = 0;
 
   bool isLoading = false;
+  bool isLoaded = false;
   bool hasErrors = false;
   Error error;
 
@@ -84,21 +85,6 @@ class _AddToListButtonState extends State<AddToListButton> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setSheetState) {
-            final newListButton = ListTile(
-              onTap: () async {
-                final res = await showNewListDialog(context);
-                if (res != null && res) { Navigator.pop(context); }
-              },
-              leading: Icon(Icons.add),
-              title: Text(
-                'New list',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            );
-
             List<Widget> tiles = [];
 
             if (hasErrors) {
@@ -130,13 +116,14 @@ class _AddToListButtonState extends State<AddToListButton> {
               );
             }
 
-            if (quotesLists.length == 0 && !isLoading) {
+            if (quotesLists.length == 0 && !isLoading && !isLoaded) {
               tiles.add(LinearProgressIndicator());
 
               fetchLists()
                 .then((resp) {
                   setSheetState(() {
                     quotesLists = resp;
+                    isLoaded = true;
                   });
                 })
                 .catchError((err) {
@@ -144,32 +131,18 @@ class _AddToListButtonState extends State<AddToListButton> {
                     error = err;
                     hasErrors = true;
                     isLoading = false;
+                    isLoaded = true;
                   });
                 });
             } else {
               for (var list in quotesLists) {
-                tiles.add(
-                  ListTile(
-                    onTap: () {
-                      addQuoteToList(
-                        context: context,
-                        listId: list.id,
-                        listName: list.name
-                      );
-
-                      Navigator.pop(context);
-                    },
-                    title: Text(
-                      list.name,
-                    ),
-                  )
-                );
+                tiles.add(tileList(list));
               }
             }
 
             return ListView(
               children: <Widget>[
-                newListButton,
+                newListButton(),
                 Divider(),
                 ...tiles
               ],
@@ -180,6 +153,40 @@ class _AddToListButtonState extends State<AddToListButton> {
     );
   }
 
+  Widget tileList(QuotesList list) {
+    return ListTile(
+      onTap: () {
+        addQuoteToList(
+          context: context,
+          listId: list.id,
+          listName: list.name
+        );
+
+        Navigator.pop(context);
+      },
+      title: Text(
+        list.name,
+      ),
+    );
+  }
+
+  Widget newListButton() {
+    return ListTile(
+      onTap: () async {
+        final res = await showNewListDialog(context);
+        if (res != null && res) { Navigator.pop(context); }
+      },
+      leading: Icon(Icons.add),
+      title: Text(
+        'New list',
+        textAlign: TextAlign.start,
+        style: TextStyle(
+          fontSize: 20.0,
+        ),
+      ),
+    );
+  }
+
   Future<List<QuotesList>> fetchLists() {
     isLoading = true;
 
@@ -187,6 +194,7 @@ class _AddToListButtonState extends State<AddToListButton> {
     .lists(context, limit, order, skip)
     .then((resp) {
       isLoading = false;
+      isLoaded = true;
 
       return resp.entries;
     })
