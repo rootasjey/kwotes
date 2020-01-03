@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/data/mutationsOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
@@ -57,6 +58,102 @@ class Mutations {
     ))
     .then((queryResult) {
       return QuotesList.fromJSON(queryResult.data['createList']);
+    });
+  }
+
+  static Future<BooleanMessage> createTempQuote({BuildContext context}) async {
+    final clientsModels = Provider.of<HttpClientsModel>(context);
+    final client = clientsModels.defaultClient.value;
+
+    return client.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.createTempQuote,
+        variables: {
+          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
+          'authorName'    : AddQuoteInputs.authorName,
+          'authorJob'     : AddQuoteInputs.authorJob,
+          'authorSummary' : AddQuoteInputs.authorSummary,
+          'authorUrl'     : AddQuoteInputs.authorUrl,
+          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
+          'comment'       : AddQuoteInputs.comment,
+          'lang'          : AddQuoteInputs.lang,
+          'name'          : AddQuoteInputs.name,
+          'topics'        : AddQuoteInputs.topics,
+          'refImgUrl'     : AddQuoteInputs.refImgUrl,
+          'refLang'       : AddQuoteInputs.refLang,
+          'refName'       : AddQuoteInputs.refName,
+          'refSubType'    : AddQuoteInputs.refSubType,
+          'refSummary'    : AddQuoteInputs.refSummary,
+          'refType'       : AddQuoteInputs.refType,
+          'refUrl'        : AddQuoteInputs.refUrl,
+          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
+        }
+      )
+    ).then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.length > 0 ?
+            queryResult.exception.graphqlErrors.first.message :
+            queryResult.exception.clientException.message,
+        );
+      }
+
+      return BooleanMessage(boolean: true,);
+
+    }).catchError((error) {
+      return BooleanMessage(
+        boolean: false,
+        message: error.toString(),
+      );
+    });
+  }
+
+  static Future<BooleanMessage> updateTempQuote({BuildContext context}) async {
+    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
+
+    return client.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.updateTempQuote,
+        variables: {
+          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
+          'authorJob'     : AddQuoteInputs.authorJob,
+          'authorName'    : AddQuoteInputs.authorName,
+          'authorSummary' : AddQuoteInputs.authorSummary,
+          'authorUrl'     : AddQuoteInputs.authorUrl,
+          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
+          'comment'       : AddQuoteInputs.comment,
+          'id'            : AddQuoteInputs.id,
+          'lang'          : AddQuoteInputs.lang,
+          'name'          : AddQuoteInputs.name,
+          'topics'        : AddQuoteInputs.topics,
+          'refImgUrl'     : AddQuoteInputs.refImgUrl,
+          'refLang'       : AddQuoteInputs.refLang,
+          'refName'       : AddQuoteInputs.refName,
+          'refSubType'    : AddQuoteInputs.refSubType,
+          'refSummary'    : AddQuoteInputs.refSummary,
+          'refType'       : AddQuoteInputs.refType,
+          'refUrl'        : AddQuoteInputs.refUrl,
+          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
+        }
+      )
+    ).then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.length > 0 ?
+            queryResult.exception.graphqlErrors.first.message :
+            queryResult.exception.clientException.message,
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+
+    }).catchError((error) {
+      return BooleanMessage(
+        boolean: false,
+        message: error.toString(),
+      );
     });
   }
 
