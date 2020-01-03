@@ -4,6 +4,7 @@ import 'package:memorare/types/temp_quote.dart';
 class SmallTempQuoteCard extends StatefulWidget {
   final Function onDelete;
   final Function onDoubleTap;
+  final Function onTap;
   final Function onEdit;
   final Function onLongPress;
   final Function onValidate;
@@ -12,6 +13,7 @@ class SmallTempQuoteCard extends StatefulWidget {
   SmallTempQuoteCard({
     this.onDelete,
     this.onDoubleTap,
+    this.onTap,
     this.onEdit,
     this.onLongPress,
     this.onValidate,
@@ -40,6 +42,11 @@ class _SmallTempQuoteCardState extends State<SmallTempQuoteCard> {
               onDoubleTap: () {
                 if (widget.onDoubleTap != null) {
                   widget.onDoubleTap(widget.quote.id);
+                }
+              },
+              onTap: () {
+                if (widget.onTap != null) {
+                  widget.onTap(widget.quote.id);
                 }
               },
               child: Padding(
