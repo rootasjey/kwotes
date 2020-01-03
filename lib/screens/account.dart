@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/add_quote.dart';
@@ -172,6 +173,8 @@ class Account extends StatelessWidget {
                 title: Text('Add a new quote', style: TextStyle(fontSize: 20.0),),
               ),
               onPressed: () {
+                AddQuoteInputs.clearAll();
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
