@@ -7,6 +7,7 @@ import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/quotes_list.dart';
 import 'package:provider/provider.dart';
 
@@ -21,9 +22,10 @@ class _QuotesListsState extends State<QuotesLists> {
   bool hasErrors = false;
   Error error;
 
-  int limit = 10;
-  int order = 1;
-  int skip = 0;
+  int order = -1;
+
+  Pagination pagination = Pagination();
+  bool isLoadingMoreLists = false;
 
   String newListName = '';
   String newListDescription = '';
@@ -103,50 +105,63 @@ class _QuotesListsState extends State<QuotesLists> {
             await fetchLists();
             return null;
           },
-          child: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
-            itemCount: lists.length,
-            separatorBuilder: (context, index) {
-              return Divider();
-            },
-            itemBuilder: (BuildContext context, int index) {
-              final item = lists.elementAt(index);
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+                  return false;
+                }
 
-              return ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return QuotesListScreen(
-                          id: item.id,
-                          name: item.name,
-                          description: item.description,
-                        );
-                      }
-                    )
-                  );
-                },
-                trailing: moreButton(quotesList: item, index: index),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      item.name,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    if (item.description != null)
-                      Opacity(
-                        opacity: .6,
-                        child: Text(
-                          item.description,
+                if (pagination.hasNext && !isLoadingMoreLists) {
+                  fetchMoreLists();
+                }
+
+                return false;
+            },
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
+              itemCount: lists.length,
+              separatorBuilder: (context, index) {
+                return Divider();
+              },
+              itemBuilder: (BuildContext context, int index) {
+                final item = lists.elementAt(index);
+
+                return ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return QuotesListScreen(
+                            id: item.id,
+                            name: item.name,
+                            description: item.description,
+                          );
+                        }
+                      )
+                    );
+                  },
+                  trailing: moreButton(quotesList: item, index: index),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        item.name,
+                        style: TextStyle(
+                          fontSize: 20.0,
                         ),
                       ),
-                  ],
-                )
-              );
-            },
+                      if (item.description != null)
+                        Opacity(
+                          opacity: .6,
+                          child: Text(
+                            item.description,
+                          ),
+                        ),
+                    ],
+                  )
+                );
+              },
+            )
           ),
         );
       }),
@@ -201,19 +216,46 @@ class _QuotesListsState extends State<QuotesLists> {
       isLoading = true;
     });
 
-    return Queries.lists(context, limit, order, skip)
-      .then((quotesListsResp) {
-        setState(() {
-          isLoading = false;
-          hasErrors = false;
-          lists = quotesListsResp.entries;
-        });
-      })
-      .catchError((err) {
-        error = err;
+    return Queries.lists(
+      context: context,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.skip,
+
+    ).then((quotesListsResp) {
+      setState(() {
         isLoading = false;
-        hasErrors = true;
+        hasErrors = false;
+        lists = quotesListsResp.entries;
+        pagination = quotesListsResp.pagination;
       });
+    })
+    .catchError((err) {
+      error = err;
+      isLoading = false;
+      hasErrors = true;
+    });
+  }
+
+  Future fetchMoreLists() {
+    isLoadingMoreLists = true;
+
+    return Queries.lists(
+      context: context,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.nextSkip,
+
+    ).then((quotesListsResp) {
+      setState(() {
+        lists.addAll(quotesListsResp.entries);
+        pagination = quotesListsResp.pagination;
+        isLoadingMoreLists = false;
+      });
+    })
+    .catchError((err) {
+      isLoadingMoreLists = false;
+    });
   }
 
   void showCreateListDialog() {
