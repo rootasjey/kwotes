@@ -290,6 +290,36 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode tempQuote = parseString("""
+    query (\$id: String!) {
+      tempQuote (id: \$id) {
+        author {
+          imgUrl
+          job
+          name
+          summary
+          url
+          wikiUrl
+        }
+        comment
+        id
+        lang
+        name
+        references {
+          imgUrl
+          lang
+          name
+          subType
+          summary
+          type
+          url
+          wikiUrl
+        }
+        topics
+      }
+    }
+  """);
+
   static DocumentNode todayTopics = parseString("""
     query {
       quotidian {

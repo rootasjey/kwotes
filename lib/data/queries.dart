@@ -11,6 +11,7 @@ import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/types/quotodians_response.dart';
 import 'package:memorare/types/reference.dart';
+import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
 import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
@@ -292,6 +293,22 @@ class Queries {
         )
       ).then((QueryResult queryResult) {
         return QuotesResponse.fromJSON(queryResult.data['userData']['starred']);
+      });
+  }
+
+  static Future<TempQuote> tempQuote({
+    BuildContext context,
+    String id,
+  }) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.tempQuote,
+          variables: {'id': id},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return TempQuote.fromJSON(queryResult.data['tempQuote']);
       });
   }
 
