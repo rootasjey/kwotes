@@ -1,4 +1,6 @@
 class AddQuoteInputs {
+  /// Quote's id if this is an edit.
+  static String id = '';
   static String name    = '';
   static String lang    = 'en';
   static List<String> topics  = [];
@@ -25,6 +27,16 @@ class AddQuoteInputs {
   static bool hasExceptions = false;
   static String exceptionMessage = '';
 
+  static void clearAll() {
+    clearAuthor();
+    clearComment();
+    clearQuoteId();
+    clearQuoteName();
+    clearReference();
+    clearStatus();
+    clearTopics();
+  }
+
   static void clearAuthor() {
     authorImgUrl  = '';
     authorName    = '';
@@ -38,8 +50,13 @@ class AddQuoteInputs {
     comment = '';
   }
 
- static void clearQuoteName() {
+  static void clearQuoteId() {
+    id = '';
+  }
+
+  static void clearQuoteName() {
     name = '';
+    lang = 'en';
   }
 
   static void clearReference() {
