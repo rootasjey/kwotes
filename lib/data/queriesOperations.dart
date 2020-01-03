@@ -42,6 +42,12 @@ class QueriesOperations {
             description
             name
           }
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
         }
       }
     }
@@ -50,16 +56,16 @@ class QueriesOperations {
   static DocumentNode publishedQuotes = parseString("""
     query (\$lang: String, \$limit: Float, \$order: Float, \$skip: Float) {
       publishedQuotes (lang: \$lang, limit: \$limit, order: \$order, skip: \$skip) {
+        entries {
+          id
+          name
+          topics
+        }
         pagination {
           hasNext
           limit
           nextSkip
           skip
-        }
-        entries {
-          id
-          name
-          topics
         }
       }
     }
