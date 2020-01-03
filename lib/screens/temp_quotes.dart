@@ -138,7 +138,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 }
 
                 if (pagination.hasNext && !isLoadingMoreQuotes) {
-                  isLoadingMoreQuotes = true;
                   fetchMoreTempQuotes();
                 }
 
@@ -220,9 +219,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Future fetchMoreTempQuotes() {
-    setState(() {
-      isLoadingMoreQuotes = true;
-    });
+    isLoadingMoreQuotes = true;
 
     return Queries.myTempQuotes(
       context: context,
@@ -239,9 +236,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       });
     })
     .catchError((err) {
-      setState(() {
-        isLoadingMoreQuotes = false;
-      });
+      isLoadingMoreQuotes = false;
     });
   }
 

@@ -134,7 +134,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                 }
 
                 if (pagination.hasNext && !isLoadingMoreQuotes) {
-                  isLoadingMoreQuotes = true;
                   fetchMoreQuotes();
                 }
 
@@ -187,9 +186,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Future fetchMoreQuotes() {
-    setState(() {
-      isLoadingMoreQuotes = true;
-    });
+    isLoadingMoreQuotes = true;
 
     return Queries.myPublihshedQuotes(
       context: context,
