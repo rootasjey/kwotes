@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/quotes_list.dart';
 import 'package:provider/provider.dart';
 
@@ -31,19 +32,20 @@ class AddToListButton extends StatefulWidget {
 }
 
 class _AddToListButtonState extends State<AddToListButton> {
-  List<QuotesList> quotesLists = [];
+  List<QuotesList> lists = [];
 
   String newListName = '';
   String newListDescription = '';
 
-  int limit = 20;
-  int order = 1;
-  int skip = 0;
+  int order = -1;
 
   bool isLoading = false;
+  bool isLoadingMoreList = false;
   bool isLoaded = false;
   bool hasErrors = false;
   Error error;
+
+  Pagination pagination = Pagination();
 
   @override
   Widget build(BuildContext context) {
@@ -89,63 +91,51 @@ class _AddToListButtonState extends State<AddToListButton> {
 
             if (hasErrors) {
               tiles.add(
-                Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        'There was an issue while loading your lists.'
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          fetchLists()
-                          .then((resp) {
-                            setSheetState(() {
-                              quotesLists = resp;
-                            });
-                          });
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text('Retry'),
-                        ),
-                      )
-                    ],
-                  ),
-                )
+                errorTileList(onPressed: () async {
+                  await fetchLists();
+                  setSheetState(() { isLoaded = true; });
+                })
               );
             }
 
-            if (quotesLists.length == 0 && !isLoading && !isLoaded) {
+            if (lists.length == 0 && !isLoading && !isLoaded) {
               tiles.add(LinearProgressIndicator());
 
-              fetchLists()
-                .then((resp) {
-                  setSheetState(() {
-                    quotesLists = resp;
-                    isLoaded = true;
-                  });
-                })
-                .catchError((err) {
-                  setSheetState(() {
-                    error = err;
-                    hasErrors = true;
-                    isLoading = false;
-                    isLoaded = true;
-                  });
-                });
-            } else {
-              for (var list in quotesLists) {
+              fetchLists().then((_) {
+                setSheetState(() { isLoaded = true; });
+              });
+            }
+
+            if (lists.length > 0) {
+              for (var list in lists) {
                 tiles.add(tileList(list));
               }
             }
 
-            return ListView(
-              children: <Widget>[
-                newListButton(),
-                Divider(),
-                ...tiles
-              ],
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollNotif) {
+                if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+                  return false;
+                }
+
+                if (pagination.hasNext && !isLoadingMoreList) {
+                  fetchMoreLists()
+                    .then((_) {
+                      setSheetState(() {
+                        isLoadingMoreList = false;
+                      });
+                    });
+                }
+
+                return false;
+              },
+              child: ListView(
+                children: <Widget>[
+                  newListButton(),
+                  Divider(),
+                  ...tiles
+                ],
+              ),
             );
           },
         );
@@ -187,25 +177,74 @@ class _AddToListButtonState extends State<AddToListButton> {
     );
   }
 
-  Future<List<QuotesList>> fetchLists() {
+  Widget errorTileList({Function onPressed}) {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            'There was an issue while loading your lists.'
+          ),
+          FlatButton(
+            onPressed: () {
+              if (onPressed != null) {
+                onPressed();
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text('Retry'),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future fetchLists() {
     isLoading = true;
+    pagination = Pagination();
 
     return Queries
     .lists(
       context: context,
-      limit: limit,
+      limit: pagination.limit,
       order: order,
-      skip: skip,
+      skip: pagination.skip,
 
     ).then((resp) {
       isLoading = false;
       isLoaded = true;
 
-      return resp.entries;
+      lists = resp.entries;
+      pagination = resp.pagination;
 
     }).catchError((err) {
-      return [];
+      error = err;
+      hasErrors = true;
+      isLoading = false;
+      isLoaded = true;
     });
+  }
+
+  Future fetchMoreLists() {
+    isLoadingMoreList = true;
+
+    return Queries
+      .lists(
+        context: context,
+        limit: pagination.limit,
+        order: order,
+        skip: pagination.nextSkip,
+
+      ).then((resp) {
+        isLoadingMoreList = false;
+        pagination = resp.pagination;
+        lists.addAll(resp.entries);
+
+      }).catchError((err) {
+        isLoadingMoreList = false;
+      });
   }
 
   Future<bool> showNewListDialog(BuildContext context) {

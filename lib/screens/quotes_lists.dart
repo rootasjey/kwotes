@@ -119,13 +119,13 @@ class _QuotesListsState extends State<QuotesLists> {
             onNotification: (ScrollNotification scrollNotif) {
               if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
                   return false;
-                }
+              }
 
-                if (pagination.hasNext && !isLoadingMoreLists) {
-                  fetchMoreLists();
-                }
+              if (pagination.hasNext && !isLoadingMoreLists) {
+                fetchMoreLists();
+              }
 
-                return false;
+              return false;
             },
             child: ListView.separated(
               controller: listScrollController,
