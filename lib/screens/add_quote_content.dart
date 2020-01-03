@@ -28,6 +28,16 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   final _nameController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    if (AddQuoteInputs.id.isNotEmpty) {
+      _nameController.text = AddQuoteInputs.name;
+      lang = AddQuoteInputs.lang;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final accent = Provider.of<ThemeColor>(context).accent;
 

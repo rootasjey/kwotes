@@ -25,14 +25,26 @@ class AddQuoteLastStep extends StatefulWidget {
 
 class AddQuoteLastStepState extends State<AddQuoteLastStep> {
   String comment = '';
-  bool _isSending = false;
-  bool isSuccess = false;
-  bool isError = false;
-  String errorType = '';
+  bool isSending = false;
+  bool isCompleted = false;
+  bool hasExceptions = false;
 
-  void complete() {
+  @override
+  void initState() {
+    super.initState();
+
     setState(() {
-      _isSending = false;
+      isSending = AddQuoteInputs.isSending;
+      isCompleted = AddQuoteInputs.isCompleted;
+      hasExceptions = AddQuoteInputs.hasExceptions;
+    });
+  }
+
+  void notifyComplete({bool hasExceptionsResp}) {
+    setState(() {
+      hasExceptions = hasExceptionsResp;
+      isSending = false;
+      isCompleted = true;
     });
   }
 
@@ -44,15 +56,15 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
     return Center(
       child: ListView(
-        shrinkWrap: AddQuoteInputs.isCompleted,
+        shrinkWrap: isCompleted,
         children: <Widget>[
-          if (!AddQuoteInputs.isCompleted)
+          if (!isCompleted)
             sendComponent(),
 
-          if (AddQuoteInputs.isCompleted && !AddQuoteInputs.hasExceptions)
+          if (isCompleted && !hasExceptions)
             successComponent(backgroundColor: backgroundColor),
 
-          if (AddQuoteInputs.isCompleted && AddQuoteInputs.hasExceptions)
+          if (isCompleted && hasExceptions)
             retryComponent(
               backgroundColor: backgroundColor,
               accent: accent
@@ -98,7 +110,7 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
           )
         ),
 
-        if (_isSending == false)
+        if (isSending == false)
           Column(
             children: <Widget>[
               RaisedButton(
@@ -107,7 +119,7 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
                   if (widget.onValidate != null) {
                     setState(() {
-                      _isSending = true;
+                      isSending = true;
                     });
 
                     widget.onValidate();
@@ -116,21 +128,12 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
                 color: ThemeColor.success,
                 child: Padding(
                   padding: EdgeInsets.all(15.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(right: 10.0),
-                        child: Icon(Icons.check, color: Colors.white),
-                      ),
-                      Text(
-                        'Validate',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    'Validate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
                   ),
                 )
               ),
@@ -154,7 +157,7 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
             ],
           ),
 
-        if (_isSending)
+        if (isSending)
           CircularProgressIndicator(),
       ],
     );

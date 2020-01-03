@@ -1,18 +1,14 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/data/mutationsOperations.dart';
-import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/data/mutations.dart';
 import 'package:memorare/screens/add_quote_author.dart';
 import 'package:memorare/screens/add_quote_comment.dart';
 import 'package:memorare/screens/add_quote_content.dart';
 import 'package:memorare/screens/add_quote_last_step.dart';
 import 'package:memorare/screens/add_quote_reference.dart';
 import 'package:memorare/screens/add_quote_topics.dart';
-import 'package:memorare/types/boolean_message.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
 
 class AddQuote extends StatefulWidget {
   @override
@@ -23,6 +19,8 @@ class _AddQuoteState extends State<AddQuote> {
   final int maxSteps = 6;
   String mainTopic = '';
   bool isFabVisible = true;
+
+  var lastStepState = GlobalKey<AddQuoteLastStepState>();
 
   final _pageController = PageController(
     initialPage: 0,
@@ -83,6 +81,7 @@ class _AddQuoteState extends State<AddQuote> {
           AddQuoteReference(step: 4, maxSteps: maxSteps,),
           AddQuoteComment(step: 5, maxSteps: maxSteps),
           AddQuoteLastStep(
+            key: lastStepState,
             step: 6,
             maxSteps: maxSteps,
             onPreviousPage: () {
@@ -103,29 +102,39 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void validateQuote() async {
-    final booleanMessage = await proposeQuote();
+    final booleanMessage = AddQuoteInputs.id.isEmpty ?
+      await Mutations.createTempQuote(context: context) :
+      await Mutations.updateTempQuote(context: context);
+
+    String successMessage = AddQuoteInputs.id.isEmpty ?
+      'Your quote has been successfully proposed.':
+      'Your quote has been successfully saved.';
+
+    if (_pageController.page < (maxSteps - 1)) {
+      _pageController.jumpToPage(maxSteps - 1);
+    }
+
+    AddQuoteInputs.isCompleted = true;
 
     if (booleanMessage.boolean) {
-      AddQuoteInputs.isCompleted = true;
       AddQuoteInputs.hasExceptions = false;
 
       Flushbar(
         backgroundColor: ThemeColor.success,
         messageText: Text(
-          'Your quote has been successfully proposed.',
+          successMessage,
           style: TextStyle(color: Colors.white),
         ),
         duration: Duration(seconds: 3),
       )..show(context);
 
-      if (_pageController.page < (maxSteps - 1)) {
-        _pageController.jumpToPage(maxSteps - 1);
+      if (lastStepState != null && lastStepState.currentState != null) {
+        lastStepState.currentState.notifyComplete(hasExceptionsResp: false);
       }
 
       return;
     }
 
-    AddQuoteInputs.isCompleted = true;
     AddQuoteInputs.hasExceptions = true;
     AddQuoteInputs.exceptionMessage = booleanMessage.message;
 
@@ -137,61 +146,9 @@ class _AddQuoteState extends State<AddQuote> {
       ),
       duration: Duration(seconds: 3),
     )..show(context);
-  }
 
-  Future<BooleanMessage> proposeQuote() async {
-    final clientsModels = Provider.of<HttpClientsModel>(context);
-
-    if (clientsModels == null) {
-      return BooleanMessage(
-        boolean: false,
-        message: 'Sorry, an error happenned. Please contact us by email or Twitter (More detail: null http).',
-      );
+    if (lastStepState != null && lastStepState.currentState != null) {
+      lastStepState.currentState.notifyComplete(hasExceptionsResp: true);
     }
-
-    final client = clientsModels.defaultClient.value;
-
-    return client.mutate(
-      MutationOptions(
-        documentNode: MutationsOperations.propose,
-        variables: {
-          'name'          : AddQuoteInputs.name,
-          'lang'          : AddQuoteInputs.lang,
-          'topics'        : AddQuoteInputs.topics,
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSubType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-        }
-      )
-    ).then((queryResult) {
-      if (queryResult.hasException) {
-        return BooleanMessage(
-          boolean: false,
-          message: queryResult.exception.graphqlErrors.length > 0 ?
-            queryResult.exception.graphqlErrors.first.message :
-            queryResult.exception.clientException.message,
-        );
-      }
-
-      return BooleanMessage(boolean: true,);
-
-    }).catchError((error) {
-      return BooleanMessage(
-        boolean: false,
-        message: error.toString(),
-      );
-    });
   }
 }

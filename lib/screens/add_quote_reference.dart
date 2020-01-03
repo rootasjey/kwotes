@@ -32,26 +32,27 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   List<String> langs = ['en', 'fr'];
 
-  final _nameController = TextEditingController();
-  final _typeController = TextEditingController();
-  final _subTypeController = TextEditingController();
-  final _summaryController = TextEditingController();
-  final _urlController = TextEditingController();
-  final _wikiUrlController = TextEditingController();
+  final _nameController     = TextEditingController();
+  final _typeController     = TextEditingController();
+  final _subTypeController  = TextEditingController();
+  final _summaryController  = TextEditingController();
+  final _urlController      = TextEditingController();
+  final _wikiUrlController  = TextEditingController();
 
   @override
   void initState() {
     setState(() {
-      imgUrl = AddQuoteInputs.refImgUrl;
+      imgUrl  = AddQuoteInputs.refImgUrl;
+      lang    = AddQuoteInputs.refLang;
+
+      _nameController.text    = AddQuoteInputs.refName;
+      _subTypeController.text = AddQuoteInputs.refSubType;
+      _summaryController.text = AddQuoteInputs.refSummary;
+      _urlController.text     = AddQuoteInputs.refUrl;
+      _wikiUrlController.text = AddQuoteInputs.refWikiUrl;
     });
 
     super.initState();
-  }
-
-  @override
-  dispose() {
-    AddQuoteInputs.refImgUrl = imgUrl;
-    super.dispose();
   }
 
   @override

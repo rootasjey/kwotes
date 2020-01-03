@@ -24,16 +24,22 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   String _tempImgUrl = '';
 
-  final _nameController = TextEditingController();
-  final _summaryController = TextEditingController();
-  final _jobController = TextEditingController();
-  final _urlController = TextEditingController();
-  final _wikiController = TextEditingController();
+  final _nameController     = TextEditingController();
+  final _jobController      = TextEditingController();
+  final _summaryController  = TextEditingController();
+  final _urlController      = TextEditingController();
+  final _wikiController     = TextEditingController();
 
   @override
   void initState() {
     setState(() {
       imgUrl = AddQuoteInputs.authorImgUrl;
+
+      _nameController.text    = AddQuoteInputs.authorName;
+      _jobController.text     = AddQuoteInputs.authorJob;
+      _summaryController.text = AddQuoteInputs.authorSummary;
+      _urlController.text     = AddQuoteInputs.authorUrl;
+      _wikiController.text    = AddQuoteInputs.authorWikiUrl;
     });
 
     super.initState();

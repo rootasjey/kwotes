@@ -5,6 +5,7 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/filter_fab.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/small_temp_quote_card.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/add_quote.dart';
@@ -34,6 +35,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   bool hasErrors = false;
   Error error;
 
+  bool isLoadingTempQuote = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -50,6 +53,17 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       return Scaffold(
         body: LoadingComponent(
           title: 'Loading my quotes in validation...',
+          padding: EdgeInsets.symmetric(horizontal: 30.0),
+          color: backgroundColor,
+          backgroundColor: Colors.transparent,
+        ),
+      );
+    }
+
+    if (isLoadingTempQuote) {
+      return Scaffold(
+        body: LoadingComponent(
+          title: 'Loading quote...',
           padding: EdgeInsets.symmetric(horizontal: 30.0),
           color: backgroundColor,
           backgroundColor: Colors.transparent,
@@ -175,6 +189,12 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                     onDoubleTap: (String id) async {
                       tryValidateQuote(index, id);
                     },
+                    onEdit: (String id) {
+                      editTempQuote(id: id);
+                    },
+                    onTap: (String id) {
+                      editTempQuote(id: id);
+                    },
                     onValidate: (String id) async {
                       tryValidateQuote(index, id);
                     },
@@ -186,6 +206,59 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         },
       )
     );
+  }
+
+  Future editTempQuote({String id}) {
+    setState(() {
+      isLoadingTempQuote = true;
+    });
+
+    return Queries.tempQuote(context: context, id: id)
+      .then((tempQuote) {
+        isLoadingTempQuote = false;
+
+        AddQuoteInputs.comment = tempQuote.comment;
+        AddQuoteInputs.id = tempQuote.id;
+        AddQuoteInputs.name = tempQuote.name;
+        AddQuoteInputs.lang = tempQuote.lang;
+        AddQuoteInputs.topics = tempQuote.topics;
+
+        if (tempQuote.author != null) {
+          AddQuoteInputs.authorImgUrl = tempQuote.author.imgUrl;
+          AddQuoteInputs.authorJob = tempQuote.author.job;
+          AddQuoteInputs.authorName = tempQuote.author.name;
+          AddQuoteInputs.authorSummary = tempQuote.author.summary;
+          AddQuoteInputs.authorUrl = tempQuote.author.url;
+          AddQuoteInputs.authorWikiUrl = tempQuote.author.wikiUrl;
+        }
+
+        if (tempQuote.references != null && tempQuote.references.length > 0) {
+          final ref = tempQuote.references.first;
+          AddQuoteInputs.refImgUrl = ref.imgUrl;
+          AddQuoteInputs.refLang = ref.lang;
+          AddQuoteInputs.refName = ref.name;
+          AddQuoteInputs.refSubType = ref.subType;
+          AddQuoteInputs.refSummary = ref.summary;
+          AddQuoteInputs.refType = ref.type;
+          AddQuoteInputs.refUrl = ref.url;
+          AddQuoteInputs.refWikiUrl = ref.wikiUrl;
+        }
+
+        AddQuoteInputs.isCompleted = false;
+        AddQuoteInputs.isSending = false;
+        AddQuoteInputs.hasExceptions = false;
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext contexxt) {
+              return AddQuote();
+            }
+          )
+        );
+
+      }).catchError((err) {
+        isLoadingTempQuote = false;
+      });
   }
 
   Future fetchTempQuotes() {

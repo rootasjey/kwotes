@@ -50,14 +50,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   @override
-  void dispose() {
-    AddQuoteInputs.topics = topics;
-
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final themeColor = Provider.of<ThemeColor>(context);
     final color = themeColor.accent;
@@ -258,6 +250,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     setState(() {
       topics.add(topic);
     });
+
+    AddQuoteInputs.topics = topics;
   }
 
   Future<List<String>> fetchSampleTopics() {

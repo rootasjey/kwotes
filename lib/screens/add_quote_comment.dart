@@ -17,6 +17,12 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
   final _commentController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _commentController.text = AddQuoteInputs.comment;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[

@@ -23,6 +23,7 @@ class AddQuoteInputs {
 
   static String comment = '';
 
+  static bool isSending = false;
   static bool isCompleted = false;
   static bool hasExceptions = false;
   static String exceptionMessage = '';
