@@ -26,6 +26,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
   Pagination pagination = Pagination();
   bool isLoadingMoreLists = false;
+  ScrollController listScrollController = ScrollController();
 
   String newListName = '';
   String newListDescription = '';
@@ -49,11 +50,20 @@ class _QuotesListsState extends State<QuotesLists> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,
-        title: Text(
-          'Lists',
-          style: TextStyle(
-            color: accent,
-            fontSize: 30.0,
+        title: InkWell(
+          onTap: () {
+            listScrollController.animateTo(
+              0,
+              duration: Duration(seconds: 2),
+              curve: Curves.easeOutQuint,
+            );
+          },
+          child: Text(
+            'Lists',
+            style: TextStyle(
+              color: accent,
+              fontSize: 30.0,
+            ),
           ),
         ),
         leading: IconButton(
@@ -118,6 +128,7 @@ class _QuotesListsState extends State<QuotesLists> {
                 return false;
             },
             child: ListView.separated(
+              controller: listScrollController,
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
               itemCount: lists.length,
               separatorBuilder: (context, index) {
