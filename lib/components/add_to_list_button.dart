@@ -191,14 +191,19 @@ class _AddToListButtonState extends State<AddToListButton> {
     isLoading = true;
 
     return Queries
-    .lists(context, limit, order, skip)
-    .then((resp) {
+    .lists(
+      context: context,
+      limit: limit,
+      order: order,
+      skip: skip,
+
+    ).then((resp) {
       isLoading = false;
       isLoaded = true;
 
       return resp.entries;
-    })
-    .catchError((err) {
+
+    }).catchError((err) {
       return [];
     });
   }

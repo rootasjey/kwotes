@@ -31,9 +31,12 @@ class Queries {
       });
   }
 
-  static Future<QuotesListsResponse> lists(
-    BuildContext context, int limit, int order, int skip,
-  ) {
+  static Future<QuotesListsResponse> lists({
+    BuildContext context,
+    int limit,
+    int order,
+    int skip,
+  }) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
