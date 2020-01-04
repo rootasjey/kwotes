@@ -6,12 +6,12 @@ import 'package:provider/provider.dart';
 class AddQuoteContent extends StatefulWidget {
   final int maxSteps;
   final int step;
-  final Function onNextStepTap;
+  final Function onNextStep;
 
   AddQuoteContent({
     Key key,
     this.maxSteps,
-    this.onNextStepTap,
+    this.onNextStep,
     this.step
   }): super(key: key);
 
@@ -48,24 +48,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 60.0),
-                  child: Text(
-                    'Add content',
-                    style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                Text(
-                  '${widget.step}/${widget.maxSteps}',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                header(),
 
                 Padding(
                   padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 40.0),
@@ -118,14 +101,37 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
               ],
             ),
 
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Icon(Icons.arrow_back),
-            ),
+            backButton(),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget header() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 25.0),
+          child: Text(
+            'Add content',
+            style: TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+
+        Opacity(
+          opacity: 0.6,
+          child: Text(
+            '${widget.step}/${widget.maxSteps}',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
       ],
     );
   }
@@ -157,14 +163,30 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
+  Widget backButton() {
+    return Positioned(
+      top: 10.0,
+      left: 10.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      )
+    );
+  }
+
   Widget nextStepButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: FlatButton(
         padding: EdgeInsets.all(10.0),
         onPressed: () {
-          if (widget.onNextStepTap != null) {
-            widget.onNextStepTap();
+          if (widget.onNextStep != null) {
+            widget.onNextStep();
           }
         },
         child: Opacity(

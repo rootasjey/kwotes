@@ -7,10 +7,14 @@ import 'package:provider/provider.dart';
 class AddQuoteReference extends StatefulWidget {
   final int step;
   final int maxSteps;
+  final Function onNextStep;
+  final Function onPreviousStep;
 
   AddQuoteReference({
     Key key,
     this.maxSteps,
+    this.onNextStep,
+    this.onPreviousStep,
     this.step
   }): super(key: key);
 
@@ -57,15 +61,44 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Provider.of<ThemeColor>(context);
-
     return ListView(
       children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        Stack(
+          children: <Widget>[
+            content(),
+            backButton(),
+            forwardButton(),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget content() {
+    final themeColor = Provider.of<ThemeColor>(context);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        header(),
+        imagePreview(),
+        nameField(),
+        typesFields(),
+        langAndSummary(themeColor),
+        links(),
+        clearButton(),
+      ],
+    );
+  }
+
+  Widget header() {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 60.0),
+              padding: EdgeInsets.only(top: 25.0),
               child: Text(
                 'Add reference',
                 style: TextStyle(
@@ -74,224 +107,287 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 ),
               ),
             ),
-            Text(
-              '${widget.step}/${widget.maxSteps}',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
-              child: InkWell(
-                onTap: () {
-                  return showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Image URL'),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusDirectional.all(Radius.circular(5.0)),
-                        ),
-                        content: TextField(
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: imgUrl.length > 0 ? imgUrl : 'Type a new URL',
-                          ),
-                          onChanged: (newValue) {
-                            tempImgUrl = newValue;
-                          },
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Cancel', style: TextStyle(color: ThemeColor.error),),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton(
-                            child: Text('Save',),
-                            onPressed: () {
-                              setState(() {
-                                imgUrl = tempImgUrl;
-                              });
-
-                              AddQuoteInputs.refImgUrl = imgUrl;
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    }
-                  );
-                },
-                child: imgUrl.length > 0 ?
-                CircleAvatar(
-                  backgroundImage: NetworkImage(imgUrl),
-                  radius: 80.0,
-                ) :
-                Card(
-                  child: SizedBox(
-                    height: 300.0,
-                    width: 250.0,
-                    child: Icon(Icons.add, size: 50.0,),
-                  ),
-                ),
-              )
-            ),
-
-            SizedBox(
-              width: 200.0,
-              child: TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                ),
-                onChanged: (newValue) {
-                  name = newValue;
-                  AddQuoteInputs.refName = newValue;
-                },
-              ),
-            ),
-            SizedBox(
-              width: 200.0,
-              child: TextField(
-                controller: _typeController,
-                decoration: InputDecoration(
-                  labelText: 'Type',
-                ),
-                onChanged: (newValue) {
-                  type = newValue;
-                  AddQuoteInputs.refType = newValue;
-                },
-              ),
-            ),
-            SizedBox(
-              width: 200.0,
-              child: TextField(
-                controller: _subTypeController,
-                decoration: InputDecoration(
-                  labelText: 'Sub-Type',
-                ),
-                onChanged: (newValue) {
-                  subType = newValue;
-                  AddQuoteInputs.refSubType = newValue;
-                },
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: DropdownButton<String>(
-                value: lang,
-                style: TextStyle(
-                  color: themeColor.accent,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                underline: Container(
-                  color: themeColor.accent,
-                  height: 2.0,
-                ),
-                onChanged: (newValue) {
-                  setState(() {
-                    lang = newValue;
-                    AddQuoteInputs.refLang = newValue;
-                  });
-                },
-                items: langs.map<DropdownMenuItem<String>>((value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(value.toUpperCase()),
-                  );
-                }).toList(),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 50.0),
-              child: SizedBox(
-                width: 300,
-                child: TextField(
-                  controller: _summaryController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Summary',
-                    alignLabelWithHint: true,
-                  ),
-                  minLines: 4,
-                  maxLines: null,
-                  onChanged: (newValue) {
-                    summary = newValue;
-                    AddQuoteInputs.refSummary = newValue;
-                  },
-                ),
-              ),
-            ),
-
-            SizedBox(
-              width: 300,
-              child: TextField(
-                controller: _wikiUrlController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconsMore.wikipedia_w),
-                  labelText: 'Wikipedia URL'
-                ),
-                onChanged: (newValue) {
-                  wikiUrl = newValue;
-                  AddQuoteInputs.refWikiUrl = newValue;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: SizedBox(
-                width: 300,
-                child: TextField(
-                  controller: _urlController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(IconsMore.earth),
-                    labelText: 'Website URL'
-                  ),
-                  onChanged: (newValue) {
-                    url = newValue;
-                    AddQuoteInputs.refUrl = newValue;
-                  },
-                ),
-              ),
-            ),
-
-            FlatButton(
-              padding: EdgeInsets.all(10.0),
-              onPressed: () {
-                AddQuoteInputs.clearReference();
-
-                imgUrl = '';
-
-                _nameController.clear();
-                _typeController.clear();
-                _subTypeController.clear();
-                _summaryController.clear();
-                _urlController.clear();
-                _wikiUrlController.clear();
-              },
-              child: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  'Clear reference information',
-                ),
-              ),
-            ),
-
-            Padding(padding: EdgeInsets.only(bottom: 100.0)),
           ],
         ),
+
+        Opacity(
+          opacity: 0.6,
+          child: Text(
+            '${widget.step}/${widget.maxSteps}',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
       ],
+    );
+  }
+
+  Widget imagePreview() {
+    return Padding(
+      padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
+      child: InkWell(
+        onTap: () {
+          return showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Image URL'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusDirectional.all(Radius.circular(5.0)),
+                ),
+                content: TextField(
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: imgUrl.length > 0 ? imgUrl : 'Type a new URL',
+                  ),
+                  onChanged: (newValue) {
+                    tempImgUrl = newValue;
+                  },
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Cancel', style: TextStyle(color: ThemeColor.error),),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Save',),
+                    onPressed: () {
+                      setState(() {
+                        imgUrl = tempImgUrl;
+                      });
+
+                      AddQuoteInputs.refImgUrl = imgUrl;
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            }
+          );
+        },
+        child: imgUrl.length > 0 ?
+        CircleAvatar(
+          backgroundImage: NetworkImage(imgUrl),
+          radius: 80.0,
+        ) :
+        Card(
+          child: SizedBox(
+            height: 300.0,
+            width: 250.0,
+            child: Icon(Icons.add, size: 50.0,),
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget nameField() {
+    return SizedBox(
+      width: 200.0,
+      child: TextField(
+        controller: _nameController,
+        decoration: InputDecoration(
+          labelText: 'Name',
+        ),
+        onChanged: (newValue) {
+          name = newValue;
+          AddQuoteInputs.refName = newValue;
+        },
+      ),
+    );
+  }
+
+  Widget typesFields() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          width: 200.0,
+          child: TextField(
+            controller: _typeController,
+            decoration: InputDecoration(
+              labelText: 'Type',
+            ),
+            onChanged: (newValue) {
+              type = newValue;
+              AddQuoteInputs.refType = newValue;
+            },
+          ),
+        ),
+        SizedBox(
+          width: 200.0,
+          child: TextField(
+            controller: _subTypeController,
+            decoration: InputDecoration(
+              labelText: 'Sub-Type',
+            ),
+            onChanged: (newValue) {
+              subType = newValue;
+              AddQuoteInputs.refSubType = newValue;
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget langAndSummary(ThemeColor themeColor) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 20.0),
+          child: DropdownButton<String>(
+            value: lang,
+            style: TextStyle(
+              color: themeColor.accent,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+            underline: Container(
+              color: themeColor.accent,
+              height: 2.0,
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                lang = newValue;
+                AddQuoteInputs.refLang = newValue;
+              });
+            },
+            items: langs.map<DropdownMenuItem<String>>((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value.toUpperCase()),
+              );
+            }).toList(),
+          ),
+        ),
+
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 50.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: _summaryController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Summary',
+                alignLabelWithHint: true,
+              ),
+              minLines: 4,
+              maxLines: null,
+              onChanged: (newValue) {
+                summary = newValue;
+                AddQuoteInputs.refSummary = newValue;
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget links() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          width: 300,
+          child: TextField(
+            controller: _wikiUrlController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(IconsMore.wikipedia_w),
+              labelText: 'Wikipedia URL'
+            ),
+            onChanged: (newValue) {
+              wikiUrl = newValue;
+              AddQuoteInputs.refWikiUrl = newValue;
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: _urlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(IconsMore.earth),
+                labelText: 'Website URL'
+              ),
+              onChanged: (newValue) {
+                url = newValue;
+                AddQuoteInputs.refUrl = newValue;
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget clearButton() {
+    return FlatButton(
+      padding: EdgeInsets.all(10.0),
+      onPressed: () {
+        AddQuoteInputs.clearReference();
+
+        imgUrl = '';
+
+        _nameController.clear();
+        _typeController.clear();
+        _subTypeController.clear();
+        _summaryController.clear();
+        _urlController.clear();
+        _wikiUrlController.clear();
+      },
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'Clear reference information',
+        ),
+      ),
+    );
+  }
+
+  Widget backButton() {
+    return Positioned(
+      top: 10.0,
+      left: 10.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: IconButton(
+          onPressed: () {
+            if (widget.onPreviousStep != null) {
+              widget.onPreviousStep();
+            }
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      )
+    );
+  }
+
+  Widget forwardButton() {
+    return Positioned(
+      top: 10.0,
+      right: 10.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: IconButton(
+          onPressed: () {
+            if (widget.onNextStep != null) {
+              widget.onNextStep();
+            }
+          },
+          icon: Icon(Icons.arrow_forward),
+        ),
+      )
     );
   }
 }

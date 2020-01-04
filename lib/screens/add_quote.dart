@@ -75,11 +75,58 @@ class _AddQuoteState extends State<AddQuote> {
           });
         },
         children: <Widget>[
-          AddQuoteContent(step: 1, maxSteps: maxSteps, onNextStepTap: () { onNextPage(); },),
-          AddQuoteTopics(step: 2, maxSteps: maxSteps,),
-          AddQuoteAuthor(step: 3, maxSteps: maxSteps,),
-          AddQuoteReference(step: 4, maxSteps: maxSteps,),
-          AddQuoteComment(step: 5, maxSteps: maxSteps),
+          AddQuoteContent(
+            step: 1,
+            maxSteps: maxSteps,
+            onNextStep: () {
+              onNextPage();
+            },
+          ),
+
+          AddQuoteTopics(
+            step: 2,
+            maxSteps: maxSteps,
+            onNextStep: () {
+              onNextPage();
+            },
+            onPreviousStep: () {
+              onPreviousPage();
+            },
+          ),
+
+          AddQuoteAuthor(
+            step: 3,
+            maxSteps: maxSteps,
+            onNextStep: () {
+              onNextPage();
+            },
+            onPreviousStep: () {
+              onPreviousPage();
+            },
+          ),
+
+          AddQuoteReference(
+            step: 4,
+            maxSteps: maxSteps,
+            onNextStep: () {
+              onNextPage();
+            },
+            onPreviousStep: () {
+              onPreviousPage();
+            },
+          ),
+
+          AddQuoteComment(
+            step: 5,
+            maxSteps: maxSteps,
+            onNextStep: () {
+              onNextPage();
+            },
+            onPreviousStep: () {
+              onPreviousPage();
+            },
+          ),
+
           AddQuoteLastStep(
             key: lastStepState,
             step: 6,
