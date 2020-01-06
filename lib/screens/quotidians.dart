@@ -13,7 +13,6 @@ import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotidian.dart';
-import 'package:provider/provider.dart';
 
 enum QuoteAction { addList, like, share }
 
@@ -57,13 +56,11 @@ class _QuotidiansState extends State<Quotidians> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = Provider.of<ThemeColor>(context).background;
-
     if (isLoading) {
       return LoadingComponent(
         backgroundColor: Colors.transparent,
-        color: backgroundColor,
-        title: 'Loading quotidians',
+        color: ThemeColor.primary,
+        title: 'Loading quotidians...',
       );
     }
 
