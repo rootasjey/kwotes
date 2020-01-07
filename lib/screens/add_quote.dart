@@ -48,14 +48,17 @@ class _AddQuoteState extends State<AddQuote> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          foregroundColor: Colors.white,
-          backgroundColor: ThemeColor.success,
-          onPressed: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-            validateQuote();
-          },
-          child: Icon(Icons.check,),
+        InkWell(
+          onLongPress: () => saveDraft(),
+          child: FloatingActionButton(
+            foregroundColor: Colors.white,
+            backgroundColor: ThemeColor.success,
+            onPressed: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              validateQuote();
+            },
+            child: Icon(Icons.check,),
+          ),
         ) :
         Padding(padding: EdgeInsets.zero,),
 
@@ -78,65 +81,45 @@ class _AddQuoteState extends State<AddQuote> {
           AddQuoteContent(
             step: 1,
             maxSteps: maxSteps,
-            onNextStep: () {
-              onNextPage();
-            },
+            onNextStep: () => onNextPage(),
+            onSaveDraft: () => saveDraft(),
           ),
 
           AddQuoteTopics(
             step: 2,
             maxSteps: maxSteps,
-            onNextStep: () {
-              onNextPage();
-            },
-            onPreviousStep: () {
-              onPreviousPage();
-            },
+            onNextStep: () => onNextPage(),
+            onPreviousStep: () => onPreviousPage(),
           ),
 
           AddQuoteAuthor(
             step: 3,
             maxSteps: maxSteps,
-            onNextStep: () {
-              onNextPage();
-            },
-            onPreviousStep: () {
-              onPreviousPage();
-            },
+            onNextStep: () => onNextPage(),
+            onPreviousStep: () => onPreviousPage(),
           ),
 
           AddQuoteReference(
             step: 4,
             maxSteps: maxSteps,
-            onNextStep: () {
-              onNextPage();
-            },
-            onPreviousStep: () {
-              onPreviousPage();
-            },
+            onNextStep: () => onNextPage(),
+            onPreviousStep: () => onPreviousPage(),
           ),
 
           AddQuoteComment(
             step: 5,
             maxSteps: maxSteps,
-            onNextStep: () {
-              onNextPage();
-            },
-            onPreviousStep: () {
-              onPreviousPage();
-            },
+            onNextStep: () => onNextPage(),
+            onPreviousStep: () => onPreviousPage(),
           ),
 
           AddQuoteLastStep(
             key: lastStepState,
             step: 6,
             maxSteps: maxSteps,
-            onPreviousPage: () {
-              onPreviousPage();
-            },
-            onValidate: () async {
-              validateQuote();
-            },
+            onPreviousStep: () => onPreviousPage(),
+            onValidate: () => validateQuote(),
+            onSaveDraft: () => saveDraft(),
             onAddAnotherQuote: () {
               AddQuoteInputs.clearQuoteName();
               AddQuoteInputs.clearStatus();
@@ -197,5 +180,18 @@ class _AddQuoteState extends State<AddQuote> {
     if (lastStepState != null && lastStepState.currentState != null) {
       lastStepState.currentState.notifyComplete(hasExceptionsResp: true);
     }
+
+    saveDraft();
+  }
+
+  void saveDraft() {
+    Mutations.createDraft(context: context)
+      .then((draftId) {
+        Flushbar(
+          backgroundColor: ThemeColor.success,
+          messageText: Text('Your quote has been saved in drafts.'),
+          duration: Duration(seconds: 3),
+        )..show(context);
+      });
   }
 }

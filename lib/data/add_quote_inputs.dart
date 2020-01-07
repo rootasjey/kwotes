@@ -5,6 +5,9 @@ class AddQuoteInputs {
   static String lang    = 'en';
   static List<String> topics  = [];
 
+  /// Draft's quote id (filled when creating a new quote).
+  static String draftId = '';
+
   static String authorImgUrl  = '';
   static String authorName    = '';
   static String authorJob     = '';

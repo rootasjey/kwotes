@@ -6,15 +6,17 @@ import 'package:provider/provider.dart';
 class AddQuoteLastStep extends StatefulWidget {
   final int step;
   final int maxSteps;
-  final Function onPreviousPage;
-  final Function onValidate;
   final Function onAddAnotherQuote;
+  final Function onPreviousStep;
+  final Function onSaveDraft;
+  final Function onValidate;
 
   AddQuoteLastStep({
     Key key,
     this.maxSteps,
     this.onAddAnotherQuote,
-    this.onPreviousPage,
+    this.onPreviousStep,
+    this.onSaveDraft,
     this.onValidate,
     this.step
   }): super(key: key);
@@ -50,27 +52,59 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final backgroundColor = themeColor.background;
-    final accent = themeColor.accent;
 
     return Center(
       child: ListView(
         shrinkWrap: isCompleted,
         children: <Widget>[
-          if (!isCompleted)
-            sendComponent(),
-
-          if (isCompleted && !hasExceptions)
-            successComponent(backgroundColor: backgroundColor),
-
-          if (isCompleted && hasExceptions)
-            retryComponent(
-              backgroundColor: backgroundColor,
-              accent: accent
-            ),
+          Stack(
+            children: <Widget>[
+              content(),
+              backButton(),
+            ],
+          )
         ],
       ),
+    );
+  }
+
+  Widget content() {
+    final themeColor = Provider.of<ThemeColor>(context);
+    final backgroundColor = themeColor.background;
+    final accent = themeColor.accent;
+
+    return Column(
+      children: <Widget>[
+        if (!isCompleted)
+          sendComponent(),
+
+        if (isCompleted && !hasExceptions)
+          successComponent(backgroundColor: backgroundColor),
+
+        if (isCompleted && hasExceptions)
+          retryComponent(
+            backgroundColor: backgroundColor,
+            accent: accent
+          ),
+      ],
+    );
+  }
+
+  Widget backButton() {
+    return Positioned(
+      top: 10.0,
+      left: 10.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: IconButton(
+          onPressed: () {
+            if (widget.onPreviousStep != null) {
+              widget.onPreviousStep();
+            }
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      )
     );
   }
 
@@ -79,7 +113,7 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 60.0),
+          padding: EdgeInsets.only(top: 25.0),
           child: Text(
             'Last step!',
             style: TextStyle(
@@ -88,11 +122,14 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
             ),
           ),
         ),
-        Text(
-          '${widget.step}/${widget.maxSteps}',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+        Opacity(
+          opacity: 0.6,
+          child: Text(
+            '${widget.step}/${widget.maxSteps}',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
 
@@ -140,14 +177,15 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
               FlatButton(
                 onPressed: () {
-                  if (widget.onPreviousPage != null) {
-                    widget.onPreviousPage();
+                  if (widget.onPreviousStep != null) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    widget.onSaveDraft();
                   }
                 },
                 child: Opacity(
                   opacity: 0.6,
                   child: Text(
-                    'Previous',
+                    'Save draft',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -196,15 +234,17 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
   }
 
   Widget retryComponent({Color backgroundColor, Color accent}) {
+    final exceptionMessage = AddQuoteInputs.exceptionMessage.isNotEmpty ?
+      AddQuoteInputs.exceptionMessage :
+      'There was an error while trying sending your quote. This maybe due to bad network.';
+
     return Column(
       children: <Widget>[
         Icon(Icons.warning, size: 60.0,),
         Padding(
           padding: EdgeInsets.all(30.0),
           child: Text(
-            AddQuoteInputs.exceptionMessage.isNotEmpty ?
-              AddQuoteInputs.exceptionMessage :
-              'There was an error while trying sending your quote. This maybe due to bad network.',
+            '$exceptionMessage. \nWe saved your quote in your drafts.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: backgroundColor,

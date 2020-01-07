@@ -7,11 +7,13 @@ class AddQuoteContent extends StatefulWidget {
   final int maxSteps;
   final int step;
   final Function onNextStep;
+  final Function onSaveDraft;
 
   AddQuoteContent({
     Key key,
     this.maxSteps,
     this.onNextStep,
+    this.onSaveDraft,
     this.step
   }): super(key: key);
 
@@ -97,11 +99,12 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
                 langSelect(accent),
 
-                nextStepButton(),
+                saveDraftButton(),
               ],
             ),
 
             backButton(),
+            forwardButton(),
           ],
         ),
       ],
@@ -179,14 +182,32 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget nextStepButton() {
+  Widget forwardButton() {
+    return Positioned(
+      top: 10.0,
+      right: 10.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: IconButton(
+          onPressed: () {
+            if (widget.onNextStep != null) {
+              widget.onNextStep();
+            }
+          },
+          icon: Icon(Icons.arrow_forward),
+        ),
+      )
+    );
+  }
+
+  Widget saveDraftButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: FlatButton(
         padding: EdgeInsets.all(10.0),
         onPressed: () {
           if (widget.onNextStep != null) {
-            widget.onNextStep();
+            widget.onSaveDraft();
           }
         },
         child: Opacity(
@@ -194,11 +215,11 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Next step'),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Icon(Icons.arrow_forward),
-              )
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(Icons.save),
+              ),
+              Text('Save to drafts'),
             ],
           ),
         )
