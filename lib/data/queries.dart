@@ -10,7 +10,7 @@ import 'package:memorare/types/quotes_list.dart';
 import 'package:memorare/types/quotes_lists_response.dart';
 import 'package:memorare/types/quotes_response.dart';
 import 'package:memorare/types/quotidian.dart';
-import 'package:memorare/types/quotodians_response.dart';
+import 'package:memorare/types/quotidians_response.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/temp_quotes_response.dart';
