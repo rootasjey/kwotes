@@ -355,5 +355,24 @@ class QueriesOperations {
       }
     }
   """);
+
+  static DocumentNode userDrafts = parseString("""
+    query {
+      userData {
+        drafts (\$limit: Float \$order: Float \$skip: Float) {
+          entries {
+            id
+            name
+          }
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
+        }
+      }
+    }
+  """);
 }
 

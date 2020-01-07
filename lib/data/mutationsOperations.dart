@@ -21,6 +21,54 @@ class MutationsOperations {
     }
   """);
 
+  static DocumentNode createDraft = parseString("""
+    mutation (
+      \$authorImgUrl: String
+      \$authorName: String
+      \$authorJob: String
+      \$authorSummary: String
+      \$authorUrl: String
+      \$authorWikiUrl: String
+      \$comment: String
+      \$lang: String
+      \$name: String!
+      \$origin: String
+      \$refImgUrl: String
+      \$refLang: String
+      \$refName: String
+      \$refSummary: String
+      \$refSubType: String
+      \$refType: String
+      \$refWikiUrl: String
+      \$refUrl: String
+      \$topics: [String!]
+    ) {
+      createDraft(
+        authorImgUrl: \$authorImgUrl
+        authorName: \$authorName
+        authorJob: \$authorJob
+        authorSummary: \$authorSummary
+        authorUrl: \$authorUrl
+        authorWikiUrl: \$authorWikiUrl
+        comment: \$comment
+        lang: \$lang
+        name:\$name
+        origin: \$origin
+        refImgUrl: \$refImgUrl
+        refLang:\$refLang
+        refName:\$refName
+        refSummary:\$refSummary
+        refSubType:\$refSubType
+        refType:\$refType
+        refWikiUrl:\$refWikiUrl
+        refUrl:\$refUrl
+        topics: \$topics
+      ) {
+        id
+      }
+    }
+  """);
+
   static DocumentNode createTempQuote = parseString("""
     mutation (
       \$authorImgUrl: String
@@ -144,6 +192,56 @@ class MutationsOperations {
   static DocumentNode updatePassword = parseString("""
     mutation (\$oldPassword: String!, \$newPassword: String!) {
       updatePassword(oldPassword: \$oldPassword, newPassword: \$newPassword) {
+        id
+      }
+    }
+  """);
+
+  static DocumentNode updateDraft = parseString("""
+    mutation (
+      \$authorImgUrl: String
+      \$authorName: String
+      \$authorJob: String
+      \$authorSummary: String
+      \$authorUrl: String
+      \$authorWikiUrl: String
+      \$comment: String
+      \$id: String!
+      \$lang: String
+      \$name: String!
+      \$origin: String
+      \$refImgUrl: String
+      \$refLang: String
+      \$refName: String
+      \$refSummary: String
+      \$refSubType: String
+      \$refType: String
+      \$refWikiUrl: String
+      \$refUrl: String
+      \$topics: [String!]
+    ) {
+      updateDraft(
+        authorImgUrl: \$authorImgUrl
+        authorName: \$authorName
+        authorJob: \$authorJob
+        authorSummary: \$authorSummary
+        authorUrl: \$authorUrl
+        authorWikiUrl: \$authorWikiUrl
+        comment: \$comment
+        id: \$id
+        lang: \$lang
+        name:\$name
+        origin: \$origin
+        refImgUrl: \$refImgUrl
+        refLang:\$refLang
+        refName:\$refName
+        refSummary:\$refSummary
+        refSubType:\$refSubType
+        refType:\$refType
+        refWikiUrl:\$refWikiUrl
+        refUrl:\$refUrl
+        topics: \$topics
+      ) {
         id
       }
     }

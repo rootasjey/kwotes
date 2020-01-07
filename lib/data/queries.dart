@@ -4,6 +4,7 @@ import 'package:memorare/data/queriesOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/boolean_message.dart';
+import 'package:memorare/types/drafts_response.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotes_list.dart';
 import 'package:memorare/types/quotes_lists_response.dart';
@@ -378,6 +379,18 @@ class Queries {
     )
     .then((queryResult) {
       return UserData.fromJSON(queryResult.data['userData']);
+    });
+  }
+
+  static Future<DraftsResponse> userDrafts(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+      QueryOptions(
+        documentNode: QueriesOperations.userDrafts,
+      )
+    )
+    .then((queryResult) {
+      return DraftsResponse.fromJSON(queryResult.data['userData']['drafts']);
     });
   }
 }
