@@ -372,8 +372,8 @@ class Queries {
 
   static Future<UserData> userData(BuildContext context) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
-      .mutate(
-      MutationOptions(
+      .query(
+      QueryOptions(
         documentNode: QueriesOperations.userData,
       )
     )
