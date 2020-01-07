@@ -217,36 +217,36 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       .then((tempQuote) {
         isLoadingTempQuote = false;
 
-        AddQuoteInputs.comment = tempQuote.comment;
-        AddQuoteInputs.id = tempQuote.id;
-        AddQuoteInputs.name = tempQuote.name;
-        AddQuoteInputs.lang = tempQuote.lang;
-        AddQuoteInputs.topics = tempQuote.topics;
+        AddQuoteInputs.comment  = tempQuote.comment;
+        AddQuoteInputs.id       = tempQuote.id;
+        AddQuoteInputs.name     = tempQuote.name;
+        AddQuoteInputs.lang     = tempQuote.lang;
+        AddQuoteInputs.topics   = tempQuote.topics;
 
         if (tempQuote.author != null) {
-          AddQuoteInputs.authorImgUrl = tempQuote.author.imgUrl;
-          AddQuoteInputs.authorJob = tempQuote.author.job;
-          AddQuoteInputs.authorName = tempQuote.author.name;
-          AddQuoteInputs.authorSummary = tempQuote.author.summary;
-          AddQuoteInputs.authorUrl = tempQuote.author.url;
-          AddQuoteInputs.authorWikiUrl = tempQuote.author.wikiUrl;
+          AddQuoteInputs.authorImgUrl   = tempQuote.author.imgUrl;
+          AddQuoteInputs.authorJob      = tempQuote.author.job;
+          AddQuoteInputs.authorName     = tempQuote.author.name;
+          AddQuoteInputs.authorSummary  = tempQuote.author.summary;
+          AddQuoteInputs.authorUrl      = tempQuote.author.url;
+          AddQuoteInputs.authorWikiUrl  = tempQuote.author.wikiUrl;
         }
 
         if (tempQuote.references != null && tempQuote.references.length > 0) {
           final ref = tempQuote.references.first;
-          AddQuoteInputs.refImgUrl = ref.imgUrl;
-          AddQuoteInputs.refLang = ref.lang;
-          AddQuoteInputs.refName = ref.name;
+          AddQuoteInputs.refImgUrl  = ref.imgUrl;
+          AddQuoteInputs.refLang    = ref.lang;
+          AddQuoteInputs.refName    = ref.name;
           AddQuoteInputs.refSubType = ref.subType;
           AddQuoteInputs.refSummary = ref.summary;
-          AddQuoteInputs.refType = ref.type;
-          AddQuoteInputs.refUrl = ref.url;
+          AddQuoteInputs.refType    = ref.type;
+          AddQuoteInputs.refUrl     = ref.url;
           AddQuoteInputs.refWikiUrl = ref.wikiUrl;
         }
 
-        AddQuoteInputs.isCompleted = false;
-        AddQuoteInputs.isSending = false;
-        AddQuoteInputs.hasExceptions = false;
+        AddQuoteInputs.isCompleted    = false;
+        AddQuoteInputs.isSending      = false;
+        AddQuoteInputs.hasExceptions  = false;
 
         Navigator.of(context).push(
           MaterialPageRoute(
