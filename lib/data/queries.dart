@@ -349,8 +349,8 @@ class Queries {
 
   static Future<BooleanMessage> updateEmailStepOne(BuildContext context, String newEmail) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
-      .mutate(
-      MutationOptions(
+      .query(
+      QueryOptions(
         documentNode: QueriesOperations.updateEmailStepOne,
         variables: {'newEmail': newEmail},
       )
