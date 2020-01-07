@@ -147,102 +147,6 @@ class Mutations {
     });
   }
 
-  static Future<BooleanMessage> updateDraft({BuildContext context}) async {
-    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
-
-    return client.mutate(
-      MutationOptions(
-        documentNode: MutationsOperations.updateDraft,
-        variables: {
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-          'id'            : AddQuoteInputs.draftId,
-          'lang'          : AddQuoteInputs.lang,
-          'name'          : AddQuoteInputs.name,
-          'topics'        : AddQuoteInputs.topics,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSubType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
-        }
-      )
-    ).then((queryResult) {
-      if (queryResult.hasException) {
-        return BooleanMessage(
-          boolean: false,
-          message: queryResult.exception.graphqlErrors.length > 0 ?
-            queryResult.exception.graphqlErrors.first.message :
-            queryResult.exception.clientException.message,
-        );
-      }
-
-      return BooleanMessage(boolean: true);
-
-    }).catchError((error) {
-      return BooleanMessage(
-        boolean: false,
-        message: error.toString(),
-      );
-    });
-  }
-
-  static Future<BooleanMessage> updateTempQuote({BuildContext context}) async {
-    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
-
-    return client.mutate(
-      MutationOptions(
-        documentNode: MutationsOperations.updateTempQuote,
-        variables: {
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-          'id'            : AddQuoteInputs.id,
-          'lang'          : AddQuoteInputs.lang,
-          'name'          : AddQuoteInputs.name,
-          'topics'        : AddQuoteInputs.topics,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSubType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
-        }
-      )
-    ).then((queryResult) {
-      if (queryResult.hasException) {
-        return BooleanMessage(
-          boolean: false,
-          message: queryResult.exception.graphqlErrors.length > 0 ?
-            queryResult.exception.graphqlErrors.first.message :
-            queryResult.exception.clientException.message,
-        );
-      }
-
-      return BooleanMessage(boolean: true);
-
-    }).catchError((error) {
-      return BooleanMessage(
-        boolean: false,
-        message: error.toString(),
-      );
-    });
-  }
-
   static Future<TryResponse> deleteAccount(BuildContext context, String password) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
     .mutate(MutationOptions(
@@ -305,6 +209,33 @@ class Mutations {
     });
   }
 
+  static Future<BooleanMessage> removeFromList(
+    BuildContext context,
+    String listId,
+    String quoteId,
+  ) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.removeFromList,
+        variables: {'listId': listId, 'quoteId': quoteId},
+      )
+    ).then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+
+    }).catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
   static Future<BooleanMessage> star(BuildContext context, String quoteId) {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 
@@ -353,30 +284,51 @@ class Mutations {
     });
   }
 
-  static Future<BooleanMessage> removeFromList(
-    BuildContext context,
-    String listId,
-    String quoteId,
-  ) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
+  static Future<BooleanMessage> updateDraft({BuildContext context}) async {
+    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
 
-    return httpClientModel.defaultClient.value.mutate(
+    return client.mutate(
       MutationOptions(
-        documentNode: MutationsOperations.removeFromList,
-        variables: {'listId': listId, 'quoteId': quoteId},
+        documentNode: MutationsOperations.updateDraft,
+        variables: {
+          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
+          'authorJob'     : AddQuoteInputs.authorJob,
+          'authorName'    : AddQuoteInputs.authorName,
+          'authorSummary' : AddQuoteInputs.authorSummary,
+          'authorUrl'     : AddQuoteInputs.authorUrl,
+          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
+          'comment'       : AddQuoteInputs.comment,
+          'id'            : AddQuoteInputs.draftId,
+          'lang'          : AddQuoteInputs.lang,
+          'name'          : AddQuoteInputs.name,
+          'topics'        : AddQuoteInputs.topics,
+          'refImgUrl'     : AddQuoteInputs.refImgUrl,
+          'refLang'       : AddQuoteInputs.refLang,
+          'refName'       : AddQuoteInputs.refName,
+          'refSubType'    : AddQuoteInputs.refSubType,
+          'refSummary'    : AddQuoteInputs.refSummary,
+          'refType'       : AddQuoteInputs.refType,
+          'refUrl'        : AddQuoteInputs.refUrl,
+          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
+        }
       )
     ).then((queryResult) {
       if (queryResult.hasException) {
         return BooleanMessage(
           boolean: false,
-          message: queryResult.exception.graphqlErrors.first.message
+          message: queryResult.exception.graphqlErrors.length > 0 ?
+            queryResult.exception.graphqlErrors.first.message :
+            queryResult.exception.clientException.message,
         );
       }
 
       return BooleanMessage(boolean: true);
 
     }).catchError((error) {
-      return BooleanMessage(boolean: false, message: error.toString());
+      return BooleanMessage(
+        boolean: false,
+        message: error.toString(),
+      );
     });
   }
 
@@ -484,6 +436,54 @@ class Mutations {
       return BooleanMessage(
         boolean: false,
         message: error.toString()
+      );
+    });
+  }
+
+  static Future<BooleanMessage> updateTempQuote({BuildContext context}) async {
+    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
+
+    return client.mutate(
+      MutationOptions(
+        documentNode: MutationsOperations.updateTempQuote,
+        variables: {
+          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
+          'authorJob'     : AddQuoteInputs.authorJob,
+          'authorName'    : AddQuoteInputs.authorName,
+          'authorSummary' : AddQuoteInputs.authorSummary,
+          'authorUrl'     : AddQuoteInputs.authorUrl,
+          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
+          'comment'       : AddQuoteInputs.comment,
+          'id'            : AddQuoteInputs.id,
+          'lang'          : AddQuoteInputs.lang,
+          'name'          : AddQuoteInputs.name,
+          'topics'        : AddQuoteInputs.topics,
+          'refImgUrl'     : AddQuoteInputs.refImgUrl,
+          'refLang'       : AddQuoteInputs.refLang,
+          'refName'       : AddQuoteInputs.refName,
+          'refSubType'    : AddQuoteInputs.refSubType,
+          'refSummary'    : AddQuoteInputs.refSummary,
+          'refType'       : AddQuoteInputs.refType,
+          'refUrl'        : AddQuoteInputs.refUrl,
+          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
+        }
+      )
+    ).then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.length > 0 ?
+            queryResult.exception.graphqlErrors.first.message :
+            queryResult.exception.clientException.message,
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+
+    }).catchError((error) {
+      return BooleanMessage(
+        boolean: false,
+        message: error.toString(),
       );
     });
   }
