@@ -110,14 +110,46 @@ class Account extends StatelessWidget {
             Divider(),
             FlatButton(
               child: ListTile(
-                leading: Icon(Icons.check, size: 30.0,),
-                title: Text('Published', style: TextStyle(fontSize: 20.0),),
+                leading: Icon(Icons.add, size: 30.0,),
+                title: Text('Add a new quote', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                AddQuoteInputs.clearAll();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AddQuote();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.edit, size: 30.0,),
+                title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
               ),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return MyPublishedQuotes();
+                      return Drafts();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.list, size: 30.0,),
+                title: Text('Lists', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return QuotesLists();
                     }
                   )
                 );
@@ -155,51 +187,20 @@ class Account extends StatelessWidget {
             ),
             FlatButton(
               child: ListTile(
-                leading: Icon(Icons.list, size: 30.0,),
-                title: Text('Lists', style: TextStyle(fontSize: 20.0),),
+                leading: Icon(Icons.check, size: 30.0,),
+                title: Text('Published', style: TextStyle(fontSize: 20.0),),
               ),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return QuotesLists();
+                      return MyPublishedQuotes();
                     }
                   )
                 );
               },
             ),
-            FlatButton(
-              child: ListTile(
-                leading: Icon(Icons.add, size: 30.0,),
-                title: Text('Add a new quote', style: TextStyle(fontSize: 20.0),),
-              ),
-              onPressed: () {
-                AddQuoteInputs.clearAll();
 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return AddQuote();
-                    }
-                  )
-                );
-              },
-            ),
-            FlatButton(
-              child: ListTile(
-                leading: Icon(Icons.edit, size: 30.0,),
-                title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
-              ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Drafts();
-                    }
-                  )
-                );
-              },
-            ),
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.settings, size: 30.0,),
