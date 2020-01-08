@@ -5,6 +5,7 @@ import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:share/share.dart';
 
 class MediumQuoteCard extends StatelessWidget {
   final Color color;
@@ -164,9 +165,23 @@ class MediumQuoteCard extends StatelessWidget {
               onBeforeShowSheet: () => Navigator.pop(context),
             ),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'share',
             child: ListTile(
+              onTap: () {
+                Navigator.pop(context);
+
+                final RenderBox box = context.findRenderObject();
+                final sharingText = quote.author != null ?
+                  '${quote.name} - ${quote.author.name}' :
+                  quote.name;
+
+                Share.share(
+                  sharingText,
+                  subject: 'Memorare quote',
+                  sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+                );
+              },
               leading: Icon(Icons.share),
               title: Text(
                 'Share',

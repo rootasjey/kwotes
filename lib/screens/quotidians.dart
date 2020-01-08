@@ -14,6 +14,7 @@ import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:share/share.dart';
 
 enum QuoteAction { addList, like, share }
 
@@ -176,7 +177,16 @@ class _QuotidiansState extends State<Quotidians> {
               Icons.share,
               size: 30.0,
             ),
-            onPressed: () {},
+            onPressed: () {
+              final RenderBox box = context.findRenderObject();
+              final sharingText = '${quote.name} - ${quote.author.name}';
+
+              Share.share(
+                sharingText,
+                subject: 'Memorare quote',
+                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+              );
+            },
           ),
 
           if (!quote.starred)

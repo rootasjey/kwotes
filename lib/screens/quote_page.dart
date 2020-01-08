@@ -11,6 +11,7 @@ import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:share/share.dart';
 
 class QuotePage extends StatefulWidget {
   final String quoteId;
@@ -236,7 +237,16 @@ class _QuotePageState extends State<QuotePage> {
             padding: EdgeInsets.all(16.0),
             iconSize: 40.0,
             icon: Icon(Icons.share,),
-            onPressed: () {},
+            onPressed: () {
+              final RenderBox box = context.findRenderObject();
+              final sharingText = '${quote.name} - ${quote.author.name}';
+
+              Share.share(
+                sharingText,
+                subject: 'Memorare quote',
+                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+              );
+            },
           ),
 
           AddToListButton(
