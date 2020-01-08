@@ -9,6 +9,7 @@ import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -293,17 +294,33 @@ class _QuotidiansState extends State<Quotidians> {
   }
 
   Widget reference(Quote quote) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            quote.references.first.name,
-            style: TextStyle(
+    final reference = quote.references.first;
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ReferencePage(
+                id: reference.id,
+                referenceName: reference.name,
+              );
+            }
+          )
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              reference.name,
+              style: TextStyle(
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
