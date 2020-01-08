@@ -165,6 +165,52 @@ class Mutations {
     });
   }
 
+  static Future<BooleanMessage> deleteAllDrafts({BuildContext context}) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+      documentNode: MutationsOperations.deleteAllDrafts,
+    ))
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
+  static Future<BooleanMessage> deleteDraft({
+    BuildContext context,
+    String id
+  }) {
+    final httpClientModel = Provider.of<HttpClientsModel>(context);
+
+    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+      documentNode: MutationsOperations.deleteDraft,
+      variables: {'id': id},
+    ))
+    .then((queryResult) {
+      if (queryResult.hasException) {
+        return BooleanMessage(
+          boolean: false,
+          message: queryResult.exception.graphqlErrors.first.message
+        );
+      }
+
+      return BooleanMessage(boolean: true);
+    })
+    .catchError((error) {
+      return BooleanMessage(boolean: false, message: error.toString());
+    });
+  }
+
   static Future<BooleanMessage> deleteList(BuildContext context, String id) {
     final httpClientModel = Provider.of<HttpClientsModel>(context);
 

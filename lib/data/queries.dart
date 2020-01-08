@@ -33,6 +33,40 @@ class Queries {
       });
   }
 
+  static Future<TempQuote> draft({
+    BuildContext context,
+    String id,
+  }) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+        QueryOptions(
+          documentNode: QueriesOperations.draft,
+          variables: {'id': id},
+          fetchPolicy: FetchPolicy.networkOnly,
+        )
+      ).then((QueryResult queryResult) {
+        return TempQuote.fromJSON(queryResult.data['draft']);
+      });
+  }
+
+  static Future<DraftsResponse> drafts({
+    BuildContext context,
+    int limit,
+    int order,
+    int skip,
+  }) {
+    return Provider.of<HttpClientsModel>(context).defaultClient.value
+      .query(
+      QueryOptions(
+        documentNode: QueriesOperations.drafts,
+        fetchPolicy: FetchPolicy.networkOnly,
+      )
+    )
+    .then((queryResult) {
+      return DraftsResponse.fromJSON(queryResult.data['userData']['drafts']);
+    });
+  }
+
   static Future<QuotesListsResponse> lists({
     BuildContext context,
     int limit,
@@ -379,18 +413,6 @@ class Queries {
     )
     .then((queryResult) {
       return UserData.fromJSON(queryResult.data['userData']);
-    });
-  }
-
-  static Future<DraftsResponse> userDrafts(BuildContext context) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
-      .query(
-      QueryOptions(
-        documentNode: QueriesOperations.userDrafts,
-      )
-    )
-    .then((queryResult) {
-      return DraftsResponse.fromJSON(queryResult.data['userData']['drafts']);
     });
   }
 }

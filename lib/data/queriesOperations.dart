@@ -16,6 +16,55 @@ class QueriesOperations {
     }
   """);
 
+  static DocumentNode draft = parseString("""
+    query (\$id: String!) {
+      draft (id: \$id) {
+        author {
+          imgUrl
+          job
+          name
+          summary
+          url
+          wikiUrl
+        }
+        comment
+        id
+        lang
+        name
+        references {
+          imgUrl
+          lang
+          name
+          subType
+          summary
+          type
+          url
+          wikiUrl
+        }
+        topics
+      }
+    }
+  """);
+
+  static DocumentNode drafts = parseString("""
+    query (\$limit: Float, \$order: Float, \$skip: Float) {
+      userData {
+        drafts (limit: \$limit, order: \$order, skip: \$skip) {
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
+          }
+          entries {
+            id
+            name
+          }
+        }
+      }
+    }
+  """);
+
   static DocumentNode listById = parseString("""
     query (\$id: String!) {
       listById(id: \$id) {
@@ -352,25 +401,6 @@ class QueriesOperations {
         name
         rights
         token
-      }
-    }
-  """);
-
-  static DocumentNode userDrafts = parseString("""
-    query {
-      userData {
-        drafts (\$limit: Float \$order: Float \$skip: Float) {
-          entries {
-            id
-            name
-          }
-          pagination {
-            hasNext
-            limit
-            nextSkip
-            skip
-          }
-        }
       }
     }
   """);

@@ -125,6 +125,22 @@ class MutationsOperations {
       }
   """);
 
+  static DocumentNode deleteAllDrafts = parseString("""
+    mutation {
+      deleteAllDrafts {
+        id
+      }
+    }
+  """);
+
+  static DocumentNode deleteDraft = parseString("""
+    mutation (\$id: String!) {
+      deleteDraft (id: \$id) {
+        id
+      }
+    }
+  """);
+
   static DocumentNode deleteList = parseString("""
     mutation (\$id: String!) {
       deleteList (id: \$id) {

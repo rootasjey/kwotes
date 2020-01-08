@@ -7,6 +7,7 @@ import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/app_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/starred.dart';
@@ -179,6 +180,21 @@ class Account extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return AddQuote();
+                    }
+                  )
+                );
+              },
+            ),
+            FlatButton(
+              child: ListTile(
+                leading: Icon(Icons.edit, size: 30.0,),
+                title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Drafts();
                     }
                   )
                 );
