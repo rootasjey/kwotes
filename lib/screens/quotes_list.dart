@@ -101,6 +101,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 displayedName,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: accent,
                   fontSize: 30.0,
