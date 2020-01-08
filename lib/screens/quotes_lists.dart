@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
@@ -129,6 +130,7 @@ class _QuotesListsState extends State<QuotesLists> {
             },
             child: ListView.separated(
               controller: listScrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
               itemCount: lists.length,
               separatorBuilder: (context, index) {
@@ -222,16 +224,21 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
-  Future fetchLists() {
+  Future fetchLists({bool reset = false}) {
     setState(() {
       isLoading = true;
     });
+
+    final fetchPolicy = reset == false ?
+        FetchPolicy.cacheAndNetwork :
+        FetchPolicy.networkOnly;
 
     return Queries.lists(
       context: context,
       limit: pagination.limit,
       order: order,
       skip: pagination.skip,
+      fetchPolicy: fetchPolicy,
 
     ).then((quotesListsResp) {
       setState(() {
@@ -256,6 +263,7 @@ class _QuotesListsState extends State<QuotesLists> {
       limit: pagination.limit,
       order: order,
       skip: pagination.nextSkip,
+      fetchPolicy: FetchPolicy.networkOnly,
 
     ).then((quotesListsResp) {
       setState(() {

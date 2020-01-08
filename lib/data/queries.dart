@@ -72,13 +72,14 @@ class Queries {
     int limit,
     int order,
     int skip,
+    FetchPolicy fetchPolicy = FetchPolicy.cacheAndNetwork,
   }) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
           documentNode: QueriesOperations.lists,
           variables: {'limit': limit, 'order': order, 'skip': skip},
-          fetchPolicy: FetchPolicy.networkOnly,
+          fetchPolicy: fetchPolicy,
         )
       ).then((QueryResult queryResult) {
         return QuotesListsResponse.fromJSON(queryResult.data['userData']['quotesLists']);
