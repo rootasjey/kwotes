@@ -66,16 +66,22 @@ class QueriesOperations {
   """);
 
   static DocumentNode listById = parseString("""
-    query (\$id: String!) {
-      listById(id: \$id) {
+    query (\$id: String!, \$limit: Float, \$order: Float, \$skip: Float) {
+      listById (id: \$id) {
         id
         name
         description
-        quotes {
+        quotes (limit: \$limit, order: \$order, skip: \$skip) {
           entries {
             id
             name
             topics
+          }
+          pagination {
+            hasNext
+            limit
+            nextSkip
+            skip
           }
         }
       }

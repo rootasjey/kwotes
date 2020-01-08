@@ -7,6 +7,7 @@ import 'package:memorare/components/medium_quote_card.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/pagination.dart';
 import 'package:memorare/types/quotes_list.dart';
 import 'package:provider/provider.dart';
 
@@ -26,12 +27,13 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
 
   bool isDeletingList = false;
   bool isLoading = false;
+  bool isLoadingMoreQuotes = false;
   bool hasErrors = false;
   Error error;
 
-  int limit = 10;
   int order = 1;
-  int skip = 0;
+
+  Pagination pagination = Pagination();
 
   String displayedName = '';
   String displayedDescription = '';
@@ -176,25 +178,53 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           );
         }
 
-        return ListView(
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
-          children: <Widget>[
-            ...quotesCards,
-          ],
+        return RefreshIndicator(
+          onRefresh: () async {
+            await fetchQuotes(widget.id);
+            return null;
+          },
+          child: NotificationListener(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+                  return false;
+              }
+
+              if (pagination.hasNext && !isLoadingMoreQuotes) {
+                // fetchMoreLists();
+              }
+
+              return false;
+            },
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+              children: <Widget>[
+                ...quotesCards,
+              ],
+            ),
+          ),
         );
       }),
     );
   }
 
-  void fetchQuotes(String id) {
+  Future fetchQuotes(String id) {
     setState(() {
       isLoading = true;
     });
 
-    Queries.listById(context, id)
+    pagination = Pagination();
+
+    return Queries.listById(
+      context: context,
+      id: id,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.skip,
+      )
       .then((quotesListResp) {
         setState(() {
           quotesList = quotesListResp;
+          pagination = quotesListResp.pagination;
           isLoading = false;
         });
       })
@@ -204,6 +234,28 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           isLoading = false;
           hasErrors = true;
         });
+      });
+  }
+
+  Future fetchMoreQuotes(String id) {
+    isLoadingMoreQuotes = true;
+
+    return Queries.listById(
+      context: context,
+      id: id,
+      limit: pagination.limit,
+      order: order,
+      skip: pagination.nextSkip,
+      )
+      .then((quotesListResp) {
+        setState(() {
+          quotesList.quotes.addAll(quotesListResp.quotes);
+          pagination = quotesListResp.pagination;
+          isLoadingMoreQuotes = false;
+        });
+      })
+      .catchError((err) {
+        isLoadingMoreQuotes = false;
       });
   }
 

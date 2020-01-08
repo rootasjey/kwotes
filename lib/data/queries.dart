@@ -86,14 +86,14 @@ class Queries {
       });
   }
 
-  static Future<QuotesList> listById(
-    BuildContext context, String id,
-  ) {
+  static Future<QuotesList> listById({
+    BuildContext context, String id, int limit, int order, int skip,
+  }) {
     return Provider.of<HttpClientsModel>(context).defaultClient.value
       .query(
         QueryOptions(
           documentNode: QueriesOperations.listById,
-          variables: {'id': id },
+          variables: {'id': id, 'limit': limit, 'order': order, 'skip': skip},
           fetchPolicy: FetchPolicy.networkOnly,
         )
       ).then((QueryResult queryResult) {
