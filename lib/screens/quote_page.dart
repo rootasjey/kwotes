@@ -7,6 +7,7 @@ import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -152,20 +153,38 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget reference() {
-    return quote.references.length > 0 ?
-      Padding(
+    if (quote.references == null || quote.references.length == 0) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
+    final reference = quote.references.first;
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ReferencePage(
+                id: reference.id,
+                referenceName: reference.name,
+              );
+            }
+          )
+        );
+      },
+      child: Padding(
         padding: EdgeInsets.only(top: 10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              quote.references.first.name,
+              reference.name,
               style: TextStyle(),
             ),
           ],
         ),
-      ) :
-      Padding(padding: EdgeInsets.zero,);
+      ),
+    );
   }
 
   Widget topics() {
