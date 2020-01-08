@@ -5,6 +5,7 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
@@ -64,6 +65,8 @@ class _QuotePageState extends State<QuotePage> {
                   children: <Widget>[
                     content(),
 
+                    Padding(padding: EdgeInsets.only(top: 40.0),),
+
                     author(),
 
                     reference(),
@@ -118,13 +121,26 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget author() {
-    return Padding(
-      padding: EdgeInsets.only(top: 40.0),
+    final author = quote.author;
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return AuthorPage(
+                id: author.id,
+                authorName: author.name,
+              );
+            }
+          )
+        );
+      },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            '${quote.author.name}',
+            '${author.name}',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
