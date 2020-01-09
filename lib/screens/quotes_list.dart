@@ -31,6 +31,8 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   bool hasErrors = false;
   Error error;
 
+  ScrollController listScrollController = ScrollController();
+
   int order = 1;
 
   Pagination pagination = Pagination();
@@ -97,32 +99,41 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             ],
           ),
         ],
-        title: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                displayedName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: accent,
-                  fontSize: 30.0,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Opacity(
-                opacity: .6,
+        title: InkWell(
+          onTap: () {
+            listScrollController.animateTo(
+              0,
+              duration: Duration(seconds: 2),
+              curve: Curves.easeOutQuint,
+            );
+          },
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  displayedDescription,
+                  displayedName,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16.0,
-                  )
+                    color: accent,
+                    fontSize: 30.0,
+                  ),
                 ),
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Opacity(
+                  opacity: .6,
+                  child: Text(
+                    displayedDescription,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    )
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -196,6 +207,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               return false;
             },
             child: ListView(
+              controller: listScrollController,
               padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
               children: <Widget>[
                 ...quotesCards,
