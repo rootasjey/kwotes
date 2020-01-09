@@ -22,6 +22,7 @@ class _StarredState extends State<Starred> {
 
   Pagination pagination = Pagination();
   bool isLoadingMoreQuotes = false;
+  ScrollController listScrollController = ScrollController();
 
   bool isLoading = false;
   bool hasErrors = false;
@@ -44,11 +45,20 @@ class _StarredState extends State<Starred> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,
-        title: Text(
-          'favorites',
-          style: TextStyle(
-            color: color,
-            fontSize: 30.0,
+        title: InkWell(
+          onTap: () {
+            listScrollController.animateTo(
+              0,
+              duration: Duration(seconds: 2),
+              curve: Curves.easeOutQuint,
+            );
+          },
+          child: Text(
+            'favorites',
+            style: TextStyle(
+              color: color,
+              fontSize: 30.0,
+            ),
           ),
         ),
         leading: IconButton(
@@ -131,6 +141,7 @@ class _StarredState extends State<Starred> {
                 return false;
               },
               child: ListView(
+                controller: listScrollController,
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
                 children: <Widget>[
                   ...quotes.map<Widget>((quote) {
