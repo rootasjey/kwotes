@@ -84,6 +84,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         elevation: 0,
         title: InkWell(
           onTap: () {
+            if (quotes.length == 0) { return; }
+
             gridViewScrollController.animateTo(
               0,
               duration: Duration(seconds: 2),

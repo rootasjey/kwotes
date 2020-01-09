@@ -101,6 +101,10 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         ],
         title: InkWell(
           onTap: () {
+            if (quotesList == null || quotesList.quotes.length == 0) {
+              return;
+            }
+
             listScrollController.animateTo(
               0,
               duration: Duration(seconds: 2),

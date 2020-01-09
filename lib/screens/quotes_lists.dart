@@ -53,6 +53,8 @@ class _QuotesListsState extends State<QuotesLists> {
         elevation: 0,
         title: InkWell(
           onTap: () {
+            if (lists.length == 0) { return; }
+
             listScrollController.animateTo(
               0,
               duration: Duration(seconds: 2),
