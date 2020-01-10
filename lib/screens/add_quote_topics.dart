@@ -86,6 +86,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
         if (sampleTopics.length > 0)
           sampleTopicsSection(themeColor),
+
+        helpButton(),
       ],
     );
   }
@@ -318,6 +320,63 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           icon: Icon(Icons.arrow_forward),
         ),
       )
+    );
+  }
+
+  Widget helpButton() {
+    return IconButton(
+      padding: EdgeInsets.only(bottom: 30.0),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return ListView(
+              padding: EdgeInsets.all(40.0),
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 40.0),
+                  child: Text(
+                    'Help',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Topics should be in english plain words',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Topics are used to categorize the quote',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Already used topics are preferred',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      },
+      icon: Icon(Icons.help),
     );
   }
 
