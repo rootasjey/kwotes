@@ -100,6 +100,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                 langSelect(accent),
 
                 saveDraftButton(),
+
+                help(),
               ],
             ),
 
@@ -224,6 +226,89 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           ),
         )
       ),
+    );
+  }
+
+  Widget help() {
+    return IconButton(
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return ListView(
+              padding: EdgeInsets.all(40.0),
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 40.0),
+                  child: Text(
+                    'Help',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Only the quote\'s content is required for submission',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Your quote should be short (<200 characters), catchy and memorable',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Quotes with a reference are preferred. A reference can be a movie, a book, a song, a game or from any cultural material',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- The moderators can reject, remove or modify your quotes without notice, before or after validation',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Explicit, offensive and disrespectful words and ideas can be rejected',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Long press the green validation button (with a check mark) at any step to save your quote in drafts',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      },
+      icon: Icon(Icons.help),
     );
   }
 }
