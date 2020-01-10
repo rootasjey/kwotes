@@ -101,7 +101,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
                 saveDraftButton(),
 
-                help(),
+                helpButton(),
               ],
             ),
 
@@ -229,8 +229,9 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget help() {
+  Widget helpButton() {
     return IconButton(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
       onPressed: () {
         showModalBottomSheet(
           context: context,
