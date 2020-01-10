@@ -49,6 +49,18 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        header(),
+
+        input(),
+
+        helpButton(),
+      ],
+    );
+  }
+
+  Widget header() {
+    return Column(
+      children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -75,9 +87,15 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
             ),
           ),
         ),
+      ],
+    );
+  }
 
+  Widget input() {
+    return Column(
+      children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 60.0),
+          padding: EdgeInsets.only(top: 60.0),
           child: SizedBox(
             width: 300.0,
             child: TextField(
@@ -94,19 +112,25 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
           ),
         ),
 
-        FlatButton(
-          onPressed: () {
-            _commentController.clear();
-          },
-          child: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Clear comment',
-            ),
-          )
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  _commentController.clear();
+                },
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'Clear comment',
+                  ),
+                )
+              ),
+            ],
+          ),
         ),
-
-        helpButton(),
       ],
     );
   }
@@ -147,7 +171,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
     );
   }
 
-    Widget helpButton() {
+  Widget helpButton() {
     return IconButton(
       padding: EdgeInsets.symmetric(vertical: 20.0),
       onPressed: () {
@@ -180,7 +204,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- If you want to specify the context, the hidden meaning of the quote or something related',
+                    '- Use it if you want to specify the context, the hidden meaning of the quote or something related',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
