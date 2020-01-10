@@ -105,6 +105,8 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
             ),
           )
         ),
+
+        helpButton(),
       ],
     );
   }
@@ -142,6 +144,54 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
           icon: Icon(Icons.arrow_forward),
         ),
       )
+    );
+  }
+
+    Widget helpButton() {
+    return IconButton(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return ListView(
+              padding: EdgeInsets.all(40.0),
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 40.0),
+                  child: Text(
+                    'Help',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Comment is optional',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- If you want to specify the context, the hidden meaning of the quote or something related',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      },
+      icon: Icon(Icons.help),
     );
   }
 }
