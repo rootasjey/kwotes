@@ -8,3 +8,4 @@ shared_preferences_web=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hos
 url_launcher=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.4.1/
 url_launcher_macos=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_macos-0.0.1+2/
 url_launcher_web=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_web-0.1.0+2/
+workmanager=/usr/local/Caskroom/flutter/latest/flutter/.pub-cache/hosted/pub.dartlang.org/workmanager-0.2.0/
