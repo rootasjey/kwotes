@@ -87,6 +87,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         links(),
         clearButton(),
 
+        helpButton(),
+
         Padding(padding: EdgeInsets.only(bottom: 100.0),)
       ],
     );
@@ -343,4 +345,51 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
+  Widget helpButton() {
+    return IconButton(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return ListView(
+              padding: EdgeInsets.all(40.0),
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 40.0),
+                  child: Text(
+                    'Help',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- Author information are optional',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    '- If you select the author\'s name in the dropdown list, other fields can stay empty',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      },
+      icon: Icon(Icons.help),
+    );
+  }
 }
