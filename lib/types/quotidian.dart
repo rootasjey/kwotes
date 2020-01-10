@@ -12,4 +12,13 @@ class Quotidian {
       quote: Quote.fromJSON(json['quote']),
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    Map<String, dynamic> json = Map();
+
+    json['id']    = id;
+    json['quote'] = quote.toJSON();
+
+    return json;
+  }
 }

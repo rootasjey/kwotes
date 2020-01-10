@@ -43,4 +43,22 @@ class Quote {
       topics: topicsList,
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    Map<String, dynamic> json = Map();
+    List<Map<String, dynamic>> refStr = [];
+
+    for (var ref in references) {
+      refStr.add(ref.toJSON());
+    }
+
+    json['author']      = author.toJSON();
+    json['id']          = id;
+    json['name']        = name;
+    json['references']  = refStr;
+    json['starred']     = starred;
+    json['topics']      = topics;
+
+    return json;
+  }
 }

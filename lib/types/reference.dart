@@ -45,4 +45,22 @@ class Reference {
       wikiUrl     : json['wikiUrl'],
     );
   }
+
+
+  Map<String, dynamic> toJSON() {
+    Map<String, dynamic> json = Map();
+
+    json['id']          = id;
+    json['imgUrl']      = imgUrl;
+    json['lang']        = lang;
+    json['linkedRefs']  = linkedRefs;
+    json['name']        = name;
+    json['subType']     = subType;
+    json['summary']     = summary;
+    json['type']        = type;
+    json['url']         = url;
+    json['wikiUrl']     = wikiUrl;
+
+    return json;
+  }
 }

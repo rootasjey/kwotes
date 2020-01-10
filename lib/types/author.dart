@@ -28,4 +28,18 @@ class Author {
       wikiUrl : json['wikiUrl'],
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    Map<String, dynamic> json = Map();
+
+    json['id']      = id;
+    json['imgUrl']  = imgUrl;
+    json['job']     = job;
+    json['name']    = name;
+    json['summary'] = summary;
+    json['url']     = url;
+    json['wikiUrl'] = wikiUrl;
+
+    return json;
+  }
 }
