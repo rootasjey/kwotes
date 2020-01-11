@@ -10,12 +10,14 @@ import Flutter
     GeneratedPluginRegistrant.register(with: self)
 
     if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        UNUserNotificationCenter.current().delegate = self
     }
 
     if(!UserDefaults.standard.bool(forKey: "Notification")) {
-      UIApplication.shared.cancelAllLocalNotifications()
-      UserDefaults.standard.set(true, forKey: "Notification")
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
+        UserDefaults.standard.set(true, forKey: "Notification")
     }
 
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
