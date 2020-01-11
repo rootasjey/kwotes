@@ -36,26 +36,6 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
   Widget build(BuildContext context) {
     Color topicColor = ThemeColor.topicColor(widget.topic);
 
-    if (hasErrors && !isLoading) {
-      return Scaffold(
-        body: ErrorComponent(
-          description: error != null ? error.toString() : '',
-        ),
-      );
-    }
-
-    if (!isLoading && quotes.length == 0) {
-      return topicEmptyView(topicColor);
-    }
-
-    if (isLoading) {
-      return Scaffold(
-        body: LoadingComponent(
-          title: 'Loading ${widget.topic} quotes...',
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -75,64 +55,84 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
           icon: Icon(Icons.arrow_back, color: topicColor,),
         ),
       ),
-      body: Swiper(
-        itemCount: quotes.length,
-        scale: 0.9,
-        viewportFraction: 0.8,
-        itemBuilder: (BuildContext context, int index) {
-          return Center(
-            child: MediumQuoteCard(
-              color: topicColor,
-              quote: quotes.elementAt(index),
-              onLike: () async {
-                setState(() { // optimistic
-                  quotes.elementAt(index).starred = true;
-                });
+      body: Builder(
+        builder: (BuildContext context) {
+          if (hasErrors && !isLoading) {
+            return ErrorComponent(
+              description: error != null ? error.toString() : '',
+            );
+          }
 
-                final booleanMessage = await Mutations.star(
-                  context,
-                  quotes.elementAt(index).id
-                );
+          if (isLoading) {
+            return LoadingComponent(
+              title: 'Loading ${widget.topic} quotes...',
+            );
+          }
 
-                if (!booleanMessage.boolean) {
-                  setState(() { // rollback
-                    quotes.elementAt(index).starred = false;
-                  });
+          if (!isLoading && quotes.length == 0) {
+            return topicEmptyView(topicColor);
+          }
 
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ThemeColor.error,
-                    message: booleanMessage.message,
-                  )..show(context);
-                }
+          return Swiper(
+            itemCount: quotes.length,
+            scale: 0.9,
+            viewportFraction: 0.8,
+            itemBuilder: (BuildContext context, int index) {
+              return Center(
+                child: MediumQuoteCard(
+                  color: topicColor,
+                  quote: quotes.elementAt(index),
+                  onLike: () async {
+                    setState(() { // optimistic
+                      quotes.elementAt(index).starred = true;
+                    });
 
-              },
-              onUnlike: () async {
-                setState(() { // optimistic
-                  quotes.elementAt(index).starred = false;
-                });
+                    final booleanMessage = await Mutations.star(
+                      context,
+                      quotes.elementAt(index).id
+                    );
 
-                final booleanMessage = await Mutations.unstar(
-                  context,
-                  quotes.elementAt(index).id
-                );
+                    if (!booleanMessage.boolean) {
+                      setState(() { // rollback
+                        quotes.elementAt(index).starred = false;
+                      });
 
-                if (!booleanMessage.boolean) {
-                  setState(() { // rollback
-                    quotes.elementAt(index).starred = true;
-                  });
+                      Flushbar(
+                        duration: Duration(seconds: 2),
+                        backgroundColor: ThemeColor.error,
+                        message: booleanMessage.message,
+                      )..show(context);
+                    }
 
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ThemeColor.error,
-                    message: booleanMessage.message,
-                  )..show(context);
-                }
-              },
-            )
+                  },
+                  onUnlike: () async {
+                    setState(() { // optimistic
+                      quotes.elementAt(index).starred = false;
+                    });
+
+                    final booleanMessage = await Mutations.unstar(
+                      context,
+                      quotes.elementAt(index).id
+                    );
+
+                    if (!booleanMessage.boolean) {
+                      setState(() { // rollback
+                        quotes.elementAt(index).starred = true;
+                      });
+
+                      Flushbar(
+                        duration: Duration(seconds: 2),
+                        backgroundColor: ThemeColor.error,
+                        message: booleanMessage.message,
+                      )..show(context);
+                    }
+                  },
+                )
+              );
+            },
           );
         },
-      ),
+      )
     );
   }
 
