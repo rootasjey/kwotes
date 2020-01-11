@@ -138,48 +138,10 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
 
   Widget topicEmptyView(Color topicColor) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          EmptyView(
-            title: 'Topic quotes',
-            description: 'There is no quotes in this language on the "${widget.topic}" topic',
-          ),
-
-          RaisedButton(
-            onPressed: () { fetchQuotes(widget.topic); },
-            color: topicColor,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Try again',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-            )
-          ),
-
-          FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  'Go back',
-                  style: TextStyle(
-                    fontSize: 17.0,
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      )
+      body: EmptyView(
+          title: 'Topic quotes',
+          description: 'There is no quotes in this language on the "${widget.topic}" topic',
+        ),
     );
   }
 
