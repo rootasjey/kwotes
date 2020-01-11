@@ -52,19 +52,11 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Center(
-      child: ListView(
-        shrinkWrap: isCompleted,
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              content(),
-              backButton(),
-            ],
-          )
-        ],
-      ),
+    return Stack(
+      children: <Widget>[
+        content(),
+        backButton(),
+      ],
     );
   }
 
@@ -74,6 +66,7 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
     final accent = themeColor.accent;
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         if (!isCompleted)
           sendComponent(),
@@ -92,12 +85,17 @@ class AddQuoteLastStepState extends State<AddQuoteLastStep> {
 
   Widget backButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       left: 10.0,
       child: Opacity(
         opacity: 0.6,
         child: IconButton(
           onPressed: () {
+            if (isCompleted) {
+              Navigator.of(context).pop();
+              return;
+            }
+
             if (widget.onPreviousStep != null) {
               widget.onPreviousStep();
             }
