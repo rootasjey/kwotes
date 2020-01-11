@@ -25,12 +25,7 @@ class EmptyView extends StatelessWidget {
       },
       child: ListView(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              content(context),
-              backButton(context),
-            ],
-          )
+          content(context),
         ],
       ),
     );
@@ -75,22 +70,6 @@ class EmptyView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget backButton(BuildContext context) {
-    return Positioned(
-      top: 10.0,
-      left: 10.0,
-      child: Opacity(
-        opacity: 0.6,
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
-      )
     );
   }
 }
