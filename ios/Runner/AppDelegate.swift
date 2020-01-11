@@ -20,7 +20,7 @@ import Flutter
         UserDefaults.standard.set(true, forKey: "Notification")
     }
 
-    UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
+    UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*360))
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
