@@ -24,49 +24,73 @@ class EmptyView extends StatelessWidget {
         }
       },
       child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 40.0),
         children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 100.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (icon != null)
-                  icon,
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30.0,
-                    ),
-                  ),
-                ),
-
-                Opacity(
-                  opacity: 0.6,
-                  child: FlatButton(
-                    onPressed: () {
-                      if (onTapDescription != null) {
-                        onTapDescription();
-                      }
-                    },
-                    child: Text(
-                      description,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  )
-                ),
-              ],
-            ),
+          Stack(
+            children: <Widget>[
+              content(context),
+              backButton(context),
+            ],
           )
         ],
       ),
+    );
+  }
+
+  Widget content(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 100.0,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          if (icon != null)
+            icon,
+
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30.0,
+              ),
+            ),
+          ),
+
+          Opacity(
+            opacity: 0.6,
+            child: FlatButton(
+              onPressed: () {
+                if (onTapDescription != null) {
+                  onTapDescription();
+                }
+              },
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            )
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget backButton(BuildContext context) {
+    return Positioned(
+      top: 10.0,
+      left: 10.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      )
     );
   }
 }
