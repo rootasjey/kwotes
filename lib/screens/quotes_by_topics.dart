@@ -140,7 +140,7 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
     return Scaffold(
       body: EmptyView(
           title: 'Topic quotes',
-          description: 'There is no quotes in this language on the "${widget.topic}" topic',
+          description: 'There is no quotes in your language on the "${widget.topic}" topic',
         ),
     );
   }
