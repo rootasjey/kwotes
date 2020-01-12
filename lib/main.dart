@@ -30,10 +30,7 @@ void callbackDispatcher() {
         break;
     }
 
-    final url = inputData['url'];
-    final apiKey = inputData['apiKey'];
-
-    final quotidian = await BackgroundTasks.fetchQuotidian(url: url, apiKey: apiKey);
+    final quotidian = await BackgroundTasks.fetchQuotidian();
     if (quotidian == null) { return Future.value(true); }
 
     await BackgroundTasks.saveQuotidian(quotidian: quotidian);
@@ -123,14 +120,9 @@ class MainState extends State<Main> {
   void initState() {
     super.initState();
 
-    String url;
-    String apiKey;
-
     getApiConfig()
       .then((apiConfig) {
         setState(() {
-          url = apiConfig['url'];
-          apiKey = apiConfig['apikey'];
           Provider.of<HttpClientsModel>(context).setApiConfig(apiConfig);
         });
 
@@ -159,18 +151,18 @@ class MainState extends State<Main> {
           })
           .then((_) {
             Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
-            Workmanager.registerOneOffTask(
-              '1',
-              backgroundTaskName,
-              initialDelay: Duration(seconds: 5),
-              constraints: Constraints(
-                networkType: NetworkType.connected,
-              ),
-              inputData: {
-                'url': url,
-                'apiKey': apiKey,
-              }
-            );
+            // Workmanager.registerOneOffTask(
+            //   '1',
+            //   backgroundTaskName,
+            //   initialDelay: Duration(seconds: 5),
+            //   constraints: Constraints(
+            //     networkType: NetworkType.connected,
+            //   ),
+            //   inputData: {
+            //     'url': url,
+            //     'apiKey': apiKey,
+            //   }
+            // );
           });
       });
   }

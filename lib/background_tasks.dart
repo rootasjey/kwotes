@@ -4,15 +4,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gql/language.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/app_keys.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BackgroundTasks {
-  static Future<Quotidian> fetchQuotidian({String url, String apiKey}) async {
+  static Future<Quotidian> fetchQuotidian() async {
     final HttpLink httpLink = HttpLink(
-        uri: url,
+        uri: AppKeys.uri,
         headers: {
-          'apikey': apiKey,
+          'apikey': AppKeys.apiKey,
         },
       );
 
