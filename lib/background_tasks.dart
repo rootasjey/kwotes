@@ -9,6 +9,8 @@ import 'package:memorare/types/quotidian.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BackgroundTasks {
+  static const name = 'memorareTask';
+
   static Future<Quotidian> fetchQuotidian() async {
     final HttpLink httpLink = HttpLink(
         uri: AppKeys.uri,
