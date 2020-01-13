@@ -22,13 +22,22 @@ import 'package:workmanager/workmanager.dart';
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
+    bool isExecutionAllowed = true;
+
     switch (task) {
       case BackgroundTasks.name:
         debugPrint('android background task');
         break;
       case Workmanager.iOSBackgroundTask:
         debugPrint('iOS background fetch');
+        await AppSettings.readFromFile();
+        isExecutionAllowed = AppSettings.isQuotidianNotifActive;
         break;
+    }
+
+    if (!isExecutionAllowed) {
+      debugPrint('Execution stopped because settings prevent it (probably on iOS).');
+      return Future.value(true);
     }
 
     final quotidian = await BackgroundTasks.fetchQuotidian();
