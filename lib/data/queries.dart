@@ -18,10 +18,14 @@ import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 
 class Queries {
+  static GraphQLClient getClient(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context, listen: false).defaultClient.value;
+  }
+
   static Future<Author> author(
     BuildContext context, String id,
   ) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.author,
@@ -37,7 +41,7 @@ class Queries {
     BuildContext context,
     String id,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.draft,
@@ -55,7 +59,7 @@ class Queries {
     int order,
     int skip,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
       QueryOptions(
         documentNode: QueriesOperations.drafts,
@@ -74,7 +78,7 @@ class Queries {
     int skip,
     FetchPolicy fetchPolicy = FetchPolicy.cacheAndNetwork,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.lists,
@@ -89,7 +93,7 @@ class Queries {
   static Future<QuotesList> listById({
     BuildContext context, String id, int limit, int order, int skip,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.listById,
@@ -104,7 +108,7 @@ class Queries {
   static Future<QuotesResponse> myPublihshedQuotes({
     BuildContext context, String lang, int limit, int order, int skip,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.publishedQuotes,
@@ -123,7 +127,7 @@ class Queries {
     int order,
     int skip,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.tempQuotes,
@@ -136,7 +140,7 @@ class Queries {
   }
 
   static Future<Quote> quote(BuildContext context, String id) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quote,
@@ -155,7 +159,7 @@ class Queries {
   static Future<QuotesResponse> quotesByAuthor(
     BuildContext context, String id,
   ) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quotesByAuthorId,
@@ -170,7 +174,7 @@ class Queries {
   static Future<QuotesResponse> quotesByReference(
     BuildContext context, String id,
   ) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quotesByReferenceId,
@@ -185,7 +189,7 @@ class Queries {
   static Future<List<Quote>> quotesByTopics(
     BuildContext context, String topic,
   ) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quotesByTopics,
@@ -205,7 +209,7 @@ class Queries {
   }
 
   static Future<Quotidian> quotidian(BuildContext context) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quotidian,
@@ -221,7 +225,7 @@ class Queries {
   }
 
   static Future<QuotidiansResponse> quotidians(BuildContext context) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quotidians,
@@ -237,7 +241,7 @@ class Queries {
   }
 
   static Future<List<Author>> randomAuthors(BuildContext context, String quoteLang) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.randomAuthors,
@@ -261,7 +265,7 @@ class Queries {
   }
 
   static Future<List<Reference>> randomReferences(BuildContext context, String quoteLang) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.randomReferences,
@@ -287,7 +291,7 @@ class Queries {
   static Future<QuotesResponse> recent(
     BuildContext context, int limit, int order, int skip,
   ) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.quotes,
@@ -302,7 +306,7 @@ class Queries {
   static Future<Reference> reference(
     BuildContext context, String id,
   ) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.reference,
@@ -320,7 +324,7 @@ class Queries {
     int order,
     int skip,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.starred,
@@ -336,7 +340,7 @@ class Queries {
     BuildContext context,
     String id,
   }) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.tempQuote,
@@ -349,7 +353,7 @@ class Queries {
   }
 
   static Future<String> todayTopic(BuildContext context) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
         QueryOptions(
           documentNode: QueriesOperations.todayTopics,
@@ -363,7 +367,7 @@ class Queries {
   }
 
   static Future<List<String>> topics(BuildContext context) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
     .query(
       QueryOptions(
         documentNode: QueriesOperations.topics,
@@ -383,7 +387,7 @@ class Queries {
   }
 
   static Future<BooleanMessage> updateEmailStepOne(BuildContext context, String newEmail) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
       QueryOptions(
         documentNode: QueriesOperations.updateEmailStepOne,
@@ -406,7 +410,7 @@ class Queries {
   }
 
   static Future<UserData> userData(BuildContext context) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
       .query(
       QueryOptions(
         documentNode: QueriesOperations.userData,

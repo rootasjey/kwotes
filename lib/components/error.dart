@@ -39,7 +39,7 @@ class ErrorComponent extends StatelessWidget {
       return TryResponse(hasErrors: true, reason: ErrorReason.credentials);
     }
 
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
+    final httpClientModel = Provider.of<HttpClientsModel>(context, listen: false);
 
     return httpClientModel.client.value.mutate(MutationOptions(
         documentNode: parseString(signinMutation),
@@ -54,7 +54,7 @@ class ErrorComponent extends StatelessWidget {
 
         var userData = UserData.fromJSON(signinJson);
 
-        final userDataModel = Provider.of<UserDataModel>(context);
+        final userDataModel = Provider.of<UserDataModel>(context, listen: false);
 
         userDataModel
           ..update(userData)

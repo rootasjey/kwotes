@@ -11,14 +11,17 @@ import 'package:memorare/types/try_response.dart';
 import 'package:provider/provider.dart';
 
 class Mutations {
+  static GraphQLClient getClient(BuildContext context) {
+    return Provider.of<HttpClientsModel>(context, listen: false).defaultClient.value;
+  }
+
   static Future<BooleanMessage> addUniqToList(
     BuildContext context,
     String listId,
     String quoteId,
   ) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.addUniqToList,
         variables: {'listId': listId, 'quoteId': quoteId},
@@ -45,9 +48,7 @@ class Mutations {
     String quoteId,
   }) {
 
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
-
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
       documentNode: MutationsOperations.createList,
       variables: {
@@ -62,10 +63,7 @@ class Mutations {
   }
 
   static Future<String> createDraft({BuildContext context}) {
-    final clientsModels = Provider.of<HttpClientsModel>(context);
-    final client = clientsModels.defaultClient.value;
-
-    return client.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.createDraft,
         variables: {
@@ -100,10 +98,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> createTempQuote({BuildContext context}) async {
-    final clientsModels = Provider.of<HttpClientsModel>(context);
-    final client = clientsModels.defaultClient.value;
-
-    return client.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.createTempQuote,
         variables: {
@@ -148,7 +143,7 @@ class Mutations {
   }
 
   static Future<TryResponse> deleteAccount(BuildContext context, String password) {
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
     .mutate(MutationOptions(
       documentNode: MutationsOperations.deleteAccount,
       variables: {'password': password},
@@ -166,9 +161,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> deleteAllDrafts({BuildContext context}) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
-
-    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+    return getClient(context).mutate(MutationOptions(
       documentNode: MutationsOperations.deleteAllDrafts,
     ))
     .then((queryResult) {
@@ -190,9 +183,8 @@ class Mutations {
     BuildContext context,
     String id
   }) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+    return getClient(context).mutate(MutationOptions(
       documentNode: MutationsOperations.deleteDraft,
       variables: {'id': id},
     ))
@@ -212,9 +204,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> deleteList(BuildContext context, String id) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
-
-    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+    return getClient(context).mutate(MutationOptions(
       documentNode: MutationsOperations.deleteList,
       variables: {'id': id},
     ))
@@ -234,9 +224,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> deleteTempQuote(BuildContext context, String id) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
-
-    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+    return getClient(context).mutate(MutationOptions(
       documentNode: MutationsOperations.deleteTempQuote,
       variables: {'id': id},
     ))
@@ -260,9 +248,8 @@ class Mutations {
     String listId,
     String quoteId,
   ) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.removeFromList,
         variables: {'listId': listId, 'quoteId': quoteId},
@@ -283,9 +270,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> star(BuildContext context, String quoteId) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
-
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.star,
         variables: {'quoteId': quoteId},
@@ -307,9 +292,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> unstar(BuildContext context, String quoteId) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
-
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.unstar,
         variables: {'quoteId': quoteId},
@@ -331,9 +314,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> updateDraft({BuildContext context}) async {
-    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
-
-    return client.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.updateDraft,
         variables: {
@@ -382,9 +363,8 @@ class Mutations {
     BuildContext context,
     String imgUrl,
   ) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.updateImgUrl,
         variables: {'imgUrl': imgUrl},
@@ -394,7 +374,7 @@ class Mutations {
 
       final String imgUrl = jsonMap['imgUrl'];
 
-      final userDataModel = Provider.of<UserDataModel>(context);
+      final userDataModel = Provider.of<UserDataModel>(context, listen: false);
 
       userDataModel.setImgUrl(imgUrl);
 
@@ -411,9 +391,8 @@ class Mutations {
     String name,
     String description,
   ) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.updateList,
         variables: {'id': id, 'name': name, 'description': description},
@@ -438,7 +417,7 @@ class Mutations {
     String name,
   ) {
 
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
     .mutate(
       MutationOptions(
         documentNode: MutationsOperations.updateName,
@@ -458,7 +437,7 @@ class Mutations {
     String confirmPassword,
   ) {
 
-    return Provider.of<HttpClientsModel>(context).defaultClient.value
+    return getClient(context)
     .mutate(
       MutationOptions(
         documentNode: MutationsOperations.updatePassword,
@@ -487,9 +466,7 @@ class Mutations {
   }
 
   static Future<BooleanMessage> updateTempQuote({BuildContext context}) async {
-    final client = Provider.of<HttpClientsModel>(context).defaultClient.value;
-
-    return client.mutate(
+    return getClient(context).mutate(
       MutationOptions(
         documentNode: MutationsOperations.updateTempQuote,
         variables: {
@@ -537,9 +514,8 @@ class Mutations {
   static Future<BooleanMessage> validateTempQuote(
     BuildContext context, String id
   ) {
-    final httpClientModel = Provider.of<HttpClientsModel>(context);
 
-    return httpClientModel.defaultClient.value.mutate(MutationOptions(
+    return getClient(context).mutate(MutationOptions(
       documentNode: MutationsOperations.validateTempQuote,
       variables: {'id': id, 'ignoreStatus':  true},
     ))

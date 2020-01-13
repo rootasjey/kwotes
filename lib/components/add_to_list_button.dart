@@ -144,6 +144,8 @@ class _AddToListButtonState extends State<AddToListButton> {
   }
 
   Widget tileList(QuotesList list) {
+    final _context = widget.context ?? context;
+
     return ListTile(
       onTap: () {
         addQuoteToList(
@@ -152,7 +154,7 @@ class _AddToListButtonState extends State<AddToListButton> {
           listName: list.name
         );
 
-        Navigator.pop(context);
+        Navigator.pop(_context);
       },
       title: Text(
         list.name,
@@ -329,7 +331,7 @@ class _AddToListButtonState extends State<AddToListButton> {
     final _context = widget.context ?? context;
 
     Mutations
-    .addUniqToList(context, listId, widget.quoteId)
+    .addUniqToList(_context, listId, widget.quoteId)
     .then((resp) {
       if (resp.boolean) {
         Flushbar(

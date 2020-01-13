@@ -30,7 +30,7 @@ dependencies:
   flutter_swiper: 1.1.6
   graphql_flutter: 2.1.1-beta.5
   path_provider: 1.5.1
-  provider: 3.2.0
+  provider: 4.0.1
   share: 0.6.3+5
   url_launcher: 5.4.1
   workmanager: 0.2.0

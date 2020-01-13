@@ -119,14 +119,14 @@ class MainState extends State<Main> {
     getApiConfig()
       .then((apiConfig) {
         setState(() {
-          Provider.of<HttpClientsModel>(context).setApiConfig(apiConfig);
+          Provider.of<HttpClientsModel>(context, listen: false).setApiConfig(apiConfig);
         });
 
-        final userDataModel = Provider.of<UserDataModel>(context);
+        final userDataModel = Provider.of<UserDataModel>(context, listen: false);
 
         userDataModel.readFromFile()
           .then((_) {
-            Provider.of<HttpClientsModel>(context)
+            Provider.of<HttpClientsModel>(context, listen: false)
               .setToken(
                 token: userDataModel.data.token,
                 context: context
@@ -135,7 +135,7 @@ class MainState extends State<Main> {
           .then((_) {
             Queries.todayTopic(context)
               .then((topic) {
-                Provider.of<ThemeColor>(context).updatePalette(context, topic);
+                Provider.of<ThemeColor>(context, listen: false).updatePalette(context, topic);
               });
           })
           .then((_) {

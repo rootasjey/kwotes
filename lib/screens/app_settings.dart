@@ -103,7 +103,7 @@ class _AppPageSettingsState extends State<AppPageSettings> {
             });
 
             DynamicTheme.of(context).setBrightness(brightness);
-            Provider.of<ThemeColor>(context).updateBackground(brightness);
+            Provider.of<ThemeColor>(context, listen: false).updateBackground(brightness);
           },
         ),
         RadioListTile(
@@ -122,7 +122,7 @@ class _AppPageSettingsState extends State<AppPageSettings> {
             });
 
             DynamicTheme.of(context).setBrightness(brightness);
-            Provider.of<ThemeColor>(context).updateBackground(brightness);
+            Provider.of<ThemeColor>(context, listen: false).updateBackground(brightness);
           },
         ),
       ],

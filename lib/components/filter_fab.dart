@@ -15,7 +15,7 @@ class FilterFab extends StatefulWidget {
 class _FilterFabState extends State<FilterFab> {
   @override
   Widget build(BuildContext context) {
-    final accent = Provider.of<ThemeColor>(context).accent;
+    final accent = Provider.of<ThemeColor>(context, listen: false).accent;
 
     return FloatingActionButton(
       onPressed: () {
@@ -28,7 +28,7 @@ class _FilterFabState extends State<FilterFab> {
   }
 
 void showFilterFabModal() {
-  final themeColor = Provider.of<ThemeColor>(context);
+  final themeColor = Provider.of<ThemeColor>(context, listen: false);
   final accent = themeColor.accent;
 
   showModalBottomSheet(
