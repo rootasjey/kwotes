@@ -67,22 +67,38 @@ class ThemeColor extends ChangeNotifier {
 
   static Color topicColor(String topic) {
     switch (topic) {
-      case 'feelings':
-        return Color(0xFFE74C3C);
-      case 'motivation':
-        return Color(0xFF1E90FF);
-      case 'fun':
-        return Color(0xFFF5CD79);
-      case 'reflexion':
-        return Color(0xFFFF793F);
-      case 'philosophy':
-        return Color(0xFF574B90);
-      case 'fact':
-        return Color(0xFFF19066);
       case 'beliefs':
         return Color(0xFF303952);
+      case 'death':
+        return Color(0xFF2D1457);
+      case 'fact':
+        return Color(0xFFF19066);
+      case 'feelings':
+        return Color(0xFFE74C3C);
+      case 'fun':
+        return Color(0xFFFFC11E);
+      case 'improvement':
+        return Color(0xFFF85C50);
+      case 'life':
+        return Color(0xFF41B619);
+      case 'meaning':
+        return Color(0xFF70E852);
+      case 'motivation':
+        return Color(0xFF1E90FF);
+      case 'philosophy':
+        return Color(0xFF574B90);
       case 'poetry':
         return Color(0xFF546DE5);
+      case 'purpose':
+        return Color(0xFF242240);
+      case 'reflexion':
+        return Color(0xFF2300B0);
+      case 'sens':
+        return Color(0xFF00DFC8);
+      case 'suffering':
+        return Color(0xFFBC0022);
+      case 'technology':
+        return Color(0xFF0351C1);
       default:
         return primary;
     }
