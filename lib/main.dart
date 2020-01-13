@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/app_notifications.dart';
 import 'package:memorare/background_tasks.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/data/queries.dart';
@@ -13,20 +15,19 @@ import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/topics.dart';
+import 'package:memorare/types/app_settings.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 
-const backgroundTaskName = 'memorareTask';
-
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
     switch (task) {
-      case backgroundTaskName:
-        print('android background task');
+      case BackgroundTasks.name:
+        debugPrint('android background task');
         break;
       case Workmanager.iOSBackgroundTask:
-        print('iOS background fetch');
+        debugPrint('iOS background fetch');
         break;
     }
 
@@ -36,21 +37,6 @@ void callbackDispatcher() {
     await BackgroundTasks.saveQuotidian(quotidian: quotidian);
     return Future.value(true);
   });
-
-
-  // For notifications
-  // ----------------
-  // final directory = await getApplicationDocumentsDirectory();
-  // final path = '${directory.path}/quotidian';
-  // final file = File(path);
-
-  // try {
-  //   final str = file.readAsStringSync();
-  //   final json = jsonDecode(str);
-  //   final quotidian = Quotidian.fromJSON(json);
-  //   print(quotidian);
-
-  // } catch (e) {}
 }
 
 void main() => runApp(App());
@@ -151,18 +137,26 @@ class MainState extends State<Main> {
           })
           .then((_) {
             Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
-            // Workmanager.registerOneOffTask(
-            //   '1',
-            //   backgroundTaskName,
-            //   initialDelay: Duration(seconds: 5),
-            //   constraints: Constraints(
-            //     networkType: NetworkType.connected,
-            //   ),
-            //   inputData: {
-            //     'url': url,
-            //     'apiKey': apiKey,
-            //   }
-            // );
+            AppNotifications.initialize(context);
+
+            AppSettings.readFromFile()
+              .then((_) {
+                if (AppSettings.isFirstLaunch) {
+                  AppSettings.updateFirstLaunch(false);
+                  AppNotifications.scheduleNotifications();
+
+                  if (Platform.isAndroid) {
+                    Workmanager.registerPeriodicTask(
+                      '1',
+                      BackgroundTasks.name,
+                      frequency: Duration(hours: 6),
+                      constraints: Constraints(
+                        networkType: NetworkType.connected,
+                      ),
+                    );
+                  }
+                }
+              });
           });
       });
   }
