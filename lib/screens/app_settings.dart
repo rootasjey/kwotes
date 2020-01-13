@@ -178,8 +178,6 @@ class _AppPageSettingsState extends State<AppPageSettings> {
       return;
     }
 
-    AppNotifications.scheduleNotifications();
-
     if (Platform.isAndroid) {
       Workmanager.registerPeriodicTask(
         '1',

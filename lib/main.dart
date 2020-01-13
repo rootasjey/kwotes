@@ -43,7 +43,8 @@ void callbackDispatcher() {
     final quotidian = await BackgroundTasks.fetchQuotidian();
     if (quotidian == null) { return Future.value(true); }
 
-    await BackgroundTasks.saveQuotidian(quotidian: quotidian);
+    AppNotifications.initialize();
+    await AppNotifications.scheduleNotifications(quotidian: quotidian);
     return Future.value(true);
   });
 }

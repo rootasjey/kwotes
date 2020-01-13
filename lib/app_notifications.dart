@@ -36,8 +36,10 @@ class AppNotifications {
     );
   }
 
-  static void scheduleNotifications() async {
-    final time = Time(8, 0 , 0);
+  static Future scheduleNotifications({Quotidian quotidian}) async {
+    if (quotidian == null) { return; }
+
+    _plugin.cancelAll();
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'memorare_quotidian', 'Quotidian from Memorare', 'Daily quote from Memorare',
@@ -52,14 +54,14 @@ class AppNotifications {
       iOSPlatformChannelSpecifics
     );
 
-    final quotidian = await getSavedQuotidian();
-    if (quotidian == null) { return; }
+    final now = DateTime.now().add(Duration(days: 1));
+    final scheduledDateTime = DateTime(now.year, now.month, now.day, 8);
 
-    await _plugin.showDailyAtTime(
+    await _plugin.schedule(
       0,
       'Quotidian',
       '${quotidian.quote.name} - ${quotidian.quote.author.name}',
-      time,
+      scheduledDateTime,
       platformChannelSpecifics,
       payload: quotidian.quote.id
     );
