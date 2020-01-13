@@ -14,9 +14,7 @@ class ThemeColor extends ChangeNotifier {
 
   bool isColorLoaded = false;
 
-  void updatePalette(BuildContext context, String topic) {
-    updateAccent(topic);
-
+  void initializeBackgroundColor(BuildContext context) {
     final dynamicTheme = DynamicTheme.of(context);
     if (dynamicTheme == null) { return; }
 
@@ -25,6 +23,11 @@ class ThemeColor extends ChangeNotifier {
 
     blackOrWhite = dynamicTheme.brightness == Brightness.dark ?
       Colors.white : Colors.black;
+  }
+
+  void updatePalette(BuildContext context, String topic) {
+    updateAccent(topic);
+    initializeBackgroundColor(context);
   }
 
   void updateAccent(String topic) {
