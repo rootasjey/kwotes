@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:memorare/app_keys.dart';
 import 'package:memorare/app_notifications.dart';
 import 'package:memorare/background_tasks.dart';
 import 'package:memorare/common/icons_more_icons.dart';
@@ -56,19 +56,9 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  Map<String, dynamic> _apiConfig;
-
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<Map<String, dynamic>> getApiConfig() async {
-    var jsonFile = await DefaultAssetBundle.of(context)
-      .loadString('assets/api.json');
-
-    Map<String, dynamic> apiConfig = jsonDecode(jsonFile);
-    return apiConfig;
   }
 
   @override
@@ -76,7 +66,7 @@ class AppState extends State<App> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserDataModel>(create: (context) => UserDataModel(),),
-        ChangeNotifierProvider<HttpClientsModel>(create: (context) => HttpClientsModel(apiConfig: _apiConfig),),
+        ChangeNotifierProvider<HttpClientsModel>(create: (context) => HttpClientsModel(uri: AppKeys.uri, apiKey: AppKeys.apiKey),),
         ChangeNotifierProvider<ThemeColor>(create: (context) => ThemeColor(),),
       ],
       child: DynamicTheme(
@@ -116,67 +106,51 @@ class MainState extends State<Main> {
   void initState() {
     super.initState();
 
-    getApiConfig()
-      .then((apiConfig) {
-        setState(() {
-          Provider.of<HttpClientsModel>(context, listen: false).setApiConfig(apiConfig);
+    final userDataModel = Provider.of<UserDataModel>(context, listen: false);
+    userDataModel.readFromFile()
+    .then((_) {
+      Provider.of<HttpClientsModel>(context, listen: false)
+        .setToken(
+          token: userDataModel.data.token,
+          context: context
+        );
+    })
+    .then((_) {
+      Queries.todayTopic(context)
+        .then((topic) {
+          Provider.of<ThemeColor>(context, listen: false).updatePalette(context, topic);
         });
+    })
+    .then((_) {
+      if (userDataModel.data.id == null || userDataModel.data.id.isEmpty) {
+        return;
+      }
 
-        final userDataModel = Provider.of<UserDataModel>(context, listen: false);
+      userDataModel.fetchAndUpdate(context);
+    })
+    .then((_) {
+      Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
+      AppNotifications.initialize(context: context);
 
-        userDataModel.readFromFile()
-          .then((_) {
-            Provider.of<HttpClientsModel>(context, listen: false)
-              .setToken(
-                token: userDataModel.data.token,
-                context: context
+      AppSettings.readFromFile()
+        .then((_) {
+          if (AppSettings.isFirstLaunch) {
+            AppSettings.updateFirstLaunch(false);
+            AppNotifications.scheduleNotifications();
+
+            if (Platform.isAndroid) {
+              Workmanager.registerPeriodicTask(
+                '1',
+                BackgroundTasks.name,
+                frequency: Duration(hours: 6),
+                constraints: Constraints(
+                  networkType: NetworkType.connected,
+                ),
               );
-          })
-          .then((_) {
-            Queries.todayTopic(context)
-              .then((topic) {
-                Provider.of<ThemeColor>(context, listen: false).updatePalette(context, topic);
-              });
-          })
-          .then((_) {
-            if (userDataModel.data.id == null || userDataModel.data.id.isEmpty) {
-              return;
             }
-
-            userDataModel.fetchAndUpdate(context);
-          })
-          .then((_) {
-            Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
-            AppNotifications.initialize(context: context);
-
-            AppSettings.readFromFile()
-              .then((_) {
-                if (AppSettings.isFirstLaunch) {
-                  AppSettings.updateFirstLaunch(false);
-                  AppNotifications.scheduleNotifications();
-
-                  if (Platform.isAndroid) {
-                    Workmanager.registerPeriodicTask(
-                      '1',
-                      BackgroundTasks.name,
-                      frequency: Duration(hours: 6),
-                      constraints: Constraints(
-                        networkType: NetworkType.connected,
-                      ),
-                    );
-                  }
-                }
-              });
-          });
-      });
-  }
-
-  Future<Map<String, dynamic>> getApiConfig() async {
-    var jsonFile = await DefaultAssetBundle.of(context)
-      .loadString('assets/api.json');
-
-    Map<String, dynamic> apiConfig = jsonDecode(jsonFile);
-    return apiConfig;
+          }
+        });
+    });
   }
 
   void _onItemTapped(int index) {

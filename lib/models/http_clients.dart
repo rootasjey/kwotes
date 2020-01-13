@@ -6,8 +6,9 @@ import 'package:memorare/components/error.dart';
 class HttpClientsModel extends ChangeNotifier {
   ValueNotifier<GraphQLClient> _client;
   ValueNotifier<GraphQLClient> _authClient;
-  Map<String, dynamic> _apiConfig;
   String _token = '';
+  String _uri = '';
+  String _apiKey = '';
 
   ValueNotifier<GraphQLClient> get client => _client;
   ValueNotifier<GraphQLClient> get authClient => _authClient;
@@ -16,8 +17,9 @@ class HttpClientsModel extends ChangeNotifier {
   ///
   /// Because cannot change headers after client creation.
   /// Consider ditching graphql_flutter?
-  HttpClientsModel({Map<String, dynamic> apiConfig}) {
-    _apiConfig = apiConfig;
+  HttpClientsModel({String uri = '', String apiKey = ''}) {
+    _uri = uri;
+    _apiKey = apiKey;
     initClient();
   }
 
@@ -37,9 +39,9 @@ class HttpClientsModel extends ChangeNotifier {
 
   void initClient() {
     final HttpLink httpLink = HttpLink(
-      uri: _apiConfig != null ? _apiConfig['url'] : '',
+      uri: _uri,
       headers: {
-        'apikey': _apiConfig != null ? _apiConfig['apikey'] : '',
+        'apikey': _apiKey,
       },
     );
 
@@ -51,19 +53,14 @@ class HttpClientsModel extends ChangeNotifier {
     );
   }
 
-  void setApiConfig(Map<String, dynamic> apiConfig) {
-    _apiConfig = apiConfig;
-    initClient();
-  }
-
   /// Provide a user's token to make auth requests.
   void setToken({String token, BuildContext context}) {
     _token = token;
 
     final HttpLink httpLink = HttpLink(
-      uri: _apiConfig['url'],
+      uri: _uri,
       headers: {
-        'apikey': _apiConfig['apikey'],
+        'apikey': _apiKey,
         'token': _token,
       },
     );
