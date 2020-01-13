@@ -12,7 +12,7 @@ class AppNotifications {
 
   static FlutterLocalNotificationsPlugin get plugin => _plugin;
 
-  static void initialize(BuildContext context) {
+  static void initialize({BuildContext context}) {
     _plugin = FlutterLocalNotificationsPlugin();
 
     final androidInitSettings = AndroidInitializationSettings('memorare_icon');
@@ -28,7 +28,6 @@ class AppNotifications {
 
         debugPrint('notification payload: $payload');
 
-        // return Future.value(true);
         await Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => QuotePage(quoteId: payload,))

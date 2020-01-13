@@ -146,7 +146,7 @@ class MainState extends State<Main> {
           })
           .then((_) {
             Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
-            AppNotifications.initialize(context);
+            AppNotifications.initialize(context: context);
 
             AppSettings.readFromFile()
               .then((_) {
