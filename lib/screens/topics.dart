@@ -1,5 +1,6 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/error.dart';
+import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
@@ -16,13 +17,16 @@ class _TopicsState extends State<Topics> {
   List<String> topicsList = [];
   bool isLoading = false;
   bool hasErrors = false;
+  bool hasConnection = false;
   String exceptionMessage =  '';
 
   @override
   void initState() {
     super.initState();
+
     setState(() {
       topicsList = _topicsList;
+      isLoading = true;
     });
   }
 
@@ -30,8 +34,21 @@ class _TopicsState extends State<Topics> {
   didChangeDependencies () {
     super.didChangeDependencies();
 
-    if (topicsList.length > 0) { return; }
-    fetchTopics();
+    DataConnectionChecker().hasConnection
+      .then((_hasConnection) {
+        hasConnection = _hasConnection;
+
+        if (!hasConnection) {
+          setState(() {
+            isLoading = false;
+          });
+
+          return;
+        }
+
+        if (topicsList.length > 0) { return; }
+        fetchTopics();
+      });
   }
 
   @override
@@ -42,10 +59,50 @@ class _TopicsState extends State<Topics> {
 
   @override
   Widget build(BuildContext context) {
+    if (!isLoading && !hasConnection) {
+      return EmptyView(
+        title: 'No connection',
+        description: 'Memorare cannot reach Internet right now.',
+        onRefresh: () {
+          DataConnectionChecker().hasConnection
+            .then((_hasConnection) {
+              if (!hasConnection) { return; }
+
+              fetchTopics();
+            });
+        },
+      );
+    }
+
+    if (isLoading) {
+      return LoadingComponent();
+    }
+
+    if (!isLoading && hasErrors) {
+      return EmptyView(
+        title: 'Topics',
+        description: exceptionMessage.isNotEmpty ?
+          exceptionMessage : 'An unexpected error ocurred. Please try again.',
+        onRefresh: () {
+          fetchTopics();
+        },
+      );
+    }
+
     List<Widget> topicChips = [];
 
     for (var topic in topicsList) {
       topicChips.add(topicChip(topic));
+    }
+
+    if (topicChips.length == 0) {
+      return EmptyView(
+        title: 'Topics',
+        description: 'Sorry, no topic could be retrieved for now.',
+        onRefresh: () {
+          fetchTopics();
+        },
+      );
     }
 
     return RefreshIndicator(
@@ -65,59 +122,10 @@ class _TopicsState extends State<Topics> {
             ),
           ),
 
-          if (isLoading)
-            LoadingComponent(),
-
-          if (!isLoading && hasErrors)
-            ErrorComponent(description: exceptionMessage, title: 'Topics',),
-
-          if (topicChips.length == 0)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 60.0),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Sorry, no topic could be retrieved for now.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 40.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        setState(() {
-                          isLoading = true;
-                        });
-
-                        fetchTopics()
-                          .then((topics) {
-                            setState(() {
-                              topicsList = topics;
-                              isLoading = false;
-                            });
-                          });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text(
-                          'Try again',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-
-          if (isLoading == false && hasErrors == false && topicChips.length > 0)
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: topicChips,
-            ),
+          Wrap(
+            alignment: WrapAlignment.center,
+            children: topicChips,
+          ),
         ],
       ),
     );
@@ -152,11 +160,22 @@ class _TopicsState extends State<Topics> {
     );
   }
 
-  Future fetchTopics() {
+  Future fetchTopics() async {
     setState(() {
       isLoading = true;
       hasErrors = false;
     });
+
+    hasConnection = await DataConnectionChecker().hasConnection;
+
+    if (!hasConnection) {
+      setState(() {
+        isLoading = false;
+        hasErrors = true;
+      });
+
+      return;
+    }
 
     return Queries.topics(context)
       .then((topicsResp) {

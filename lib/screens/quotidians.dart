@@ -1,3 +1,4 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -31,6 +32,7 @@ class _QuotidiansState extends State<Quotidians> {
 
   bool isLoading = false;
   bool hasErrors = false;
+  bool hasConnection = false;
   Error error;
 
   @override
@@ -66,10 +68,22 @@ class _QuotidiansState extends State<Quotidians> {
       );
     }
 
-    if (hasErrors) {
+    if (!hasConnection) {
       return ErrorComponent(
-        description: error != null ? error.toString() : '',
+        description: 'Memorare cannot connect to Internet. Please check your connectivity or contact us if the problem persists.',
         title: 'Quotidians',
+      );
+    }
+
+    if (hasErrors) {
+      return EmptyView(
+        title: 'Quotidians',
+        description: error != null ?
+          error.toString() :
+          'An unexpected error ocurred. Please try again.',
+        onRefresh: () {
+          fetchQuotidians();
+        },
       );
     }
 
@@ -335,10 +349,25 @@ class _QuotidiansState extends State<Quotidians> {
     );
   }
 
-  Future fetchQuotidians() {
+  Future fetchQuotidians() async {
     setState(() {
       isLoading = true;
     });
+
+    hasConnection = await DataConnectionChecker().hasConnection;
+
+    if (!hasConnection) {
+      setState(() {
+        isLoading = false;
+      });
+
+      Flushbar(
+        backgroundColor: ThemeColor.error,
+        message: 'You are offline because Memorare cannot access Internet.',
+      )..show(context);
+
+      return;
+    }
 
     return Queries.quotidians(context)
     .then((resp) {

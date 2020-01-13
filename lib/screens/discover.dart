@@ -1,6 +1,6 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/models/user_data.dart';
@@ -23,7 +23,10 @@ class _DiscoverState extends State<Discover> {
   List<Reference> references = [];
   List<Author> authors = [];
 
+  String lang = 'en';
+
   bool isLoading = false;
+  bool hasConnection = false;
   bool hasErrorsAuthors = false;
   bool hasErrorsReferences = false;
   Error error;
@@ -31,9 +34,11 @@ class _DiscoverState extends State<Discover> {
   @override
   void initState() {
     super.initState();
+
     setState(() {
       references = _references;
       authors = _authors;
+      isLoading = true;
     });
   }
 
@@ -41,16 +46,33 @@ class _DiscoverState extends State<Discover> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (authors.length > 0 || references.length > 0) {
-      return;
-    }
+    DataConnectionChecker().hasConnection
+    .then((_hasConnection) {
+      hasConnection = _hasConnection;
 
-    final userData = Provider.of<UserDataModel>(context);
-    final lang = userData.data.lang != null && userData.data.lang.isNotEmpty ?
-      userData.data.lang : 'en';
+      if (!hasConnection) {
+        setState(() {
+          isLoading = false;
+        });
 
-    fetchRandomAuthors(lang);
-    fetchRandomReferences(lang);
+        return;
+      }
+
+      if (authors.length > 0 || references.length > 0) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      final userData = Provider.of<UserDataModel>(context);
+      lang = (userData.data.lang != null && userData.data.lang.isNotEmpty) ?
+        userData.data.lang : 'en';
+
+      fetchRandomAuthors(lang);
+      fetchRandomReferences(lang);
+    });
   }
 
   @override
@@ -68,6 +90,17 @@ class _DiscoverState extends State<Discover> {
           final themeColor = Provider.of<ThemeColor>(context);
           final backgroundColor = themeColor.background;
 
+          if (!isLoading && !hasConnection) {
+            return EmptyView(
+              title: 'No connection',
+              description: 'Memorare cannot reach Internet right now.',
+              onRefresh: () {
+                fetchRandomAuthors(lang);
+                fetchRandomReferences(lang);
+              },
+            );
+          }
+
           if (isLoading) {
             return LoadingComponent(
               backgroundColor: Colors.transparent,
@@ -77,9 +110,15 @@ class _DiscoverState extends State<Discover> {
           }
 
           if (hasErrorsAuthors && hasErrorsReferences) {
-            return ErrorComponent(
-              description: error != null ? error.toString() : '',
+            return EmptyView(
               title: 'Discover',
+              description: error != null ?
+                error.toString()
+                : 'An unexpected error ocurred. Please try again.',
+              onRefresh: () {
+                fetchRandomAuthors(lang);
+                fetchRandomReferences(lang);
+              },
             );
           }
 
@@ -249,39 +288,64 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
-  Future fetchRandomAuthors(String lang) {
+  Future fetchRandomAuthors(String lang) async {
     setState(() {
       isLoading = true;
+      hasErrorsAuthors = false;
     });
+
+    hasConnection = await DataConnectionChecker().hasConnection;
+
+    if (!hasConnection) {
+      setState(() {
+        isLoading = false;
+        hasErrorsAuthors = true;
+      });
+
+      return;
+    }
 
     return Queries.randomAuthors(context, lang)
-    .then((authorsResp) {
-      setState(() {
-        authors = authorsResp.toSet().toList();
-        isLoading = false;
+      .then((authorsResp) {
+        setState(() {
+          authors = authorsResp.toSet().toList();
+          isLoading = false;
+        });
+      })
+      .catchError((err) {
+        setState(() {
+          error = err;
+          hasErrorsAuthors = true;
+          isLoading = false;
+        });
       });
-    })
-    .catchError((err) {
-      setState(() {
-        error = err;
-        hasErrorsAuthors = true;
-        isLoading = false;
-      });
-    });
   }
 
-  Future fetchRandomReferences(String lang) {
-    return Queries.randomReferences(context, lang)
-    .then((referencesResp) {
+  Future fetchRandomReferences(String lang) async {
+    hasErrorsReferences = false;
+
+    hasConnection = await DataConnectionChecker().hasConnection;
+
+    if (!hasConnection) {
       setState(() {
-        references = referencesResp.toSet().toList();
+        isLoading = false;
+        hasErrorsAuthors = true;
+      });
+
+      return;
+    }
+
+    return Queries.randomReferences(context, lang)
+      .then((referencesResp) {
+        setState(() {
+          references = referencesResp.toSet().toList();
+          isLoading = false;
+        });
+      })
+      .catchError((err) {
+        error = err;
+        hasErrorsReferences = true;
         isLoading = false;
       });
-    })
-    .catchError((err) {
-      error = err;
-      hasErrorsReferences = true;
-      isLoading = false;
-    });
   }
 }

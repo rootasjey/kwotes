@@ -1,3 +1,4 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
@@ -16,7 +17,26 @@ import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/credentials.dart';
 import 'package:provider/provider.dart';
 
-class Account extends StatelessWidget {
+class Account extends StatefulWidget {
+  @override
+  _AccountState createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
+  bool hasConnection = false;
+
+  @override
+  initState() {
+    super.initState();
+
+    DataConnectionChecker().hasConnection
+      .then((result) {
+        setState(() {
+          hasConnection = result;
+        });
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserDataModel>(context);
@@ -28,7 +48,7 @@ class Account extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0,),
             child: Column(
               children: <Widget>[
-                userData.data.imgUrl.length > 0 ?
+                (userData.data.imgUrl.length > 0) && hasConnection ?
                   CircleAvatar(
                     backgroundImage: NetworkImage('${userData.data.imgUrl}'),
                     radius: 70.0,
@@ -64,7 +84,7 @@ class Account extends StatelessWidget {
         padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
         child: RaisedButton(
           color: Provider.of<ThemeColor>(context).accent,
-          onPressed: () {
+          onPressed: hasConnection ? () {
             Provider.of<UserDataModel>(context)
               ..clear()
               ..setAuthenticated(false);
@@ -81,7 +101,7 @@ class Account extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
             )..show(context);
-          },
+          } : null,
           child: Padding(
             padding: EdgeInsets.all(15.0),
             child: Text(
@@ -91,9 +111,10 @@ class Account extends StatelessWidget {
           ),
         ),
       ),
+
       IconButton(
         icon: Icon(Icons.settings),
-        onPressed: () {
+        onPressed: hasConnection ? () {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
@@ -101,19 +122,21 @@ class Account extends StatelessWidget {
               }
             )
           );
-        },
+        } : null,
       ),
+
       Padding(
         padding: EdgeInsets.only(top: 20.0),
         child: Column(
           children: <Widget>[
             Divider(),
+
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.add, size: 30.0,),
                 title: Text('Add a new quote', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {
+              onPressed: hasConnection ? () {
                 AddQuoteInputs.clearAll();
 
                 Navigator.of(context).push(
@@ -123,14 +146,15 @@ class Account extends StatelessWidget {
                     }
                   )
                 );
-              },
+              } : null,
             ),
+
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.edit, size: 30.0,),
                 title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {
+              onPressed: hasConnection ? () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
@@ -138,14 +162,15 @@ class Account extends StatelessWidget {
                     }
                   )
                 );
-              },
+              } : null,
             ),
+
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.list, size: 30.0,),
                 title: Text('Lists', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {
+              onPressed: hasConnection ? () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
@@ -153,14 +178,15 @@ class Account extends StatelessWidget {
                     }
                   )
                 );
-              },
+              } : null,
             ),
+
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.timelapse, size: 30.0,),
                 title: Text('In validation', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {
+              onPressed: hasConnection ? () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
@@ -168,14 +194,15 @@ class Account extends StatelessWidget {
                     }
                   )
                 );
-              },
+              } : null,
             ),
+
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.favorite, size: 30.0,),
                 title: Text('Favorites', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {
+              onPressed: hasConnection ? () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
@@ -183,14 +210,15 @@ class Account extends StatelessWidget {
                     }
                   )
                 );
-              },
+              } : null,
             ),
+
             FlatButton(
               child: ListTile(
                 leading: Icon(Icons.check, size: 30.0,),
                 title: Text('Published', style: TextStyle(fontSize: 20.0),),
               ),
-              onPressed: () {
+              onPressed: hasConnection ? () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
@@ -198,7 +226,7 @@ class Account extends StatelessWidget {
                     }
                   )
                 );
-              },
+              } : null,
             ),
 
             FlatButton(
@@ -227,7 +255,7 @@ class Account extends StatelessWidget {
       Padding(
         padding: EdgeInsets.only(top: 30.0),
         child: RaisedButton(
-          onPressed: () {
+          onPressed: hasConnection ? () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
@@ -235,7 +263,7 @@ class Account extends StatelessWidget {
                 }
               )
             );
-          },
+          } : null,
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Padding(

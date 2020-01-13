@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -107,6 +108,7 @@ class MainState extends State<Main> {
     super.initState();
 
     final userDataModel = Provider.of<UserDataModel>(context, listen: false);
+
     userDataModel.readFromFile()
     .then((_) {
       Provider.of<HttpClientsModel>(context, listen: false)
@@ -115,13 +117,22 @@ class MainState extends State<Main> {
           context: context
         );
     })
-    .then((_) {
+    .then((_) async {
+      final themeColor = Provider.of<ThemeColor>(context, listen: false);
+      themeColor.initializeBackgroundColor(context);
+
+      final hasConnection = await DataConnectionChecker().hasConnection;
+      if (!hasConnection) { return; }
+
       Queries.todayTopic(context)
         .then((topic) {
-          Provider.of<ThemeColor>(context, listen: false).updatePalette(context, topic);
+          themeColor.updatePalette(context, topic);
         });
     })
-    .then((_) {
+    .then((_) async {
+      final hasConnection = await DataConnectionChecker().hasConnection;
+      if (!hasConnection) { return; }
+
       if (userDataModel.data.id == null || userDataModel.data.id.isEmpty) {
         return;
       }
