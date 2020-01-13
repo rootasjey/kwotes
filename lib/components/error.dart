@@ -9,6 +9,7 @@ import 'package:memorare/types/error_reason.dart';
 import 'package:memorare/types/try_response.dart';
 import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ErrorComponent extends StatelessWidget {
   final String description;
@@ -94,50 +95,39 @@ class ErrorComponent extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 20.0),
               child: Text(
-                'Details: $description',
+                description,
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            ReportButton(),
+
+            Padding(
+              padding: EdgeInsets.only(top: 40.0),
+              child: RaisedButton(
+                color: ThemeColor.error,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    'Report',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  final url = 'mailto:mobile_issues@memorare.app?subject=Mobile%20Issues&body=Issue%20description:%20$description';
+
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  }
+                },
+              ),
+            )
           ],
         ),
-      ),
-    );
-  }
-}
-
-// Because cannot use Scaffold.of(context).showSnackBar
-// on the ErrorComponent.
-class ReportButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 40.0),
-      child: RaisedButton(
-        color: ThemeColor.secondary,
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'Report',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 25.0,
-            ),
-          ),
-        ),
-        onPressed: () {
-          Scaffold.of(context)
-            .showSnackBar(
-              SnackBar(
-                content: Text('Thank you for helping.'),
-              )
-            );
-
-          Navigator.of(context).pop();
-        },
       ),
     );
   }
