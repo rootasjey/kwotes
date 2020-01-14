@@ -358,7 +358,7 @@ class _QuotidiansState extends State<Quotidians> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              reference.name.length > 100 ?
+              reference.name.length < 100 ?
                 reference.name :
                 '${reference.name.substring(0, 100)}...',
               style: TextStyle(
