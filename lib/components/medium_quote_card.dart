@@ -62,6 +62,7 @@ class MediumQuoteCard extends StatelessWidget {
                       child: Center(
                         child: Text(
                           '${quote.name}',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: FontSize.mediumCard(quote.name),
                             fontWeight: FontWeight.bold,
