@@ -324,9 +324,9 @@ class _QuotidiansState extends State<Quotidians> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
         child: Text(
-          quote.name.length < 400 ?
+          quote.name.length < 200 ?
           quote.name :
-          '${quote.name.substring(0, 400)}...',
+          '${quote.name.substring(0, 200)}...',
           style: TextStyle(
             fontSize: FontSize.bigCard(quote.name),
             fontWeight: FontWeight.bold
@@ -446,9 +446,9 @@ class _QuotidiansState extends State<Quotidians> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
         child: Text(
-          quote.name.length < 400 ?
+          quote.name.length < 200 ?
           quote.name :
-          '${quote.name.substring(0, 400)}...',
+          '${quote.name.substring(0, 200)}...',
           style: TextStyle(
             fontSize: FontSize.landscapeBigCard(quote.name),
             fontWeight: FontWeight.bold
