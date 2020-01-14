@@ -48,7 +48,11 @@ class _QuotidiansState extends State<Quotidians> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (quotidians.length > 0) { return; }
+    if (quotidians.length > 0) {
+      hasConnection = true;
+      return;
+    }
+
     fetchQuotidians();
   }
 
