@@ -72,6 +72,9 @@ class _QuotidiansState extends State<Quotidians> {
       return ErrorComponent(
         description: 'Memorare cannot connect to Internet. Please check your connectivity or contact us if the problem persists.',
         title: 'Quotidians',
+        onRefresh: () {
+          fetchQuotidians();
+        },
       );
     }
 

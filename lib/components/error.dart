@@ -14,8 +14,9 @@ import 'package:url_launcher/url_launcher.dart';
 class ErrorComponent extends StatelessWidget {
   final String description;
   final String title;
+  final Function onRefresh;
 
-  ErrorComponent({this.description, this.title});
+  ErrorComponent({this.description, this.onRefresh, this.title});
 
   static Future<TryResponse> trySignin(BuildContext context) async {
     final String signinMutation = """
@@ -125,7 +126,20 @@ class ErrorComponent extends StatelessWidget {
                   }
                 },
               ),
-            )
+            ),
+
+            if (onRefresh != null)
+              Padding(
+                padding: EdgeInsets.only(top: 5.0),
+                child: FlatButton(
+                  onPressed: () {
+                    onRefresh();
+                  },
+                  child: Text(
+                    'Refresh'
+                  ),
+                ),
+              ),
           ],
         ),
       ),
