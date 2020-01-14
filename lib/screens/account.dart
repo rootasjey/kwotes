@@ -5,7 +5,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/add_quote.dart';
-import 'package:memorare/screens/app_settings.dart';
+import 'package:memorare/screens/app_page_settings.dart';
 import 'package:memorare/screens/connect.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/drafts.dart';
