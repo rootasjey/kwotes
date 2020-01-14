@@ -129,58 +129,66 @@ class _QuotidiansState extends State<Quotidians> {
             itemBuilder: (BuildContext context, int index) {
               final quote = quotidians.elementAt(index).quote;
 
-              final topicColor = quote.topics.length > 0 ?
-                ThemeColor.topicColor(quote.topics.first) :
-                ThemeColor.primary;
+              final orientation = MediaQuery.of(context).orientation;
 
-              return Center(
+              return orientation == Orientation.portrait ?
+                portraitCard(quote: quote, index: index) :
+                landscapeCard(quote: quote, index: index);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget portraitCard({Quote quote, int index}) {
+    final topicColor = quote.topics.length > 0 ?
+      ThemeColor.topicColor(quote.topics.first) :
+      ThemeColor.primary;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 580.0,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Card(
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                  side: BorderSide(
+                    color: topicColor,
+                    width: 5.0,
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: 580.0,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Card(
-                          elevation: 5.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(
-                              color: topicColor,
-                              width: 5.0,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              content(quote),
+                    content(quote),
 
-                              author(quote),
+                    author(quote),
 
-                              if (quote.references.length > 0)
-                                reference(quote),
+                    if (quote.references.length > 0)
+                      reference(quote),
 
-                              actionIcons(quote),
-                            ],
-                          ),
-                        ),
-                      )
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Opacity(
-                        opacity: .6,
-                        child: Text(
-                          days.elementAt(index),
-                        ),
-                      ),
-                    )
+                    actionIcons(quote),
                   ],
                 ),
-              );
-            },
+              ),
+            )
           ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                days.elementAt(index),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -352,6 +360,250 @@ class _QuotidiansState extends State<Quotidians> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget landscapeCard({Quote quote, int index}) {
+    final topicColor = quote.topics.length > 0 ?
+      ThemeColor.topicColor(quote.topics.first) :
+      ThemeColor.primary;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 280.0,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Card(
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                  side: BorderSide(
+                    color: topicColor,
+                    width: 5.0,
+                  ),
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        landscapeContent(quote),
+                      ],
+                    ),
+
+                    moreButton(context: context, quote: quote),
+                    landscapeDay(index),
+                  ],
+                ),
+              ),
+            )
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget landscapeDay(int index) {
+    return Positioned(
+      bottom: 10.0,
+      left: 30.0,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5.0),
+        child: Opacity(
+          opacity: .6,
+          child: Text(
+            days.elementAt(index),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget landscapeContent(Quote quote) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return QuotePage(quoteId: quote.id,);
+            }
+          )
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+        child: Text(
+          '${quote.name}',
+          style: TextStyle(
+            fontSize: FontSize.landscapeBigCard(quote.name),
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget landcapeAuthor(Quote quote) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return AuthorPage(
+                id: quote.author.id,
+                authorName: quote.author.name,
+              );
+            }
+          )
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              '${quote.author.name}',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget moreButton({Quote quote, BuildContext context}) {
+    final starred = quote.starred;
+
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: PopupMenuButton<String>(
+        icon: Icon(Icons.more_horiz),
+        onSelected: (value) async {
+          if (value == 'like') {
+            setState(() { // optimistic
+              quote.starred = true;
+            });
+
+            final booleanMessage = await Mutations.star(context, quote.id);
+
+            if (!booleanMessage.boolean) {
+              setState(() { // rollback
+                quote.starred = false;
+              });
+
+              Flushbar(
+                duration: Duration(seconds: 2),
+                backgroundColor: ThemeColor.error,
+                message: booleanMessage.message,
+              )..show(context);
+            }
+            return;
+          }
+
+          if (value == 'unlike') {
+            setState(() { // optimistic
+              quote.starred = false;
+            });
+
+            final booleanMessage = await Mutations.unstar(context, quote.id);
+
+            if (!booleanMessage.boolean) {
+              setState(() { // rollback
+                quote.starred = true;
+              });
+
+              Flushbar(
+                duration: Duration(seconds: 2),
+                backgroundColor: ThemeColor.error,
+                message: booleanMessage.message,
+              )..show(context);
+            }
+            return;
+          }
+
+          if (value == 'addTo') {
+            return;
+          }
+
+          if (value == 'share') {
+            return;
+          }
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          PopupMenuItem(
+            value: 'addTo',
+            child: AddToListButton(
+              context: context,
+              quoteId: quote.id,
+              type: ButtonType.tile,
+              onBeforeShowSheet: () => Navigator.pop(context),
+            ),
+          ),
+          PopupMenuItem(
+            value: 'share',
+            child: ListTile(
+              onTap: () {
+                Navigator.pop(context);
+
+                final RenderBox box = context.findRenderObject();
+                final sharingText = quote.author != null ?
+                  '${quote.name} - ${quote.author.name}' :
+                  quote.name;
+
+                Share.share(
+                  sharingText,
+                  subject: 'Memorare quote',
+                  sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+                );
+              },
+              leading: Icon(Icons.share),
+              title: Text(
+                'Share',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ),
+          if (!starred)
+            const PopupMenuItem(
+              value: 'like',
+              child: ListTile(
+                leading: Icon(Icons.favorite_border),
+                title: Text(
+                  'Like',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+            ),
+          if (starred)
+            const PopupMenuItem(
+              value: 'unlike',
+              child: ListTile(
+                leading: Icon(Icons.favorite),
+                title: Text(
+                  'Unlike',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+            ),
+        ],
       ),
     );
   }
