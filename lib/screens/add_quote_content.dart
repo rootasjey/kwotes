@@ -33,10 +33,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   void initState() {
     super.initState();
 
-    if (AddQuoteInputs.id.isNotEmpty) {
-      _nameController.text = AddQuoteInputs.name;
-      lang = AddQuoteInputs.lang;
-    }
+    _nameController.text = AddQuoteInputs.name;
+    lang = AddQuoteInputs.lang;
   }
 
   @override
