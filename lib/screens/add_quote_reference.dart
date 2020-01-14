@@ -195,6 +195,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       width: 200.0,
       child: TextField(
         controller: _nameController,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           labelText: 'Name',
         ),
@@ -213,6 +214,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           width: 200.0,
           child: TextField(
             controller: _typeController,
+            textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Type',
             ),
@@ -226,6 +228,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           width: 200.0,
           child: TextField(
             controller: _subTypeController,
+            textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Sub-Type',
             ),
@@ -276,6 +279,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             width: 300,
             child: TextField(
               controller: _summaryController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Summary',

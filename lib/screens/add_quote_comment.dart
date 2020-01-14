@@ -100,6 +100,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
             width: 300.0,
             child: TextField(
               controller: _commentController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Add a comment about the quote'

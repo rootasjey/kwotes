@@ -59,6 +59,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                     autofocus: true,
                     controller: _nameController,
                     keyboardType: TextInputType.multiline,
+                    textCapitalization: TextCapitalization.sentences,
                     onChanged: (newValue) {
                       name = newValue;
                       AddQuoteInputs.name = newValue;

@@ -198,6 +198,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           width: 200.0,
           child: TextField(
             controller: _nameController,
+            textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Name',
             ),
@@ -211,6 +212,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           width: 200.0,
           child: TextField(
             controller: _jobController,
+            textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Job',
             ),
@@ -231,6 +233,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         width: 300,
         child: TextField(
           controller: _summaryController,
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Summary',
