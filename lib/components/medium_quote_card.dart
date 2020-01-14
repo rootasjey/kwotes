@@ -61,7 +61,9 @@ class MediumQuoteCard extends StatelessWidget {
                       padding: EdgeInsets.all(25.0),
                       child: Center(
                         child: Text(
-                          '${quote.name}',
+                          quote.name.length < 200 ?
+                            quote.name :
+                            '${quote.name.substring(0, 400)}...',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: FontSize.mediumCard(quote.name),
