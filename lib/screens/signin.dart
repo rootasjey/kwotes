@@ -147,7 +147,7 @@ class SigninState extends State<Signin> {
                           Map<String, dynamic> signinJson = resultData['signin'];
 
                           var userData = UserData.fromJSON(signinJson);
-                          var userDataModel = Provider.of<UserDataModel>(context);
+                          var userDataModel = Provider.of<UserDataModel>(context, listen: false);
 
                           userDataModel
                             ..update(userData)
@@ -156,7 +156,7 @@ class SigninState extends State<Signin> {
 
                           Credentials(email: email, password: password).saveToFile();
 
-                          Provider.of<HttpClientsModel>(context).setToken(token: userData.token);
+                          Provider.of<HttpClientsModel>(context, listen: false).setToken(token: userData.token);
 
                           Navigator.of(context).pop();
                         },
