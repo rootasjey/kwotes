@@ -11,9 +11,10 @@ class MediumQuoteCard extends StatelessWidget {
   final Color color;
   final Function onLike;
   final Function onUnlike;
-  final Quote quote;
   final Function onRemove;
   final String onRemoveText;
+  final Orientation orientation;
+  final Quote quote;
 
   MediumQuoteCard({
     this.color,
@@ -21,6 +22,7 @@ class MediumQuoteCard extends StatelessWidget {
     this.onRemoveText,
     this.onLike,
     this.onUnlike,
+    this.orientation = Orientation.portrait,
     this.quote,
   });
 
@@ -36,11 +38,13 @@ class MediumQuoteCard extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 330.0,
+      height: orientation == Orientation.portrait ?
+        330.0 : 280.0,
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 300.0,
+            height: orientation == Orientation.portrait ?
+              300.0 : 250.0,
             child: Card(
               elevation: 5.0,
               shape: RoundedRectangleBorder(

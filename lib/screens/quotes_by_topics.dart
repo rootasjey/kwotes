@@ -78,60 +78,37 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
             scale: 0.9,
             viewportFraction: 0.8,
             itemBuilder: (BuildContext context, int index) {
-              return Center(
-                child: MediumQuoteCard(
-                  color: topicColor,
-                  quote: quotes.elementAt(index),
-                  onLike: () async {
-                    setState(() { // optimistic
-                      quotes.elementAt(index).starred = true;
-                    });
+              final orientation = MediaQuery.of(context).orientation;
 
-                    final booleanMessage = await Mutations.star(
-                      context,
-                      quotes.elementAt(index).id
-                    );
-
-                    if (!booleanMessage.boolean) {
-                      setState(() { // rollback
-                        quotes.elementAt(index).starred = false;
-                      });
-
-                      Flushbar(
-                        duration: Duration(seconds: 2),
-                        backgroundColor: ThemeColor.error,
-                        message: booleanMessage.message,
-                      )..show(context);
-                    }
-
-                  },
-                  onUnlike: () async {
-                    setState(() { // optimistic
-                      quotes.elementAt(index).starred = false;
-                    });
-
-                    final booleanMessage = await Mutations.unstar(
-                      context,
-                      quotes.elementAt(index).id
-                    );
-
-                    if (!booleanMessage.boolean) {
-                      setState(() { // rollback
-                        quotes.elementAt(index).starred = true;
-                      });
-
-                      Flushbar(
-                        duration: Duration(seconds: 2),
-                        backgroundColor: ThemeColor.error,
-                        message: booleanMessage.message,
-                      )..show(context);
-                    }
-                  },
-                )
-              );
+              return orientation == Orientation.portrait ?
+                verticalCard(index: index, topicColor: topicColor) :
+                horizontalCard(index: index, topicColor: topicColor);
             },
           );
         },
+      )
+    );
+  }
+
+  Widget verticalCard({int index, Color topicColor}) {
+    return Center(
+      child: MediumQuoteCard(
+        color: topicColor,
+        quote: quotes.elementAt(index),
+        onLike: () => onLike(index: index),
+        onUnlike: () => onUnlike(index: index),
+      )
+    );
+  }
+
+  Widget horizontalCard({int index, Color topicColor}) {
+    return Center(
+      child: MediumQuoteCard(
+        color: topicColor,
+        orientation: Orientation.landscape,
+        quote: quotes.elementAt(index),
+        onLike: () => onLike(index: index),
+        onUnlike: () => onUnlike(index: index),
       )
     );
   }
@@ -164,5 +141,51 @@ class _QuotesByTopicsState extends State<QuotesByTopics> {
           hasErrors = true;
         });
       });
+  }
+
+  void onLike({int index}) async {
+    setState(() { // optimistic
+      quotes.elementAt(index).starred = true;
+    });
+
+    final booleanMessage = await Mutations.star(
+      context,
+      quotes.elementAt(index).id
+    );
+
+    if (!booleanMessage.boolean) {
+      setState(() { // rollback
+        quotes.elementAt(index).starred = false;
+      });
+
+      Flushbar(
+        duration: Duration(seconds: 2),
+        backgroundColor: ThemeColor.error,
+        message: booleanMessage.message,
+      )..show(context);
+    }
+  }
+
+  void onUnlike({int index}) async {
+    setState(() { // optimistic
+      quotes.elementAt(index).starred = false;
+    });
+
+    final booleanMessage = await Mutations.unstar(
+      context,
+      quotes.elementAt(index).id
+    );
+
+    if (!booleanMessage.boolean) {
+      setState(() { // rollback
+        quotes.elementAt(index).starred = true;
+      });
+
+      Flushbar(
+        duration: Duration(seconds: 2),
+        backgroundColor: ThemeColor.error,
+        message: booleanMessage.message,
+      )..show(context);
+    }
   }
 }
