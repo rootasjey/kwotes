@@ -296,7 +296,9 @@ class _QuotidiansState extends State<Quotidians> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '${quote.author.name}',
+              quote.author.name.length < 150 ?
+                quote.author.name :
+                '${quote.author.name.substring(0, 150)}...',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -322,7 +324,9 @@ class _QuotidiansState extends State<Quotidians> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
         child: Text(
-          '${quote.name}',
+          quote.name.length < 400 ?
+          quote.name :
+          '${quote.name.substring(0, 400)}...',
           style: TextStyle(
             fontSize: FontSize.bigCard(quote.name),
             fontWeight: FontWeight.bold
@@ -354,7 +358,9 @@ class _QuotidiansState extends State<Quotidians> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              reference.name,
+              reference.name.length > 100 ?
+                reference.name :
+                '${reference.name.substring(0, 100)}...',
               style: TextStyle(
               ),
             ),
@@ -440,7 +446,9 @@ class _QuotidiansState extends State<Quotidians> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
         child: Text(
-          '${quote.name}',
+          quote.name.length < 400 ?
+          quote.name :
+          '${quote.name.substring(0, 400)}...',
           style: TextStyle(
             fontSize: FontSize.landscapeBigCard(quote.name),
             fontWeight: FontWeight.bold
@@ -470,7 +478,9 @@ class _QuotidiansState extends State<Quotidians> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(
-              '${quote.author.name}',
+              quote.author.name.length < 150 ?
+                quote.author.name :
+                '${quote.author.name.substring(0, 150)}...',
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.bold,
