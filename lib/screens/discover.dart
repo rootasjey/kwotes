@@ -66,7 +66,7 @@ class _DiscoverState extends State<Discover> {
         return;
       }
 
-      final userData = Provider.of<UserDataModel>(context);
+      final userData = Provider.of<UserDataModel>(context, listen: false);
       lang = (userData.data.lang != null && userData.data.lang.isNotEmpty) ?
         userData.data.lang : 'en';
 
@@ -189,7 +189,7 @@ class _DiscoverState extends State<Discover> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              final userData = Provider.of<UserDataModel>(context);
+              final userData = Provider.of<UserDataModel>(context, listen: false);
               final lang = userData.data.lang;
 
               await fetchRandomReferences(lang);
