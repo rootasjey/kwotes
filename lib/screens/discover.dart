@@ -26,7 +26,7 @@ class _DiscoverState extends State<Discover> {
   String lang = 'en';
 
   bool isLoading = false;
-  bool hasConnection = false;
+  bool hasConnection = true;
   bool hasErrorsAuthors = false;
   bool hasErrorsReferences = false;
   Error error;
@@ -38,7 +38,6 @@ class _DiscoverState extends State<Discover> {
     setState(() {
       references = _references;
       authors = _authors;
-      isLoading = true;
     });
   }
 
@@ -46,21 +45,15 @@ class _DiscoverState extends State<Discover> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    if (authors.length > 0 || references.length > 0) {
+      return;
+    }
+
     DataConnectionChecker().hasConnection
     .then((_hasConnection) {
-      hasConnection = _hasConnection;
-
       if (!hasConnection) {
         setState(() {
-          isLoading = false;
-        });
-
-        return;
-      }
-
-      if (authors.length > 0 || references.length > 0) {
-        setState(() {
-          isLoading = false;
+          hasConnection = _hasConnection;
         });
 
         return;

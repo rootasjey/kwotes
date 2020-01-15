@@ -23,17 +23,19 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  bool hasConnection = false;
+  bool hasConnection = true;
 
   @override
   initState() {
     super.initState();
 
     DataConnectionChecker().hasConnection
-      .then((result) {
-        setState(() {
-          hasConnection = result;
+      .then((_hasConnection) {
+        if (!_hasConnection) {
+          setState(() {
+          hasConnection = _hasConnection;
         });
+        }
       });
   }
 

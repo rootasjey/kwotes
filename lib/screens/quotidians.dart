@@ -32,7 +32,7 @@ class _QuotidiansState extends State<Quotidians> {
 
   bool isLoading = false;
   bool hasErrors = false;
-  bool hasConnection = false;
+  bool hasConnection = true;
   Error error;
 
   @override
@@ -49,7 +49,6 @@ class _QuotidiansState extends State<Quotidians> {
     super.didChangeDependencies();
 
     if (quotidians.length > 0) {
-      hasConnection = true;
       return;
     }
 
@@ -151,7 +150,7 @@ class _QuotidiansState extends State<Quotidians> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 580.0,
+            height: 560.0,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Card(

@@ -17,7 +17,7 @@ class _TopicsState extends State<Topics> {
   List<String> topicsList = [];
   bool isLoading = false;
   bool hasErrors = false;
-  bool hasConnection = false;
+  bool hasConnection = true;
   String exceptionMessage =  '';
 
   @override
@@ -26,13 +26,16 @@ class _TopicsState extends State<Topics> {
 
     setState(() {
       topicsList = _topicsList;
-      isLoading = true;
     });
   }
 
   @override
   didChangeDependencies () {
     super.didChangeDependencies();
+
+    if (topicsList.length > 0) {
+      return;
+    }
 
     DataConnectionChecker().hasConnection
       .then((_hasConnection) {
@@ -46,7 +49,6 @@ class _TopicsState extends State<Topics> {
           return;
         }
 
-        if (topicsList.length > 0) { return; }
         fetchTopics();
       });
   }
