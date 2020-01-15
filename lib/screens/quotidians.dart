@@ -8,6 +8,7 @@ import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/screens/reference_page.dart';
@@ -15,6 +16,7 @@ import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 enum QuoteAction { addList, like, share }
@@ -34,6 +36,8 @@ class _QuotidiansState extends State<Quotidians> {
   bool hasErrors = false;
   bool hasConnection = true;
   Error error;
+
+  bool isStarredFetched = false;
 
   @override
   initState() {
@@ -63,6 +67,12 @@ class _QuotidiansState extends State<Quotidians> {
 
   @override
   Widget build(BuildContext context) {
+    final httpClients = Provider.of<HttpClientsModel>(context, listen: false);
+
+    if (httpClients.authClient != null && !isStarredFetched) {
+      fetchWhichStarred();
+    }
+
     if (isLoading) {
       return LoadingComponent(
         backgroundColor: Colors.transparent,
@@ -638,25 +648,44 @@ class _QuotidiansState extends State<Quotidians> {
     }
 
     return Queries.quotidians(context)
-    .then((resp) {
-      if (resp == null) {
-        return;
-      }
+      .then((resp) {
+        if (resp == null) {
+          return;
+        }
 
-      resp.entries.insert(1, resp.entries.removeLast());
+        resp.entries.insert(1, resp.entries.removeLast());
 
-      setState(() {
-        hasErrors = false;
-        quotidians = resp.entries;
-        isLoading = false;
+        setState(() {
+          hasErrors = false;
+          quotidians = resp.entries;
+          isLoading = false;
+        });
+      })
+      .catchError((err) {
+        setState(() {
+          error = err;
+          hasErrors = true;
+          isLoading = false;
+        });
       });
-    })
-    .catchError((err) {
-      setState(() {
-        error = err;
-        hasErrors = true;
-        isLoading = false;
-      });
-    });
   }
+
+  Future fetchWhichStarred() async {
+    isStarredFetched = true;
+
+    return Queries.quotidians(context)
+      .then((resp) {
+        resp.entries.insert(1, resp.entries.removeLast());
+
+        if (quotidians.length == 0) { return; }
+
+        for (var i = 0; i < quotidians.length; i++) {
+          quotidians.elementAt(i).quote.starred = resp.entries.elementAt(i).quote.starred;
+        }
+
+        setState(() {});
+      })
+      .catchError((err) {});
+  }
+
 }
