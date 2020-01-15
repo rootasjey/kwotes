@@ -177,6 +177,7 @@ class QueriesOperations {
           references {
             name
           }
+          starred
           topics
         }
         pagination {
@@ -198,6 +199,7 @@ class QueriesOperations {
           }
           id
           name
+          starred
           topics
         }
         pagination {
@@ -212,12 +214,13 @@ class QueriesOperations {
   static DocumentNode quotesByTopics = parseString("""
     query (\$topics: [String!]!) {
       quotesByTopics (topics: \$topics) {
-        id
-        name
         author {
           id
           name
         }
+        id
+        name
+        starred
       }
     }
   """);
