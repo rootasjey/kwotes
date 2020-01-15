@@ -173,7 +173,8 @@ class _AppPageSettingsState extends State<AppPageSettings> {
 
   void toggleBackgroundTask() {
     if (isDailyQuoteActive == false) {
-      Workmanager.cancelAll();
+      if (Platform.isAndroid) { Workmanager.cancelAll(); }
+
       AppNotifications.plugin.cancelAll();
       return;
     }
