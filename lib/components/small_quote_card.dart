@@ -22,7 +22,7 @@ class SmallQuoteCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 195.0,
+            height: 185.0,
             width: 200.0,
             child: Card(
               shape: RoundedRectangleBorder(
@@ -43,7 +43,7 @@ class SmallQuoteCard extends StatelessWidget {
                   );
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(25.0),
+                  padding: EdgeInsets.all(20.0),
                   child: Center(
                     child: Text(
                       (quote.name.length > 51) ?
