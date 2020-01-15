@@ -63,7 +63,7 @@ class MediumQuoteCard extends StatelessWidget {
                         child: Text(
                           quote.name.length < 200 ?
                             quote.name :
-                            '${quote.name.substring(0, 400)}...',
+                            '${quote.name.substring(0, 200)}...',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: FontSize.mediumCard(quote.name),
