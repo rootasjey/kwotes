@@ -234,7 +234,7 @@ class _QuotePageState extends State<QuotePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(30.0),
             iconSize: 40.0,
             icon: Icon(Icons.share,),
             onPressed: () {
@@ -257,7 +257,7 @@ class _QuotePageState extends State<QuotePage> {
 
           if (!quote.starred)
             IconButton(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(30.0),
               iconSize: 40.0,
               icon: Icon(Icons.favorite_border,),
               onPressed: () async {
@@ -283,7 +283,7 @@ class _QuotePageState extends State<QuotePage> {
 
           if (quote.starred)
             IconButton(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(30.0),
               iconSize: 40.0,
               icon: Icon(Icons.favorite,),
               onPressed: () async {
