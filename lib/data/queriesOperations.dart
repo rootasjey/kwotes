@@ -75,6 +75,7 @@ class QueriesOperations {
           entries {
             id
             name
+            starred
             topics
           }
           pagination {
