@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/app_notifications.dart';
-import 'package:memorare/background_tasks.dart';
 import 'package:memorare/types/app_settings.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
 
 class AppPageSettings extends StatefulWidget {
   @override
@@ -173,21 +170,8 @@ class _AppPageSettingsState extends State<AppPageSettings> {
 
   void toggleBackgroundTask() {
     if (isDailyQuoteActive == false) {
-      if (Platform.isAndroid) { Workmanager.cancelAll(); }
-
       AppNotifications.plugin.cancelAll();
       return;
-    }
-
-    if (Platform.isAndroid) {
-      Workmanager.registerPeriodicTask(
-        '1',
-        BackgroundTasks.name,
-        frequency: Duration(hours: 6),
-        constraints: Constraints(
-          networkType: NetworkType.connected,
-        ),
-      );
     }
   }
 }

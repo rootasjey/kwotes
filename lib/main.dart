@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:io';
 
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -7,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/app_keys.dart';
 import 'package:memorare/app_notifications.dart';
-import 'package:memorare/background_tasks.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/account.dart';
@@ -19,36 +16,6 @@ import 'package:memorare/screens/topics.dart';
 import 'package:memorare/types/app_settings.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
-
-void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
-    bool isExecutionAllowed = true;
-
-    switch (task) {
-      case BackgroundTasks.name:
-        debugPrint('android background task');
-        break;
-      case Workmanager.iOSBackgroundTask:
-        debugPrint('iOS background fetch');
-        await AppSettings.readFromFile();
-        isExecutionAllowed = AppSettings.isQuotidianNotifActive;
-        break;
-    }
-
-    if (!isExecutionAllowed) {
-      debugPrint('Execution stopped because settings prevent it (probably on iOS).');
-      return Future.value(true);
-    }
-
-    final quotidian = await BackgroundTasks.fetchQuotidian();
-    if (quotidian == null) { return Future.value(true); }
-
-    AppNotifications.initialize();
-    await AppNotifications.scheduleNotifications(quotidian: quotidian);
-    return Future.value(true);
-  });
-}
 
 void main() => runApp(App());
 
@@ -140,25 +107,12 @@ class MainState extends State<Main> {
       userDataModel.fetchAndUpdate(context);
     })
     .then((_) {
-      Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
       AppNotifications.initialize(context: context);
 
       AppSettings.readFromFile()
         .then((_) {
           if (AppSettings.isFirstLaunch) {
             AppSettings.updateFirstLaunch(false);
-            AppNotifications.scheduleNotifications();
-
-            if (Platform.isAndroid) {
-              Workmanager.registerPeriodicTask(
-                '1',
-                BackgroundTasks.name,
-                frequency: Duration(hours: 6),
-                constraints: Constraints(
-                  networkType: NetworkType.connected,
-                ),
-              );
-            }
           }
         });
     });
