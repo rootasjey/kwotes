@@ -118,6 +118,7 @@ class _DiscoverState extends State<Discover> {
           if (authors.length == 0 && references.length == 0) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 EmptyView(
                   title: 'Discover',
