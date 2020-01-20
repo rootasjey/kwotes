@@ -1,5 +1,5 @@
 name: memorare
-description: Explore the greatest quotes of History.
+description: Your daily inspirational quote.
 licence: MPL-2.0
 
 # The following defines the version and build number for your application.
@@ -24,6 +24,9 @@ dependencies:
   cupertino_icons: 0.1.3
   data_connection_checker: 0.3.4
   dynamic_theme: 1.0.1
+  firebase_core: 0.4.3+2
+  firebase_analytics: 5.0.9
+  firebase_messaging: 6.0.9
   flushbar: 1.9.1
   flutter:
     sdk: flutter

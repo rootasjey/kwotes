@@ -1,4 +1,5 @@
 import UIKit
+import Firebase
 import Flutter
 
 @UIApplicationMain
@@ -18,14 +19,7 @@ import Flutter
             UNUserNotificationCenter.current().delegate = self
         }
 
-        if(!UserDefaults.standard.bool(forKey: "Notification")) {
-            let center = UNUserNotificationCenter.current()
-            center.removeAllDeliveredNotifications()
-            center.removeAllPendingNotificationRequests()
-            UserDefaults.standard.set(true, forKey: "Notification")
-        }
-
-        UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*360))
+        FirebaseApp.configure()
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
