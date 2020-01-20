@@ -25,6 +25,7 @@ dependencies:
   data_connection_checker: 0.3.4
   dynamic_theme: 1.0.1
   firebase_core: 0.4.3+2
+  cloud_firestore: 0.13.0+1
   firebase_analytics: 5.0.9
   firebase_messaging: 6.0.9
   flushbar: 1.9.1
