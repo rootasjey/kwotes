@@ -19,7 +19,7 @@ import Flutter
             UNUserNotificationCenter.current().delegate = self
         }
 
-        FirebaseApp.configure()
+        //FirebaseApp.configure()
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }

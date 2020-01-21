@@ -7,6 +7,7 @@ import 'package:memorare/app_keys.dart';
 import 'package:memorare/app_notifications.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/data/queries.dart';
+import 'package:memorare/push_notifications.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
@@ -135,8 +136,13 @@ class MainState extends State<Main> {
         title: 'Memorare',
         theme: widget.theme,
         home: Scaffold(
-          body: Container(
-            child: _listScreens.elementAt(_selectedIndex),
+          body: Stack(
+            children: <Widget>[
+              Container(
+                child: _listScreens.elementAt(_selectedIndex),
+              ),
+              PushNotifications(),
+            ],
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: [
