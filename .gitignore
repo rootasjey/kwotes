@@ -109,3 +109,8 @@ coverage/
 
 # Private config files
 assets/api.json
+.flutter-plugins-dependencies
+.packages
+.flutter-plugins
+android/app/google-services.json
+android/.idea
