@@ -37,12 +37,7 @@ class AppState extends State<App> {
         ),
         themedWidgetBuilder: (context, theme) {
           if (kIsWeb) {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: theme,
-              debugShowCheckedModeBanner: false,
-              home: HomeWeb(title: 'Memo Home Page'),
-            );
+            return HomeWeb(theme: theme,);
           }
 
           return HomeMobile(theme: theme,);
