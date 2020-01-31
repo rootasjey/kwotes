@@ -29,7 +29,7 @@ class Topics extends StatelessWidget {
             child: Opacity(
               opacity: .6,
               child: Text(
-                'Choose a topic you like to explorer related quotes.'
+                'Choose a topic you would like to explore.'
               ),
             ),
           ),
