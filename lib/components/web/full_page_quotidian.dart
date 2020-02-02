@@ -9,7 +9,7 @@ class FullPageQuotidian extends StatefulWidget {
 
 class _FullPageQuotidianState extends State<FullPageQuotidian> {
   Quotidian quotidian;
-  bool isLoading = true;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -136,6 +136,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void fetchQuotidian() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians').doc('01:02:2020').get();
