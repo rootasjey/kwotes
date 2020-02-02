@@ -201,7 +201,7 @@ class ReferencePageState extends State<ReferencePage> {
     return Padding(
       padding: EdgeInsets.only(top: 10.0),
       child: Text(
-        reference.type,
+        reference.type.primary,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
           color: color,

@@ -241,7 +241,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           AddQuoteInputs.refName    = ref.name;
           AddQuoteInputs.refSubType = ref.subType;
           AddQuoteInputs.refSummary = ref.summary;
-          AddQuoteInputs.refType    = ref.type;
+          // AddQuoteInputs.refType    = ref.type; // TODO: add primary, secondary
           AddQuoteInputs.refUrl     = ref.url;
           AddQuoteInputs.refWikiUrl = ref.wikiUrl;
         }
