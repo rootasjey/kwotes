@@ -136,6 +136,10 @@ class _DiscoverState extends State<Discover> {
         });
       }
 
+      if (!this.mounted) {
+        return;
+      }
+
       setState(() {
         authors = authorsList;
         references = referencesList;
