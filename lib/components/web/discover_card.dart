@@ -35,7 +35,8 @@ class DiscoverCard extends StatelessWidget {
                         name.length < 21 ?
                           name : '${name.substring(0, 20)}...',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
