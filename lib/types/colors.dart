@@ -70,38 +70,46 @@ class ThemeColor extends ChangeNotifier {
 
   static Color topicColor(String topic) {
     switch (topic) {
-      case 'beliefs':
-        return Color(0xFF303952);
-      case 'death':
-        return Color(0xFF2D1457);
-      case 'fact':
-        return Color(0xFFF19066);
+      case 'art':
+        return Color(0xFF5199FF);
+      case 'biology':
+        return Color(0xFFCBE724);
       case 'feelings':
-        return Color(0xFFE74C3C);
+        return Color(0xFFFF0000);
       case 'fun':
         return Color(0xFFFFC11E);
-      case 'improvement':
-        return Color(0xFFF85C50);
-      case 'life':
-        return Color(0xFF41B619);
-      case 'meaning':
-        return Color(0xFF70E852);
+      case 'gratitude':
+        return Color(0xFFCEFF9D);
+      case 'introspection':
+        return Color(0xFF0043A4);
+      case 'knowledge':
+        return Color(0xFFFFDFDC);
+      case 'language':
+        return Color(0xFFB5FBDD);
+      case 'metaphor':
+        return Color(0xFF17F1D7);
       case 'motivation':
-        return Color(0xFF1E90FF);
+        return Color(0xFF7AB1FF);
       case 'philosophy':
-        return Color(0xFF574B90);
+        return Color(0xFFF375F3);
       case 'poetry':
-        return Color(0xFF546DE5);
-      case 'purpose':
-        return Color(0xFF242240);
-      case 'reflexion':
-        return Color(0xFF2300B0);
-      case 'sens':
-        return Color(0xFF00DFC8);
-      case 'suffering':
-        return Color(0xFFBC0022);
-      case 'technology':
-        return Color(0xFF0351C1);
+        return Color(0xFFFF756B);
+      case 'proverb':
+        return Color(0xFFDF8600);
+      case 'psychology':
+        return Color(0xFF580BE4);
+      case 'retrospection':
+        return Color(0xFF2D1457);
+      case 'sciences':
+        return Color(0xFFE85668);
+      case 'sex':
+        return Color(0xFFFF2970);
+      case 'social':
+        return Color(0xFFFEAC92);
+      case 'spiritual':
+        return Color(0xFFF6DDDF);
+      case 'work':
+        return Color(0xFF58595B);
       default:
         return primary;
     }
