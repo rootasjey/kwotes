@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/types/quotidian.dart';
 
 class FullPageQuotidian extends StatefulWidget {
   @override
@@ -6,8 +8,45 @@ class FullPageQuotidian extends StatefulWidget {
 }
 
 class _FullPageQuotidianState extends State<FullPageQuotidian> {
+  Quotidian quotidian;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchQuotidian();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Column(
+        children: <Widget>[
+          CircularProgressIndicator(),
+          Text(
+            'Loading...',
+            style: TextStyle(
+              fontSize: 40.0,
+            ),
+          )
+        ],
+      );
+    }
+
+    if (!isLoading && quotidian == null) {
+      return Column(
+        children: <Widget>[
+          Text(
+            'Sorry, an unexpected error happended :(',
+            style: TextStyle(
+              fontSize: 35.0,
+            ),
+          )
+        ],
+      );
+    }
+
     return Column(
       children: <Widget>[
         SizedBox(
@@ -18,7 +57,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Une fois en orbite, on est à mi-chemin de partout ailleurs.',
+                  quotidian.quote.name,
                   style: TextStyle(
                     fontSize: 80.0,
                   ),
@@ -40,7 +79,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   child: Opacity(
                     opacity: .8,
                     child: Text(
-                      'Un internaute inspiré',
+                      quotidian.quote.author.name,
                       style: TextStyle(
                         fontSize: 25.0,
                       ),
@@ -48,18 +87,20 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   )
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Opacity(
-                    opacity: .6,
-                    child: Text(
-                      'La référence inoubliable',
-                      style: TextStyle(
-                        fontSize: 18.0,
+                if (quotidian.quote.mainReference?.name != null &&
+                  quotidian.quote.mainReference.name.length > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Opacity(
+                      opacity: .6,
+                      child: Text(
+                        quotidian.quote.mainReference.name,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -92,5 +133,33 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         ),
       ],
     );
+  }
+
+  void fetchQuotidian() async {
+    try {
+      final doc = await FirestoreApp.instance
+        .collection('quotidians').doc('01:02:2020').get();
+
+      if (!doc.exists) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      setState(() {
+        quotidian = Quotidian.fromJSON(doc.data());
+        isLoading = false;
+      });
+
+    } catch (error, stackTrace) {
+      debugPrint('error => $error');
+      debugPrint(stackTrace.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
