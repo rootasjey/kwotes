@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
+import 'package:memorare/types/quotidian.dart';
 
 class PreviousQuotidians extends StatefulWidget {
   @override
@@ -7,6 +9,17 @@ class PreviousQuotidians extends StatefulWidget {
 }
 
 class _PreviousQuotidiansState extends State<PreviousQuotidians> {
+  Quotidian quotidian;
+  bool isLoading = false;
+
+  @override
+  initState() {
+    super.initState();
+
+    if (quotidian != null) { return; }
+    fetchPreviousQuotidian();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -40,13 +53,64 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
               ),
             ),
 
-            HorizontalCard(
-              name: 'Lourd est le parpaing sur la tartelette à la fraise de nos illusions.',
-              authorName: 'Someone on the internet',
-            ),
+            createCard(),
           ],
         ),
       )
     );
+  }
+
+  Widget createCard() {
+    if (isLoading) {
+      return HorizontalCard(
+        name: 'Loading...',
+        authorName: '...',
+      );
+    }
+
+    if (!isLoading && quotidian == null) {
+      return HorizontalCard(
+        name: 'Sorry, a bug has slipped through. Try reloading the page.',
+      );
+    }
+
+    return HorizontalCard(
+      name: quotidian.quote.name,
+      authorName: quotidian.quote.author.name,
+    );
+  }
+
+  void fetchPreviousQuotidian() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final doc = await FirestoreApp.instance
+        .collection('quotidians')
+        .doc('02:02:2020')
+        .get();
+
+      if (!doc.exists) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      setState(() {
+        quotidian = Quotidian.fromJSON(doc.data());
+        isLoading = false;
+      });
+
+    } catch (error, stackTrace) {
+      debugPrint('error => $error');
+      debugPrint(stackTrace.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
