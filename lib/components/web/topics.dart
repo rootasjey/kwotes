@@ -1,7 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:memorare/components/web/topic_card_color.dart';
+import 'dart:math';
 
-class Topics extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/types/colors.dart';
+import 'package:memorare/types/topic_color.dart';
+
+class Topics extends StatefulWidget {
+  @override
+  _TopicsState createState() => _TopicsState();
+}
+
+class _TopicsState extends State<Topics> {
+  bool isLoading = false;
+  List<TopicColor> topicsColorsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,26 +52,82 @@ class Topics extends StatelessWidget {
             ),
           ),
 
-          Wrap(
-            children: <Widget>[
-              TopicCardColor(
-                color: Colors.blue,
-                name: 'art',
-              ),
+          SizedBox(
+            width: 330.0,
+            child: Wrap(
+              children: <Widget>[
+                TopicCardColor(
+                  color: ThemeColor.topicColor('art'),
+                  name: 'art',
+                ),
 
-              TopicCardColor(
-                color: Colors.red,
-                name: 'feelings',
-              ),
+                TopicCardColor(
+                  color: ThemeColor.topicColor('feelings'),
+                  name: 'feelings',
+                ),
 
-              TopicCardColor(
-                color: Color(0xFFFFC11E),
-                name: 'fun',
-              ),
-            ],
+                TopicCardColor(
+                  color: ThemeColor.topicColor('fun'),
+                  name: 'fun',
+                ),
+
+                TopicCardColor(
+                  color: ThemeColor.topicColor('work'),
+                  name: 'language',
+                ),
+
+                TopicCardColor(
+                  color: ThemeColor.topicColor('work'),
+                  name: 'knowledge',
+                ),
+
+                TopicCardColor(
+                  color: ThemeColor.topicColor('work'),
+                  name: 'metaphor',
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+
+  void fetchTopics() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final random = Random();
+
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection('topics')
+        .where('random', '>=', random.nextInt(100000000))
+        .limit(6)
+        .get();
+
+      if (snapshot.empty) {
+        print('empty');
+        setState(() {
+          isLoading = false;
+          return;
+        });
+      }
+
+      snapshot.forEach((doc) {
+        print('doc => ${doc.data()}');
+        topicsColorsList.add(TopicColor.fromJSON(doc.data()));
+      });
+
+      setState(() {});
+
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      debugPrint(error);
+    }
   }
 }
