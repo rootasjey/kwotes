@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/quotidian.dart';
 
+Quotidian _quotidian;
+
 class FullPageQuotidian extends StatefulWidget {
   @override
   _FullPageQuotidianState createState() => _FullPageQuotidianState();
 }
 
 class _FullPageQuotidianState extends State<FullPageQuotidian> {
-  Quotidian quotidian;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
+    if (_quotidian != null) { return; }
     fetchQuotidian();
   }
 
@@ -34,7 +36,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       );
     }
 
-    if (!isLoading && quotidian == null) {
+    if (!isLoading && _quotidian == null) {
       return Column(
         children: <Widget>[
           Text(
@@ -57,7 +59,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  quotidian.quote.name,
+                  _quotidian.quote.name,
                   style: TextStyle(
                     fontSize: 80.0,
                   ),
@@ -79,7 +81,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   child: Opacity(
                     opacity: .8,
                     child: Text(
-                      quotidian.quote.author.name,
+                      _quotidian.quote.author.name,
                       style: TextStyle(
                         fontSize: 25.0,
                       ),
@@ -87,14 +89,14 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   )
                 ),
 
-                if (quotidian.quote.mainReference?.name != null &&
-                  quotidian.quote.mainReference.name.length > 0)
+                if (_quotidian.quote.mainReference?.name != null &&
+                  _quotidian.quote.mainReference.name.length > 0)
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
                     child: Opacity(
                       opacity: .6,
                       child: Text(
-                        quotidian.quote.mainReference.name,
+                        _quotidian.quote.mainReference.name,
                         style: TextStyle(
                           fontSize: 18.0,
                         ),
@@ -153,7 +155,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       }
 
       setState(() {
-        quotidian = Quotidian.fromJSON(doc.data());
+        _quotidian = Quotidian.fromJSON(doc.data());
         isLoading = false;
       });
 
