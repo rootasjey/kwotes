@@ -4,14 +4,15 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 
+List<Reference> _references = [];
+List<Author> _authors = [];
+
 class Discover extends StatefulWidget {
   @override
   _DiscoverState createState() => _DiscoverState();
 }
 
 class _DiscoverState extends State<Discover> {
-  List<Reference> references = [];
-  List<Author> authors = [];
 
   bool isLoading = false;
 
@@ -19,7 +20,7 @@ class _DiscoverState extends State<Discover> {
   initState() {
     super.initState();
 
-    if (references.length > 0) { return; }
+    if (_references.length > 0) { return; }
     fetchAuthorsAndReferences();
   }
 
@@ -76,7 +77,7 @@ class _DiscoverState extends State<Discover> {
   List<Widget> createCards() {
     List<Widget> cards = [];
 
-    for (var reference in references) {
+    for (var reference in _references) {
       cards.add(
         DiscoverCard(
           name: reference.name,
@@ -85,7 +86,7 @@ class _DiscoverState extends State<Discover> {
       );
     }
 
-    for (var author in authors) {
+    for (var author in _authors) {
       cards.add(
         DiscoverCard(
           name: author.name,
@@ -106,9 +107,6 @@ class _DiscoverState extends State<Discover> {
       isLoading = true;
     });
 
-    List<Reference> referencesList = [];
-    List<Author> authorsList = [];
-
     try {
       final refsSnapshot = await FirestoreApp.instance
         .collection("references")
@@ -120,7 +118,7 @@ class _DiscoverState extends State<Discover> {
       if (!refsSnapshot.empty) {
         refsSnapshot.forEach((docSnapshot) {
           final ref = Reference.fromJSON(docSnapshot.data());
-          referencesList.add(ref);
+          _references.add(ref);
         });
       }
 
@@ -132,7 +130,7 @@ class _DiscoverState extends State<Discover> {
       if (!authorsSnapshot.empty) {
         authorsSnapshot.forEach((doc) {
           final author = Author.fromJSON(doc.data());
-          authorsList.add(author);
+          _authors.add(author);
         });
       }
 
@@ -141,9 +139,6 @@ class _DiscoverState extends State<Discover> {
       }
 
       setState(() {
-        authors = authorsList;
-        references = referencesList;
-
         isLoading = false;
       });
 
