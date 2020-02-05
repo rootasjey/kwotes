@@ -63,19 +63,19 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
   Widget createCard() {
     if (isLoading) {
       return HorizontalCard(
-        name: 'Loading...',
+        quoteName: 'Loading...',
         authorName: '...',
       );
     }
 
     if (!isLoading && quotidian == null) {
       return HorizontalCard(
-        name: 'Sorry, a bug has slipped through. Try reloading the page.',
+        quoteName: 'Sorry, a bug has slipped through. Try reloading the page.',
       );
     }
 
     return HorizontalCard(
-      name: quotidian.quote.name,
+      quoteName: quotidian.quote.name,
       authorName: quotidian.quote.author.name,
     );
   }

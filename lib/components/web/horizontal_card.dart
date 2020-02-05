@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HorizontalCard extends StatefulWidget {
-  final String name;
+  final String quoteName;
   final String authorName;
   final String referenceName;
 
   HorizontalCard({
     this.authorName = '',
-    this.name,
+    this.quoteName,
     this.referenceName = '',
   });
 
@@ -30,7 +30,7 @@ class _HorizontalCardState extends State<HorizontalCard> {
               Padding(
                 padding: EdgeInsets.all(40.0),
                 child: Text(
-                  widget.name,
+                  widget.quoteName,
                   style: TextStyle(
                     fontSize: 27.0,
                   ),
