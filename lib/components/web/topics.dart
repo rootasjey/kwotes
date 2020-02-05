@@ -6,6 +6,8 @@ import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/topic_color.dart';
 
+List<TopicColor> _topicsList = [];
+
 class Topics extends StatefulWidget {
   @override
   _TopicsState createState() => _TopicsState();
@@ -13,11 +15,13 @@ class Topics extends StatefulWidget {
 
 class _TopicsState extends State<Topics> {
   bool isLoading = false;
-  List<TopicColor> topicsColorsList = [];
 
   @override
   void initState() {
     super.initState();
+
+    if (_topicsList.length > 0) { return; }
+    fetchTopics();
   }
 
   @override
@@ -53,44 +57,34 @@ class _TopicsState extends State<Topics> {
           ),
 
           SizedBox(
-            width: 330.0,
+            width: 360.0,
             child: Wrap(
-              children: <Widget>[
-                TopicCardColor(
-                  color: ThemeColor.topicColor('art'),
-                  name: 'art',
-                ),
-
-                TopicCardColor(
-                  color: ThemeColor.topicColor('feelings'),
-                  name: 'feelings',
-                ),
-
-                TopicCardColor(
-                  color: ThemeColor.topicColor('fun'),
-                  name: 'fun',
-                ),
-
-                TopicCardColor(
-                  color: ThemeColor.topicColor('work'),
-                  name: 'language',
-                ),
-
-                TopicCardColor(
-                  color: ThemeColor.topicColor('work'),
-                  name: 'knowledge',
-                ),
-
-                TopicCardColor(
-                  color: ThemeColor.topicColor('work'),
-                  name: 'metaphor',
-                ),
-              ],
+              children: topicsColorsCards(),
             ),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> topicsColorsCards() {
+    List<Widget> cards = [];
+    int count = 0;
+
+    _topicsList.forEach((topicColor) {
+      cards.add(
+        TopicCardColor(
+          color: count < 3 ?
+            Color(topicColor.decimal) :
+            ThemeColor.topicColor('work'),
+          name: topicColor.name,
+        ),
+      );
+
+      count++;
+    });
+
+    return cards;
   }
 
   void fetchTopics() async {
@@ -108,7 +102,6 @@ class _TopicsState extends State<Topics> {
         .get();
 
       if (snapshot.empty) {
-        print('empty');
         setState(() {
           isLoading = false;
           return;
@@ -116,8 +109,7 @@ class _TopicsState extends State<Topics> {
       }
 
       snapshot.forEach((doc) {
-        print('doc => ${doc.data()}');
-        topicsColorsList.add(TopicColor.fromJSON(doc.data()));
+        _topicsList.add(TopicColor.fromJSON(doc.data()));
       });
 
       setState(() {});
@@ -127,7 +119,8 @@ class _TopicsState extends State<Topics> {
         isLoading = false;
       });
 
-      debugPrint(error);
+      print('error');
+      print(error);
     }
   }
 }
