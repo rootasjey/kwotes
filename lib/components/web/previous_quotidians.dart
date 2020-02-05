@@ -75,8 +75,9 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     }
 
     return HorizontalCard(
-      quoteName: quotidian.quote.name,
       authorName: quotidian.quote.author.name,
+      quoteId: quotidian.quote.id,
+      quoteName: quotidian.quote.name,
     );
   }
 

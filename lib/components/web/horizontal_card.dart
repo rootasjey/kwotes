@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 
 class HorizontalCard extends StatefulWidget {
-  final String quoteName;
   final String authorName;
+  final String quoteId;
+  final String quoteName;
   final String referenceName;
 
   HorizontalCard({
     this.authorName = '',
+    this.quoteId,
     this.quoteName,
     this.referenceName = '',
   });
@@ -20,15 +23,24 @@ class _HorizontalCardState extends State<HorizontalCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 700.0,
-      height: 300.0,
+      height: 350.0,
       child: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(40.0),
+        child: Column(
+          children: <Widget>[
+            Card(
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return QuotePage(quoteId: widget.quoteId);
+                      }
+                    )
+                  );
+                },
+                child: Padding(
+                padding: EdgeInsets.all(60.0),
                 child: Text(
                   widget.quoteName,
                   style: TextStyle(
@@ -36,11 +48,15 @@ class _HorizontalCardState extends State<HorizontalCard> {
                   ),
                 ),
               ),
-              Text(
+              )
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Text(
                 widget.authorName,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
