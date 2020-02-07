@@ -9,6 +9,7 @@ import 'package:memorare/home_web.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -24,6 +25,8 @@ void main() {
       measurementId: FirebaseConfig.measurementId,
     );
   }
+
+  FluroRouter.setupRouter();
 
   return runApp(App());
 }

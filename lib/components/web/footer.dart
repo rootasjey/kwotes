@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/utils/route_names.dart';
+import 'package:memorare/utils/router.dart';
 
 class Footer extends StatelessWidget {
   @override
@@ -165,7 +167,9 @@ class Footer extends StatelessWidget {
               ),
 
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  FluroRouter.router.navigateTo(context, ContactRoute);
+                },
                 child: Opacity(
                   opacity: .5,
                   child: Text(
