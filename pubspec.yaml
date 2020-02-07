@@ -27,6 +27,7 @@ dependencies:
   firebase_core: 0.4.3+2
   firebase_analytics: 5.0.9
   firebase_messaging: 6.0.9
+  fluro: 1.5.1
   flushbar: 1.9.1
   flutter:
     sdk: flutter
