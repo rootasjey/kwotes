@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/home.dart';
+import 'package:memorare/screens/web/undefined_page.dart';
 import 'package:memorare/utils/route_names.dart';
 
 class FluroRouter {
@@ -16,6 +17,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Home()));
 
+  static Handler _undefinedhandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(UndefinedPage(name: params['route'][0],)));
+
   static void setupRouter() {
     router.define(
       HomeRoute,
@@ -24,6 +29,10 @@ class FluroRouter {
     router.define(
       ContactRoute,
       handler: _contactHandler,
+    );
+    router.define(
+      UndefinedRoute,
+      handler: _undefinedhandler,
     );
   }
 
