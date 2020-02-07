@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -13,11 +14,11 @@ class Contact extends StatelessWidget {
             onTap: () {
               FluroRouter.router.navigateTo(context, HomeRoute);
             },
-            borderRadius: BorderRadius.circular(40.0),
+            borderRadius: BorderRadius.circular(50.0),
             child: Image(
               image: AssetImage('assets/images/icon-small.png'),
-              width: 70.0,
-              height: 70.0,
+              width: 90.0,
+              height: 90.0,
             ),
           )
         ),
@@ -101,7 +102,7 @@ class Contact extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Icon(Icons.send, color: Colors.white, size: 55.0,),
+                          child: Icon(IconsMore.twitter, color: Colors.white, size: 55.0,),
                         )
                       ],
                     ),
