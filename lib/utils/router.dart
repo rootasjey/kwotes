@@ -4,6 +4,7 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/home.dart';
+import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
 import 'package:memorare/utils/route_names.dart';
 
@@ -22,6 +23,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Home()));
 
+  static Handler _privacyhandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(PrivacyTerms()));
+
   static Handler _undefinedhandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
@@ -38,6 +43,10 @@ class FluroRouter {
     router.define(
       HomeRoute,
       handler: _homehandler,
+    );
+    router.define(
+      PrivacyRoute,
+      handler: _privacyhandler,
     );
     router.define(
       UndefinedRoute,
