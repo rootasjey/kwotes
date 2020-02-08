@@ -154,7 +154,9 @@ class Footer extends StatelessWidget {
               ),
 
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  FluroRouter.router.navigateTo(context, AboutRoute);
+                },
                 child: Opacity(
                   opacity: .5,
                   child: Text(

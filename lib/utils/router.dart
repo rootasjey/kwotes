@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
@@ -8,6 +9,10 @@ import 'package:memorare/utils/route_names.dart';
 
 class FluroRouter {
   static Router router = Router();
+
+  static Handler _aboutHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(About()));
 
   static Handler _contactHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -23,12 +28,16 @@ class FluroRouter {
 
   static void setupRouter() {
     router.define(
-      HomeRoute,
-      handler: _homehandler,
+      AboutRoute,
+      handler: _aboutHandler,
     );
     router.define(
       ContactRoute,
       handler: _contactHandler,
+    );
+    router.define(
+      HomeRoute,
+      handler: _homehandler,
     );
     router.define(
       UndefinedRoute,
