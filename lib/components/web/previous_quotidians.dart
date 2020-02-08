@@ -22,41 +22,39 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500.0,
-      child: Container(
-        decoration: BoxDecoration(color: Color(0xFFEDEDEC)),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
+      decoration: BoxDecoration(color: Color(0xFFEDEDEC)),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: Text(
+              'YESTERDAY',
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+
+          SizedBox(
+            width: 50.0,
+            child: Divider(thickness: 2.0,),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Opacity(
+              opacity: .6,
               child: Text(
-                'YESTERDAY',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
+                'Quotes of the past.'
               ),
             ),
+          ),
 
-            SizedBox(
-              width: 50.0,
-              child: Divider(thickness: 2.0,),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'Quotes of the past.'
-                ),
-              ),
-            ),
-
-            createCard(),
-          ],
-        ),
-      )
+          createCard(),
+        ],
+      ),
     );
   }
 

@@ -28,8 +28,8 @@ class _DiscoverState extends State<Discover> {
   Widget build(BuildContext context) {
     final cards = createCards();
 
-    return SizedBox(
-      height: 600.0,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
       child: Column(
         children: <Widget>[
           Padding(
@@ -70,7 +70,7 @@ class _DiscoverState extends State<Discover> {
             ),
           )
         ],
-      ),
+      )
     );
   }
 

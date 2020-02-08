@@ -28,7 +28,7 @@ class _TopicsState extends State<Topics> {
   Widget build(BuildContext context) {
     return Container(
       color: Color(0xFFF2F2F2),
-      padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 80.0),
+      padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
       child: Column(
         children: <Widget>[
           Padding(
@@ -47,7 +47,7 @@ class _TopicsState extends State<Topics> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(bottom: 40.0),
+            padding: const EdgeInsets.only(bottom: 70.0),
             child: Opacity(
               opacity: .6,
               child: Text(
