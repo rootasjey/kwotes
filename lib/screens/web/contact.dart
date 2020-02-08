@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contact extends StatelessWidget {
@@ -146,7 +147,7 @@ class Contact extends StatelessWidget {
           ),
         ),
 
-        Padding(padding: const EdgeInsets.only(bottom: 300.0),),
+        NavBackFooter(),
       ],
     );
   }

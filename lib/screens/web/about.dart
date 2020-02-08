@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/web/nav_back_footer.dart';
 
 class About extends StatelessWidget {
   @override
@@ -107,7 +108,7 @@ class About extends StatelessWidget {
           ),
         ),
 
-        Padding(padding: const EdgeInsets.only(bottom: 300.0),),
+        NavBackFooter(),
       ],
     );
   }

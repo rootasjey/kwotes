@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/components/web/nav_back_footer.dart';
 
 class PrivacyTerms extends StatelessWidget {
   @override
@@ -122,22 +122,7 @@ class PrivacyTerms extends StatelessWidget {
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 200.0),
-          child: FlatButton(
-            onPressed: () {
-              FluroRouter.router.pop(context);
-            },
-            shape: RoundedRectangleBorder(
-              side: BorderSide(),
-              borderRadius: BorderRadius.circular(2.0),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text('Back'),
-            ),
-          ),
-        ),
+        NavBackFooter(),
       ],
     );
   }
