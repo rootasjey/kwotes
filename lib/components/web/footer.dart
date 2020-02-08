@@ -200,19 +200,6 @@ class Footer extends StatelessWidget {
                   ),
                 )
               ),
-
-              FlatButton(
-                onPressed: () {},
-                child: Opacity(
-                  opacity: .5,
-                  child: Text(
-                    'Sitemap',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                )
-              ),
             ],
           ),
         ],
