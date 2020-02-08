@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contact extends StatelessWidget {
@@ -9,20 +8,7 @@ class Contact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 80.0),
-          child: InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(context, HomeRoute);
-            },
-            borderRadius: BorderRadius.circular(50.0),
-            child: Image(
-              image: AssetImage('assets/images/icon-small.png'),
-              width: 90.0,
-              height: 90.0,
-            ),
-          )
-        ),
+        AppIconHeader(),
 
         Padding(
           padding: const EdgeInsets.all(24.0),

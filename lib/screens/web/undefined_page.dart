@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -16,20 +17,7 @@ class _UndefinedPageState extends State<UndefinedPage> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 80.0),
-          child: InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(context, HomeRoute);
-            },
-            borderRadius: BorderRadius.circular(50.0),
-            child: Image(
-              image: AssetImage('assets/images/icon-small.png'),
-              width: 60.0,
-              height: 60.0,
-            ),
-          )
-        ),
+        AppIconHeader(),
 
         Text(
           '404',
