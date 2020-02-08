@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatelessWidget {
   @override
@@ -120,7 +121,9 @@ class Footer extends StatelessWidget {
               ),
 
               FlatButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await launch('https://github.com/memorare/app');
+                },
                 child: Opacity(
                   opacity: .5,
                   child: Text(
