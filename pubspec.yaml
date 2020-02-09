@@ -63,6 +63,7 @@ flutter:
     - assets/api.json
     - assets/images/monk.png
     - assets/images/icon-small.png
+    - assets/images/power-of-pen-1200.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
