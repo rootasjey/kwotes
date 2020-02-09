@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/web/quote_page.dart';
+import 'package:memorare/utils/route_names.dart';
+import 'package:memorare/utils/router.dart';
 
 class HorizontalCard extends StatefulWidget {
   final String authorName;
@@ -31,12 +32,9 @@ class _HorizontalCardState extends State<HorizontalCard> {
             Card(
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return QuotePage(quoteId: widget.quoteId);
-                      }
-                    )
+                  FluroRouter.router.navigateTo(
+                    context,
+                    QuotePageRoute.replaceFirst(':id', widget.quoteId)
                   );
                 },
                 child: Padding(
