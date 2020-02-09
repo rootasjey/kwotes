@@ -1,3 +1,5 @@
+import 'package:memorare/types/urls.dart';
+
 class Author {
   final String id;
   final String imgUrl;
@@ -6,6 +8,7 @@ class Author {
   final String summary;
   final String url;
   final String wikiUrl;
+  final Urls urls;
 
   Author({
     this.id,
@@ -14,6 +17,7 @@ class Author {
     this.name,
     this.summary  = '',
     this.url      = '',
+    this.urls,
     this.wikiUrl  = '',
   });
 
@@ -25,6 +29,7 @@ class Author {
       name    : json['name'],
       summary : json['summary'],
       url     : json['url'],
+      urls    : json['urls'] != null ? Urls.fromJSON(json['urls']) : null,
       wikiUrl : json['wikiUrl'],
     );
   }
