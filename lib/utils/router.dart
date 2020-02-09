@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
+import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
@@ -15,6 +16,10 @@ class FluroRouter {
   static Handler _aboutHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(About()));
+
+  static Handler _authorHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(AuthorPage(id: params['id'][0],)));
 
   static Handler _contactHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -40,6 +45,10 @@ class FluroRouter {
     router.define(
       AboutRoute,
       handler: _aboutHandler,
+    );
+    router.define(
+      AuthorRoute,
+      handler: _authorHandler,
     );
     router.define(
       ContactRoute,

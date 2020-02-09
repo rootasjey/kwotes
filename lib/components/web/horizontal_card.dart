@@ -3,12 +3,14 @@ import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
 class HorizontalCard extends StatefulWidget {
+  final String authorId;
   final String authorName;
   final String quoteId;
   final String quoteName;
   final String referenceName;
 
   HorizontalCard({
+    this.authorId,
     this.authorName = '',
     this.quoteId,
     this.quoteName,
@@ -38,20 +40,28 @@ class _HorizontalCardState extends State<HorizontalCard> {
                   );
                 },
                 child: Padding(
-                padding: EdgeInsets.all(60.0),
-                child: Text(
-                  widget.quoteName,
-                  style: TextStyle(
-                    fontSize: 27.0,
+                  padding: EdgeInsets.all(60.0),
+                  child: Text(
+                    widget.quoteName,
+                    style: TextStyle(
+                      fontSize: 27.0,
+                    ),
                   ),
                 ),
               ),
-              )
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
-              child: Text(
-                widget.authorName,
+              child: FlatButton(
+                onPressed: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    AuthorRoute.replaceFirst(':id', widget.authorId)
+                  );
+                },
+                child: Text(
+                  widget.authorName,
+                ),
               ),
             ),
           ],
