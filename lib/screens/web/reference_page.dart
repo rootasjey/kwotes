@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -36,7 +37,9 @@ class _ReferencePageState extends State<ReferencePage> {
     }
 
     if (!isLoading && reference == null) {
-      return errorWidget();
+      return FullPageError(
+        message: 'An error occurred while loading reference.'
+      );
     }
 
     return Column(
@@ -354,14 +357,6 @@ class _ReferencePageState extends State<ReferencePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget errorWidget() {
-    return Column(
-      children: <Widget>[
-        Text('An error occurred :('),
-      ],
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -38,7 +39,9 @@ class _AuthorPageState extends State<AuthorPage> {
     }
 
     if (!isLoading && author == null) {
-      return errorWidget();
+      return FullPageError(
+        message: 'An error occurred while loading author.'
+      );
     }
 
     return Column(
@@ -165,14 +168,6 @@ class _AuthorPageState extends State<AuthorPage> {
     return CircleAvatar(
       backgroundImage: AssetImage('assets/images/power-of-pen-1200.png'),
       radius: 80.0,
-    );
-  }
-
-  Widget errorWidget() {
-    return Column(
-      children: <Widget>[
-        Text('An error occurred :('),
-      ],
     );
   }
 
