@@ -153,7 +153,7 @@ class _ReferencePageState extends State<ReferencePage> {
           )
         ),
 
-        quoteWidget(),
+        quoteCard(),
 
         externalLinks(),
 
@@ -360,7 +360,7 @@ class _ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget quoteWidget() {
+  Widget quoteCard() {
     if (quote == null) {
       return Padding(padding: EdgeInsets.zero,);
     }

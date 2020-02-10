@@ -148,9 +148,9 @@ class _AuthorPageState extends State<AuthorPage> {
           )
         ),
 
-        quoteWidget(),
+        quoteCard(),
 
-        buttonsWidget(),
+        externalLinks(),
 
         NavBackFooter(),
       ],
@@ -171,7 +171,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget quoteWidget() {
+  Widget quoteCard() {
     if (quote == null) {
       return Padding(padding: EdgeInsets.zero,);
     }
@@ -216,7 +216,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget buttonsWidget() {
+  Widget externalLinks() {
     final children = <Widget>[];
 
     if (author.urls.wikipedia != null &&
