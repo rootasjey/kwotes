@@ -119,39 +119,7 @@ class _ReferencePageState extends State<ReferencePage> {
           thickness: 1.0,
         ),
 
-        Padding(
-          padding: const EdgeInsets.only(top: 40.0),
-          child: Opacity(
-            opacity: .6,
-            child: Text(
-              'SUMMARY'
-            ),
-          )
-        ),
-
-        SizedBox(
-          width: 100,
-          child: Divider(thickness: 1.0,)
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 100.0
-          ),
-          child: SizedBox(
-            width: 600.0,
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                reference.summary,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  height: 1.5,
-                )
-              ),
-            ),
-          )
-        ),
+        summary(),
 
         quoteCard(),
 
@@ -239,6 +207,46 @@ class _ReferencePageState extends State<ReferencePage> {
           ),
         ),
       );
+  }
+
+  Widget summary() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'SUMMARY'
+            ),
+          )
+        ),
+
+        SizedBox(
+          width: 100,
+          child: Divider(thickness: 1.0,)
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 100.0
+          ),
+          child: SizedBox(
+            width: 600.0,
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                reference.summary,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  height: 1.5,
+                )
+              ),
+            ),
+          )
+        ),
+      ],
+    );
   }
 
   Widget externalLinks() {

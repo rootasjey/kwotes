@@ -129,24 +129,7 @@ class _AuthorPageState extends State<AuthorPage> {
           thickness: 1.0,
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 100.0
-          ),
-          child: SizedBox(
-            width: 600.0,
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                author.summary,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  height: 1.5,
-                )
-              ),
-            ),
-          )
-        ),
+        summary(),
 
         quoteCard(),
 
@@ -168,6 +151,46 @@ class _AuthorPageState extends State<AuthorPage> {
     return CircleAvatar(
       backgroundImage: AssetImage('assets/images/power-of-pen-1200.png'),
       radius: 80.0,
+    );
+  }
+
+  Widget summary() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'SUMMARY'
+            ),
+          )
+        ),
+
+        SizedBox(
+          width: 100,
+          child: Divider(thickness: 1.0,)
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 100.0
+          ),
+          child: SizedBox(
+            width: 600.0,
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                author.summary,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  height: 1.5,
+                )
+              ),
+            ),
+          )
+        ),
+      ],
     );
   }
 
@@ -199,7 +222,7 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 100.0),
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
             child: HorizontalCard(
               quoteId: quote.id,
               quoteName: quote.name,
@@ -223,29 +246,41 @@ class _AuthorPageState extends State<AuthorPage> {
       author.urls.wikipedia.length > 0) {
 
       children.add(
-        RaisedButton(
-          onPressed: () {
-            launch(author.urls.wikipedia);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 25.0),
-                  child: Icon(
-                    IconsMore.wikipedia_w,
-                    size: 15.0,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 200.0,
+            height: 240.0,
+            child: Card(
+              child: InkWell(
+                onTap: () {
+                  launch(author.urls.wikipedia);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: Icon(
+                          IconsMore.wikipedia_w,
+                          size: 30.0,
+                        ),
+                      ),
+                      Text(
+                        'Wikipedia',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Text(
-                  'Wikipedia',
-                )
-              ],
+              ),
             ),
-          )
+          ),
         )
       );
     }
@@ -254,29 +289,41 @@ class _AuthorPageState extends State<AuthorPage> {
       author.urls.website.length > 0) {
 
       children.add(
-        RaisedButton(
-          onPressed: () {
-            launch(author.urls.website);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 25.0),
-                  child: Icon(
-                    IconsMore.earth,
-                    size: 15.0,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 200.0,
+            height: 240.0,
+            child: Card(
+              child: InkWell(
+                onTap: () {
+                  launch(author.urls.website);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: Icon(
+                          IconsMore.earth,
+                          size: 30.0,
+                        ),
+                      ),
+                      Text(
+                        'Website',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Text(
-                  'Website',
-                )
-              ],
-            ),
-          )
+              ),
+            )
+          ),
         )
       );
     }
@@ -284,8 +331,29 @@ class _AuthorPageState extends State<AuthorPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 25.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: children,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'EXTERNAL LINKS'
+              ),
+            )
+          ),
+
+          SizedBox(
+            width: 100,
+            child: Divider(thickness: 1.0,)
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Wrap(
+              children: children,
+            ),
+          ),
+        ],
       ),
     );
   }
