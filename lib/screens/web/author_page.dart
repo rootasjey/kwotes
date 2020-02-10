@@ -142,6 +142,8 @@ class _AuthorPageState extends State<AuthorPage> {
           )
         ),
 
+        quoteWidget(),
+
         NavBackFooter(),
       ],
     );
@@ -181,17 +183,45 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget quoteWidget() {
-    if (quote == null) { return Padding(padding: EdgeInsets.zero,); }
+    if (quote == null) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
 
     return Container(
-      padding: EdgeInsets.all(80.0),
       child: Column(
         children: <Widget>[
-          HorizontalCard(
-            quoteId: quote.id,
-            quoteName: quote.name,
-            referenceName: quote.mainReference.name,
-          )
+          Divider(
+            thickness: 1.0,
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'QUOTES'
+              ),
+            )
+          ),
+
+          SizedBox(
+            width: 100,
+            child: Divider(thickness: 1.0,)
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 100.0),
+            child: HorizontalCard(
+              quoteId: quote.id,
+              quoteName: quote.name,
+              referenceId: quote.mainReference.id,
+              referenceName: quote.mainReference.name,
+            ),
+          ),
+
+          Divider(
+            thickness: 1.0,
+          ),
         ],
       ),
     );
@@ -235,8 +265,6 @@ class _AuthorPageState extends State<AuthorPage> {
   void fetchQuote() async {
     if (author == null) { return; }
 
-    print(author.name);
-
     try {
       final snapshot = await FirestoreApp.instance
         .collection('quotes')
@@ -244,12 +272,13 @@ class _AuthorPageState extends State<AuthorPage> {
         .limit(1)
         .get();
 
-      if (snapshot.empty) { print('empty'); return; }
+      if (snapshot.empty) { return; }
 
       snapshot.forEach((doc) {
-        print(doc.data());
         quote = Quote.fromJSON(doc.data());
       });
+
+      setState(() {});
 
     } catch (error) {
       print(error);
