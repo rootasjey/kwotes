@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/utils/router.dart';
 
 class FullPageError extends StatelessWidget {
   final String message;
 
   FullPageError({
-    this.message = '',
+    this.message = 'An error occurred :(',
   });
 
   @override
@@ -22,9 +23,29 @@ class FullPageError extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(top: 50.0),
-            child: Text('An error occurred :('),
+            padding: const EdgeInsets.only(
+              top: 20.0,
+              bottom: 40.0
+            ),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                message,
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
           ),
+
+          FlatButton(
+            onPressed: () {
+              FluroRouter.router.pop(context);
+            },
+            child: Text(
+              'Back',
+            ),
+          )
         ],
       ),
     );
