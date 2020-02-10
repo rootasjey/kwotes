@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/types/quote.dart';
@@ -31,7 +32,7 @@ class _ReferencePageState extends State<ReferencePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return loadingWidget();
+      return FullPageLoading(message: 'Loading reference...');
     }
 
     if (!isLoading && reference == null) {
@@ -350,23 +351,6 @@ class _ReferencePageState extends State<ReferencePage> {
             child: Wrap(
               children: children,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget loadingWidget() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(),
-          Text(
-            'Loading author...',
           ),
         ],
       ),

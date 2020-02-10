@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/types/author.dart';
@@ -33,7 +34,7 @@ class _AuthorPageState extends State<AuthorPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return loadingWidget();
+      return FullPageLoading(message: 'Loading author...');
     }
 
     if (!isLoading && author == null) {
@@ -164,17 +165,6 @@ class _AuthorPageState extends State<AuthorPage> {
     return CircleAvatar(
       backgroundImage: AssetImage('assets/images/power-of-pen-1200.png'),
       radius: 80.0,
-    );
-  }
-
-  Widget loadingWidget() {
-    return Column(
-      children: <Widget>[
-        CircularProgressIndicator(),
-        Text(
-          'Loading author...',
-        ),
-      ],
     );
   }
 
