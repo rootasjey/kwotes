@@ -80,6 +80,7 @@ class _DiscoverState extends State<Discover> {
     for (var reference in _references) {
       cards.add(
         DiscoverCard(
+          id: reference.id,
           name: reference.name,
           summary: reference.summary,
         ),
@@ -89,6 +90,7 @@ class _DiscoverState extends State<Discover> {
     for (var author in _authors) {
       cards.add(
         DiscoverCard(
+          id: author.id,
           name: author.name,
           summary: author.summary,
         ),
@@ -116,8 +118,11 @@ class _DiscoverState extends State<Discover> {
         .get();
 
       if (!refsSnapshot.empty) {
-        refsSnapshot.forEach((docSnapshot) {
-          final ref = Reference.fromJSON(docSnapshot.data());
+        refsSnapshot.forEach((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
+
+          final ref = Reference.fromJSON(data);
           _references.add(ref);
         });
       }
@@ -129,7 +134,10 @@ class _DiscoverState extends State<Discover> {
 
       if (!authorsSnapshot.empty) {
         authorsSnapshot.forEach((doc) {
-          final author = Author.fromJSON(doc.data());
+          final data = doc.data();
+          data['id'] = doc.id;
+
+          final author = Author.fromJSON(data);
           _authors.add(author);
         });
       }
