@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/route_names.dart';
+import 'package:memorare/utils/router.dart';
 
 Quotidian _quotidian;
 
@@ -80,12 +82,22 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   padding: const EdgeInsets.only(top: 30.0),
                   child: Opacity(
                     opacity: .8,
-                    child: Text(
-                      _quotidian.quote.author.name,
-                      style: TextStyle(
-                        fontSize: 25.0,
+                    child: FlatButton(
+                      onPressed: () {
+                        final id = _quotidian.quote.author.id;
+
+                        FluroRouter.router.navigateTo(
+                          context,
+                          AuthorRoute.replaceFirst(':id', id)
+                        );
+                      },
+                      child: Text(
+                        _quotidian.quote.author.name,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                        ),
                       ),
-                    ),
+                    )
                   )
                 ),
 
