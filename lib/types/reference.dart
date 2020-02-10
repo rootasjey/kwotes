@@ -1,4 +1,5 @@
 import 'package:memorare/types/reference_type.dart';
+import 'package:memorare/types/urls.dart';
 
 class Reference {
   final String id;
@@ -10,6 +11,7 @@ class Reference {
   final String summary;
   final ReferenceType type;
   final String url;
+  final Urls urls;
   final String wikiUrl;
 
   Reference({
@@ -22,6 +24,7 @@ class Reference {
     this.summary,
     this.type,
     this.url,
+    this.urls,
     this.wikiUrl,
   });
 
@@ -46,6 +49,9 @@ class Reference {
         ReferenceType.fromJSON(json['type']) : ReferenceType(),
 
       url         : json['url'],
+      urls        : json['urls'] != null ?
+        Urls.fromJSON(json['urls']) : null,
+
       wikiUrl     : json['wikiUrl'],
     );
   }

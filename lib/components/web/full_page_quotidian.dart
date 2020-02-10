@@ -107,12 +107,22 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                     padding: const EdgeInsets.only(top: 15.0),
                     child: Opacity(
                       opacity: .6,
-                      child: Text(
-                        _quotidian.quote.mainReference.name,
-                        style: TextStyle(
-                          fontSize: 18.0,
+                      child: FlatButton(
+                        onPressed: () {
+                          final id = _quotidian.quote.mainReference.id;
+
+                          FluroRouter.router.navigateTo(
+                            context,
+                            ReferenceRoute.replaceFirst(':id', id)
+                          );
+                        },
+                        child: Text(
+                          _quotidian.quote.mainReference.name,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
                         ),
-                      ),
+                      )
                     ),
                   ),
               ],

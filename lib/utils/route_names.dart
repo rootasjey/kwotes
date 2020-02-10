@@ -4,4 +4,5 @@ const String AuthorRoute    = '/author/:id';
 const String ContactRoute   = '/contact';
 const String PrivacyRoute   = '/privacy';
 const String QuotePageRoute = '/quote/:id';
+const String ReferenceRoute = '/reference/:id';
 const String UndefinedRoute = '/:route';
