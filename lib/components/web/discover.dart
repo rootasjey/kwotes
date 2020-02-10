@@ -93,6 +93,7 @@ class _DiscoverState extends State<Discover> {
           id: author.id,
           name: author.name,
           summary: author.summary,
+          type: 'author',
         ),
       );
     }
