@@ -275,7 +275,9 @@ class _AuthorPageState extends State<AuthorPage> {
       if (snapshot.empty) { return; }
 
       snapshot.forEach((doc) {
-        quote = Quote.fromJSON(doc.data());
+        final data = doc.data();
+        data['id'] = doc.id;
+        quote = Quote.fromJSON(data);
       });
 
       setState(() {});
