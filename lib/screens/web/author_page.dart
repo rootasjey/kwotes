@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthorPage extends StatefulWidget {
   final String id;
@@ -144,6 +146,8 @@ class _AuthorPageState extends State<AuthorPage> {
 
         quoteWidget(),
 
+        buttonsWidget(),
+
         NavBackFooter(),
       ],
     );
@@ -223,6 +227,80 @@ class _AuthorPageState extends State<AuthorPage> {
             thickness: 1.0,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buttonsWidget() {
+    final children = <Widget>[];
+
+    if (author.urls.wikipedia != null &&
+      author.urls.wikipedia.length > 0) {
+
+      children.add(
+        RaisedButton(
+          onPressed: () {
+            launch(author.urls.wikipedia);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 25.0),
+                  child: Icon(
+                    IconsMore.wikipedia_w,
+                    size: 15.0,
+                  ),
+                ),
+                Text(
+                  'Wikipedia',
+                )
+              ],
+            ),
+          )
+        )
+      );
+    }
+
+    if (author.urls.website != null &&
+      author.urls.website.length > 0) {
+
+      children.add(
+        RaisedButton(
+          onPressed: () {
+            launch(author.urls.website);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 25.0),
+                  child: Icon(
+                    IconsMore.earth,
+                    size: 15.0,
+                  ),
+                ),
+                Text(
+                  'Website',
+                )
+              ],
+            ),
+          )
+        )
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 25.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: children,
       ),
     );
   }
