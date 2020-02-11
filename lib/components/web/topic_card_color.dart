@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/utils/route_names.dart';
+import 'package:memorare/utils/router.dart';
 
 class TopicCardColor extends StatelessWidget {
   final String name;
@@ -24,7 +26,12 @@ class TopicCardColor extends StatelessWidget {
               ),
               color: color,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    TopicRoute.replaceFirst(':name', name)
+                  );
+                },
               ),
             ),
           ),

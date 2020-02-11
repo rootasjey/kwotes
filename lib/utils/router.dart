@@ -8,6 +8,7 @@ import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/reference_page.dart';
+import 'package:memorare/screens/web/topic_page.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
 import 'package:memorare/utils/route_names.dart';
 
@@ -42,6 +43,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(ReferencePage(id: params['id'][0])));
 
+  static Handler _topichandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(TopicPage(name: params['name'][0])));
+
   static Handler _undefinedhandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
@@ -74,6 +79,10 @@ class FluroRouter {
     router.define(
       ReferenceRoute,
       handler: _referencehandler,
+    );
+    router.define(
+      TopicRoute,
+      handler: _topichandler,
     );
     router.define(
       UndefinedRoute,
