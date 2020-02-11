@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/router.dart';
@@ -66,7 +67,7 @@ class _QuotePageState extends State<QuotePage> {
                 Text(
                   quote.name,
                   style: TextStyle(
-                    fontSize: 80.0,
+                    fontSize: FontSize.hero(quote.name),
                   ),
                 ),
 
