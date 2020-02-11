@@ -131,32 +131,62 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                onPressed: () { print('fav'); },
-                icon: Icon(Icons.favorite_border),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: IconButton(
-                  onPressed: () { print('share'); },
-                  icon: Icon(Icons.share),
-                ),
-              ),
-
-              IconButton(
-                onPressed: () { print('add list'); },
-                icon: Icon(Icons.playlist_add),
-              ),
-            ],
-          ),
-        ),
+        userSection(),
       ],
+    );
+  }
+
+  Widget userSection() {
+    return signinButton();
+  }
+
+  Widget signinButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          RaisedButton(
+            onPressed: () {
+              FluroRouter.router.navigateTo(
+                context,
+                SigninRoute,
+              );
+            },
+            child: Text(
+              'Signin',
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget userActions() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            onPressed: () { print('fav'); },
+            icon: Icon(Icons.favorite_border),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: IconButton(
+              onPressed: () { print('share'); },
+              icon: Icon(Icons.share),
+            ),
+          ),
+
+          IconButton(
+            onPressed: () { print('add list'); },
+            icon: Icon(Icons.playlist_add),
+          ),
+        ],
+      ),
     );
   }
 

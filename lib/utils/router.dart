@@ -8,6 +8,7 @@ import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/reference_page.dart';
+import 'package:memorare/screens/web/signin.dart';
 import 'package:memorare/screens/web/topic_page.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -42,6 +43,10 @@ class FluroRouter {
   static Handler _referencehandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(ReferencePage(id: params['id'][0])));
+
+  static Handler _signinHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(Signin()));
 
   static Handler _topichandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -79,6 +84,10 @@ class FluroRouter {
     router.define(
       ReferenceRoute,
       handler: _referencehandler,
+    );
+    router.define(
+      SigninRoute,
+      handler: _signinHandler,
     );
     router.define(
       TopicRoute,
