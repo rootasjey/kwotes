@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -63,7 +64,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 Text(
                   _quotidian.quote.name,
                   style: TextStyle(
-                    fontSize: 80.0,
+                    fontSize: FontSize.hero(_quotidian.quote.name),
                   ),
                 ),
 
