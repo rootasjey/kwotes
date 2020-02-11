@@ -28,19 +28,19 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Contact()));
 
-  static Handler _homehandler = Handler(
+  static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Home()));
 
-  static Handler _privacyhandler = Handler(
+  static Handler _privacyHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(PrivacyTerms()));
 
-  static Handler _quotePagehandler = Handler(
+  static Handler _quotePageHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(QuotePage(quoteId: params['id'][0],)));
 
-  static Handler _referencehandler = Handler(
+  static Handler _referenceHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(ReferencePage(id: params['id'][0])));
 
@@ -48,11 +48,11 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Signin()));
 
-  static Handler _topichandler = Handler(
+  static Handler _topicHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(TopicPage(name: params['name'][0])));
 
-  static Handler _undefinedhandler = Handler(
+  static Handler _undefinedHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
 
@@ -71,19 +71,19 @@ class FluroRouter {
     );
     router.define(
       HomeRoute,
-      handler: _homehandler,
+      handler: _homeHandler,
     );
     router.define(
       PrivacyRoute,
-      handler: _privacyhandler,
+      handler: _privacyHandler,
     );
     router.define(
       QuotePageRoute,
-      handler: _quotePagehandler,
+      handler: _quotePageHandler,
     );
     router.define(
       ReferenceRoute,
-      handler: _referencehandler,
+      handler: _referenceHandler,
     );
     router.define(
       SigninRoute,
@@ -91,11 +91,11 @@ class FluroRouter {
     );
     router.define(
       TopicRoute,
-      handler: _topichandler,
+      handler: _topicHandler,
     );
     router.define(
       UndefinedRoute,
-      handler: _undefinedhandler,
+      handler: _undefinedHandler,
     );
   }
 

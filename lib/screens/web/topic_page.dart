@@ -59,7 +59,7 @@ class _TopicPageState extends State<TopicPage> {
                   },
                   icon: Icon(Icons.arrow_back),
                 ),
-              )
+              ),
             ],
           ),
         ),
