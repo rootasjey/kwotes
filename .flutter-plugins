@@ -1,6 +1,8 @@
 # This is a generated file; do not edit or check into version control.
 connectivity=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.6+2/
 firebase_analytics=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-5.0.9/
+firebase_auth=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.15.4/
+firebase_auth_web=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-0.1.2/
 firebase_core=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.3+2/
 firebase_core_web=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.1.1+2/
 firebase_messaging=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-6.0.9/
