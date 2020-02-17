@@ -17,6 +17,20 @@ class _SignupState extends State<Signup> {
   bool isLoading = false;
 
   @override
+  initState() {
+    super.initState();
+    checkAuthStatus();
+  }
+
+  void checkAuthStatus() async {
+    final user = await FirebaseAuth.instance.currentUser();
+
+    if (user != null) {
+      FluroRouter.router.navigateTo(context, DashboardRoute);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -60,6 +74,10 @@ class _SignupState extends State<Signup> {
             padding: const EdgeInsets.only(top: 15.0,),
             child: FlatButton(
               onPressed: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  DashboardRoute,
+                );
               },
               child: Opacity(
                 opacity: .6,

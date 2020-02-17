@@ -4,6 +4,7 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
+import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
@@ -28,6 +29,10 @@ class FluroRouter {
   static Handler _contactHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Contact()));
+
+  static Handler _dashboardHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(Dashboard()));
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -73,6 +78,10 @@ class FluroRouter {
     router.define(
       ContactRoute,
       handler: _contactHandler,
+    );
+    router.define(
+      DashboardRoute,
+      handler: _dashboardHandler,
     );
     router.define(
       HomeRoute,
