@@ -114,3 +114,6 @@ assets/api.json
 .flutter-plugins
 android/app/google-services.json
 android/.idea
+.firebaserc
+.firebase/hosting.YnVpbGQvd2Vi.cache
+firebase.json
