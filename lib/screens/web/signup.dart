@@ -228,8 +228,7 @@ class _SignupState extends State<Signup> {
         return;
       }
 
-      // Create user in firestore
-      final doc = await FirestoreApp.instance
+      await FirestoreApp.instance
         .collection('users')
         .doc(user.uid)
         .set({
