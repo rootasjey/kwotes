@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
-class Signin extends StatefulWidget {
+class Signup extends StatefulWidget {
   @override
-  _SigninState createState() => _SigninState();
+  _SignupState createState() => _SignupState();
 }
 
-class _SigninState extends State<Signin> {
+class _SignupState extends State<Signup> {
   String email = '';
   String password = '';
   bool isCompleted = false;
@@ -22,12 +23,12 @@ class _SigninState extends State<Signin> {
         NavBackHeader(),
 
         Padding(
-        padding: const EdgeInsets.only(bottom: 300.0),
-        child: SizedBox(
-          width: 300.0,
-          child: content(),
+          padding: const EdgeInsets.only(bottom: 300.0),
+          child: SizedBox(
+            width: 300.0,
+            child: content(),
+          ),
         ),
-      ),
       ],
     );
   }
@@ -48,7 +49,7 @@ class _SigninState extends State<Signin> {
           Padding(
             padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
             child: Text(
-              'You are now logged in!',
+              'Your account has been successfully created!',
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -80,7 +81,7 @@ class _SigninState extends State<Signin> {
           Padding(
             padding: const EdgeInsets.only(top: 40.0),
             child: Text(
-              'Signing in...',
+              'Signing up...',
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -95,7 +96,7 @@ class _SigninState extends State<Signin> {
         Padding(
           padding: EdgeInsets.only(top: 10.0),
           child: Text(
-            'Sign in into your existing account.',
+            'Sign up for a new account.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20.0,
@@ -108,13 +109,13 @@ class _SigninState extends State<Signin> {
           onPressed: () {
             FluroRouter.router.navigateTo(
               context,
-              SignupRoute,
+              SigninRoute,
             );
           },
           child: Opacity(
             opacity: .6,
             child: Text(
-              "I don't have an account"
+              "I already have an account"
             ),
           )
         ),
@@ -136,7 +137,7 @@ class _SigninState extends State<Signin> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Email login cannot be empty';
+                    return 'Email cannot be empty';
                   }
 
                   return null;
@@ -174,43 +175,15 @@ class _SigninState extends State<Signin> {
         Padding(
           padding: const EdgeInsets.only(top: 60.0),
           child: FlatButton(
-            onPressed: () async {
-              setState(() {
-                isLoading = true;
-              });
-
-              try {
-                final result = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-
-                if (result.user == null) {
-                  showSnack(message: 'The password is incorrect or the user does not exists.');
-                  return;
-                }
-
-                setState(() {
-                  isLoading = false;
-                  isCompleted = true;
-                });
-
-                print('logged in as: ${result.user.email}');
-
-              } catch (error) {
-                showSnack(
-                  message: 'The password is incorrect or the user does not exists.',
-                );
-
-                setState(() {
-                  isLoading = false;
-                });
-              }
+            onPressed: () {
+              createAccount();
             },
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text('Sign me in'),
+                  Text('Sign me up'),
                   Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: Icon(Icons.arrow_forward),
@@ -224,17 +197,74 @@ class _SigninState extends State<Signin> {
     );
   }
 
-  void showSnack({String message}) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
+  void createAccount() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final result = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+
+      final user = result.user;
+
+      if (user == null) {
+        setState(() {
+          isLoading = false;
+        });
+
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              'An occurred while creating your account. Please try again or contact us if the problem persists.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          )
+        );
+
+        return;
+      }
+
+      // Create user in firestore
+      final doc = await FirestoreApp.instance
+        .collection('users')
+        .doc(user.uid)
+        .set({
+          'uid': user.uid,
+          'email': user.email,
+          'lang': 'en',
+          'name': '',
+          'nameLowerCase': '',
+          'notifications': [],
+          'pricing': 'free',
+          'quota': {
+            'date': DateTime.now(),
+            'history': [],
+            'today': 0,
+          },
+          'rights': {
+            'user:proposequote': true,
+            'user:readquote': true,
+          },
+          'tokens': {},
+        });
+
+      setState(() {
+        isLoading = true;
+        isCompleted = true;
+      });
+
+    } catch (error) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error: ${error.toString()}',
           ),
-        ),
-      )
-    );
+        )
+      );
+    }
   }
 }
