@@ -76,16 +76,21 @@ class _DashboardState extends State<Dashboard> {
               height: 200.0,
               child: Card(
                 color: Color(0xFF414042),
-                child: Padding(
-                  padding: const EdgeInsets.all(60.0),
-                  child: Text(
-                    'Account settings',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
+                child: InkWell(
+                  onTap: () {
+                    FluroRouter.router.navigateTo(context, AccountRoute);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(60.0),
+                    child: Text(
+                      'Account settings',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
                     ),
                   ),
-                ),
+                )
               ),
             ),
           )

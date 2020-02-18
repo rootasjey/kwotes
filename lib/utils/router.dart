@@ -2,9 +2,11 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
+import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
+import 'package:memorare/screens/web/delete_account.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
@@ -22,6 +24,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(About()));
 
+  static Handler _accountHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(Account()));
+
   static Handler _authorHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(AuthorPage(id: params['id'][0],)));
@@ -33,6 +39,10 @@ class FluroRouter {
   static Handler _dashboardHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Dashboard()));
+
+  static Handler _deleteAccountHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(DeleteAccount()));
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -72,6 +82,10 @@ class FluroRouter {
       handler: _aboutHandler,
     );
     router.define(
+      AccountRoute,
+      handler: _accountHandler,
+    );
+    router.define(
       AuthorRoute,
       handler: _authorHandler,
     );
@@ -82,6 +96,10 @@ class FluroRouter {
     router.define(
       DashboardRoute,
       handler: _dashboardHandler,
+    );
+    router.define(
+      DeleteAccountRoute,
+      handler: _deleteAccountHandler,
     );
     router.define(
       HomeRoute,

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -192,36 +193,8 @@ class _SigninState extends State<Signin> {
         Padding(
           padding: const EdgeInsets.only(top: 60.0),
           child: FlatButton(
-            onPressed: () async {
-              setState(() {
-                isLoading = true;
-              });
-
-              try {
-                final result = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-
-                if (result.user == null) {
-                  showSnack(message: 'The password is incorrect or the user does not exists.');
-                  return;
-                }
-
-                setState(() {
-                  isLoading = false;
-                  isCompleted = true;
-                });
-
-                print('logged in as: ${result.user.email}');
-
-              } catch (error) {
-                showSnack(
-                  message: 'The password is incorrect or the user does not exists.',
-                );
-
-                setState(() {
-                  isLoading = false;
-                });
-              }
+            onPressed: () {
+              connectAccount();
             },
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -240,6 +213,38 @@ class _SigninState extends State<Signin> {
         )
       ],
     );
+  }
+
+  void connectAccount() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final result = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+      if (result.user == null) {
+        showSnack(message: 'The password is incorrect or the user does not exists.');
+        return;
+      }
+
+      AppLocalStorage.saveEmail(email);
+
+      setState(() {
+        isLoading = false;
+        isCompleted = true;
+      });
+
+    } catch (error) {
+      showSnack(
+        message: 'The password is incorrect or the user does not exists.',
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void showSnack({String message}) {

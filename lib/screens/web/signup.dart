@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -64,6 +65,7 @@ class _SignupState extends State<Signup> {
             padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
             child: Text(
               'Your account has been successfully created!',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -252,6 +254,7 @@ class _SignupState extends State<Signup> {
         .set({
           'uid': user.uid,
           'email': user.email,
+          'flag': '',
           'lang': 'en',
           'name': '',
           'nameLowerCase': '',
@@ -268,6 +271,8 @@ class _SignupState extends State<Signup> {
           },
           'tokens': {},
         });
+
+      AppLocalStorage.saveEmail(email);
 
       setState(() {
         isLoading = true;
