@@ -19,6 +19,8 @@ class _AccountState extends State<Account> {
 
   String displayName = '';
   String oldDisplayName = '';
+  String avatarUrl = '';
+  String email = '';
 
   @override
   void initState() {
@@ -36,6 +38,8 @@ class _AccountState extends State<Account> {
 
     setState(() {
       oldDisplayName = userAuth.displayName ?? '';
+      avatarUrl = userAuth.photoUrl ?? '';
+      email = userAuth.email ?? '';
     });
   }
 
@@ -70,6 +74,8 @@ class _AccountState extends State<Account> {
             )
           ),
 
+          avatar(),
+
           inputDisplayName(),
 
           Padding(
@@ -100,6 +106,52 @@ class _AccountState extends State<Account> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget avatar() {
+    NetworkImage networkImage;
+    AssetImage assetImage = AssetImage('assets/images/icon-small.png');
+
+    if (avatarUrl.length > 0) {
+      networkImage = NetworkImage(avatarUrl);
+    } else if (email.length > 0) {
+      networkImage = NetworkImage('https://api.adorable.io/avatars/285/$email');
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 60.0),
+      child: Material(
+        elevation: 1.0,
+        shape: CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: Ink.image(
+          image: networkImage != null ? NetworkImage('https://api.adorable.io/avatars/285/$email') :
+            assetImage,
+          fit: BoxFit.cover,
+          width: 200.0,
+          height: 200.0,
+          child: InkWell(
+            onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Container(
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: networkImage ?? assetImage,
+                        ),
+                      ),
+                    );
+                  }
+                );
+              },
+          ),
+        ),
       ),
     );
   }
@@ -177,8 +229,7 @@ class _AccountState extends State<Account> {
     });
 
     try {
-      // NOTE: Name unicity ?;
-
+      // NOTE: Name unicity ?
       final userUpdateInfo = UserUpdateInfo();
       userUpdateInfo.displayName = displayName;
 
