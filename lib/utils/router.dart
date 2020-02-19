@@ -7,6 +7,7 @@ import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/delete_account.dart';
+import 'package:memorare/screens/web/edit_email.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
@@ -43,6 +44,10 @@ class FluroRouter {
   static Handler _deleteAccountHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(DeleteAccount()));
+
+  static Handler _editEmailHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(EditEmail()));
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -100,6 +105,10 @@ class FluroRouter {
     router.define(
       DeleteAccountRoute,
       handler: _deleteAccountHandler,
+    );
+    router.define(
+      EditEmailRoute,
+      handler: _editEmailHandler,
     );
     router.define(
       HomeRoute,

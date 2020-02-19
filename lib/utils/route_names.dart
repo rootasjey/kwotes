@@ -5,6 +5,7 @@ const String AccountRoute       = '/account';
 const String ContactRoute       = '/contact';
 const String DashboardRoute     = '/dashboard';
 const String DeleteAccountRoute = '/account/delete';
+const String EditEmailRoute     = '/account/email/edit';
 const String PrivacyRoute       = '/privacy';
 const String QuotePageRoute     = '/quote/:id';
 const String ReferenceRoute     = '/reference/:id';

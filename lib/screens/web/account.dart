@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/components/web/settings_card.dart';
+import 'package:memorare/components/web/settings_color_card.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -13,6 +15,8 @@ class _AccountState extends State<Account> {
   bool isLoading = false;
   bool isCompleted = false;
   FirebaseUser userAuth;
+
+  String displayName = '';
 
   @override
   void initState() {
@@ -61,21 +65,55 @@ class _AccountState extends State<Account> {
             )
           ),
 
-          RaisedButton(
-            onPressed: () {
-              FluroRouter.router.navigateTo(context, DeleteAccountRoute);
-            },
-            color: Colors.red,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'Delete account',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+          Container(
+            padding: EdgeInsets.only(bottom: 40.0),
+            width: 400.0,
+            child: TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.email),
+                labelText: 'Display name',
+              ),
+              keyboardType: TextInputType.text,
+              onChanged: (value) {
+                displayName = value;
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Display name cannot be empty.';
+                }
+
+                return null;
+              },
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50.0),
+            child: SizedBox(
+              width: 500.0,
+              child: Wrap(
+                children: <Widget>[
+                  SettingsCard(
+                    icon: Icon(Icons.email, size: 40.0,),
+                    name: 'Update email',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, EditEmailRoute);
+                    },
+                  ),
+
+                  SettingsColorCard(
+                    backgroundColor: Color(0xFFF85C50),
+                    color: Colors.white,
+                    icon: Icon(Icons.delete, size: 40.0, color: Colors.white,),
+                    name: 'Delete account',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, DeleteAccountRoute);
+                    },
+                  ),
+                ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
