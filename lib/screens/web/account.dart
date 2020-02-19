@@ -16,12 +16,14 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   bool isLoading = false;
   bool isCompleted = false;
+  bool isLoadingImageURL = false;
   FirebaseUser userAuth;
 
   String displayName = '';
   String oldDisplayName = '';
   String avatarUrl = '';
   String email = '';
+  String imageUrl = '';
 
   @override
   void initState() {
@@ -113,6 +115,28 @@ class _AccountState extends State<Account> {
   }
 
   Widget avatar() {
+    if (isLoadingImageURL) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 60.0),
+        child: SizedBox(
+          width: 200.0,
+          height: 200.0,
+          child: Column(
+            children: <Widget>[
+              CircularProgressIndicator(),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  'Updating profile image...',
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     NetworkImage networkImage;
     AssetImage assetImage = AssetImage('assets/images/icon-small.png');
 
@@ -130,8 +154,7 @@ class _AccountState extends State<Account> {
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: Ink.image(
-          image: networkImage != null ? NetworkImage('https://api.adorable.io/avatars/285/$email') :
-            assetImage,
+          image: networkImage ?? assetImage,
           fit: BoxFit.cover,
           width: 200.0,
           height: 200.0,
@@ -142,14 +165,87 @@ class _AccountState extends State<Account> {
                 barrierDismissible: true,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    content: Container(
-                      child: Image(
-                        fit: BoxFit.cover,
-                        image: networkImage ?? assetImage,
-                      ),
-                    ),
+                    content: Stack(
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Opacity(
+                                opacity: .6,
+                                child: SizedBox(
+                                  width: 300.0,
+                                  child: Text(
+                                    'You can provide a new URL for your image here',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                )
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 50.0),
+                              child: SizedBox(
+                                width: 300.0,
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    icon: Icon(Icons.image),
+                                    labelText: 'Image URL',
+                                  ),
+                                  onChanged: (value) {
+                                    imageUrl = value;
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            RaisedButton(
+                              color: Color(0xFF58595B),
+                              onPressed: () {
+                                updateImageUrl();
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(top: 40.0),
+                              child: SizedBox(
+                                width: 400.0,
+                                height: 400.0,
+                                child: Image(
+                                  fit: BoxFit.cover,
+                                  image: networkImage ?? assetImage,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Positioned(
+                          top: 5.0,
+                          right: 5.0,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.close),
+                          ),
+                        ),
+                      ],
+                    )
                   );
-                }
+                },
               );
             },
           ),
@@ -271,6 +367,49 @@ class _AccountState extends State<Account> {
         SnackBar(
           backgroundColor: Colors.red,
           content: Text('Error while updating your display name. Please try again or contact us.'),
+        )
+      );
+    }
+  }
+
+
+  void updateImageUrl() async {
+    if (userAuth == null) {
+      checkAuthStatus();
+      return;
+    }
+
+    setState(() {
+      isLoadingImageURL = true;
+    });
+
+    try {
+      final userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.photoUrl = imageUrl;
+      await userAuth.updateProfile(userUpdateInfo);
+
+      setState(() {
+        isLoadingImageURL = false;
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Your image has been successfully updated.'),
+        )
+      );
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoadingImageURL = false;
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Error while updating your image URL. Please try again or contact us.'),
         )
       );
     }
