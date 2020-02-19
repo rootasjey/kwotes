@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/components/web/settings_color_card.dart';
@@ -17,6 +18,7 @@ class _AccountState extends State<Account> {
   FirebaseUser userAuth;
 
   String displayName = '';
+  String oldDisplayName = '';
 
   @override
   void initState() {
@@ -27,11 +29,14 @@ class _AccountState extends State<Account> {
   void checkAuthStatus() async {
     userAuth = await FirebaseAuth.instance.currentUser();
 
-    setState(() {});
-
     if (userAuth == null) {
       FluroRouter.router.navigateTo(context, SigninRoute);
+      return;
     }
+
+    setState(() {
+      oldDisplayName = userAuth.displayName ?? '';
+    });
   }
 
   @override
@@ -65,27 +70,7 @@ class _AccountState extends State<Account> {
             )
           ),
 
-          Container(
-            padding: EdgeInsets.only(bottom: 40.0),
-            width: 400.0,
-            child: TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.email),
-                labelText: 'Display name',
-              ),
-              keyboardType: TextInputType.text,
-              onChanged: (value) {
-                displayName = value;
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Display name cannot be empty.';
-                }
-
-                return null;
-              },
-            ),
-          ),
+          inputDisplayName(),
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 50.0),
@@ -117,5 +102,124 @@ class _AccountState extends State<Account> {
         ],
       ),
     );
+  }
+
+  Widget inputDisplayName() {
+    if (isLoading) {
+      return SizedBox(
+        height: 200.0,
+        child: Column(
+          children: <Widget>[
+            CircularProgressIndicator(),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: Text(
+                'Updating your display name...'
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: EdgeInsets.only(bottom: 40.0),
+      width: 400.0,
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 330.0,
+            child: TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.person_outline),
+                labelText: oldDisplayName.isEmpty ? 'Display name' : oldDisplayName,
+              ),
+              keyboardType: TextInputType.text,
+              onChanged: (value) {
+                setState(() {
+                  displayName = value;
+                });
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Display name cannot be empty.';
+                }
+
+                return null;
+              },
+            ),
+          ),
+
+          if (displayName.length > 0 && displayName != oldDisplayName)
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                onPressed: () {
+                  updateDisplayName();
+                },
+                icon: Icon(Icons.save, color: Colors.green,),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void updateDisplayName() async {
+    if (userAuth == null) {
+      checkAuthStatus();
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // NOTE: Name unicity ?;
+
+      final userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = displayName;
+
+      await userAuth.updateProfile(userUpdateInfo);
+
+      await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .update(
+          data: {
+            'name': displayName,
+            'nameLowerCase': displayName.toLowerCase(),
+          }
+        );
+
+      setState(() {
+        isLoading = false;
+        oldDisplayName = displayName;
+        displayName = '';
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Your display name has been successfully updated.'),
+        )
+      );
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Error while updating your display name. Please try again or contact us.'),
+        )
+      );
+    }
   }
 }
