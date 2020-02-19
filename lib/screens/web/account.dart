@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/components/web/settings_color_card.dart';
@@ -46,7 +47,6 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(bottom: 300.0),
       child: Column(
         children: <Widget>[
           NavBackHeader(),
@@ -105,6 +105,8 @@ class _AccountState extends State<Account> {
               ),
             ),
           ),
+
+          NavBackFooter(),
         ],
       ),
     );
@@ -135,21 +137,21 @@ class _AccountState extends State<Account> {
           height: 200.0,
           child: InkWell(
             onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: Container(
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: networkImage ?? assetImage,
-                        ),
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Container(
+                      child: Image(
+                        fit: BoxFit.cover,
+                        image: networkImage ?? assetImage,
                       ),
-                    );
-                  }
-                );
-              },
+                    ),
+                  );
+                }
+              );
+            },
           ),
         ),
       ),
