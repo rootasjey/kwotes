@@ -190,6 +190,7 @@ class _SignupState extends State<Signup> {
                 ),
                 obscureText: true,
                 onChanged: (value) {
+                  if (value.length == 0) { return; }
                   password = value;
                 },
                 onFieldSubmitted: (value) {

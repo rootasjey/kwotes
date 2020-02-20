@@ -193,6 +193,7 @@ class _SigninState extends State<Signin> {
                   password = value;
                 },
                 onFieldSubmitted: (value) {
+                  if (value.length == 0) { return; }
                   connectAccount();
                 },
                 validator: (value) {
