@@ -5,25 +5,31 @@ class Language {
   /// Current application's language.
   static String current = 'en';
 
+  static const String en = 'en';
+  static const String fr = 'fr';
+
+  static const String english = 'English';
+  static const String french = 'Français';
+
   static String backend(String lang) {
     switch (lang) {
-      case 'English':
-        return 'en';
-      case 'Français':
-        return 'fr';
+      case english:
+        return en;
+      case french:
+        return fr;
       default:
-        return 'en';
+        return en;
     }
   }
 
   static String frontend(String lang) {
     switch (lang) {
-      case 'en':
-        return 'English';
-      case 'fr':
-        return 'Français';
+      case en:
+        return english;
+      case fr:
+        return french;
       default:
-        return 'English';
+        return english;
     }
   }
 
