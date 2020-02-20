@@ -5,6 +5,7 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/components/web/settings_color_card.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -24,6 +25,7 @@ class _AccountState extends State<Account> {
   String avatarUrl = '';
   String email = '';
   String imageUrl = '';
+  String selectedLang = 'English';
 
   @override
   void initState() {
@@ -43,6 +45,24 @@ class _AccountState extends State<Account> {
       oldDisplayName = userAuth.displayName ?? '';
       avatarUrl = userAuth.photoUrl ?? '';
       email = userAuth.email ?? '';
+    });
+
+    loadLang();
+  }
+
+  void loadLang() async {
+    final user = await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
+
+    if (!user.exists) { return; }
+
+    final data = user.data();
+    final lang = data['lang'];
+
+    setState(() {
+      selectedLang = Language.frontend(lang);
     });
   }
 
@@ -116,6 +136,26 @@ class _AccountState extends State<Account> {
                 ),
               ],
             ),
+          ),
+
+          DropdownButton<String>(
+            elevation: 3,
+            value: selectedLang,
+            onChanged: (String newValue) {
+              setState(() {
+                selectedLang = newValue;
+              });
+
+              updateLang();
+            },
+            items: ['English', 'Français']
+              .map((String value) {
+                return DropdownMenuItem(
+                  value: value,
+                  child: Text(value,)
+                );
+              })
+              .toList(),
           ),
 
           Padding(
@@ -419,7 +459,6 @@ class _AccountState extends State<Account> {
     }
   }
 
-
   void updateImageUrl() async {
     if (userAuth == null) {
       checkAuthStatus();
@@ -457,6 +496,49 @@ class _AccountState extends State<Account> {
         SnackBar(
           backgroundColor: Colors.red,
           content: Text('Error while updating your image URL. Please try again or contact us.'),
+        )
+      );
+    }
+  }
+
+  void updateLang() async {
+    if (userAuth == null) {
+      checkAuthStatus();
+      return;
+    }
+
+    final lang = Language.backend(selectedLang);
+
+    try {
+      await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .update(
+          data: {
+            'lang': lang,
+          }
+        );
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'Your language has been successfully updated.'
+          ),
+        )
+      );
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Error while updating your language. Please try again or contact us.'),
         )
       );
     }
