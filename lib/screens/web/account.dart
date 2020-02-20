@@ -81,6 +81,44 @@ class _AccountState extends State<Account> {
           inputDisplayName(),
 
           Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            child: Wrap(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Material(
+                      color: Color(0xFF58595B),
+                      elevation: 1,
+                      shape: CircleBorder(),
+                      clipBehavior: Clip.hardEdge,
+                      child: IconButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          FluroRouter.router.navigateTo(context, HomeRoute);
+                        },
+                        icon: Icon(
+                          Icons.exit_to_app,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: Opacity(
+                        opacity: .7,
+                        child: Text(
+                          'Sign out',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
             padding: const EdgeInsets.symmetric(vertical: 60.0),
             child: SizedBox(
               width: 800.0,
