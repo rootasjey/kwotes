@@ -40,29 +40,46 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Column(
-        children: <Widget>[
-          CircularProgressIndicator(),
-          Text(
-            'Loading...',
-            style: TextStyle(
-              fontSize: 40.0,
+      return Container(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(),
+
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'Loading...',
+                style: TextStyle(
+                  fontSize: 40.0,
+                ),
+              ),
             ),
-          )
-        ],
+          ],
+        ),
       );
     }
 
     if (!isLoading && _quotidian == null) {
-      return Column(
-        children: <Widget>[
-          Text(
-            'Sorry, an unexpected error happended :(',
-            style: TextStyle(
-              fontSize: 35.0,
+      return Container(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.warning, size: 40.0,),
+
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'Sorry, an unexpected error happended :(',
+                style: TextStyle(
+                  fontSize: 35.0,
+                ),
+              ),
             ),
-          )
-        ],
+          ],
+        ),
       );
     }
 
