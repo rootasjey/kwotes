@@ -1,9 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Footer extends StatelessWidget {
+class Footer extends StatefulWidget {
+  @override
+  _FooterState createState() => _FooterState();
+}
+
+class _FooterState extends State<Footer> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +43,10 @@ class Footer extends StatelessWidget {
               ),
 
               FlatButton(
-                onPressed: () {},
+                onPressed: () async {
+                  Language.current = Language.en;
+                  updateUserLang();
+                },
                 child: Opacity(
                   opacity: .5,
                   child: Text(
@@ -48,7 +59,10 @@ class Footer extends StatelessWidget {
               ),
 
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  Language.current = Language.fr;
+                  updateUserLang();
+                },
                 child: Opacity(
                   opacity: .5,
                   child: Text(
@@ -205,5 +219,38 @@ class Footer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future updateUserLang() async {
+    final userAuth = await FirebaseAuth.instance.currentUser();
+
+    if (userAuth == null) { return; }
+
+    try {
+     await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .update(
+        data: {
+          'lang': Language.current,
+        }
+      );
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Your language has been successfully updated.'),
+        )
+      );
+    } catch (error) {
+      debugPrint(error.toString());
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Sorry, There was an error while updating your language.'),
+        )
+      );
+    }
   }
 }
