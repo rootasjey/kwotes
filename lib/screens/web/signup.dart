@@ -17,6 +17,8 @@ class _SignupState extends State<Signup> {
   bool isCompleted = false;
   bool isLoading = false;
 
+  final _passwordNode = FocusNode();
+
   @override
   initState() {
     super.initState();
@@ -155,6 +157,9 @@ class _SignupState extends State<Signup> {
                 onChanged: (value) {
                   email = value;
                 },
+                onFieldSubmitted: (value) {
+                  FocusScope.of(context).requestFocus(_passwordNode);
+                },
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Email cannot be empty';
@@ -172,6 +177,7 @@ class _SignupState extends State<Signup> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
+                focusNode: _passwordNode,
                 decoration: InputDecoration(
                   icon: Icon(Icons.lock_outline),
                   labelText: 'Password',
@@ -179,6 +185,9 @@ class _SignupState extends State<Signup> {
                 obscureText: true,
                 onChanged: (value) {
                   password = value;
+                },
+                onFieldSubmitted: (value) {
+                  createAccount();
                 },
                 validator: (value) {
                   if (value.isEmpty) {

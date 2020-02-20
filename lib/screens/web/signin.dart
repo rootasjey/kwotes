@@ -16,6 +16,8 @@ class _SigninState extends State<Signin> {
   bool isCompleted = false;
   bool isLoading = false;
 
+  final _passwordNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -153,6 +155,9 @@ class _SigninState extends State<Signin> {
                 onChanged: (value) {
                   email = value;
                 },
+                onFieldSubmitted: (value) {
+                  FocusScope.of(context).requestFocus(_passwordNode);
+                },
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Email login cannot be empty';
@@ -171,6 +176,7 @@ class _SigninState extends State<Signin> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
+                focusNode: _passwordNode,
                 decoration: InputDecoration(
                   icon: Icon(Icons.lock_outline),
                   labelText: 'Password',
@@ -178,6 +184,9 @@ class _SigninState extends State<Signin> {
                 obscureText: true,
                 onChanged: (value) {
                   password = value;
+                },
+                onFieldSubmitted: (value) {
+                  connectAccount();
                 },
                 validator: (value) {
                   if (value.isEmpty) {
