@@ -46,26 +46,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget greetings() {
-    if (userAuth == null) {
-      return Padding(padding: EdgeInsets.zero,);
-    }
-
-    final name = userAuth.displayName != null ?
-      userAuth.displayName : userAuth.email;
-
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Text(
-        'Hello $name!',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 30.0,
-        ),
-      ),
-    );
-  }
-
   Widget cardsList() {
     return Padding(
       padding: const EdgeInsets.only(top: 100.0),
@@ -97,6 +77,26 @@ class _DashboardState extends State<Dashboard> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget greetings() {
+    if (userAuth == null) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
+    final name = userAuth.displayName != null ?
+      userAuth.displayName : userAuth.email;
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Text(
+        'Hello $name!',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 30.0,
+        ),
       ),
     );
   }
