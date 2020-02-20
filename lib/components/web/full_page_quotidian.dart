@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/font_size.dart';
@@ -14,6 +15,7 @@ class FullPageQuotidian extends StatefulWidget {
 
 class _FullPageQuotidianState extends State<FullPageQuotidian> {
   bool isLoading = false;
+  FirebaseUser userAuth;
 
   @override
   void initState() {
@@ -21,6 +23,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     if (_quotidian != null) { return; }
     fetchQuotidian();
+    checkAuthStatus();
+  }
+
+  void checkAuthStatus() async {
+    userAuth = await FirebaseAuth.instance.currentUser();
+
+    setState(() {});
   }
 
   @override
@@ -137,7 +146,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget userSection() {
-    return signinButton();
+    if (userAuth == null) {
+      return signinButton();
+    }
+
+    return userActions();
   }
 
   Widget signinButton() {
