@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -251,6 +252,8 @@ class _SigninState extends State<Signin> {
         isLoading = false;
         isCompleted = true;
       });
+
+      await Language.fetchLang(result.user);
 
     } catch (error) {
       showSnack(

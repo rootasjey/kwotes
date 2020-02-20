@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -30,6 +31,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     userAuth = await FirebaseAuth.instance.currentUser();
 
     setState(() {});
+
+    if (userAuth != null) {
+      Language.fetchLang(userAuth);
+    }
   }
 
   @override
@@ -70,8 +75,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  _quotidian.quote.name,
+                Text(_quotidian.quote.name,
                   style: TextStyle(
                     fontSize: FontSize.hero(_quotidian.quote.name),
                   ),

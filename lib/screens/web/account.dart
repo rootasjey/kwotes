@@ -47,22 +47,14 @@ class _AccountState extends State<Account> {
       email = userAuth.email ?? '';
     });
 
-    loadLang();
+    fetchLang();
   }
 
-  void loadLang() async {
-    final user = await FirestoreApp.instance
-      .collection('users')
-      .doc(userAuth.uid)
-      .get();
-
-    if (!user.exists) { return; }
-
-    final data = user.data();
-    final lang = data['lang'];
+  void fetchLang() async {
+    await Language.fetchLang(userAuth);
 
     setState(() {
-      selectedLang = Language.frontend(lang);
+      selectedLang = Language.frontend(Language.current);
     });
   }
 
@@ -518,6 +510,8 @@ class _AccountState extends State<Account> {
             'lang': lang,
           }
         );
+
+      Language.current = lang;
 
       Scaffold.of(context).showSnackBar(
         SnackBar(
