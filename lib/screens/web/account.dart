@@ -33,31 +33,6 @@ class _AccountState extends State<Account> {
     checkAuthStatus();
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-      return;
-    }
-
-    setState(() {
-      oldDisplayName = userAuth.displayName ?? '';
-      avatarUrl = userAuth.photoUrl ?? '';
-      email = userAuth.email ?? '';
-    });
-
-    fetchLang();
-  }
-
-  void fetchLang() async {
-    await Language.fetchLang(userAuth);
-
-    setState(() {
-      selectedLang = Language.frontend(Language.current);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -393,6 +368,31 @@ class _AccountState extends State<Account> {
         ],
       ),
     );
+  }
+
+  void checkAuthStatus() async {
+    userAuth = await FirebaseAuth.instance.currentUser();
+
+    if (userAuth == null) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+      return;
+    }
+
+    setState(() {
+      oldDisplayName = userAuth.displayName ?? '';
+      avatarUrl = userAuth.photoUrl ?? '';
+      email = userAuth.email ?? '';
+    });
+
+    fetchLang();
+  }
+
+  void fetchLang() async {
+    await Language.fetchLang(userAuth);
+
+    setState(() {
+      selectedLang = Language.frontend(Language.current);
+    });
   }
 
   void updateDisplayName() async {
