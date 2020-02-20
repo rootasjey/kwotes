@@ -81,16 +81,25 @@ class _AccountState extends State<Account> {
           inputDisplayName(),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50.0),
+            padding: const EdgeInsets.symmetric(vertical: 60.0),
             child: SizedBox(
-              width: 500.0,
+              width: 800.0,
               child: Wrap(
+                alignment: WrapAlignment.center,
                 children: <Widget>[
                   SettingsCard(
                     icon: Icon(Icons.email, size: 40.0,),
                     name: 'Update email',
                     onTap: () {
                       FluroRouter.router.navigateTo(context, EditEmailRoute);
+                    },
+                  ),
+
+                  SettingsCard(
+                    icon: Icon(Icons.lock, size: 40.0,),
+                    name: 'Update password',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, EditPasswordRoute);
                     },
                   ),
 

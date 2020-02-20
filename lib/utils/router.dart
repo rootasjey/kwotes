@@ -8,6 +8,7 @@ import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/delete_account.dart';
 import 'package:memorare/screens/web/edit_email.dart';
+import 'package:memorare/screens/web/edit_password.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
@@ -48,6 +49,10 @@ class FluroRouter {
   static Handler _editEmailHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(EditEmail()));
+
+  static Handler _editPasswordHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(EditPassword()));
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -109,6 +114,10 @@ class FluroRouter {
     router.define(
       EditEmailRoute,
       handler: _editEmailHandler,
+    );
+    router.define(
+      EditPasswordRoute,
+      handler: _editPasswordHandler,
     );
     router.define(
       HomeRoute,
