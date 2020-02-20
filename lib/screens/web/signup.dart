@@ -25,6 +25,12 @@ class _SignupState extends State<Signup> {
     checkAuthStatus();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _passwordNode.dispose();
+  }
+
   void checkAuthStatus() async {
     final user = await FirebaseAuth.instance.currentUser();
 
