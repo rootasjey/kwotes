@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -11,6 +12,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   FirebaseUser userAuth;
+  bool canManage = false;
 
   @override
   void initState() {
@@ -26,6 +28,17 @@ class _DashboardState extends State<Dashboard> {
     if (userAuth == null) {
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
+
+    final user = await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
+
+    if (!user.exists) { return; }
+
+    setState(() {
+      canManage = user.data()['rights']['user:managequote'] == true;
+    });
   }
 
   @override
@@ -41,6 +54,9 @@ class _DashboardState extends State<Dashboard> {
           signOutButton(),
 
           cardsList(),
+
+          if (canManage)
+            adminCardLists(),
         ],
       ),
     );
@@ -48,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget cardsList() {
     return Padding(
-      padding: const EdgeInsets.only(top: 100.0),
+      padding: const EdgeInsets.symmetric(vertical: 100.0),
       child: Column(
         children: <Widget>[
           Padding(
@@ -75,9 +91,51 @@ class _DashboardState extends State<Dashboard> {
                 )
               ),
             ),
-          )
+          ),
         ],
       ),
+    );
+  }
+
+  Widget adminCardLists() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          width: 200.0,
+          child: Divider(
+            height: 50.0,
+            thickness: 1.0,
+          ),
+        ),
+
+        Text('ADMIN'),
+
+        Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: SizedBox(
+            width: 700.0,
+            height: 200.0,
+            child: Card(
+              color: Color(0xFF00CF91),
+              child: InkWell(
+                onTap: () {
+                  FluroRouter.router.navigateTo(context, QuotesRoute);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(60.0),
+                  child: Text(
+                    'Published quotes',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+              )
+            ),
+          ),
+        ),
+      ],
     );
   }
 
