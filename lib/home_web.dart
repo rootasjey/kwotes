@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/router.dart';
 
 class HomeWeb extends StatefulWidget {
@@ -10,6 +11,12 @@ class HomeWeb extends StatefulWidget {
 }
 
 class _HomeWebState extends State<HomeWeb> {
+  @override
+  initState() {
+    super.initState();
+    ThemeColor.fetchTopicsColors();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

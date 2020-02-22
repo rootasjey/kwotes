@@ -1,5 +1,7 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/types/topic_color.dart';
 
 class ThemeColor extends ChangeNotifier {
   static Color primary = Color(0xFF706FD3);
@@ -11,6 +13,8 @@ class ThemeColor extends ChangeNotifier {
   Color accent = Color(0xFF706FD3);
   Color background = Colors.black54;
   Color blackOrWhite = Colors.black;
+
+  static List<TopicColor> topicsColors = [];
 
   bool isColorLoaded = false;
 
@@ -131,5 +135,18 @@ class ThemeColor extends ChangeNotifier {
     final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
 
     return hslDark.toColor();
+  }
+
+  static void fetchTopicsColors() async {
+    final snapshot = await FirestoreApp.instance
+      .collection('topics')
+      .get();
+
+    if (snapshot.empty) { return; }
+
+    snapshot.forEach((doc) {
+      final topicColor = TopicColor.fromJSON(doc.data());
+      topicsColors.add(topicColor);
+    });
   }
 }
