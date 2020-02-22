@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -76,11 +77,13 @@ class _QuotesPageState extends State<QuotesPage> {
     return gridQuotes();
   }
 
-
   Widget gridQuotes() {
     final children = <Widget>[];
 
     quotes.forEach((quote) {
+      final topicColor = ThemeColor.topicsColors
+        .firstWhere((element) => element.name == quote.topics.first);
+
       children.add(
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -90,7 +93,7 @@ class _QuotesPageState extends State<QuotesPage> {
             child: Card(
               shape: BorderDirectional(
                 bottom: BorderSide(
-                  color: Colors.green,
+                  color: Color(topicColor.decimal),
                   width: 2.0,
                 ),
               ),
