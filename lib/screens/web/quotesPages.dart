@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/load_more_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/types/colors.dart';
@@ -17,6 +18,9 @@ class _QuotesPageState extends State<QuotesPage> {
   List<Quote> quotes = [];
 
   bool isLoading = false;
+  bool isLoadingMore = false;
+
+  var lastDoc;
 
   @override
   initState() {
@@ -125,6 +129,15 @@ class _QuotesPageState extends State<QuotesPage> {
       );
     });
 
+    children.add(
+      LoadMoreCard(
+        isLoading: isLoadingMore,
+        onTap: () {
+          fetchMoreQuotes();
+        },
+      )
+    );
+
     return Column(
       children: <Widget>[
         Padding(
@@ -188,6 +201,8 @@ class _QuotesPageState extends State<QuotesPage> {
         quotes.add(quote);
       });
 
+      lastDoc = snapshot.docs.last;
+
       setState(() {
         isLoading = false;
       });
@@ -195,6 +210,48 @@ class _QuotesPageState extends State<QuotesPage> {
     } catch (error) {
       setState(() {
         isLoading = false;
+      });
+    }
+  }
+
+  void fetchMoreQuotes() async {
+    if (lastDoc == null) { return; }
+
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection('quotes')
+        .where('lang', '==', Language.current)
+        .startAfter(snapshot: lastDoc)
+        .limit(30)
+        .get();
+
+      if (snapshot.empty) {
+        setState(() {
+          isLoadingMore = false;
+        });
+
+        return;
+      }
+
+      snapshot.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        final quote = Quote.fromJSON(data);
+        quotes.insert(quotes.length - 1, quote);
+      });
+
+      setState(() {
+        isLoadingMore = false;
+      });
+
+    } catch (error) {
+      setState(() {
+        isLoadingMore = false;
       });
     }
   }
