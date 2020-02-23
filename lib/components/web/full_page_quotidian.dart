@@ -229,9 +229,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       isLoading = true;
     });
 
+    final now = DateTime.now();
+
     try {
       final doc = await FirestoreApp.instance
-        .collection('quotidians').doc('01:02:2020').get();
+        .collection('quotidians')
+        .doc('${now.year}:${now.month}:${now.day}:${Language.current}')
+        .get();
 
       if (!doc.exists) {
         setState(() {

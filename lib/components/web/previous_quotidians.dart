@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/language.dart';
 
 class PreviousQuotidians extends StatefulWidget {
   @override
@@ -68,7 +69,7 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
 
     if (!isLoading && quotidian == null) {
       return HorizontalCard(
-        quoteName: 'Sorry, a bug has slipped through. Try reloading the page.',
+        quoteName: 'It\'s our mistakes which define us the most (try reloading the page).',
       );
     }
 
@@ -85,10 +86,15 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
       isLoading = true;
     });
 
+    final now = DateTime.now();
+    final yesterday = now.subtract(
+      Duration(days: 1)
+    );
+
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('02:02:2020')
+        .doc('${yesterday.year}:${yesterday.month}:${yesterday.day}:${Language.current}')
         .get();
 
       if (!doc.exists) {

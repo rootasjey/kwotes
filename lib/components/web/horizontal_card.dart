@@ -34,7 +34,9 @@ class _HorizontalCardState extends State<HorizontalCard> {
           children: <Widget>[
             Card(
               child: InkWell(
-                onTap: () {
+                onTap: (widget.quoteId == null || widget.quoteId.length == 0) ?
+                null :
+                () {
                   FluroRouter.router.navigateTo(
                     context,
                     QuotePageRoute.replaceFirst(':id', widget.quoteId)
