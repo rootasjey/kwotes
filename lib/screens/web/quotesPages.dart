@@ -101,27 +101,53 @@ class _QuotesPageState extends State<QuotesPage> {
                   width: 2.0,
                 ),
               ),
-              child: InkWell(
-                onTap: () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    QuotePageRoute.replaceFirst(':id', quote.id)
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        quote.name,
-                        style: TextStyle(
-                          fontSize: adaptativeFont(quote.name),
-                        ),
-                      )
+              child: Stack(
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      FluroRouter.router.navigateTo(
+                        context,
+                        QuotePageRoute.replaceFirst(':id', quote.id)
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            quote.name,
+                            style: TextStyle(
+                              fontSize: adaptativeFont(quote.name),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'quotidian') {
+                        addQuotidian(quote);
+                        return;
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      PopupMenuItem(
+                        value: 'quotidian',
+                        child: ListTile(
+                          leading: Icon(Icons.add),
+                          title: Text('Add to quotidians'),
+                        )
+                      ),
                     ],
                   ),
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -253,6 +279,91 @@ class _QuotesPageState extends State<QuotesPage> {
       setState(() {
         isLoadingMore = false;
       });
+    }
+  }
+
+  void addQuotidian(Quote quote) async {
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection("quotidians")
+        .orderBy("date", "desc")
+        .limit(1)
+        .get();
+
+      String id = '';
+      DateTime nextDate;
+
+      if (snapshot.empty) {
+        final now = DateTime.now();
+        nextDate = now;
+
+        id = '${now.year}:${now.month}:${now.day}:${Language.current}';
+
+      } else {
+        final first = snapshot.docs.first;
+        final DateTime lastDate = first.data()['date'];
+
+        nextDate = lastDate.add(
+          Duration(days: 1)
+        );
+
+        id = '${nextDate.year}:${nextDate.month}:${nextDate.day}:${Language.current}';
+      }
+
+      await FirestoreApp.instance
+        .collection('quotidians')
+        .doc(id)
+        .set({
+          'createdAt': DateTime.now(),
+          'date': nextDate,
+          'lang': Language.current,
+          'quote': {
+            'author': {
+              'id': quote.author.id,
+              'name': quote.author.name,
+            },
+            'id': quote.id,
+            'mainReference': {
+              'id': quote.mainReference.id,
+              'name': quote.mainReference.name,
+            },
+            'name': quote.name,
+            'topics': quote.topics,
+          },
+          'updatedAt': DateTime.now(),
+          'urls': {
+            'image': {
+              'small': '',
+              'medium': '',
+              'large': '',
+            },
+            'imageAndText': {
+              'small': '',
+              'medium': '',
+              'large': '',
+            },
+          }
+        });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'The quote has been successfully added to quotidians.'
+          ),
+        )
+      );
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Sorry, an error occurred while adding the quotes to quotidian.'
+          ),
+        )
+      );
     }
   }
 }
