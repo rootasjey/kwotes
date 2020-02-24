@@ -1,12 +1,20 @@
-# memorare
+<p align="middle">
+  <img src="./assets/images/icon-512.png" title="memorare icon" width="254"/>
+</p>
 
-Official Memorare mobile (Android & iOS) app.
+<h1 align="middle">Memorare</h1>
 
-<img src="./screenshot.png" alt="mobile screenshot" title="mobile screenshot" width="300" />
+<p align="middle">5 seconds of emotion.</p>
 
-## Getting Started
+<p align="middle">
+  <img src="./screenshots/home_quote.png" title="memorare home web" />
+</p>
 
-* Pre-requisites
+# Quickstart
+
+> ⚠️ This project is in early development stage so you may find bugs. The developer part hasn't been built yet, so you won't be able to contribute to it at the moment without explicit authorization.
+
+## Pre-requisites
 
 Make sure you have Flutter dev tools installed.
 You can test that by running the following command in a terminal:
@@ -17,21 +25,22 @@ flutter doctor -v
 
 This will check that everything is alright.
 
-If you don't have the flutter dev tools yet, please visit the official page.
+If you don't have the flutter dev tools yet, please visit the [official Flutter page](https://flutter.dev).
 
-* Clone the project
+## Setup the project
+
+1. Clone the project
 
 ```bash
 git clone https://github.com/memorare/mobile.git
 ```
 
-* Add the file `assets/api.json` containing the api endpoint with your private key:
+2. Fill up the file `lib/app_keys.json` with your url and your private key:
 
-```json
-{
-  "apikey": "my_api_key",
-  "url": "api_endpoint_url"
-}
+> You can find them at [dev.memorare.app](https://dev.memorare.app)
+
+```dart
+/// Will be available soon
 ```
 
 * Run the app using Android Studio, VSCode or the Command line interface
@@ -40,10 +49,30 @@ git clone https://github.com/memorare/mobile.git
 flutter run lib/main.dart
 ```
 
-## Licence
+# Contibute
+
+You won't be able to contribute to this project at the moment without explicit authorization due to the early development stage and the missing developers section.
+
+# Licence
 
 Mozilla Public License 2.0.
 
 Please read the [LICENSE](./LICENSE) for more information.
 
 Please [ask](mailto:github@memorare.app) if you have any doubt.
+
+# Screenshots
+
+Web |
+--------------------------------
+![Web home](./screenshots/home_quote.png) |
+--------------------------------
+![Web discover](./screenshots/home_discover.png) |
+--------------------------------
+![Web discover](./screenshots/home_topics.png) |
+--------------------------------
+Mobile |
+--------------------------------
+<img src="./screenshots/iphone_home_light.png" title="Mobile home light" width="254" />
+<img src="./screenshots/iphone_home_dark.png" title="Mobile home dark" width="254" />
+--------------------------------
