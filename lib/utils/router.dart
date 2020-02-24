@@ -13,6 +13,7 @@ import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/quotesPages.dart';
+import 'package:memorare/screens/web/quotidians.dart';
 import 'package:memorare/screens/web/reference_page.dart';
 import 'package:memorare/screens/web/signin.dart';
 import 'package:memorare/screens/web/signup.dart';
@@ -70,6 +71,10 @@ class FluroRouter {
   static Handler _quotesPageHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(QuotesPage()));
+
+  static Handler _quotidiansHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(Quotidians()));
 
   static Handler _referenceHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -139,6 +144,10 @@ class FluroRouter {
     router.define(
       QuotesRoute,
       handler: _quotesPageHandler,
+    );
+    router.define(
+      QuotidiansRoute,
+      handler: _quotidiansHandler,
     );
     router.define(
       ReferenceRoute,

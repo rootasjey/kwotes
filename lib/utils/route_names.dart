@@ -10,6 +10,7 @@ const String EditPasswordRoute  = '/account/password/edit';
 const String PrivacyRoute       = '/privacy';
 const String QuotePageRoute     = '/quote/:id';
 const String QuotesRoute        = '/quotes';
+const String QuotidiansRoute    = '/quotidians';
 const String ReferenceRoute     = '/reference/:id';
 const String SigninRoute        = '/signin';
 const String SignupRoute        = '/signup';

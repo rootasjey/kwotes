@@ -135,6 +135,32 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
+
+        Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: SizedBox(
+            width: 700.0,
+            height: 200.0,
+            child: Card(
+              color: Color(0xFFFFAF50),
+              child: InkWell(
+                onTap: () {
+                  FluroRouter.router.navigateTo(context, QuotidiansRoute);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(60.0),
+                  child: Text(
+                    'Quotidians',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+              )
+            ),
+          ),
+        ),
       ],
     );
   }
