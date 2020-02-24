@@ -63,16 +63,14 @@ Please [ask](mailto:github@memorare.app) if you have any doubt.
 
 # Screenshots
 
-Web |
+Web
 --------------------------------
-![Web home](./screenshots/home_quote.png) |
+![Web home](./screenshots/home_quote.png)
 --------------------------------
-![Web discover](./screenshots/home_discover.png) |
+![Web discover](./screenshots/home_discover.png)
 --------------------------------
-![Web discover](./screenshots/home_topics.png) |
+![Web discover](./screenshots/home_topics.png)
 --------------------------------
-Mobile |
+Mobile
 --------------------------------
-<img src="./screenshots/iphone_home_light.png" title="Mobile home light" width="254" />
-<img src="./screenshots/iphone_home_dark.png" title="Mobile home dark" width="254" />
---------------------------------
+![Memorare mobile](./screenshots/collage_memorare_mobile.png)
