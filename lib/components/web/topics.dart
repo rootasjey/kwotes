@@ -119,8 +119,7 @@ class _TopicsState extends State<Topics> {
         isLoading = false;
       });
 
-      print('error');
-      print(error);
+      debugPrint(error.toString());
     }
   }
 }
