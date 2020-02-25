@@ -50,7 +50,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       lang    = AddQuoteInputs.refLang;
 
       _nameController.text    = AddQuoteInputs.refName;
-      _subTypeController.text = AddQuoteInputs.refSubType;
+      _subTypeController.text = AddQuoteInputs.refSecondaryType;
+      _typeController.text    = AddQuoteInputs.refPrimaryType;
       _summaryController.text = AddQuoteInputs.refSummary;
       _urlController.text     = AddQuoteInputs.refUrl;
       _wikiUrlController.text = AddQuoteInputs.refWikiUrl;
@@ -220,7 +221,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             ),
             onChanged: (newValue) {
               type = newValue;
-              AddQuoteInputs.refType = newValue;
+              AddQuoteInputs.refPrimaryType= newValue;
             },
           ),
         ),
@@ -234,7 +235,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             ),
             onChanged: (newValue) {
               subType = newValue;
-              AddQuoteInputs.refSubType = newValue;
+              AddQuoteInputs.refSecondaryType = newValue;
             },
           ),
         ),

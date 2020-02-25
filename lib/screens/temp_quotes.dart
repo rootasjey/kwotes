@@ -236,14 +236,15 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
         if (tempQuote.references != null && tempQuote.references.length > 0) {
           final ref = tempQuote.references.first;
-          AddQuoteInputs.refImgUrl  = ref.imgUrl;
-          AddQuoteInputs.refLang    = ref.lang;
-          AddQuoteInputs.refName    = ref.name;
-          AddQuoteInputs.refSubType = ref.subType;
-          AddQuoteInputs.refSummary = ref.summary;
-          // AddQuoteInputs.refType    = ref.type; // TODO: add primary, secondary
-          AddQuoteInputs.refUrl     = ref.url;
-          AddQuoteInputs.refWikiUrl = ref.wikiUrl;
+
+          AddQuoteInputs.refImgUrl        = ref.imgUrl;
+          AddQuoteInputs.refLang          = ref.lang;
+          AddQuoteInputs.refName          = ref.name;
+          AddQuoteInputs.refSecondaryType = ref.subType;
+          AddQuoteInputs.refSummary       = ref.summary;
+          AddQuoteInputs.refPrimaryType   = ref.type.primary;
+          AddQuoteInputs.refUrl           = ref.url;
+          AddQuoteInputs.refWikiUrl       = ref.wikiUrl;
         }
 
         AddQuoteInputs.isCompleted    = false;
