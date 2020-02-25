@@ -51,7 +51,19 @@ class _DashboardState extends State<Dashboard> {
 
           greetings(),
 
-          signOutButton(),
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: SizedBox(
+              height: 150.0,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  signOutButton(),
+                ],
+              ),
+            ),
+          ),
 
           cardsList(),
 
@@ -64,7 +76,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget cardsList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 100.0),
+      padding: const EdgeInsets.symmetric(vertical: 60.0),
       child: Column(
         children: <Widget>[
           Padding(
@@ -100,15 +112,31 @@ class _DashboardState extends State<Dashboard> {
   Widget adminCardLists() {
     return Column(
       children: <Widget>[
-        SizedBox(
-          width: 200.0,
-          child: Divider(
-            height: 50.0,
-            thickness: 1.0,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 100.0,
+              child: Divider(
+                thickness: 1.0,
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Text('ADMIN'),
+            ),
+
+            SizedBox(
+              width: 100.0,
+              child: Divider(
+                thickness: 1.0,
+              ),
+            ),
+          ],
         ),
 
-        Text('ADMIN'),
+        Padding(padding: const EdgeInsets.only(top: 20.0),),
 
         Padding(
           padding: const EdgeInsets.all(30.0),
@@ -187,7 +215,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget signOutButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Wrap(
         children: <Widget>[
           Column(
