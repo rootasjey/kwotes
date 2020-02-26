@@ -60,6 +60,7 @@ class _DashboardState extends State<Dashboard> {
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   signOutButton(),
+                  addQuoteButton(),
                 ],
               ),
             ),
@@ -243,6 +244,45 @@ class _DashboardState extends State<Dashboard> {
                   opacity: .7,
                   child: Text(
                     'Sign out',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget addQuoteButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Wrap(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Material(
+                color: Color(0xFF58595B),
+                elevation: 1,
+                shape: CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: IconButton(
+                  onPressed: () {
+                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+                  },
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Opacity(
+                  opacity: .7,
+                  child: Text(
+                    'Add a qutoe',
                   ),
                 ),
               ),

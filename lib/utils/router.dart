@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
+import 'package:memorare/screens/web/add_quote_content.dart';
 import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
@@ -31,6 +32,10 @@ class FluroRouter {
   static Handler _accountHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Account()));
+
+  static Handler _addQuoteHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AddQuoteContent());
 
   static Handler _authorHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -104,6 +109,10 @@ class FluroRouter {
     router.define(
       AccountRoute,
       handler: _accountHandler,
+    );
+    router.define(
+      AddQuoteContentRoute,
+      handler: _addQuoteHandler,
     );
     router.define(
       AuthorRoute,
