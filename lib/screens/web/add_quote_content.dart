@@ -131,7 +131,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
           langSelect(Colors.blue),
 
-          footer(),
+          buttonsNavigation(),
         ],
       ),
     );
@@ -164,7 +164,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget footer() {
+  Widget buttonsNavigation() {
     return Padding(
       padding: const EdgeInsets.only(top: 100.0, bottom: 300.0),
       child: Row(
@@ -182,7 +182,9 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
               ),
               child: Padding(
                 padding: EdgeInsets.all(15.0),
-                child: Text('Cancel'),
+                child: Text(
+                  'Cancel',
+                ),
               ),
             ),
           ),
@@ -201,7 +203,9 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
               ),
               child: Padding(
                 padding: EdgeInsets.all(15.0),
-                child: Text('Next'),
+                child: Text(
+                  'Next',
+                ),
               ),
             ),
           ),
