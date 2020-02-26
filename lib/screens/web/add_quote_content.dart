@@ -51,31 +51,6 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget title() {
-    return Column(
-      children: <Widget>[
-        Text(
-          'Add content',
-          style: TextStyle(
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        Opacity(
-          opacity: 0.6,
-          child: Text(
-            '1/6',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
   Widget body() {
     return SizedBox(
       width: 500.0,
@@ -141,33 +116,6 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget langSelect(Color color) {
-    return DropdownButton<String>(
-      value: lang,
-      style: TextStyle(
-        color: color,
-        fontSize: 20.0,
-        fontWeight: FontWeight.bold,
-      ),
-      underline: Container(
-        height: 2.0,
-        color: color,
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          lang = newValue;
-          AddQuoteInputs.lang = newValue;
-        });
-      },
-      items: langs.map<DropdownMenuItem<String>>((value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value.toUpperCase()),
-        );
-      }).toList(),
     );
   }
 
@@ -260,6 +208,58 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           }
         );
       },
+    );
+  }
+
+  Widget langSelect(Color color) {
+    return DropdownButton<String>(
+      value: lang,
+      style: TextStyle(
+        color: color,
+        fontSize: 20.0,
+        fontWeight: FontWeight.bold,
+      ),
+      underline: Container(
+        height: 2.0,
+        color: color,
+      ),
+      onChanged: (newValue) {
+        setState(() {
+          lang = newValue;
+          AddQuoteInputs.lang = newValue;
+        });
+      },
+      items: langs.map<DropdownMenuItem<String>>((value) {
+        return DropdownMenuItem(
+          value: value,
+          child: Text(value.toUpperCase()),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget title() {
+    return Column(
+      children: <Widget>[
+        Text(
+          'Add content',
+          style: TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        Opacity(
+          opacity: 0.6,
+          child: Text(
+            '1/6',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
+      ],
     );
   }
 }
