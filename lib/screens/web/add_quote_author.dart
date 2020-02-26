@@ -77,98 +77,38 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   Widget avatar() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
-      child: InkWell(
-        onTap: () {
-          return showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusDirectional.all(Radius.circular(5.0)),
-                ),
-                content: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: SizedBox(
-                    width: 250.0,
-                    height: 150.0,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 60.0),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                "Author image's URL",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        TextField(
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: imgUrl.length > 0 ? imgUrl : 'URL',
-                          ),
-                          onChanged: (newValue) {
-                            _tempImgUrl = newValue;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      'CANCEL',
-                      style: TextStyle(
-                        color: Provider.of<ThemeColor>(context).blackOrWhite,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  FlatButton(
-                    child: Text(
-                      'SAVE',
-                      style: TextStyle(
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        imgUrl = _tempImgUrl;
-                      });
-
-                      AddQuoteInputs.authorImgUrl = imgUrl;
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            }
-          );
-        },
+      child: Material(
+        elevation: 1.0,
+        shape: CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
         child: imgUrl.length > 0 ?
-        CircleAvatar(
-          backgroundImage: NetworkImage(imgUrl),
-          radius: 80.0,
-        ) :
-        CircleAvatar(
-          child: Icon(
-            Icons.add,
-            size: 50.0,
-            color: Provider.of<ThemeColor>(context).accent,
+          Ink.image(
+            image: NetworkImage(imgUrl),
+            fit: BoxFit.cover,
+            width: 200.0,
+            height: 200.0,
+            child: InkWell(
+              onTap: () => showAvatarDialog(),
+            ),
+          ) :
+          Ink(
+            width: 200.0,
+            height: 200.0,
+            child: InkWell(
+              onTap: () => showAvatarDialog(),
+              child: CircleAvatar(
+                child: Icon(
+                  Icons.add,
+                  size: 50.0,
+                  color: Provider.of<ThemeColor>(context).accent,
+                ),
+                backgroundColor: Colors.black12,
+                radius: 80.0,
+              ),
+            )
           ),
-          backgroundColor: Colors.black12,
-          radius: 80.0,
-        ),
-      )
+      ),
     );
   }
 
@@ -399,6 +339,83 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ),
         )
       ],
+    );
+  }
+
+  void showAvatarDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.all(Radius.circular(5.0)),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: SizedBox(
+              width: 250.0,
+              height: 150.0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 60.0),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Author image's URL",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: imgUrl.length > 0 ? imgUrl : 'URL',
+                    ),
+                    onChanged: (newValue) {
+                      _tempImgUrl = newValue;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'CANCEL',
+                style: TextStyle(
+                  color: Provider.of<ThemeColor>(context).blackOrWhite,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'SAVE',
+                style: TextStyle(
+                ),
+              ),
+              onPressed: () {
+                setState(() {
+                  imgUrl = _tempImgUrl;
+                });
+
+                AddQuoteInputs.authorImgUrl = imgUrl;
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
     );
   }
 }
