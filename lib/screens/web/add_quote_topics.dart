@@ -117,7 +117,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
-          Divider(height: 60.0,),
+          Divider(height: 120.0,),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Text(
