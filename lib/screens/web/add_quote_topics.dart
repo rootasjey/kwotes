@@ -171,6 +171,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       width: 500.0,
       child: Column(
         children: <Widget>[
+          title(),
+
           selectedTopics.length == 0 ?
             emptyTopics(themeColor) :
             addedTopics(themeColor),
@@ -270,14 +272,11 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   Widget title() {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 25.0),
-          child: Text(
-            'Add topics',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-            ),
+        Text(
+          'Add topics',
+          style: TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         Opacity(
