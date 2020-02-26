@@ -1,8 +1,7 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/utils/router.dart';
 
 class AddQuoteContent extends StatefulWidget {
@@ -30,55 +29,24 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          proposeQuote();
-        },
-        label: Text('Propose'),
-        icon: Icon(Icons.send),
-        backgroundColor: Colors.green,
-      ),
-      body: Builder(
-        builder: (BuildContext contxt) {
-          return ListView(
+    return AddQuoteLayout(
+      child: Stack(
+        children: <Widget>[
+          Column(
             children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      NavBackHeader(),
-                      body(),
-                    ],
-                  ),
-
-                  Positioned(
-                    right: 50.0,
-                    top: 80.0,
-                    child: helpButton(),
-                  )
-                ],
-              ),
-
-              Footer(),
+              NavBackHeader(),
+              body(),
             ],
-          );
-        }
+          ),
+
+          Positioned(
+            right: 50.0,
+            top: 80.0,
+            child: helpButton(),
+          )
+        ],
       ),
     );
-  }
-
-  void proposeQuote() {
-    if (AddQuoteInputs.name.isEmpty) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        message: "The quote's content cannot be empty.",
-      )
-      ..show(context);
-
-      return;
-    }
   }
 
   Widget title() {
