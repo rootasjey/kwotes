@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
+import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
+import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
 class AddQuoteContent extends StatefulWidget {
@@ -131,7 +133,12 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
           langSelect(Colors.blue),
 
-          buttonsNavigation(),
+          // buttonsNavigation(),
+          AddQuoteNavButtons(
+            onPrevPressed: () => FluroRouter.router.pop(context),
+            prevMessage: 'Cancel',
+            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
+          ),
         ],
       ),
     );
@@ -161,56 +168,6 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           child: Text(value.toUpperCase()),
         );
       }).toList(),
-    );
-  }
-
-  Widget buttonsNavigation() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 100.0, bottom: 300.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: FlatButton(
-              onPressed: () {
-                FluroRouter.router.pop(context);
-              },
-              shape: RoundedRectangleBorder(
-                side: BorderSide(),
-                borderRadius: BorderRadius.circular(2.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text(
-                  'Cancel',
-                ),
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: FlatButton(
-              onPressed: () {
-                FluroRouter.router.pop(context);
-              },
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Colors.blue,
-                ),
-                borderRadius: BorderRadius.circular(2.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text(
-                  'Next',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
