@@ -5,6 +5,7 @@ import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
 import 'package:memorare/screens/web/add_quote_content.dart';
+import 'package:memorare/screens/web/add_quote_topics.dart';
 import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
@@ -41,6 +42,10 @@ class FluroRouter {
   static Handler _addQuoteAuthorHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteAuthor());
+
+  static Handler _addQuoteTopicsHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AddQuoteTopics());
 
   static Handler _authorHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -122,6 +127,10 @@ class FluroRouter {
     router.define(
       AddQuoteAuthorRoute,
       handler: _addQuoteAuthorHandler,
+    );
+    router.define(
+      AddQuoteTopicsRoute,
+      handler: _addQuoteTopicsHandler,
     );
     router.define(
       AuthorRoute,

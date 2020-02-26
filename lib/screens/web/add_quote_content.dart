@@ -108,11 +108,10 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
           langSelect(Colors.blue),
 
-          // buttonsNavigation(),
           AddQuoteNavButtons(
             onPrevPressed: () => FluroRouter.router.pop(context),
             prevMessage: 'Cancel',
-            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
+            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute),
           ),
         ],
       ),
