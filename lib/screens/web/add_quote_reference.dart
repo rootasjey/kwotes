@@ -5,6 +5,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +74,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
           AddQuoteNavButtons(
             onPrevPressed: () => FluroRouter.router.pop(context),
+            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteCommentRoute),
           ),
         ],
       ),

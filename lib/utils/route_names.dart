@@ -2,6 +2,7 @@ const String HomeRoute              = '/';
 const String AboutRoute             = '/about';
 const String AddQuoteContentRoute   = '/quote/add/content';
 const String AddQuoteAuthorRoute    = '/quote/add/author';
+const String AddQuoteCommentRoute   = '/quote/add/comment';
 const String AddQuoteReferenceRoute = '/quote/add/reference';
 const String AddQuoteTopicsRoute    = '/quote/add/topics';
 const String AuthorRoute            = '/author/:id';
