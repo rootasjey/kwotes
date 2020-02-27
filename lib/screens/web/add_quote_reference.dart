@@ -116,6 +116,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: TextField(
+          autofocus: true,
           controller: _nameController,
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
