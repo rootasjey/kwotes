@@ -199,7 +199,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           Padding(
                             padding: EdgeInsets.only(bottom: 20.0),
                             child: Text(
-                              '- Author information are optional',
+                              '• Author information are optional',
                               style: TextStyle(
                                 fontSize: 17.0,
                               ),
@@ -208,7 +208,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           Padding(
                             padding: EdgeInsets.only(bottom: 20.0),
                             child: Text(
-                              '- If you select the author\'s name in the dropdown list, other fields can stay empty',
+                              '• If you select the author\'s name in the dropdown list, other fields can stay empty',
                               style: TextStyle(
                                 fontSize: 17.0,
                               ),
@@ -410,8 +410,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             FlatButton(
               child: Text(
                 'SAVE',
-                style: TextStyle(
-                ),
               ),
               onPressed: () {
                 setState(() {
