@@ -282,7 +282,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
         Opacity(
           opacity: 0.6,
           child: Text(
-            '2/6',
+            '2/5',
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,

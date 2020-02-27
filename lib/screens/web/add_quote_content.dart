@@ -281,7 +281,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         Opacity(
           opacity: 0.6,
           child: Text(
-            '1/6',
+            '1/5',
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
