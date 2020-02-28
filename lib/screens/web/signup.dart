@@ -277,7 +277,6 @@ class _SignupState extends State<Signup> {
           'pricing': 'free',
           'quota': {
             'day': DateTime.now(),
-            'history': [],
             'limit': 1,
             'today': 0,
           },
