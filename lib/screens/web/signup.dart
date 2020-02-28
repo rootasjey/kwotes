@@ -49,14 +49,14 @@ class _SignupState extends State<Signup> {
           padding: const EdgeInsets.only(bottom: 300.0),
           child: SizedBox(
             width: 300.0,
-            child: content(),
+            child: body(),
           ),
         ),
       ],
     );
   }
 
-  Widget content() {
+  Widget body() {
     if (isCompleted) {
       return Column(
         children: <Widget>[
@@ -268,7 +268,6 @@ class _SignupState extends State<Signup> {
         .collection('users')
         .doc(user.uid)
         .set({
-          'uid': user.uid,
           'email': user.email,
           'flag': '',
           'lang': 'en',
@@ -287,6 +286,7 @@ class _SignupState extends State<Signup> {
             'user:readquote': true,
           },
           'tokens': {},
+          'uid': user.uid,
         });
 
       AppLocalStorage.saveEmail(email);
