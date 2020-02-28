@@ -25,32 +25,20 @@ class _EditEmailState extends State<EditEmail> {
     checkAuthStatus();
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    setState(() {});
-
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: <Widget>[
           NavBackHeader(),
-
-          content(),
-
+          body(),
           NavBackFooter(),
         ],
       ),
     );
   }
 
-  Widget content() {
+  Widget body() {
     if (isCompleted) {
       return SizedBox(
         width: 600.0,
@@ -181,6 +169,16 @@ class _EditEmailState extends State<EditEmail> {
         ],
       ),
     );
+  }
+
+  void checkAuthStatus() async {
+    userAuth = await FirebaseAuth.instance.currentUser();
+
+    setState(() {});
+
+    if (userAuth == null) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
   }
 
   void updateEmail() async {

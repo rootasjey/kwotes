@@ -53,6 +53,30 @@ flutter run lib/main.dart
 
 You won't be able to contribute to this project at the moment without explicit authorization due to the early development stage and the missing developers section.
 
+## Code styles
+
+Repository code styles for better structure and reading.
+
+### Dart class
+
+Rules for dart classes.
+
+* All imports at the top, ascending ordered alphabeticaly
+* Variables declared at the top of the state
+
+```dart
+class _DashboardState extends State<Dashboard> {
+  FirebaseUser userAuth;
+  bool canManage = false;
+  // ...
+```
+
+* Class methods in priority order:
+  * Overrides (e.g. `initState`)
+  * build method
+  * Custom methods which return a widget
+  * Other functions (e.g. auth functions, fetch data, ...)
+
 # Licence
 
 Mozilla Public License 2.0.

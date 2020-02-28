@@ -130,59 +130,6 @@ class _ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  void fetchReference() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      final doc = await FirestoreApp.instance
-        .collection('references')
-        .doc(widget.id)
-        .get();
-
-      if (!doc.exists) {
-        setState(() {
-          isLoading = false;
-        });
-
-        return;
-      }
-
-      setState(() {
-        reference = Reference.fromJSON(doc.data());
-        isLoading = false;
-      });
-
-      fetchQuote();
-
-    } catch (error) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void fetchQuote() async {
-    if (reference == null) { return; }
-
-    try {
-      final snapshot = await FirestoreApp.instance
-        .collection('quotes')
-        .where('mainReference.name', '==', reference.name)
-        .limit(1)
-        .get();
-
-      snapshot.forEach((doc) {
-        quote = Quote.fromJSON(doc.data());
-      });
-
-      setState(() {});
-
-    } catch (error) {
-    }
-  }
-
   Widget avatar() {
     if (reference.urls.image != null && reference.urls.image.length > 0) {
       return SizedBox(
@@ -411,5 +358,58 @@ class _ReferencePageState extends State<ReferencePage> {
         ],
       ),
     );
+  }
+
+  void fetchQuote() async {
+    if (reference == null) { return; }
+
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection('quotes')
+        .where('mainReference.name', '==', reference.name)
+        .limit(1)
+        .get();
+
+      snapshot.forEach((doc) {
+        quote = Quote.fromJSON(doc.data());
+      });
+
+      setState(() {});
+
+    } catch (error) {
+    }
+  }
+
+  void fetchReference() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final doc = await FirestoreApp.instance
+        .collection('references')
+        .doc(widget.id)
+        .get();
+
+      if (!doc.exists) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      setState(() {
+        reference = Reference.fromJSON(doc.data());
+        isLoading = false;
+      });
+
+      fetchQuote();
+
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

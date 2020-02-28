@@ -14,6 +14,7 @@ class Signin extends StatefulWidget {
 class _SigninState extends State<Signin> {
   String email = '';
   String password = '';
+
   bool isCompleted = false;
   bool isLoading = false;
 
@@ -49,14 +50,14 @@ class _SigninState extends State<Signin> {
         padding: const EdgeInsets.only(bottom: 300.0),
         child: SizedBox(
           width: 300.0,
-          child: content(),
+          child: body(),
         ),
       ),
       ],
     );
   }
 
-  Widget content() {
+  Widget body() {
     if (isCompleted) {
       return Column(
         children: <Widget>[

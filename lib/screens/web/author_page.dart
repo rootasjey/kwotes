@@ -154,91 +154,6 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget summary() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 40.0),
-          child: Opacity(
-            opacity: .6,
-            child: Text(
-              'SUMMARY'
-            ),
-          )
-        ),
-
-        SizedBox(
-          width: 100,
-          child: Divider(thickness: 1.0,)
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 100.0
-          ),
-          child: SizedBox(
-            width: 600.0,
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                author.summary,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  height: 1.5,
-                )
-              ),
-            ),
-          )
-        ),
-      ],
-    );
-  }
-
-  Widget quoteCard() {
-    if (quote == null) {
-      return Padding(padding: EdgeInsets.zero,);
-    }
-
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Divider(
-            thickness: 1.0,
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'QUOTES'
-              ),
-            )
-          ),
-
-          SizedBox(
-            width: 100,
-            child: Divider(thickness: 1.0,)
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-            child: HorizontalCard(
-              quoteId: quote.id,
-              quoteName: quote.name,
-              referenceId: quote.mainReference.id,
-              referenceName: quote.mainReference.name,
-            ),
-          ),
-
-          Divider(
-            thickness: 1.0,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget externalLinks() {
     final children = <Widget>[];
 
@@ -355,6 +270,91 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget quoteCard() {
+    if (quote == null) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Divider(
+            thickness: 1.0,
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'QUOTES'
+              ),
+            )
+          ),
+
+          SizedBox(
+            width: 100,
+            child: Divider(thickness: 1.0,)
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            child: HorizontalCard(
+              quoteId: quote.id,
+              quoteName: quote.name,
+              referenceId: quote.mainReference.id,
+              referenceName: quote.mainReference.name,
+            ),
+          ),
+
+          Divider(
+            thickness: 1.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget summary() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'SUMMARY'
+            ),
+          )
+        ),
+
+        SizedBox(
+          width: 100,
+          child: Divider(thickness: 1.0,)
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 100.0
+          ),
+          child: SizedBox(
+            width: 600.0,
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                author.summary,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  height: 1.5,
+                )
+              ),
+            ),
+          )
+        ),
+      ],
     );
   }
 

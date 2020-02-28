@@ -81,6 +81,99 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
+  Widget clearButton() {
+    return FlatButton(
+      padding: EdgeInsets.all(10.0),
+      onPressed: () {
+        AddQuoteInputs.clearReference();
+
+        imgUrl = '';
+
+        _nameController.clear();
+        _primaryTypeController.clear();
+        _secondaryTypeController.clear();
+        _summaryController.clear();
+        _urlController.clear();
+        _wikiUrlController.clear();
+      },
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'Clear reference information',
+        ),
+      ),
+    );
+  }
+
+  Widget helpButton() {
+    return IconButton(
+      iconSize: 40.0,
+      icon: Opacity(
+        opacity: .6,
+        child: Icon(Icons.help,)
+      ),
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    width: 500.0,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 40.0),
+                      child: Text(
+                        'Help',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: 500.0,
+                    child: Opacity(
+                      opacity: .6,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20.0),
+                            child: Text(
+                              '• Reference information are optional',
+                              style: TextStyle(
+                                fontSize: 17.0,
+                              ),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20.0),
+                            child: Text(
+                              '• If you select the reference\'s name in the dropdown list, other fields can stay empty',
+                              style: TextStyle(
+                                fontSize: 17.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        );
+      },
+    );
+  }
+
   Widget imagePreview() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
@@ -106,65 +199,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               onTap: () => showImageDialog(),
             ),
           ),
-      ),
-    );
-  }
-
-  Widget nameField() {
-    return SizedBox(
-      width: 200.0,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: TextField(
-          autofocus: true,
-          controller: _nameController,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: InputDecoration(
-            labelText: 'Name',
-          ),
-          onChanged: (newValue) {
-            name = newValue;
-            AddQuoteInputs.refName = newValue;
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget typesFields() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40.0),
-      child: SizedBox(
-        width: 300.0,
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: _primaryTypeController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: 'Primary type (TV Show, Movie, ...)',
-              ),
-              onChanged: (newValue) {
-                primaryType = newValue;
-                AddQuoteInputs.refPrimaryType= newValue;
-              },
-            ),
-
-            Padding(padding: const EdgeInsets.only(bottom: 10.0)),
-
-            TextField(
-              controller: _secondaryTypeController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: 'Secondary type (Horror, Thriller, ...)',
-              ),
-              onChanged: (newValue) {
-                secondaryType = newValue;
-                AddQuoteInputs.refSecondaryType = newValue;
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -265,96 +299,24 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget clearButton() {
-    return FlatButton(
-      padding: EdgeInsets.all(10.0),
-      onPressed: () {
-        AddQuoteInputs.clearReference();
-
-        imgUrl = '';
-
-        _nameController.clear();
-        _primaryTypeController.clear();
-        _secondaryTypeController.clear();
-        _summaryController.clear();
-        _urlController.clear();
-        _wikiUrlController.clear();
-      },
-      child: Opacity(
-        opacity: 0.6,
-        child: Text(
-          'Clear reference information',
+  Widget nameField() {
+    return SizedBox(
+      width: 200.0,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: TextField(
+          autofocus: true,
+          controller: _nameController,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+            labelText: 'Name',
+          ),
+          onChanged: (newValue) {
+            name = newValue;
+            AddQuoteInputs.refName = newValue;
+          },
         ),
       ),
-    );
-  }
-
-  Widget helpButton() {
-    return IconButton(
-      iconSize: 40.0,
-      icon: Opacity(
-        opacity: .6,
-        child: Icon(Icons.help,)
-      ),
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    width: 500.0,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 40.0),
-                      child: Text(
-                        'Help',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    width: 500.0,
-                    child: Opacity(
-                      opacity: .6,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20.0),
-                            child: Text(
-                              '• Reference information are optional',
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20.0),
-                            child: Text(
-                              '• If you select the reference\'s name in the dropdown list, other fields can stay empty',
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        );
-      },
     );
   }
 
@@ -379,6 +341,44 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           ),
         )
       ],
+    );
+  }
+
+  Widget typesFields() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 40.0),
+      child: SizedBox(
+        width: 300.0,
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: _primaryTypeController,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: 'Primary type (TV Show, Movie, ...)',
+              ),
+              onChanged: (newValue) {
+                primaryType = newValue;
+                AddQuoteInputs.refPrimaryType= newValue;
+              },
+            ),
+
+            Padding(padding: const EdgeInsets.only(bottom: 10.0)),
+
+            TextField(
+              controller: _secondaryTypeController,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: 'Secondary type (Horror, Thriller, ...)',
+              ),
+              onChanged: (newValue) {
+                secondaryType = newValue;
+                AddQuoteInputs.refSecondaryType = newValue;
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

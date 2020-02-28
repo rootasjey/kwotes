@@ -38,15 +38,13 @@ class _DeleteAccountState extends State<DeleteAccount> {
     return Column(
       children: <Widget>[
         NavBackHeader(),
-
-        content(),
-
+        body(),
         NavBackFooter(),
       ],
     );
   }
 
-  Widget content() {
+  Widget body() {
     if (isCompleted) {
       return Column(
         children: <Widget>[

@@ -33,15 +33,13 @@ class _QuotesPageState extends State<QuotesPage> {
     return Column(
       children: <Widget>[
         NavBackHeader(),
-
-        content(),
-
+        body(),
         NavBackFooter(),
       ],
     );
   }
 
-  Widget content() {
+  Widget body() {
     if (isLoading) {
       return Container(
         height: MediaQuery.of(context).size.height,
@@ -159,7 +157,7 @@ class _QuotesPageState extends State<QuotesPage> {
       LoadMoreCard(
         isLoading: isLoadingMore,
         onTap: () {
-          fetchMoreQuotes();
+          fetchQuotesMore();
         },
       )
     );
@@ -197,89 +195,6 @@ class _QuotesPageState extends State<QuotesPage> {
     }
 
     return 20.0;
-  }
-
-  void fetchQuotes() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      final snapshot = await FirestoreApp.instance
-        .collection('quotes')
-        .where('lang', '==', Language.current)
-        .limit(30)
-        .get();
-
-      if (snapshot.empty) {
-        setState(() {
-          isLoading = false;
-        });
-
-        return;
-      }
-
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-
-        final quote = Quote.fromJSON(data);
-        quotes.add(quote);
-      });
-
-      lastDoc = snapshot.docs.last;
-
-      setState(() {
-        isLoading = false;
-      });
-
-    } catch (error) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void fetchMoreQuotes() async {
-    if (lastDoc == null) { return; }
-
-    setState(() {
-      isLoadingMore = true;
-    });
-
-    try {
-      final snapshot = await FirestoreApp.instance
-        .collection('quotes')
-        .where('lang', '==', Language.current)
-        .startAfter(snapshot: lastDoc)
-        .limit(30)
-        .get();
-
-      if (snapshot.empty) {
-        setState(() {
-          isLoadingMore = false;
-        });
-
-        return;
-      }
-
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-
-        final quote = Quote.fromJSON(data);
-        quotes.insert(quotes.length - 1, quote);
-      });
-
-      setState(() {
-        isLoadingMore = false;
-      });
-
-    } catch (error) {
-      setState(() {
-        isLoadingMore = false;
-      });
-    }
   }
 
   void addQuotidian(Quote quote) async {
@@ -366,4 +281,88 @@ class _QuotesPageState extends State<QuotesPage> {
       );
     }
   }
+
+  void fetchQuotes() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection('quotes')
+        .where('lang', '==', Language.current)
+        .limit(30)
+        .get();
+
+      if (snapshot.empty) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapshot.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
+      });
+
+      lastDoc = snapshot.docs.last;
+
+      setState(() {
+        isLoading = false;
+      });
+
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void fetchQuotesMore() async {
+    if (lastDoc == null) { return; }
+
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection('quotes')
+        .where('lang', '==', Language.current)
+        .startAfter(snapshot: lastDoc)
+        .limit(30)
+        .get();
+
+      if (snapshot.empty) {
+        setState(() {
+          isLoadingMore = false;
+        });
+
+        return;
+      }
+
+      snapshot.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        final quote = Quote.fromJSON(data);
+        quotes.insert(quotes.length - 1, quote);
+      });
+
+      setState(() {
+        isLoadingMore = false;
+      });
+
+    } catch (error) {
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
+  }
+
 }

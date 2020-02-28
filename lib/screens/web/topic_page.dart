@@ -21,6 +21,7 @@ class TopicPage extends StatefulWidget {
 class _TopicPageState extends State<TopicPage> {
   int decimal = 4283980123;
   bool isLoading = false;
+
   List<Quote> quotes = [];
   TopicColor topicColor;
 
@@ -121,20 +122,16 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  void fetchTopic() async {
-    try {
-      final doc = await FirestoreApp.instance
-        .collection('topics')
-        .doc(widget.name)
-        .get();
-
-      if (!doc.exists) { return; }
-
-      topicColor = TopicColor.fromJSON(doc.data());
-      decimal = topicColor.decimal;
-
-    } catch (error) {
+  double adaptativeFont(String text) {
+    if (text.length > 90) {
+      return 16.0;
     }
+
+    if (text.length > 60) {
+      return 18.0;
+    }
+
+    return 20.0;
   }
 
   void fetchQuotes() async {
@@ -177,15 +174,20 @@ class _TopicPageState extends State<TopicPage> {
     }
   }
 
-  double adaptativeFont(String text) {
-    if (text.length > 90) {
-      return 16.0;
-    }
+  void fetchTopic() async {
+    try {
+      final doc = await FirestoreApp.instance
+        .collection('topics')
+        .doc(widget.name)
+        .get();
 
-    if (text.length > 60) {
-      return 18.0;
-    }
+      if (!doc.exists) { return; }
 
-    return 20.0;
+      topicColor = TopicColor.fromJSON(doc.data());
+      decimal = topicColor.decimal;
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 }

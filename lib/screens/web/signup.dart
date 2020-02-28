@@ -14,6 +14,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   String email = '';
   String password = '';
+
   bool isCompleted = false;
   bool isLoading = false;
 

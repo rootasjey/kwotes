@@ -35,14 +35,14 @@ class _QuotidiansState extends State<Quotidians> {
       children: <Widget>[
         NavBackHeader(),
 
-        content(),
+        body(),
 
         NavBackFooter(),
       ],
     );
   }
 
-  Widget content() {
+  Widget body() {
     if (isLoading) {
       return Container(
         height: MediaQuery.of(context).size.height,
@@ -200,7 +200,7 @@ class _QuotidiansState extends State<Quotidians> {
       LoadMoreCard(
         isLoading: isLoadingMore,
         onTap: () {
-          fetchMoreQuotidians();
+          fetchQuotidiansMore();
         },
       )
     );
@@ -238,6 +238,39 @@ class _QuotidiansState extends State<Quotidians> {
     }
 
     return 20.0;
+  }
+
+  void deleteQuotidian(Quotidian quotidian) async {
+    try {
+      await FirestoreApp.instance
+        .collection('quotidians')
+        .doc(quotidian.id)
+        .delete();
+
+      setState(() {
+        quotidians.removeWhere((element) => element.id == quotidian.id);
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'The quotidian has been successfully deleted.'
+          ),
+        )
+      );
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Sorry, an error occurred while deleting the quotidian.'
+          ),
+        )
+      );
+    }
   }
 
   void fetchQuotidians() async {
@@ -281,7 +314,7 @@ class _QuotidiansState extends State<Quotidians> {
     }
   }
 
-  void fetchMoreQuotidians() async {
+  void fetchQuotidiansMore() async {
     if (lastDoc == null) { return; }
 
     setState(() {
@@ -320,39 +353,6 @@ class _QuotidiansState extends State<Quotidians> {
       setState(() {
         isLoadingMore = false;
       });
-    }
-  }
-
-  void deleteQuotidian(Quotidian quotidian) async {
-    try {
-      await FirestoreApp.instance
-        .collection('quotidians')
-        .doc(quotidian.id)
-        .delete();
-
-      setState(() {
-        quotidians.removeWhere((element) => element.id == quotidian.id);
-      });
-
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            'The quotidian has been successfully deleted.'
-          ),
-        )
-      );
-
-    } catch (error) {
-      debugPrint(error.toString());
-
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Sorry, an error occurred while deleting the quotidian.'
-          ),
-        )
-      );
     }
   }
 }

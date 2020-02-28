@@ -20,27 +20,6 @@ class _DashboardState extends State<Dashboard> {
     checkAuthStatus();
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    setState(() {});
-
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-    }
-
-    final user = await FirestoreApp.instance
-      .collection('users')
-      .doc(userAuth.uid)
-      .get();
-
-    if (!user.exists) { return; }
-
-    setState(() {
-      canManage = user.data()['rights']['user:managequote'] == true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -291,5 +270,26 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
+  }
+
+  void checkAuthStatus() async {
+    userAuth = await FirebaseAuth.instance.currentUser();
+
+    setState(() {});
+
+    if (userAuth == null) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
+
+    final user = await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
+
+    if (!user.exists) { return; }
+
+    setState(() {
+      canManage = user.data()['rights']['user:managequote'] == true;
+    });
   }
 }
