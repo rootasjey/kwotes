@@ -107,7 +107,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                 spacing: 30.0,
                 children: <Widget>[
                   navCard(
-                    icon: Icon(Icons.apps, size: 40.0,),
+                    icon: Icon(Icons.dashboard, size: 40.0,),
                     title: 'Dashboard',
                     onTap: () => FluroRouter.router.navigateTo(context, DashboardRoute),
                   ),
