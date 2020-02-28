@@ -279,6 +279,7 @@ class _SignupState extends State<Signup> {
           'quota': {
             'date': DateTime.now(),
             'history': [],
+            'limit': 1,
             'today': 0,
           },
           'rights': {
