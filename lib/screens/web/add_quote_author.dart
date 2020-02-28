@@ -15,12 +15,13 @@ class AddQuoteAuthor extends StatefulWidget {
 }
 
 class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
-  String imgUrl  = '';
-  String name    = '';
-  String job     = '';
-  String summary = '';
-  String url     = '';
-  String wikiUrl = '';
+  String affiliateUrl = '';
+  String imgUrl       = '';
+  String name         = '';
+  String job          = '';
+  String summary      = '';
+  String url          = '';
+  String wikiUrl      = '';
 
   String _tempImgUrl = '';
 
@@ -261,6 +262,24 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               onChanged: (newValue) {
                 url = newValue;
                 AddQuoteInputs.authorUrl = newValue;
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: _urlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.monetization_on),
+                labelText: 'Affiliate URL'
+              ),
+              onChanged: (newValue) {
+                affiliateUrl = newValue;
+                AddQuoteInputs.authorAffiliateUrl = newValue;
               },
             ),
           ),

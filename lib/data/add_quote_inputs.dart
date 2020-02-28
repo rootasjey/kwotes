@@ -8,6 +8,9 @@ class AddQuoteInputs {
   /// Draft's quote id (filled when creating a new quote).
   static String draftId           = '';
 
+  /// If not empty, the author already exists.
+  static String authorAffiliateUrl = '';
+  static String authorId          = '';
   static String authorImgUrl      = '';
   static String authorName        = '';
   static String authorJob         = '';
@@ -15,6 +18,9 @@ class AddQuoteInputs {
   static String authorUrl         = '';
   static String authorWikiUrl     = '';
 
+  /// If not empty, the reference already exists.
+  static String refAffiliateUrl   = '';
+  static String refId             = '';
   static String refImgUrl         = '';
   static String refLang           = 'en';
   static String refName           = '';
@@ -25,6 +31,7 @@ class AddQuoteInputs {
   static String refWikiUrl        = '';
 
   static String comment           = '';
+  static String region            = '';
 
   static bool isSending           = false;
   static bool isCompleted         = false;
@@ -42,12 +49,14 @@ class AddQuoteInputs {
   }
 
   static void clearAuthor() {
-    authorImgUrl  = '';
-    authorName    = '';
-    authorJob     = '';
-    authorSummary = '';
-    authorUrl     = '';
-    authorWikiUrl = '';
+    authorAffiliateUrl  = '';
+    authorId            = '';
+    authorImgUrl        = '';
+    authorName          = '';
+    authorJob           = '';
+    authorSummary       = '';
+    authorUrl           = '';
+    authorWikiUrl       = '';
   }
 
   static void clearComment() {
@@ -61,9 +70,12 @@ class AddQuoteInputs {
   static void clearQuoteName() {
     name = '';
     lang = 'en';
+    region = '';
   }
 
   static void clearReference() {
+    refAffiliateUrl   = '';
+    refId             = '';
     refImgUrl         = '';
     refLang           = 'en';
     refName           = '';

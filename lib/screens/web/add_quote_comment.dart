@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
-import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
 import 'package:memorare/utils/router.dart';
 
 class AddQuoteComment extends StatefulWidget {
@@ -52,8 +51,36 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
           title(),
           commentInput(),
 
-          AddQuoteNavButtons(
-            onPrevPressed: () => FluroRouter.router.pop(context),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 60.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Click on the bottom right button to propose your quote.',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 60.0),
+            child: FlatButton(
+              onPressed: () => FluroRouter.router.pop(context),
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text(
+                  'Previous',
+                ),
+              ),
+            ),
           ),
         ],
       ),
