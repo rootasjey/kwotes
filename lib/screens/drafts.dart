@@ -345,7 +345,7 @@ class _DraftsState extends State<Drafts> {
       .then((tempQuote) {
         isLoadingTempQuote = false;
 
-        AddQuoteInputs.comment  = tempQuote.comment;
+        AddQuoteInputs.comment  = tempQuote.comments.length > 0 ? tempQuote.comments.first : '';
         AddQuoteInputs.id       = tempQuote.id;
         AddQuoteInputs.name     = tempQuote.name;
         AddQuoteInputs.lang     = tempQuote.lang;
