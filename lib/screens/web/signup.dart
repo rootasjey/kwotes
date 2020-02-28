@@ -284,6 +284,11 @@ class _SignupState extends State<Signup> {
             'user:proposequote': true,
             'user:readquote': true,
           },
+          'stats': {
+            'favourites': 0,
+            'lists': 0,
+            'proposed': 0,
+          },
           'tokens': {},
           'uid': user.uid,
         });
