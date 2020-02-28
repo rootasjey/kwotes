@@ -56,7 +56,6 @@ class Reference {
     );
   }
 
-
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> json = Map();
 
