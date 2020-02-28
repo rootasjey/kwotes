@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/load_more_card.dart';
@@ -9,16 +10,19 @@ import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
-class QuotesPage extends StatefulWidget {
+class AdminQuotes extends StatefulWidget {
   @override
-  _QuotesPageState createState() => _QuotesPageState();
+  _AdminQuotesState createState() => _AdminQuotesState();
 }
 
-class _QuotesPageState extends State<QuotesPage> {
+class _AdminQuotesState extends State<AdminQuotes> {
   List<Quote> quotes = [];
 
   bool isLoading = false;
   bool isLoadingMore = false;
+
+  FirebaseUser userAuth;
+  bool canManage = false;
 
   var lastDoc;
 
@@ -282,6 +286,30 @@ class _QuotesPageState extends State<QuotesPage> {
     }
   }
 
+  void checkAuthStatus() async {
+    userAuth = await FirebaseAuth.instance.currentUser();
+
+    if (userAuth == null) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
+
+    final user = await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
+
+    if (!user.exists) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+      return;
+    }
+
+    canManage = user.data()['rights']['user:managequote'] == true;
+
+    if (!canManage) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
+  }
+
   void fetchQuotes() async {
     setState(() {
       isLoading = true;
@@ -364,5 +392,4 @@ class _QuotesPageState extends State<QuotesPage> {
       });
     }
   }
-
 }

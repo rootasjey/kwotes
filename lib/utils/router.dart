@@ -17,7 +17,7 @@ import 'package:memorare/screens/web/edit_password.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/quote_page.dart';
-import 'package:memorare/screens/web/quotesPages.dart';
+import 'package:memorare/screens/web/admin_quotes.dart';
 import 'package:memorare/screens/web/quotidians.dart';
 import 'package:memorare/screens/web/reference_page.dart';
 import 'package:memorare/screens/web/signin.dart';
@@ -95,7 +95,7 @@ class FluroRouter {
 
   static Handler _quotesPageHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(QuotesPage()));
+          _layout(AdminQuotes()));
 
   static Handler _quotidiansHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
