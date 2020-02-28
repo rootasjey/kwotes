@@ -1,23 +1,37 @@
+import 'package:memorare/types/partial_user.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/temp_author.dart';
+import 'package:memorare/types/validation.dart';
 
 class TempQuote {
   final TempAuthor author;
-  final String comment;
+  final List<String> comments;
+  final DateTime createdAt;
   final String id;
   final String lang;
+  final Reference mainReference;
   final String name;
   final List<Reference> references;
+  final String region;
   final List<String> topics;
+  final DateTime updatedAt;
+  final PartialUser user;
+  final Validation validation;
 
   TempQuote({
     this.author,
-    this.comment,
+    this.comments,
+    this.createdAt,
     this.id,
     this.lang,
+    this.mainReference,
     this.name,
     this.references,
+    this.region,
     this.topics,
+    this.updatedAt,
+    this.user,
+    this.validation,
   });
 
   factory TempQuote.fromJSON(Map<String, dynamic> json) {
@@ -36,14 +50,32 @@ class TempQuote {
       }
     }
 
+    final _author = json['author'] != null ?
+      TempAuthor.fromJSON(json['author']) : null;
+
+    final _mainReference = json['mainReference'] != null ?
+      Reference.fromJSON(json['mainReference']) : null;
+
+    final _user = json['user'] != null ?
+      PartialUser.fromJSON(json['user']) : null;
+
+    final _validation = json['validation'] != null ?
+      Validation.fromJSON(json['validation']) : null;
+
     return TempQuote(
-      author: json['author'] != null ? TempAuthor.fromJSON(json['author']): null,
-      comment: json['comment'],
-      id: json['id'],
-      lang: json['lang'],
-      name: json['name'],
-      references: referencesList,
-      topics: topicsList,
+      author        : _author,
+      comments      : json['comments'],
+      createdAt     : json['createdAt'],
+      id            : json['id'],
+      lang          : json['lang'],
+      mainReference : _mainReference,
+      name          : json['name'],
+      references    : referencesList,
+      region        : json['region'],
+      topics        : topicsList,
+      updatedAt     : json['updatedAt'],
+      user          : _user,
+      validation    : _validation,
     );
   }
 }
