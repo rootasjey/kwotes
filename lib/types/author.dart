@@ -22,14 +22,17 @@ class Author {
   });
 
   factory Author.fromJSON(Map<String, dynamic> json) {
+    final _urls = json['urls'] != null ?
+      Urls.fromJSON(json['urls']) : null;
+
     return Author(
-      id      : json['id'],
+      id      : json['id'] ?? null,
       imgUrl  : json['imgUrl'] != null ? json['imgUrl'] : '',
       job     : json['job'],
       name    : json['name'],
       summary : json['summary'],
       url     : json['url'],
-      urls    : json['urls'] != null ? Urls.fromJSON(json['urls']) : null,
+      urls    : _urls,
       wikiUrl : json['wikiUrl'],
     );
   }
