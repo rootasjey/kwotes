@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/empty_flat_card.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/load_more_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -62,26 +63,9 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
 
     if (!isLoading && tempQuotes.length == 0) {
       return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Opacity(
-                opacity: .6,
-                child: Icon(Icons.list, size: 60.0)
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'There is no temporary quotes at the moment.',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-          ],
+        height: MediaQuery.of(context).size.height - 300.0,
+        child:  EmptyFlatCard(
+          onPressed: () => fetchTempQuotes(),
         ),
       );
     }
