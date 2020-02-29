@@ -129,13 +129,22 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                       FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
                     },
                   ),
-                  navCard(
-                    icon: Icon(Icons.home, size: 40.0,),
-                    title: 'Home',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(context, HomeRoute);
-                    },
-                  ),
+
+                  canManage ?
+                    navCard(
+                      icon: Icon(Icons.timer, size: 40.0,),
+                      title: 'Temporary quotes',
+                      onTap: () {
+                        FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+                      },
+                    ):
+                    navCard(
+                      icon: Icon(Icons.home, size: 40.0,),
+                      title: 'Home',
+                      onTap: () {
+                        FluroRouter.router.navigateTo(context, HomeRoute);
+                      },
+                    ),
                 ],
               ),
             ),
