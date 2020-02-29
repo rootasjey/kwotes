@@ -208,6 +208,17 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       return;
     }
 
+    if (AddQuoteInputs.topics.length == 0) {
+      Flushbar(
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        message: "You must select at least 1 topics for the quote.",
+      )
+      ..show(context);
+
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });

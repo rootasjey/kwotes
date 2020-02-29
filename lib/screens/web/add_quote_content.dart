@@ -159,7 +159,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                           Padding(
                             padding: EdgeInsets.only(bottom: 20.0),
                             child: Text(
-                              '• Only the quote\'s content is required for submission',
+                              "• Only the quote's content and a topic are required for submission",
                               style: TextStyle(
                                 fontSize: 17.0,
                               ),
