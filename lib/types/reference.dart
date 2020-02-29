@@ -15,13 +15,13 @@ class Reference {
   final String wikiUrl;
 
   Reference({
-    this.id,
+    this.id = '',
     this.imgUrl,
-    this.lang,
+    this.lang = 'en',
     this.linkedRefs,
-    this.name,
+    this.name = '',
     this.subType,
-    this.summary,
+    this.summary = '',
     this.type,
     this.url,
     this.urls,
@@ -37,21 +37,23 @@ class Reference {
       }
     }
 
+    final _urls = json['urls'] != null ?
+      Urls.fromJSON(json['urls']) : Urls();
+
+    final _type = json['type'] != null ?
+      ReferenceType.fromJSON(json['type']) : ReferenceType();
+
     return Reference(
-      id          : json['id'],
+      id          : json['id'] ?? '',
       imgUrl      : json['imgUrl'],
       lang        : json['lang'],
       linkedRefs  : _linkedRefs,
-      name        : json['name'],
+      name        : json['name'] ?? '',
       subType     : json['subType'],
       summary     : json['summary'],
-      type        : json['type'] != null ?
-        ReferenceType.fromJSON(json['type']) : ReferenceType(),
-
+      type        : _type,
       url         : json['url'],
-      urls        : json['urls'] != null ?
-        Urls.fromJSON(json['urls']) : null,
-
+      urls        : _urls,
       wikiUrl     : json['wikiUrl'],
     );
   }
