@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/load_more_card.dart';
@@ -178,7 +179,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         Padding(
           padding: const EdgeInsets.only(bottom: 40.0),
           child: Text(
-            'Quotes',
+            'Quotes in validation',
             style: TextStyle(
               fontSize: 20.0,
             ),
@@ -208,7 +209,39 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     return 20.0;
   }
 
-  void deleteTempQuote(TempQuote tempQuote) async {}
+  void deleteTempQuote(TempQuote tempQuote) async {
+    int index = tempQuotes.indexOf(tempQuote);
+
+    setState(() {
+      tempQuotes.remove(tempQuote);
+    });
+
+    try {
+      await FirestoreApp.instance
+        .collection('tempquotes')
+        .doc(tempQuote.id)
+        .delete();
+
+      Flushbar(
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.green,
+        message: 'The temporary quote has been successfully deleted.',
+      )..show(context);
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        tempQuotes.insert(index, tempQuote);
+      });
+
+      Flushbar(
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        message: "Couldn't delete the temporary quote. Details: ${error.toString()}",
+      )..show(context);
+    }
+  }
 
   void fetchTempQuotes() async {
     setState(() {
