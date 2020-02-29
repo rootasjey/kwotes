@@ -5,18 +5,18 @@ class Urls {
   final String wikipedia;
 
   Urls({
-    this.affiliate,
-    this.image,
-    this.website,
-    this.wikipedia,
+    this.affiliate  = '',
+    this.image      = '',
+    this.website    = '',
+    this.wikipedia  = '',
   });
 
   factory Urls.fromJSON(Map<String, dynamic> json) {
     return Urls(
-      affiliate : json['affiliate'],
-      image     : json['image'],
-      website   : json['website'],
-      wikipedia : json['wikipedia'],
+      affiliate : json['affiliate'] ?? '',
+      image     : json['image']     ?? '',
+      website   : json['website']   ?? '',
+      wikipedia : json['wikipedia'] ?? '',
     );
   }
 }
