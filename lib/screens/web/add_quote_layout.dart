@@ -31,6 +31,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   bool canManage = false;
 
   String fabText = 'Propose';
+  Icon fabIcon = Icon(Icons.send);
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
     if (AddQuoteInputs.id.isNotEmpty) {
       fabText = 'Save';
+      fabIcon = Icon(Icons.save);
     }
   }
 
@@ -53,7 +55,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           proposeQuote();
         },
         label: Text(fabText),
-        icon: Icon(Icons.send),
+        icon: fabIcon,
         backgroundColor: Colors.green,
       ),
       body: ListView(
