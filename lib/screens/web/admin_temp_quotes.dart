@@ -5,6 +5,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/load_more_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -129,6 +130,11 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
                         deleteTempQuote(tempQuote);
                         return;
                       }
+
+                      if (value == 'edit') {
+                        editTempQuote(tempQuote);
+                        return;
+                      }
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                       PopupMenuItem(
@@ -136,6 +142,13 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
                         child: ListTile(
                           leading: Icon(Icons.delete_forever),
                           title: Text('Delete'),
+                        )
+                      ),
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: ListTile(
+                          leading: Icon(Icons.edit),
+                          title: Text('Edit'),
                         )
                       ),
                     ],
@@ -225,6 +238,11 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         message: "Couldn't delete the temporary quote. Details: ${error.toString()}",
       )..show(context);
     }
+  }
+
+  void editTempQuote(TempQuote tempQuote) async {
+    AddQuoteInputs.populateWithTempQuote(tempQuote);
+    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
   }
 
   void fetchTempQuotes() async {
