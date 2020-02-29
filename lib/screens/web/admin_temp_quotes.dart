@@ -98,10 +98,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      FluroRouter.router.navigateTo(
-                        context,
-                        AddQuoteContentRoute,
-                      );
+                      editTempQuote(tempQuote);
                     },
                     child: SizedBox.expand(
                       child: Padding(
