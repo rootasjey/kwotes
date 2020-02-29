@@ -1,7 +1,7 @@
-import 'package:memorare/types/comment.dart';
+import 'package:memorare/types/validation_comment.dart';
 
 class Validation {
-  final Comment comment;
+  final ValidationComment comment;
   final String status;
   final DateTime updatedAt;
 
@@ -14,7 +14,7 @@ class Validation {
   factory Validation.fromJSON(Map<String, dynamic> json) {
     return Validation(
       comment: json['comment'] != null ?
-        Comment.fromJSON(json['comment']) : null,
+        ValidationComment.fromJSON(json['comment']) : null,
 
       status: json['status'],
       updatedAt: json['updatedAt'],
