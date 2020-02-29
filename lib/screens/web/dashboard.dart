@@ -169,6 +169,32 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
+
+        Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: SizedBox(
+            width: 700.0,
+            height: 200.0,
+            child: Card(
+              color: Color(0xFF2E3F7F),
+              child: InkWell(
+                onTap: () {
+                  FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(60.0),
+                  child: Text(
+                    'Temporary quotes',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+              )
+            ),
+          ),
+        ),
       ],
     );
   }

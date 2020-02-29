@@ -8,6 +8,7 @@ import 'package:memorare/screens/web/add_quote_comment.dart';
 import 'package:memorare/screens/web/add_quote_content.dart';
 import 'package:memorare/screens/web/add_quote_reference.dart';
 import 'package:memorare/screens/web/add_quote_topics.dart';
+import 'package:memorare/screens/web/admin_temp_quotes.dart';
 import 'package:memorare/screens/web/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
@@ -117,6 +118,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(TopicPage(name: params['name'][0])));
 
+  static Handler _tempQuotesHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(AdminTempQuotes()));
+
   static Handler _undefinedHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
@@ -205,6 +210,10 @@ class FluroRouter {
     router.define(
       SignupRoute,
       handler: _signupHandler,
+    );
+    router.define(
+      AdminTempQuotesRoute,
+      handler: _tempQuotesHandler,
     );
     router.define(
       TopicRoute,
