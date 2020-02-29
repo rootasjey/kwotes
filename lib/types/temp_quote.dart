@@ -1,10 +1,10 @@
+import 'package:memorare/types/author.dart';
 import 'package:memorare/types/partial_user.dart';
 import 'package:memorare/types/reference.dart';
-import 'package:memorare/types/temp_author.dart';
 import 'package:memorare/types/validation.dart';
 
 class TempQuote {
-  final TempAuthor author;
+  final Author author;
   final List<String> comments;
   final DateTime createdAt;
   final String id;
@@ -52,7 +52,7 @@ class TempQuote {
     }
 
     final _author = json['author'] != null ?
-      TempAuthor.fromJSON(json['author']) : null;
+      Author.fromJSON(json['author']) : null;
 
     final _mainReference = json['mainReference'] != null ?
       Reference.fromJSON(json['mainReference']) : null;
