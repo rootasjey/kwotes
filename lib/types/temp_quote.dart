@@ -45,9 +45,10 @@ class TempQuote {
     }
 
     if (json['topics'] != null) {
-      for (var tag in json['topics']) {
-        topicsList.add(tag);
-      }
+      final Map<String, dynamic> _topics = json['topics'];
+      _topics.forEach((key, value) {
+        topicsList.add(key);
+      });
     }
 
     final _author = json['author'] != null ?
@@ -62,9 +63,12 @@ class TempQuote {
     final _validation = json['validation'] != null ?
       Validation.fromJSON(json['validation']) : null;
 
+    final List<dynamic> _dynamicList = json['comments'];
+    final _comments = _dynamicList.length > 0 ? _dynamicList : List<String>();
+
     return TempQuote(
       author        : _author,
-      comments      : json['comments'],
+      comments      : _comments,
       createdAt     : json['createdAt'],
       id            : json['id'],
       lang          : json['lang'],
