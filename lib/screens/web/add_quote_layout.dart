@@ -30,10 +30,16 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   FirebaseUser userAuth;
   bool canManage = false;
 
+  String fabText = 'Propose';
+
   @override
   void initState() {
     super.initState();
     checkAuthStatus();
+
+    if (AddQuoteInputs.id.isNotEmpty) {
+      fabText = 'Save';
+    }
   }
 
   @override
@@ -46,7 +52,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         onPressed: () {
           proposeQuote();
         },
-        label: Text('Propose'),
+        label: Text(fabText),
         icon: Icon(Icons.send),
         backgroundColor: Colors.green,
       ),
@@ -62,7 +68,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   Widget body() {
     if (isLoading) {
       return FullPageLoading(
-        message: 'Sending quote...',
+        message: AddQuoteInputs.id.isEmpty ?
+          'Proposing quote...' : 'Saving quote...',
       );
     }
 
@@ -175,6 +182,55 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     );
   }
 
+  Future addNewTempQuote({
+    List<String> comments,
+    List<Reference> references,
+    Map<String, bool> topics,
+  }) async {
+    await FirestoreApp.instance
+      .collection('tempquotes')
+      .add({
+        'author': {
+          'id': AddQuoteInputs.authorId,
+          'job': AddQuoteInputs.authorId,
+          'jobLang': {},
+          'name': AddQuoteInputs.authorName,
+          'summary': AddQuoteInputs.authorSummary,
+          'summaryLang': {},
+          'updatedAt': DateTime.now(),
+          'urls': {
+            'affiliate': AddQuoteInputs.authorAffiliateUrl,
+            'image': AddQuoteInputs.authorImgUrl,
+            'website': AddQuoteInputs.authorUrl,
+            'wikipedia': AddQuoteInputs.authorWikiUrl,
+          }
+        },
+        'comments': comments,
+        'createdAt': DateTime.now(),
+        'lang': AddQuoteInputs.lang,
+        'name': AddQuoteInputs.name,
+        'mainReference': {
+          'id': AddQuoteInputs.refId,
+          'name': AddQuoteInputs.refName,
+        },
+        'references': references,
+        'region': AddQuoteInputs.region,
+        'topics': topics,
+        'user': {
+          'id': userAuth.uid,
+        },
+        'updatedAt': DateTime.now(),
+        'validation': {
+          'comment': {
+            'name': '',
+            'updatedAt': DateTime.now(),
+          },
+          'status': 'proposed',
+          'updatedAt': DateTime.now(),
+        }
+      });
+  }
+
   void checkAuthStatus() async {
     userAuth = await FirebaseAuth.instance.currentUser();
 
@@ -280,48 +336,20 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           'stats.proposed': proposed,
         });
 
-      await FirestoreApp.instance
-        .collection('tempquotes')
-        .add({
-          'author': {
-            'id': AddQuoteInputs.authorId,
-            'job': AddQuoteInputs.authorId,
-            'jobLang': {},
-            'name': AddQuoteInputs.authorName,
-            'summary': AddQuoteInputs.authorSummary,
-            'summaryLang': {},
-            'updatedAt': DateTime.now(),
-            'urls': {
-              'affiliate': AddQuoteInputs.authorAffiliateUrl,
-              'image': AddQuoteInputs.authorImgUrl,
-              'website': AddQuoteInputs.authorUrl,
-              'wikipedia': AddQuoteInputs.authorWikiUrl,
-            }
-          },
-          'comments': comments,
-          'createdAt': DateTime.now(),
-          'lang': AddQuoteInputs.lang,
-          'name': AddQuoteInputs.name,
-          'mainReference': {
-            'id': AddQuoteInputs.refId,
-            'name': AddQuoteInputs.refName,
-          },
-          'references': references,
-          'region': AddQuoteInputs.region,
-          'topics': topics,
-          'user': {
-            'id': userAuth.uid,
-          },
-          'updatedAt': DateTime.now(),
-          'validation': {
-            'comment': {
-              'name': '',
-              'updatedAt': DateTime.now(),
-            },
-            'status': 'proposed',
-            'updatedAt': DateTime.now(),
-          }
-        });
+      if (AddQuoteInputs.id.isEmpty) {
+        await addNewTempQuote(
+          comments: comments,
+          references: references,
+          topics: topics,
+        );
+
+      } else {
+        await saveExistingTempQuote(
+          comments: comments,
+          references: references,
+          topics: topics,
+        );
+      }
 
       setState(() {
         isLoading = false;
@@ -331,7 +359,9 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       Flushbar(
         duration: Duration(seconds: 5),
         backgroundColor: Colors.green,
-        message: 'Your quote has been successfully proposed.',
+        message: AddQuoteInputs.id.isEmpty ?
+          'Your quote has been successfully proposed.' :
+          'Your quote has been successfully edited',
       )
       ..show(context);
 
@@ -351,5 +381,55 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       )
       ..show(context);
     }
+  }
+
+  Future saveExistingTempQuote({
+    List<String> comments,
+    List<Reference> references,
+    Map<String, bool> topics,
+  }) async {
+    await FirestoreApp.instance
+      .collection('tempquotes')
+      .doc(AddQuoteInputs.id)
+      .set({
+        'author': {
+          'id': AddQuoteInputs.authorId,
+          'job': AddQuoteInputs.authorId,
+          'jobLang': {},
+          'name': AddQuoteInputs.authorName,
+          'summary': AddQuoteInputs.authorSummary,
+          'summaryLang': {},
+          'updatedAt': DateTime.now(),
+          'urls': {
+            'affiliate': AddQuoteInputs.authorAffiliateUrl,
+            'image': AddQuoteInputs.authorImgUrl,
+            'website': AddQuoteInputs.authorUrl,
+            'wikipedia': AddQuoteInputs.authorWikiUrl,
+          }
+        },
+        'comments': comments,
+        'createdAt': DateTime.now(),
+        'lang': AddQuoteInputs.lang,
+        'name': AddQuoteInputs.name,
+        'mainReference': {
+          'id': AddQuoteInputs.refId,
+          'name': AddQuoteInputs.refName,
+        },
+        'references': references,
+        'region': AddQuoteInputs.region,
+        'topics': topics,
+        'user': {
+          'id': userAuth.uid,
+        },
+        'updatedAt': DateTime.now(),
+        'validation': {
+          'comment': {
+            'name': '',
+            'updatedAt': DateTime.now(),
+          },
+          'status': 'proposed',
+          'updatedAt': DateTime.now(),
+        }
+      });
   }
 }
