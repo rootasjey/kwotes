@@ -1,3 +1,5 @@
+import 'package:memorare/types/temp_quote.dart';
+
 class AddQuoteInputs {
   /// Quote's id if this is an edit.
   static String id                  = '';
@@ -93,5 +95,42 @@ class AddQuoteInputs {
 
   static void clearTopics() {
     topics.clear();
+  }
+
+  static populateWithTempQuote(TempQuote tempQuote) {
+      id     = tempQuote.id;
+      name   = tempQuote.name;
+      lang   = tempQuote.lang;
+      topics = tempQuote.topics;
+
+      authorAffiliateUrl = tempQuote.author.urls.affiliate;
+      authorId           = tempQuote.author.id;
+      authorImgUrl       = tempQuote.author.urls.image;
+      authorJob          = tempQuote.author.job;
+      authorName         = tempQuote.author.name;
+      authorSummary      = tempQuote.author.summary;
+      authorUrl          = tempQuote.author.urls.website;
+      authorWikiUrl      = tempQuote.author.urls.wikipedia;
+
+      if (tempQuote.references.length > 0) {
+        final ref = tempQuote.references.first;
+
+        refAffiliateUrl   = ref.urls.wikipedia;
+        refId             = ref.id;
+        refImgUrl         = ref.urls.image;
+        refLang           = ref.lang;
+        refName           = ref.name;
+        refPrimaryType    = ref.type.primary;
+        refSecondaryType  = ref.type.secondary;
+        refSummary        = ref.summary;
+        refUrl            = ref.urls.website;
+        refWikiUrl        = ref.urls.wikipedia;
+      }
+
+      if (tempQuote.comments.length > 0) {
+        comment = tempQuote.comments.first;
+      }
+
+      region = tempQuote.region;
   }
 }
