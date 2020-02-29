@@ -11,10 +11,10 @@ class Author {
   final Urls urls;
 
   Author({
-    this.id,
+    this.id       = '',
     this.imgUrl   = '',
     this.job      = '',
-    this.name,
+    this.name     = '',
     this.summary  = '',
     this.url      = '',
     this.urls,
@@ -23,7 +23,7 @@ class Author {
 
   factory Author.fromJSON(Map<String, dynamic> json) {
     final _urls = json['urls'] != null ?
-      Urls.fromJSON(json['urls']) : null;
+      Urls.fromJSON(json['urls']) : Urls();
 
     return Author(
       id      : json['id'] ?? null,
