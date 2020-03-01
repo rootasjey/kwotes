@@ -198,46 +198,47 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     List<Reference> references,
     Map<String, bool> topics,
   }) async {
+
     await FirestoreApp.instance
       .collection('tempquotes')
       .add({
-        'author': {
-          'id': AddQuoteInputs.authorId,
-          'job': AddQuoteInputs.authorJob,
-          'jobLang': {},
-          'name': AddQuoteInputs.authorName,
-          'summary': AddQuoteInputs.authorSummary,
-          'summaryLang': {},
-          'updatedAt': DateTime.now(),
+        'author'        : {
+          'id'          : AddQuoteInputs.authorId,
+          'job'         : AddQuoteInputs.authorJob,
+          'jobLang'     : {},
+          'name'        : AddQuoteInputs.authorName,
+          'summary'     : AddQuoteInputs.authorSummary,
+          'summaryLang' : {},
+          'updatedAt'   : DateTime.now(),
           'urls': {
-            'affiliate': AddQuoteInputs.authorAffiliateUrl,
-            'image': AddQuoteInputs.authorImgUrl,
-            'website': AddQuoteInputs.authorUrl,
-            'wikipedia': AddQuoteInputs.authorWikiUrl,
+            'affiliate' : AddQuoteInputs.authorAffiliateUrl,
+            'image'     : AddQuoteInputs.authorImgUrl,
+            'website'   : AddQuoteInputs.authorUrl,
+            'wikipedia' : AddQuoteInputs.authorWikiUrl,
           }
         },
-        'comments': comments,
-        'createdAt': DateTime.now(),
-        'lang': AddQuoteInputs.lang,
-        'name': AddQuoteInputs.name,
-        'mainReference': {
-          'id': AddQuoteInputs.refId,
+        'comments'      : comments,
+        'createdAt'     : DateTime.now(),
+        'lang'          : AddQuoteInputs.lang,
+        'name'          : AddQuoteInputs.name,
+        'mainReference' : {
+          'id'  : AddQuoteInputs.refId,
           'name': AddQuoteInputs.refName,
         },
-        'references': references,
-        'region': AddQuoteInputs.region,
-        'topics': topics,
+        'references'    : references,
+        'region'        : AddQuoteInputs.region,
+        'topics'        : topics,
         'user': {
           'id': userAuth.uid,
         },
-        'updatedAt': DateTime.now(),
-        'validation': {
-          'comment': {
-            'name': '',
-            'updatedAt': DateTime.now(),
+        'updatedAt'     : DateTime.now(),
+        'validation'    : {
+          'comment'     : {
+            'name'      : '',
+            'updatedAt' : DateTime.now(),
           },
-          'status': 'proposed',
-          'updatedAt': DateTime.now(),
+          'status'      : 'proposed',
+          'updatedAt'   : DateTime.now(),
         }
       });
   }
@@ -301,20 +302,20 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     if (AddQuoteInputs.refName.isNotEmpty) {
       references.add(
         Reference(
-          imgUrl: AddQuoteInputs.refImgUrl,
-          lang: AddQuoteInputs.refLang,
-          linkedRefs: [],
-          name: AddQuoteInputs.refName,
-          summary: AddQuoteInputs.refSummary,
-          type: ReferenceType(
-            primary: AddQuoteInputs.refPrimaryType,
-            secondary: AddQuoteInputs.refSecondaryType,
+          imgUrl      : AddQuoteInputs.refImgUrl,
+          lang        : AddQuoteInputs.refLang,
+          linkedRefs  : [],
+          name        : AddQuoteInputs.refName,
+          summary     : AddQuoteInputs.refSummary,
+          type        : ReferenceType(
+            primary   : AddQuoteInputs.refPrimaryType,
+            secondary : AddQuoteInputs.refSecondaryType,
           ),
-          urls: Urls(
-            affiliate: AddQuoteInputs.refAffiliateUrl,
-            image: AddQuoteInputs.refImgUrl,
-            website: AddQuoteInputs.refUrl,
-            wikipedia: AddQuoteInputs.refWikiUrl,
+          urls        : Urls(
+            affiliate : AddQuoteInputs.refAffiliateUrl,
+            image     : AddQuoteInputs.refImgUrl,
+            website   : AddQuoteInputs.refUrl,
+            wikipedia : AddQuoteInputs.refWikiUrl,
           ),
         )
       );
@@ -356,9 +357,9 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
       } else {
         await saveExistingTempQuote(
-          comments: comments,
+          comments  : comments,
           references: references,
-          topics: topics,
+          topics    : topics,
         );
       }
 
@@ -386,9 +387,9 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       });
 
       Flushbar(
-        duration: Duration(seconds: 5),
-        backgroundColor: Colors.red,
-        message: 'There was an issue while proposing your new quote.',
+        duration        : Duration(seconds: 5),
+        backgroundColor : Colors.red,
+        message         : 'There was an issue while proposing your new quote.',
       )
       ..show(context);
     }
@@ -399,6 +400,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     List<Reference> references,
     Map<String, bool> topics,
   }) async {
+
     await FirestoreApp.instance
       .collection('tempquotes')
       .doc(AddQuoteInputs.id)
