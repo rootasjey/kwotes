@@ -108,6 +108,9 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
                     onTap: () {
                       editTempQuote(tempQuote);
                     },
+                    onLongPress: () {
+                      validateTempQuote(tempQuote);
+                    },
                     child: SizedBox.expand(
                       child: Padding(
                         padding: const EdgeInsets.all(40.0),
