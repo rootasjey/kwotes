@@ -6,6 +6,7 @@ import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Quotidian _quotidian;
 
@@ -210,7 +211,19 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
-              onPressed: () { print('share'); },
+              onPressed: () async {
+                final quote = _quotidian.quote.name;
+                final author = _quotidian.quote.author.name;
+
+                String quoteAndAuthor = '"$quote"';
+
+                if (author.isNotEmpty) {
+                  quoteAndAuthor += ' — $author';
+                }
+
+                final url = 'https://twitter.com/intent/tweet?via=memorareapp&text=$quoteAndAuthor';
+                await launch(url);
+              },
               icon: Icon(Icons.share),
             ),
           ),
