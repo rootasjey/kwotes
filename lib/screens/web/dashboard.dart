@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -273,6 +274,7 @@ class _DashboardState extends State<Dashboard> {
                 clipBehavior: Clip.hardEdge,
                 child: IconButton(
                   onPressed: () {
+                    AddQuoteInputs.clearAll();
                     FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
                   },
                   icon: Icon(
