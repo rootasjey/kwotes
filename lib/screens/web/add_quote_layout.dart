@@ -203,7 +203,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       .add({
         'author': {
           'id': AddQuoteInputs.authorId,
-          'job': AddQuoteInputs.authorId,
+          'job': AddQuoteInputs.authorJob,
           'jobLang': {},
           'name': AddQuoteInputs.authorName,
           'summary': AddQuoteInputs.authorSummary,
@@ -405,7 +405,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       .set({
         'author': {
           'id': AddQuoteInputs.authorId,
-          'job': AddQuoteInputs.authorId,
+          'job': AddQuoteInputs.authorJob,
           'jobLang': {},
           'name': AddQuoteInputs.authorName,
           'summary': AddQuoteInputs.authorSummary,
