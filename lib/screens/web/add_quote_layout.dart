@@ -404,42 +404,42 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       .doc(AddQuoteInputs.id)
       .set({
         'author': {
-          'id': AddQuoteInputs.authorId,
-          'job': AddQuoteInputs.authorJob,
-          'jobLang': {},
-          'name': AddQuoteInputs.authorName,
-          'summary': AddQuoteInputs.authorSummary,
-          'summaryLang': {},
-          'updatedAt': DateTime.now(),
+          'id'          : AddQuoteInputs.authorId,
+          'job'         : AddQuoteInputs.authorJob,
+          'jobLang'     : {},
+          'name'        : AddQuoteInputs.authorName,
+          'summary'     : AddQuoteInputs.authorSummary,
+          'summaryLang' : {},
+          'updatedAt'   : DateTime.now(),
           'urls': {
-            'affiliate': AddQuoteInputs.authorAffiliateUrl,
-            'image': AddQuoteInputs.authorImgUrl,
-            'website': AddQuoteInputs.authorUrl,
-            'wikipedia': AddQuoteInputs.authorWikiUrl,
+            'affiliate' : AddQuoteInputs.authorAffiliateUrl,
+            'image'     : AddQuoteInputs.authorImgUrl,
+            'website'   : AddQuoteInputs.authorUrl,
+            'wikipedia' : AddQuoteInputs.authorWikiUrl,
           }
         },
-        'comments': comments,
-        'createdAt': DateTime.now(),
-        'lang': AddQuoteInputs.lang,
-        'name': AddQuoteInputs.name,
-        'mainReference': {
-          'id': AddQuoteInputs.refId,
+        'comments'      : comments,
+        'createdAt'     : DateTime.now(),
+        'lang'          : AddQuoteInputs.lang,
+        'name'          : AddQuoteInputs.name,
+        'mainReference' : {
+          'id'  : AddQuoteInputs.refId,
           'name': AddQuoteInputs.refName,
         },
-        'references': references,
-        'region': AddQuoteInputs.region,
-        'topics': topics,
+        'references'    : references,
+        'region'        : AddQuoteInputs.region,
+        'topics'        : topics,
         'user': {
           'id': userAuth.uid,
         },
-        'updatedAt': DateTime.now(),
-        'validation': {
+        'updatedAt'     : DateTime.now(),
+        'validation'    : {
           'comment': {
-            'name': '',
-            'updatedAt': DateTime.now(),
+            'name'      : '',
+            'updatedAt' : DateTime.now(),
           },
-          'status': 'proposed',
-          'updatedAt': DateTime.now(),
+          'status'      : 'proposed',
+          'updatedAt'   : DateTime.now(),
         }
       });
   }
