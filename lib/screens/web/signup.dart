@@ -32,14 +32,6 @@ class _SignupState extends State<Signup> {
     _passwordNode.dispose();
   }
 
-  void checkAuthStatus() async {
-    final user = await FirebaseAuth.instance.currentUser();
-
-    if (user != null) {
-      FluroRouter.router.navigateTo(context, DashboardRoute);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -232,6 +224,14 @@ class _SignupState extends State<Signup> {
         )
       ],
     );
+  }
+
+  void checkAuthStatus() async {
+    final user = await FirebaseAuth.instance.currentUser();
+
+    if (user != null) {
+      FluroRouter.router.navigateTo(context, DashboardRoute);
+    }
   }
 
   void createAccount() async {

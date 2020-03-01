@@ -32,14 +32,6 @@ class _SigninState extends State<Signin> {
     _passwordNode.dispose();
   }
 
-  void checkAuthStatus() async {
-    final user = await FirebaseAuth.instance.currentUser();
-
-    if (user != null) {
-      FluroRouter.router.navigateTo(context, DashboardRoute);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -195,7 +187,7 @@ class _SigninState extends State<Signin> {
                 },
                 onFieldSubmitted: (value) {
                   if (value.length == 0) { return; }
-                  connectAccount();
+                  signin();
                 },
                 validator: (value) {
                   if (value.isEmpty) {
@@ -213,7 +205,7 @@ class _SigninState extends State<Signin> {
           padding: const EdgeInsets.only(top: 60.0),
           child: FlatButton(
             onPressed: () {
-              connectAccount();
+              signin();
             },
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -234,7 +226,15 @@ class _SigninState extends State<Signin> {
     );
   }
 
-  void connectAccount() async {
+  void checkAuthStatus() async {
+    final user = await FirebaseAuth.instance.currentUser();
+
+    if (user != null) {
+      FluroRouter.router.navigateTo(context, DashboardRoute);
+    }
+  }
+
+  void signin() async {
     setState(() {
       isLoading = true;
     });
