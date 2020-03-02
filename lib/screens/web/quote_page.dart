@@ -149,7 +149,7 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget topicsList() {
     if (topicColors.length == 0) {
-      return Padding(padding: EdgeInsets.all(0));
+      return Padding(padding: EdgeInsets.zero);
     }
 
     final children = <Widget>[];
