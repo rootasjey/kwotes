@@ -235,6 +235,20 @@ class _SigninState extends State<Signin> {
     }
   }
 
+  void showSnack({String message}) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          message,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      )
+    );
+  }
+
   void signin() async {
     setState(() {
       isLoading = true;
@@ -273,17 +287,4 @@ class _SigninState extends State<Signin> {
     }
   }
 
-  void showSnack({String message}) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      )
-    );
-  }
 }

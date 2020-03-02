@@ -56,35 +56,40 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget cardsList() {
+  Widget addQuoteButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 60.0),
-      child: Column(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Wrap(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: SizedBox(
-              width: 700.0,
-              height: 200.0,
-              child: Card(
-                color: Color(0xFF414042),
-                child: InkWell(
-                  onTap: () {
-                    FluroRouter.router.navigateTo(context, AccountRoute);
+          Column(
+            children: <Widget>[
+              Material(
+                color: Color(0xFF58595B),
+                elevation: 1,
+                shape: CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: IconButton(
+                  onPressed: () {
+                    AddQuoteInputs.clearAll();
+                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(60.0),
-                    child: Text(
-                      'Account settings',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
                   ),
-                )
+                ),
               ),
-            ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Opacity(
+                  opacity: .7,
+                  child: Text(
+                    'Add a qutoe',
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -201,6 +206,41 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget cardsList() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 60.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: SizedBox(
+              width: 700.0,
+              height: 200.0,
+              child: Card(
+                color: Color(0xFF414042),
+                child: InkWell(
+                  onTap: () {
+                    FluroRouter.router.navigateTo(context, AccountRoute);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(60.0),
+                    child: Text(
+                      'Account settings',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ),
+                )
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget greetings() {
     if (userAuth == null) {
       return Padding(padding: EdgeInsets.zero,);
@@ -253,46 +293,6 @@ class _DashboardState extends State<Dashboard> {
                   opacity: .7,
                   child: Text(
                     'Sign out',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget addQuoteButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Wrap(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Material(
-                color: Color(0xFF58595B),
-                elevation: 1,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  onPressed: () {
-                    AddQuoteInputs.clearAll();
-                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Opacity(
-                  opacity: .7,
-                  child: Text(
-                    'Add a qutoe',
                   ),
                 ),
               ),

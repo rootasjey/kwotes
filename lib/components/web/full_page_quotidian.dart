@@ -31,16 +31,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     checkAuthStatus();
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    setState(() {});
-
-    if (userAuth != null) {
-      Language.fetchLang(userAuth);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -170,16 +160,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget userSection() {
-    return Observer(builder: (context) {
-      if (isUserConnected.value) {
-        return userActions();
-      }
-
-      return signinButton();
-    });
-  }
-
   Widget signinButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -240,6 +220,26 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         ],
       ),
     );
+  }
+
+  Widget userSection() {
+    return Observer(builder: (context) {
+      if (isUserConnected.value) {
+        return userActions();
+      }
+
+      return signinButton();
+    });
+  }
+
+  void checkAuthStatus() async {
+    userAuth = await FirebaseAuth.instance.currentUser();
+
+    setState(() {});
+
+    if (userAuth != null) {
+      Language.fetchLang(userAuth);
+    }
   }
 
   void fetchQuotidian() async {
