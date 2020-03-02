@@ -84,7 +84,7 @@ class FluroRouter {
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(Home()));
+          Home());
 
   static Handler _privacyHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
