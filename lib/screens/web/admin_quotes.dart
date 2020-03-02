@@ -118,7 +118,8 @@ class _AdminQuotesState extends State<AdminQuotes> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            quote.name,
+                            quote.name.length > 115 ?
+                            '${quote.name.substring(0, 115)}...' : quote.name,
                             style: TextStyle(
                               fontSize: adaptativeFont(quote.name),
                             ),
