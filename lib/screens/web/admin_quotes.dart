@@ -203,9 +203,11 @@ class _AdminQuotesState extends State<AdminQuotes> {
 
   void addQuotidian(Quote quote) async {
     try {
+      // Decide the next date
       final snapshot = await FirestoreApp.instance
-        .collection("quotidians")
-        .orderBy("date", "desc")
+        .collection('quotidians')
+        .where('lang', '==', Language.current)
+        .orderBy('date', 'desc')
         .limit(1)
         .get();
 
