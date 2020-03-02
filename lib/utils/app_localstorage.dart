@@ -14,4 +14,10 @@ class AppLocalStorage {
   static String getEmail() {
     return _userStorage.getItem('email');
   }
+
+  static void saveLang(String lang) {
+    _userStorage.setItem('lang', lang);
+  }
+
+  static String getLang() => _userStorage.getItem('lang');
 }
