@@ -133,20 +133,31 @@ class _DashboardState extends State<Dashboard> {
             child: Card(
               color: Color(0xFF00CF91),
               child: InkWell(
-                onTap: () {
-                  FluroRouter.router.navigateTo(context, QuotesRoute);
-                },
-                child: Padding(
+                onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
+                child: Container(
                   padding: const EdgeInsets.all(60.0),
-                  child: Text(
-                    'Published quotes',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.cloud_done,
+                        color: Colors.white,
+                        size: 40.0,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          'Published quotes',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              )
+              ),
             ),
           ),
         ),
@@ -159,17 +170,28 @@ class _DashboardState extends State<Dashboard> {
             child: Card(
               color: Color(0xFFFFAF50),
               child: InkWell(
-                onTap: () {
-                  FluroRouter.router.navigateTo(context, QuotidiansRoute);
-                },
-                child: Padding(
+                onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
+                child: Container(
                   padding: const EdgeInsets.all(60.0),
-                  child: Text(
-                    'Quotidians',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.today,
+                        color: Colors.white,
+                        size: 40.0,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          'Quotidians',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -188,14 +210,27 @@ class _DashboardState extends State<Dashboard> {
                 onTap: () {
                   FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
                 },
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.all(60.0),
-                  child: Text(
-                    'Temporary quotes',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                        size: 40.0,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          'Temporary quotes',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -222,14 +257,27 @@ class _DashboardState extends State<Dashboard> {
                   onTap: () {
                     FluroRouter.router.navigateTo(context, AccountRoute);
                   },
-                  child: Padding(
+                  child: Container(
                     padding: const EdgeInsets.all(60.0),
-                    child: Text(
-                      'Account settings',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.settings,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            'Account settings',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25.0,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 )
