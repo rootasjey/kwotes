@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
-import 'package:memorare/models/user_data.dart';
+import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
-import 'package:provider/provider.dart';
 
 class Signin extends StatefulWidget {
   @override
@@ -259,8 +258,7 @@ class _SigninState extends State<Signin> {
 
       await Language.fetchLang(result.user);
 
-      final userData = Provider.of<UserDataModel>(context, listen: false);
-      userData.setAuthenticated(true);
+      setUserConnected();
 
     } catch (error) {
       debugPrint(error.toString());
