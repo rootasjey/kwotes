@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/app_keys.dart';
 import 'package:memorare/common/firebase_config.dart';
-import 'package:memorare/home_mobile.dart';
-import 'package:memorare/home_web.dart';
+import 'package:memorare/main_mobile.dart';
+import 'package:memorare/main_web.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/colors.dart';
@@ -59,10 +59,10 @@ class AppState extends State<App> {
         themedWidgetBuilder: (context, theme) {
           if (kIsWeb) {
             AppLocalStorage.init();
-            return HomeWeb(theme: theme,);
+            return MainWeb(theme: theme,);
           }
 
-          return HomeMobile(theme: theme,);
+          return MainMobile(theme: theme,);
         },
       ),
     );

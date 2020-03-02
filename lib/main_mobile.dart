@@ -15,16 +15,16 @@ import 'package:memorare/types/app_settings.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
-class HomeMobile extends StatefulWidget {
+class MainMobile extends StatefulWidget {
   final ThemeData theme;
 
-  HomeMobile({this.theme});
+  MainMobile({this.theme});
 
   @override
-  HomeMobileState createState() => HomeMobileState();
+  MainMobileState createState() => MainMobileState();
 }
 
-class HomeMobileState extends State<HomeMobile> {
+class MainMobileState extends State<MainMobile> {
   int _selectedIndex = 0;
 
   static List<Widget> _listScreens = <Widget>[

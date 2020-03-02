@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/router.dart';
 
-class HomeWeb extends StatefulWidget {
+class MainWeb extends StatefulWidget {
   final ThemeData theme;
-  HomeWeb({Key key, this.theme}) : super(key: key);
+  MainWeb({Key key, this.theme}) : super(key: key);
 
   @override
-  _HomeWebState createState() => _HomeWebState();
+  _MainWebState createState() => _MainWebState();
 }
 
-class _HomeWebState extends State<HomeWeb> {
+class _MainWebState extends State<MainWeb> {
   @override
   initState() {
     super.initState();
