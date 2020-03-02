@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Quotidian _quotidian;
@@ -168,7 +170,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget userSection() {
-    if (userAuth == null) {
+    final userDataModel = Provider.of<UserDataModel>(context);
+
+    if (!userDataModel.isAuthenticated) {
       return signinButton();
     }
 
