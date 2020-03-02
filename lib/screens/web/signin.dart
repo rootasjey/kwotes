@@ -231,6 +231,7 @@ class _SigninState extends State<Signin> {
     final user = await FirebaseAuth.instance.currentUser();
 
     if (user != null) {
+      setUserConnected();
       FluroRouter.router.navigateTo(context, DashboardRoute);
     }
   }
