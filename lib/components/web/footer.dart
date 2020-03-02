@@ -44,7 +44,7 @@ class _FooterState extends State<Footer> {
 
               FlatButton(
                 onPressed: () async {
-                  Language.current = Language.en;
+                  Language.setLang(Language.en);
                   updateUserLang();
                 },
                 child: Opacity(
@@ -60,7 +60,7 @@ class _FooterState extends State<Footer> {
 
               FlatButton(
                 onPressed: () {
-                  Language.current = Language.fr;
+                  Language.setLang(Language.fr);
                   updateUserLang();
                 },
                 child: Opacity(

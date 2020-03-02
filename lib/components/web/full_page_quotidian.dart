@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
-import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Quotidian _quotidian;
+String _prevLang;
 
 class FullPageQuotidian extends StatefulWidget {
   @override
@@ -21,13 +23,28 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   bool isLoading = false;
   FirebaseUser userAuth;
 
+  ReactionDisposer disposeLang;
+
   @override
   void initState() {
     super.initState();
 
-    if (_quotidian != null) { return; }
+    disposeLang = autorun((_) {
+      if (_quotidian != null && _prevLang == appUserLang.current) {
+        return;
+      }
 
-    fetchQuotidian();
+      fetchQuotidian();
+    });
+  }
+
+  @override
+  void dispose() {
+    if (disposeLang != null) {
+      disposeLang();
+    }
+
+    super.dispose();
   }
 
   @override
@@ -241,7 +258,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('${now.year}:${now.month}:${now.day}:${Language.current}')
+        .doc('${now.year}:${now.month}:${now.day}:${appUserLang.current}')
         .get();
 
       if (!doc.exists) {
@@ -251,6 +268,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
         return;
       }
+
+      _prevLang = appUserLang.current;
 
       setState(() {
         _quotidian = Quotidian.fromJSON(doc.data());

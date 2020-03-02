@@ -350,7 +350,7 @@ class _AccountState extends State<Account> {
   }
 
   void fetchLang() async {
-    await Language.fetchLang(userAuth);
+    await Language.fetch(userAuth);
 
     setState(() {
       selectedLang = Language.frontend(Language.current);
