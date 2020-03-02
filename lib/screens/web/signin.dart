@@ -271,7 +271,8 @@ class _SigninState extends State<Signin> {
         isCompleted = true;
       });
 
-      await Language.fetchLang(result.user);
+      final lang = await Language.fetch(result.user);
+      Language.setLang(lang);
 
       setUserConnected();
 
