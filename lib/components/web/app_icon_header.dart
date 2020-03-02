@@ -4,9 +4,11 @@ import 'package:memorare/utils/router.dart';
 
 class AppIconHeader extends StatelessWidget {
   final EdgeInsetsGeometry padding;
+  final double size;
 
   AppIconHeader({
     this.padding = const EdgeInsets.symmetric(vertical: 80.0),
+    this.size = 60.0,
   });
 
   @override
@@ -21,8 +23,8 @@ class AppIconHeader extends StatelessWidget {
         child: Ink.image(
           image: AssetImage('assets/images/icon-small.png'),
           fit: BoxFit.cover,
-          width: 60.0,
-          height: 60.0,
+          width: size,
+          height: size,
           child: InkWell(
             onTap: () => FluroRouter.router.navigateTo(context, HomeRoute),
           ),
