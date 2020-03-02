@@ -28,7 +28,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     if (_quotidian != null) { return; }
 
     fetchQuotidian();
-    checkAuthStatus();
   }
 
   @override
@@ -230,16 +229,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
       return signinButton();
     });
-  }
-
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    setState(() {});
-
-    if (userAuth != null) {
-      Language.fetchLang(userAuth);
-    }
   }
 
   void fetchQuotidian() async {
