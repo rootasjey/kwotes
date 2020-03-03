@@ -7,9 +7,6 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/types/reference.dart';
-import 'package:memorare/types/reference_type.dart';
-import 'package:memorare/types/urls.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -195,7 +192,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   Future addNewTempQuote({
     List<String> comments,
-    List<Reference> references,
+    List<Map<String, dynamic>> references,
     Map<String, bool> topics,
   }) async {
 
@@ -297,27 +294,27 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       comments.add(AddQuoteInputs.comment);
     }
 
-    final references = List<Reference>();
+    final references = List<Map<String, dynamic>>();
 
     if (AddQuoteInputs.refName.isNotEmpty) {
       references.add(
-        Reference(
-          imgUrl      : AddQuoteInputs.refImgUrl,
-          lang        : AddQuoteInputs.refLang,
-          links       : [],
-          name        : AddQuoteInputs.refName,
-          summary     : AddQuoteInputs.refSummary,
-          type        : ReferenceType(
-            primary   : AddQuoteInputs.refPrimaryType,
-            secondary : AddQuoteInputs.refSecondaryType,
-          ),
-          urls        : Urls(
-            affiliate : AddQuoteInputs.refAffiliateUrl,
-            image     : AddQuoteInputs.refImgUrl,
-            website   : AddQuoteInputs.refUrl,
-            wikipedia : AddQuoteInputs.refWikiUrl,
-          ),
-        )
+        {
+          'imgUrl'      : AddQuoteInputs.refImgUrl,
+          'lang'        : AddQuoteInputs.refLang,
+          'links'       : [],
+          'name'        : AddQuoteInputs.refName,
+          'summary'     : AddQuoteInputs.refSummary,
+          'type'        : {
+            'primary'   : AddQuoteInputs.refPrimaryType,
+            'secondary' : AddQuoteInputs.refSecondaryType,
+          },
+          'urls'        : {
+            'affiliate' : AddQuoteInputs.refAffiliateUrl,
+            'image'     : AddQuoteInputs.refImgUrl,
+            'website'   : AddQuoteInputs.refUrl,
+            'wikipedia' : AddQuoteInputs.refWikiUrl,
+          },
+        }
       );
     }
 
@@ -397,7 +394,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   Future saveExistingTempQuote({
     List<String> comments,
-    List<Reference> references,
+    List<Map<String, dynamic>> references,
     Map<String, bool> topics,
   }) async {
 
