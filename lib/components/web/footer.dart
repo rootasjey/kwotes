@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -224,7 +226,34 @@ class _FooterState extends State<Footer> {
   Future updateUserLang() async {
     final userAuth = await FirebaseAuth.instance.currentUser();
 
-    if (userAuth == null) { return; }
+    if (userAuth == null) {
+      Flushbar(
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 5),
+        messageText: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.white,
+              ),
+            ),
+
+            Text(
+              'Your language has been successfully updated.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      )..show(context);
+
+      return;
+    }
+
+    print(appUserLang.current);
 
     try {
      await FirestoreApp.instance
@@ -232,25 +261,58 @@ class _FooterState extends State<Footer> {
       .doc(userAuth.uid)
       .update(
         data: {
-          'lang': Language.current,
+          'lang': appUserLang.current,
         }
       );
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text('Your language has been successfully updated.'),
-        )
-      );
+      Flushbar(
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 5),
+        messageText: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.white,
+              ),
+            ),
+
+            Text(
+              'Your language has been successfully updated.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      )..show(context);
+
     } catch (error) {
       debugPrint(error.toString());
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text('Sorry, There was an error while updating your language.'),
-        )
-      );
+      Flushbar(
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 5),
+        messageText: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.cancel,
+                color: Colors.white,
+              ),
+            ),
+
+            Text(
+              'Sorry, there was an error while updating your language.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      )..show(context);
     }
   }
 }
