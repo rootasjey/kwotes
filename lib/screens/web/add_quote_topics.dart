@@ -76,13 +76,14 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   Widget addedTopics(ThemeColor themeColor) {
-    return Column(
-      children: <Widget>[
-        Wrap(
-          children: selectedTopics.map<Widget>((topic) {
-            return Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Chip(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 70.0),
+      child: Column(
+        children: <Widget>[
+          Wrap(
+            spacing: 20.0,
+            children: selectedTopics.map<Widget>((topic) {
+              return Chip(
                 backgroundColor: Color(topic.decimal),
                 padding: EdgeInsets.all(5.0),
                 label: Text(topic.name, style: TextStyle(color: Colors.white),),
@@ -95,33 +96,33 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
                   AddQuoteInputs.topics.removeWhere((element) => element == topic.name);
                 },
-              ),
-            );
-          }).toList(),
-        ),
+              );
+            }).toList(),
+          ),
 
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: FlatButton(
-            padding: EdgeInsets.all(10.0),
-            onPressed: () {
-              setState(() {
-                AddQuoteInputs.clearTopics();
-                selectedTopics.clear();
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: FlatButton(
+              padding: EdgeInsets.all(10.0),
+              onPressed: () {
+                setState(() {
+                  AddQuoteInputs.clearTopics();
+                  selectedTopics.clear();
 
-                availableTopics.clear();
-                availableTopics.addAll(ThemeColor.topicsColors);
-              });
-            },
-            child: Text(
-              'Clear all topics',
-              style: TextStyle(
-                color: themeColor.background,
+                  availableTopics.clear();
+                  availableTopics.addAll(ThemeColor.topicsColors);
+                });
+              },
+              child: Text(
+                'Clear all topics',
+                style: TextStyle(
+                  color: themeColor.background,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -208,7 +209,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   Widget emptyTopics(ThemeColor themeColor) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
+      padding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 40.0),
       child: Text(
         'You have not added any topic yet.',
         textAlign: TextAlign.center,
