@@ -227,41 +227,44 @@ class _FooterState extends State<Footer> {
     );
   }
 
-  Future updateUserAccountLang() async {
+  void notifyLangSuccess() {
     if (widget.pageScrollController != null) {
       widget.pageScrollController.animateTo(
         0.0,
-        duration: Duration(milliseconds: 300),
+        duration: Duration(seconds: 1),
         curve: Curves.easeOut,
       );
     }
 
+    Flushbar(
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 5),
+      messageText: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+          ),
+
+          Text(
+            'Your language has been successfully updated.',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    )..show(context);
+  }
+
+  void updateUserAccountLang() async {
     final userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
-      Flushbar(
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 5),
-        messageText: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.white,
-              ),
-            ),
-
-            Text(
-              'Your language has been successfully updated.',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      )..show(context);
-
+      notifyLangSuccess();
       return;
     }
 
@@ -275,28 +278,7 @@ class _FooterState extends State<Footer> {
         }
       );
 
-      Flushbar(
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 5),
-        messageText: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.white,
-              ),
-            ),
-
-            Text(
-              'Your language has been successfully updated.',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      )..show(context);
+      notifyLangSuccess();
 
     } catch (error) {
       debugPrint(error.toString());
