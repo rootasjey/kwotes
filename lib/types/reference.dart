@@ -5,7 +5,7 @@ class Reference {
   final String id;
   final String imgUrl;
   final String lang;
-  final List<Reference> linkedRefs;
+  final List<String> links;
   final String name;
   final String subType;
   final String summary;
@@ -18,7 +18,7 @@ class Reference {
     this.id = '',
     this.imgUrl,
     this.lang = 'en',
-    this.linkedRefs,
+    this.links,
     this.name = '',
     this.subType,
     this.summary = '',
@@ -29,11 +29,11 @@ class Reference {
   });
 
   factory Reference.fromJSON(Map<String, dynamic> json) {
-    List<Reference> _linkedRefs = [];
+    final _links = List<String>();
 
-    if (json['linkedRefs'] != null) {
-      for (var ref in json['linkedRefs']) {
-        _linkedRefs.add(Reference.fromJSON(ref));
+    if (json['links'] != null) {
+      for (String ref in json['links']) {
+        _links.add(ref);
       }
     }
 
@@ -47,7 +47,7 @@ class Reference {
       id          : json['id'] ?? '',
       imgUrl      : json['imgUrl'],
       lang        : json['lang'],
-      linkedRefs  : _linkedRefs,
+      links       : _links,
       name        : json['name'] ?? '',
       subType     : json['subType'],
       summary     : json['summary'],
@@ -64,7 +64,7 @@ class Reference {
     json['id']          = id;
     json['imgUrl']      = imgUrl;
     json['lang']        = lang;
-    json['linkedRefs']  = linkedRefs;
+    json['links']       = links;
     json['name']        = name;
     json['subType']     = subType;
     json['summary']     = summary;

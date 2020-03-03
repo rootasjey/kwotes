@@ -304,7 +304,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         Reference(
           imgUrl      : AddQuoteInputs.refImgUrl,
           lang        : AddQuoteInputs.refLang,
-          linkedRefs  : [],
+          links       : [],
           name        : AddQuoteInputs.refName,
           summary     : AddQuoteInputs.refSummary,
           type        : ReferenceType(
