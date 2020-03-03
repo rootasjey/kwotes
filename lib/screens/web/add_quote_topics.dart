@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
@@ -18,15 +19,27 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   List<TopicColor> selectedTopics = [];
   List<TopicColor> availableTopics = [];
 
+  FocusNode _keyboardFocusNode;
+
   @override
   void initState() {
     super.initState();
+    _keyboardFocusNode = FocusNode();
 
     setState(() {
       availableTopics.addAll(ThemeColor.topicsColors);
     });
 
     populateSelectedTopics();
+  }
+
+  @override
+  void dispose() {
+    if (_keyboardFocusNode != null) {
+      _keyboardFocusNode.dispose();
+    }
+
+    super.dispose();
   }
 
   @override
@@ -169,21 +182,26 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
     return SizedBox(
       width: 500.0,
-      child: Column(
-        children: <Widget>[
-          title(),
+      child: RawKeyboardListener(
+        autofocus: true,
+        focusNode: _keyboardFocusNode,
+        onKey: keyHandler,
+        child: Column(
+          children: <Widget>[
+            title(),
 
-          selectedTopics.length == 0 ?
-            emptyTopics(themeColor) :
-            addedTopics(themeColor),
+            selectedTopics.length == 0 ?
+              emptyTopics(themeColor) :
+              addedTopics(themeColor),
 
-          availableTopicsSection(themeColor),
+            availableTopicsSection(themeColor),
 
-          AddQuoteNavButtons(
-            onPrevPressed: () => FluroRouter.router.pop(context),
-            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
-          ),
-        ],
+            AddQuoteNavButtons(
+              onPrevPressed: () => FluroRouter.router.pop(context),
+              onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -291,6 +309,17 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
         )
       ],
     );
+  }
+
+  void keyHandler (RawKeyEvent keyEvent) {
+    if (keyEvent.runtimeType.toString() == 'RawKeyDownEvent') {
+      return;
+    }
+
+    if (keyEvent.logicalKey.keyId == LogicalKeyboardKey.enter.keyId) {
+      FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute);
+      return;
+    }
   }
 
   void populateSelectedTopics() {
