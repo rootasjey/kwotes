@@ -47,7 +47,7 @@ class _FooterState extends State<Footer> {
               FlatButton(
                 onPressed: () async {
                   Language.setLang(Language.en);
-                  updateUserLang();
+                  updateUserAccountLang();
                 },
                 child: Opacity(
                   opacity: .5,
@@ -63,7 +63,7 @@ class _FooterState extends State<Footer> {
               FlatButton(
                 onPressed: () {
                   Language.setLang(Language.fr);
-                  updateUserLang();
+                  updateUserAccountLang();
                 },
                 child: Opacity(
                   opacity: .5,
@@ -223,7 +223,7 @@ class _FooterState extends State<Footer> {
     );
   }
 
-  Future updateUserLang() async {
+  Future updateUserAccountLang() async {
     final userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
