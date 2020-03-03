@@ -311,6 +311,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           decoration: InputDecoration(
             labelText: 'Name',
           ),
+          onSubmitted: (_) {
+            FluroRouter.router.navigateTo(context, AddQuoteCommentRoute);
+          },
           onChanged: (newValue) {
             name = newValue;
             AddQuoteInputs.refName = newValue;
