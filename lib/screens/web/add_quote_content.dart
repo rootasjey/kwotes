@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
@@ -15,7 +16,11 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   String lang = 'en';
   String name = '';
 
-  var _nameFocusNode = FocusNode();
+  bool isKeyHandled = false;
+
+  FocusNode _nameFocusNode;
+  FocusNode _clearFocusNode;
+  FocusNode _nameKeyFocusNode;
 
   List<String> langs = ['en', 'fr'];
 
@@ -24,9 +29,20 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   @override
   void initState() {
     super.initState();
+    _nameFocusNode = FocusNode();
+    _nameKeyFocusNode = FocusNode();
+    _clearFocusNode = FocusNode();
 
     _nameController.text = AddQuoteInputs.name;
     lang = AddQuoteInputs.lang;
+  }
+
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _nameKeyFocusNode.dispose();
+    _clearFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,66 +70,72 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   Widget body() {
     return SizedBox(
       width: 500.0,
-      child: Column(
-        children: <Widget>[
-          title(),
+      child: RawKeyboardListener(
+        focusNode: _nameKeyFocusNode,
+        autofocus: false,
+        onKey: keyHandler,
+        child: Column(
+          children: <Widget>[
+            title(),
 
-          Padding(
-            padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 80.0),
-            child: TextField(
-              maxLines: null,
-              autofocus: true,
-              focusNode: _nameFocusNode,
-              controller: _nameController,
-              keyboardType: TextInputType.multiline,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: (newValue) {
-                name = newValue;
-                AddQuoteInputs.name = newValue;
-              },
-              decoration: InputDecoration(
-                hintText: 'Type your quote there',
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.blue,
-                    width: 2.0,
-                  )
+            Padding(
+              padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 80.0),
+              child: TextField(
+                maxLines: null,
+                autofocus: true,
+                focusNode: _nameFocusNode,
+                controller: _nameController,
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
+                onChanged: (newValue) {
+                  name = newValue;
+                  AddQuoteInputs.name = newValue;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Type your quote there',
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.blue,
+                      width: 2.0,
+                    )
+                  ),
                 ),
               ),
             ),
-          ),
 
-          Padding(
-            padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    AddQuoteInputs.clearQuoteName();
-                    _nameController.clear();
-                    FocusScope.of(context).requestFocus(_nameFocusNode);
-                  },
-                  child: Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      'Clear quote content',
-                    ),
-                  )
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    focusNode: _clearFocusNode,
+                    onPressed: () {
+                      AddQuoteInputs.clearQuoteName();
+                      _nameController.clear();
+                      _nameFocusNode.requestFocus();
+                    },
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Clear quote content',
+                      ),
+                    )
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          langSelect(Colors.blue),
+            langSelect(Colors.blue),
 
-          AddQuoteNavButtons(
-            onPrevPressed: () => FluroRouter.router.pop(context),
-            prevMessage: 'Cancel',
-            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute),
-          ),
-        ],
+            AddQuoteNavButtons(
+              onPrevPressed: () => FluroRouter.router.pop(context),
+              prevMessage: 'Cancel',
+              onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -290,5 +312,33 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         )
       ],
     );
+  }
+
+  // !WARNING:
+  // !Key event handler is quite bugged (in this app).
+  // !After focus on `clear` button, & pushing space, focus is blocked.
+  void keyHandler(RawKeyEvent keyEvent) {
+    // ?NOTE: Filter on RawKeyDownEvent
+    if (keyEvent.runtimeType.toString() == 'RawKeyDownEvent') {
+      return;
+    }
+
+    if (keyEvent.logicalKey.keyId == LogicalKeyboardKey.backspace.keyId ||
+      keyEvent.logicalKey.keyId == LogicalKeyboardKey.browserBack.keyId) {
+
+      FluroRouter.router.pop(context);
+      return;
+    }
+
+    if (keyEvent.logicalKey.keyId == LogicalKeyboardKey.enter.keyId) {
+      FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute);
+      return;
+    }
+
+    if (keyEvent.logicalKey.keyId == LogicalKeyboardKey.tab.keyId) {
+      if (_nameFocusNode.hasFocus) {
+        _clearFocusNode.requestFocus();
+      }
+    }
   }
 }
