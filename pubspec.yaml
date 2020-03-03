@@ -36,7 +36,6 @@ dependencies:
   flutter_mobx: 1.0.1
   flutter_swiper: 1.1.6
   graphql_flutter: 2.1.1-beta.5
-  localstorage: 3.0.1+4
   mobx: 1.0.2
   mobx_codegen: 1.0.2
   path_provider: 1.5.1
