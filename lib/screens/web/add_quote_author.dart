@@ -414,6 +414,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     onChanged: (newValue) {
                       _tempImgUrl = newValue;
                     },
+                    onSubmitted: (_) {
+                      setState(() {
+                        imgUrl = _tempImgUrl;
+                      });
+
+                      AddQuoteInputs.authorImgUrl = imgUrl;
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),
