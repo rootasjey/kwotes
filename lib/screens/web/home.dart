@@ -16,6 +16,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +38,14 @@ class _HomeState extends State<Home> {
         }
       ),
       body: ListView(
+        controller: _scrollController,
         children: <Widget>[
           TopBar(),
           FullPageQuotidian(),
           PreviousQuotidians(),
           Discover(),
           Topics(),
-          Footer(),
+          Footer(pageScrollController: _scrollController,),
         ],
       ),
     );

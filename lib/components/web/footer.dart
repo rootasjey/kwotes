@@ -9,6 +9,10 @@ import 'package:memorare/utils/router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatefulWidget {
+  final ScrollController pageScrollController;
+
+  Footer({this.pageScrollController});
+
   @override
   _FooterState createState() => _FooterState();
 }
@@ -224,6 +228,14 @@ class _FooterState extends State<Footer> {
   }
 
   Future updateUserAccountLang() async {
+    if (widget.pageScrollController != null) {
+      widget.pageScrollController.animateTo(
+        0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+
     final userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
@@ -252,8 +264,6 @@ class _FooterState extends State<Footer> {
 
       return;
     }
-
-    print(appUserLang.current);
 
     try {
      await FirestoreApp.instance
