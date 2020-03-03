@@ -1,23 +1,11 @@
-import 'package:localstorage/localstorage.dart';
+import 'dart:html';
 
 class AppLocalStorage {
-  static LocalStorage _userStorage;
+  static Storage _localStorage = window.localStorage;
 
-  static void init() {
-    _userStorage = LocalStorage('user');
-  }
+  static String getEmail() => _localStorage['email'];
+  static String getLang() => _localStorage['lang'];
 
-  static void saveEmail(String email) {
-    _userStorage.setItem('email', email);
-  }
-
-  static String getEmail() {
-    return _userStorage.getItem('email');
-  }
-
-  static void saveLang(String lang) {
-    _userStorage.setItem('lang', lang);
-  }
-
-  static String getLang() => _userStorage.getItem('lang');
+  static void saveEmail(String email) => _localStorage['email'] = email;
+  static void saveLang(String lang) => _localStorage['lang'] = lang;
 }

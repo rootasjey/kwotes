@@ -9,7 +9,6 @@ import 'package:memorare/main_web.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +57,6 @@ class AppState extends State<App> {
         ),
         themedWidgetBuilder: (context, theme) {
           if (kIsWeb) {
-            AppLocalStorage.init();
             return MainWeb(theme: theme,);
           }
 
