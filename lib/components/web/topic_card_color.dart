@@ -42,6 +42,7 @@ class TopicCardColor extends StatelessWidget {
               opacity: .5,
               child: Text(
                 name,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
