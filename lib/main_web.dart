@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_connection.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -19,9 +17,6 @@ class _MainWebState extends State<MainWeb> {
   initState() {
     super.initState();
 
-    // TODO: Delete the folowing line
-    ThemeColor.fetchTopicsColors();
-    appTopicsColors.fetchTopicsColors();
     populateAuthAndLang();
   }
 
