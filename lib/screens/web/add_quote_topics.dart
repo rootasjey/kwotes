@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -26,10 +28,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     super.initState();
     _keyboardFocusNode = FocusNode();
 
-    setState(() {
-      availableTopics.addAll(ThemeColor.topicsColors);
-    });
-
     populateSelectedTopics();
   }
 
@@ -40,17 +38,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     }
 
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (availableTopics.length > 0) { return; }
-
-    setState(() {
-      availableTopics.addAll(ThemeColor.topicsColors);
-    });
-
-    super.didChangeDependencies();
   }
 
   @override
@@ -151,28 +138,32 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-            child: Wrap(
-              children: availableTopics.map<Widget>((topic) {
-                return Padding(
-                  padding: EdgeInsets.only(right: 5.0),
-                  child: ActionChip(
-                    padding: EdgeInsets.all(5.0),
-                    label: Text(topic.name),
-                    onPressed: () {
-                      setState(() {
-                        selectedTopics.add(topic);
-                        availableTopics.remove(topic);
-                      });
+          Observer(builder: (context) {
+            availableTopics = appTopicsColors.topicsColors;
 
-                      AddQuoteInputs.topics.add(topic.name);
-                    },
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 60.0),
+              child: Wrap(
+                children: availableTopics.map<Widget>((topic) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: ActionChip(
+                      padding: EdgeInsets.all(5.0),
+                      label: Text(topic.name),
+                      onPressed: () {
+                        setState(() {
+                          selectedTopics.add(topic);
+                          availableTopics.remove(topic);
+                        });
+
+                        AddQuoteInputs.topics.add(topic.name);
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          }),
         ],
       ),
     );
