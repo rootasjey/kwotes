@@ -291,6 +291,43 @@ class _DashboardState extends State<Dashboard> {
               width: 700.0,
               height: 200.0,
               child: Card(
+                color: Color(0xFF00CF91),
+                child: InkWell(
+                  onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
+                  child: Container(
+                    padding: const EdgeInsets.all(60.0),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.cloud_done,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            'Published quotes',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: SizedBox(
+              width: 700.0,
+              height: 200.0,
+              child: Card(
                 color: Color(0xFF414042),
                 child: InkWell(
                   onTap: () {

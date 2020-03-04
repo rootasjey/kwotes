@@ -17,6 +17,7 @@ import 'package:memorare/screens/web/edit_email.dart';
 import 'package:memorare/screens/web/edit_password.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
+import 'package:memorare/screens/web/published_quotes.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/admin_quotes.dart';
 import 'package:memorare/screens/web/quotidians.dart';
@@ -94,6 +95,10 @@ class FluroRouter {
   static Handler _privacyHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(PrivacyTerms()));
+
+  static Handler _publishedQuotesHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(PublishedQuotes()));
 
   static Handler _quotePageHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -195,6 +200,10 @@ class FluroRouter {
     router.define(
       PrivacyRoute,
       handler: _privacyHandler,
+    );
+    router.define(
+      PublishedQuotesRoute,
+      handler: _publishedQuotesHandler,
     );
     router.define(
       QuotePageRoute,
