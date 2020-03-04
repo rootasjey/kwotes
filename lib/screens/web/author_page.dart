@@ -142,9 +142,37 @@ class _AuthorPageState extends State<AuthorPage> {
 
   Widget avatar() {
     if (author.urls.image != null && author.urls.image.length > 0) {
-      return CircleAvatar(
-        backgroundImage: NetworkImage(author.urls.image),
-        radius: 80.0,
+      return Material(
+        elevation: 1.0,
+        shape: CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: Ink.image(
+          image: NetworkImage(author.urls.image),
+          fit: BoxFit.cover,
+          width: 200.0,
+          height: 200.0,
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Container(
+                      height: 500.0,
+                      width: 500.0,
+                      child: Image(
+                        image: NetworkImage(author.urls.image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }
+              );
+            },
+          ),
+        ),
       );
     }
 
