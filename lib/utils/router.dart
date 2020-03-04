@@ -58,6 +58,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteTopics());
 
+  static Handler _adminTempQuotesHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(AdminTempQuotes()));
+
   static Handler _authorHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(AuthorPage(id: params['id'][0],)));
@@ -117,10 +121,6 @@ class FluroRouter {
   static Handler _topicHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(TopicPage(name: params['name'][0])));
-
-  static Handler _tempQuotesHandler = Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(AdminTempQuotes()));
 
   static Handler _undefinedHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -213,7 +213,7 @@ class FluroRouter {
     );
     router.define(
       AdminTempQuotesRoute,
-      handler: _tempQuotesHandler,
+      handler: _adminTempQuotesHandler,
     );
     router.define(
       TopicRoute,
