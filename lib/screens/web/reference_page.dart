@@ -136,9 +136,31 @@ class _ReferencePageState extends State<ReferencePage> {
         width: 200.0,
         height: 250.0,
         child: Card(
-          child: Image.network(
-            reference.urls.image,
+          child: Ink.image(
+            image: NetworkImage(
+              reference.urls.image,
+            ),
             fit: BoxFit.cover,
+            child: InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Container(
+                        height: 500.0,
+                        width: 500.0,
+                        child: Image(
+                          image: NetworkImage(reference.urls.image),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }
+                );
+              },
+            ),
           ),
         ),
       );
