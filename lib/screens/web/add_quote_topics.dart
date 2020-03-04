@@ -139,7 +139,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           ),
 
           Observer(builder: (context) {
-            availableTopics = appTopicsColors.topicsColors;
+            availableTopics.addAll(appTopicsColors.topicsColors);
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
