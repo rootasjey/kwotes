@@ -3,7 +3,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/load_more_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
-import 'package:memorare/types/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
@@ -108,8 +108,7 @@ class _QuotidiansState extends State<Quotidians> {
     int currentMonth = 0;
 
     quotidians.forEach((quotidian) {
-      final topicColor = ThemeColor.topicsColors
-        .firstWhere((element) => element.name == quotidian.quote.topics.first);
+      final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
 
       if (currentMonth != quotidian.date.month) {
         currentMonth = quotidian.date.month;
