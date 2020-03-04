@@ -1,6 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/topic_color.dart';
 
 class ThemeColor extends ChangeNotifier {
@@ -117,18 +116,5 @@ class ThemeColor extends ChangeNotifier {
       default:
         return primary;
     }
-  }
-
-  static void fetchTopicsColors() async {
-    final snapshot = await FirestoreApp.instance
-      .collection('topics')
-      .get();
-
-    if (snapshot.empty) { return; }
-
-    snapshot.forEach((doc) {
-      final topicColor = TopicColor.fromJSON(doc.data());
-      topicsColors.add(topicColor);
-    });
   }
 }

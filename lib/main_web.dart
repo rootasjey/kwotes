@@ -16,7 +16,6 @@ class _MainWebState extends State<MainWeb> {
   @override
   initState() {
     super.initState();
-
     populateAuthAndLang();
   }
 
@@ -40,5 +39,4 @@ class _MainWebState extends State<MainWeb> {
 
     Language.fetchAndPopulate(userAuth);
   }
-
 }
