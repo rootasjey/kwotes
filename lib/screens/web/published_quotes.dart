@@ -70,7 +70,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: <Widget>[
-            Icon(Icons.list, size: 80.0),
+            Icon(Icons.check_box_outline_blank, size: 80.0),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text('You have no published quotes yet.'),
