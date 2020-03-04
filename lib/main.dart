@@ -8,6 +8,7 @@ import 'package:memorare/main_mobile.dart';
 import 'package:memorare/main_web.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ void main() {
   }
 
   FluroRouter.setupRouter();
+  appTopicsColors.fetchTopicsColors();
 
   return runApp(App());
 }
