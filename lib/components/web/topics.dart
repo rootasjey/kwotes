@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/firestore_app.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
-import 'package:memorare/types/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
 
-List<TopicColor> _topicsList = [];
+List<TopicColor> _topics = [];
 
 class Topics extends StatefulWidget {
   @override
@@ -15,14 +13,6 @@ class Topics extends StatefulWidget {
 
 class _TopicsState extends State<Topics> {
   bool isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (_topicsList.length > 0) { return; }
-    fetchTopics();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,69 +47,40 @@ class _TopicsState extends State<Topics> {
           ),
 
           SizedBox(
-            width: 360.0,
-            child: Wrap(
-              children: topicsColorsCards(),
-            ),
+            width: 400.0,
+            height: 400.0,
+            child: topicsColorsCards(),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> topicsColorsCards() {
-    List<Widget> cards = [];
+  Widget topicsColorsCards() {
     int count = 0;
 
-    _topicsList.forEach((topicColor) {
-      cards.add(
-        TopicCardColor(
-          color: count < 3 ?
-            Color(topicColor.decimal) :
-            ThemeColor.topicColor('work'),
-          name: topicColor.name,
-        ),
-      );
+    return Observer(
+      builder: (context) {
+        if (_topics.length == 0) {
+          _topics = appTopicsColors.shuffle(max: 6);
+        }
 
-      count++;
-    });
+        return GridView.count(
+          crossAxisCount: 3,
+          childAspectRatio: .8,
+          children: _topics.map((topicColor) {
+            count++;
 
-    return cards;
-  }
+            return TopicCardColor(
+              color: count < 4 ?
+                Color(topicColor.decimal) :
+                Color(0xFF58595B),
+              name: topicColor.name,
+            );
 
-  void fetchTopics() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final random = Random();
-
-    try {
-      final snapshot = await FirestoreApp.instance
-        .collection('topics')
-        .where('random', '>=', random.nextInt(100000000))
-        .limit(6)
-        .get();
-
-      if (snapshot.empty) {
-        setState(() {
-          isLoading = false;
-          return;
-        });
-      }
-
-      snapshot.forEach((doc) {
-        _topicsList.add(TopicColor.fromJSON(doc.data()));
-      });
-
-      setState(() {});
-
-    } catch (error) {
-      setState(() {
-        isLoading = false;
-      });
-
-      debugPrint(error.toString());
-    }
+          }).toList(),
+        );
+      },
+    );
   }
 }
