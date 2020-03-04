@@ -23,6 +23,7 @@ import 'package:memorare/screens/web/quotidians.dart';
 import 'package:memorare/screens/web/reference_page.dart';
 import 'package:memorare/screens/web/signin.dart';
 import 'package:memorare/screens/web/signup.dart';
+import 'package:memorare/screens/web/temp_quotes.dart';
 import 'package:memorare/screens/web/topic_page.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -122,6 +123,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(TopicPage(name: params['name'][0])));
 
+  static Handler _tempQuotesHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(TempQuotes()));
+
   static Handler _undefinedHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
@@ -154,6 +159,10 @@ class FluroRouter {
     router.define(
       AddQuoteTopicsRoute,
       handler: _addQuoteTopicsHandler,
+    );
+    router.define(
+      AdminTempQuotesRoute,
+      handler: _adminTempQuotesHandler,
     );
     router.define(
       AuthorRoute,
@@ -212,8 +221,8 @@ class FluroRouter {
       handler: _signupHandler,
     );
     router.define(
-      AdminTempQuotesRoute,
-      handler: _adminTempQuotesHandler,
+      TempQuotesRoute,
+      handler: _tempQuotesHandler,
     );
     router.define(
       TopicRoute,

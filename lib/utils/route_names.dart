@@ -20,5 +20,6 @@ const String QuotidiansRoute        = '/quotidians';
 const String ReferenceRoute         = '/reference/:id';
 const String SigninRoute            = '/signin';
 const String SignupRoute            = '/signup';
+const String TempQuotesRoute        = '/tempquotes';
 const String TopicRoute             = '/topic/:name';
 const String UndefinedRoute         = '/:route';
