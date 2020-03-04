@@ -7,8 +7,8 @@ import 'package:memorare/components/web/load_more_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/author.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/reference_type.dart';
 import 'package:memorare/types/temp_quote.dart';
@@ -86,8 +86,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     final children = <Widget>[];
 
     tempQuotes.forEach((tempQuote) {
-      final topicColor = ThemeColor.topicsColors
-        .firstWhere((element) => element.name == tempQuote.topics.first);
+      final topicColor = appTopicsColors.find(tempQuote.topics.first);
 
       children.add(
         Padding(
