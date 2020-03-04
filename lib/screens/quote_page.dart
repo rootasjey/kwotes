@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/colors.dart';
 import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
@@ -97,7 +98,7 @@ class _QuotePageState extends State<QuotePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Card(
-            color: ThemeColor.lighten(topicColor),
+            color: lighten(topicColor),
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 30.0,
