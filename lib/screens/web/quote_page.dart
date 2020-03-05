@@ -51,26 +51,9 @@ class _QuotePageState extends State<QuotePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () {
-                          FluroRouter.router.pop(context);
-                        },
-                        icon: Icon(Icons.arrow_back),
-                      )
-                    ],
-                  ),
-                ),
+                backIcon(),
 
-                Text(
-                  quote.name,
-                  style: TextStyle(
-                    fontSize: FontSize.hero(quote.name),
-                  ),
-                ),
+                quoteName(),
 
                 Padding(
                   padding: const EdgeInsets.only(top: 30.0),
@@ -83,33 +66,10 @@ class _QuotePageState extends State<QuotePage> {
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: Opacity(
-                    opacity: .8,
-                    child: Text(
-                      quote.author.name,
-                      style: TextStyle(
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  )
-                ),
+                authorName(),
 
-                if (quote.mainReference?.name != null &&
-                  quote.mainReference.name.length > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Opacity(
-                      opacity: .6,
-                      child: Text(
-                        quote.mainReference.name,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                  ),
+                if (quote.mainReference.name.length > 0)
+                  referenceName(),
               ],
             ),
           ),
@@ -121,6 +81,61 @@ class _QuotePageState extends State<QuotePage> {
 
         NavBackFooter(),
       ],
+    );
+  }
+
+  Widget authorName() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: Opacity(
+        opacity: .8,
+        child: Text(
+          quote.author.name,
+          style: TextStyle(
+            fontSize: 25.0,
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget backIcon() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            onPressed: () {
+              FluroRouter.router.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget quoteName() {
+    return Text(
+      quote.name,
+      style: TextStyle(
+        fontSize: FontSize.hero(quote.name),
+      ),
+    );
+  }
+
+  Widget referenceName() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Opacity(
+        opacity: .6,
+        child: Text(
+          quote.mainReference.name,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+      ),
     );
   }
 
