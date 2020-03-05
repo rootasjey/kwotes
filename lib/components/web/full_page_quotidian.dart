@@ -208,8 +208,19 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               if (_isFav) {
+                final result = await removeFromFavourites(
+                  context: context,
+                  quotidian: _quotidian,
+                );
+
+                if (result) {
+                  setState(() {
+                    _isFav = false;
+                  });
+                }
+
                 return;
               }
 
