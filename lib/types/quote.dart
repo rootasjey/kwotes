@@ -23,8 +23,8 @@ class Quote {
   });
 
   factory Quote.fromJSON(Map<String, dynamic> json) {
-    List<Reference> refs = [];
-    List<String> topicsList = [];
+    List<Reference> _references = [];
+    List<String> _topics = [];
 
     final _author = json['author'] != null ?
       Author.fromJSON(json['author']) : null;
@@ -34,21 +34,21 @@ class Quote {
 
     if (json['references'] != null) {
       for (var ref in json['references']) {
-        refs.add(Reference.fromJSON(ref));
+        _references.add(Reference.fromJSON(ref));
       }
     }
 
     if (json['topics'] != null) {
         if (json['topics'] is Iterable<dynamic>) {
           for (var tag in json['topics']) {
-          topicsList.add(tag);
+          _topics.add(tag);
         }
 
       } else {
         Map<String, dynamic> mapTopics = json['topics'];
 
         mapTopics.forEach((key, value) {
-          topicsList.add(key);
+          _topics.add(key);
         });
       }
     }
@@ -59,9 +59,9 @@ class Quote {
       lang          : json['lang'],
       name          : json['name'],
       mainReference : _mainReference,
-      references    : refs,
+      references    : _references,
       starred       : json['starred'] ?? false,
-      topics        : topicsList,
+      topics        : _topics,
     );
   }
 
