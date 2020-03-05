@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/state/user_lang.dart';
@@ -205,7 +206,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: () { print('fav'); },
+            onPressed: () => addToFavourites(
+              context: context,
+              quotidian: _quotidian,
+            ),
             icon: Icon(Icons.favorite_border),
           ),
 
