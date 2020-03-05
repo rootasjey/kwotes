@@ -114,31 +114,7 @@ class _QuotePageState extends State<QuotePage> {
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                onPressed: () { print('fav'); },
-                icon: Icon(Icons.favorite_border),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: IconButton(
-                  onPressed: () { print('share'); },
-                  icon: Icon(Icons.share),
-                ),
-              ),
-
-              IconButton(
-                onPressed: () { print('add list'); },
-                icon: Icon(Icons.playlist_add),
-              ),
-            ],
-          ),
-        ),
+        userActions(),
 
         topicsList(),
 
@@ -178,6 +154,34 @@ class _QuotePageState extends State<QuotePage> {
             ),
           ),
 
+        ],
+      ),
+    );
+  }
+
+  Widget userActions() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.favorite_border),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.share),
+            ),
+          ),
+
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.playlist_add),
+          ),
         ],
       ),
     );
