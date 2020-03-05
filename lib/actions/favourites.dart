@@ -14,7 +14,6 @@ Future addToFavourites({
 }) async {
 
   try {
-
     final userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
@@ -107,5 +106,28 @@ Future addToFavourites({
         ],
       ),
     )..show(context);
+  }
+}
+
+/// Returns true if the target quote is in user's favourites.
+/// False otherwise.
+Future<bool> isFavourite({
+  String quoteId,
+  String userUid,
+}) async {
+
+  try {
+    final doc = await FirestoreApp.instance
+      .collection('users')
+      .doc(userUid)
+      .collection('favourites')
+      .doc(quoteId)
+      .get();
+
+    return doc.exists;
+
+  } catch (error) {
+    debugPrint(error.toString());
+    return false;
   }
 }
