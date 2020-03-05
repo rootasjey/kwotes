@@ -210,24 +210,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           IconButton(
             onPressed: () async {
               if (_isFav) {
-                final result = await removeFromFavourites(
-                  context: context,
-                  quotidian: _quotidian,
-                );
-
-                if (result) {
-                  setState(() {
-                    _isFav = false;
-                  });
-                }
-
+                addQuotidianToFav();
                 return;
               }
 
-              addToFavourites(
-                context: context,
-                quotidian: _quotidian,
-              );
+              removeQuotidianFromFav();
             },
             icon: _isFav ?
               Icon(Icons.favorite) :
@@ -255,7 +242,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           ),
 
           IconButton(
-            onPressed: () { print('add list'); },
+            onPressed: () {},
             icon: Icon(Icons.playlist_add),
           ),
         ],
@@ -277,6 +264,23 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       _isConnected = false;
       return signinButton();
     });
+  }
+
+  void addQuotidianToFav() async {
+    setState(() { // Optimistic result
+      _isFav = false;
+    });
+
+    final result = await removeFromFavourites(
+      context: context,
+      quotidian: _quotidian,
+    );
+
+    if (!result) {
+      setState(() {
+        _isFav = true;
+      });
+    }
   }
 
   void fetchIsFav() async {
@@ -329,6 +333,23 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
       setState(() {
         isLoading = false;
+      });
+    }
+  }
+
+  void removeQuotidianFromFav() async {
+    setState(() { // Optimistic result
+      _isFav = true;
+    });
+
+    final result = await addToFavourites(
+      context: context,
+      quotidian: _quotidian,
+    );
+
+    if (!result) {
+      setState(() {
+        _isFav = false;
       });
     }
   }

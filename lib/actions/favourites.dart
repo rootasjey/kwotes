@@ -7,7 +7,7 @@ import 'package:memorare/types/quotidian.dart';
 
 /// Add the target quote to the current authenticated user's favourites subcollection.
 /// You only need to specify either the `quotidian` parameter or `quote` one.
-Future addToFavourites({
+Future<bool> addToFavourites({
   BuildContext context,
   Quotidian quotidian,
   Quote quote,
@@ -22,7 +22,7 @@ Future addToFavourites({
         message: "You're not connected to add this quote to your favourites.",
       )..show(context);
 
-      return;
+      return false;
     }
 
     String lang = quotidian != null ?
@@ -40,7 +40,7 @@ Future addToFavourites({
       .get();
 
     if (doc.exists) {
-      return;
+      return false;
     }
 
     await FirestoreApp.instance
@@ -84,6 +84,8 @@ Future addToFavourites({
       ),
     )..show(context);
 
+    return true;
+
   } catch (error) {
     debugPrint(error.toString());
 
@@ -106,6 +108,8 @@ Future addToFavourites({
         ],
       ),
     )..show(context);
+
+    return false;
   }
 }
 
