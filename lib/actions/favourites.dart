@@ -131,3 +131,94 @@ Future<bool> isFavourite({
     return false;
   }
 }
+
+/// Remove the target quote from the current authenticated user's favourites subcollection.
+/// You only need to specify either the `quotidian` parameter or `quote` one.
+Future<bool> removeFromFavourites({
+  BuildContext context,
+  Quotidian quotidian,
+  Quote quote,
+}) async {
+
+  try {
+    final userAuth = await FirebaseAuth.instance.currentUser();
+
+    if (userAuth == null) {
+      Flushbar(
+        backgroundColor: Colors.red,
+        message: "You're not connected to remove this quote from your favourites.",
+      )..show(context);
+
+      return false;
+    }
+
+    if (quote == null) {
+      quote = quotidian.quote;
+    }
+
+    final doc = await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .collection('favourites')
+      .doc(quote.id)
+      .get();
+
+    if (!doc.exists) {
+      return false;
+    }
+
+    await FirestoreApp.instance
+      .collection('users')
+      .doc(userAuth.uid)
+      .collection('favourites')
+      .doc(quote.id)
+      .delete();
+
+    Flushbar(
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.green,
+      messageText: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: Icon(Icons.check_circle, color: Colors.white,),
+          ),
+
+          Text(
+            'The quote has been removed from your favourites.',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
+    )..show(context);
+
+    return true;
+
+  } catch (error) {
+    debugPrint(error.toString());
+
+    Flushbar(
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.red,
+      messageText: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: Icon(Icons.error, color: Colors.white,),
+          ),
+
+          Text(
+            "Sorry, we couldn't remove the quote from your favourites.",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
+    )..show(context);
+
+    return false;
+  }
+}
