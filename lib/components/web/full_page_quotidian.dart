@@ -14,6 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 Quotidian _quotidian;
 String _prevLang;
+bool _isConnected;
+bool _isFav = false;
 
 class FullPageQuotidian extends StatefulWidget {
   @override
@@ -206,11 +208,19 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: () => addToFavourites(
-              context: context,
-              quotidian: _quotidian,
-            ),
-            icon: Icon(Icons.favorite_border),
+            onPressed: () {
+              if (_isFav) {
+                return;
+              }
+
+              addToFavourites(
+                context: context,
+                quotidian: _quotidian,
+              );
+            },
+            icon: _isFav ?
+              Icon(Icons.favorite) :
+              Icon(Icons.favorite_border),
           ),
 
           Padding(
@@ -244,12 +254,34 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget userSection() {
     return Observer(builder: (context) {
+      if (_isConnected != isUserConnected.value) {
+        fetchIsFav();
+      }
+
       if (isUserConnected.value) {
+        _isConnected = true;
         return userActions();
       }
 
+      _isConnected = false;
       return signinButton();
     });
+  }
+
+  void fetchIsFav() async {
+    userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+
+    if (userAuth != null) {
+      final isFav = await isFavourite(
+        userUid: userAuth.uid,
+        quoteId: _quotidian.quote.id,
+      );
+
+      if (_isFav != isFav) {
+        _isFav = isFav;
+        setState(() {});
+      }
+    }
   }
 
   void fetchQuotidian() async {
