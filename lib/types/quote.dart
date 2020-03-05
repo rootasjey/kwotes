@@ -4,6 +4,7 @@ import 'reference.dart';
 class Quote {
   final Author author;
   final String id;
+  final String lang;
   final String name;
   final Reference mainReference;
   final List<Reference> references;
@@ -13,6 +14,7 @@ class Quote {
   Quote({
     this.author,
     this.id,
+    this.lang,
     this.name,
     this.mainReference,
     this.references,
@@ -50,6 +52,7 @@ class Quote {
         Author.fromJSON(json['author']) : null,
 
       id: json['id'],
+      lang: json['lang'],
       name: json['name'],
       mainReference: json['mainReference'] != null ?
         Reference.fromJSON(json['mainReference']) : null,
@@ -70,6 +73,7 @@ class Quote {
 
     json['author']      = author.toJSON();
     json['id']          = id;
+    json['lang']        = lang;
     json['name']        = name;
     json['references']  = refStr;
     json['starred']     = starred;
