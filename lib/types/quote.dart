@@ -26,6 +26,12 @@ class Quote {
     List<Reference> refs = [];
     List<String> topicsList = [];
 
+    final _author = json['author'] != null ?
+      Author.fromJSON(json['author']) : null;
+
+    final _mainReference = json['mainReference'] != null ?
+      Reference.fromJSON(json['mainReference']) : null;
+
     if (json['references'] != null) {
       for (var ref in json['references']) {
         refs.add(Reference.fromJSON(ref));
@@ -48,18 +54,14 @@ class Quote {
     }
 
     return Quote(
-      author: json['author'] != null ?
-        Author.fromJSON(json['author']) : null,
-
-      id: json['id'],
-      lang: json['lang'],
-      name: json['name'],
-      mainReference: json['mainReference'] != null ?
-        Reference.fromJSON(json['mainReference']) : null,
-
-      references: refs,
-      starred: json['starred'] ?? false,
-      topics: topicsList,
+      author        : _author,
+      id            : json['id'],
+      lang          : json['lang'],
+      name          : json['name'],
+      mainReference : _mainReference,
+      references    : refs,
+      starred       : json['starred'] ?? false,
+      topics        : topicsList,
     );
   }
 
