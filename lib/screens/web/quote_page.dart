@@ -6,6 +6,7 @@ import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QuotePage extends StatefulWidget {
   final String quoteId;
@@ -173,7 +174,18 @@ class _QuotePageState extends State<QuotePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                final author = quote.author.name;
+
+                String quoteAndAuthor = quote.name;
+
+                if (author.isNotEmpty) {
+                  quoteAndAuthor += ' — $author';
+                }
+
+                final url = 'https://twitter.com/intent/tweet?via=memorareapp&text=$quoteAndAuthor';
+                await launch(url);
+              },
               icon: Icon(Icons.share),
             ),
           ),
