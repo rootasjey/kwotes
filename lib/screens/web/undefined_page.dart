@@ -31,6 +31,15 @@ class _UndefinedPageState extends State<UndefinedPage> {
           child: Text('Route for "${widget.name}" is not defined.'),
         ),
 
+        Padding(
+          padding: const EdgeInsets.only(top: 50.0),
+          child: Image(
+            image: AssetImage('assets/images/page-not-found-4.png'),
+            width: 350.0,
+            height: 350.0,
+          ),
+        ),
+
         Padding(padding: EdgeInsets.only(bottom: 100.0)),
 
         Padding(

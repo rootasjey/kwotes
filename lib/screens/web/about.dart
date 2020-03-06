@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatelessWidget {
   @override
@@ -14,30 +15,7 @@ class About extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Opacity(
-                opacity: .8,
-                child: Text(
-                  'What is Memorare?',
-                  style: TextStyle(
-                    fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              Opacity(
-                opacity: .6,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Text(
-                    'Memorare is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. The subject can be as diverse as funny, philosophical, introspective, or motivational. In addition, you can browse quotes by topics, authors, references and use the search feature.',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
-              ),
+              ...whatis(),
 
               Opacity(
                 opacity: .8,
@@ -210,6 +188,8 @@ class About extends StatelessWidget {
                   ),
                 ),
               ),
+
+              ...thanks(),
             ],
           ),
         ),
@@ -217,5 +197,79 @@ class About extends StatelessWidget {
         NavBackFooter(),
       ],
     );
+  }
+
+  List<Widget> thanks() {
+    return <Widget>[
+      Opacity(
+        opacity: .8,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 60.0),
+          child: Text(
+            'Resources',
+            style: TextStyle(
+              fontSize: 50.0,
+            ),
+          ),
+        ),
+      ),
+
+      Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+        child: Text(
+          'Illustrations:',
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: FlatButton(
+          onPressed: () {
+            launch('https://icons8.com');
+          },
+          child: Text(
+            '• https://icons8.com',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> whatis() {
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 60.0),
+        child: Opacity(
+          opacity: .8,
+          child: Text(
+            'What is Memorare?',
+            style: TextStyle(
+              fontSize: 50.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Text(
+            'Memorare is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. The subject can be as diverse as funny, philosophical, introspective, or motivational. In addition, you can browse quotes by topics, authors, references and use the search feature.',
+            style: TextStyle(
+              fontSize: 20.0,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 }
