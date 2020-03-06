@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
@@ -182,8 +184,17 @@ class _QuotePageState extends State<QuotePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.favorite_border),
+            onPressed: () async {
+              if (quote.starred) {
+                removeQuoteFromFav();
+                return;
+              }
+
+              addQuoteToFav();
+            },
+            icon: quote.starred ?
+              Icon(Icons.favorite) :
+              Icon(Icons.favorite_border),
           ),
 
           Padding(
@@ -212,6 +223,23 @@ class _QuotePageState extends State<QuotePage> {
         ],
       ),
     );
+  }
+
+  void addQuoteToFav() async {
+    setState(() { // Optimistic result
+      quote.starred = true;
+    });
+
+    final result = await addToFavourites(
+      context: context,
+      quote: quote,
+    );
+
+    if (!result) {
+      setState(() {
+        quote.starred = false;
+      });
+    }
   }
 
   void fetchTopics() async {
@@ -250,12 +278,17 @@ class _QuotePageState extends State<QuotePage> {
           isLoading = false;
         });
 
-      return;
+        return;
       }
+
+      final data = doc.data();
+      data['id'] = doc.id;
+      quote = Quote.fromJSON(data);
+
+      await fetchIsFav();
 
       setState(() {
         isLoading = false;
-        quote = Quote.fromJSON(doc.data());
       });
 
       fetchTopics();
@@ -265,7 +298,37 @@ class _QuotePageState extends State<QuotePage> {
         isLoading = false;
       });
 
-      print(error);
+      debugPrint(error);
+    }
+  }
+
+  Future fetchIsFav() async {
+    final userAuth = await FirebaseAuth.instance.currentUser();
+
+    if (userAuth != null) {
+      final isFav = await isFavourite(
+        userUid: userAuth.uid,
+        quoteId: quote.id,
+      );
+
+      quote.starred = isFav;
+    }
+  }
+
+  void removeQuoteFromFav() async {
+    setState(() { // Optimistic result
+      quote.starred = false;
+    });
+
+    final result = await removeFromFavourites(
+      context: context,
+      quote: quote,
+    );
+
+    if (!result) {
+      setState(() {
+        quote.starred = true;
+      });
     }
   }
 }
