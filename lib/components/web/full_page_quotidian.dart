@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
+import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/state/user_lang.dart';
@@ -10,7 +11,6 @@ import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:mobx/mobx.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 Quotidian _quotidian;
 String _prevLang;
@@ -225,17 +225,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
               onPressed: () async {
-                final quote = _quotidian.quote.name;
-                final author = _quotidian.quote.author.name;
-
-                String quoteAndAuthor = '"$quote"';
-
-                if (author.isNotEmpty) {
-                  quoteAndAuthor += ' — $author';
-                }
-
-                final url = 'https://twitter.com/intent/tweet?via=memorareapp&text=$quoteAndAuthor';
-                await launch(url);
+                shareTwitter(quote: _quotidian.quote);
               },
               icon: Icon(Icons.share),
             ),
