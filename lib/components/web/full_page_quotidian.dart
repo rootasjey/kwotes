@@ -210,11 +210,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           IconButton(
             onPressed: () async {
               if (_isFav) {
-                addQuotidianToFav();
+                removeQuotidianFromFav();
                 return;
               }
 
-              removeQuotidianFromFav();
+              addQuotidianToFav();
             },
             icon: _isFav ?
               Icon(Icons.favorite) :
@@ -268,17 +268,17 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   void addQuotidianToFav() async {
     setState(() { // Optimistic result
-      _isFav = false;
+      _isFav = true;
     });
 
-    final result = await removeFromFavourites(
+    final result = await addToFavourites(
       context: context,
       quotidian: _quotidian,
     );
 
     if (!result) {
       setState(() {
-        _isFav = true;
+        _isFav = false;
       });
     }
   }
@@ -339,17 +339,17 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   void removeQuotidianFromFav() async {
     setState(() { // Optimistic result
-      _isFav = true;
+      _isFav = false;
     });
 
-    final result = await addToFavourites(
+    final result = await removeFromFavourites(
       context: context,
       quotidian: _quotidian,
     );
 
     if (!result) {
       setState(() {
-        _isFav = false;
+        _isFav = true;
       });
     }
   }
