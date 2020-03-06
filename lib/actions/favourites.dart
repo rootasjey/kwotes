@@ -64,26 +64,6 @@ Future<bool> addToFavourites({
         'topics'        : quote.topics,
       });
 
-    Flushbar(
-      duration: Duration(seconds: 3),
-      backgroundColor: Colors.green,
-      messageText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Icon(Icons.check_circle, color: Colors.white,),
-          ),
-
-          Text(
-            "The quote has been added to your favourites.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-    )..show(context);
-
     return true;
 
   } catch (error) {
@@ -100,7 +80,7 @@ Future<bool> addToFavourites({
           ),
 
           Text(
-            "Sorry, we couldn't add the quote to your favourites.",
+            "Sorry, an error prevented the quote to be favourited.",
             style: TextStyle(
               color: Colors.white,
             ),
@@ -178,26 +158,6 @@ Future<bool> removeFromFavourites({
       .doc(quote.id)
       .delete();
 
-    Flushbar(
-      duration: Duration(seconds: 3),
-      backgroundColor: Colors.green,
-      messageText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Icon(Icons.check_circle, color: Colors.white,),
-          ),
-
-          Text(
-            'The quote has been removed from your favourites.',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-    )..show(context);
-
     return true;
 
   } catch (error) {
@@ -214,7 +174,7 @@ Future<bool> removeFromFavourites({
           ),
 
           Text(
-            "Sorry, we couldn't remove the quote from your favourites.",
+            "Sorry, the quote couldn't be unfavourited.",
             style: TextStyle(
               color: Colors.white,
             ),
