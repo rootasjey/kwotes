@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
+import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
@@ -8,7 +9,6 @@ import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class QuotePage extends StatefulWidget {
   final String quoteId;
@@ -201,16 +201,7 @@ class _QuotePageState extends State<QuotePage> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
               onPressed: () async {
-                final author = quote.author.name;
-
-                String quoteAndAuthor = quote.name;
-
-                if (author.isNotEmpty) {
-                  quoteAndAuthor += ' — $author';
-                }
-
-                final url = 'https://twitter.com/intent/tweet?via=memorareapp&text=$quoteAndAuthor';
-                await launch(url);
+                shareTwitter(quote: quote);
               },
               icon: Icon(Icons.share),
             ),
