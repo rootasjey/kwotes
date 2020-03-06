@@ -15,6 +15,7 @@ import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/delete_account.dart';
 import 'package:memorare/screens/web/edit_email.dart';
 import 'package:memorare/screens/web/edit_password.dart';
+import 'package:memorare/screens/web/favourites.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/published_quotes.dart';
@@ -87,6 +88,10 @@ class FluroRouter {
   static Handler _editPasswordHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(EditPassword()));
+
+  static Handler _favouritesHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          _layout(Favourites()));
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -192,6 +197,10 @@ class FluroRouter {
     router.define(
       EditPasswordRoute,
       handler: _editPasswordHandler,
+    );
+    router.define(
+      FavouritesRoute,
+      handler: _favouritesHandler,
     );
     router.define(
       HomeRoute,

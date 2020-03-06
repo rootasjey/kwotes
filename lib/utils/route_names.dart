@@ -13,6 +13,7 @@ const String DashboardRoute         = '/dashboard';
 const String DeleteAccountRoute     = '/account/delete';
 const String EditEmailRoute         = '/account/email/edit';
 const String EditPasswordRoute      = '/account/password/edit';
+const String FavouritesRoute        = '/favourites';
 const String PrivacyRoute           = '/privacy';
 const String QuotePageRoute         = '/quote/:id';
 const String QuotesRoute            = '/quotes';
