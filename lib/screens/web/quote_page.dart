@@ -5,6 +5,7 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
@@ -57,16 +58,7 @@ class _QuotePageState extends State<QuotePage> {
 
                 quoteName(),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: SizedBox(
-                    width: 200.0,
-                    child: Divider(
-                      color: Color(0xFF64C7FF),
-                      thickness: 2.0,
-                    ),
-                  ),
-                ),
+                dividerColor(),
 
                 authorName(),
 
@@ -113,6 +105,24 @@ class _QuotePageState extends State<QuotePage> {
             icon: Icon(Icons.arrow_back),
           )
         ],
+      ),
+    );
+  }
+
+  Widget dividerColor() {
+    final topicColor = appTopicsColors.find(quote.topics.first);
+    final color = topicColor != null ?
+      Color(topicColor.decimal) :
+      Colors.white;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: SizedBox(
+        width: 200.0,
+        child: Divider(
+          color: color,
+          thickness: 2.0,
+        ),
       ),
     );
   }
@@ -171,7 +181,6 @@ class _QuotePageState extends State<QuotePage> {
               children: children,
             ),
           ),
-
         ],
       ),
     );
