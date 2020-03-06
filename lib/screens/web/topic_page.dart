@@ -65,7 +65,10 @@ class _TopicPageState extends State<TopicPage> {
           ),
         ),
 
-        gridQuotes(),
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 100.0,
+          child: gridQuotes(),
+        ),
 
         NavBackFooter(),
       ],
@@ -73,52 +76,51 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget gridQuotes() {
-    final children = <Widget>[];
+    return GridView.builder(
+      itemCount: quotes.length,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300,
+        mainAxisSpacing: 20.0,
+        crossAxisSpacing: 20.0,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        final quote = quotes.elementAt(index);
 
-    quotes.forEach((quote) {
-      children.add(
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SizedBox(
-            width: 250.0,
-            height: 250.0,
-            child: Card(
-              shape: BorderDirectional(
-                bottom: BorderSide(
-                  color: Color(decimal),
-                  width: 2.0,
-                ),
+        return SizedBox(
+          width: 250.0,
+          height: 250.0,
+          child: Card(
+            shape: BorderDirectional(
+              bottom: BorderSide(
+                color: Color(decimal),
+                width: 2.0,
               ),
-              child: InkWell(
-                onTap: () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    QuotePageRoute.replaceFirst(':id', quote.id)
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        quote.name,
-                        style: TextStyle(
-                          fontSize: adaptativeFont(quote.name),
-                        ),
-                      )
-                    ],
-                  ),
+            ),
+            child: InkWell(
+              onTap: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  QuotePageRoute.replaceFirst(':id', quote.id)
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      quote.name,
+                      style: TextStyle(
+                        fontSize: adaptativeFont(quote.name),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
           ),
-        )
-      );
-    });
-
-    return Wrap(
-      children: children,
+        );
+      },
     );
   }
 
