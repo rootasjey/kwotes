@@ -18,6 +18,7 @@ Future<bool> addToFavourites({
 
     if (userAuth == null) {
       Flushbar(
+        duration: Duration(seconds: 3),
         backgroundColor: Colors.red,
         message: "You're not connected to add this quote to your favourites.",
       )..show(context);
@@ -129,6 +130,7 @@ Future<bool> removeFromFavourites({
 
     if (userAuth == null) {
       Flushbar(
+        duration: Duration(seconds: 3),
         backgroundColor: Colors.red,
         message: "You're not connected to remove this quote from your favourites.",
       )..show(context);
