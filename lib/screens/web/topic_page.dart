@@ -168,7 +168,7 @@ class _TopicPageState extends State<TopicPage> {
     return 20.0;
   }
 
-  Future fetchIsFav(String quoteId) async {
+  Future<bool> fetchIsFav(String quoteId) async {
     isFavLoading = true;
 
     if (userAuth == null) {
@@ -176,7 +176,7 @@ class _TopicPageState extends State<TopicPage> {
     }
 
     if (userAuth == null) {
-      return;
+      return false;
     }
 
     try {
@@ -192,8 +192,11 @@ class _TopicPageState extends State<TopicPage> {
         isFavLoading = false;
       });
 
+      return true;
+
     } catch (error) {
       debugPrint(error.toString());
+      return false;
     }
   }
 
@@ -265,9 +268,9 @@ class _TopicPageState extends State<TopicPage> {
           builder: (BuildContext context, StateSetter stateSetter) {
             if (!isFavLoading && !isFavLoaded) {
               fetchIsFav(quote.id)
-                .then((_) {
+                .then((isOk) {
                   stateSetter(() {
-                    isFavLoaded = true;
+                    isFavLoaded = isOk;
                   });
                 });
             }
