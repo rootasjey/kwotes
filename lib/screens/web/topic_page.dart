@@ -89,8 +89,6 @@ class _TopicPageState extends State<TopicPage> {
       itemCount: quotes.length,
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 300,
-        mainAxisSpacing: 20.0,
-        crossAxisSpacing: 20.0,
       ),
       itemBuilder: (BuildContext context, int index) {
         final quote = quotes.elementAt(index);
@@ -99,12 +97,8 @@ class _TopicPageState extends State<TopicPage> {
           width: 250.0,
           height: 250.0,
           child: Card(
-            shape: BorderDirectional(
-              bottom: BorderSide(
-                color: Color(decimal),
-                width: 2.0,
-              ),
-            ),
+            elevation: 0,
+            margin: EdgeInsets.zero,
             child: InkWell(
               onTap: () {
                 FluroRouter.router.navigateTo(
@@ -154,7 +148,10 @@ class _TopicPageState extends State<TopicPage> {
       tooltip: 'Quotes actions',
       icon: Opacity(
         opacity: .5,
-        child: Icon(Icons.more_horiz),
+        child: Icon(
+          Icons.more_horiz,
+          color: Color(decimal),
+        ),
       ),
     );
   }
