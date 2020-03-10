@@ -12,6 +12,7 @@ import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:supercharged/supercharged.dart';
 
 Quotidian _quotidian;
 String _prevLang;
@@ -91,8 +92,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget animatedDivider() {
     return ControlledAnimation(
-      delay: Duration(seconds: 1),
-      duration: Duration(seconds: 1),
+      delay: 1.seconds,
+      duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
       builder: (context, value) {
         return Padding(
@@ -111,8 +112,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget authorName() {
     return ControlledAnimation(
-      delay: Duration(seconds: 1),
-      duration: Duration(seconds: 1),
+      delay: 1.seconds,
+      duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 0.8),
       builder: (context, value) {
         return Padding(
