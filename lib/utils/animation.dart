@@ -5,19 +5,30 @@ import 'package:simple_animations/simple_animations.dart';
 
 /// Create a widget animating a quote's name.
 /// Decides which animation is most suited for the quote.
-Widget createHeroQuoteAnimation({Quote quote}) {
+Widget createHeroQuoteAnimation({Quote quote, double screenWidth}) {
   final quoteName = quote.name;
 
   if (quoteName.contains(',')) {
-    return createPunctuationAnimation(quote: quote, punctuation: ', ');
+    return createPunctuationAnimation(
+      quote: quote,
+      punctuation: ', ',
+      screenWidth: screenWidth,
+    );
   }
 
   if (quoteName.contains('. ')) {
-    return createPunctuationAnimation(quote: quote, punctuation: '. ');
+    return createPunctuationAnimation(
+      quote: quote,
+      punctuation: '. ',
+      screenWidth: screenWidth,
+    );
   }
 
   if (quoteName.length > 90) {
-    return createLengthAnimation(quote: quote);
+    return createLengthAnimation(
+      quote: quote,
+      screenWidth: screenWidth,
+    );
   }
 
   return ControlledAnimation(
@@ -26,9 +37,10 @@ Widget createHeroQuoteAnimation({Quote quote}) {
     builder: (context, value) {
       return Opacity(
         opacity: value,
-        child: Text(quote.name,
+        child: Text(
+          quote.name,
           style: TextStyle(
-            fontSize: FontSize.hero(quote.name),
+            fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
           ),
         ),
       );
@@ -36,8 +48,16 @@ Widget createHeroQuoteAnimation({Quote quote}) {
   );
 }
 
+double dividerNumber(double screenWidth) {
+  return 1352 / screenWidth;
+}
+
 /// Create animations according to the quote's punctuation.
-Widget createPunctuationAnimation({Quote quote, String punctuation}) {
+Widget createPunctuationAnimation({
+  Quote quote,
+  String punctuation,
+  double screenWidth,
+}) {
   final quoteName = quote.name;
   List<String> parts = quoteName.split(punctuation);
 
@@ -57,7 +77,7 @@ Widget createPunctuationAnimation({Quote quote, String punctuation}) {
           opacity: value,
           child: Text(part,
             style: TextStyle(
-              fontSize: FontSize.hero(quote.name),
+              fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
             ),
           ),
         );
@@ -73,7 +93,7 @@ Widget createPunctuationAnimation({Quote quote, String punctuation}) {
 }
 
 /// Create animations according to the quote's length.
-Widget createLengthAnimation({Quote quote}) {
+Widget createLengthAnimation({Quote quote, double screenWidth}) {
   final quoteName = quote.name;
 
   final half = quoteName.length ~/ 2;
@@ -100,7 +120,7 @@ Widget createLengthAnimation({Quote quote}) {
           opacity: value,
           child: Text(part,
             style: TextStyle(
-              fontSize: FontSize.hero(quote.name),
+              fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
             ),
           ),
         );

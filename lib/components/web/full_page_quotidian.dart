@@ -62,31 +62,37 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       return emptyContainer();
     }
 
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: MediaQuery.of(context).size.height - 50.0,
-          child: Padding(
-            padding: EdgeInsets.all(70.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                quoteName(),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 50.0,
+              child: Padding(
+                padding: EdgeInsets.all(70.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    quoteName(
+                      screenWidth: MediaQuery.of(context).size.width,
+                    ),
 
-                animatedDivider(),
+                    animatedDivider(),
 
-                authorName(),
+                    authorName(),
 
-                if (_quotidian.quote.mainReference?.name != null &&
-                  _quotidian.quote.mainReference.name.length > 0)
-                  referenceName(),
-              ],
+                    if (_quotidian.quote.mainReference?.name != null &&
+                      _quotidian.quote.mainReference.name.length > 0)
+                      referenceName(),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
 
-        userSection(),
-      ],
+            userSection(),
+          ],
+        );
+      },
     );
   }
 
@@ -186,9 +192,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget quoteName() {
+  Widget quoteName({double screenWidth}) {
     return createHeroQuoteAnimation(
       quote: _quotidian.quote,
+      screenWidth: screenWidth,
     );
   }
 
