@@ -42,6 +42,7 @@ dependencies:
   path_provider: 1.5.1
   provider: 4.0.1
   share: 0.6.3+5
+  supercharged: 1.2.1
   url_launcher: 5.4.1
 
 dev_dependencies:
