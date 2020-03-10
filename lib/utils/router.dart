@@ -131,7 +131,7 @@ class FluroRouter {
 
   static Handler _topicHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(TopicPage(name: params['name'][0])));
+          TopicPage(name: params['name'][0]));
 
   static Handler _tempQuotesHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/types/quote.dart';
@@ -25,8 +26,15 @@ class _TopicPageState extends State<TopicPage> {
   int decimal = 4283980123;
   bool isLoading = false;
 
+  var _lastDoc;
+  bool isLoadingMore = false;
+  bool hasNext = true;
+
   List<Quote> quotes = [];
   TopicColor topicColor;
+
+  final _scrollController = ScrollController();
+  bool isFabVisible = false;
 
   bool isFavLoading = false;
   bool isFavLoaded = false;
@@ -44,99 +52,178 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 50.0, bottom: 100.0),
-          child: Stack(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TopicCardColor(
-                    color: Color(decimal),
-                    name: widget.name,
-                  ),
-                ],
-              ),
+    return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          onPressed: () {
+            _scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+          child: Icon(Icons.arrow_upward),
+        ) : null,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: gridQuotes(),
+          ),
 
-              Positioned(
-                left: 80.0,
-                top: 30.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
+          Column(
+            children: <Widget>[
+              loadMoreButton(),
+              NavBackFooter(),
             ],
           ),
-        ),
 
-        SizedBox(
-          height: MediaQuery.of(context).size.height - 100.0,
-          child: gridQuotes(),
-        ),
-
-        NavBackFooter(),
-      ],
+          Footer(),
+        ],
+      ),
     );
   }
 
   Widget gridQuotes() {
-    return GridView.builder(
-      itemCount: quotes.length,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        final quote = quotes.elementAt(index);
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        // FAB visibility
+        if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+          setState(() {
+            isFabVisible = false;
+          });
+        } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+          setState(() {
+            isFabVisible = true;
+          });
+        }
 
-        return SizedBox(
-          width: 250.0,
-          height: 250.0,
-          child: Card(
-            elevation: 0,
-            margin: EdgeInsets.zero,
-            child: InkWell(
-              onTap: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  QuotePageRoute.replaceFirst(':id', quote.id)
+        // Load more scenario
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+          return false;
+        }
+
+        if (hasNext && !isLoadingMore) {
+          fetchMoreQuotes();
+        }
+
+        return false;
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            expandedHeight: 250.0,
+            backgroundColor: Colors.white,
+            flexibleSpace: Stack(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    TopicCardColor(
+                      color: Color(decimal),
+                      name: widget.name,
+                    ),
+                  ],
+                ),
+
+                Positioned(
+                  left: 80.0,
+                  top: 40.0,
+                  child: IconButton(
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 300.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final quote = quotes.elementAt(index);
+
+                return SizedBox(
+                  width: 250.0,
+                  height: 250.0,
+                  child: gridItem(quote),
                 );
               },
-              onLongPress: () {
-                showActionsSheet(quote);
-              },
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          quote.name,
-                          style: TextStyle(
-                            fontSize: adaptativeFont(quote.name),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              childCount: quotes.length,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-                  Positioned(
-                    bottom: 0.0,
-                    right: 0.0,
-                    child: userActions(quote),
+  Widget gridItem(Quote quote) {
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () {
+          FluroRouter.router.navigateTo(
+            context,
+            QuotePageRoute.replaceFirst(':id', quote.id)
+          );
+        },
+        onLongPress: () {
+          showActionsSheet(quote);
+        },
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    quote.name,
+                    style: TextStyle(
+                      fontSize: adaptativeFont(quote.name),
+                    ),
                   ),
                 ],
               ),
             ),
+
+            Positioned(
+              bottom: 0.0,
+              right: 0.0,
+              child: userActions(quote),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget loadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+        child: FlatButton(
+        onPressed: () {
+          fetchMoreQuotes();
+        },
+        shape: RoundedRectangleBorder(
+          side: BorderSide(),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Load more...'
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -229,14 +316,54 @@ class _TopicPageState extends State<TopicPage> {
         quotes.add(quote);
       });
 
+      _lastDoc = snapshot.docs.last;
+
       setState(() {
         isLoading = false;
       });
 
     } catch (error) {
+      debugPrint(error.toString());
+
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void fetchMoreQuotes() async {
+    isLoadingMore = true;
+
+    try {
+      final snapshot = await FirestoreApp.instance
+        .collection('quotes')
+        .where('topics.${widget.name}', '==', true)
+        .where('lang', '==', 'en')
+        .startAfter(snapshot: _lastDoc)
+        .limit(10)
+        .get();
+
+      if (snapshot.empty) {
+        hasNext = false;
+        return;
+      }
+
+      snapshot.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
+      });
+
+      _lastDoc = snapshot.docs.last;
+
+      setState(() {
+        isLoadingMore = false;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
     }
   }
 
