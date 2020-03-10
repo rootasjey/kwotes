@@ -62,7 +62,7 @@ class _DiscoverState extends State<Discover> {
             child: ListView(
               padding: EdgeInsets.symmetric(
                 vertical: 40.0,
-                horizontal: 80.0
+                horizontal: 20.0
               ),
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
