@@ -54,47 +54,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'Loading...',
-                style: TextStyle(
-                  fontSize: 40.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+      return loadingContainer();
     }
 
     if (!isLoading && _quotidian == null) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.warning, size: 40.0,),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'Sorry, an unexpected error happended :(',
-                style: TextStyle(
-                  fontSize: 35.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+      return emptyContainer();
     }
 
     return Column(
@@ -108,78 +72,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               children: <Widget>[
                 quoteName(),
 
-                ControlledAnimation(
-                  delay: Duration(seconds: 1),
-                  duration: Duration(seconds: 1),
-                  tween: Tween(begin: 0.0, end: 200.0),
-                  builder: (context, value) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: SizedBox(
-                        width: value,
-                        child: Divider(
-                          color: Color(0xFF64C7FF),
-                          thickness: 2.0,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                animatedDivider(),
 
-                ControlledAnimation(
-                  delay: Duration(seconds: 1),
-                  duration: Duration(seconds: 1),
-                  tween: Tween(begin: 0.0, end: 0.8),
-                  builder: (context, value) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: Opacity(
-                        opacity: value,
-                        child: FlatButton(
-                          onPressed: () {
-                            final id = _quotidian.quote.author.id;
-
-                            FluroRouter.router.navigateTo(
-                              context,
-                              AuthorRoute.replaceFirst(':id', id)
-                            );
-                          },
-                          child: Text(
-                            _quotidian.quote.author.name,
-                            style: TextStyle(
-                              fontSize: 25.0,
-                            ),
-                          ),
-                        )
-                      )
-                    );
-                  },
-                ),
+                authorName(),
 
                 if (_quotidian.quote.mainReference?.name != null &&
                   _quotidian.quote.mainReference.name.length > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Opacity(
-                      opacity: .6,
-                      child: FlatButton(
-                        onPressed: () {
-                          final id = _quotidian.quote.mainReference.id;
-
-                          FluroRouter.router.navigateTo(
-                            context,
-                            ReferenceRoute.replaceFirst(':id', id)
-                          );
-                        },
-                        child: Text(
-                          _quotidian.quote.mainReference.name,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      )
-                    ),
-                  ),
+                  referenceName(),
               ],
             ),
           ),
@@ -190,9 +89,130 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
+  Widget animatedDivider() {
+    return ControlledAnimation(
+      delay: Duration(seconds: 1),
+      duration: Duration(seconds: 1),
+      tween: Tween(begin: 0.0, end: 200.0),
+      builder: (context, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: SizedBox(
+            width: value,
+            child: Divider(
+              color: Color(0xFF64C7FF),
+              thickness: 2.0,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget authorName() {
+    return ControlledAnimation(
+      delay: Duration(seconds: 1),
+      duration: Duration(seconds: 1),
+      tween: Tween(begin: 0.0, end: 0.8),
+      builder: (context, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Opacity(
+            opacity: value,
+            child: FlatButton(
+              onPressed: () {
+                final id = _quotidian.quote.author.id;
+
+                FluroRouter.router.navigateTo(
+                  context,
+                  AuthorRoute.replaceFirst(':id', id)
+                );
+              },
+              child: Text(
+                _quotidian.quote.author.name,
+                style: TextStyle(
+                  fontSize: 25.0,
+                ),
+              ),
+            )
+          )
+        );
+      },
+    );
+  }
+
+  Widget emptyContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.warning, size: 40.0,),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              'Sorry, an unexpected error happended :(',
+              style: TextStyle(
+                fontSize: 35.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget loadingContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              'Loading...',
+              style: TextStyle(
+                fontSize: 40.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget quoteName() {
     return createHeroQuoteAnimation(
       quote: _quotidian.quote,
+    );
+  }
+
+  Widget referenceName() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Opacity(
+        opacity: .6,
+        child: FlatButton(
+          onPressed: () {
+            final id = _quotidian.quote.mainReference.id;
+
+            FluroRouter.router.navigateTo(
+              context,
+              ReferenceRoute.replaceFirst(':id', id)
+            );
+          },
+          child: Text(
+            _quotidian.quote.mainReference.name,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+        )
+      ),
     );
   }
 
