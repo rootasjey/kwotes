@@ -6,11 +6,12 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/state/user_lang.dart';
-import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/animation.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:mobx/mobx.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 Quotidian _quotidian;
 String _prevLang;
@@ -105,44 +106,54 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(_quotidian.quote.name,
-                  style: TextStyle(
-                    fontSize: FontSize.hero(_quotidian.quote.name),
-                  ),
-                ),
+                quoteName(),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: SizedBox(
-                    width: 200.0,
-                    child: Divider(
-                      color: Color(0xFF64C7FF),
-                      thickness: 2.0,
-                    ),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: Opacity(
-                    opacity: .8,
-                    child: FlatButton(
-                      onPressed: () {
-                        final id = _quotidian.quote.author.id;
-
-                        FluroRouter.router.navigateTo(
-                          context,
-                          AuthorRoute.replaceFirst(':id', id)
-                        );
-                      },
-                      child: Text(
-                        _quotidian.quote.author.name,
-                        style: TextStyle(
-                          fontSize: 25.0,
+                ControlledAnimation(
+                  delay: Duration(seconds: 1),
+                  duration: Duration(seconds: 1),
+                  tween: Tween(begin: 0.0, end: 200.0),
+                  builder: (context, value) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: SizedBox(
+                        width: value,
+                        child: Divider(
+                          color: Color(0xFF64C7FF),
+                          thickness: 2.0,
                         ),
                       ),
-                    )
-                  )
+                    );
+                  },
+                ),
+
+                ControlledAnimation(
+                  delay: Duration(seconds: 1),
+                  duration: Duration(seconds: 1),
+                  tween: Tween(begin: 0.0, end: 0.8),
+                  builder: (context, value) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Opacity(
+                        opacity: value,
+                        child: FlatButton(
+                          onPressed: () {
+                            final id = _quotidian.quote.author.id;
+
+                            FluroRouter.router.navigateTo(
+                              context,
+                              AuthorRoute.replaceFirst(':id', id)
+                            );
+                          },
+                          child: Text(
+                            _quotidian.quote.author.name,
+                            style: TextStyle(
+                              fontSize: 25.0,
+                            ),
+                          ),
+                        )
+                      )
+                    );
+                  },
                 ),
 
                 if (_quotidian.quote.mainReference?.name != null &&
@@ -176,6 +187,12 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
         userSection(),
       ],
+    );
+  }
+
+  Widget quoteName() {
+    return createHeroQuoteAnimation(
+      quote: _quotidian.quote,
     );
   }
 
