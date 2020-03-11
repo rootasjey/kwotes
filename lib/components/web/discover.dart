@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/discover_card.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
@@ -77,24 +78,40 @@ class _DiscoverState extends State<Discover> {
   List<Widget> createCards() {
     List<Widget> cards = [];
 
+    double count = 0;
+
     for (var reference in _references) {
+      count += 1.0;
+
       cards.add(
-        DiscoverCard(
-          id: reference.id,
-          name: reference.name,
-          summary: reference.summary,
+        FadeInX(
+          beginX: 130.0,
+          endX: 0.0,
+          delay: count,
+          child: DiscoverCard(
+            id: reference.id,
+            name: reference.name,
+            summary: reference.summary,
+          ),
         ),
       );
     }
 
     for (var author in _authors) {
+      count += 1.0;
+
       cards.add(
-        DiscoverCard(
-          id: author.id,
-          name: author.name,
-          summary: author.summary,
-          type: 'author',
-        ),
+        FadeInX(
+          beginX: 130.0,
+          endX: 0.0,
+          delay: count,
+          child: DiscoverCard(
+            id: author.id,
+            name: author.name,
+            summary: author.summary,
+            type: 'author',
+          ),
+        )
       );
     }
 
