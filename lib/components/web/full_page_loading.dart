@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/loading_animation.dart';
 
 class FullPageLoading extends StatelessWidget {
-  final String message;
+  final String title;
 
   FullPageLoading({
-    this.message = '',
+    this.title = 'Loading...',
   });
 
   @override
@@ -12,22 +13,7 @@ class FullPageLoading extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(),
-          Padding(
-            padding: const EdgeInsets.only(top: 50.0),
-            child: Text(
-              message,
-              style: TextStyle(
-                fontSize: 25.0,
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: LoadingAnimation(title: title),
     );
   }
 }

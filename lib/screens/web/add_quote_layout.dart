@@ -67,7 +67,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   Widget body() {
     if (isLoading) {
       return FullPageLoading(
-        message: AddQuoteInputs.id.isEmpty ?
+        title: AddQuoteInputs.id.isEmpty ?
           'Proposing quote...' : 'Saving quote...',
       );
     }

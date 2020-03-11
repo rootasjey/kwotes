@@ -33,7 +33,7 @@ class _ReferencePageState extends State<ReferencePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return FullPageLoading(message: 'Loading reference...');
+      return FullPageLoading(title: 'Loading reference...');
     }
 
     if (!isLoading && reference == null) {

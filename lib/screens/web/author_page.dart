@@ -35,7 +35,7 @@ class _AuthorPageState extends State<AuthorPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return FullPageLoading(message: 'Loading author...');
+      return FullPageLoading(title: 'Loading author...');
     }
 
     if (!isLoading && author == null) {
