@@ -398,6 +398,8 @@ class _AdminQuotesState extends State<AdminQuotes> {
         quotes.insert(quotes.length - 1, quote);
       });
 
+      lastDoc = snapshot.docs.last;
+
       setState(() {
         isLoadingMore = false;
       });
