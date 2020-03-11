@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -158,21 +159,27 @@ class _QuotidiansState extends State<Quotidians> {
           SliverAppBar(
             floating: true,
             snap: true,
-            expandedHeight: 250.0,
+            expandedHeight: 320.0,
             backgroundColor: Colors.transparent,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  padding: const EdgeInsets.only(top: 0.0),
+                  child: Column(
                     children: <Widget>[
-                      Text(
-                        'Quotidians',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                        ),
+                      AppIconHeader(),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Quotidians',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -180,7 +187,7 @@ class _QuotidiansState extends State<Quotidians> {
 
                 Positioned(
                   left: 80.0,
-                  top: 50.0,
+                  top: 80.0,
                   child: IconButton(
                     onPressed: () {
                       FluroRouter.router.pop(context);
@@ -460,8 +467,6 @@ class _QuotidiansState extends State<Quotidians> {
         .startAfter(snapshot: lastDoc)
         .limit(30)
         .get();
-
-      print('no more quotidian: ${snapshot.empty}');
 
       if (snapshot.empty) {
         setState(() {
