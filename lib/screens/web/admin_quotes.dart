@@ -443,6 +443,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoading = false;
         });
 
@@ -489,6 +490,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoadingMore = false;
         });
 
