@@ -303,6 +303,7 @@ class _TopicPageState extends State<TopicPage> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoading = false;
         });
 
@@ -345,7 +346,10 @@ class _TopicPageState extends State<TopicPage> {
         .get();
 
       if (snapshot.empty) {
-        hasNext = false;
+        setState(() {
+          hasNext = false;
+          isLoadingMore = false;
+        });
         return;
       }
 
