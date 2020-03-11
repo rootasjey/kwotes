@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
-import 'package:memorare/components/web/load_more_card.dart';
+import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/language.dart';
@@ -20,6 +19,10 @@ class _AdminQuotesState extends State<AdminQuotes> {
 
   bool isLoading = false;
   bool isLoadingMore = false;
+  bool hasNext = true;
+
+  final _scrollController = ScrollController();
+  bool isFabVisible = false;
 
   FirebaseUser userAuth;
   bool canManage = false;
@@ -34,154 +37,255 @@ class _AdminQuotesState extends State<AdminQuotes> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        NavBackHeader(),
-        body(),
-        NavBackFooter(),
-      ],
+    return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          onPressed: () {
+            _scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+          child: Icon(Icons.arrow_upward),
+        ) : null,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: gridQuotes(),
+          ),
+
+          Column(
+            children: <Widget>[
+              loadMoreButton(),
+              NavBackFooter(),
+            ],
+          ),
+
+          Footer(),
+        ],
+      ),
     );
   }
 
   Widget body() {
     if (isLoading) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            CircularProgressIndicator(),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'Loading quotes...',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+      return loadingContainer();
     }
 
     if (!isLoading && quotes.length == 0) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            Icon(Icons.warning, size: 40.0),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('No quotes found. Either the service has trouble or your connection does not work properly.'),
-            ),
-          ],
-        ),
-      );
+      return emptyContainer();
     }
 
     return gridQuotes();
   }
 
+  Widget emptyContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: <Widget>[
+          Icon(Icons.warning, size: 40.0),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text('No quotes found. Either the service has trouble or your connection does not work properly.'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget gridQuotes() {
-    final children = <Widget>[];
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        // FAB visibility
+        if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+          setState(() {
+            isFabVisible = false;
+          });
+        } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+          setState(() {
+            isFabVisible = true;
+          });
+        }
 
-    quotes.forEach((quote) {
-      final topicColor = appTopicsColors.find(quote.topics.first);
+        // Load more scenario
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+          return false;
+        }
 
-      children.add(
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SizedBox(
-            width: 250.0,
-            height: 250.0,
-            child: Card(
-              shape: BorderDirectional(
-                bottom: BorderSide(
-                  color: Color(topicColor.decimal),
-                  width: 2.0,
-                ),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      FluroRouter.router.navigateTo(
-                        context,
-                        QuotePageRoute.replaceFirst(':id', quote.id)
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(40.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            quote.name.length > 115 ?
-                            '${quote.name.substring(0, 115)}...' : quote.name,
-                            style: TextStyle(
-                              fontSize: adaptativeFont(quote.name),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+        if (hasNext && !isLoadingMore) {
+          fetchMoreQuotes();
+        }
 
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'quotidian') {
-                        addQuotidian(quote);
-                        return;
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem(
-                        value: 'quotidian',
-                        child: ListTile(
-                          leading: Icon(Icons.add),
-                          title: Text('Add to quotidians'),
-                        )
+        return false;
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            expandedHeight: 250.0,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 60.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'All published quotes',
+                        style: TextStyle(
+                          fontSize: 30.0,
+                        ),
                       ),
                     ],
                   ),
+                ),
+
+                Positioned(
+                  left: 80.0,
+                  top: 50.0,
+                  child: IconButton(
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
+                    },
+                    tooltip: 'Back',
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 300.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final quote = quotes.elementAt(index);
+
+                return SizedBox(
+                  width: 250.0,
+                  height: 250.0,
+                  child: gridItem(quote),
+                );
+              },
+              childCount: quotes.length,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget gridItem(Quote quote) {
+    final topicColor = appTopicsColors.find(quote.topics.first);
+
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () {
+          FluroRouter.router.navigateTo(
+            context,
+            QuotePageRoute.replaceFirst(':id', quote.id)
+          );
+        },
+        onLongPress: () {
+          addQuotidian(quote);
+        },
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    quote.name.length > 115 ?
+                      '${quote.name.substring(0, 115)}...' : quote.name,
+                    style: TextStyle(
+                      fontSize: adaptativeFont(quote.name),
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-        )
-      );
-    });
 
-    children.add(
-      LoadMoreCard(
-        isLoading: isLoadingMore,
-        onTap: () {
-          fetchQuotesMore();
-        },
-      )
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_horiz,
+                  color: Color(topicColor.decimal),
+                ),
+                onSelected: (value) {
+                  if (value == 'quotidian') {
+                    addQuotidian(quote);
+                    return;
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                    value: 'quotidian',
+                    child: ListTile(
+                      leading: Icon(Icons.add),
+                      title: Text('Add to quotidians'),
+                    )
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
 
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 40.0),
-          child: Text(
-            'Quotes',
-            style: TextStyle(
-              fontSize: 20.0,
+  Widget loadingContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: <Widget>[
+          CircularProgressIndicator(),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              'Loading quotes...',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
             ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
 
-        Wrap(
-          children: children,
+  Widget loadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+        child: FlatButton(
+        onPressed: () {
+          fetchMoreQuotes();
+        },
+        shape: RoundedRectangleBorder(
+          side: BorderSide(),
         ),
-      ],
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Load more...'
+          ),
+        ),
+      ),
     );
   }
 
@@ -367,7 +471,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
     }
   }
 
-  void fetchQuotesMore() async {
+  void fetchMoreQuotes() async {
     if (lastDoc == null) { return; }
 
     setState(() {

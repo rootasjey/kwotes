@@ -111,7 +111,7 @@ class FluroRouter {
 
   static Handler _quotesPageHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(AdminQuotes()));
+          AdminQuotes());
 
   static Handler _quotidiansHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
