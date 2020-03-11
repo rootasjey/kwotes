@@ -27,6 +27,7 @@ class _FooterState extends State<Footer> {
       ),
       color: Color(0xFFE6E6E6),
       child: Wrap(
+        runSpacing: 80.0,
         alignment: WrapAlignment.spaceAround,
         children: <Widget>[
           languages(),
