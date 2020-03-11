@@ -70,6 +70,7 @@ flutter:
     - assets/api.json
     - assets/images/monk.png
     - assets/images/icon-small.png
+    - assets/images/icon-30.png
     - assets/images/power-of-pen-1200.png
     - assets/images/dotted-notebook.png
     - assets/images/jeje-profile.jpg
