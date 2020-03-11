@@ -129,6 +129,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
             snap: true,
             expandedHeight: 250.0,
             backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
                 Padding(

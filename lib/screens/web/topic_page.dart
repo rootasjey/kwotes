@@ -117,6 +117,7 @@ class _TopicPageState extends State<TopicPage> {
             snap: true,
             expandedHeight: 250.0,
             backgroundColor: Colors.white,
+            automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
                 Row(
