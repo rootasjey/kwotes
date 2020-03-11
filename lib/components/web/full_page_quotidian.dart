@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
@@ -55,7 +56,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return loadingContainer();
+      return FullPageLoading(
+        title: 'Loading quotidian...',
+      );
     }
 
     if (!isLoading && _quotidian == null) {
@@ -162,28 +165,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               'Sorry, an unexpected error happended :(',
               style: TextStyle(
                 fontSize: 35.0,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget loadingContainer() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(),
-
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 40.0,
               ),
             ),
           ),

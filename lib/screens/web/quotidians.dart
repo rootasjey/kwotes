@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -71,7 +72,9 @@ class _QuotidiansState extends State<Quotidians> {
 
   Widget body() {
     if (isLoading) {
-      return loadingContainer();
+      return FullPageLoading(
+        title: 'Loading quotidians...',
+      );
     }
 
     if (!isLoading && quotidians.length == 0) {
@@ -317,27 +320,6 @@ class _QuotidiansState extends State<Quotidians> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget loadingContainer() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: <Widget>[
-          CircularProgressIndicator(),
-
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'Loading quotidians...',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

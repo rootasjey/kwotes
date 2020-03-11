@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
@@ -71,7 +72,9 @@ class _AdminQuotesState extends State<AdminQuotes> {
 
   Widget body() {
     if (isLoading) {
-      return loadingContainer();
+      return FullPageLoading(
+        title: 'Loading all published quotes...',
+      );
     }
 
     if (!isLoading && quotes.length == 0) {
@@ -245,27 +248,6 @@ class _AdminQuotesState extends State<AdminQuotes> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget loadingContainer() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: <Widget>[
-          CircularProgressIndicator(),
-
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'Loading quotes...',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

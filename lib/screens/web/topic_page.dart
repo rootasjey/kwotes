@@ -4,6 +4,7 @@ import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/types/quote.dart';
@@ -64,23 +65,27 @@ class _TopicPageState extends State<TopicPage> {
           },
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: ListView(
-        children: <Widget>[
+      body: body(),
+    );
+  }
+
+  Widget body() {
+    return ListView(
+      children: <Widget>[
+        isLoading ?
+          FullPageLoading(
+            title: 'Loading quotes on ${widget.name}',
+          ):
           SizedBox(
             height: MediaQuery.of(context).size.height,
             child: gridQuotes(),
           ),
 
-          Column(
-            children: <Widget>[
-              loadMoreButton(),
-              NavBackFooter(),
-            ],
-          ),
+        loadMoreButton(),
+        NavBackFooter(),
 
-          Footer(),
-        ],
-      ),
+        Footer(),
+      ],
     );
   }
 
