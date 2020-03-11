@@ -4,7 +4,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/load_more_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
-import 'package:memorare/types/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -87,8 +87,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
     final children = <Widget>[];
 
     quotes.forEach((quote) {
-      final topicColor = ThemeColor.topicsColors
-        .firstWhere((element) => element.name == quote.topics.first);
+      final topicColor = appTopicsColors.find(quote.topics.first);
 
       children.add(
         Padding(
