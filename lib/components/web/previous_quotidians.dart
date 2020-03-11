@@ -87,14 +87,21 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     });
 
     final now = DateTime.now();
+
     final yesterday = now.subtract(
       Duration(days: 1)
     );
 
+    String month = now.month.toString();
+    month = month.length == 2 ? month : '0$month';
+
+    String day = now.day.toString();
+    day = day.length == 2 ? day : '0$day';
+
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('${yesterday.year}:${yesterday.month}:${yesterday.day}:${Language.current}')
+        .doc('${yesterday.year}:$month:$day:${Language.current}')
         .get();
 
       if (!doc.exists) {
