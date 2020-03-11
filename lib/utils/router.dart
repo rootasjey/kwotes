@@ -115,7 +115,7 @@ class FluroRouter {
 
   static Handler _quotidiansHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(Quotidians()));
+          Quotidians());
 
   static Handler _referenceHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

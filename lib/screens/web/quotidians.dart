@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
-import 'package:memorare/components/web/load_more_card.dart';
+import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Quotidians extends StatefulWidget {
   @override
@@ -20,6 +21,10 @@ class _QuotidiansState extends State<Quotidians> {
 
   bool isLoading = false;
   bool isLoadingMore = false;
+  bool hasNext = true;
+
+  final _scrollController = ScrollController();
+  bool isFabVisible = false;
 
   var lastDoc;
 
@@ -31,52 +36,45 @@ class _QuotidiansState extends State<Quotidians> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        NavBackHeader(),
+    return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          onPressed: () {
+            _scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+          child: Icon(Icons.arrow_upward),
+        ) : null,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: body(),
+          ),
 
-        body(),
+          Column(
+            children: <Widget>[
+              loadMoreButton(),
+              NavBackFooter(),
+            ],
+          ),
 
-        NavBackFooter(),
-      ],
+          Footer(),
+        ],
+      ),
     );
   }
 
   Widget body() {
     if (isLoading) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            CircularProgressIndicator(),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'Loading quotidians...',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+      return loadingContainer();
     }
 
     if (!isLoading && quotidians.length == 0) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            Icon(Icons.warning, size: 40.0),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('No quotidians found. Either the service has trouble or your connection does not work properly.'),
-            ),
-          ],
-        ),
-      );
+      return emptyContainer();
     }
 
     return gridQuotes();
@@ -103,123 +101,257 @@ class _QuotidiansState extends State<Quotidians> {
     );
   }
 
+  Widget emptyContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: <Widget>[
+          Icon(Icons.warning, size: 40.0),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text('No quotidians found. Either the service has trouble or your connection does not work properly.'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget gridQuotes() {
-    final children = <Widget>[];
-    int currentMonth = 0;
+    final Map<String, List<Quotidian>> groups = quotidians.groupBy(
+      (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
+    );
 
-    quotidians.forEach((quotidian) {
-      final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
+    final List<Widget> groupedGrids = [];
 
-      if (currentMonth != quotidian.date.month) {
-        currentMonth = quotidian.date.month;
+    groups.forEach((key, value) {
+      final grid = groupGrid(key, value);
+      groupedGrids.addAll(grid);
+    });
 
-        children.add(
-          createMonthTitle(quotidian.date)
-        );
-      }
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        // FAB visibility
+        if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+          setState(() {
+            isFabVisible = false;
+          });
+        } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+          setState(() {
+            isFabVisible = true;
+          });
+        }
 
-      children.add(
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SizedBox(
-            width: 300.0,
-            height: 250.0,
-            child: Card(
-              shape: BorderDirectional(
-                bottom: BorderSide(
-                  color: Color(topicColor.decimal),
-                  width: 2.0,
-                ),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      FluroRouter.router.navigateTo(
-                        context,
-                        QuotePageRoute.replaceFirst(':id', quotidian.quote.id)
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(40.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Opacity(
-                              opacity: .6,
-                              child: Text(
-                                quotidian.date.day.toString(),
-                              ),
-                            ),
-                          ),
+        // Load more scenario
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+          return false;
+        }
 
-                          Text(
-                            quotidian.quote.name,
-                            style: TextStyle(
-                              fontSize: adaptativeFont(quotidian.quote.name),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+        if (hasNext && !isLoadingMore) {
+          fetchMoreQuotidians();
+        }
 
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'delete') {
-                        deleteQuotidian(quotidian);
-                        return;
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: ListTile(
-                          leading: Icon(Icons.delete),
-                          title: Text('Delete'),
-                        )
+        return false;
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            expandedHeight: 250.0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            flexibleSpace: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 60.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Quotidians',
+                        style: TextStyle(
+                          fontSize: 30.0,
+                        ),
                       ),
                     ],
                   ),
+                ),
+
+                Positioned(
+                  left: 80.0,
+                  top: 50.0,
+                  child: IconButton(
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
+                    },
+                    tooltip: 'Back',
+                    icon: Icon(Icons.arrow_back),
                   ),
+                ),
+              ],
+            ),
+          ),
+
+          ...groupedGrids,
+        ],
+      ),
+    );
+  }
+
+  List<Widget> groupGrid(String yearMonth, List<Quotidian> grouped) {
+    final splittedDate = yearMonth.split('-');
+
+    final year = splittedDate[0];
+    final month = getMonthFromNumber(splittedDate[1].toInt());
+
+    return [
+      SliverPersistentHeader(
+        pinned: true,
+        floating: true,
+        delegate: SliverAppBarDelegate(
+          minHeight: 60.0,
+          maxHeight: 100.0,
+          child: Container(
+            padding: const EdgeInsets.only(top: 20.0),
+            color: Colors.white,
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Text('$month $year'),
+
+                  SizedBox(
+                    width: 100.0,
+                    child: Divider(thickness: 2,),
+                  )
                 ],
               ),
             ),
           ),
-        )
-      );
-    });
+        ),
+      ),
 
-    children.add(
-      LoadMoreCard(
-        isLoading: isLoadingMore,
+      SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final quote = grouped.elementAt(index);
+
+            return SizedBox(
+              width: 250.0,
+              height: 250.0,
+              child: gridItem(quote),
+            );
+          },
+          childCount: grouped.length,
+        ),
+      ),
+    ];
+  }
+
+  Widget gridItem(Quotidian quotidian) {
+    final quote = quotidian.quote;
+    final topicColor = appTopicsColors.find(quote.topics.first);
+
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      child: InkWell(
         onTap: () {
-          fetchQuotidiansMore();
+          FluroRouter.router.navigateTo(
+            context,
+            QuotePageRoute.replaceFirst(':id', quotidian.id)
+          );
         },
-      )
-    );
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    quote.name.length > 115 ?
+                      '${quote.name.substring(0, 115)}...' : quote.name,
+                    style: TextStyle(
+                      fontSize: adaptativeFont(quote.name),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 40.0),
-          child: Text(
-            'Quotidians',
-            style: TextStyle(
-              fontSize: 20.0,
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_horiz,
+                  color: Color(topicColor.decimal),
+                ),
+                onSelected: (value) {
+                  if (value == 'delete') {
+                    deleteQuotidian(quotidian);
+                    return;
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: ListTile(
+                      leading: Icon(Icons.delete),
+                      title: Text('Delete'),
+                    )
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget loadingContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: <Widget>[
+          CircularProgressIndicator(),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              'Loading quotidians...',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
             ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
 
-        Wrap(
-          children: children,
+  Widget loadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+        child: FlatButton(
+        onPressed: () {
+          fetchMoreQuotidians();
+        },
+        shape: RoundedRectangleBorder(
+          side: BorderSide(),
         ),
-      ],
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Load more...'
+          ),
+        ),
+      ),
     );
   }
 
@@ -286,6 +418,7 @@ class _QuotidiansState extends State<Quotidians> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoading = false;
         });
 
@@ -313,7 +446,7 @@ class _QuotidiansState extends State<Quotidians> {
     }
   }
 
-  void fetchQuotidiansMore() async {
+  void fetchMoreQuotidians() async {
     if (lastDoc == null) { return; }
 
     setState(() {
@@ -328,8 +461,11 @@ class _QuotidiansState extends State<Quotidians> {
         .limit(30)
         .get();
 
+      print('no more quotidian: ${snapshot.empty}');
+
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoadingMore = false;
         });
 
