@@ -69,15 +69,15 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
 
     if (!isLoading && quotidian == null) {
       return HorizontalCard(
-        quoteName: 'It\'s our mistakes which define us the most (try reloading the page).',
+        quoteName: "It's our mistakes which define us the most.",
       );
     }
 
     return HorizontalCard(
-      authorId: quotidian.quote.author.id,
+      authorId  : quotidian.quote.author.id,
       authorName: quotidian.quote.author.name,
-      quoteId: quotidian.quote.id,
-      quoteName: quotidian.quote.name,
+      quoteId   : quotidian.quote.id,
+      quoteName : quotidian.quote.name,
     );
   }
 
