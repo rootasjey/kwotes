@@ -341,10 +341,16 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     final now = DateTime.now();
 
+    String month = now.month.toString();
+    month = month.length == 2 ? month : '0$month';
+
+    String day = now.day.toString();
+    day = day.length == 2 ? day : '0$day';
+
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('${now.year}:${now.month}:${now.day}:${appUserLang.current}')
+        .doc('${now.year}:$month:$day:${appUserLang.current}')
         .get();
 
       if (!doc.exists) {

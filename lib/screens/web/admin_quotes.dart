@@ -218,7 +218,13 @@ class _AdminQuotesState extends State<AdminQuotes> {
         final now = DateTime.now();
         nextDate = now;
 
-        id = '${now.year}:${now.month}:${now.day}:${Language.current}';
+        String month = now.month.toString();
+        month = month.length == 2 ? month : '0$month';
+
+        String day = now.day.toString();
+        day = day.length == 2 ? day : '0$day';
+
+        id = '${now.year}:$month:$day:${Language.current}';
 
       } else {
         final first = snapshot.docs.first;
@@ -228,7 +234,13 @@ class _AdminQuotesState extends State<AdminQuotes> {
           Duration(days: 1)
         );
 
-        id = '${nextDate.year}:${nextDate.month}:${nextDate.day}:${Language.current}';
+        String nextMonth = nextDate.month.toString();
+        nextMonth = nextMonth.length == 2 ? nextMonth : '0$nextMonth';
+
+        String nextDay = nextDate.day.toString();
+        nextDay = nextDay.length == 2 ? nextDay : '0$nextDay';
+
+        id = '${nextDate.year}:$nextMonth:$nextDay:${Language.current}';
       }
 
       await FirestoreApp.instance
