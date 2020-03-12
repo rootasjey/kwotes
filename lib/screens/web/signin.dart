@@ -115,6 +115,53 @@ class _SigninState extends State<Signin> {
   Widget idleContainer() {
     return Column(
       children: <Widget>[
+        formHeader(),
+        emailInput(),
+        passwordInput(),
+        validationButton(),
+      ],
+    );
+  }
+
+  Widget emailInput() {
+    return FadeInY(
+      delay: 1.5,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              autofocus: true,
+              decoration: InputDecoration(
+                icon: Icon(Icons.email),
+                labelText: 'Email',
+              ),
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {
+                email = value;
+              },
+              onFieldSubmitted: (value) {
+                FocusScope.of(context).requestFocus(_passwordNode);
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Email login cannot be empty';
+                }
+
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget formHeader() {
+    return Column(
+      children: <Widget>[
         FadeInY(
           beginY: 50.0,
           child: Padding(
@@ -148,102 +195,72 @@ class _SigninState extends State<Signin> {
             )
           ),
         ),
+      ],
+    );
+  }
 
-        FadeInY(
-          delay: 1.5,
-          beginY: 50.0,
-          child: Padding(
-            padding: EdgeInsets.only(top: 40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.email),
-                    labelText: 'Email',
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {
-                    email = value;
-                  },
-                  onFieldSubmitted: (value) {
-                    FocusScope.of(context).requestFocus(_passwordNode);
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Email login cannot be empty';
-                    }
-
-                    return null;
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        FadeInY(
-          delay: 2,
-          beginY: 50.0,
-          child: Padding(
-            padding: EdgeInsets.only(top: 30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  focusNode: _passwordNode,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.lock_outline),
-                    labelText: 'Password',
-                  ),
-                  obscureText: true,
-                  onChanged: (value) {
-                    password = value;
-                  },
-                  onFieldSubmitted: (value) {
-                    if (value.length == 0) { return; }
-                    signin();
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Password login cannot be empty';
-                    }
-
-                    return null;
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        FadeInY(
-          delay: 2,
-          beginY: 50.0,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: FlatButton(
-              onPressed: () {
+  Widget passwordInput() {
+    return FadeInY(
+      delay: 2,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              focusNode: _passwordNode,
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock_outline),
+                labelText: 'Password',
+              ),
+              obscureText: true,
+              onChanged: (value) {
+                password = value;
+              },
+              onFieldSubmitted: (value) {
+                if (value.length == 0) { return; }
                 signin();
               },
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('Sign me in'),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Icon(Icons.arrow_forward),
-                    )
-                  ],
-                ),
-              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Password login cannot be empty';
+                }
+
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget validationButton() {
+    return FadeInY(
+      delay: 2,
+      beginY: 50.0,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 60.0),
+        child: FlatButton(
+          onPressed: () {
+            signin();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Sign me in'),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Icon(Icons.arrow_forward),
+                )
+              ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
