@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
@@ -131,24 +132,34 @@ class _AdminQuotesState extends State<AdminQuotes> {
           SliverAppBar(
             floating: true,
             snap: true,
-            expandedHeight: 250.0,
+            expandedHeight: 320.0,
             backgroundColor: Colors.transparent,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'All published quotes',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                        ),
+                Column(
+                  children: <Widget>[
+                    FadeInY(
+                      beginY: 50.0,
+                      child: AppIconHeader(),
+                    ),
+
+                    FadeInY(
+                      delay: 1.0,
+                      beginY: 50.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'All published quotes',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
 
                 Positioned(
@@ -175,7 +186,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
                 final quote = quotes.elementAt(index);
 
                 return FadeInY(
-                  delay: index.toDouble(),
+                  delay: 3.0 + index.toDouble(),
                   beginY: 100.0,
                   child: SizedBox(
                     width: 250.0,
