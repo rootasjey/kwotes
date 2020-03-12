@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/empty_flat_card.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
@@ -104,47 +105,51 @@ class _FavouritesState extends State<Favourites> {
           final quote = quotes.elementAt(index);
           final topicColor = appTopicsColors.find(quote.topics.first);
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 40.0,
-            ),
-            child: Column(
-              children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    FluroRouter.router.navigateTo(
-                      context,
-                      QuotePageRoute.replaceFirst(':id', quote.id),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: SizedBox(
-                      width: 400.0,
-                      child: Text(
-                        quote.name,
-                        style: TextStyle(
-                          fontSize: 25.0,
+          return FadeInY(
+            delay: index.toDouble() * 0.1,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 40.0,
+              ),
+              child: Column(
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      FluroRouter.router.navigateTo(
+                        context,
+                        QuotePageRoute.replaceFirst(':id', quote.id),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: SizedBox(
+                        width: 400.0,
+                        child: Text(
+                          quote.name,
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                SizedBox(
-                  width: 100.0,
-                  child: Divider(
-                    color: topicColor != null ?
-                      Color(topicColor.decimal) :
-                      Colors.white,
-                    thickness: 2.0,
-                    height: 40.0,
-                  )
-                ),
+                  SizedBox(
+                    width: 100.0,
+                    child: Divider(
+                      color: topicColor != null ?
+                        Color(topicColor.decimal) :
+                        Colors.white,
+                      thickness: 2.0,
+                      height: 40.0,
+                    )
+                  ),
 
-                userActions(quote),
-              ],
+                  userActions(quote),
+                ],
+              ),
             ),
           );
         }
