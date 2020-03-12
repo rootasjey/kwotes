@@ -52,46 +52,7 @@ class _SigninState extends State<Signin> {
 
   Widget body() {
     if (isCompleted) {
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Icon(
-              Icons.check_circle,
-              size: 80.0,
-              color: Colors.green,
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
-            child: Text(
-              'You are now logged in!',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0,),
-            child: FlatButton(
-              onPressed: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  DashboardRoute,
-                );
-              },
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'Go to your dashboard',
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
+      return completedContainer();
     }
 
     if (isLoading) {
@@ -112,6 +73,53 @@ class _SigninState extends State<Signin> {
       );
     }
 
+    return idleContainer();
+  }
+
+  Widget completedContainer() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Icon(
+            Icons.check_circle,
+            size: 80.0,
+            color: Colors.green,
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
+          child: Text(
+            'You are now logged in!',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0,),
+          child: FlatButton(
+            onPressed: () {
+              FluroRouter.router.navigateTo(
+                context,
+                DashboardRoute,
+              );
+            },
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Go to your dashboard',
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget idleContainer() {
     return Column(
       children: <Widget>[
         Padding(
@@ -288,5 +296,4 @@ class _SigninState extends State<Signin> {
       });
     }
   }
-
 }
