@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
@@ -71,11 +72,16 @@ class _TopicsState extends State<Topics> {
           children: _topics.map((topicColor) {
             count++;
 
-            return TopicCardColor(
-              color: count < 4 ?
-                Color(topicColor.decimal) :
-                Color(0xFF58595B),
-              name: topicColor.name,
+            return FadeInY(
+              beginY: 50.0,
+              endY: 0.0,
+              delay: count.toDouble(),
+              child: TopicCardColor(
+                color: count < 4 ?
+                  Color(topicColor.decimal) :
+                  Color(0xFF58595B),
+                name: topicColor.name,
+              ),
             );
 
           }).toList(),
