@@ -415,7 +415,6 @@ class _DashboardState extends State<Dashboard> {
       child: Text(
         'Hello $name!',
         style: TextStyle(
-          color: Colors.black,
           fontSize: 30.0,
         ),
       ),
