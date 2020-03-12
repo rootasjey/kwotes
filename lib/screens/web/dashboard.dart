@@ -179,119 +179,92 @@ class _DashboardState extends State<Dashboard> {
 
         Padding(padding: const EdgeInsets.only(top: 20.0),),
 
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: SizedBox(
-            width: 700.0,
-            height: 200.0,
-            child: Card(
-              color: Color(0xFF00CF91),
-              child: InkWell(
-                onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
-                child: Container(
-                  padding: const EdgeInsets.all(60.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.cloud_done,
-                        color: Colors.white,
-                        size: 40.0,
-                      ),
+        adminPubQuotesCard(),
 
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          'Published quotes',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                          ),
-                        ),
-                      ),
-                    ],
+        quotidiansCard(),
+
+        adminTempQuotesCard(),
+      ],
+    );
+  }
+
+  Widget adminPubQuotesCard() {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: SizedBox(
+        width: 700.0,
+        height: 200.0,
+        child: Card(
+          color: Color(0xFF00CF91),
+          child: InkWell(
+            onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
+            child: Container(
+              padding: const EdgeInsets.all(60.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.cloud_done,
+                    color: Colors.white,
+                    size: 40.0,
                   ),
-                ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      'Published quotes',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
 
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: SizedBox(
-            width: 700.0,
-            height: 200.0,
-            child: Card(
-              color: Color(0xFFFFAF50),
-              child: InkWell(
-                onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
-                child: Container(
-                  padding: const EdgeInsets.all(60.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.today,
-                        color: Colors.white,
-                        size: 40.0,
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          'Quotidians',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                          ),
-                        ),
-                      ),
-                    ],
+  Widget adminTempQuotesCard() {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: SizedBox(
+        width: 700.0,
+        height: 200.0,
+        child: Card(
+          color: Color(0xFF2E3F7F),
+          child: InkWell(
+            onTap: () {
+              FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(60.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.timelapse,
+                    color: Colors.white,
+                    size: 40.0,
                   ),
-                ),
-              )
-            ),
-          ),
-        ),
 
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: SizedBox(
-            width: 700.0,
-            height: 200.0,
-            child: Card(
-              color: Color(0xFF2E3F7F),
-              child: InkWell(
-                onTap: () {
-                  FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(60.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.timelapse,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      'Temporary quotes',
+                      style: TextStyle(
                         color: Colors.white,
-                        size: 40.0,
+                        fontSize: 25.0,
                       ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          'Temporary quotes',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              )
+                ],
+              ),
             ),
-          ),
+          )
         ),
-      ],
+      ),
     );
   }
 
@@ -430,6 +403,45 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget quotidiansCard() {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: SizedBox(
+        width: 700.0,
+        height: 200.0,
+        child: Card(
+          color: Color(0xFFFFAF50),
+          child: InkWell(
+            onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
+            child: Container(
+              padding: const EdgeInsets.all(60.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.today,
+                    color: Colors.white,
+                    size: 40.0,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      'Quotidians',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
         ),
       ),
     );
