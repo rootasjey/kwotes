@@ -20,10 +20,17 @@ class FadeInY extends StatelessWidget {
   Widget build(BuildContext context) {
     final tween = MultiTrackTween([
       Track('opacity')
-          .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
-      Track('translateY').add(
-          Duration(milliseconds: 500), Tween(begin: beginY, end: endY),
-          curve: Curves.easeOut)
+        .add(
+          Duration(milliseconds: 500),
+          Tween(begin: 0.0, end: 1.0),
+        ),
+
+      Track('translateY')
+        .add(
+          Duration(milliseconds: 500),
+          Tween(begin: beginY, end: endY),
+          curve: Curves.easeOut,
+        )
     ]);
 
     return ControlledAnimation(
@@ -35,7 +42,8 @@ class FadeInY extends StatelessWidget {
         opacity: animation['opacity'],
         child: Transform.translate(
           offset: Offset(0, animation['translateY']),
-          child: child),
+          child: child,
+        ),
       ),
     );
   }
