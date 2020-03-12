@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:supercharged/supercharged.dart';
 
 /// Create a widget animating a quote's name.
 /// Decides which animation is most suited for the quote.
@@ -77,8 +78,8 @@ Widget createPunctuationAnimation({
     if (index < parts.length) { part += punctuation; }
 
     return ControlledAnimation(
-      delay: Duration(seconds: index * 1),
-      duration: Duration(seconds: 1),
+      delay: Duration(milliseconds: index * 500),
+      duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 1.0),
       builder: (context, value) {
         return Opacity(
@@ -120,8 +121,8 @@ Widget createLengthAnimation({Quote quote, double screenWidth}) {
     if (index < parts.length) { part += ' '; }
 
     return ControlledAnimation(
-      delay: Duration(seconds: index * 1),
-      duration: Duration(seconds: 1),
+      delay: Duration(milliseconds: index * 500),
+      duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 1.0),
       builder: (context, value) {
         return Opacity(
