@@ -168,32 +168,29 @@ class _QuotidiansState extends State<Quotidians> {
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 0.0),
-                  child: Column(
-                    children: <Widget>[
-                      FadeInY(
-                        beginY: 50.0,
-                        child: AppIconHeader(),
-                      ),
+                Column(
+                  children: <Widget>[
+                    FadeInY(
+                      beginY: 50.0,
+                      child: AppIconHeader(),
+                    ),
 
-                      FadeInY(
-                        delay: 1.0,
-                        beginY: 50.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Quotidians',
-                              style: TextStyle(
-                                fontSize: 30.0,
-                              ),
+                    FadeInY(
+                      delay: 1.0,
+                      beginY: 50.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Quotidians',
+                            style: TextStyle(
+                              fontSize: 30.0,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
 
                 Positioned(
