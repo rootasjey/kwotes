@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -173,10 +174,14 @@ class _AdminQuotesState extends State<AdminQuotes> {
               (BuildContext context, int index) {
                 final quote = quotes.elementAt(index);
 
-                return SizedBox(
-                  width: 250.0,
-                  height: 250.0,
-                  child: gridItem(quote),
+                return FadeInY(
+                  delay: index.toDouble(),
+                  beginY: 100.0,
+                  child: SizedBox(
+                    width: 250.0,
+                    height: 250.0,
+                    child: gridItem(quote),
+                  ),
                 );
               },
               childCount: quotes.length,
