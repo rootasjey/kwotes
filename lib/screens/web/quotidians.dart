@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -171,18 +172,25 @@ class _QuotidiansState extends State<Quotidians> {
                   padding: const EdgeInsets.only(top: 0.0),
                   child: Column(
                     children: <Widget>[
-                      AppIconHeader(),
+                      FadeInY(
+                        beginY: 50.0,
+                        child: AppIconHeader(),
+                      ),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Quotidians',
-                            style: TextStyle(
-                              fontSize: 30.0,
+                      FadeInY(
+                        delay: 1.0,
+                        beginY: 50.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Quotidians',
+                              style: TextStyle(
+                                fontSize: 30.0,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -249,10 +257,14 @@ class _QuotidiansState extends State<Quotidians> {
           (BuildContext context, int index) {
             final quote = grouped.elementAt(index);
 
-            return SizedBox(
-              width: 250.0,
-              height: 250.0,
-              child: gridItem(quote),
+            return FadeInY(
+              delay: 3.0 + index.toDouble(),
+              beginY: 100.0,
+              child: SizedBox(
+                width: 250.0,
+                height: 250.0,
+                child: gridItem(quote),
+              ),
             );
           },
           childCount: grouped.length,
