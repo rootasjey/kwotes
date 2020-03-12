@@ -24,6 +24,14 @@ Widget createHeroQuoteAnimation({Quote quote, double screenWidth}) {
     );
   }
 
+  if (quoteName.contains('; ')) {
+    return createPunctuationAnimation(
+      quote: quote,
+      punctuation: '; ',
+      screenWidth: screenWidth,
+    );
+  }
+
   if (quoteName.length > 90) {
     return createLengthAnimation(
       quote: quote,
