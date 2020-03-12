@@ -6,6 +6,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/language.dart';
@@ -184,6 +185,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 final quote = quotes.elementAt(index);
+                final topicColor = appTopicsColors.find(quote.topics.first);
 
                 return FadeInY(
                   delay: 3.0 + index.toDouble(),
@@ -191,7 +193,30 @@ class _AdminQuotesState extends State<AdminQuotes> {
                   child: SizedBox(
                     width: 250.0,
                     height: 250.0,
-                    child: gridItem(quote),
+                    child: QuoteCardGridItem(
+                      quote: quote,
+                      popupMenuButton: PopupMenuButton<String>(
+                        icon: Icon(
+                          Icons.more_horiz,
+                          color: Color(topicColor.decimal),
+                        ),
+                        onSelected: (value) {
+                          if (value == 'quotidian') {
+                            addQuotidian(quote);
+                            return;
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          PopupMenuItem(
+                            value: 'quotidian',
+                            child: ListTile(
+                              leading: Icon(Icons.add),
+                              title: Text('Add to quotidians'),
+                            )
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },
@@ -199,71 +224,6 @@ class _AdminQuotesState extends State<AdminQuotes> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget gridItem(Quote quote) {
-    final topicColor = appTopicsColors.find(quote.topics.first);
-
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: () {
-          FluroRouter.router.navigateTo(
-            context,
-            QuotePageRoute.replaceFirst(':id', quote.id)
-          );
-        },
-        onLongPress: () {
-          addQuotidian(quote);
-        },
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    quote.name.length > 115 ?
-                      '${quote.name.substring(0, 115)}...' : quote.name,
-                    style: TextStyle(
-                      fontSize: adaptativeFont(quote.name),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_horiz,
-                  color: Color(topicColor.decimal),
-                ),
-                onSelected: (value) {
-                  if (value == 'quotidian') {
-                    addQuotidian(quote);
-                    return;
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem(
-                    value: 'quotidian',
-                    child: ListTile(
-                      leading: Icon(Icons.add),
-                      title: Text('Add to quotidians'),
-                    )
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -286,22 +246,6 @@ class _AdminQuotesState extends State<AdminQuotes> {
         ),
       ),
     );
-  }
-
-  double adaptativeFont(String text) {
-    if (text.length > 120) {
-      return 14.0;
-    }
-
-    if (text.length > 90) {
-      return 16.0;
-    }
-
-    if (text.length > 60) {
-      return 18.0;
-    }
-
-    return 20.0;
   }
 
   void addQuotidian(Quote quote) async {
