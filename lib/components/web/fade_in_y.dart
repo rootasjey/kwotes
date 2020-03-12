@@ -34,7 +34,7 @@ class FadeInY extends StatelessWidget {
     ]);
 
     return ControlledAnimation(
-      delay: Duration(milliseconds: (300 * delay).round()),
+      delay: Duration(milliseconds: (100 * delay).round()),
       duration: tween.duration,
       tween: tween,
       child: child,
