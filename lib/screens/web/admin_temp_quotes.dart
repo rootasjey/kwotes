@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_flat_card.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
-import 'package:memorare/components/web/load_more_card.dart';
+import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/author.dart';
@@ -27,6 +30,11 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
   bool isLoading = false;
   bool isLoadingMore = false;
 
+  bool hasNext = true;
+
+  final _scrollController = ScrollController();
+  bool isFabVisible = false;
+
   FirebaseUser userAuth;
 
   var lastDoc;
@@ -39,34 +47,42 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        NavBackHeader(),
-        body(),
-        NavBackFooter(),
-      ],
+    return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          onPressed: () {
+            _scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+          child: Icon(Icons.arrow_upward),
+        ) : null,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: gridQuotes(),
+          ),
+
+          Column(
+            children: <Widget>[
+              loadMoreButton(),
+              NavBackFooter(),
+            ],
+          ),
+
+          Footer(),
+        ],
+      ),
     );
   }
 
   Widget body() {
     if (isLoading) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            CircularProgressIndicator(),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'Loading quotes...',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-          ],
-        ),
+      return FullPageLoading(
+        title: 'Loading temporary quotes...',
       );
     }
 
@@ -83,146 +99,176 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget gridQuotes() {
-    final children = <Widget>[];
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        // FAB visibility
+        if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+          setState(() {
+            isFabVisible = false;
+          });
+        } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+          setState(() {
+            isFabVisible = true;
+          });
+        }
 
-    tempQuotes.forEach((tempQuote) {
-      final topicColor = appTopicsColors.find(tempQuote.topics.first);
+        // Load more scenario
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+          return false;
+        }
 
-      children.add(
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SizedBox(
-            width: 250.0,
-            height: 250.0,
-            child: Card(
-              shape: BorderDirectional(
-                bottom: BorderSide(
-                  color: Color(topicColor.decimal),
-                  width: 2.0,
+        if (hasNext && !isLoadingMore) {
+          fetchMoreTempQuotes();
+        }
+
+        return false;
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            expandedHeight: 320.0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            flexibleSpace: Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    FadeInY(
+                      beginY: 50.0,
+                      child: AppIconHeader(),
+                    ),
+
+                    FadeInY(
+                      delay: 1.0,
+                      beginY: 50.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'All temporary quotes',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      editTempQuote(tempQuote);
+
+                Positioned(
+                  left: 80.0,
+                  top: 50.0,
+                  child: IconButton(
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
                     },
-                    onLongPress: () {
-                      validateTempQuote(tempQuote);
-                    },
-                    child: SizedBox.expand(
-                      child: Padding(
-                        padding: const EdgeInsets.all(40.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              tempQuote.name,
-                              style: TextStyle(
-                                fontSize: adaptativeFont(tempQuote.name),
-                              ),
-                            )
-                          ],
+                    tooltip: 'Back',
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 300.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final tempQuote = tempQuotes.elementAt(index);
+                final topicColor = appTopicsColors.find(tempQuote.topics.first);
+
+                return FadeInY(
+                  delay: 3.0 + index.toDouble(),
+                  beginY: 100.0,
+                  child: SizedBox(
+                    width: 250.0,
+                    height: 250.0,
+                    child: TempQuoteCardGridItem(
+                      onTap: () => editTempQuote(tempQuote),
+                      onLongPress: () => validateTempQuote(tempQuote),
+                      tempQuote: tempQuote,
+                      popupMenuButton: PopupMenuButton<String>(
+                        icon: Icon(
+                          Icons.more_horiz,
+                          color: topicColor != null ?
+                            Color(topicColor.decimal) : Colors.primaries,
                         ),
+                        onSelected: (value) {
+                          if (value == 'delete') {
+                            deleteTempQuote(tempQuote);
+                            return;
+                          }
+
+                          if (value == 'edit') {
+                            editTempQuote(tempQuote);
+                            return;
+                          }
+
+                          if (value == 'validate') {
+                            validateTempQuote(tempQuote);
+                            return;
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: ListTile(
+                              leading: Icon(Icons.delete_forever),
+                              title: Text('Delete'),
+                            )
+                          ),
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: ListTile(
+                              leading: Icon(Icons.edit),
+                              title: Text('Edit'),
+                            )
+                          ),
+                          PopupMenuItem(
+                            value: 'validate',
+                            child: ListTile(
+                              leading: Icon(Icons.check),
+                              title: Text('Validate'),
+                            )
+                          ),
+                        ],
                       ),
                     ),
                   ),
-
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'delete') {
-                        deleteTempQuote(tempQuote);
-                        return;
-                      }
-
-                      if (value == 'edit') {
-                        editTempQuote(tempQuote);
-                        return;
-                      }
-
-                      if (value == 'validate') {
-                        validateTempQuote(tempQuote);
-                        return;
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: ListTile(
-                          leading: Icon(Icons.delete_forever),
-                          title: Text('Delete'),
-                        )
-                      ),
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: ListTile(
-                          leading: Icon(Icons.edit),
-                          title: Text('Edit'),
-                        )
-                      ),
-                      PopupMenuItem(
-                        value: 'validate',
-                        child: ListTile(
-                          leading: Icon(Icons.check),
-                          title: Text('Validate'),
-                        )
-                      ),
-                    ],
-                  ),
-                  ),
-                ],
-              ),
+                );
+              },
+              childCount: tempQuotes.length,
             ),
           ),
-        )
-      );
-    });
-
-    children.add(
-      LoadMoreCard(
-        isLoading: isLoadingMore,
-        onTap: () {
-          fetchTempQuotesMore();
-        },
-      )
-    );
-
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 40.0),
-          child: Text(
-            'Quotes in validation',
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-
-        Wrap(
-          children: children,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  double adaptativeFont(String text) {
-    if (text.length > 120) {
-      return 14.0;
-    }
-
-    if (text.length > 90) {
-      return 16.0;
-    }
-
-    if (text.length > 60) {
-      return 18.0;
-    }
-
-    return 20.0;
+  Widget loadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+        child: FlatButton(
+        onPressed: () {
+          fetchMoreTempQuotes();
+        },
+        shape: RoundedRectangleBorder(
+          side: BorderSide(),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Load more...'
+          ),
+        ),
+      ),
+    );
   }
 
   Future createComments({
@@ -459,7 +505,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  void fetchTempQuotesMore() async {
+  void fetchMoreTempQuotes() async {
     if (lastDoc == null) { return; }
 
     setState(() {

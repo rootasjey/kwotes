@@ -63,7 +63,7 @@ class FluroRouter {
 
   static Handler _adminTempQuotesHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(AdminTempQuotes()));
+          AdminTempQuotes());
 
   static Handler _authorHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
