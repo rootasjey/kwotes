@@ -45,4 +45,20 @@ class FontSize {
 
     return 30.0;
   }
+
+  static double gridItem(String text) {
+    if (text.length > 120) {
+      return 14.0;
+    }
+
+    if (text.length > 90) {
+      return 16.0;
+    }
+
+    if (text.length > 60) {
+      return 18.0;
+    }
+
+    return 20.0;
+  }
 }
