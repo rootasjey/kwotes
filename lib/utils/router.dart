@@ -135,7 +135,7 @@ class FluroRouter {
 
   static Handler _tempQuotesHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(TempQuotes()));
+          TempQuotes());
 
   static Handler _undefinedHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
