@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -56,20 +57,11 @@ class _SigninState extends State<Signin> {
     }
 
     if (isLoading) {
-      return Column(
-        children: <Widget>[
-          CircularProgressIndicator(),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child: Text(
-              'Signing in...',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          )
-        ],
+      return Padding(
+        padding: const EdgeInsets.only(top: 80.0),
+        child: LoadingAnimation(
+          title: 'Signing in...',
+        ),
       );
     }
 
