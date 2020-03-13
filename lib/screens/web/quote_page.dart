@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_error.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -34,15 +36,15 @@ class _QuotePageState extends State<QuotePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Column(
-        children: <Widget>[
-          Text('Loading...')
-        ],
+      return FullPageLoading(
+        title: 'Loading quote...',
       );
     }
 
     if (quote == null) {
-      return Text('Error while loading the quote.');
+      return FullPageError(
+        message: 'Error while loading the quote.',
+      );
     }
 
     return Column(
