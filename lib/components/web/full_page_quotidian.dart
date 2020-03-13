@@ -181,27 +181,35 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget referenceName() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
-      child: Opacity(
-        opacity: .6,
-        child: FlatButton(
-          onPressed: () {
-            final id = _quotidian.quote.mainReference.id;
+    return ControlledAnimation(
+      delay: 2.seconds,
+      duration: 1.seconds,
+      tween: Tween(begin: 0.0, end: 0.6),
+      child: FlatButton(
+        onPressed: () {
+          final id = _quotidian.quote.author.id;
 
-            FluroRouter.router.navigateTo(
-              context,
-              ReferenceRoute.replaceFirst(':id', id)
-            );
-          },
-          child: Text(
-            _quotidian.quote.mainReference.name,
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
+          FluroRouter.router.navigateTo(
+            context,
+            ReferenceRoute.replaceFirst(':id', id)
+          );
+        },
+        child: Text(
+          _quotidian.quote.mainReference.name,
+          style: TextStyle(
+            fontSize: 18.0,
           ),
-        )
+        ),
       ),
+      builderWithChild: (context, child, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Opacity(
+            opacity: value,
+            child: child,
+          )
+        );
+      },
     );
   }
 
