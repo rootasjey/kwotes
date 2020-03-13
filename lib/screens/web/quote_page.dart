@@ -2,16 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
+import 'package:memorare/utils/animation.dart';
+import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:simple_animations/simple_animations.dart';
+import 'package:supercharged/supercharged.dart';
 
 class QuotePage extends StatefulWidget {
   final String quoteId;
@@ -47,51 +51,75 @@ class _QuotePageState extends State<QuotePage> {
       );
     }
 
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: MediaQuery.of(context).size.height - 0.0,
-          child: Padding(
-            padding: EdgeInsets.all(70.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                backIcon(),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 0.0,
+              child: Padding(
+                padding: EdgeInsets.all(70.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    backIcon(),
 
-                quoteName(),
+                    quoteName(
+                      screenWidth: MediaQuery.of(context).size.width,
+                    ),
 
-                dividerColor(),
+                    dividerColor(),
 
-                authorName(),
+                    authorName(),
 
-                if (quote.mainReference.name.length > 0)
-                  referenceName(),
-              ],
+                    if (quote.mainReference.name.length > 0)
+                      referenceName(),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
 
-        userActions(),
+            userActions(),
 
-        topicsList(),
+            topicsList(),
 
-        NavBackFooter(),
-      ],
+            NavBackFooter(),
+          ],
+        );
+      },
     );
   }
 
   Widget authorName() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: Opacity(
-        opacity: .8,
+    return ControlledAnimation(
+      delay: 1.seconds,
+      duration: 1.seconds,
+      tween: Tween(begin: 0.0, end: 0.8),
+      child: FlatButton(
+        onPressed: () {
+          final id = quote.author.id;
+
+          FluroRouter.router.navigateTo(
+            context,
+            AuthorRoute.replaceFirst(':id', id)
+          );
+        },
         child: Text(
           quote.author.name,
           style: TextStyle(
             fontSize: 25.0,
           ),
         ),
-      )
+      ),
+      builderWithChild: (context, child, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Opacity(
+            opacity: value,
+            child: child,
+          )
+        );
+      },
     );
   }
 
@@ -117,32 +145,47 @@ class _QuotePageState extends State<QuotePage> {
       Color(topicColor.decimal) :
       Colors.white;
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: SizedBox(
-        width: 200.0,
-        child: Divider(
+    return ControlledAnimation(
+      delay: 1.seconds,
+      duration: 1.seconds,
+      tween: Tween(begin: 0.0, end: 200.0),
+      child: Divider(
           color: color,
           thickness: 2.0,
-        ),
       ),
+      builderWithChild: (context, child, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: SizedBox(
+            width: value,
+            child: child,
+          ),
+        );
+      },
     );
   }
 
-  Widget quoteName() {
-    return Text(
-      quote.name,
-      style: TextStyle(
-        fontSize: FontSize.hero(quote.name),
-      ),
+  Widget quoteName({double screenWidth}) {
+    return createHeroQuoteAnimation(
+      quote: quote,
+      screenWidth: screenWidth,
     );
   }
 
   Widget referenceName() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
-      child: Opacity(
-        opacity: .6,
+    return ControlledAnimation(
+      delay: 2.seconds,
+      duration: 1.seconds,
+      tween: Tween(begin: 0.0, end: 0.6),
+      child: FlatButton(
+        onPressed: () {
+          final id = quote.author.id;
+
+          FluroRouter.router.navigateTo(
+            context,
+            ReferenceRoute.replaceFirst(':id', id)
+          );
+        },
         child: Text(
           quote.mainReference.name,
           style: TextStyle(
@@ -150,6 +193,15 @@ class _QuotePageState extends State<QuotePage> {
           ),
         ),
       ),
+      builderWithChild: (context, child, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Opacity(
+            opacity: value,
+            child: child,
+          )
+        );
+      },
     );
   }
 
@@ -158,16 +210,7 @@ class _QuotePageState extends State<QuotePage> {
       return Padding(padding: EdgeInsets.zero);
     }
 
-    final children = <Widget>[];
-
-    topicColors.forEach((topic) {
-      children.add(
-        TopicCardColor(
-          color: Color(topic.decimal),
-          name: topic.name,
-        )
-      );
-    });
+    double count = 0;
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -180,7 +223,18 @@ class _QuotePageState extends State<QuotePage> {
               shrinkWrap: true,
               padding: EdgeInsets.only(top: 80.0,),
               scrollDirection: Axis.horizontal,
-              children: children,
+              children: topicColors.map((topic) {
+                count += 1.0;
+
+                return FadeInX(
+                  delay: count,
+                  beginX: 50.0,
+                  child: TopicCardColor(
+                    color: Color(topic.decimal),
+                    name: topic.name,
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ],
