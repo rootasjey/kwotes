@@ -68,7 +68,7 @@ class _QuotePageState extends State<QuotePage> {
                       screenWidth: MediaQuery.of(context).size.width,
                     ),
 
-                    dividerColor(),
+                    animatedDivider(),
 
                     authorName(),
 
@@ -85,6 +85,32 @@ class _QuotePageState extends State<QuotePage> {
 
             NavBackFooter(),
           ],
+        );
+      },
+    );
+  }
+
+  Widget animatedDivider() {
+    final topicColor = appTopicsColors.find(quote.topics.first);
+    final color = topicColor != null ?
+      Color(topicColor.decimal) :
+      Colors.white;
+
+    return ControlledAnimation(
+      delay: 1.seconds,
+      duration: 1.seconds,
+      tween: Tween(begin: 0.0, end: 200.0),
+      child: Divider(
+          color: color,
+          thickness: 2.0,
+      ),
+      builderWithChild: (context, child, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: SizedBox(
+            width: value,
+            child: child,
+          ),
         );
       },
     );
@@ -136,32 +162,6 @@ class _QuotePageState extends State<QuotePage> {
           )
         ],
       ),
-    );
-  }
-
-  Widget dividerColor() {
-    final topicColor = appTopicsColors.find(quote.topics.first);
-    final color = topicColor != null ?
-      Color(topicColor.decimal) :
-      Colors.white;
-
-    return ControlledAnimation(
-      delay: 1.seconds,
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 200.0),
-      child: Divider(
-          color: color,
-          thickness: 2.0,
-      ),
-      builderWithChild: (context, child, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: SizedBox(
-            width: value,
-            child: child,
-          ),
-        );
-      },
     );
   }
 
