@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
@@ -15,17 +17,18 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  bool isLoading = false;
-  bool isCompleted = false;
-  bool isLoadingImageURL = false;
+  bool isLoading          = false;
+  bool isCompleted        = false;
+  bool isLoadingImageURL  = false;
+
   FirebaseUser userAuth;
 
-  String displayName = '';
+  String avatarUrl      = '';
+  String displayName    = '';
+  String email          = '';
+  String imageUrl       = '';
   String oldDisplayName = '';
-  String avatarUrl = '';
-  String email = '';
-  String imageUrl = '';
-  String selectedLang = 'English';
+  String selectedLang   = 'English';
 
   @override
   void initState() {
@@ -40,92 +43,90 @@ class _AccountState extends State<Account> {
         children: <Widget>[
           NavBackHeader(),
 
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              'Account Settings',
-              style: TextStyle(
-                fontSize: 30.0,
-              ),
-            ),
+          FadeInY(
+            beginY: 50.0,
+            child: headerTitle(),
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(bottom: 120.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                'You can update your account settings here.',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            )
+          FadeInY(
+            delay: 1.0,
+            beginY: 50.0,
+            child: headerSubtitle(),
           ),
 
-          avatar(),
-
-          inputDisplayName(),
-
-          DropdownButton<String>(
-            elevation: 3,
-            value: selectedLang,
-            onChanged: (String newValue) {
-              setState(() {
-                selectedLang = newValue;
-              });
-
-              updateLang();
-            },
-            items: ['English', 'Français']
-              .map((String value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(value,)
-                );
-              })
-              .toList(),
+          FadeInY(
+            delay: 1.5,
+            beginY: 50.0,
+            child: avatar(),
           ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 60.0),
-            child: SizedBox(
-              width: 800.0,
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                children: <Widget>[
-                  SettingsCard(
-                    icon: Icon(Icons.email, size: 40.0,),
-                    name: 'Update email',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(context, EditEmailRoute);
-                    },
-                  ),
-
-                  SettingsCard(
-                    icon: Icon(Icons.lock, size: 40.0,),
-                    name: 'Update password',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(context, EditPasswordRoute);
-                    },
-                  ),
-
-                  SettingsColorCard(
-                    backgroundColor: Color(0xFFF85C50),
-                    color: Colors.white,
-                    icon: Icon(Icons.delete, size: 40.0, color: Colors.white,),
-                    name: 'Delete account',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(context, DeleteAccountRoute);
-                    },
-                  ),
-                ],
-              ),
-            ),
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: inputDisplayName(),
           ),
+
+          FadeInY(
+            delay: 2.5,
+            beginY: 50.0,
+            child: langSelect(),
+          ),
+
+          accountActions(),
 
           NavBackFooter(),
         ],
+      ),
+    );
+  }
+
+  Widget accountActions() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 60.0),
+      child: SizedBox(
+        width: 800.0,
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          children: <Widget>[
+            FadeInX(
+              delay: 3.0,
+              beginX: 50.0,
+              child: SettingsCard(
+                icon: Icon(Icons.email, size: 40.0,),
+                name: 'Update email',
+                onTap: () {
+                  FluroRouter.router.navigateTo(context, EditEmailRoute);
+                },
+              ),
+            ),
+
+            FadeInX(
+              delay: 3.5,
+              beginX: 50.0,
+              child: SettingsCard(
+                icon: Icon(Icons.lock, size: 40.0,),
+                name: 'Update password',
+                onTap: () {
+                  FluroRouter.router.navigateTo(context, EditPasswordRoute);
+                },
+              ),
+            ),
+
+            FadeInX(
+              delay: 4.0,
+              beginX: 50.0,
+              child: SettingsColorCard(
+                backgroundColor: Color(0xFFF85C50),
+                color: Colors.white,
+                icon: Icon(Icons.delete, size: 40.0, color: Colors.white,),
+                name: 'Delete account',
+                onTap: () {
+                  FluroRouter.router.navigateTo(context, DeleteAccountRoute);
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -270,6 +271,33 @@ class _AccountState extends State<Account> {
     );
   }
 
+  Widget headerSubtitle() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 120.0),
+      child: Opacity(
+        opacity: .7,
+        child: Text(
+          'You can update your account settings here.',
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget headerTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Text(
+        'Account Settings',
+        style: TextStyle(
+          fontSize: 30.0,
+        ),
+      ),
+    );
+  }
+
   Widget inputDisplayName() {
     if (isLoading) {
       return SizedBox(
@@ -329,6 +357,28 @@ class _AccountState extends State<Account> {
             ),
         ],
       ),
+    );
+  }
+
+  Widget langSelect() {
+    return DropdownButton<String>(
+      elevation: 3,
+      value: selectedLang,
+      onChanged: (String newValue) {
+        setState(() {
+          selectedLang = newValue;
+        });
+
+        updateLang();
+      },
+      items: ['English', 'Français']
+        .map((String value) {
+          return DropdownMenuItem(
+            value: value,
+            child: Text(value,)
+          );
+        })
+        .toList(),
     );
   }
 
