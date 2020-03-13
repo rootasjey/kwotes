@@ -3,6 +3,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/language.dart';
+import 'package:supercharged/supercharged.dart';
 
 class PreviousQuotidians extends StatefulWidget {
   @override
@@ -87,15 +88,12 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     });
 
     final now = DateTime.now();
+    final yesterday = now.subtract(1.days);
 
-    final yesterday = now.subtract(
-      Duration(days: 1)
-    );
-
-    String month = now.month.toString();
+    String month = yesterday.month.toString();
     month = month.length == 2 ? month : '0$month';
 
-    String day = now.day.toString();
+    String day = yesterday.day.toString();
     day = day.length == 2 ? day : '0$day';
 
     try {
