@@ -91,7 +91,7 @@ class FluroRouter {
 
   static Handler _favouritesHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(Favourites()));
+          Favourites());
 
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

@@ -3,11 +3,13 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_flat_card.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -21,6 +23,10 @@ class Favourites extends StatefulWidget {
 class _FavouritesState extends State<Favourites> {
   bool isLoading = false;
   bool isLoadingMore = false;
+  bool hasNext = true;
+
+  final _scrollController = ScrollController();
+  bool isFabVisible = false;
 
   List<Quote> quotes = [];
 
@@ -36,34 +42,41 @@ class _FavouritesState extends State<Favourites> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        NavBackHeader(),
-        body(),
-        NavBackFooter(),
-      ],
+    return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          onPressed: () {
+            _scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+          child: Icon(Icons.arrow_upward),
+        ) : null,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: body(),
+          ),
+
+          Column(
+            children: <Widget>[
+              NavBackFooter(),
+            ],
+          ),
+
+          Footer(),
+        ],
+      ),
     );
   }
 
   Widget body() {
     if (isLoading) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            CircularProgressIndicator(),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                'Loading your favourites...',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-          ],
-        ),
+      return FullPageLoading(
+        title: 'Loading your favourites...',
       );
     }
 
@@ -76,83 +89,143 @@ class _FavouritesState extends State<Favourites> {
       );
     }
 
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 40.0),
-          child: Opacity(
-            opacity: .6,
-            child: Text(
-              'Favourites',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          )
-        ),
-
-        listQuotes(),
-      ],
-    );
+    return listQuotes();
   }
 
   Widget listQuotes() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - 100.0,
-      child: ListView.builder(
-        itemCount: quotes.length,
-        itemBuilder: (BuildContext context, int index) {
-          final quote = quotes.elementAt(index);
-          final topicColor = appTopicsColors.find(quote.topics.first);
+    return NotificationListener(
+      onNotification: (ScrollNotification scrollNotif) {
+        // FAB visibility
+        if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+          setState(() {
+            isFabVisible = false;
+          });
+        } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+          setState(() {
+            isFabVisible = true;
+          });
+        }
 
-          return FadeInY(
-            delay: index.toDouble() * 0.1,
-            beginY: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 40.0,
-              ),
-              child: Column(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      FluroRouter.router.navigateTo(
-                        context,
-                        QuotePageRoute.replaceFirst(':id', quote.id),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SizedBox(
-                        width: 400.0,
-                        child: Text(
-                          quote.name,
-                          style: TextStyle(
-                            fontSize: 25.0,
+        // Load more scenario
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+          return false;
+        }
+
+        if (hasNext && !isLoadingMore) {
+          fetchMoreFavQuotes();
+        }
+
+        return false;
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            expandedHeight: 320.0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            flexibleSpace: Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    FadeInY(
+                      beginY: 50.0,
+                      child: AppIconHeader(),
+                    ),
+
+                    FadeInY(
+                      delay: .5,
+                      beginY: 50.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Favourites',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ),
+                  ],
+                ),
 
-                  SizedBox(
-                    width: 100.0,
-                    child: Divider(
-                      color: topicColor != null ?
-                        Color(topicColor.decimal) :
-                        Colors.white,
-                      thickness: 2.0,
-                      height: 40.0,
-                    )
+                Positioned(
+                  left: 80.0,
+                  top: 50.0,
+                  child: IconButton(
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
+                    },
+                    tooltip: 'Back',
+                    icon: Icon(Icons.arrow_back),
                   ),
-
-                  userActions(quote),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        }
+          ),
+
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final quote = quotes.elementAt(index);
+                final topicColor = appTopicsColors.find(quote.topics.first);
+
+                return FadeInY(
+                  delay: 2.0 + index.toDouble() * 0.1,
+                  beginY: 50.0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 40.0,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            FluroRouter.router.navigateTo(
+                              context,
+                              QuotePageRoute.replaceFirst(':id', quote.id),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: SizedBox(
+                              width: 400.0,
+                              child: Text(
+                                quote.name,
+                                style: TextStyle(
+                                  fontSize: 25.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: 100.0,
+                          child: Divider(
+                            color: topicColor != null ?
+                              Color(topicColor.decimal) :
+                              Colors.white,
+                            thickness: 2.0,
+                            height: 40.0,
+                          )
+                        ),
+
+                        userActions(quote),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              childCount: quotes.length,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -232,6 +305,60 @@ class _FavouritesState extends State<Favourites> {
 
       setState(() {
         isLoading = false;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      Flushbar(
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        message: "There was an issue while fetching your favourites.",
+      )..show(context);
+    }
+  }
+
+  void fetchMoreFavQuotes() async {
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+      }
+
+      final snapshot = await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .collection('favourites')
+        .startAfter(snapshot: lastDoc)
+        .limit(30)
+        .get();
+
+      if (snapshot.empty) {
+        setState(() {
+          hasNext = false;
+          isLoadingMore = false;
+        });
+
+        return;
+      }
+
+      snapshot.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
+      });
+
+      lastDoc = snapshot.docs.last;
+
+      setState(() {
+        isLoadingMore = false;
       });
 
     } catch (error) {
