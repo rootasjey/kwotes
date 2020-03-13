@@ -5,6 +5,7 @@ import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
@@ -100,19 +101,25 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget animatedDivider() {
+    final topicColor = appTopicsColors.find(_quotidian.quote.topics.first);
+    final color = topicColor != null ?
+      Color(topicColor.decimal) :
+      Colors.white;
+
     return ControlledAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
-      builder: (context, value) {
+      child: Divider(
+          color: color,
+          thickness: 2.0,
+      ),
+      builderWithChild: (context, child, value) {
         return Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: SizedBox(
             width: value,
-            child: Divider(
-              color: Color(0xFF64C7FF),
-              thickness: 2.0,
-            ),
+            child: child,
           ),
         );
       },
