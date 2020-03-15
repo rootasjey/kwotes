@@ -80,23 +80,6 @@ class _DiscoverState extends State<Discover> {
 
     double count = 0;
 
-    for (var reference in _references) {
-      count += 1.0;
-
-      cards.add(
-        FadeInX(
-          beginX: 130.0,
-          endX: 0.0,
-          delay: count,
-          child: DiscoverCard(
-            id: reference.id,
-            name: reference.name,
-            summary: reference.summary,
-          ),
-        ),
-      );
-    }
-
     for (var author in _authors) {
       count += 1.0;
 
@@ -112,6 +95,23 @@ class _DiscoverState extends State<Discover> {
             type: 'author',
           ),
         )
+      );
+    }
+
+    for (var reference in _references) {
+      count += 1.0;
+
+      cards.add(
+        FadeInX(
+          beginX: 130.0,
+          endX: 0.0,
+          delay: count,
+          child: DiscoverCard(
+            id: reference.id,
+            name: reference.name,
+            summary: reference.summary,
+          ),
+        ),
       );
     }
 
@@ -132,7 +132,7 @@ class _DiscoverState extends State<Discover> {
         .collection("references")
         .where('lang', '==', 'en')
         .orderBy('updatedAt', 'desc')
-        .limit(2)
+        .limit(1)
         .get();
 
       if (!refsSnapshot.empty) {
@@ -147,7 +147,7 @@ class _DiscoverState extends State<Discover> {
 
       final authorsSnapshot = await FirestoreApp.instance
         .collection('authors')
-        .limit(1)
+        .limit(2)
         .get();
 
       if (!authorsSnapshot.empty) {
