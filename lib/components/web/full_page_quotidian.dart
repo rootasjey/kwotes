@@ -234,7 +234,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               );
             },
             child: Text(
-              'Signin',
+              'Sign in',
             ),
           )
         ],
