@@ -92,7 +92,7 @@ class _TopicsState extends State<Topics> {
               delay: count.toDouble(),
               child: TopicCardColor(
                 color: Color(topicColor.decimal),
-                name: topicColor.name,
+                name: '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
               ),
             );
 
