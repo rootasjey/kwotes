@@ -42,7 +42,7 @@ class _TopicsState extends State<Topics> {
             child: Opacity(
               opacity: .6,
               child: Text(
-                'Choose a topic you would like to explore.'
+                '3 Topics you might like'
               ),
             ),
           ),

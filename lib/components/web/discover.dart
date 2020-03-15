@@ -53,7 +53,7 @@ class _DiscoverState extends State<Discover> {
             child: Opacity(
               opacity: .6,
               child: Text(
-                'Learn knowledge about an author or a reference.'
+                'Learn knowledge about an author or a reference'
               ),
             ),
           ),

@@ -44,16 +44,6 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
             child: Divider(thickness: 2.0,),
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Quotes of the past.'
-              ),
-            ),
-          ),
-
           createCard(),
         ],
       ),
