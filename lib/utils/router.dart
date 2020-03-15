@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/all_topics.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
@@ -133,6 +134,10 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           TopicPage(name: params['name'][0]));
 
+  static Handler _topicsHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AllTopics());
+
   static Handler _tempQuotesHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           TempQuotes());
@@ -245,6 +250,10 @@ class FluroRouter {
     router.define(
       TopicRoute,
       handler: _topicHandler,
+    );
+    router.define(
+      TopicsRoute,
+      handler: _topicsHandler,
     );
     router.define(
       UndefinedRoute,

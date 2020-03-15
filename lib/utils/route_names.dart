@@ -24,4 +24,5 @@ const String SigninRoute            = '/signin';
 const String SignupRoute            = '/signup';
 const String TempQuotesRoute        = '/tempquotes';
 const String TopicRoute             = '/topic/:name';
+const String TopicsRoute            = '/topics';
 const String UndefinedRoute         = '/:route';

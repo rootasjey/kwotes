@@ -4,6 +4,8 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
+import 'package:memorare/utils/route_names.dart';
+import 'package:memorare/utils/router.dart';
 
 List<TopicColor> _topics = [];
 
@@ -49,8 +51,20 @@ class _TopicsState extends State<Topics> {
 
           SizedBox(
             width: 400.0,
-            height: 400.0,
+            height: 200.0,
             child: topicsColorsCards(),
+          ),
+
+          FlatButton(
+            onPressed: () {
+              FluroRouter.router.navigateTo(context, TopicsRoute);
+            },
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Discover more topics'
+              ),
+            ),
           ),
         ],
       ),
@@ -63,7 +77,7 @@ class _TopicsState extends State<Topics> {
     return Observer(
       builder: (context) {
         if (_topics.length == 0) {
-          _topics = appTopicsColors.shuffle(max: 6);
+          _topics = appTopicsColors.shuffle(max: 3);
         }
 
         return GridView.count(
@@ -77,9 +91,7 @@ class _TopicsState extends State<Topics> {
               endY: 0.0,
               delay: count.toDouble(),
               child: TopicCardColor(
-                color: count < 4 ?
-                  Color(topicColor.decimal) :
-                  Color(0xFF58595B),
+                color: Color(topicColor.decimal),
                 name: topicColor.name,
               ),
             );
