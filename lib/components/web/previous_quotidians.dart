@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
+import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
-import 'package:memorare/utils/language.dart';
+import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 class PreviousQuotidians extends StatefulWidget {
@@ -14,12 +15,23 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
   Quotidian quotidian;
   bool isLoading = false;
 
+  ReactionDisposer disposeLang;
+
   @override
   initState() {
     super.initState();
 
-    if (quotidian != null) { return; }
-    fetchPreviousQuotidian();
+    disposeLang = autorun((reaction) {
+      fetchPreviousQuotidian(
+        lang: appUserLang.current,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    if (disposeLang != null) { disposeLang(); }
+    super.dispose();
   }
 
   @override
@@ -72,7 +84,7 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     );
   }
 
-  void fetchPreviousQuotidian() async {
+  void fetchPreviousQuotidian({String lang}) async {
     setState(() {
       isLoading = true;
     });
@@ -89,7 +101,7 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('${yesterday.year}:$month:$day:${Language.current}')
+        .doc('${yesterday.year}:$month:$day:$lang')
         .get();
 
       if (!doc.exists) {
