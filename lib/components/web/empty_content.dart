@@ -28,6 +28,7 @@ class EmptyContent extends StatelessWidget {
               padding: const EdgeInsets.only(top: 60.0),
               child: Text(
                 title,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
@@ -42,6 +43,7 @@ class EmptyContent extends StatelessWidget {
                 opacity: .6,
                 child: Text(
                   subtitle,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
