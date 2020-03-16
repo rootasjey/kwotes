@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/components/web/empty_flat_card.dart';
+import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
@@ -86,15 +86,6 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       );
     }
 
-    if (!isLoading && tempQuotes.length == 0) {
-      return Container(
-        height: MediaQuery.of(context).size.height - 300.0,
-        child:  EmptyFlatCard(
-          onPressed: () => fetchTempQuotes(),
-        ),
-      );
-    }
-
     return gridQuotes();
   }
 
@@ -174,84 +165,117 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
             ),
           ),
 
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.0,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final tempQuote = tempQuotes.elementAt(index);
-                final topicColor = appTopicsColors.find(tempQuote.topics.first);
-
-                return FadeInY(
-                  delay: 3.0 + index.toDouble(),
-                  beginY: 100.0,
-                  child: SizedBox(
-                    width: 250.0,
-                    height: 250.0,
-                    child: TempQuoteCardGridItem(
-                      onTap: () => editTempQuote(tempQuote),
-                      onLongPress: () => validateTempQuote(tempQuote),
-                      tempQuote: tempQuote,
-                      popupMenuButton: PopupMenuButton<String>(
-                        icon: Icon(
-                          Icons.more_horiz,
-                          color: topicColor != null ?
-                            Color(topicColor.decimal) : Colors.primaries,
-                        ),
-                        onSelected: (value) {
-                          if (value == 'delete') {
-                            deleteTempQuote(tempQuote);
-                            return;
-                          }
-
-                          if (value == 'edit') {
-                            editTempQuote(tempQuote);
-                            return;
-                          }
-
-                          if (value == 'validate') {
-                            validateTempQuote(tempQuote);
-                            return;
-                          }
-                        },
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: ListTile(
-                              leading: Icon(Icons.delete_forever),
-                              title: Text('Delete'),
-                            )
-                          ),
-                          PopupMenuItem(
-                            value: 'edit',
-                            child: ListTile(
-                              leading: Icon(Icons.edit),
-                              title: Text('Edit'),
-                            )
-                          ),
-                          PopupMenuItem(
-                            value: 'validate',
-                            child: ListTile(
-                              leading: Icon(Icons.check),
-                              title: Text('Validate'),
-                            )
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-              childCount: tempQuotes.length,
-            ),
-          ),
+          gridContent(),
         ],
       ),
     );
   }
 
+  Widget gridContent() {
+    if (tempQuotes.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.sentiment_neutral,
+                    size: 120.0,
+                    color: Color(0xFFFF005C),
+                  ),
+                ),
+                title: "There're no temporary quote at this moment",
+                subtitle: 'They will appear after people add new quotes',
+                onRefresh: () => fetchTempQuotes(),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final tempQuote = tempQuotes.elementAt(index);
+          final topicColor = appTopicsColors.find(tempQuote.topics.first);
+
+          return FadeInY(
+            delay: 3.0 + index.toDouble(),
+            beginY: 100.0,
+            child: SizedBox(
+              width: 250.0,
+              height: 250.0,
+              child: TempQuoteCardGridItem(
+                onTap: () => editTempQuote(tempQuote),
+                onLongPress: () => validateTempQuote(tempQuote),
+                tempQuote: tempQuote,
+                popupMenuButton: PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: topicColor != null ?
+                      Color(topicColor.decimal) : Colors.primaries,
+                  ),
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      deleteTempQuote(tempQuote);
+                      return;
+                    }
+
+                    if (value == 'edit') {
+                      editTempQuote(tempQuote);
+                      return;
+                    }
+
+                    if (value == 'validate') {
+                      validateTempQuote(tempQuote);
+                      return;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: ListTile(
+                        leading: Icon(Icons.delete_forever),
+                        title: Text('Delete'),
+                      )
+                    ),
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Edit'),
+                      )
+                    ),
+                    PopupMenuItem(
+                      value: 'validate',
+                      child: ListTile(
+                        leading: Icon(Icons.check),
+                        title: Text('Validate'),
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        childCount: tempQuotes.length,
+      ),
+    );
+  }
+
   Widget loadMoreButton() {
+    if (!hasNext) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
@@ -476,6 +500,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoading = false;
         });
 
@@ -521,6 +546,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoadingMore = false;
         });
 
