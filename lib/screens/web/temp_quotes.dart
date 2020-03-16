@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/components/web/empty_flat_card.dart';
+import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
@@ -59,7 +59,7 @@ class _TempQuotesState extends State<TempQuotes> {
         children: <Widget>[
           SizedBox(
             height: MediaQuery.of(context).size.height,
-            child: gridQuotes(),
+            child: body(),
           ),
 
           Column(
@@ -82,19 +82,6 @@ class _TempQuotesState extends State<TempQuotes> {
       );
     }
 
-    if (!isLoading && tempQuotes.length == 0) {
-      return Container(
-        height: MediaQuery.of(context).size.height - 300.0,
-        child:  EmptyFlatCard(
-          onPressed: () => fetchTempQuotes(),
-        ),
-      );
-    }
-
-    return gridQuotes();
-  }
-
-  Widget gridQuotes() {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotif) {
         // FAB visibility
@@ -134,7 +121,9 @@ class _TempQuotesState extends State<TempQuotes> {
                   children: <Widget>[
                     FadeInY(
                       beginY: 50.0,
-                      child: AppIconHeader(),
+                      child: AppIconHeader(
+                        padding: const EdgeInsets.symmetric(vertical: 50.0),
+                      ),
                     ),
 
                     FadeInY(
@@ -144,9 +133,9 @@ class _TempQuotesState extends State<TempQuotes> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'My temporary quotes',
+                            'Temporary quotes',
                             style: TextStyle(
-                              fontSize: 30.0,
+                              fontSize: 20.0,
                             ),
                           ),
                         ],
@@ -170,71 +159,104 @@ class _TempQuotesState extends State<TempQuotes> {
             ),
           ),
 
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.0,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final tempQuote = tempQuotes.elementAt(index);
-                final topicColor = appTopicsColors.find(tempQuote.topics.first);
-
-                return FadeInY(
-                  delay: 3.0 + index.toDouble(),
-                  beginY: 100.0,
-                  child: SizedBox(
-                    width: 250.0,
-                    height: 250.0,
-                    child: TempQuoteCardGridItem(
-                      onTap: () => editTempQuote(tempQuote),
-                      tempQuote: tempQuote,
-                      popupMenuButton: PopupMenuButton<String>(
-                        icon: Icon(
-                          Icons.more_horiz,
-                          color: topicColor != null ?
-                            Color(topicColor.decimal) : Colors.primaries,
-                        ),
-                        onSelected: (value) {
-                          if (value == 'delete') {
-                            deleteTempQuote(tempQuote);
-                            return;
-                          }
-
-                          if (value == 'edit') {
-                            editTempQuote(tempQuote);
-                            return;
-                          }
-                        },
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: ListTile(
-                              leading: Icon(Icons.delete_forever),
-                              title: Text('Delete'),
-                            )
-                          ),
-                          PopupMenuItem(
-                            value: 'edit',
-                            child: ListTile(
-                              leading: Icon(Icons.edit),
-                              title: Text('Edit'),
-                            )
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-              childCount: tempQuotes.length,
-            ),
-          ),
+          gridContent(),
         ],
       ),
     );
   }
 
+  Widget gridContent() {
+    if (tempQuotes.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.sentiment_neutral,
+                    size: 120.0,
+                    color: Color(0xFFFF005C),
+                  ),
+                ),
+                title: "You've no temporary quote at this moment",
+                subtitle: 'They will appear after you propose a new quote',
+                onRefresh: () => fetchTempQuotes(),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final tempQuote = tempQuotes.elementAt(index);
+          final topicColor = appTopicsColors.find(tempQuote.topics.first);
+
+          return FadeInY(
+            delay: 3.0 + index.toDouble(),
+            beginY: 100.0,
+            child: SizedBox(
+              width: 250.0,
+              height: 250.0,
+              child: TempQuoteCardGridItem(
+                onTap: () => editTempQuote(tempQuote),
+                tempQuote: tempQuote,
+                popupMenuButton: PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: topicColor != null ?
+                      Color(topicColor.decimal) : Colors.primaries,
+                  ),
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      deleteTempQuote(tempQuote);
+                      return;
+                    }
+
+                    if (value == 'edit') {
+                      editTempQuote(tempQuote);
+                      return;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: ListTile(
+                        leading: Icon(Icons.delete_forever),
+                        title: Text('Delete'),
+                      )
+                    ),
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Edit'),
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        childCount: tempQuotes.length,
+      ),
+    );
+  }
+
   Widget loadMoreButton() {
+    if (!hasNext) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
@@ -336,6 +358,7 @@ class _TempQuotesState extends State<TempQuotes> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoading = false;
         });
 
@@ -381,6 +404,7 @@ class _TempQuotesState extends State<TempQuotes> {
 
       if (snapshot.empty) {
         setState(() {
+          hasNext = false;
           isLoadingMore = false;
         });
 
