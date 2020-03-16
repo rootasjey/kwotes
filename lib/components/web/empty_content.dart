@@ -53,15 +53,10 @@ class EmptyContent extends StatelessWidget {
 
           if (onRefresh != null)
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Opacity(
-                opacity: .8,
-                child: FlatButton(
-                  onPressed: onRefresh,
-                  child: Text(
-                    'Refresh',
-                  ),
-                ),
+              padding: const EdgeInsets.only(top: 15.0),
+              child: IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: onRefresh,
               ),
             ),
         ],
