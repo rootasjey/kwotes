@@ -280,6 +280,12 @@ class _DashboardState extends State<Dashboard> {
           ),
 
           FadeInY(
+            delay: 2.10,
+            beginY: 50.0,
+            child: listsCard(),
+          ),
+
+          FadeInY(
             delay: 2.25,
             beginY: 50.0,
             child: tempQuotesCard(),
@@ -366,6 +372,45 @@ class _DashboardState extends State<Dashboard> {
           child: child,
         );
       },
+    );
+  }
+
+  Widget listsCard() {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: SizedBox(
+        width: 700.0,
+        height: 200.0,
+        child: Card(
+          color: Color(0xFF0260E8),
+          child: InkWell(
+            onTap: () => FluroRouter.router.navigateTo(context, ListsRoute),
+            child: Container(
+              padding: const EdgeInsets.all(60.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.list,
+                    color: Colors.white,
+                    size: 40.0,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      'Lists',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
