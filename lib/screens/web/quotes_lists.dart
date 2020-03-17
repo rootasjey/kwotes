@@ -491,6 +491,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
       }
 
       final snapshot = await FirestoreApp.instance
@@ -542,6 +543,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
       }
 
       final snapshot = await FirestoreApp.instance
