@@ -68,6 +68,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/api.json
+    - assets/images/bulb-75.png
     - assets/images/monk.png
     - assets/images/icon-small.png
     - assets/images/icon-30.png
