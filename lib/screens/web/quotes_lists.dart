@@ -535,7 +535,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
   void fetchMoreLists() async {
     setState(() {
-      isLoading = true;
+      isLoadingMore = true;
     });
 
     try {
@@ -557,7 +557,7 @@ class _QuotesListsState extends State<QuotesLists> {
       if (snapshot.empty) {
         setState(() {
           hasNext = false;
-          isLoading = false;
+          isLoadingMore = false;
         });
 
         return;
@@ -574,14 +574,14 @@ class _QuotesListsState extends State<QuotesLists> {
       lastDoc = snapshot.docs.last;
 
       setState(() {
-        isLoading = false;
+        isLoadingMore = false;
       });
 
     } catch (error) {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isLoadingMore = false;
       });
     }
   }
