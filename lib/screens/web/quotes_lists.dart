@@ -449,10 +449,12 @@ class _QuotesListsState extends State<QuotesLists> {
         .doc(userAuth.uid)
         .collection('lists')
         .add({
+          'createdAt'   : DateTime.now(),
           'description' : newListDescription,
           'name'        : newListName,
           'iconUrl'     : newListIconUrl,
           'isPublic'    : newListIsPublic,
+          'updatedAt'   : DateTime.now(),
         });
 
       final doc = await docRef.get();
