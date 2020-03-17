@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -272,10 +273,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             ),
           ),
 
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.playlist_add),
-          ),
+          AddToListButton(quote: _quotidian.quote,),
         ],
       ),
     );
