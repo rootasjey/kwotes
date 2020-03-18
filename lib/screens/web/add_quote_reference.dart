@@ -15,6 +15,7 @@ class AddQuoteReference extends StatefulWidget {
 }
 
 class _AddQuoteReferenceState extends State<AddQuoteReference> {
+  String affiliateUrl   = '';
   String imgUrl         = '';
   String lang           = 'en';
   String name           = '';
@@ -28,6 +29,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   List<String> langs = ['en', 'fr'];
 
+  final _affiliateController      = TextEditingController();
   final _nameController           = TextEditingController();
   final _primaryTypeController    = TextEditingController();
   final _secondaryTypeController  = TextEditingController();
@@ -308,6 +310,25 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               onChanged: (newValue) {
                 url = newValue;
                 AddQuoteInputs.refUrl = newValue;
+              },
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: _affiliateController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.monetization_on),
+                labelText: 'Affiliate URL'
+              ),
+              onChanged: (newValue) {
+                url = newValue;
+                AddQuoteInputs.refAffiliateUrl = newValue;
               },
             ),
           ),
