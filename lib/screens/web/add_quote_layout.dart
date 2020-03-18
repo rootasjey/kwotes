@@ -124,6 +124,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                   title: 'Dashboard',
                   onTap: () => FluroRouter.router.navigateTo(context, DashboardRoute),
                 ),
+
                 navCard(
                   icon: Icon(Icons.add, size: 40.0,),
                   title: 'Add another quote',
