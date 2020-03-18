@@ -25,11 +25,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   String _tempImgUrl = '';
 
-  final _nameController     = TextEditingController();
-  final _jobController      = TextEditingController();
-  final _summaryController  = TextEditingController();
-  final _urlController      = TextEditingController();
-  final _wikiController     = TextEditingController();
+  final _affiliateUrlController = TextEditingController();
+  final _nameController         = TextEditingController();
+  final _jobController          = TextEditingController();
+  final _summaryController      = TextEditingController();
+  final _urlController          = TextEditingController();
+  final _wikiController         = TextEditingController();
 
   final _nameFocusNode = FocusNode();
 
@@ -38,11 +39,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     setState(() {
       imgUrl = AddQuoteInputs.authorImgUrl;
 
-      _nameController.text    = AddQuoteInputs.authorName;
-      _jobController.text     = AddQuoteInputs.authorJob;
-      _summaryController.text = AddQuoteInputs.authorSummary;
-      _urlController.text     = AddQuoteInputs.authorUrl;
-      _wikiController.text    = AddQuoteInputs.authorWikiUrl;
+      _affiliateUrlController.text  = AddQuoteInputs.authorAffiliateUrl;
+      _nameController.text          = AddQuoteInputs.authorName;
+      _jobController.text           = AddQuoteInputs.authorJob;
+      _summaryController.text       = AddQuoteInputs.authorSummary;
+      _urlController.text           = AddQuoteInputs.authorUrl;
+      _wikiController.text          = AddQuoteInputs.authorWikiUrl;
     });
 
     super.initState();
@@ -145,6 +147,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
         imgUrl = '';
 
+        _affiliateUrlController.clear();
         _nameController.clear();
         _summaryController.clear();
         _jobController.clear();
@@ -271,7 +274,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _urlController,
+              controller: _affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.monetization_on),
