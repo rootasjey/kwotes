@@ -36,6 +36,22 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   final _wikiUrlController        = TextEditingController();
 
   @override
+  initState() {
+    setState(() {
+      imgUrl = AddQuoteInputs.refImgUrl;
+
+      _nameController.text          = AddQuoteInputs.refName;
+      _primaryTypeController.text   = AddQuoteInputs.refPrimaryType;
+      _secondaryTypeController.text = AddQuoteInputs.refSecondaryType;
+      _summaryController.text       = AddQuoteInputs.refSummary;
+      _urlController.text           = AddQuoteInputs.refUrl;
+      _wikiUrlController.text       = AddQuoteInputs.refWikiUrl;
+    });
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AddQuoteLayout(
       child: Stack(
@@ -277,6 +293,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
         ),
+
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: SizedBox(
