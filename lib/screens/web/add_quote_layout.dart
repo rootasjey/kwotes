@@ -79,80 +79,84 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     }
 
     if (isCompleted) {
-      return Container(
-        padding: const EdgeInsets.all(60.0),
-        child: Column(
-          children: <Widget>[
-            AppIconHeader(),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 0.0),
-              child: Text(
-                'Your quote has been successfully proposed!',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'Soon, a moderator will review it and it will ba validated if everything is alright.',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 100.0, bottom: 200.0),
-              child: Wrap(
-                spacing: 30.0,
-                children: <Widget>[
-                  navCard(
-                    icon: Icon(Icons.dashboard, size: 40.0,),
-                    title: 'Dashboard',
-                    onTap: () => FluroRouter.router.navigateTo(context, DashboardRoute),
-                  ),
-                  navCard(
-                    icon: Icon(Icons.add, size: 40.0,),
-                    title: 'Add another quote',
-                    onTap: () {
-                      AddQuoteInputs.clearQuoteName();
-                      AddQuoteInputs.clearTopics();
-                      AddQuoteInputs.clearQuoteId();
-                      AddQuoteInputs.clearComment();
-                      FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
-                    },
-                  ),
-
-                  canManage ?
-                    navCard(
-                      icon: Icon(Icons.timer, size: 40.0,),
-                      title: 'Temporary quotes',
-                      onTap: () {
-                        FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
-                      },
-                    ):
-                    navCard(
-                      icon: Icon(Icons.home, size: 40.0,),
-                      title: 'Home',
-                      onTap: () {
-                        FluroRouter.router.navigateTo(context, HomeRoute);
-                      },
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+      return completedContainer();
     }
 
     return widget.child;
+  }
+
+  Widget completedContainer() {
+    return Container(
+      padding: const EdgeInsets.all(60.0),
+      child: Column(
+        children: <Widget>[
+          AppIconHeader(),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 0.0),
+            child: Text(
+              'Your quote has been successfully proposed!',
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Soon, a moderator will review it and it will ba validated if everything is alright.',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 100.0, bottom: 200.0),
+            child: Wrap(
+              spacing: 30.0,
+              children: <Widget>[
+                navCard(
+                  icon: Icon(Icons.dashboard, size: 40.0,),
+                  title: 'Dashboard',
+                  onTap: () => FluroRouter.router.navigateTo(context, DashboardRoute),
+                ),
+                navCard(
+                  icon: Icon(Icons.add, size: 40.0,),
+                  title: 'Add another quote',
+                  onTap: () {
+                    AddQuoteInputs.clearQuoteName();
+                    AddQuoteInputs.clearTopics();
+                    AddQuoteInputs.clearQuoteId();
+                    AddQuoteInputs.clearComment();
+                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+                  },
+                ),
+
+                canManage ?
+                  navCard(
+                    icon: Icon(Icons.timer, size: 40.0,),
+                    title: 'Temporary quotes',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+                    },
+                  ):
+                  navCard(
+                    icon: Icon(Icons.home, size: 40.0,),
+                    title: 'Home',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, HomeRoute);
+                    },
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget navCard({Icon icon, Function onTap, String title,}) {
