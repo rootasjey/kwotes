@@ -29,7 +29,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   List<String> langs = ['en', 'fr'];
 
-  final _affiliateController      = TextEditingController();
+  final _affiliateUrlController   = TextEditingController();
   final _nameController           = TextEditingController();
   final _primaryTypeController    = TextEditingController();
   final _secondaryTypeController  = TextEditingController();
@@ -42,7 +42,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     setState(() {
       imgUrl = AddQuoteInputs.refImgUrl;
 
-      _affiliateController.text     = AddQuoteInputs.refAffiliateUrl;
+      _affiliateUrlController.text     = AddQuoteInputs.refAffiliateUrl;
       _nameController.text          = AddQuoteInputs.refName;
       _primaryTypeController.text   = AddQuoteInputs.refPrimaryType;
       _secondaryTypeController.text = AddQuoteInputs.refSecondaryType;
@@ -108,7 +108,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
         imgUrl = '';
 
-        _affiliateController.clear();
+        _affiliateUrlController.clear();
         _nameController.clear();
         _primaryTypeController.clear();
         _secondaryTypeController.clear();
@@ -322,7 +322,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _affiliateController,
+              controller: _affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.monetization_on),
