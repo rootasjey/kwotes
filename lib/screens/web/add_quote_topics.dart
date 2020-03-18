@@ -139,7 +139,9 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           ),
 
           Observer(builder: (context) {
-            availableTopics.addAll(appTopicsColors.topicsColors);
+            if (availableTopics.length == 0) {
+              availableTopics.addAll(appTopicsColors.topicsColors);
+            }
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
@@ -317,8 +319,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   void populateSelectedTopics() {
     AddQuoteInputs.topics.forEach((topicName) {
       selectedTopics.add(
-        ThemeColor.topicsColors
-          .firstWhere((element) => element.name == topicName)
+        appTopicsColors.find(topicName)
       );
     });
 
