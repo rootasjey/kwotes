@@ -308,9 +308,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               name = newValue;
               AddQuoteInputs.authorName = newValue;
             },
-            onSubmitted: (_) {
-              FluroRouter.router.navigateTo(context, AddQuoteReferenceRoute);
-            },
           ),
         ),
 
