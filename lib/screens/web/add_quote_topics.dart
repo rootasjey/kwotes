@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
@@ -11,6 +12,8 @@ import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_animations/simple_animations.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AddQuoteTopics extends StatefulWidget {
   @override
@@ -18,6 +21,10 @@ class AddQuoteTopics extends StatefulWidget {
 }
 
 class _AddQuoteTopicsState extends State<AddQuoteTopics> {
+  final beginY    = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
+
   List<TopicColor> selectedTopics = [];
   List<TopicColor> availableTopics = [];
 
@@ -118,48 +125,79 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
-          Divider(height: 120.0,),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: Text(
-              'Topics',
-              style: TextStyle(
-                fontSize: 22.0,
+          ControlledAnimation(
+            duration: 1.seconds,
+            delay: 1.seconds,
+            tween: Tween(begin: 0.0, end: 500.0),
+            builder: (_, value) {
+              return SizedBox(
+                width: value,
+                child: Divider(height: 120.0,),
+              );
+            },
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (2 * delayStep),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Text(
+                'Topics',
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
               ),
             ),
           ),
 
-          Text(
-            'Select some of the available topics to categorize the quote.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: themeColor.background,
-              fontSize: 20.0,
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (3 * delayStep),
+            child: Text(
+              'Select some of the available topics to categorize the quote.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: themeColor.background,
+                fontSize: 20.0,
+              ),
             ),
           ),
 
           Observer(builder: (context) {
+            int factor = 1;
+
             if (availableTopics.length == 0) {
               availableTopics.addAll(appTopicsColors.topicsColors);
-            }
+
+            } else { factor = 0; }
+
+            int index = 0;
+            final initDely = (delay + (4 * delayStep)) * factor;
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
               child: Wrap(
                 children: availableTopics.map<Widget>((topic) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: 5.0),
-                    child: ActionChip(
-                      padding: EdgeInsets.all(5.0),
-                      label: Text(topic.name),
-                      onPressed: () {
-                        setState(() {
-                          selectedTopics.add(topic);
-                          availableTopics.remove(topic);
-                        });
+                  index++;
 
-                        AddQuoteInputs.topics.add(topic.name);
-                      },
+                  return FadeInY(
+                    beginY: beginY,
+                    delay: (initDely + (index * 1.1)) * factor,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 5.0),
+                      child: ActionChip(
+                        padding: EdgeInsets.all(5.0),
+                        label: Text(topic.name),
+                        onPressed: () {
+                          setState(() {
+                            selectedTopics.add(topic);
+                            availableTopics.remove(topic);
+                          });
+
+                          AddQuoteInputs.topics.add(topic.name);
+                        },
+                      ),
                     ),
                   );
                 }).toList(),
@@ -182,7 +220,10 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
         onKey: keyHandler,
         child: Column(
           children: <Widget>[
-            title(),
+            FadeInY(
+              beginY: beginY,
+              child: title(),
+            ),
 
             selectedTopics.length == 0 ?
               emptyTopics(themeColor) :
@@ -201,14 +242,18 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   Widget emptyTopics(ThemeColor themeColor) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 40.0),
-      child: Text(
-        'You have not added any topic yet.',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18.0,
-          color: themeColor.background,
+    return FadeInY(
+      delay: delay + (1 * delayStep),
+      beginY: beginY,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 40.0),
+        child: Text(
+          'You have not added any topic yet.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18.0,
+            color: themeColor.background,
+          ),
         ),
       ),
     );
