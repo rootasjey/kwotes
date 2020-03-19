@@ -328,6 +328,19 @@ class _QuotesListsState extends State<QuotesLists> {
         FluroRouter.router.navigateTo(context, SigninRoute);
       }
 
+      // Add a new document containing information
+      // to delete the subcollection (in order to delete its documents).
+      await FirestoreApp.instance
+        .collection('todelete')
+        .add({
+          'objectId': quoteList.id,
+          'path': 'users/<userId>/lists/<listId>/quotes',
+          'userId': userAuth.uid,
+          'target': 'list',
+          'type': 'subcollection',
+        });
+
+      // Delete the quote collection doc.
       await FirestoreApp.instance
         .collection('users')
         .doc(userAuth.uid)
