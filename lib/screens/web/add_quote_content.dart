@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
@@ -13,6 +14,10 @@ class AddQuoteContent extends StatefulWidget {
 }
 
 class _AddQuoteContentState extends State<AddQuoteContent> {
+  final beginY = 100.0;
+  final delay = 1.0;
+  final delayStep = 1.2;
+
   String lang = 'en';
   String name = '';
 
@@ -69,18 +74,37 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       width: 500.0,
       child: Column(
         children: <Widget>[
-          title(),
+          FadeInY(
+            beginY: beginY,
+            child: title(),
+          ),
 
-          quoteNameInput(),
+          FadeInY(
+            delay: delay + (1 * delayStep),
+            beginY: beginY,
+            child: quoteNameInput(),
+          ),
 
-          clearButton(),
+          FadeInY(
+            delay: delay + (2 * delayStep),
+            beginY: beginY,
+            child: clearButton(),
+          ),
 
-          langSelect(Colors.blue),
+          FadeInY(
+            delay: delay + (3 * delayStep),
+            beginY: beginY,
+            child: langSelect(Colors.blue),
+          ),
 
-          AddQuoteNavButtons(
-            onPrevPressed: () => FluroRouter.router.pop(context),
-            prevMessage: 'Cancel',
-            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute),
+          FadeInY(
+            delay: delay + (4 * delayStep),
+            beginY: beginY,
+            child: AddQuoteNavButtons(
+              onPrevPressed: () => FluroRouter.router.pop(context),
+              prevMessage: 'Cancel',
+              onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute),
+            ),
           ),
         ],
       ),
