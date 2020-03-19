@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:simple_animations/simple_animations.dart';
-import 'package:supercharged/supercharged.dart';
 
 /// Create a widget animating a quote's name.
 /// Decides which animation is most suited for the quote.
@@ -67,32 +67,45 @@ Widget createPunctuationAnimation({
   String punctuation,
   double screenWidth,
 }) {
+
   final quoteName = quote.name;
-  List<String> parts = quoteName.split(punctuation);
 
-  int index = 0;
+  final indexes = <int>[];
+  bool hasNext = true;
 
-  final children = parts.map((part) {
-    index++;
+  while (hasNext) {
+    final index = quoteName.indexOf(punctuation);
 
-    if (index < parts.length) { part += punctuation; }
+    if (indexes.contains(index)) {
+      hasNext = false;
 
-    return ControlledAnimation(
-      delay: Duration(milliseconds: index * 500),
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value) {
-        return Opacity(
-          opacity: value,
-          child: Text(part,
-            style: TextStyle(
-              fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
-            ),
+    } else {
+      indexes.add(index);
+    }
+  }
+
+  int delayFactor = 0;
+
+  final children = quoteName
+    .split(' ')
+    .map((word) {
+      word += ' ';
+
+      if (word.endsWith(punctuation)) {
+        delayFactor++;
+      }
+
+      return FadeInY(
+        endY: 0.0,
+        beginY: 50.0,
+        delay: delayFactor * 3.0,
+        child: Text(word,
+          style: TextStyle(
+            fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
           ),
-        );
-      },
-    );
-  });
+        ),
+      );
+    });
 
   return Wrap(
     children: <Widget>[
@@ -108,34 +121,31 @@ Widget createLengthAnimation({Quote quote, double screenWidth}) {
   final half = quoteName.length ~/ 2;
   final rightHalf = quoteName.indexOf(' ', half);
 
-  List<String> parts = [
-    quoteName.substring(0, rightHalf),
-    quoteName.substring(rightHalf + 1, quoteName.length),
-  ];
-
   int index = 0;
+  int delayFactor = 0;
 
-  final children = parts.map((part) {
-    index++;
+  final children = quoteName
+    .split(' ')
+    .map((word) {
+      word += ' ';
 
-    if (index < parts.length) { part += ' '; }
+      if (rightHalf > index) {
+        delayFactor++;
+      }
 
-    return ControlledAnimation(
-      delay: Duration(milliseconds: index * 500),
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value) {
-        return Opacity(
-          opacity: value,
-          child: Text(part,
-            style: TextStyle(
-              fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
-            ),
+      index ++;
+
+      return FadeInY(
+        endY: 0.0,
+        beginY: 50.0,
+        delay: delayFactor * 3.0,
+        child: Text(word,
+          style: TextStyle(
+            fontSize: FontSize.hero(quote.name) / dividerNumber(screenWidth),
           ),
-        );
-      },
-    );
-  });
+        ),
+      );
+    });
 
   return Wrap(
     children: <Widget>[
