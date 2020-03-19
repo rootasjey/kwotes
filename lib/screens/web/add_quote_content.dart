@@ -71,54 +71,9 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         children: <Widget>[
           title(),
 
-          Padding(
-            padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 80.0),
-            child: TextField(
-              maxLines: null,
-              autofocus: true,
-              focusNode: _nameFocusNode,
-              controller: _nameController,
-              keyboardType: TextInputType.multiline,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: (newValue) {
-                name = newValue;
-                AddQuoteInputs.name = newValue;
-              },
-              decoration: InputDecoration(
-                hintText: 'Type your quote there',
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.blue,
-                    width: 2.0,
-                  )
-                ),
-              ),
-            ),
-          ),
+          quoteNameInput(),
 
-          Padding(
-            padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  focusNode: _clearFocusNode,
-                  onPressed: () {
-                    AddQuoteInputs.clearQuoteName();
-                    _nameController.clear();
-                    _nameFocusNode.requestFocus();
-                  },
-                  child: Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      'Clear quote content',
-                    ),
-                  )
-                ),
-              ],
-            ),
-          ),
+          clearButton(),
 
           langSelect(Colors.blue),
 
@@ -126,6 +81,31 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
             onPrevPressed: () => FluroRouter.router.pop(context),
             prevMessage: 'Cancel',
             onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteTopicsRoute),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget clearButton() {
+    return Padding(
+      padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FlatButton(
+            focusNode: _clearFocusNode,
+            onPressed: () {
+              AddQuoteInputs.clearQuoteName();
+              _nameController.clear();
+              _nameFocusNode.requestFocus();
+            },
+            child: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Clear quote content',
+              ),
+            )
           ),
         ],
       ),
@@ -278,6 +258,34 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           child: Text(value.toUpperCase()),
         );
       }).toList(),
+    );
+  }
+
+  Widget quoteNameInput() {
+    return Padding(
+      padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 80.0),
+      child: TextField(
+        maxLines: null,
+        autofocus: true,
+        focusNode: _nameFocusNode,
+        controller: _nameController,
+        keyboardType: TextInputType.multiline,
+        textCapitalization: TextCapitalization.sentences,
+        onChanged: (newValue) {
+          name = newValue;
+          AddQuoteInputs.name = newValue;
+        },
+        decoration: InputDecoration(
+          hintText: 'Type your quote there',
+          border: OutlineInputBorder(),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 2.0,
+            )
+          ),
+        ),
+      ),
     );
   }
 
