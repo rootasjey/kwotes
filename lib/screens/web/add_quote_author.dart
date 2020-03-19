@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
@@ -15,6 +16,10 @@ class AddQuoteAuthor extends StatefulWidget {
 }
 
 class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
+  final beginY        = 100.0;
+  final delay         = 1.0;
+  final delayStep     = 1.2;
+
   String affiliateUrl = '';
   String imgUrl       = '';
   String name         = '';
@@ -122,18 +127,48 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          title(),
+          FadeInY(
+            beginY: beginY,
+            child: title(),
+          ),
 
-          avatar(),
-          nameAndJob(),
+          FadeInY(
+            delay: delay + (1 * delayStep),
+            beginY: beginY,
+            child: avatar(),
+          ),
 
-          summaryField(),
-          links(),
-          clearButton(),
+          FadeInY(
+            delay: delay + (2 * delayStep),
+            beginY: beginY,
+            child: nameAndJob(),
+          ),
 
-          AddQuoteNavButtons(
-            onPrevPressed: () => FluroRouter.router.pop(context),
-            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteReferenceRoute),
+          FadeInY(
+            delay: delay + (3 * delayStep),
+            beginY: beginY,
+            child: summaryField(),
+          ),
+
+          FadeInY(
+            delay: delay + (4 * delayStep),
+            beginY: beginY,
+            child: links(),
+          ),
+
+          FadeInY(
+            delay: delay + (5 * delayStep),
+            beginY: beginY,
+            child: clearButton(),
+          ),
+
+          FadeInY(
+            delay: delay + (6 * delayStep),
+            beginY: beginY,
+            child: AddQuoteNavButtons(
+              onPrevPressed: () => FluroRouter.router.pop(context),
+              onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteReferenceRoute),
+            ),
           ),
         ],
       ),
