@@ -47,7 +47,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     setState(() {
       imgUrl = AddQuoteInputs.refImgUrl;
 
-      _affiliateUrlController.text     = AddQuoteInputs.refAffiliateUrl;
+      _affiliateUrlController.text  = AddQuoteInputs.refAffiliateUrl;
       _nameController.text          = AddQuoteInputs.refName;
       _primaryTypeController.text   = AddQuoteInputs.refPrimaryType;
       _secondaryTypeController.text = AddQuoteInputs.refSecondaryType;
