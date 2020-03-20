@@ -5,6 +5,7 @@ import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
+import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -54,7 +55,9 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              NavBackHeader(),
+              NavBackHeader(
+                onLongPress: () => onLongPressNavBack(context),
+              ),
               body(),
             ],
           ),

@@ -125,6 +125,7 @@ class _DashboardState extends State<Dashboard> {
                 child: IconButton(
                   onPressed: () {
                     AddQuoteInputs.clearAll();
+                    AddQuoteInputs.navigatedFromPath = 'dashboard';
                     FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
                   },
                   icon: Icon(

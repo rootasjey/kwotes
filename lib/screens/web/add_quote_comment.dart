@@ -3,6 +3,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
+import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/utils/router.dart';
 
 class AddQuoteComment extends StatefulWidget {
@@ -33,7 +34,9 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              NavBackHeader(),
+              NavBackHeader(
+                onLongPress: () => onLongPressNavBack(context),
+              ),
               body(),
             ],
           ),

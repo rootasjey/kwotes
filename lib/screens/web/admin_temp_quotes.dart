@@ -481,6 +481,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   void editTempQuote(TempQuote tempQuote) async {
+    AddQuoteInputs.navigatedFromPath = 'admintempquotes';
     AddQuoteInputs.populateWithTempQuote(tempQuote);
     FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
   }

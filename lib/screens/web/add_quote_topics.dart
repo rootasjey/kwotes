@@ -9,6 +9,7 @@ import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/topic_color.dart';
+import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +55,9 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              NavBackHeader(),
+              NavBackHeader(
+                onLongPress: () => onLongPressNavBack(context),
+              ),
               body(),
             ],
           ),

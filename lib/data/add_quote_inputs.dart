@@ -1,6 +1,10 @@
 import 'package:memorare/types/temp_quote.dart';
 
 class AddQuoteInputs {
+  /// Navigated to new quote page
+  /// from Dashboard or Admin temp quote?
+  static String navigatedFromPath = '';
+
   /// Quote's id if this is an edit.
   static String id                  = '';
   static String name                = '';
