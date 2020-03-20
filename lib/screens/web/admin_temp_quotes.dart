@@ -13,9 +13,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
-import 'package:memorare/types/reference_type.dart';
 import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/types/urls.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -420,16 +418,16 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         'linkedRefs': [],
         'name'      : reference.name,
         'summary'   : reference.summary,
-        'type'      : ReferenceType(
-          primary   : reference.type.primary,
-          secondary : reference.type.secondary,
-        ),
-        'urls'      : Urls(
-          affiliate : reference.urls.affiliate,
-          image     : reference.urls.image,
-          website   : reference.urls.website,
-          wikipedia : reference.urls.wikipedia,
-        ),
+        'type'      : {
+          'primary'   : reference.type.primary,
+          'secondary' : reference.type.secondary,
+        },
+        'urls'      : {
+          'affiliate' : reference.urls.affiliate,
+          'image'     : reference.urls.image,
+          'website'   : reference.urls.website,
+          'wikipedia' : reference.urls.wikipedia,
+        },
       });
 
     return Reference(
