@@ -115,7 +115,7 @@ class AddQuoteInputs {
       if (tempQuote.references.length > 0) {
         final ref = tempQuote.references.first;
 
-        refAffiliateUrl   = ref.urls.wikipedia;
+        refAffiliateUrl   = ref.urls.affiliate;
         refId             = ref.id;
         refImgUrl         = ref.urls.image;
         refLang           = ref.lang;
