@@ -3,6 +3,12 @@ import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/utils/router.dart';
 
 class NavBackHeader extends StatelessWidget {
+  final Function onLongPress;
+
+  NavBackHeader({
+    this.onLongPress,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -17,11 +23,14 @@ class NavBackHeader extends StatelessWidget {
         Positioned(
           left: 80.0,
           top: 100.0,
-          child: IconButton(
-            onPressed: () {
-              FluroRouter.router.pop(context);
-            },
-            icon: Icon(Icons.arrow_back),
+          child: GestureDetector(
+            onLongPress: onLongPress,
+            child: IconButton(
+              onPressed: () {
+                FluroRouter.router.pop(context);
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
           ),
         ),
       ],
