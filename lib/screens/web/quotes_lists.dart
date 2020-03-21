@@ -19,9 +19,10 @@ class QuotesLists extends StatefulWidget {
 }
 
 class _QuotesListsState extends State<QuotesLists> {
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool hasNext = true;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  bool hasNext        = true;
+  int limit           = 10;
 
   final _scrollController = ScrollController();
   bool isFabVisible = false;
@@ -511,7 +512,7 @@ class _QuotesListsState extends State<QuotesLists> {
         .collection('users')
         .doc(userAuth.uid)
         .collection('lists')
-        .limit(10)
+        .limit(limit)
         .get();
 
       if (snapshot.empty) {
@@ -534,6 +535,7 @@ class _QuotesListsState extends State<QuotesLists> {
       lastDoc = snapshot.docs.last;
 
       setState(() {
+        hasNext = snapshot.size == limit;
         isLoading = false;
       });
 
@@ -564,7 +566,7 @@ class _QuotesListsState extends State<QuotesLists> {
         .doc(userAuth.uid)
         .collection('lists')
         .startAfter(snapshot: lastDoc)
-        .limit(10)
+        .limit(limit)
         .get();
 
       if (snapshot.empty) {
@@ -587,6 +589,7 @@ class _QuotesListsState extends State<QuotesLists> {
       lastDoc = snapshot.docs.last;
 
       setState(() {
+        hasNext = snapshot.size == limit;
         isLoadingMore = false;
       });
 
