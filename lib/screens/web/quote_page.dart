@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_error.dart';
@@ -30,6 +31,8 @@ class _QuotePageState extends State<QuotePage> {
   bool isLoading;
   Quote quote;
   List<TopicColor> topicColors = [];
+
+  FirebaseUser userAuth;
 
   @override
   void initState() {
@@ -272,9 +275,9 @@ class _QuotePageState extends State<QuotePage> {
             ),
           ),
 
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.playlist_add),
+          AddToListButton(
+            quote: quote,
+            isDisabled: userAuth == null,
           ),
         ],
       ),
@@ -359,7 +362,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Future fetchIsFav() async {
-    final userAuth = await FirebaseAuth.instance.currentUser();
+    userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth != null) {
       final isFav = await isFavourite(
