@@ -16,9 +16,11 @@ class AddToListButton extends StatefulWidget {
   final Quote quote;
   final ButtonType type;
   final double size;
+  final bool isDisabled;
 
   AddToListButton({
     this.onBeforeShowSheet,
+    this.isDisabled = false,
     this.quote,
     this.size = 30.0,
     this.type = ButtonType.icon
@@ -58,21 +60,23 @@ class _AddToListButtonState extends State<AddToListButton> {
         icon: Icon(
           Icons.playlist_add,
         ),
-        onPressed: () {
-          if (widget.onBeforeShowSheet != null) {
-            widget.onBeforeShowSheet();
-          }
+        onPressed: widget.isDisabled ?
+          null : () {
+            if (widget.onBeforeShowSheet != null) {
+              widget.onBeforeShowSheet();
+            }
 
-          showBottomSheetList();
+            showBottomSheetList();
         },
       ):
       ListTile(
-        onTap: () {
-          if (widget.onBeforeShowSheet != null) {
-            widget.onBeforeShowSheet();
-          }
+        onTap: widget.isDisabled ?
+          null : () {
+            if (widget.onBeforeShowSheet != null) {
+              widget.onBeforeShowSheet();
+            }
 
-          showBottomSheetList();
+            showBottomSheetList();
         },
         leading: Icon(Icons.playlist_add),
         title: Text(
@@ -138,7 +142,7 @@ class _AddToListButtonState extends State<AddToListButton> {
                 children: <Widget>[
                   newListButton(),
 
-                  Center(child: Divider()),
+                  Divider(thickness: 2.0,),
 
                   ...tiles
                 ],
