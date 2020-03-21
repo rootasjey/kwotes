@@ -232,20 +232,17 @@ class _QuoteListState extends State<QuotesList> {
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
-          InkWell(
+          GestureDetector(
             onTap: () {
               FluroRouter.router.navigateTo(
                 context,
                 QuotePageRoute.replaceFirst(':id', quote.quoteId),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Text(
-                quote.name,
-                style: TextStyle(
-                  fontSize: FontSize.hero(quote.name) / (2000 / screenWidth),
-                ),
+            child: Text(
+              quote.name,
+              style: TextStyle(
+                fontSize: FontSize.hero(quote.name) / (2000 / screenWidth),
               ),
             ),
           ),
