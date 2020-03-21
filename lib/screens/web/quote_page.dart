@@ -252,13 +252,14 @@ class _QuotePageState extends State<QuotePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: () async {
-              if (quote.starred) {
-                removeQuoteFromFav();
-                return;
-              }
+            onPressed: userAuth == null ?
+              null : () async {
+                if (quote.starred) {
+                  removeQuoteFromFav();
+                  return;
+                }
 
-              addQuoteToFav();
+                addQuoteToFav();
             },
             icon: quote.starred ?
               Icon(Icons.favorite) :
