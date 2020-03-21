@@ -58,7 +58,7 @@ Widget createHeroQuoteAnimation({Quote quote, double screenWidth}) {
 }
 
 double dividerNumber(double screenWidth) {
-  return 1352 / screenWidth;
+  return 1452 / screenWidth;
 }
 
 /// Create animations according to the quote's punctuation.
