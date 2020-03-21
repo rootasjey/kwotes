@@ -137,8 +137,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           padding: const EdgeInsets.only(top: 30.0),
           child: Opacity(
             opacity: value,
-            child: FlatButton(
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 final id = _quotidian.quote.author.id;
 
                 FluroRouter.router.navigateTo(
