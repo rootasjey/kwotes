@@ -182,9 +182,17 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget quoteName({double screenWidth}) {
-    return createHeroQuoteAnimation(
-      quote: _quotidian.quote,
-      screenWidth: screenWidth,
+    return GestureDetector(
+      onTap: () {
+        FluroRouter.router.navigateTo(
+          context,
+          QuotePageRoute.replaceFirst(':id', _quotidian.quote.id),
+        );
+      },
+      child: createHeroQuoteAnimation(
+        quote: _quotidian.quote,
+        screenWidth: screenWidth,
+      ),
     );
   }
 
