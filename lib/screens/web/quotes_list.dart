@@ -255,12 +255,20 @@ class _QuoteListState extends State<QuotesList> {
             ),
           ),
 
-          Opacity(
-            opacity: .6,
-            child: Text(
-              quote.author.name,
-              style: TextStyle(
-                fontSize: 20.0,
+          GestureDetector(
+            onTap: () {
+              FluroRouter.router.navigateTo(
+                context,
+                AuthorRoute.replaceFirst(':id', quote.author.id),
+              );
+            },
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                quote.author.name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
               ),
             ),
           ),
