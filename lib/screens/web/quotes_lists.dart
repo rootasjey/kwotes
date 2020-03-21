@@ -390,10 +390,6 @@ class _QuotesListsState extends State<QuotesLists> {
               onChanged: (newValue) {
                 newListName = newValue;
               },
-              onSubmitted: (_) {
-                createList();
-                Navigator.of(context).pop();
-              },
             ),
 
             Padding(padding: EdgeInsets.only(top: 10.0),),
