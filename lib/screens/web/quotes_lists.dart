@@ -244,7 +244,12 @@ class _QuotesListsState extends State<QuotesLists> {
             height: 120.0,
             child: Card(
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    ListRoute.replaceFirst(':id', quoteList.id),
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Stack(

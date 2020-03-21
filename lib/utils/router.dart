@@ -22,6 +22,7 @@ import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/published_quotes.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/admin_quotes.dart';
+import 'package:memorare/screens/web/quotes_list.dart';
 import 'package:memorare/screens/web/quotes_lists.dart';
 import 'package:memorare/screens/web/quotidians.dart';
 import 'package:memorare/screens/web/reference_page.dart';
@@ -98,6 +99,10 @@ class FluroRouter {
   static Handler _homeHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Home());
+
+  static Handler _listHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          QuotesList(listId: params['id'][0],));
 
   static Handler _listsHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -215,6 +220,10 @@ class FluroRouter {
     router.define(
       HomeRoute,
       handler: _homeHandler,
+    );
+    router.define(
+      ListRoute,
+      handler: _listHandler,
     );
     router.define(
       ListsRoute,

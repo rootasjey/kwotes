@@ -7,6 +7,8 @@ class Quote {
   final String lang;
   final String name;
   final Reference mainReference;
+  /// Useful when the quote is in a list.
+  final String quoteId;
   final List<Reference> references;
   bool starred;
   final List<String> topics;
@@ -17,6 +19,7 @@ class Quote {
     this.lang,
     this.name,
     this.mainReference,
+    this.quoteId,
     this.references,
     this.starred = false,
     this.topics,
@@ -59,6 +62,7 @@ class Quote {
       lang          : json['lang'],
       name          : json['name'],
       mainReference : _mainReference,
+      quoteId       : json['quoteId'] ?? '',
       references    : _references,
       starred       : json['starred'] ?? false,
       topics        : _topics,
@@ -77,6 +81,7 @@ class Quote {
     json['id']          = id;
     json['lang']        = lang;
     json['name']        = name;
+    json['quoteId']     = quoteId;
     json['references']  = refStr;
     json['starred']     = starred;
     json['topics']      = topics;
