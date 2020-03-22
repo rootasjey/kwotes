@@ -201,8 +201,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       delay: 2.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 0.6),
-      child: FlatButton(
-        onPressed: () {
+      child: GestureDetector(
+        onTap: () {
           final id = _quotidian.quote.author.id;
 
           FluroRouter.router.navigateTo(
