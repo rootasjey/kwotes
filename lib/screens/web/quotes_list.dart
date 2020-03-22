@@ -9,6 +9,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
@@ -227,6 +228,8 @@ class _QuoteListState extends State<QuotesList> {
   }
 
   Widget quoteContainer({Quote quote, double screenWidth}) {
+    final topicColor = appTopicsColors.find(quote.topics.first);
+
     return Container(
       padding: const EdgeInsets.all(80.0),
       height: MediaQuery.of(context).size.height,
@@ -247,13 +250,22 @@ class _QuoteListState extends State<QuotesList> {
             ),
           ),
 
-          SizedBox(
-            width: 100.0,
-            child: Divider(
-              thickness: 2.0,
-              height: 40.0,
+          topicColor != null ?
+            SizedBox(
+              width: 100.0,
+              child: Divider(
+                color: Color(topicColor.decimal),
+                thickness: 2.0,
+                height: 40.0,
+              )
+            ) :
+            SizedBox(
+              width: 100.0,
+              child: Divider(
+                thickness: 2.0,
+                height: 40.0,
+              ),
             ),
-          ),
 
           GestureDetector(
             onTap: () {
