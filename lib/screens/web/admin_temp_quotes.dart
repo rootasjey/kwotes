@@ -414,6 +414,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     final newReference = await FirestoreApp.instance
       .collection('references')
       .add({
+        'createdAt' : DateTime.now(),
         'lang'      : reference.lang,
         'linkedRefs': [],
         'name'      : reference.name,
@@ -422,6 +423,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
           'primary'   : reference.type.primary,
           'secondary' : reference.type.secondary,
         },
+        'updatedAt' : DateTime.now(),
         'urls'      : {
           'affiliate' : reference.urls.affiliate,
           'image'     : reference.urls.image,
