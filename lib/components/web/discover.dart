@@ -129,7 +129,7 @@ class _DiscoverState extends State<Discover> {
 
     try {
       final refsSnapshot = await FirestoreApp.instance
-        .collection("references")
+        .collection('references')
         .where('lang', '==', 'en')
         .orderBy('updatedAt', 'desc')
         .limit(1)
@@ -147,6 +147,7 @@ class _DiscoverState extends State<Discover> {
 
       final authorsSnapshot = await FirestoreApp.instance
         .collection('authors')
+        .orderBy('updatedAt', 'desc')
         .limit(2)
         .get();
 
