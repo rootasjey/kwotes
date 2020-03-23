@@ -2,15 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/web/empty_content.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
-import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:mobx/mobx.dart';
 
 class TopicPage extends StatefulWidget {
   final String name;
@@ -25,21 +28,22 @@ class TopicPage extends StatefulWidget {
 
 class _TopicPageState extends State<TopicPage> {
   int decimal = 4283980123;
-  bool isLoading = false;
+  String topicName;
+  ReactionDisposer topicDisposer;
 
-  var _lastDoc;
+  var lastDoc;
+  bool isLoading = false;
   bool isLoadingMore = false;
   bool hasNext = true;
 
   List<Quote> quotes = [];
-  TopicColor topicColor;
 
-  final _scrollController = ScrollController();
-  bool isFabVisible = false;
+  final scrollController = ScrollController();
 
-  bool isFavLoading = false;
-  bool isFavLoaded = false;
   bool isFav = false;
+  bool isFavLoaded = false;
+  bool isFavLoading = false;
+  bool isFabVisible = false;
 
   FirebaseUser userAuth;
 
@@ -47,8 +51,17 @@ class _TopicPageState extends State<TopicPage> {
   void initState() {
     super.initState();
 
-    fetchTopic();
+    setupTopic();
     fetchQuotes();
+  }
+
+  @override
+  void dispose() {
+    if (topicDisposer != null) {
+      topicDisposer();
+    }
+
+    super.dispose();
   }
 
   @override
@@ -57,7 +70,7 @@ class _TopicPageState extends State<TopicPage> {
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
           onPressed: () {
-            _scrollController.animateTo(
+            scrollController.animateTo(
               0.0,
               duration: Duration(seconds: 1),
               curve: Curves.easeOut,
@@ -65,31 +78,27 @@ class _TopicPageState extends State<TopicPage> {
           },
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: body(),
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: body(),
+          ),
+
+          Column(
+            children: <Widget>[
+              loadMoreButton(),
+              NavBackFooter(),
+            ],
+          ),
+
+          Footer(),
+        ],
+      ),
     );
   }
 
   Widget body() {
-    return ListView(
-      children: <Widget>[
-        isLoading ?
-          FullPageLoading(
-            title: 'Loading quotes on ${widget.name}',
-          ):
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: gridQuotes(),
-          ),
-
-        loadMoreButton(),
-        NavBackFooter(),
-
-        Footer(),
-      ],
-    );
-  }
-
-  Widget gridQuotes() {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotif) {
         // FAB visibility
@@ -115,29 +124,32 @@ class _TopicPageState extends State<TopicPage> {
         return false;
       },
       child: CustomScrollView(
-        controller: _scrollController,
+        controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
             floating: true,
             snap: true,
             expandedHeight: 250.0,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TopicCardColor(
-                      color: Color(decimal),
-                      name: widget.name,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      TopicCardColor(
+                        color: Color(decimal),
+                        name: widget.name,
+                      ),
+                    ],
+                  ),
                 ),
 
                 Positioned(
                   left: 80.0,
-                  top: 40.0,
+                  top: 50.0,
                   child: IconButton(
                     onPressed: () {
                       FluroRouter.router.pop(context);
@@ -149,24 +161,66 @@ class _TopicPageState extends State<TopicPage> {
             ),
           ),
 
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.0,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final quote = quotes.elementAt(index);
-
-                return SizedBox(
-                  width: 250.0,
-                  height: 250.0,
-                  child: gridItem(quote),
-                );
-              },
-              childCount: quotes.length,
-            ),
-          ),
+          gridQuotesContent(),
         ],
+      ),
+    );
+  }
+
+  Widget gridQuotesContent() {
+    if (isLoading) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            LoadingAnimation(
+              title: 'Loading ${widget.name} quotes...',
+            ),
+          ]
+        ),
+      );
+    }
+
+    if (quotes.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: EmptyContent(
+                  icon: Opacity(
+                    opacity: .8,
+                    child: Icon(
+                      Icons.chat_bubble_outline,
+                      size: 60.0,
+                      color: Color(0xFFFF005C),
+                    ),
+                  ),
+                  title: "There's no quotes for ${widget.name} at this moment",
+                  subtitle: 'You can help us and propose some',
+                ),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final quote = quotes.elementAt(index);
+
+          return SizedBox(
+            width: 250.0,
+            height: 250.0,
+            child: gridItem(quote),
+          );
+        },
+        childCount: quotes.length,
       ),
     );
   }
@@ -301,7 +355,7 @@ class _TopicPageState extends State<TopicPage> {
     try {
       final snapshot = await FirestoreApp.instance
         .collection('quotes')
-        .where('topics.${widget.name}', '==', true)
+        .where('topics.$topicName', '==', true)
         .where('lang', '==', 'en')
         .limit(10)
         .get();
@@ -323,7 +377,7 @@ class _TopicPageState extends State<TopicPage> {
         quotes.add(quote);
       });
 
-      _lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -344,9 +398,9 @@ class _TopicPageState extends State<TopicPage> {
     try {
       final snapshot = await FirestoreApp.instance
         .collection('quotes')
-        .where('topics.${widget.name}', '==', true)
+        .where('topics.$topicName', '==', true)
         .where('lang', '==', 'en')
-        .startAfter(snapshot: _lastDoc)
+        .startAfter(snapshot: lastDoc)
         .limit(10)
         .get();
 
@@ -366,7 +420,7 @@ class _TopicPageState extends State<TopicPage> {
         quotes.add(quote);
       });
 
-      _lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoadingMore = false;
@@ -377,21 +431,15 @@ class _TopicPageState extends State<TopicPage> {
     }
   }
 
-  void fetchTopic() async {
-    try {
-      final doc = await FirestoreApp.instance
-        .collection('topics')
-        .doc(widget.name)
-        .get();
+  void setupTopic() async {
+    topicName = widget.name.toLowerCase();
 
-      if (!doc.exists) { return; }
+    topicDisposer = autorun((_) {
+      final topicColor = appTopicsColors.find(topicName);
+      if (topicColor == null) { return; }
 
-      topicColor = TopicColor.fromJSON(doc.data());
       decimal = topicColor.decimal;
-
-    } catch (error) {
-      debugPrint(error.toString());
-    }
+    });
   }
 
   void showActionsSheet(Quote quote) {
