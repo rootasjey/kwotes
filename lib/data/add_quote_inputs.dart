@@ -75,8 +75,6 @@ class AddQuoteInputs {
 
   static void clearQuoteName() {
     name = '';
-    lang = 'en';
-    region = '';
   }
 
   static void clearReference() {
