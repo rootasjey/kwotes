@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -8,6 +9,8 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:simple_animations/simple_animations.dart';
+import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReferencePage extends StatefulWidget {
@@ -20,6 +23,10 @@ class ReferencePage extends StatefulWidget {
 }
 
 class _ReferencePageState extends State<ReferencePage> {
+  final beginY    = 50.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
+
   Reference reference;
   Quote quote;
   bool isLoading = false;
@@ -33,12 +40,18 @@ class _ReferencePageState extends State<ReferencePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return FullPageLoading(title: 'Loading reference...');
+      return FadeInY(
+        beginY: beginY,
+        child: FullPageLoading(title: 'Loading reference...'),
+      );
     }
 
     if (!isLoading && reference == null) {
-      return FullPageError(
-        message: 'An error occurred while loading reference.'
+      return FadeInY(
+        beginY: beginY,
+        child: FullPageError(
+          message: 'An error occurred while loading reference.'
+        ),
       );
     }
 
@@ -66,45 +79,68 @@ class _ReferencePageState extends State<ReferencePage> {
                       ],
                     ),
 
-                    Padding(
-                      padding: EdgeInsets.only(top: 100.0),
-                      child: avatar(),
+                    FadeInY(
+                      beginY: beginY,
+                      delay: delay + (0 * delayStep),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 100.0),
+                        child: avatar(),
+                      ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
-                      child: Text(
-                        reference.name,
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
+                    FadeInY(
+                      beginY: beginY,
+                      delay: delay + (1 * delayStep),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 50.0),
+                        child: Text(
+                          reference.name,
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
 
-                    SizedBox(
-                      width: 100.0,
-                      child: Divider(
-                        thickness: 1.0,
-                        height: 50.0,
-                      ),
+                    ControlledAnimation(
+                      delay: 1.seconds,
+                      duration: 1.seconds,
+                      tween: Tween(begin: 0.0, end: 100.0),
+                      builder: (_, value) {
+                        return SizedBox(
+                          width: value,
+                          child: Divider(
+                            thickness: 1.0,
+                            height: 50.0,
+                          ),
+                        );
+                      },
                     ),
 
-                    Opacity(
-                      opacity: .8,
-                      child: Text(
-                        reference.type.primary,
-                        style: TextStyle(
+                    FadeInY(
+                      beginY: beginY,
+                      delay: delay + (2 * delayStep),
+                      child: Opacity(
+                        opacity: .8,
+                        child: Text(
+                          reference.type.primary,
+                          style: TextStyle(
+                          ),
                         ),
                       ),
                     ),
 
                     if (reference.type.secondary != null && reference.type.secondary.length > 0)
-                      Opacity(
-                        opacity: .8,
-                        child: Text(
-                          reference.type.secondary,
-                          style: TextStyle(
+                      FadeInY(
+                        beginY: beginY,
+                        delay: delay + (3 * delayStep),
+                        child: Opacity(
+                          opacity: .8,
+                          child: Text(
+                            reference.type.secondary,
+                            style: TextStyle(
+                            ),
                           ),
                         ),
                       ),
