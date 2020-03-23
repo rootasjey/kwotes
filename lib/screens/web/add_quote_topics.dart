@@ -186,7 +186,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
                   return FadeInY(
                     beginY: beginY,
-                    delay: (initDely + (index * 1.1)) * factor,
+                    delay: (initDely + index) * factor,
                     child: Padding(
                       padding: EdgeInsets.only(right: 5.0),
                       child: ActionChip(
