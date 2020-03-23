@@ -26,8 +26,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   final delay     = 1.0;
   final delayStep = 1.2;
 
+  List<TopicColor> sampleTopics = [];
   List<TopicColor> selectedTopics = [];
-  List<TopicColor> availableTopics = [];
 
   FocusNode _keyboardFocusNode;
 
@@ -72,157 +72,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget addedTopics(ThemeColor themeColor) {
-    double index = 0.0;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 70.0),
-      child: Column(
-        children: <Widget>[
-          Wrap(
-            spacing: 20.0,
-            children: selectedTopics.map<Widget>((topic) {
-              index++;
-
-              return FadeInY(
-                delay: index,
-                beginY: 10.0,
-                child: Chip(
-                  backgroundColor: Color(topic.decimal),
-                  padding: EdgeInsets.all(5.0),
-                  label: Text(topic.name, style: TextStyle(color: Colors.white),),
-                  deleteIconColor: Colors.white,
-                  onDeleted: () {
-                    setState(() {
-                      availableTopics.add(topic);
-                      selectedTopics.remove(topic);
-                    });
-
-                    AddQuoteInputs.topics.removeWhere((element) => element == topic.name);
-                  },
-                ),
-              );
-            }).toList(),
-          ),
-
-          FadeInY(
-            beginY: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: FlatButton(
-                padding: EdgeInsets.all(10.0),
-                onPressed: () {
-                  setState(() {
-                    AddQuoteInputs.clearTopics();
-                    selectedTopics.clear();
-
-                    availableTopics.clear();
-                    availableTopics.addAll(ThemeColor.topicsColors);
-                  });
-                },
-                child: Text(
-                  'Clear all topics',
-                  style: TextStyle(
-                    color: themeColor.background,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget availableTopicsSection(ThemeColor themeColor) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Column(
-        children: <Widget>[
-          ControlledAnimation(
-            duration: 1.seconds,
-            delay: 1.seconds,
-            tween: Tween(begin: 0.0, end: 500.0),
-            builder: (_, value) {
-              return SizedBox(
-                width: value,
-                child: Divider(height: 120.0,),
-              );
-            },
-          ),
-
-          FadeInY(
-            beginY: beginY,
-            delay: delay + (2 * delayStep),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Text(
-                'Topics',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-          ),
-
-          FadeInY(
-            beginY: beginY,
-            delay: delay + (3 * delayStep),
-            child: Text(
-              'Select some of the available topics to categorize the quote.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: themeColor.background,
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-
-          Observer(builder: (context) {
-            int factor = 1;
-
-            if (availableTopics.length == 0) {
-              availableTopics.addAll(appTopicsColors.topicsColors);
-
-            } else { factor = 0; }
-
-            int index = 0;
-            final initDely = (delay + (4 * delayStep)) * factor;
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 60.0),
-              child: Wrap(
-                children: availableTopics.map<Widget>((topic) {
-                  index++;
-
-                  return FadeInY(
-                    beginY: beginY,
-                    delay: (initDely + index) * factor,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 5.0),
-                      child: ActionChip(
-                        padding: EdgeInsets.all(5.0),
-                        label: Text(topic.name),
-                        onPressed: () {
-                          setState(() {
-                            selectedTopics.add(topic);
-                            availableTopics.remove(topic);
-                          });
-
-                          AddQuoteInputs.topics.add(topic.name);
-                        },
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
   Widget body() {
     final themeColor = Provider.of<ThemeColor>(context);
 
@@ -241,9 +90,9 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
             selectedTopics.length == 0 ?
               emptyTopics(themeColor) :
-              addedTopics(themeColor),
+              selectedTopicsSection(themeColor),
 
-            availableTopicsSection(themeColor),
+            sampleTopicsSection(themeColor),
 
             AddQuoteNavButtons(
               onPrevPressed: () => FluroRouter.router.pop(context),
@@ -337,6 +186,157 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           }
         );
       },
+    );
+  }
+
+  Widget sampleTopicsSection(ThemeColor themeColor) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: <Widget>[
+          ControlledAnimation(
+            duration: 1.seconds,
+            delay: 1.seconds,
+            tween: Tween(begin: 0.0, end: 500.0),
+            builder: (_, value) {
+              return SizedBox(
+                width: value,
+                child: Divider(height: 120.0,),
+              );
+            },
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (2 * delayStep),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Text(
+                'Topics',
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
+              ),
+            ),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (3 * delayStep),
+            child: Text(
+              'Select some of the available topics to categorize the quote.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: themeColor.background,
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+
+          Observer(builder: (context) {
+            int factor = 1;
+
+            if (sampleTopics.length == 0) {
+              sampleTopics.addAll(appTopicsColors.topicsColors);
+
+            } else { factor = 0; }
+
+            int index = 0;
+            final initDely = (delay + (4 * delayStep)) * factor;
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 60.0),
+              child: Wrap(
+                children: sampleTopics.map<Widget>((topic) {
+                  index++;
+
+                  return FadeInY(
+                    beginY: beginY,
+                    delay: (initDely + index) * factor,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 5.0),
+                      child: ActionChip(
+                        padding: EdgeInsets.all(5.0),
+                        label: Text(topic.name),
+                        onPressed: () {
+                          setState(() {
+                            selectedTopics.add(topic);
+                            sampleTopics.remove(topic);
+                          });
+
+                          AddQuoteInputs.topics.add(topic.name);
+                        },
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget selectedTopicsSection(ThemeColor themeColor) {
+    double index = 0.0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 70.0),
+      child: Column(
+        children: <Widget>[
+          Wrap(
+            spacing: 20.0,
+            children: selectedTopics.map<Widget>((topic) {
+              index++;
+
+              return FadeInY(
+                delay: index,
+                beginY: 10.0,
+                child: Chip(
+                  backgroundColor: Color(topic.decimal),
+                  padding: EdgeInsets.all(5.0),
+                  label: Text(topic.name, style: TextStyle(color: Colors.white),),
+                  deleteIconColor: Colors.white,
+                  onDeleted: () {
+                    setState(() {
+                      sampleTopics.add(topic);
+                      selectedTopics.remove(topic);
+                    });
+
+                    AddQuoteInputs.topics.removeWhere((element) => element == topic.name);
+                  },
+                ),
+              );
+            }).toList(),
+          ),
+
+          FadeInY(
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: FlatButton(
+                padding: EdgeInsets.all(10.0),
+                onPressed: () {
+                  setState(() {
+                    AddQuoteInputs.clearTopics();
+                    selectedTopics.clear();
+
+                    sampleTopics.clear();
+                    sampleTopics.addAll(ThemeColor.topicsColors);
+                  });
+                },
+                child: Text(
+                  'Clear all topics',
+                  style: TextStyle(
+                    color: themeColor.background,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
