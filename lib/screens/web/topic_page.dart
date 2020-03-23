@@ -28,6 +28,10 @@ class TopicPage extends StatefulWidget {
 }
 
 class _TopicPageState extends State<TopicPage> {
+  final beginY    = 50.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
+
   int decimal = 4283980123;
   String topicName;
   ReactionDisposer topicDisposer;
@@ -135,16 +139,19 @@ class _TopicPageState extends State<TopicPage> {
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      TopicCardColor(
-                        color: Color(decimal),
-                        name: widget.name,
-                      ),
-                    ],
+                FadeInY(
+                  beginY: 50.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        TopicCardColor(
+                          color: Color(decimal),
+                          name: widget.name,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -218,7 +225,7 @@ class _TopicPageState extends State<TopicPage> {
           return SizedBox(
             width: 250.0,
             height: 250.0,
-            child: gridItem(quote),
+            child: gridItem(quote: quote, index: index),
           );
         },
         childCount: quotes.length,
@@ -226,43 +233,47 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget gridItem(Quote quote) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: () {
-          FluroRouter.router.navigateTo(
-            context,
-            QuotePageRoute.replaceFirst(':id', quote.id)
-          );
-        },
-        onLongPress: () {
-          showActionsSheet(quote);
-        },
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    quote.name,
-                    style: TextStyle(
-                      fontSize: adaptativeFont(quote.name),
+  Widget gridItem({Quote quote, int index}) {
+    return FadeInY(
+      delay: delay + (index * delayStep),
+      beginY: beginY,
+      child: Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        child: InkWell(
+          onTap: () {
+            FluroRouter.router.navigateTo(
+              context,
+              QuotePageRoute.replaceFirst(':id', quote.id)
+            );
+          },
+          onLongPress: () {
+            showActionsSheet(quote);
+          },
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      quote.name,
+                      style: TextStyle(
+                        fontSize: adaptativeFont(quote.name),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            Positioned(
-              bottom: 0.0,
-              right: 0.0,
-              child: userActions(quote),
-            ),
-          ],
+              Positioned(
+                bottom: 0.0,
+                right: 0.0,
+                child: userActions(quote),
+              ),
+            ],
+          ),
         ),
       ),
     );
