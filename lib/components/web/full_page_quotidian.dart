@@ -323,16 +323,22 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   void fetchIsFav() async {
     userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
 
-    if (userAuth != null) {
-      final isFav = await isFavourite(
-        userUid: userAuth.uid,
-        quoteId: _quotidian.quote.id,
-      );
+    if (userAuth == null) {
+      return;
+    }
 
-      if (_isFav != isFav) {
-        _isFav = isFav;
-        setState(() {});
-      }
+    final isFav = await isFavourite(
+      userUid: userAuth.uid,
+      quoteId: _quotidian.quote.id,
+    );
+
+    if (_isFav != isFav) {
+      _isFav = isFav;
+      setState(() {});
+    }
+
+    if (!_isConnected) {
+      setUserConnected();
     }
   }
 
