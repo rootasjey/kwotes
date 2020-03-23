@@ -73,6 +73,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   Widget addedTopics(ThemeColor themeColor) {
+    double index = 0.0;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 70.0),
       child: Column(
@@ -80,40 +82,49 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           Wrap(
             spacing: 20.0,
             children: selectedTopics.map<Widget>((topic) {
-              return Chip(
-                backgroundColor: Color(topic.decimal),
-                padding: EdgeInsets.all(5.0),
-                label: Text(topic.name, style: TextStyle(color: Colors.white),),
-                deleteIconColor: Colors.white,
-                onDeleted: () {
-                  setState(() {
-                    availableTopics.add(topic);
-                    selectedTopics.remove(topic);
-                  });
+              index++;
 
-                  AddQuoteInputs.topics.removeWhere((element) => element == topic.name);
-                },
+              return FadeInY(
+                delay: index,
+                beginY: 10.0,
+                child: Chip(
+                  backgroundColor: Color(topic.decimal),
+                  padding: EdgeInsets.all(5.0),
+                  label: Text(topic.name, style: TextStyle(color: Colors.white),),
+                  deleteIconColor: Colors.white,
+                  onDeleted: () {
+                    setState(() {
+                      availableTopics.add(topic);
+                      selectedTopics.remove(topic);
+                    });
+
+                    AddQuoteInputs.topics.removeWhere((element) => element == topic.name);
+                  },
+                ),
               );
             }).toList(),
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: FlatButton(
-              padding: EdgeInsets.all(10.0),
-              onPressed: () {
-                setState(() {
-                  AddQuoteInputs.clearTopics();
-                  selectedTopics.clear();
+          FadeInY(
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: FlatButton(
+                padding: EdgeInsets.all(10.0),
+                onPressed: () {
+                  setState(() {
+                    AddQuoteInputs.clearTopics();
+                    selectedTopics.clear();
 
-                  availableTopics.clear();
-                  availableTopics.addAll(ThemeColor.topicsColors);
-                });
-              },
-              child: Text(
-                'Clear all topics',
-                style: TextStyle(
-                  color: themeColor.background,
+                    availableTopics.clear();
+                    availableTopics.addAll(ThemeColor.topicsColors);
+                  });
+                },
+                child: Text(
+                  'Clear all topics',
+                  style: TextStyle(
+                    color: themeColor.background,
+                  ),
                 ),
               ),
             ),
