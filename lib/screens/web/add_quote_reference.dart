@@ -509,14 +509,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     onChanged: (newValue) {
                       tempImgUrl = newValue;
                     },
-                    onSubmitted: (value) {
-                      setState(() {
-                        imgUrl = tempImgUrl;
-                      });
-
-                      AddQuoteInputs.refImgUrl = imgUrl;
-                      Navigator.of(context).pop();
-                    },
                   ),
                 ],
               ),
