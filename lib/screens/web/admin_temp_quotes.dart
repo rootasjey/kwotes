@@ -642,12 +642,6 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         .doc(tempQuote.id)
         .delete();
 
-      Flushbar(
-        duration        : Duration(seconds: 3),
-        backgroundColor : Colors.green,
-        message         : 'The quote has been successfully validated!',
-      )..show(context);
-
     } catch (error) {
       debugPrint(error.toString());
 
