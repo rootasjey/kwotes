@@ -1,5 +1,5 @@
 <p align="middle">
-  <img src="./assets/images/app-icon-512.png" title="memorare icon" width="254"/>
+  <img src="./assets/images/app-icon-512.png" title="outofcontext icon" width="254"/>
 </p>
 
 <h1 align="middle">Out Of Context</h1>
@@ -7,7 +7,7 @@
 <p align="middle">Outside the frame</p>
 
 <p align="middle">
-  <img src="./screenshots/home_quote.png" title="memorare home web" />
+  <img src="./screenshots/home_quote.png" title="outofcontext home web" />
 </p>
 
 # Quickstart
@@ -83,7 +83,7 @@ Mozilla Public License 2.0.
 
 Please read the [LICENSE](./LICENSE) for more information.
 
-Please [ask](mailto:github@memorare.app) if you have any doubt.
+Please [ask](mailto:github@outofcontext.app) if you have any doubt.
 
 # Screenshots
 
