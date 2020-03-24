@@ -155,7 +155,6 @@ class _AccountState extends State<Account> {
     }
 
     NetworkImage networkImage;
-    AssetImage assetImage = AssetImage('assets/images/icon-small.png');
 
     if (avatarUrl.length > 0) {
       networkImage = NetworkImage(avatarUrl);
@@ -171,7 +170,7 @@ class _AccountState extends State<Account> {
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: Ink.image(
-          image: networkImage ?? assetImage,
+          image: networkImage,
           fit: BoxFit.cover,
           width: 200.0,
           height: 200.0,
@@ -242,7 +241,7 @@ class _AccountState extends State<Account> {
                                 height: 400.0,
                                 child: Image(
                                   fit: BoxFit.cover,
-                                  image: networkImage ?? assetImage,
+                                  image: networkImage,
                                 ),
                               ),
                             ),
