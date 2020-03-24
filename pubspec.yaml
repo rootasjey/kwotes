@@ -1,5 +1,5 @@
 name: memorare
-description: Your daily inspirational quote.
+description: Outside the frame
 licence: MPL-2.0
 
 # The following defines the version and build number for your application.
@@ -68,10 +68,11 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/api.json
+    - assets/images/app-icon-32.png
+    - assets/images/app-icon-512.png
+    - assets/images/app-icon-64.png
     - assets/images/bulb-75.png
     - assets/images/monk.png
-    - assets/images/icon-small.png
-    - assets/images/icon-30.png
     - assets/images/power-of-pen-1200.png
     - assets/images/dotted-notebook.png
     - assets/images/jeje-profile.jpg

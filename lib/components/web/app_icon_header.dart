@@ -16,12 +16,11 @@ class AppIconHeader extends StatelessWidget {
     return Padding(
       padding: padding,
       child: Material(
-        elevation: 1.0,
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: Ink.image(
-          image: AssetImage('assets/images/icon-small.png'),
+          image: AssetImage('assets/images/app-icon-64.png'),
           fit: BoxFit.cover,
           width: size,
           height: size,

@@ -244,7 +244,7 @@ class _QuotePageState extends State<QuotePage> {
 
               Share.share(
                 sharingText,
-                subject: 'Memorare quote',
+                subject: 'Out Of Context',
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
               );
             },

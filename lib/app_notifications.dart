@@ -42,7 +42,7 @@ class AppNotifications {
     _plugin.cancelAll();
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'memorare_quotidian', 'Quotidian from Memorare', 'Daily quote from Memorare',
+      'memorare_quotidian', 'Out Of Context', 'Daily quote from Out Of Context',
       icon: 'memorare_icon',
       style: AndroidNotificationStyle.BigText,
     );

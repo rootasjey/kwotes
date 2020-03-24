@@ -1,10 +1,10 @@
 <p align="middle">
-  <img src="./assets/images/icon-512.png" title="memorare icon" width="254"/>
+  <img src="./assets/images/app-icon-512.png" title="memorare icon" width="254"/>
 </p>
 
-<h1 align="middle">Memorare</h1>
+<h1 align="middle">Out Of Context</h1>
 
-<p align="middle">5 seconds of emotion.</p>
+<p align="middle">Outside the frame</p>
 
 <p align="middle">
   <img src="./screenshots/home_quote.png" title="memorare home web" />
@@ -37,7 +37,7 @@ git clone https://github.com/memorare/mobile.git
 
 2. Fill up the file `lib/app_keys.json` with your url and your private key:
 
-> You can find them at [dev.memorare.app](https://dev.memorare.app)
+> You can find them at [dev.outofcontext.app](https://dev.outofcontext.app)
 
 ```dart
 /// Will be available soon
@@ -97,4 +97,4 @@ Web
 --------------------------------
 Mobile
 --------------------------------
-![Memorare mobile](./screenshots/collage_memorare_mobile.png)
+![OOC mobile](./screenshots/collage_mobile.png)

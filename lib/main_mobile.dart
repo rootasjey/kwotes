@@ -96,7 +96,7 @@ class MainMobileState extends State<MainMobile> {
       client: Provider.of<HttpClientsModel>(context).defaultClient,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Memorare',
+        title: 'Out Of Context',
         theme: widget.theme,
         home: Scaffold(
           body: Stack(

@@ -54,7 +54,7 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: Text(
-            'After a thorough case study, Memorare is the only app which regroup the following features: ',
+            'After a thorough case study, Out Of Context is the only app which regroup the following features: ',
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -128,7 +128,7 @@ class About extends StatelessWidget {
         child: Opacity(
           opacity: .8,
           child: Text(
-            'What is Memorare?',
+            'What is Out Of Context (OOC) ?',
             style: TextStyle(
               fontSize: 50.0,
               fontWeight: FontWeight.bold,
@@ -142,7 +142,7 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: Text(
-            'Memorare is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. The subject can be as diverse as funny, philosophical, introspective, or motivational. In addition, you can browse quotes by topics, authors, references and use the search feature.',
+            'Out OF Context is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. The subject can be as diverse as funny, philosophical, introspective, or motivational. In addition, you can browse quotes by topics, authors, references and use the search feature.',
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,

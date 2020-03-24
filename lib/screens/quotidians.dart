@@ -83,7 +83,7 @@ class _QuotidiansState extends State<Quotidians> {
 
     if (!hasConnection) {
       return ErrorComponent(
-        description: 'Memorare cannot connect to Internet. Please check your connectivity or contact us if the problem persists.',
+        description: 'The app cannot connect to Internet. Please check your connectivity or contact us if the problem persists.',
         title: 'Quotidians',
         onRefresh: () {
           fetchQuotidians();
@@ -221,7 +221,7 @@ class _QuotidiansState extends State<Quotidians> {
 
               Share.share(
                 sharingText,
-                subject: 'Memorare quote',
+                subject: 'Out Of Context',
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
               );
             },
@@ -583,7 +583,7 @@ class _QuotidiansState extends State<Quotidians> {
 
                 Share.share(
                   sharingText,
-                  subject: 'Memorare quote',
+                  subject: 'Out Of Context',
                   sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
                 );
               },
@@ -641,7 +641,7 @@ class _QuotidiansState extends State<Quotidians> {
 
       Flushbar(
         backgroundColor: ThemeColor.error,
-        message: 'You are offline because Memorare cannot access Internet.',
+        message: 'The app cannot reach the network.',
       )..show(context);
 
       return;

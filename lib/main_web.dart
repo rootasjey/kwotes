@@ -22,7 +22,7 @@ class _MainWebState extends State<MainWeb> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Memorare',
+      title: 'Out Of Context',
       theme: widget.theme,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',

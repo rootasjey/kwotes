@@ -86,7 +86,7 @@ class _DiscoverState extends State<Discover> {
           if (!isLoading && !hasConnection) {
             return EmptyView(
               title: 'No connection',
-              description: 'Memorare cannot reach Internet right now.',
+              description: 'The app cannot reach Internet right now.',
               onRefresh: () {
                 fetchRandomAuthors(lang);
                 fetchRandomReferences(lang);
