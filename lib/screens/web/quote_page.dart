@@ -182,7 +182,7 @@ class _QuotePageState extends State<QuotePage> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: FlatButton(
         onPressed: () {
-          final id = quote.author.id;
+          final id = quote.mainReference.id;
 
           FluroRouter.router.navigateTo(
             context,

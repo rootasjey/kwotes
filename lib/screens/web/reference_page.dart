@@ -465,6 +465,8 @@ class _ReferencePageState extends State<ReferencePage> {
       fetchQuote();
 
     } catch (error) {
+      debugPrint(error.toString());
+
       setState(() {
         isLoading = false;
       });
