@@ -19,7 +19,7 @@ class LoadingAnimation extends StatelessWidget {
               top: 5.0,
               left: 5.0,
               child: Image(
-                image: AssetImage('assets/images/app-icon-30.png'),
+                image: AssetImage('assets/images/app-icon-32.png'),
                 width: 25.0,
                 height: 25.0,
               ),
