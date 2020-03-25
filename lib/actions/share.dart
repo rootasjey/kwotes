@@ -12,6 +12,6 @@ Future shareTwitter({Quote quote}) async {
     quoteAndAuthor += ' — $authorName';
   }
 
-  final url = 'https://twitter.com/intent/tweet?via=memorareapp&text=$quoteAndAuthor';
+  final url = 'https://twitter.com/intent/tweet?via=outofcontextapp&text=$quoteAndAuthor';
   await launch(url);
 }
