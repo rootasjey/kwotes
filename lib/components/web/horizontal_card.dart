@@ -83,10 +83,10 @@ class _HorizontalCardState extends State<HorizontalCard> {
                       return;
                     }
 
-                    // FluroRouter.router.navigateTo(
-                    //   context,
-                    //   AuthorRoute.replaceFirst(':id', widget.referenceId)
-                    // );
+                    FluroRouter.router.navigateTo(
+                      context,
+                      ReferenceRoute.replaceFirst(':id', widget.referenceId)
+                    );
                   },
                   child: Text(
                     widget.referenceName,
