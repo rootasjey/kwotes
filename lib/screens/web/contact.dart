@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contact extends StatelessWidget {
@@ -9,7 +9,7 @@ class Contact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        AppIconHeader(),
+        NavBackHeader(),
 
         Padding(
           padding: const EdgeInsets.all(24.0),
