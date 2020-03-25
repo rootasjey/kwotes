@@ -7,7 +7,7 @@
 <p align="middle">Outside the frame</p>
 
 <p align="middle">
-  <img src="./screenshots/home_quote.png" title="outofcontext home web" />
+  <img src="./screenshots/ooc-scenario-1.gif" title="outofcontext home web" />
 </p>
 
 # Quickstart
