@@ -101,7 +101,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () async {
-            await launch('https://github.com/memorare/app');
+            await launch('https://github.com/outofcontextapp/app');
           },
           child: Opacity(
             opacity: .5,
