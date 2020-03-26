@@ -102,6 +102,7 @@ class _AllTopicsState extends State<AllTopics> {
                           ),
 
                           ControlledAnimation(
+                            delay: 1.seconds,
                             duration: 1.seconds,
                             tween: Tween(begin: 0.0, end: 50.0),
                             builder: (context, value) {
