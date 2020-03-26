@@ -165,9 +165,9 @@ class _AccountState extends State<Account> {
       );
     }
 
-    NetworkImage networkImage;
+    NetworkImage networkImage = NetworkImage('https://api.adorable.io/avatars/285/');
 
-    if (avatarUrl.length > 0) {
+    if (avatarUrl.isNotEmpty) {
       networkImage = NetworkImage(avatarUrl);
     } else if (email.length > 0) {
       networkImage = NetworkImage('https://api.adorable.io/avatars/285/$email');
