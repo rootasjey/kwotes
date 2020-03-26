@@ -20,7 +20,6 @@ class _TopicsState extends State<Topics> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFF2F2F2),
       padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
       child: Column(
         children: <Widget>[

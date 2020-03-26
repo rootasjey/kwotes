@@ -38,7 +38,9 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
-      decoration: BoxDecoration(color: Color(0xFFEDEDEC)),
+      foregroundDecoration: BoxDecoration(
+        color: Color.fromRGBO(0, 0, 0, 0.05),
+      ),
       child: Column(
         children: <Widget>[
           Padding(

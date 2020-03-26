@@ -52,6 +52,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           proposeQuote();
         },
         label: Text(fabText),
+        foregroundColor: Colors.white,
         icon: fabIcon,
         backgroundColor: Colors.green,
       ),

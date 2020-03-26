@@ -110,12 +110,14 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       beginY: beginY,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 40.0),
-        child: Text(
-          'You have not added any topic yet.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18.0,
-            color: themeColor.background,
+        child: Opacity(
+          opacity: .6,
+          child: Text(
+            'You have not added any topic yet.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
           ),
         ),
       ),
@@ -223,12 +225,14 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           FadeInY(
             beginY: beginY,
             delay: delay + (3 * delayStep),
-            child: Text(
-              'Select some of the available topics to categorize the quote.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: themeColor.background,
-                fontSize: 20.0,
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Select some of the available topics to categorize the quote.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
               ),
             ),
           ),
@@ -326,10 +330,10 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                     sampleTopics.addAll(ThemeColor.topicsColors);
                   });
                 },
-                child: Text(
-                  'Clear all topics',
-                  style: TextStyle(
-                    color: themeColor.background,
+                child: Opacity(
+                  opacity: .6,
+                  child: Text(
+                    'Clear all topics',
                   ),
                 ),
               ),

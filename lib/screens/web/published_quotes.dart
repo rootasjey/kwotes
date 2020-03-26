@@ -7,6 +7,7 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -50,6 +51,8 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
               curve: Curves.easeOut,
             );
           },
+          backgroundColor: stateColors.primary,
+          foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
       body: ListView(
@@ -209,7 +212,9 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
           fetchMoreQuotes();
         },
         shape: RoundedRectangleBorder(
-          side: BorderSide(),
+          side: BorderSide(
+            color: stateColors.foreground,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),

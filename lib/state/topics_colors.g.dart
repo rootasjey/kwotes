@@ -29,7 +29,7 @@ mixin _$TopicsColors on TopicsColorsBase, Store {
   final _$fetchTopicsColorsAsyncAction = AsyncAction('fetchTopicsColors');
 
   @override
-  Future fetchTopicsColors() {
+  Future<dynamic> fetchTopicsColors() {
     return _$fetchTopicsColorsAsyncAction.run(() => super.fetchTopicsColors());
   }
 

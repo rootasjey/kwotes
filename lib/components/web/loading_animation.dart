@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
 
 class LoadingAnimation extends StatelessWidget {
   final String title;
@@ -13,7 +14,9 @@ class LoadingAnimation extends StatelessWidget {
         Stack(
           overflow: Overflow.visible,
           children: <Widget>[
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(stateColors.primary),
+            ),
 
             Positioned(
               top: 5.0,

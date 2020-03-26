@@ -25,7 +25,9 @@ class _FooterState extends State<Footer> {
         horizontal: 60.0,
         vertical: 100.0,
       ),
-      color: Color(0xFFE6E6E6),
+      foregroundDecoration: BoxDecoration(
+        color: Color.fromRGBO(0, 0, 0, 0.1),
+      ),
       child: Wrap(
         runSpacing: 80.0,
         alignment: WrapAlignment.spaceAround,

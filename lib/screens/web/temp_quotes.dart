@@ -10,6 +10,7 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -53,6 +54,8 @@ class _TempQuotesState extends State<TempQuotes> {
               curve: Curves.easeOut,
             );
           },
+          backgroundColor: stateColors.primary,
+          foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
       body: ListView(
@@ -264,7 +267,9 @@ class _TempQuotesState extends State<TempQuotes> {
           fetchMoreTempQuotes();
         },
         shape: RoundedRectangleBorder(
-          side: BorderSide(),
+          side: BorderSide(
+            color: stateColors.foreground,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),

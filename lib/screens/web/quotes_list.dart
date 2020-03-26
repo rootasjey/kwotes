@@ -9,6 +9,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -63,6 +64,8 @@ class _QuoteListState extends State<QuotesList> {
               curve: Curves.easeOut,
             );
           },
+          backgroundColor: stateColors.primary,
+          foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
       body: ListView(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
 
 class AddQuoteNavButtons extends StatelessWidget {
   final String prevMessage;
@@ -27,6 +28,7 @@ class AddQuoteNavButtons extends StatelessWidget {
               onPressed: onPrevPressed,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
+                  color: stateColors.foreground,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(2.0),
@@ -46,7 +48,7 @@ class AddQuoteNavButtons extends StatelessWidget {
               onPressed: onNextPressed,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color: Colors.blue,
+                  color: stateColors.primary,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(2.0),

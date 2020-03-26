@@ -6,6 +6,7 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/sliver_appbar_delegate.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/converter.dart';
@@ -49,6 +50,8 @@ class _QuotidiansState extends State<Quotidians> {
               curve: Curves.easeOut,
             );
           },
+          backgroundColor: stateColors.primary,
+          foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
       body: ListView(
@@ -229,11 +232,17 @@ class _QuotidiansState extends State<Quotidians> {
           maxHeight: 100.0,
           child: Container(
             padding: const EdgeInsets.only(top: 20.0),
-            color: Colors.white,
+            color: stateColors.background == Colors.black ?
+                Color(0xFF303030) : Color(0xFFEEEEEE),
             child: Center(
               child: Column(
                 children: <Widget>[
-                  Text('$month $year'),
+                  Text(
+                    '$month $year',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
 
                   SizedBox(
                     width: 100.0,
@@ -341,7 +350,9 @@ class _QuotidiansState extends State<Quotidians> {
           fetchMoreQuotidians();
         },
         shape: RoundedRectangleBorder(
-          side: BorderSide(),
+          side: BorderSide(
+            color: stateColors.foreground,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),

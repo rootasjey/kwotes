@@ -3,6 +3,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -92,6 +93,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                 onPressed: () => FluroRouter.router.pop(context),
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
+                    color: stateColors.foreground,
                     width: 2.0,
                   ),
                   borderRadius: BorderRadius.circular(2.0),

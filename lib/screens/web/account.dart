@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
@@ -7,6 +8,8 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/components/web/settings_color_card.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -20,6 +23,7 @@ class _AccountState extends State<Account> {
   bool isLoading          = false;
   bool isCompleted        = false;
   bool isLoadingImageURL  = false;
+  bool isThemeAuto        = true;
 
   FirebaseUser userAuth;
 
@@ -30,10 +34,15 @@ class _AccountState extends State<Account> {
   String oldDisplayName = '';
   String selectedLang   = 'English';
 
+  Brightness currentBrightness;
+
   @override
   void initState() {
     super.initState();
     checkAuthStatus();
+
+    isThemeAuto = AppLocalStorage.getAutoBrightness();
+    currentBrightness = DynamicTheme.of(context).brightness;
   }
 
   @override
@@ -73,6 +82,8 @@ class _AccountState extends State<Account> {
           ),
 
           accountActions(),
+
+          themeSwitcher(),
 
           NavBackFooter(),
         ],
@@ -381,6 +392,75 @@ class _AccountState extends State<Account> {
     );
   }
 
+  Widget themeSwitcher() {
+    return Container(
+      width: 450.0,
+      padding: const EdgeInsets.only(top: 40.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Theme',
+            style: TextStyle(
+              fontSize: 25.0,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'You can let the application to switch automatically depending of the time of the day or choose manually a theme',
+                style: TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+            ),
+          ),
+
+          SwitchListTile(
+            title: Text('Automatic theme'),
+            secondary: const Icon(Icons.autorenew),
+            value: isThemeAuto,
+            onChanged: (newValue) {
+              if (!newValue) {
+                currentBrightness = DynamicTheme.of(context).brightness;
+              }
+
+              AppLocalStorage.saveAutoBrightness(newValue);
+
+              if (newValue) {
+                setAutoBrightness();
+              }
+
+              setState(() {
+                isThemeAuto = newValue;
+              });
+            },
+          ),
+
+          if (!isThemeAuto)
+            SwitchListTile(
+              title: Text('Lights'),
+              secondary: const Icon(Icons.lightbulb_outline),
+              value: currentBrightness == Brightness.light,
+              onChanged: (newValue) {
+                currentBrightness = newValue ?
+                    Brightness.light : Brightness.dark;
+
+                DynamicTheme.of(context).setBrightness(currentBrightness);
+                stateColors.refreshTheme(currentBrightness);
+
+                AppLocalStorage.saveBrightness(currentBrightness);
+
+                setState(() {});
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
   void checkAuthStatus() async {
     userAuth = await FirebaseAuth.instance.currentUser();
 
@@ -404,6 +484,19 @@ class _AccountState extends State<Account> {
     setState(() {
       selectedLang = Language.frontend(Language.current);
     });
+  }
+
+  void setAutoBrightness() {
+    final now = DateTime.now();
+
+    Brightness brightness = Brightness.light;
+
+    if (now.hour < 6 || now.hour > 17) {
+      brightness = Brightness.dark;
+    }
+
+    DynamicTheme.of(context).setBrightness(brightness);
+    stateColors.refreshTheme(brightness);
   }
 
   void updateDisplayName() async {

@@ -30,6 +30,9 @@ class _DiscoverState extends State<Discover> {
     final cards = createCards();
 
     return Container(
+      foregroundDecoration: BoxDecoration(
+        color: Color.fromRGBO(0, 0, 0, 0.05),
+      ),
       padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
       child: Column(
         children: <Widget>[

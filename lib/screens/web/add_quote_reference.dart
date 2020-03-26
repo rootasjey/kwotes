@@ -5,11 +5,10 @@ import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
-import 'package:memorare/types/colors.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
-import 'package:provider/provider.dart';
 
 class AddQuoteReference extends StatefulWidget {
   @override
@@ -86,8 +85,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget body() {
-    final themeColor = Provider.of<ThemeColor>(context);
-
     return SizedBox(
       width: 500.0,
       child: Column(
@@ -118,7 +115,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           FadeInY(
             delay: delay + (4 * delayStep),
             beginY: beginY,
-            child: langAndSummary(themeColor),
+            child: langAndSummary(),
           ),
 
           FadeInY(
@@ -269,7 +266,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget langAndSummary(ThemeColor themeColor) {
+  Widget langAndSummary() {
     return Column(
       children: <Widget>[
         Padding(
@@ -277,12 +274,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: DropdownButton<String>(
             value: lang,
             style: TextStyle(
-              color: themeColor.accent,
+              color: stateColors.primary,
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
             ),
             underline: Container(
-              color: themeColor.accent,
+              color: stateColors.primary,
               height: 2.0,
             ),
             onChanged: (newValue) {
@@ -520,16 +517,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             FlatButton(
               child: Text(
                 'CANCEL',
-                style: TextStyle(
-                  color: Provider.of<ThemeColor>(context).blackOrWhite,
-                ),
                ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text('SAVE',),
+              child: Text(
+                'SAVE',
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              ),
               onPressed: () {
                 setState(() {
                   imgUrl = tempImgUrl;

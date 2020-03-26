@@ -5,6 +5,7 @@ import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -97,7 +98,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           FadeInY(
             delay: delay + (3 * delayStep),
             beginY: beginY,
-            child: langSelect(Colors.blue),
+            child: langSelect(),
           ),
 
           FadeInY(
@@ -243,7 +244,10 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                         FluroRouter.router.pop(context);
                       },
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 2.0),
+                        side: BorderSide(
+                          color: stateColors.foreground,
+                          width: 2.0,
+                        ),
                         borderRadius: BorderRadius.circular(2.0),
                       ),
                       child: Padding(
@@ -261,17 +265,17 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget langSelect(Color color) {
+  Widget langSelect() {
     return DropdownButton<String>(
       value: lang,
       style: TextStyle(
-        color: color,
+        color: stateColors.primary,
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
       ),
       underline: Container(
         height: 2.0,
-        color: color,
+        color: stateColors.primary,
       ),
       onChanged: (newValue) {
         setState(() {
@@ -307,7 +311,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           border: OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Colors.blue,
+              color: stateColors.primary,
               width: 2.0,
             )
           ),

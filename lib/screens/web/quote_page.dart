@@ -217,7 +217,9 @@ class _QuotePageState extends State<QuotePage> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: Color(0xFFF2F2F2),
+      foregroundDecoration: BoxDecoration(
+        color: Color.fromRGBO(0, 0, 0, 0.05),
+      ),
       child: Column(
         children: <Widget>[
           SizedBox(

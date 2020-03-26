@@ -28,9 +28,10 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 FluroRouter.router.navigateTo(context, DashboardRoute);
               },
+              backgroundColor: Colors.pink,
+              foregroundColor: Colors.white,
               icon: Icon(Icons.dashboard),
               label: Text('Dashboard'),
-              backgroundColor: Colors.pink,
             );
           }
 
