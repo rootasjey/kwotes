@@ -12,6 +12,8 @@ Future shareTwitter({Quote quote}) async {
     quoteAndAuthor += ' — $authorName';
   }
 
-  final url = 'https://twitter.com/intent/tweet?via=outofcontextapp&text=$quoteAndAuthor';
+  final hashtags = '&hashtags=outofcontext';
+
+  final url = 'https://twitter.com/intent/tweet?via=outofcontextapp&text=$quoteAndAuthor$hashtags';
   await launch(url);
 }
