@@ -318,7 +318,7 @@ class _SigninState extends State<Signin> {
         return;
       }
 
-      AppLocalStorage.saveCredentials(
+      appLocalStorage.saveCredentials(
         email: email,
         password: password,
       );

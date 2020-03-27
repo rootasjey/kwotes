@@ -27,7 +27,7 @@ Future<FirebaseUser> tryGetUserAuth() async {
   }
 
   // 2nd try
-  final credentialsMap = AppLocalStorage.getCredentials();
+  final credentialsMap = appLocalStorage.getCredentials();
 
   final email = credentialsMap['email'];
   final password = credentialsMap['password'];

@@ -43,7 +43,7 @@ class _AccountState extends State<Account> {
     super.initState();
     checkAuth();
 
-    isThemeAuto = AppLocalStorage.getAutoBrightness();
+    isThemeAuto = appLocalStorage.getAutoBrightness();
     currentBrightness = DynamicTheme.of(context).brightness;
   }
 
@@ -433,7 +433,7 @@ class _AccountState extends State<Account> {
                 currentBrightness = DynamicTheme.of(context).brightness;
               }
 
-              AppLocalStorage.saveAutoBrightness(newValue);
+              appLocalStorage.saveAutoBrightness(newValue);
 
               if (newValue) {
                 setAutoBrightness();
@@ -457,7 +457,7 @@ class _AccountState extends State<Account> {
                 DynamicTheme.of(context).setBrightness(currentBrightness);
                 stateColors.refreshTheme(currentBrightness);
 
-                AppLocalStorage.saveBrightness(currentBrightness);
+                appLocalStorage.saveBrightness(currentBrightness);
 
                 setState(() {});
               },

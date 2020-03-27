@@ -36,10 +36,10 @@ class _MainWebState extends State<MainWeb> {
   }
 
   void loadBrightness() {
-    final autoBrightness = AppLocalStorage.getAutoBrightness();
+    final autoBrightness = appLocalStorage.getAutoBrightness();
 
     if (!autoBrightness) {
-      final currentBrightness = AppLocalStorage.getBrightness();
+      final currentBrightness = appLocalStorage.getBrightness();
       stateColors.refreshTheme(currentBrightness);
 
       return;

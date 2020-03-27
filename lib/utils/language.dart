@@ -38,7 +38,7 @@ class Language {
   /// Fetch user's lang from database.
   static Future<String> fetch(FirebaseUser userAuth) async {
     if (userAuth == null) {
-      String savedLang = AppLocalStorage.getLang();
+      String savedLang = appLocalStorage.getLang();
       return savedLang ?? 'en';
      }
 
@@ -61,6 +61,6 @@ class Language {
 
   static void setLang(String lang) {
     appUserLang.setLang(lang);
-    AppLocalStorage.saveLang(lang);
+    appLocalStorage.saveLang(lang);
   }
 }

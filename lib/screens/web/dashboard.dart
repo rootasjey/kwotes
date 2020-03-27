@@ -517,7 +517,7 @@ class _DashboardState extends State<Dashboard> {
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
                     setUserDisconnected();
-                    AppLocalStorage.saveCredentials(email: '', password: '');
+                    appLocalStorage.saveCredentials(email: '', password: '');
 
                     FluroRouter.router.navigateTo(context, HomeRoute);
                   },

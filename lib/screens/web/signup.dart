@@ -353,7 +353,7 @@ class _SignupState extends State<Signup> {
           'uid': user.uid,
         });
 
-      AppLocalStorage.saveCredentials(
+      appLocalStorage.saveCredentials(
         email: email,
         password: password,
       );
