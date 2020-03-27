@@ -1,6 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/colors.dart';
+import 'package:memorare/utils/colors.dart';
 import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
