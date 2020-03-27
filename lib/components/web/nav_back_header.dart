@@ -22,7 +22,7 @@ class NavBackHeader extends StatelessWidget {
 
         Positioned(
           left: 80.0,
-          top: 100.0,
+          top: 85.0,
           child: GestureDetector(
             onLongPress: onLongPress,
             child: IconButton(

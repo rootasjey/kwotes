@@ -44,7 +44,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
 
           Positioned(
             right: 50.0,
-            top: 80.0,
+            top: 70.0,
             child: helpButton(),
           )
         ],
