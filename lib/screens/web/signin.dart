@@ -5,6 +5,7 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -18,15 +19,16 @@ class _SigninState extends State<Signin> {
   String email = '';
   String password = '';
 
-  bool isCompleted = false;
-  bool isLoading = false;
+  bool isCheckingAuth = false;
+  bool isCompleted    = false;
+  bool isSigningIn    = false;
 
   final _passwordNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
   }
 
   @override
@@ -57,7 +59,7 @@ class _SigninState extends State<Signin> {
       return completedContainer();
     }
 
-    if (isLoading) {
+    if (isSigningIn) {
       return Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: LoadingAnimation(
@@ -220,7 +222,7 @@ class _SigninState extends State<Signin> {
               },
               onFieldSubmitted: (value) {
                 if (value.length == 0) { return; }
-                signin();
+                signIn();
               },
               validator: (value) {
                 if (value.isEmpty) {
@@ -244,7 +246,7 @@ class _SigninState extends State<Signin> {
         padding: const EdgeInsets.only(top: 60.0),
         child: FlatButton(
           onPressed: () {
-            signin();
+            signIn();
           },
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -264,12 +266,27 @@ class _SigninState extends State<Signin> {
     );
   }
 
-  void checkAuthStatus() async {
-    final user = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    if (user != null) {
-      setUserConnected();
-      FluroRouter.router.navigateTo(context, DashboardRoute);
+    try {
+      final user = await getUserAuth();
+
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (user != null) {
+        setUserConnected();
+        FluroRouter.router.navigateTo(context, DashboardRoute);
+      }
+
+    } catch (error) {
+      setState(() {
+        isCheckingAuth = false;
+      });
     }
   }
 
@@ -287,9 +304,9 @@ class _SigninState extends State<Signin> {
     );
   }
 
-  void signin() async {
+  void signIn() async {
     setState(() {
-      isLoading = true;
+      isSigningIn = true;
     });
 
     try {
@@ -301,10 +318,13 @@ class _SigninState extends State<Signin> {
         return;
       }
 
-      AppLocalStorage.saveEmail(email);
+      AppLocalStorage.saveCredentials(
+        email: email,
+        password: password,
+      );
 
       setState(() {
-        isLoading = false;
+        isSigningIn = false;
         isCompleted = true;
       });
 
@@ -321,7 +341,7 @@ class _SigninState extends State<Signin> {
       );
 
       setState(() {
-        isLoading = false;
+        isSigningIn = false;
       });
     }
   }

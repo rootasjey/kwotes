@@ -15,6 +15,7 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/temp_quote.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -26,6 +27,7 @@ class AdminTempQuotes extends StatefulWidget {
 class _AdminTempQuotesState extends State<AdminTempQuotes> {
   final List<TempQuote> tempQuotes = [];
 
+  bool isCheckingAuth = false;
   bool isLoading = false;
   bool isLoadingMore = false;
 
@@ -41,6 +43,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
   @override
   initState() {
     super.initState();
+    checkAuth();
     fetchTempQuotes();
   }
 
@@ -451,6 +454,33 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       });
 
     return topicsMap;
+  }
+
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
+
+    try {
+      userAuth = await getUserAuth();
+
+      if (userAuth == null) {
+        setState(() {
+          isCheckingAuth = false;
+        });
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+    } catch (error) {
+      isCheckingAuth = false;
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
   }
 
   void deleteTempQuote(TempQuote tempQuote) async {

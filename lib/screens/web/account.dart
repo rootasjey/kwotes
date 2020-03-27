@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/components/web/settings_color_card.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -20,8 +22,8 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  bool isLoading          = false;
-  bool isCompleted        = false;
+  bool isCheckingAuth     = false;
+  bool isLoadingLang      = false;
   bool isLoadingImageURL  = false;
   bool isThemeAuto        = true;
 
@@ -39,7 +41,7 @@ class _AccountState extends State<Account> {
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
 
     isThemeAuto = AppLocalStorage.getAutoBrightness();
     currentBrightness = DynamicTheme.of(context).brightness;
@@ -47,6 +49,10 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
+    if (isCheckingAuth) {
+      return FullPageLoading();
+    }
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -309,7 +315,7 @@ class _AccountState extends State<Account> {
   }
 
   Widget inputDisplayName() {
-    if (isLoading) {
+    if (isLoadingLang) {
       return SizedBox(
         height: 200.0,
         child: Column(
@@ -461,21 +467,35 @@ class _AccountState extends State<Account> {
     );
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-      return;
-    }
-
+  void checkAuth() async {
     setState(() {
-      oldDisplayName = userAuth.displayName ?? '';
-      avatarUrl = userAuth.photoUrl ?? '';
-      email = userAuth.email ?? '';
+      isCheckingAuth = true;
     });
 
-    fetchLang();
+    try {
+      userAuth = await getUserAuth();
+
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      setState(() {
+        oldDisplayName = userAuth.displayName ?? '';
+        avatarUrl = userAuth.photoUrl ?? '';
+        email = userAuth.email ?? '';
+      });
+
+      fetchLang();
+
+    } catch (error) {
+      isCheckingAuth = false;
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
   }
 
   void fetchLang() async {
@@ -500,13 +520,8 @@ class _AccountState extends State<Account> {
   }
 
   void updateDisplayName() async {
-    if (userAuth == null) {
-      checkAuthStatus();
-      return;
-    }
-
     setState(() {
-      isLoading = true;
+      isLoadingLang = true;
     });
 
     try {
@@ -527,7 +542,7 @@ class _AccountState extends State<Account> {
         );
 
       setState(() {
-        isLoading = false;
+        isLoadingLang = false;
         oldDisplayName = displayName;
         displayName = '';
       });
@@ -543,7 +558,7 @@ class _AccountState extends State<Account> {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isLoadingLang = false;
       });
 
       Scaffold.of(context).showSnackBar(
@@ -556,11 +571,6 @@ class _AccountState extends State<Account> {
   }
 
   void updateImageUrl() async {
-    if (userAuth == null) {
-      checkAuthStatus();
-      return;
-    }
-
     setState(() {
       isLoadingImageURL = true;
     });
@@ -598,11 +608,6 @@ class _AccountState extends State<Account> {
   }
 
   void updateLang() async {
-    if (userAuth == null) {
-      checkAuthStatus();
-      return;
-    }
-
     final lang = Language.backend(selectedLang);
 
     try {
@@ -630,7 +635,7 @@ class _AccountState extends State<Account> {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isLoadingLang = false;
       });
 
       Scaffold.of(context).showSnackBar(

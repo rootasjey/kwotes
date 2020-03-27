@@ -14,6 +14,7 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:supercharged/supercharged.dart';
@@ -333,13 +334,15 @@ class _QuoteListState extends State<QuotesList> {
     try {
       quotes.clear();
 
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      // User check
+      userAuth = userAuth ?? await getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
         return;
       }
 
+      // Data
       final docList = await FirestoreApp.instance
         .collection('users')
         .doc(userAuth.uid)
@@ -398,6 +401,11 @@ class _QuoteListState extends State<QuotesList> {
       setState(() {
         isLoading = false;
       });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
     }
   }
 

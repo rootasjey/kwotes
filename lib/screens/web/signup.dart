@@ -5,6 +5,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -17,15 +18,16 @@ class _SignupState extends State<Signup> {
   String email = '';
   String password = '';
 
-  bool isCompleted = false;
-  bool isLoading = false;
+  bool isCheckingAuth = false;
+  bool isCompleted    = false;
+  bool isSigningUp    = false;
 
   final _passwordNode = FocusNode();
 
   @override
   initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
   }
 
   @override
@@ -56,7 +58,7 @@ class _SignupState extends State<Signup> {
       return completedContainer();
     }
 
-    if (isLoading) {
+    if (isSigningUp) {
       return Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: LoadingAnimation(
@@ -268,17 +270,32 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  void checkAuthStatus() async {
-    final user = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    if (user != null) {
-      FluroRouter.router.navigateTo(context, DashboardRoute);
+    try {
+      final user = await getUserAuth();
+
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (user != null) {
+        FluroRouter.router.navigateTo(context, DashboardRoute);
+      }
+
+    } catch (error) {
+      setState(() {
+        isCheckingAuth = false;
+      });
     }
   }
 
   void createAccount() async {
     setState(() {
-      isLoading = true;
+      isSigningUp = true;
     });
 
     try {
@@ -289,7 +306,7 @@ class _SignupState extends State<Signup> {
 
       if (user == null) {
         setState(() {
-          isLoading = false;
+          isSigningUp = false;
         });
 
         Scaffold.of(context).showSnackBar(
@@ -336,10 +353,13 @@ class _SignupState extends State<Signup> {
           'uid': user.uid,
         });
 
-      AppLocalStorage.saveEmail(email);
+      AppLocalStorage.saveCredentials(
+        email: email,
+        password: password,
+      );
 
       setState(() {
-        isLoading = true;
+        isSigningUp = true;
         isCompleted = true;
       });
 

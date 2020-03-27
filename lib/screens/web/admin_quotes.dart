@@ -10,6 +10,7 @@ import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -22,9 +23,10 @@ class AdminQuotes extends StatefulWidget {
 class _AdminQuotesState extends State<AdminQuotes> {
   List<Quote> quotes = [];
 
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool hasNext = true;
+  bool isCheckingAuth = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  bool hasNext        = true;
 
   final _scrollController = ScrollController();
   bool isFabVisible = false;
@@ -38,6 +40,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
   initState() {
     super.initState();
     fetchQuotes();
+    checkAuth();
   }
 
   @override
@@ -352,26 +355,29 @@ class _AdminQuotesState extends State<AdminQuotes> {
     }
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-    }
+    try {
+      userAuth = await getUserAuth();
 
-    final user = await FirestoreApp.instance
-      .collection('users')
-      .doc(userAuth.uid)
-      .get();
+      if (userAuth == null) {
+        setState(() {
+          isCheckingAuth = false;
+        });
 
-    if (!user.exists) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-      return;
-    }
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
 
-    canManage = user.data()['rights']['user:managequote'] == true;
+      setState(() {
+        isCheckingAuth = false;
+      });
 
-    if (!canManage) {
+    } catch (error) {
+      isCheckingAuth = false;
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
   }

@@ -13,6 +13,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/temp_quote.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -347,14 +348,16 @@ class _TempQuotesState extends State<TempQuotes> {
       isLoading = true;
     });
 
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-      return;
-    }
-
     try {
+      // User check
+      userAuth = await getUserAuth();
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      // Data
       final snapshot = await FirestoreApp.instance
         .collection('tempquotes')
         .where('user.id', '==', userAuth.uid)
@@ -390,6 +393,11 @@ class _TempQuotesState extends State<TempQuotes> {
       setState(() {
         isLoading = false;
       });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
     }
   }
 

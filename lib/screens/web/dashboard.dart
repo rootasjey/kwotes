@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
+import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -19,15 +22,20 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   FirebaseUser userAuth;
   bool canManage = false;
+  bool isCheckingAuth = false;
 
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isCheckingAuth) {
+      return FullPageLoading();
+    }
+
     return Container(
       padding: const EdgeInsets.only(bottom: 300.0),
       child: Column(
@@ -509,6 +517,7 @@ class _DashboardState extends State<Dashboard> {
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
                     setUserDisconnected();
+                    AppLocalStorage.saveCredentials(email: '', password: '');
 
                     FluroRouter.router.navigateTo(context, HomeRoute);
                   },
@@ -576,24 +585,38 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    setState(() {});
+    try {
+      userAuth = await getUserAuth();
 
-    if (userAuth == null) {
+      if (userAuth == null) {
+        setState(() {
+          isCheckingAuth = false;
+        });
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final user = await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .get();
+
+      if (!user.exists) { return; }
+
+      setState(() {
+        isCheckingAuth = false;
+        canManage = user.data()['rights']['user:managequote'] == true;
+      });
+
+    } catch (error) {
+      isCheckingAuth = false;
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
-
-    final user = await FirestoreApp.instance
-      .collection('users')
-      .doc(userAuth.uid)
-      .get();
-
-    if (!user.exists) { return; }
-
-    setState(() {
-      canManage = user.data()['rights']['user:managequote'] == true;
-    });
   }
 }

@@ -14,6 +14,7 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -331,12 +332,14 @@ class _FavouritesState extends State<Favourites> {
     });
 
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      // User check
+      userAuth = userAuth ?? getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
       }
 
+      // Data
       final snapshot = await FirestoreApp.instance
         .collection('users')
         .doc(userAuth.uid)
@@ -374,6 +377,11 @@ class _FavouritesState extends State<Favourites> {
         backgroundColor: Colors.red,
         message: "There was an issue while fetching your favourites.",
       )..show(context);
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
     }
   }
 

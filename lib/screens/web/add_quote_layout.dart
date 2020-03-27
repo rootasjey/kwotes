@@ -7,6 +7,7 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -20,8 +21,9 @@ class AddQuoteLayout extends StatefulWidget {
 }
 
 class _AddQuoteLayoutState extends State<AddQuoteLayout> {
-  bool isLoading = false;
-  bool isCompleted = false;
+  bool isCheckingAuth = false;
+  bool isCompleted    = false;
+  bool isProposing    = false;
   String errorMessage = '';
 
   FirebaseUser userAuth;
@@ -33,7 +35,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
 
     if (AddQuoteInputs.id.isNotEmpty) {
       fabText = 'Save';
@@ -43,9 +45,10 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final isFABVisible = isProposing || isCompleted || isCheckingAuth;
     return Scaffold(
       floatingActionButton:
-      isLoading || isCompleted ?
+      isFABVisible ?
       Padding(padding: EdgeInsets.zero,) :
       FloatingActionButton.extended(
         onPressed: () {
@@ -66,16 +69,20 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   }
 
   Widget body() {
-    if (isLoading) {
-      return FullPageLoading(
-        title: AddQuoteInputs.id.isEmpty ?
-          'Proposing quote...' : 'Saving quote...',
-      );
-    }
-
     if (errorMessage.isNotEmpty) {
       return FullPageError(
         message: errorMessage,
+      );
+    }
+
+    if (isCheckingAuth) {
+      return FullPageLoading();
+    }
+
+    if (isProposing) {
+      return FullPageLoading(
+        title: AddQuoteInputs.id.isEmpty ?
+          'Proposing quote...' : 'Saving quote...',
       );
     }
 
@@ -246,25 +253,37 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       });
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    setState(() {});
+    try {
+      userAuth = await getUserAuth();
 
-    if (userAuth == null) {
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+      }
+
+      final user = await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .get();
+
+      if (!user.exists) { return; }
+
+      setState(() {
+        canManage = user.data()['rights']['user:managequote'] == true;
+      });
+
+    } catch (error) {
+      isCheckingAuth = false;
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
-
-    final user = await FirestoreApp.instance
-      .collection('users')
-      .doc(userAuth.uid)
-      .get();
-
-    if (!user.exists) { return; }
-
-    setState(() {
-      canManage = user.data()['rights']['user:managequote'] == true;
-    });
   }
 
   void proposeQuote() async {
@@ -291,7 +310,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     }
 
     setState(() {
-      isLoading = true;
+      isProposing = true;
     });
 
     final comments = List<String>();
@@ -367,7 +386,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       }
 
       setState(() {
-        isLoading = false;
+        isProposing = false;
         isCompleted = true;
       });
 
@@ -384,7 +403,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isProposing = false;
         errorMessage = error.toString();
         isCompleted = true;
       });

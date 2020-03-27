@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -15,13 +16,15 @@ class _EditPasswordState extends State<EditPassword> {
   String newPassword = '';
 
   FirebaseUser userAuth;
-  bool isLoading = false;
-  bool isCompleted = false;
+
+  bool isCheckingAuth = false;
+  bool isUpdating     = false;
+  bool isCompleted    = false;
 
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
   }
 
   @override
@@ -68,7 +71,7 @@ class _EditPasswordState extends State<EditPassword> {
       );
     }
 
-    if (isLoading) {
+    if (isUpdating) {
       return SizedBox(
         width: 600.0,
         child: Column(
@@ -172,24 +175,32 @@ class _EditPasswordState extends State<EditPassword> {
     );
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    setState(() {});
+    try {
+      userAuth = await getUserAuth();
 
-    if (userAuth == null) {
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+      }
+
+    } catch (error) {
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
+
+
   }
 
   void updatePassword() async {
-    if (userAuth == null) {
-      checkAuthStatus();
-      return;
-    }
-
     setState(() {
-      isLoading = true;
+      isUpdating = true;
     });
 
     try {
@@ -203,7 +214,7 @@ class _EditPasswordState extends State<EditPassword> {
       await authResult.user.updatePassword(newPassword);
 
       setState(() {
-        isLoading = false;
+        isUpdating = false;
         isCompleted = true;
       });
 
@@ -211,7 +222,7 @@ class _EditPasswordState extends State<EditPassword> {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isUpdating = false;
       });
 
       Scaffold.of(context).showSnackBar(

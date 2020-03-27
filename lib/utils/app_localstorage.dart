@@ -16,7 +16,16 @@ class AppLocalStorage {
     return brightness;
   }
 
-  static String getEmail() => _localStorage['email'];
+  static Map<String, String> getCredentials() {
+    final credentials = Map<String, String>();
+
+    credentials['email'] = _localStorage['email'];
+    credentials['password'] = _localStorage['password'];
+
+    return credentials;
+  }
+
+  // static String getEmail() => _localStorage['email'];
   static String getLang() => _localStorage['lang'];
 
   static void saveAutoBrightness(bool value) {
@@ -30,4 +39,9 @@ class AppLocalStorage {
 
   static void saveEmail(String email) => _localStorage['email'] = email;
   static void saveLang(String lang) => _localStorage['lang'] = lang;
+
+  static void saveCredentials({String email, String password}) {
+    _localStorage['email'] = email;
+    _localStorage['password'] = password;
+  }
 }

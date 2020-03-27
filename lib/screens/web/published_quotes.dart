@@ -9,6 +9,7 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -232,13 +233,15 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     });
 
     try {
-      userAuth = await FirebaseAuth.instance.currentUser();
+      // User check
+      userAuth = await getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
         return;
       }
 
+      // Data
       final snapshot = await FirestoreApp.instance
         .collection('quotes')
         .where('user.id', '==', userAuth.uid)
@@ -274,6 +277,11 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
       setState(() {
         isLoading = false;
       });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
     }
   }
 

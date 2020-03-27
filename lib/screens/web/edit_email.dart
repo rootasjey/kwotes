@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -16,13 +17,15 @@ class _EditEmailState extends State<EditEmail> {
   String password = '';
 
   FirebaseUser userAuth;
-  bool isLoading = false;
-  bool isCompleted = false;
+
+  bool isCheckingAuth = false;
+  bool isUpdating     = false;
+  bool isCompleted    = false;
 
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
+    checkAuth();
   }
 
   @override
@@ -68,7 +71,7 @@ class _EditEmailState extends State<EditEmail> {
         ),
       );
     }
-    if (isLoading) {
+    if (isUpdating) {
       return SizedBox(
         width: 600.0,
         child: Column(
@@ -159,7 +162,7 @@ class _EditEmailState extends State<EditEmail> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Update my email',
+                'Edit email',
                 style: TextStyle(
                   color: Colors.white,
                 )
@@ -171,24 +174,30 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
 
-    setState(() {});
+    try {
+      userAuth = await getUserAuth();
 
-    if (userAuth == null) {
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+      }
+
+    } catch (error) {
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
   }
 
   void updateEmail() async {
-    if (userAuth == null) {
-      checkAuthStatus();
-      return;
-    }
-
     setState(() {
-      isLoading = true;
+      isUpdating = true;
     });
 
     try {
@@ -211,7 +220,7 @@ class _EditEmailState extends State<EditEmail> {
         );
 
       setState(() {
-        isLoading = false;
+        isUpdating = false;
         isCompleted = true;
       });
 
@@ -219,7 +228,7 @@ class _EditEmailState extends State<EditEmail> {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isUpdating = false;
       });
 
       Scaffold.of(context).showSnackBar(

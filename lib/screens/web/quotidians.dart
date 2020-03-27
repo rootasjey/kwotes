@@ -9,6 +9,7 @@ import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
@@ -23,9 +24,10 @@ class Quotidians extends StatefulWidget {
 class _QuotidiansState extends State<Quotidians> {
   List<Quotidian> quotidians = [];
 
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool hasNext = true;
+  bool isCheckingAuth = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  bool hasNext        = true;
 
   final _scrollController = ScrollController();
   bool isFabVisible = false;
@@ -35,6 +37,7 @@ class _QuotidiansState extends State<Quotidians> {
   @override
   initState() {
     super.initState();
+    checkAuth();
     fetchQuotidians();
   }
 
@@ -378,6 +381,33 @@ class _QuotidiansState extends State<Quotidians> {
     }
 
     return 20.0;
+  }
+
+  void checkAuth() async {
+    setState(() {
+      isCheckingAuth = true;
+    });
+
+    try {
+      final userAuth = await getUserAuth();
+
+      if (userAuth == null) {
+        setState(() {
+          isCheckingAuth = false;
+        });
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+    } catch (error) {
+      isCheckingAuth = false;
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
   }
 
   void deleteQuotidian(Quotidian quotidian) async {

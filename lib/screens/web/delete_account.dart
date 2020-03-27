@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -12,25 +13,17 @@ class DeleteAccount extends StatefulWidget {
 }
 
 class _DeleteAccountState extends State<DeleteAccount> {
-  bool isLoading = false;
-  bool isCompleted = false;
+  bool isDeleting     = false;
+  bool isCompleted    = false;
+  bool isCheckingAuth = false;
+
   FirebaseUser userAuth;
   String password = '';
 
   @override
   void initState() {
     super.initState();
-    checkAuthStatus();
-  }
-
-  void checkAuthStatus() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    setState(() {});
-
-    if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
-    }
+    checkAuth();
   }
 
   @override
@@ -88,7 +81,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
       );
     }
 
-    if (isLoading) {
+    if (isDeleting) {
       return Column(
         children: <Widget>[
           CircularProgressIndicator(),
@@ -219,14 +212,31 @@ class _DeleteAccountState extends State<DeleteAccount> {
     );
   }
 
-  void deleteAccount() async {
-    if (userAuth == null) {
-      checkAuthStatus();
-      return;
-    }
-
+  void checkAuth() async {
     setState(() {
-      isLoading = true;
+      isCheckingAuth = true;
+    });
+
+    try {
+      userAuth = await getUserAuth();
+
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+      }
+
+    } catch (error) {
+      isCheckingAuth = false;
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
+  }
+
+  void deleteAccount() async {
+    setState(() {
+      isDeleting = true;
     });
 
     try {
@@ -245,7 +255,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
       await userAuth.delete();
 
       setState(() {
-        isLoading = false;
+        isDeleting = false;
         isCompleted = true;
       });
 
@@ -253,7 +263,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
       debugPrint(error.toString());
 
       setState(() {
-        isLoading = false;
+        isDeleting = false;
       });
 
       Scaffold.of(context).showSnackBar(

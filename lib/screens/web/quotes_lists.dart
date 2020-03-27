@@ -9,6 +9,7 @@ import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/types/user_quotes_list.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:supercharged/supercharged.dart';
@@ -328,7 +329,8 @@ class _QuotesListsState extends State<QuotesLists> {
     });
 
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      // User check
+      userAuth = userAuth ?? getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
@@ -502,13 +504,15 @@ class _QuotesListsState extends State<QuotesLists> {
     try {
       userQuotesLists.clear();
 
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      // User check
+      userAuth = userAuth ?? await getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
         return;
       }
 
+      // Data
       final snapshot = await FirestoreApp.instance
         .collection('users')
         .doc(userAuth.uid)
@@ -546,6 +550,11 @@ class _QuotesListsState extends State<QuotesLists> {
       setState(() {
         isLoading = false;
       });
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
     }
   }
 
