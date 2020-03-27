@@ -6,7 +6,7 @@ class AppLocalStorage {
   static Storage _localStorage = window.localStorage;
 
   static bool getAutoBrightness() {
-    return _localStorage['autoBrightness'] == 'true' ? true : false;
+    return _localStorage['autoBrightness'] == 'false' ? false : true;
   }
 
   static Brightness getBrightness() {
