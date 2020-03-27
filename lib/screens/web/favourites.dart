@@ -333,7 +333,7 @@ class _FavouritesState extends State<Favourites> {
 
     try {
       // User check
-      userAuth = userAuth ?? getUserAuth();
+      userAuth = userAuth ?? await getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
