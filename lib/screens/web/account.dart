@@ -1,5 +1,6 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -609,6 +610,7 @@ class _AccountState extends State<Account> {
 
   void updateLang() async {
     final lang = Language.backend(selectedLang);
+    Language.setLang(lang);
 
     try {
       await FirestoreApp.instance
@@ -620,16 +622,28 @@ class _AccountState extends State<Account> {
           }
         );
 
-      Language.current = lang;
+      Flushbar(
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 5),
+        messageText: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.white,
+              ),
+            ),
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            'Your language has been successfully updated.'
-          ),
-        )
-      );
+            Text(
+              'Your language has been successfully updated.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      )..show(context);
 
     } catch (error) {
       debugPrint(error.toString());

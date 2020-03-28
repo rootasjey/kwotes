@@ -12,6 +12,9 @@ import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
+import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 import 'package:mobx/mobx.dart';
@@ -43,7 +46,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         return;
       }
 
-      fetchQuotidian();
+      checkAuthAndFetch();
     });
   }
 
@@ -58,13 +61,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
+    if (isLoading && _quotidian == null) {
       return FullPageLoading(
         title: 'Loading quotidian...',
       );
     }
 
-    if (!isLoading && _quotidian == null) {
+    if (_quotidian == null) {
       return emptyContainer();
     }
 
@@ -297,12 +300,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget userSection() {
     return Observer(builder: (context) {
-      if (_isConnected != isUserConnected.value) {
-        fetchIsFav();
-      }
-
       if (isUserConnected.value) {
+        if (_isConnected != isUserConnected.value) {
+          fetchIsFav();
+        }
+
         _isConnected = true;
+
         return userActions();
       }
 
@@ -328,6 +332,28 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     }
   }
 
+  void checkAuthAndFetch() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final credentials = appLocalStorage.getCredentials();
+    final email = credentials['email'];
+
+    if (email == null || email.isEmpty) {
+      _prevLang = await Language.fetch(null);
+
+      fetchQuotidian();
+      return;
+    }
+
+    userAuth = await getUserAuth();
+
+    _prevLang = await Language.fetch(userAuth);
+
+    fetchQuotidian();
+  }
+
   void fetchIsFav() async {
     userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
 
@@ -351,10 +377,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void fetchQuotidian() async {
-    setState(() {
-      isLoading = true;
-    });
-
     final now = DateTime.now();
 
     String month = now.month.toString();
@@ -366,7 +388,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('${now.year}:$month:$day:${appUserLang.current}')
+        .doc('${now.year}:$month:$day:$_prevLang')
         .get();
 
       if (!doc.exists) {
@@ -376,8 +398,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
         return;
       }
-
-      _prevLang = appUserLang.current;
 
       setState(() {
         _quotidian = Quotidian.fromJSON(doc.data());
