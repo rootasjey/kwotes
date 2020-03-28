@@ -144,9 +144,6 @@ class _SigninState extends State<Signin> {
               onChanged: (value) {
                 email = value;
               },
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(_passwordNode);
-              },
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Email login cannot be empty';
@@ -219,10 +216,6 @@ class _SigninState extends State<Signin> {
               obscureText: true,
               onChanged: (value) {
                 password = value;
-              },
-              onFieldSubmitted: (value) {
-                if (value.length == 0) { return; }
-                signIn();
               },
               validator: (value) {
                 if (value.isEmpty) {

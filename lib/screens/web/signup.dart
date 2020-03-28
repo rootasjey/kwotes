@@ -133,9 +133,6 @@ class _SignupState extends State<Signup> {
               onChanged: (value) {
                 email = value;
               },
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(_passwordNode);
-              },
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Email cannot be empty';
@@ -220,9 +217,6 @@ class _SignupState extends State<Signup> {
               onChanged: (value) {
                 if (value.length == 0) { return; }
                 password = value;
-              },
-              onFieldSubmitted: (value) {
-                createAccount();
               },
               validator: (value) {
                 if (value.isEmpty) {
