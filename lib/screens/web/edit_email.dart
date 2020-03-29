@@ -97,7 +97,7 @@ class _EditEmailState extends State<EditEmail> {
       child: Column(
         children: <Widget>[
           Text(
-            'Update my email',
+            'Update email',
             style: TextStyle(
               fontSize: 35.0,
             ),
@@ -111,7 +111,7 @@ class _EditEmailState extends State<EditEmail> {
                 TextFormField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
-                    labelText: 'Enter my new email',
+                    labelText: 'Enter new email',
                   ),
                   onChanged: (value) {
                     email = value;
@@ -162,7 +162,7 @@ class _EditEmailState extends State<EditEmail> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Edit email',
+                'Update email',
                 style: TextStyle(
                   color: Colors.white,
                 )

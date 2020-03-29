@@ -97,7 +97,7 @@ class _EditPasswordState extends State<EditPassword> {
       child: Column(
         children: <Widget>[
           Text(
-            'Update my password',
+            'Update password',
             style: TextStyle(
               fontSize: 35.0,
             ),

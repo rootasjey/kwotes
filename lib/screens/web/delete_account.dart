@@ -106,7 +106,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
           Padding(
             padding: const EdgeInsets.only(bottom: 60.0),
             child: Text(
-              'Delete my account',
+              'Delete account',
               style: TextStyle(
                 fontSize: 35.0,
               ),
@@ -200,7 +200,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Delete my account',
+                'Delete account',
                 style: TextStyle(
                   color: Colors.white,
                 )
