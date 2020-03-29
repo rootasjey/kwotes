@@ -65,7 +65,6 @@ class _MainWebState extends State<MainWeb> {
         }
       }
     );
-
   }
 
   void populateAuthAndLang() async {

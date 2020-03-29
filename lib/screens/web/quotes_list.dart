@@ -153,7 +153,7 @@ class _QuoteListState extends State<QuotesList> {
 
                     Positioned(
                       left: 80.0,
-                      top: 50.0,
+                      top: 85.0,
                       child: IconButton(
                         onPressed: () {
                           FluroRouter.router.pop(context);
