@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/snack.dart';
 
 /// Add the target quote to the current authenticated user's favourites subcollection.
 /// You only need to specify either the `quotidian` parameter or `quote` one.
@@ -17,11 +17,11 @@ Future<bool> addToFavourites({
     final userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
+      showSnack(
+        context: context,
         message: "You're not connected to add this quote to your favourites.",
-      )..show(context);
+        type: SnackType.error,
+      );
 
       return false;
     }
@@ -70,25 +70,11 @@ Future<bool> addToFavourites({
   } catch (error) {
     debugPrint(error.toString());
 
-    Flushbar(
-      duration: Duration(seconds: 3),
-      backgroundColor: Colors.red,
-      messageText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Icon(Icons.error, color: Colors.white,),
-          ),
-
-          Text(
-            "Sorry, an error prevented the quote to be favourited.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-    )..show(context);
+    showSnack(
+      context: context,
+      message: 'Sorry, an error prevented the quote to be favourited.',
+      type: SnackType.error,
+    );
 
     return false;
   }
@@ -129,11 +115,11 @@ Future<bool> removeFromFavourites({
     final userAuth = await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
+      showSnack(
+        context: context,
         message: "You're not connected to remove this quote from your favourites.",
-      )..show(context);
+        type: SnackType.error,
+      );
 
       return false;
     }
@@ -165,25 +151,11 @@ Future<bool> removeFromFavourites({
   } catch (error) {
     debugPrint(error.toString());
 
-    Flushbar(
-      duration: Duration(seconds: 3),
-      backgroundColor: Colors.red,
-      messageText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Icon(Icons.error, color: Colors.white,),
-          ),
-
-          Text(
-            "Sorry, the quote couldn't be unfavourited.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-    )..show(context);
+    showSnack(
+      context: context,
+      message: "Sorry, the quote couldn't be unfavourited.",
+      type: SnackType.error,
+    );
 
     return false;
   }

@@ -1,6 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -16,6 +15,7 @@ import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:memorare/utils/snack.dart';
 
 class Account extends StatefulWidget {
   @override
@@ -548,12 +548,11 @@ class _AccountState extends State<Account> {
         displayName = '';
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text('Your display name has been successfully updated.'),
-        )
-      );
+      showSnack(
+      context: context,
+      message: 'Your display name has been successfully updated.',
+      type: SnackType.success,
+    );
 
     } catch (error) {
       debugPrint(error.toString());
@@ -562,11 +561,10 @@ class _AccountState extends State<Account> {
         isLoadingLang = false;
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Error while updating your display name. Please try again or contact us.'),
-        )
+      showSnack(
+        context: context,
+        message: 'Error while updating your display name. Please try again or contact us.',
+        type: SnackType.error,
       );
     }
   }
@@ -585,11 +583,10 @@ class _AccountState extends State<Account> {
         isLoadingImageURL = false;
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text('Your image has been successfully updated.'),
-        )
+      showSnack(
+        context: context,
+        message: 'Your image has been successfully updated.',
+        type: SnackType.success,
       );
 
     } catch (error) {
@@ -599,11 +596,10 @@ class _AccountState extends State<Account> {
         isLoadingImageURL = false;
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Error while updating your image URL. Please try again or contact us.'),
-        )
+      showSnack(
+        context: context,
+        message: 'Error while updating your image URL. Please try again or contact us.',
+        type: SnackType.error,
       );
     }
   }
@@ -622,28 +618,11 @@ class _AccountState extends State<Account> {
           }
         );
 
-      Flushbar(
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 5),
-        messageText: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.white,
-              ),
-            ),
-
-            Text(
-              'Your language has been successfully updated.',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'Your language has been successfully updated.',
+        type: SnackType.success,
+      );
 
     } catch (error) {
       debugPrint(error.toString());
@@ -652,11 +631,10 @@ class _AccountState extends State<Account> {
         isLoadingLang = false;
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Error while updating your language. Please try again or contact us.'),
-        )
+      showSnack(
+        context: context,
+        message: 'Error while updating your language. Please try again or contact us.',
+        type: SnackType.error,
       );
     }
   }

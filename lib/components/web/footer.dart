@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:memorare/utils/snack.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatefulWidget {
@@ -251,28 +251,11 @@ class _FooterState extends State<Footer> {
       );
     }
 
-    Flushbar(
-      backgroundColor: Colors.green,
-      duration: Duration(seconds: 5),
-      messageText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.check_circle,
-              color: Colors.white,
-            ),
-          ),
-
-          Text(
-            'Your language has been successfully updated.',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    )..show(context);
+    showSnack(
+      context: context,
+      message: 'Your language has been successfully updated.',
+      type: SnackType.success,
+    );
   }
 
   void updateUserAccountLang() async {
@@ -298,28 +281,11 @@ class _FooterState extends State<Footer> {
     } catch (error) {
       debugPrint(error.toString());
 
-      Flushbar(
-        backgroundColor: Colors.red,
-        duration: Duration(seconds: 5),
-        messageText: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.cancel,
-                color: Colors.white,
-              ),
-            ),
-
-            Text(
-              'Sorry, there was an error while updating your language.',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'Sorry, there was an error while updating your language.',
+        type: SnackType.error,
+      );
     }
   }
 }

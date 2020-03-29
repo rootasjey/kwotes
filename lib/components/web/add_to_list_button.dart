@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
-import 'package:supercharged/supercharged.dart';
+import 'package:memorare/utils/snack.dart';
 
 enum ButtonType {
   icon,
@@ -276,11 +275,11 @@ class _AddToListButtonState extends State<AddToListButton> {
         hasErrors = false;
       });
 
-      Flushbar(
-        duration: 3.seconds,
-        backgroundColor: Colors.red,
-        message: "Cannot retrieve your lists right now",
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'Cannot retrieve your lists right now',
+        type: SnackType.error,
+      );
     }
   }
 
@@ -335,11 +334,11 @@ class _AddToListButtonState extends State<AddToListButton> {
         hasErrors = false;
       });
 
-      Flushbar(
-        duration: 3.seconds,
-        backgroundColor: Colors.red,
-        message: "Cannot retrieve more lists",
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'Cannot retrieve more lists.',
+        type: SnackType.error,
+      );
     }
   }
 
@@ -453,11 +452,11 @@ class _AddToListButtonState extends State<AddToListButton> {
     } catch (err) {
       debugPrint(err.toString());
 
-      Flushbar(
-        duration: 3.seconds,
-        backgroundColor: Colors.red,
-        message: "There was an error while adding the quote to the list",
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'There was an error while adding the quote to the list.',
+        type: SnackType.error,
+      );
     }
   }
 
@@ -499,11 +498,11 @@ class _AddToListButtonState extends State<AddToListButton> {
     } catch (error) {
       debugPrint(error.toString());
 
-      Flushbar(
-        duration: 3.seconds,
-        backgroundColor: Colors.red,
+      showSnack(
+        context: context,
         message: 'There was and issue while creating the list. Try again later',
-      )..show(context);
+        type: SnackType.error,
+      );
 
       return null;
     }
