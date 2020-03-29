@@ -9,11 +9,10 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_fav.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
-import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -23,8 +22,6 @@ import 'package:supercharged/supercharged.dart';
 
 Quotidian _quotidian;
 String _prevLang;
-bool _isConnected;
-bool _isFav = false;
 
 class FullPageQuotidian extends StatefulWidget {
   @override
@@ -32,9 +29,12 @@ class FullPageQuotidian extends StatefulWidget {
 }
 
 class _FullPageQuotidianState extends State<FullPageQuotidian> {
+  bool isPrevFav = false;
+  bool hasFetchedFav = false;
   bool isLoading = false;
   FirebaseUser userAuth;
 
+  ReactionDisposer disposeFav;
   ReactionDisposer disposeLang;
 
   @override
@@ -48,12 +48,21 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
       checkAuthAndFetch();
     });
+
+    disposeFav = autorun((_) {
+      final updatedAt = stateUserFav.updatedAt;
+      fetchIsFav(updatedAt: updatedAt);
+    });
   }
 
   @override
   void dispose() {
     if (disposeLang != null) {
       disposeLang();
+    }
+
+    if (disposeFav != null) {
+      disposeFav();
     }
 
     super.dispose();
@@ -270,14 +279,14 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         children: <Widget>[
           IconButton(
             onPressed: () async {
-              if (_isFav) {
+              if (isPrevFav) {
                 removeQuotidianFromFav();
                 return;
               }
 
               addQuotidianToFav();
             },
-            icon: _isFav ?
+            icon: isPrevFav ?
               Icon(Icons.favorite) :
               Icon(Icons.favorite_border),
           ),
@@ -301,23 +310,21 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   Widget userSection() {
     return Observer(builder: (context) {
       if (isUserConnected.value) {
-        if (_isConnected != isUserConnected.value) {
-          fetchIsFav();
-        }
+        if (!hasFetchedFav) { fetchIsFav(); }
 
-        _isConnected = true;
+        hasFetchedFav = true;
 
         return userActions();
       }
 
-      _isConnected = false;
+      hasFetchedFav = false;
       return signinButton();
     });
   }
 
   void addQuotidianToFav() async {
     setState(() { // Optimistic result
-      _isFav = true;
+      isPrevFav = true;
     });
 
     final result = await addToFavourites(
@@ -327,7 +334,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     if (!result) {
       setState(() {
-        _isFav = false;
+        isPrevFav = false;
       });
     }
   }
@@ -337,42 +344,25 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       isLoading = true;
     });
 
-    final credentials = appLocalStorage.getCredentials();
-    final email = credentials['email'];
-
-    if (email == null || email.isEmpty) {
-      _prevLang = await Language.fetch(null);
-
-      fetchQuotidian();
-      return;
-    }
-
-    userAuth = await getUserAuth();
-
-    _prevLang = await Language.fetch(userAuth);
-
+    _prevLang = await Language.fetch(null);
     fetchQuotidian();
   }
 
-  void fetchIsFav() async {
+  void fetchIsFav({DateTime updatedAt}) async {
     userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
 
     if (userAuth == null) {
       return;
     }
 
-    final isFav = await isFavourite(
+    final isCurrentFav = await isFavourite(
       userUid: userAuth.uid,
       quoteId: _quotidian.quote.id,
     );
 
-    if (_isFav != isFav) {
-      _isFav = isFav;
+    if (isPrevFav != isCurrentFav) {
+      isPrevFav = isCurrentFav;
       setState(() {});
-    }
-
-    if (!_isConnected) {
-      setUserConnected();
     }
   }
 
@@ -416,7 +406,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   void removeQuotidianFromFav() async {
     setState(() { // Optimistic result
-      _isFav = false;
+      isPrevFav = false;
     });
 
     final result = await removeFromFavourites(
@@ -426,7 +416,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     if (!result) {
       setState(() {
-        _isFav = true;
+        isPrevFav = true;
       });
     }
   }

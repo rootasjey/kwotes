@@ -12,6 +12,7 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_fav.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/auth.dart';
@@ -454,6 +455,8 @@ class _FavouritesState extends State<Favourites> {
           quotes.insert(index, quote);
         });
       }
+
+      stateUserFav.updateDate();
 
     } catch (error) {
       debugPrint(error.toString());
