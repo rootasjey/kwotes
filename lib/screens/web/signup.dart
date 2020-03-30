@@ -339,6 +339,9 @@ class _SignupState extends State<Signup> {
             'proposed': 0,
           },
           'tokens': {},
+          'urls': {
+            'image': '',
+          },
           'uid': user.uid,
         });
 
