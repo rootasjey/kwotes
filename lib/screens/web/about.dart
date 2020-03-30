@@ -15,13 +15,13 @@ class About extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ...whatIs(),
+              ...whatIs(context),
 
               ...differences(),
 
               ...whoIs(context),
 
-              ...whoIs2(),
+              ...whoIs2(context),
 
               ...thanks(),
             ],
@@ -40,10 +40,10 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 120.0),
           child: Text(
-            'How is it different from existing quotes app?',
+            'HOW IS IT DIFFERENT FROM EXISTSING QUOTES APPS?',
             style: TextStyle(
-              fontSize: 50.0,
-            fontWeight: FontWeight.bold,
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -52,7 +52,7 @@ class About extends StatelessWidget {
       Opacity(
         opacity: .6,
         child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
+          padding: const EdgeInsets.only(top: 25.0),
           child: Text(
             'After a thorough case study, Out Of Context is the only app which regroup the following features: ',
             style: TextStyle(
@@ -84,22 +84,13 @@ class About extends StatelessWidget {
       Opacity(
         opacity: .8,
         child: Padding(
-          padding: const EdgeInsets.only(top: 60.0),
+          padding: const EdgeInsets.only(top: 120.0, bottom: 30.0),
           child: Text(
-            'Resources',
+            'THANKS',
             style: TextStyle(
-              fontSize: 50.0,
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
             ),
-          ),
-        ),
-      ),
-
-      Padding(
-        padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-        child: Text(
-          'Illustrations:',
-          style: TextStyle(
-            fontSize: 20.0,
           ),
         ),
       ),
@@ -118,19 +109,68 @@ class About extends StatelessWidget {
           ),
         ),
       ),
+
+      Opacity(
+        opacity: .6,
+        child: FlatButton(
+          onPressed: () {
+            launch('https://orioniconlibrary.com');
+          },
+          child: Text(
+            '• https://orioniconlibrary.com',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+      ),
     ];
   }
 
-  List<Widget> whatIs() {
+  List<Widget> whatIs(BuildContext context) {
     return [
+      Ink.image(
+        image: NetworkImage(
+          'https://raw.githubusercontent.com/outofcontextapp/app/master/screenshots/home_quote.png',
+        ),
+        height: 380.0,
+        child: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Container(
+                    child: Image(image: NetworkImage('https://raw.githubusercontent.com/outofcontextapp/app/master/screenshots/home_quote.png'),),
+                  ),
+                );
+              }
+            );
+          },
+        ),
+      ),
+
+      Center(
+        child: FlatButton(
+          onPressed: () async {
+            await launch('https://raw.githubusercontent.com/outofcontextapp/app/master/screenshots/home_quote.png');
+          },
+          child: Opacity(
+            opacity: .6,
+            child: Text('Out Of Context home page'),
+          ),
+        ),
+      ),
+
       Padding(
-        padding: const EdgeInsets.only(top: 60.0),
+        padding: const EdgeInsets.only(top: 80.0),
         child: Opacity(
           opacity: .8,
           child: Text(
-            'What is Out Of Context (OOC) ?',
+            'WHAT IS OUT OF CONTEXT (OOC)?',
             style: TextStyle(
-              fontSize: 50.0,
+              fontSize: 30.0,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -140,9 +180,9 @@ class About extends StatelessWidget {
       Opacity(
         opacity: .6,
         child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
+          padding: const EdgeInsets.only(top: 25.0),
           child: Text(
-            'Out OF Context is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. The subject can be as diverse as funny, philosophical, introspective, or motivational. In addition, you can browse quotes by topics, authors, references and use the search feature.',
+            'Out Of Context is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. The subject can be as diverse as funny, philosophical, introspective, or motivational. In addition, you can browse quotes by topics, authors, references and use the search feature.',
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -160,10 +200,23 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 120.0),
           child: Text(
-            'Who is behind this project?',
+            'WHO IS BEHIND THIS PROJECT?',
             style: TextStyle(
-              fontSize: 50.0,
+              fontSize: 30.0,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Text(
+            "Hi, I'm Jérémie CORPINOT, a freelance developer who lives in France.",
+            style: TextStyle(
+              fontSize: 20.0,
             ),
           ),
         ),
@@ -205,22 +258,9 @@ class About extends StatelessWidget {
       Opacity(
         opacity: .6,
         child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Text(
-            'Jérémie CORPINOT, a french developer who likes quotes.',
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-      ),
-
-      Opacity(
-        opacity: .6,
-        child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Text(
-            "A few years ago, I was developping on the Windows Phone platform (RIP) improving my skills in mobile development. I was fascinated by catchy phrases of some people and I wanted an easy way to save them. It's when the idea emerged.",
+            "I'm originally from Guadeloupe and one day I traveled to Paris to study Architecture. But that didn't work out very weel as I never passed the entrance exam. So, I went to the Versailles University where I was graduated with a Master of Computer Sciences.",
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -234,7 +274,50 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Text(
-            "Plus I wanted to wake up every morning with a funny or motivational quote and I wasn't satified with existing apps so I started to build my own.",
+            "I love drawings, video games, heroic-fantasy books, to name a few. I started the freelancer journey in June, 2019 because I wanted to do what really matter to me.",
+            style: TextStyle(
+              fontSize: 20.0,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 120.0),
+          child: Text(
+            "DEV STORY",
+            style: TextStyle(
+              fontSize: 30.0,
+              height: 1.5,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Text(
+            "A few years ago, I was developping on the Windows Phone platform (RIP) improving my skills in mobile development. I loved quotes, a lot, and I wanted an easy way to save them. I had my own idea.",
+            style: TextStyle(
+              fontSize: 20.0,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Text(
+            "The idea was to wake up every morning with a funny or motivational quote and I wasn't satisfied with existing apps, so I started to build my own.",
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -245,28 +328,135 @@ class About extends StatelessWidget {
     ];
   }
 
-  List<Widget> whoIs2() {
+  List<Widget> whoIs2(BuildContext context) {
     return [
-      Opacity(
-        opacity: .6,
+      Padding(
+        padding: const EdgeInsets.only(top: 120.0),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Ink.image(
+                image: NetworkImage(
+                  'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
+                ),
+                width: 230.0,
+                height: 400.0,
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Container(
+                            child: Image(image: NetworkImage('https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png'),),
+                          ),
+                        );
+                      }
+                    );
+                  },
+                ),
+              ),
+
+              FlatButton(
+                onPressed: () async {
+                  await launch('https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png');
+                },
+                child: Opacity(
+                  opacity: .6,
+                  child: Text('Citations 365 lockscreen quote'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 30.0),
-          child: Text(
-            "'Citations 365 was alive!'",
-            style: TextStyle(
-              fontSize: 40.0,
-              height: 1.5,
+          child: Column(
+            children: <Widget>[
+              Opacity(
+                opacity: .6,
+                child: Text(
+                  "I created a first prototype for Windows Phone:",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: FlatButton(
+                  onPressed: () async {
+                    await launch('https://github.com/rootasjey/citations365');
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'CITATIONS 365',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ),
+      ),
+
+      Padding(
+        padding: const EdgeInsets.only(top: 120.0),
+        child: Column(
+          children: <Widget>[
+            Ink.image(
+              image: NetworkImage(
+                'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg',
+              ),
+              height: 380.0,
+              child: InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Container(
+                          child: Image(image: NetworkImage('https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg'),),
+                        ),
+                      );
+                    }
+                  );
+                },
+              ),
             ),
-          ),
+
+            FlatButton(
+                onPressed: () async {
+                  await launch('https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg');
+                },
+                child: Opacity(
+                  opacity: .6,
+                  child: Text('Citations 365 for PC & teblet'),
+                ),
+              ),
+          ],
         ),
       ),
 
       Opacity(
         opacity: .6,
         child: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(top: 60.0),
           child: Text(
-            "A few months past, I quit the Windows Phone Platform for Android & iOS for lack of support, and I stop to maintain Citations 365.",
+            "Then made a Windows 8 version for PC and tablet.",
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -280,7 +470,65 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Text(
-            "Fast forward 2 years later, I quit my job. I have a lot of projects I want to try and build. No existing quote app satisfies me on Android or iOS, so I decide to try building this long life project as a first goal.",
+            "Sadly, a few months later, I quit the Windows Phone Platform for Android & iOS for lack of support, so I stop maintaining Citations 365.",
+            style: TextStyle(
+              fontSize: 20.0,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Text(
+            "When I started my freelancer's journey it was a evidence that I had to start with the quotes project. I wanted to conclude definitvely with this idea.",
+            style: TextStyle(
+              fontSize: 20.0,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ),
+
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 70.0),
+          child: FlatButton(
+            onPressed: () async {
+              await launch('https://github.com/outofcontextapp/app');
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                children: <Widget>[
+                  Image.asset('assets/images/app-icon-64.png'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'OUT OF CONTEXT',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Text(
+            "A new name and a new framework later, I release this web app with a mobile app, wich over-achieve my goal of what I wanted to build.",
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
