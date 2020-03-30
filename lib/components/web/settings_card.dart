@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 class SettingsCard extends StatelessWidget {
   final String name;
-  final Icon icon;
   final Function onTap;
-  final Color color;
-  final Color backgroundColor;
   final double iconOpacity;
+  final String imagePath;
 
   SettingsCard({
-    this.backgroundColor,
-    this.color,
-    this.icon,
+    this.imagePath,
     this.iconOpacity = .6,
     this.name,
     this.onTap,
@@ -26,7 +22,6 @@ class SettingsCard extends StatelessWidget {
         height: 190.0,
         child: Card(
           elevation: 0,
-          color: backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(10.0),
@@ -44,7 +39,10 @@ class SettingsCard extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: Opacity(
                       opacity: iconOpacity,
-                      child: icon,
+                      child: Image.asset(
+                        imagePath,
+                        width: 50.0,
+                      ),
                     ),
                   ),
 
@@ -55,7 +53,6 @@ class SettingsCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
-                        color: color,
                       ),
                     ),
                   ),

@@ -109,7 +109,7 @@ class _AccountState extends State<Account> {
               delay: 3.0,
               beginX: 50.0,
               child: SettingsCard(
-                icon: Icon(Icons.email, size: 40.0,),
+                imagePath: 'assets/images/write-email.png',
                 name: 'Email',
                 onTap: () {
                   FluroRouter.router.navigateTo(context, EditEmailRoute);
@@ -121,7 +121,7 @@ class _AccountState extends State<Account> {
               delay: 3.5,
               beginX: 50.0,
               child: SettingsCard(
-                icon: Icon(Icons.lock, size: 40.0,),
+                imagePath: 'assets/images/lock.png',
                 name: 'Password',
                 onTap: () {
                   FluroRouter.router.navigateTo(context, EditPasswordRoute);
@@ -133,10 +133,7 @@ class _AccountState extends State<Account> {
               delay: 4.0,
               beginX: 50.0,
               child: SettingsCard(
-                iconOpacity: 1.0,
-                backgroundColor: Color(0xFFF85C50),
-                color: Colors.white,
-                icon: Icon(Icons.delete, size: 40.0, color: Colors.white,),
+                imagePath: 'assets/images/delete-user.png',
                 name: 'Delete account',
                 onTap: () {
                   FluroRouter.router.navigateTo(context, DeleteAccountRoute);
