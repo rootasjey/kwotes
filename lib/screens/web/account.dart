@@ -8,7 +8,6 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
-import 'package:memorare/components/web/settings_color_card.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
@@ -100,7 +99,7 @@ class _AccountState extends State<Account> {
 
   Widget accountActions() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 60.0),
+      padding: const EdgeInsets.symmetric(vertical: 120.0),
       child: SizedBox(
         width: 800.0,
         child: Wrap(
@@ -111,7 +110,7 @@ class _AccountState extends State<Account> {
               beginX: 50.0,
               child: SettingsCard(
                 icon: Icon(Icons.email, size: 40.0,),
-                name: 'Update email',
+                name: 'Email',
                 onTap: () {
                   FluroRouter.router.navigateTo(context, EditEmailRoute);
                 },
@@ -123,7 +122,7 @@ class _AccountState extends State<Account> {
               beginX: 50.0,
               child: SettingsCard(
                 icon: Icon(Icons.lock, size: 40.0,),
-                name: 'Update password',
+                name: 'Password',
                 onTap: () {
                   FluroRouter.router.navigateTo(context, EditPasswordRoute);
                 },
@@ -133,7 +132,8 @@ class _AccountState extends State<Account> {
             FadeInX(
               delay: 4.0,
               beginX: 50.0,
-              child: SettingsColorCard(
+              child: SettingsCard(
+                iconOpacity: 1.0,
                 backgroundColor: Color(0xFFF85C50),
                 color: Colors.white,
                 icon: Icon(Icons.delete, size: 40.0, color: Colors.white,),

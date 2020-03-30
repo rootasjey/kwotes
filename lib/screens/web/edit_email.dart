@@ -111,7 +111,7 @@ class _EditEmailState extends State<EditEmail> {
                 TextFormField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
-                    labelText: 'Enter new email',
+                    labelText: 'Enter your new email',
                   ),
                   onChanged: (value) {
                     email = value;
@@ -162,7 +162,7 @@ class _EditEmailState extends State<EditEmail> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Update email',
+                'Update',
                 style: TextStyle(
                   color: Colors.white,
                 )

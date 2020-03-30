@@ -163,7 +163,7 @@ class _EditPasswordState extends State<EditPassword> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Update my password',
+                'Update',
                 style: TextStyle(
                   color: Colors.white,
                 )

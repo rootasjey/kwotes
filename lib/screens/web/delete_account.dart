@@ -104,7 +104,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 60.0),
+            padding: const EdgeInsets.only(bottom: 80.0),
             child: Text(
               'Delete account',
               style: TextStyle(
@@ -114,10 +114,15 @@ class _DeleteAccountState extends State<DeleteAccount> {
           ),
 
           Card(
-            elevation: 0,
+            elevation: 3,
             color: Color(0xFFF85C50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(15.0),
+              )
+            ),
             child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 30.0),
+              padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 40.0),
               child: Row(
                 children: <Widget>[
                   Padding(
@@ -167,7 +172,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
           ),
 
           Padding(
-            padding: EdgeInsets.only(top: 50.0, bottom: 80.0),
+            padding: EdgeInsets.symmetric(vertical: 80.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -200,7 +205,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Delete account',
+                'Delete',
                 style: TextStyle(
                   color: Colors.white,
                 )
