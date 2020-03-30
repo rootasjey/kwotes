@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/components/web/nav_back_header.dart';
 
 class PrivacyTerms extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        AppIconHeader(),
+        NavBackHeader(),
 
         SizedBox(
           width: 600.0,
