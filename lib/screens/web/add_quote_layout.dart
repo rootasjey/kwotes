@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/firestore_app.dart';
@@ -10,6 +9,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:memorare/utils/snack.dart';
 
 class AddQuoteLayout extends StatefulWidget {
   final Widget child;
@@ -288,23 +288,21 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   void proposeQuote() async {
     if (AddQuoteInputs.name.isEmpty) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
+      showSnack(
+        context: context,
         message: "The quote's content cannot be empty.",
-      )
-      ..show(context);
+        type: SnackType.error,
+      );
 
       return;
     }
 
     if (AddQuoteInputs.topics.length == 0) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        message: "You must select at least 1 topics for the quote.",
-      )
-      ..show(context);
+      showSnack(
+        context: context,
+        message: 'You must select at least 1 topics for the quote.',
+        type: SnackType.error,
+      );
 
       return;
     }
@@ -390,14 +388,13 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         isCompleted = true;
       });
 
-      Flushbar(
-        duration: Duration(seconds: 5),
-        backgroundColor: Colors.green,
+      showSnack(
+        context: context,
         message: AddQuoteInputs.id.isEmpty ?
           'Your quote has been successfully proposed.' :
           'Your quote has been successfully edited',
-      )
-      ..show(context);
+        type: SnackType.success,
+      );
 
     } catch (error) {
       debugPrint(error.toString());
@@ -408,12 +405,11 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         isCompleted = true;
       });
 
-      Flushbar(
-        duration        : Duration(seconds: 5),
-        backgroundColor : Colors.red,
-        message         : 'There was an issue while proposing your new quote.',
-      )
-      ..show(context);
+      showSnack(
+        context: context,
+        message: 'There was an issue while proposing your new quote.',
+        type: SnackType.error,
+      );
     }
   }
 

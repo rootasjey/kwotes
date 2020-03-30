@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
@@ -17,7 +16,7 @@ import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
-import 'package:supercharged/supercharged.dart';
+import 'package:memorare/utils/snack.dart';
 
 class QuotesList extends StatefulWidget {
   final String listId;
@@ -351,11 +350,11 @@ class _QuoteListState extends State<QuotesList> {
         .get();
 
       if (!docList.exists) {
-        Flushbar(
-          duration: 2.seconds,
-          backgroundColor: Colors.red ,
-          message: "This list doesn't' exist anymore",
-        )..show(context);
+        showSnack(
+        context: context,
+        message: "This list doesn't' exist anymore",
+        type: SnackType.error,
+      );
 
         FluroRouter.router.pop(context);
         return;

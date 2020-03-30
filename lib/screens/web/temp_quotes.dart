@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -16,6 +15,7 @@ import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:memorare/utils/snack.dart';
 
 class TempQuotes extends StatefulWidget {
   @override
@@ -317,12 +317,6 @@ class _TempQuotesState extends State<TempQuotes> {
         .doc(tempQuote.id)
         .delete();
 
-      Flushbar(
-        duration        : Duration(seconds: 3),
-        backgroundColor : Colors.green,
-        message         : 'The temporary quote has been successfully deleted.',
-      )..show(context);
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -330,11 +324,11 @@ class _TempQuotesState extends State<TempQuotes> {
         tempQuotes.insert(index, tempQuote);
       });
 
-      Flushbar(
-        duration        : Duration(seconds: 3),
-        backgroundColor : Colors.red,
-        message         : "Couldn't delete the temporary quote. Details: ${error.toString()}",
-      )..show(context);
+      showSnack(
+        context: context,
+        message: "Couldn't delete the temporary quote.",
+        type: SnackType.error,
+      );
     }
   }
 

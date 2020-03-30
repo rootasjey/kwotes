@@ -1,4 +1,3 @@
-
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';

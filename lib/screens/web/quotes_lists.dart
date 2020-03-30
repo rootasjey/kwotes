@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -12,7 +11,7 @@ import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
-import 'package:supercharged/supercharged.dart';
+import 'package:memorare/utils/snack.dart';
 
 class QuotesLists extends StatefulWidget {
   @override
@@ -363,11 +362,11 @@ class _QuotesListsState extends State<QuotesLists> {
 
       debugPrint(error);
 
-      Flushbar(
-        duration: 3.seconds,
-        backgroundColor: Colors.red,
-        message: 'There was and issue while creating the list. Try again later',
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'There was and issue while deleting the list. Try again later',
+        type: SnackType.error,
+      );
     }
   }
 
@@ -488,11 +487,11 @@ class _QuotesListsState extends State<QuotesLists> {
     } catch (error) {
       debugPrint(error.toString());
 
-      Flushbar(
-        duration: 3.seconds,
-        backgroundColor: Colors.red,
+      showSnack(
+        context: context,
         message: 'There was and issue while creating the list. Try again later',
-      )..show(context);
+        type: SnackType.error,
+      );
     }
   }
 

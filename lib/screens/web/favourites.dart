@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
@@ -18,6 +17,7 @@ import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:memorare/utils/snack.dart';
 
 class Favourites extends StatefulWidget {
   @override
@@ -373,11 +373,11 @@ class _FavouritesState extends State<Favourites> {
     } catch (error) {
       debugPrint(error.toString());
 
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        message: "There was an issue while fetching your favourites.",
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'There was an issue while fetching your favourites.',
+        type: SnackType.error,
+      );
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
@@ -432,11 +432,11 @@ class _FavouritesState extends State<Favourites> {
     } catch (error) {
       debugPrint(error.toString());
 
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        message: "There was an issue while fetching your favourites.",
-      )..show(context);
+      showSnack(
+        context: context,
+        message: 'There was an issue while fetching your favourites.',
+        type: SnackType.error,
+      );
     }
   }
 
@@ -461,18 +461,15 @@ class _FavouritesState extends State<Favourites> {
     } catch (error) {
       debugPrint(error.toString());
 
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        message: "There was an issue while removing the quote from your favourites.",
-      )
-      ..show(context);
+      setState(() {
+        quotes.insert(index, quote);
+      });
 
-      if (!quotes.contains(quote)) {
-        setState(() {
-          quotes.insert(index, quote);
-        });
-      }
+      showSnack(
+        context: context,
+        message: "There was an issue while removing the quote from your favourites.",
+        type: SnackType.error,
+      );
     }
   }
 }
