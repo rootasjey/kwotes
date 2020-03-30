@@ -1,6 +1,7 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
@@ -98,51 +99,55 @@ class _AccountState extends State<Account> {
   }
 
   Widget accountActions() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 120.0),
-      child: SizedBox(
-        width: 800.0,
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          children: <Widget>[
-            FadeInX(
-              delay: 3.0,
-              beginX: 50.0,
-              child: SettingsCard(
-                imagePath: 'assets/images/write-email.png',
-                name: 'Email',
-                onTap: () {
-                  FluroRouter.router.navigateTo(context, EditEmailRoute);
-                },
-              ),
-            ),
+    return Observer(
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 120.0),
+          child: SizedBox(
+            width: 800.0,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                FadeInX(
+                  delay: 3.0,
+                  beginX: 50.0,
+                  child: SettingsCard(
+                    imagePath: 'assets/images/write-email-${stateColors.iconExt}.png',
+                    name: 'Email',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, EditEmailRoute);
+                    },
+                  ),
+                ),
 
-            FadeInX(
-              delay: 3.5,
-              beginX: 50.0,
-              child: SettingsCard(
-                imagePath: 'assets/images/lock.png',
-                name: 'Password',
-                onTap: () {
-                  FluroRouter.router.navigateTo(context, EditPasswordRoute);
-                },
-              ),
-            ),
+                FadeInX(
+                  delay: 3.5,
+                  beginX: 50.0,
+                  child: SettingsCard(
+                    imagePath: 'assets/images/lock-${stateColors.iconExt}.png',
+                    name: 'Password',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, EditPasswordRoute);
+                    },
+                  ),
+                ),
 
-            FadeInX(
-              delay: 4.0,
-              beginX: 50.0,
-              child: SettingsCard(
-                imagePath: 'assets/images/delete-user.png',
-                name: 'Delete account',
-                onTap: () {
-                  FluroRouter.router.navigateTo(context, DeleteAccountRoute);
-                },
-              ),
-            )
-          ],
-        ),
-      ),
+                FadeInX(
+                  delay: 4.0,
+                  beginX: 50.0,
+                  child: SettingsCard(
+                    imagePath: 'assets/images/delete-user-${stateColors.iconExt}.png',
+                    name: 'Delete account',
+                    onTap: () {
+                      FluroRouter.router.navigateTo(context, DeleteAccountRoute);
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      }
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
 
@@ -78,8 +79,8 @@ class DiscoverCard extends StatelessWidget {
                     child: Opacity(
                       opacity: .6,
                       child: type == 'reference' ?
-                        Icon(Icons.library_books, size: 30.0,) :
-                        Icon(Icons.person_pin, size: 30.0,),
+                        Image.asset('assets/images/textbook-${stateColors.iconExt}.png', width: 50.0) :
+                        Image.asset('assets/images/profile-${stateColors.iconExt}.png', width: 50.0,),
                     )
                   ),
                 ],

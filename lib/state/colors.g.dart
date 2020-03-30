@@ -43,6 +43,23 @@ mixin _$StateColors on StateColorsBase, Store {
     }, _$backgroundAtom, name: '${_$backgroundAtom.name}_set');
   }
 
+  final _$iconExtAtom = Atom(name: 'StateColorsBase.iconExt');
+
+  @override
+  String get iconExt {
+    _$iconExtAtom.context.enforceReadPolicy(_$iconExtAtom);
+    _$iconExtAtom.reportObserved();
+    return super.iconExt;
+  }
+
+  @override
+  set iconExt(String value) {
+    _$iconExtAtom.context.conditionallyRunInAction(() {
+      super.iconExt = value;
+      _$iconExtAtom.reportChanged();
+    }, _$iconExtAtom, name: '${_$iconExtAtom.name}_set');
+  }
+
   final _$StateColorsBaseActionController =
       ActionController(name: 'StateColorsBase');
 
@@ -59,7 +76,7 @@ mixin _$StateColors on StateColorsBase, Store {
   @override
   String toString() {
     final string =
-        'foreground: ${foreground.toString()},background: ${background.toString()}';
+        'foreground: ${foreground.toString()},background: ${background.toString()},iconExt: ${iconExt.toString()}';
     return '{$string}';
   }
 }
