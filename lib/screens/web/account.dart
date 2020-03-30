@@ -174,13 +174,8 @@ class _AccountState extends State<Account> {
       );
     }
 
-    NetworkImage networkImage = NetworkImage('https://api.adorable.io/avatars/285/');
-
-    if (avatarUrl.isNotEmpty) {
-      networkImage = NetworkImage(avatarUrl);
-    } else if (email.length > 0) {
-      networkImage = NetworkImage('https://api.adorable.io/avatars/285/$email');
-    }
+    String path = avatarUrl.replaceFirst('local:', '');
+    path = 'assets/images/$path-${stateColors.iconExt}.png';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 60.0),
@@ -189,101 +184,121 @@ class _AccountState extends State<Account> {
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Ink.image(
-          image: networkImage,
-          fit: BoxFit.cover,
-          width: 200.0,
-          height: 200.0,
-          child: InkWell(
-            onTap: () {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Stack(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Opacity(
-                                opacity: .6,
-                                child: SizedBox(
-                                  width: 300.0,
-                                  child: Text(
-                                    'You can provide a new URL for your image here',
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                    ),
-                                  ),
-                                )
-                              ),
-                            ),
+        child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: avatarUrl.isEmpty ?
+              Image.asset('assets/images/user-${stateColors.iconExt}.png', width: 100.0) :
+              Image.asset(path, width: 100.0),
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return showAvatarDialog();
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
 
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 50.0),
-                              child: SizedBox(
-                                width: 300.0,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.image),
-                                    labelText: 'Image URL',
-                                  ),
-                                  onChanged: (value) {
-                                    imageUrl = value;
-                                  },
-                                ),
-                              ),
-                            ),
-
-                            RaisedButton(
-                              color: Color(0xFF58595B),
-                              onPressed: () {
-                                updateImageUrl();
-                                Navigator.pop(context);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40.0),
-                              child: SizedBox(
-                                width: 400.0,
-                                height: 400.0,
-                                child: Image(
-                                  fit: BoxFit.cover,
-                                  image: networkImage,
-                                ),
-                              ),
-                            ),
-                          ],
+  AlertDialog showAvatarDialog() {
+    return AlertDialog(
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              'Cancel',
+            ),
+          ),
+        ),
+      ],
+      content: SizedBox(
+        height: 200.0,
+        width: 500.0,
+        child: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: SizedBox(
+                      width: 300.0,
+                      child: Text(
+                        'You can choose another profile picture',
+                        style: TextStyle(
+                          fontSize: 20.0,
                         ),
-
-                        Positioned(
-                          top: 5.0,
-                          right: 5.0,
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: Icon(Icons.close),
-                          ),
-                        ),
-                      ],
+                      ),
                     )
-                  );
-                },
-              );
-            },
+                  ),
+                ),
+              ),
+
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: <Widget>[
+                      FadeInX(child: ppCard(imageName: 'boy'), delay: 1, beginX: 100.0,),
+                      FadeInX(child: ppCard(imageName: 'employee'), delay: 1.2, beginX: 100.0,),
+                      FadeInX(child: ppCard(imageName: 'lady'), delay: 1.3, beginX: 100.0,),
+                      FadeInX(child: ppCard(imageName: 'user'), delay: 1.4, beginX: 100.0,),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          Positioned(
+            top: 5.0,
+            right: 5.0,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.close),
+            ),
+          ),
+        ],
+      ),
+      )
+    );
+  }
+
+  Widget ppCard({String imageName}) {
+    return SizedBox(
+      width: 80.0,
+      height: 80.0,
+      child: Card(
+        shape: avatarUrl.replaceFirst('local:', '') == imageName ?
+          RoundedRectangleBorder(
+            side: BorderSide(
+              color: stateColors.primary,
+            )
+          ) :
+          RoundedRectangleBorder(),
+        child: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            updateImageUrl(imageName: imageName);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset('assets/images/$imageName-${stateColors.iconExt}.png'),
           ),
         ),
       ),
@@ -487,15 +502,24 @@ class _AccountState extends State<Account> {
         return;
       }
 
+      final user = await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .get();
+
+      final data = user.data();
+      final String imageUrl = data['urls']['image'];
+
       setState(() {
         oldDisplayName = userAuth.displayName ?? '';
-        avatarUrl = userAuth.photoUrl ?? '';
+        avatarUrl = imageUrl;
         email = userAuth.email ?? '';
       });
 
       fetchLang();
 
     } catch (error) {
+      debugPrint(error.toString());
       isCheckingAuth = false;
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
@@ -571,17 +595,21 @@ class _AccountState extends State<Account> {
     }
   }
 
-  void updateImageUrl() async {
+  void updateImageUrl({String imageName}) async {
     setState(() {
       isLoadingImageURL = true;
     });
 
     try {
-      final userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.photoUrl = imageUrl;
-      await userAuth.updateProfile(userUpdateInfo);
+      await FirestoreApp.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .update(data: {
+          'urls.image': 'local:$imageName',
+        });
 
       setState(() {
+        avatarUrl = 'local:$imageName';
         isLoadingImageURL = false;
       });
 
