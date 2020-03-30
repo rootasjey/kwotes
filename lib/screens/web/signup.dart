@@ -8,6 +8,7 @@ import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
+import 'package:memorare/utils/snack.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -303,16 +304,10 @@ class _SignupState extends State<Signup> {
           isSigningUp = false;
         });
 
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.red,
-            content: Text(
-              'An occurred while creating your account. Please try again or contact us if the problem persists.',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          )
+        showSnack(
+          context: context,
+          message: 'An occurred while creating your account. Please try again or contact us if the problem persists.',
+          type: SnackType.error,
         );
 
         return;
@@ -358,13 +353,13 @@ class _SignupState extends State<Signup> {
       });
 
     } catch (error) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error: ${error.toString()}',
-          ),
-        )
-      );
+      debugPrint(error.toString());
+
+      showSnack(
+          context: context,
+          message: 'An occurred while creating your account. Please try again or contact us if the problem persists.',
+          type: SnackType.error,
+        );
     }
   }
 }
