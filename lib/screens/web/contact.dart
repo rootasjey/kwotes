@@ -20,7 +20,7 @@ class Contact extends StatelessWidget {
               color: Color(0xFF45D09E),
               child: InkWell(
                 onTap: () async {
-                  const url = 'mailto:feedback@memorare.app?subject=[Memorare%20Web]%20Feedback';
+                  const url = 'mailto:feedback@outofcontext.app?subject=[Outofcontext%20Web]%20Feedback';
                   await launch(url);
                 },
                 child: Container(
@@ -63,7 +63,7 @@ class Contact extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'feedback@memorare.app',
+                            'feedback@outofcontext.app',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24.0,
@@ -88,7 +88,7 @@ class Contact extends StatelessWidget {
               color: Color(0xFF64C7FF),
               child: InkWell(
                 onTap: () async {
-                  const url = 'https://twitter.com/intent/tweet?via=memorareapp';
+                  const url = 'https://twitter.com/intent/tweet?via=outofcontextapp';
                   await launch(url);
                 },
                 child: Container(
@@ -131,7 +131,7 @@ class Contact extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '@memorareapp',
+                            '@outofcontext',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24.0,
