@@ -179,14 +179,14 @@ class _DeleteAccountState extends State<DeleteAccount> {
           ),
 
           FlatButton(
+            onPressed: () {
+              deleteAccount();
+            },
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: stateColors.primary,
               ),
             ),
-            onPressed: () {
-              deleteAccount();
-            },
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
@@ -195,7 +195,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
             )
           ),
 
-          Padding(padding: const EdgeInsets.only(bottom: 200.0),)
+          Padding(padding: const EdgeInsets.only(bottom: 200.0),),
         ],
       ),
     );
