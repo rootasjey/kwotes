@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -34,7 +35,6 @@ class _EditPasswordState extends State<EditPassword> {
         children: <Widget>[
           NavBackHeader(),
           body(),
-          NavBackFooter(),
         ],
       ),
     );
@@ -93,13 +93,21 @@ class _EditPasswordState extends State<EditPassword> {
     }
 
     return SizedBox(
-      width: 600.0,
+      width: 400.0,
       child: Column(
         children: <Widget>[
           Text(
             'Update password',
             style: TextStyle(
               fontSize: 35.0,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+            child: Image.asset(
+              'assets/images/lock-${stateColors.iconExt}.png',
+              width: 100.0,
             ),
           ),
 
@@ -156,20 +164,23 @@ class _EditPasswordState extends State<EditPassword> {
           ),
 
           RaisedButton(
-            color: Colors.green,
             onPressed: () {
               updatePassword();
             },
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: stateColors.primary,
+              ),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Update',
-                style: TextStyle(
-                  color: Colors.white,
-                )
               ),
             )
           ),
+
+          Padding(padding: const EdgeInsets.only(bottom: 200.0),),
         ],
       ),
     );
