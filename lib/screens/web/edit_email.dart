@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
@@ -22,6 +23,10 @@ class _EditEmailState extends State<EditEmail> {
   bool isCheckingAuth = false;
   bool isUpdating     = false;
   bool isCompleted    = false;
+
+  double beginY = 100.0;
+  final delay = 1.0;
+  final delayStep = 1.2;
 
   @override
   void initState() {
@@ -54,11 +59,35 @@ class _EditEmailState extends State<EditEmail> {
       width: 400.0,
       child: Column(
         children: <Widget>[
-          titleText(),
+          FadeInY(
+            delay: delay + (1 * delayStep),
+            beginY: beginY,
+            child: titleText(),
+          ),
 
-          titleImg(),
+          FadeInY(
+            delay: delay + (2 * delayStep),
+            beginY: beginY,
+            child: titleImg(),
+          ),
 
-          validationButton(),
+          FadeInY(
+            delay: delay + (3 * delayStep),
+            beginY: beginY,
+            child: emailInput(),
+          ),
+
+          FadeInY(
+            delay: delay + (4 * delayStep),
+            beginY: beginY,
+            child: passwordInput(),
+          ),
+
+          FadeInY(
+            delay: delay + (5 * delayStep),
+            beginY: beginY,
+            child: validationButton(),
+          ),
 
           Padding(padding: const EdgeInsets.only(bottom: 200.0),),
         ],
@@ -196,6 +225,7 @@ class _EditEmailState extends State<EditEmail> {
       onPressed: () {
         updateEmail();
       },
+      color: Colors.transparent,
       shape: RoundedRectangleBorder(
         side: BorderSide(
           color: stateColors.primary,
