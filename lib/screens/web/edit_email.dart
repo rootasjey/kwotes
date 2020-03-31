@@ -24,8 +24,8 @@ class _EditEmailState extends State<EditEmail> {
   bool isUpdating     = false;
   bool isCompleted    = false;
 
-  double beginY = 100.0;
-  final delay = 1.0;
+  double beginY   = 100.0;
+  final delay     = 1.0;
   final delayStep = 1.2;
 
   @override
