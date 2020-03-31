@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/colors.dart';
@@ -19,6 +20,10 @@ class _DeleteAccountState extends State<DeleteAccount> {
 
   FirebaseUser userAuth;
   String password = '';
+
+  double beginY   = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
 
   @override
   void initState() {
@@ -46,18 +51,38 @@ class _DeleteAccountState extends State<DeleteAccount> {
     }
 
     return SizedBox(
-      width: 600.0,
+      width: 450.0,
       child: Column(
         children: <Widget>[
-          textTitle(),
+          FadeInY(
+            delay: delay + (1 * delayStep),
+            beginY: beginY,
+            child: textTitle(),
+          ),
 
-          imageTitle(),
+          FadeInY(
+            delay: delay + (2 * delayStep),
+            beginY: beginY,
+            child: imageTitle(),
+          ),
 
-          descriptionText(),
+          FadeInY(
+            delay: delay + (3 * delayStep),
+            beginY: beginY,
+            child: descriptionText(),
+          ),
 
-          passwordInput(),
+          FadeInY(
+            delay: delay + (4 * delayStep),
+            beginY: beginY,
+            child: passwordInput(),
+          ),
 
-          validationButton(),
+          FadeInY(
+            delay: delay + (5 * delayStep),
+            beginY: beginY,
+            child: validationButton(),
+          ),
 
           Padding(padding: const EdgeInsets.only(bottom: 200.0),),
         ],
@@ -179,7 +204,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
           TextFormField(
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline),
-              labelText: 'Confirm this action by entering your password',
+              labelText: 'Enter your password',
             ),
             obscureText: true,
             onChanged: (value) {
@@ -215,6 +240,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
       onPressed: () {
         deleteAccount();
       },
+      color: Colors.transparent,
       shape: RoundedRectangleBorder(
         side: BorderSide(
           color: stateColors.primary,
