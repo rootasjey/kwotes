@@ -178,7 +178,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
             ),
           ),
 
-          FlatButton(
+          RaisedButton(
             onPressed: () {
               deleteAccount();
             },

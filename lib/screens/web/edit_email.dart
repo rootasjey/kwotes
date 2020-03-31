@@ -162,7 +162,7 @@ class _EditEmailState extends State<EditEmail> {
             ),
           ),
 
-          FlatButton(
+          RaisedButton(
             onPressed: () {
               updateEmail();
             },
