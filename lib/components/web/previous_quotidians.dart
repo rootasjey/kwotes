@@ -3,6 +3,7 @@ import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -100,10 +101,12 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     String day = yesterday.day.toString();
     day = day.length == 2 ? day : '0$day';
 
+    final localLang = await Language.fetch(null);
+
     try {
       final doc = await FirestoreApp.instance
         .collection('quotidians')
-        .doc('${yesterday.year}:$month:$day:$lang')
+        .doc('${yesterday.year}:$month:$day:$localLang')
         .get();
 
       if (!doc.exists) {
