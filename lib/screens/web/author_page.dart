@@ -6,6 +6,7 @@ import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/router.dart';
@@ -66,7 +67,7 @@ class _AuthorPageState extends State<AuthorPage> {
               //   child: Opacity(
               //     opacity: .8,
               //     child: Image.asset(
-              //       'assets/images/power-of-pen-1200.png',
+              //       '',
               //       color: Colors.grey,
               //       fit: BoxFit.cover,
               //       height: MediaQuery.of(context).size.height,
@@ -201,9 +202,38 @@ class _AuthorPageState extends State<AuthorPage> {
       );
     }
 
-    return CircleAvatar(
-      backgroundImage: AssetImage('assets/images/power-of-pen-1200.png'),
-      radius: 80.0,
+    return Material(
+      elevation: 1.0,
+      shape: CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Image.asset(
+            'assets/images/user-${stateColors.iconExt}.png',
+            width: 80.0,
+          ),
+        ),
+        onTap: () {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Container(
+                  height: 500.0,
+                  width: 500.0,
+                  child: Image(
+                    image: AssetImage('assets/images/user-${stateColors.iconExt}.png',),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            }
+          );
+        },
+      ),
     );
   }
 

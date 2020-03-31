@@ -6,6 +6,7 @@ import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/router.dart';
@@ -202,16 +203,39 @@ class _ReferencePageState extends State<ReferencePage> {
       );
     }
 
-    return SizedBox(
-        width: 200.0,
-        height: 250.0,
-        child: Card(
+    return Material(
+      elevation: 1.0,
+      shape: CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
           child: Image.asset(
-            'assets/images/dotted-notebook.png',
-            fit: BoxFit.cover,
+            'assets/images/user-${stateColors.iconExt}.png',
+            width: 80.0,
           ),
         ),
-      );
+        onTap: () {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Container(
+                  height: 500.0,
+                  width: 500.0,
+                  child: Image(
+                    image: AssetImage('assets/images/textbook-${stateColors.iconExt}.png',),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            }
+          );
+        },
+      ),
+    );
   }
 
   Widget summary() {
