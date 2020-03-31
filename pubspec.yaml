@@ -76,7 +76,6 @@ flutter:
     - assets/images/bulb-75.png
     - assets/images/delete-user-dark.png
     - assets/images/delete-user-light.png
-    - assets/images/dotted-notebook.png
     - assets/images/employee-dark.png
     - assets/images/employee-light.png
     - assets/images/lady-light.png
@@ -86,7 +85,6 @@ flutter:
     - assets/images/monk.png
     - assets/images/jeje-profile.jpg
     - assets/images/page-not-found-4.png
-    - assets/images/power-of-pen-1200.png
     - assets/images/profile-dark.png
     - assets/images/profile-light.png
     - assets/images/textbook-dark.png
