@@ -62,13 +62,13 @@ class _EditEmailState extends State<EditEmail> {
           FadeInY(
             delay: delay + (1 * delayStep),
             beginY: beginY,
-            child: titleText(),
+            child: textTitle(),
           ),
 
           FadeInY(
             delay: delay + (2 * delayStep),
             beginY: beginY,
-            child: titleImg(),
+            child: imageTitle(),
           ),
 
           FadeInY(
@@ -152,6 +152,16 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
+  Widget imageTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+      child: Image.asset(
+        'assets/images/write-email-${stateColors.iconExt}.png',
+        width: 100.0,
+      ),
+    );
+  }
+
   Widget passwordInput() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0, bottom: 80.0),
@@ -180,17 +190,7 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget titleImg() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
-      child: Image.asset(
-        'assets/images/write-email-${stateColors.iconExt}.png',
-        width: 100.0,
-      ),
-    );
-  }
-
-  Widget titleText() {
+  Widget textTitle() {
     return Text(
       'Update email',
       style: TextStyle(

@@ -42,147 +42,175 @@ class _EditPasswordState extends State<EditPassword> {
 
   Widget body() {
     if (isCompleted) {
-      return SizedBox(
-        width: 600.0,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: Icon(
-                Icons.check_circle,
-                size: 80.0,
-                color: Colors.green,
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
-              child: Text(
-                'Your password has been successfuly updated.',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-
-            NavBackFooter(),
-          ],
-        ),
-      );
+      return completedScreen();
     }
 
     if (isUpdating) {
-      return SizedBox(
-        width: 600.0,
-        child: Column(
-          children: <Widget>[
-            CircularProgressIndicator(),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: Text(
-                'Updating your password...',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            )
-          ],
-        ),
-      );
+      return updatingScreen();
     }
 
     return SizedBox(
       width: 400.0,
       child: Column(
         children: <Widget>[
-          Text(
-            'Update password',
-            style: TextStyle(
-              fontSize: 35.0,
-            ),
-          ),
+          textTitle(),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
-            child: Image.asset(
-              'assets/images/lock-${stateColors.iconExt}.png',
-              width: 100.0,
-            ),
-          ),
+          imageTitle(),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 80.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.email),
-                    labelText: 'Enter your current password',
-                  ),
-                  onChanged: (value) {
-                    password = value;
-                  },
-                  obscureText: true,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Current password cannot be empty';
-                    }
+          currentPasswordInput(),
 
-                    return null;
-                  },
-                ),
-              ],
-            ),
-          ),
+          newPasswordInput(),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0, bottom: 80.0,),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.email),
-                    labelText: 'Enter your new password',
-                  ),
-                  obscureText: true,
-                  onChanged: (value) {
-                    newPassword = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'New password cannot be empty';
-                    }
-
-                    return null;
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          RaisedButton(
-            onPressed: () {
-              updatePassword();
-            },
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: stateColors.primary,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                'Update',
-              ),
-            )
-          ),
+          validationButton(),
 
           Padding(padding: const EdgeInsets.only(bottom: 200.0),),
         ],
       ),
+    );
+  }
+
+  Widget completedScreen() {
+    return SizedBox(
+      width: 400.0,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Icon(
+              Icons.check_circle,
+              size: 80.0,
+              color: Colors.green,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
+            child: Text(
+              'Your password has been successfuly updated.',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+
+          NavBackFooter(),
+        ],
+      ),
+    );
+  }
+
+  Widget currentPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 80.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.email),
+              labelText: 'Enter your current password',
+            ),
+            onChanged: (value) {
+              password = value;
+            },
+            obscureText: true,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Current password cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget imageTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+      child: Image.asset(
+        'assets/images/lock-${stateColors.iconExt}.png',
+        width: 100.0,
+      ),
+    );
+  }
+
+  Widget newPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0, bottom: 80.0,),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.email),
+              labelText: 'Enter your new password',
+            ),
+            obscureText: true,
+            onChanged: (value) {
+              newPassword = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'New password cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget textTitle() {
+    return Text(
+      'Update password',
+      style: TextStyle(
+        fontSize: 35.0,
+      ),
+    );
+  }
+
+  Widget updatingScreen() {
+    return SizedBox(
+      width: 400.0,
+      child: Column(
+        children: <Widget>[
+          CircularProgressIndicator(),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Text(
+              'Updating your password...',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget validationButton() {
+    return RaisedButton(
+      onPressed: () {
+        updatePassword();
+      },
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: stateColors.primary,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          'Update',
+        ),
+      )
     );
   }
 
