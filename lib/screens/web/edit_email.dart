@@ -96,25 +96,6 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget titleText() {
-    return Text(
-      'Update email',
-      style: TextStyle(
-        fontSize: 35.0,
-      ),
-    );
-  }
-
-  Widget titleImg() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
-      child: Image.asset(
-        'assets/images/write-email-${stateColors.iconExt}.png',
-        width: 100.0,
-      ),
-    );
-  }
-
   Widget emailInput() {
     return Padding(
       padding: const EdgeInsets.only(top: 80.0),
@@ -166,6 +147,25 @@ class _EditEmailState extends State<EditEmail> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget titleImg() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+      child: Image.asset(
+        'assets/images/write-email-${stateColors.iconExt}.png',
+        width: 100.0,
+      ),
+    );
+  }
+
+  Widget titleText() {
+    return Text(
+      'Update email',
+      style: TextStyle(
+        fontSize: 35.0,
       ),
     );
   }
