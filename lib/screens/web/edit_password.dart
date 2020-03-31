@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/colors.dart';
@@ -21,6 +22,10 @@ class _EditPasswordState extends State<EditPassword> {
   bool isCheckingAuth = false;
   bool isUpdating     = false;
   bool isCompleted    = false;
+
+  double beginY = 100.0;
+  final delay = 1.0;
+  final delayStep = 1.2;
 
   @override
   void initState() {
@@ -53,15 +58,35 @@ class _EditPasswordState extends State<EditPassword> {
       width: 400.0,
       child: Column(
         children: <Widget>[
-          textTitle(),
+          FadeInY(
+            delay: delay + (1 * delayStep),
+            beginY: beginY,
+            child: textTitle(),
+          ),
 
-          imageTitle(),
+          FadeInY(
+            delay: delay + (2 * delayStep),
+            beginY: beginY,
+            child: imageTitle(),
+          ),
 
-          currentPasswordInput(),
+          FadeInY(
+            delay: delay + (3 * delayStep),
+            beginY: beginY,
+            child: currentPasswordInput(),
+          ),
 
-          newPasswordInput(),
+          FadeInY(
+            delay: delay + (4 * delayStep),
+            beginY: beginY,
+            child: newPasswordInput(),
+          ),
 
-          validationButton(),
+          FadeInY(
+            delay: delay + (5 * delayStep),
+            beginY: beginY,
+            child: validationButton(),
+          ),
 
           Padding(padding: const EdgeInsets.only(bottom: 200.0),),
         ],
@@ -107,7 +132,7 @@ class _EditPasswordState extends State<EditPassword> {
         children: <Widget>[
           TextFormField(
             decoration: InputDecoration(
-              icon: Icon(Icons.email),
+              icon: Icon(Icons.lock_open),
               labelText: 'Enter your current password',
             ),
             onChanged: (value) {
@@ -145,7 +170,7 @@ class _EditPasswordState extends State<EditPassword> {
         children: <Widget>[
           TextFormField(
             decoration: InputDecoration(
-              icon: Icon(Icons.email),
+              icon: Icon(Icons.lock_outline),
               labelText: 'Enter your new password',
             ),
             obscureText: true,
@@ -200,6 +225,7 @@ class _EditPasswordState extends State<EditPassword> {
       onPressed: () {
         updatePassword();
       },
+      color: Colors.transparent,
       shape: RoundedRectangleBorder(
         side: BorderSide(
           color: stateColors.primary,
