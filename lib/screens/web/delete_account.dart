@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/firestore_app.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/route_names.dart';
 import 'package:memorare/utils/router.dart';
@@ -32,7 +32,6 @@ class _DeleteAccountState extends State<DeleteAccount> {
       children: <Widget>[
         NavBackHeader(),
         body(),
-        NavBackFooter(),
       ],
     );
   }
@@ -113,66 +112,48 @@ class _DeleteAccountState extends State<DeleteAccount> {
             ),
           ),
 
-          Card(
-            elevation: 3,
-            color: Color(0xFFF85C50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(15.0),
-              )
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 40.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 25.0),
-                    child: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.warning,
-                        size: 110.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-
-                  Container(
-                    child: Flexible(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Are you sure you want to delete your account?',
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              color: Colors.white,
-                            ),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15.0),
-                            child: Opacity(
-                              opacity: .6,
-                              child: Text(
-                                'This action is irreversible. All your data will be whiped.',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 50.0),
+            child: Image.asset(
+              'assets/images/delete-user-${stateColors.iconExt}.png',
+              width: 100.0,
             ),
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 80.0),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: <Widget>[
+                Opacity(
+                  opacity: .8,
+                  child: Text(
+                    'Are you sure you want to delete your account?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 25.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      '• This action is irreversible\n• All your data will be whiped\n• Your published quotes will be kept',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 80.0, horizontal: 40.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -197,8 +178,12 @@ class _DeleteAccountState extends State<DeleteAccount> {
             ),
           ),
 
-          RaisedButton(
-            color: Colors.red,
+          FlatButton(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: stateColors.primary,
+              ),
+            ),
             onPressed: () {
               deleteAccount();
             },
@@ -206,12 +191,11 @@ class _DeleteAccountState extends State<DeleteAccount> {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Delete',
-                style: TextStyle(
-                  color: Colors.white,
-                )
               ),
             )
           ),
+
+          Padding(padding: const EdgeInsets.only(bottom: 200.0),)
         ],
       ),
     );
