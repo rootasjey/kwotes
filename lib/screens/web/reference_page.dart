@@ -203,37 +203,38 @@ class _ReferencePageState extends State<ReferencePage> {
       );
     }
 
-    return Material(
-      elevation: 1.0,
-      shape: CircleBorder(),
-      clipBehavior: Clip.hardEdge,
-      color: Colors.transparent,
-      child: InkWell(
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Image.asset(
-            'assets/images/user-${stateColors.iconExt}.png',
-            width: 80.0,
+    return SizedBox(
+      width: 200.0,
+      height: 250.0,
+      child: Card(
+        child: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Container(
+                    height: 250.0,
+                    width: 250.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Image(
+                        image: AssetImage('assets/images/textbook-${stateColors.iconExt}.png',),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Image.asset(
+              'assets/images/textbook-${stateColors.iconExt}.png',
+            ),
           ),
         ),
-        onTap: () {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Container(
-                  height: 500.0,
-                  width: 500.0,
-                  child: Image(
-                    image: AssetImage('assets/images/textbook-${stateColors.iconExt}.png',),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              );
-            }
-          );
-        },
       ),
     );
   }
