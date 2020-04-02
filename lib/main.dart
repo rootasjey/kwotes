@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 
 void main() {
   FluroRouter.setupRouter();
-  appTopicsColors.fetchTopicsColors();
 
   return runApp(App());
 }
@@ -26,6 +25,7 @@ class AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    appTopicsColors.fetchTopicsColors();
   }
 
   @override
