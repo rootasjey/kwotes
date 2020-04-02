@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
@@ -447,9 +447,9 @@ class _AuthorPageState extends State<AuthorPage> {
     });
 
     try {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('authors')
-        .doc(widget.id)
+        .document(widget.id)
         .get();
 
       if (!doc.exists) {
@@ -460,7 +460,7 @@ class _AuthorPageState extends State<AuthorPage> {
         return;
       }
 
-      final _author = Author.fromJSON(doc.data());
+      final _author = Author.fromJSON(doc.data);
 
       setState(() {
         author = _author;
@@ -480,17 +480,17 @@ class _AuthorPageState extends State<AuthorPage> {
     if (author == null) { return; }
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('author.name', '==', author.name)
+        .where('author.name', isEqualTo: author.name)
         .limit(1)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) { return; }
+      if (snapshot.documents.isEmpty) { return; }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
         quote = Quote.fromJSON(data);
       });
 

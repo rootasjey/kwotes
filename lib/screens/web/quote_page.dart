@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -308,13 +308,13 @@ class _QuotePageState extends State<QuotePage> {
     final _topicsColors = <TopicColor>[];
 
     for (String topicName in quote.topics) {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('topics')
-        .doc(topicName)
+        .document(topicName)
         .get();
 
       if (doc.exists) {
-        final topic = TopicColor.fromJSON(doc.data());
+        final topic = TopicColor.fromJSON(doc.data);
         _topicsColors.add(topic);
       }
     }
@@ -330,9 +330,9 @@ class _QuotePageState extends State<QuotePage> {
     });
 
     try {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('quotes')
-        .doc(widget.quoteId)
+        .document(widget.quoteId)
         .get();
 
       if (!doc.exists) {
@@ -343,8 +343,8 @@ class _QuotePageState extends State<QuotePage> {
         return;
       }
 
-      final data = doc.data();
-      data['id'] = doc.id;
+      final data = doc.data;
+      data['id'] = doc.documentID;
       quote = Quote.fromJSON(data);
 
       await fetchIsFav();

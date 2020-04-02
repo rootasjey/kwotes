@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
@@ -446,14 +446,14 @@ class _ReferencePageState extends State<ReferencePage> {
     if (reference == null) { return; }
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('mainReference.name', '==', reference.name)
+        .where('mainReference.name', isEqualTo: reference.name)
         .limit(1)
-        .get();
+        .getDocuments();
 
-      snapshot.forEach((doc) {
-        quote = Quote.fromJSON(doc.data());
+      snapshot.documents.forEach((doc) {
+        quote = Quote.fromJSON(doc.data);
       });
 
       setState(() {});
@@ -468,9 +468,9 @@ class _ReferencePageState extends State<ReferencePage> {
     });
 
     try {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('references')
-        .doc(widget.id)
+        .document(widget.id)
         .get();
 
       if (!doc.exists) {
@@ -482,7 +482,7 @@ class _ReferencePageState extends State<ReferencePage> {
       }
 
       setState(() {
-        reference = Reference.fromJSON(doc.data());
+        reference = Reference.fromJSON(doc.data);
         isLoading = false;
       });
 

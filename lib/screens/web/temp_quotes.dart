@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -289,7 +289,7 @@ class _TempQuotesState extends State<TempQuotes> {
     final tempComments = tempQuote.comments;
 
     tempComments.forEach((tempComment) {
-      FirestoreApp.instance
+      Firestore.instance
         .collection('comments')
         .add({
           'commentId' : '',
@@ -312,9 +312,9 @@ class _TempQuotesState extends State<TempQuotes> {
     });
 
     try {
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('tempquotes')
-        .doc(tempQuote.id)
+        .document(tempQuote.id)
         .delete();
 
     } catch (error) {
@@ -343,7 +343,6 @@ class _TempQuotesState extends State<TempQuotes> {
     });
 
     try {
-      // User check
       userAuth = await getUserAuth();
 
       if (userAuth == null) {
@@ -351,14 +350,13 @@ class _TempQuotesState extends State<TempQuotes> {
         return;
       }
 
-      // Data
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('tempquotes')
-        .where('user.id', '==', userAuth.uid)
+        .where('user.id', isEqualTo: userAuth.uid)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -367,15 +365,15 @@ class _TempQuotesState extends State<TempQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -403,13 +401,13 @@ class _TempQuotesState extends State<TempQuotes> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('tempquotes')
-        .startAfter(snapshot: lastDoc)
+        .startAfterDocument(lastDoc)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -418,9 +416,9 @@ class _TempQuotesState extends State<TempQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.insert(tempQuotes.length - 1, quote);

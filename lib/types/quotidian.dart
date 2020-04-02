@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:memorare/types/quote.dart';
 
 class Quotidian {
@@ -19,12 +20,12 @@ class Quotidian {
 
   factory Quotidian.fromJSON(Map<String, dynamic> json) {
     return Quotidian(
-      createdAt : json['createdAt'],
-      date      : json['date'],
+      createdAt : (json['createdAt'] as Timestamp).toDate(),
+      date      : (json['date'] as Timestamp).toDate(),
       id        : json['id'],
       lang      : json['lang'],
       quote     : Quote.fromJSON(json['quote']),
-      updatedAt : json['updatedAt'],
+      updatedAt : (json['updatedAt'] as Timestamp).toDate(),
     );
   }
 

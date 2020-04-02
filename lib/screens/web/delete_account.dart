@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/auth.dart';
@@ -290,10 +290,10 @@ class _DeleteAccountState extends State<DeleteAccount> {
 
       await userAuth.reauthenticateWithCredential(credentials);
 
-      await FirestoreApp.instance
+      await Firestore.instance
       .collection('users')
-      .doc(userAuth.uid)
-      .update(data: { 'flag': 'delete'});
+      .document(userAuth.uid)
+      .updateData({'flag': 'delete'});
 
       await userAuth.delete();
 

@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
@@ -502,12 +502,12 @@ class _AccountState extends State<Account> {
         return;
       }
 
-      final user = await FirestoreApp.instance
+      final user = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .get();
 
-      final data = user.data();
+      final data = user.data;
       final String imageUrl = data['urls']['image'];
 
       setState(() {
@@ -558,11 +558,10 @@ class _AccountState extends State<Account> {
 
       await userAuth.updateProfile(userUpdateInfo);
 
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
-        .update(
-          data: {
+        .document(userAuth.uid)
+        .updateData({
             'name': displayName,
             'nameLowerCase': displayName.toLowerCase(),
           }
@@ -601,10 +600,10 @@ class _AccountState extends State<Account> {
     });
 
     try {
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
-        .update(data: {
+        .document(userAuth.uid)
+        .updateData({
           'urls.image': 'local:$imageName',
         });
 
@@ -639,11 +638,10 @@ class _AccountState extends State<Account> {
     Language.setLang(lang);
 
     try {
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
-        .update(
-          data: {
+        .document(userAuth.uid)
+        .updateData({
             'lang': lang,
           }
         );

@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -333,7 +333,6 @@ class _QuoteListState extends State<QuotesList> {
     try {
       quotes.clear();
 
-      // User check
       userAuth = userAuth ?? await getUserAuth();
 
       if (userAuth == null) {
@@ -341,12 +340,11 @@ class _QuoteListState extends State<QuotesList> {
         return;
       }
 
-      // Data
-      final docList = await FirestoreApp.instance
+      final docList = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
-        .doc(widget.listId)
+        .document(widget.listId)
         .get();
 
       if (!docList.exists) {
@@ -360,20 +358,20 @@ class _QuoteListState extends State<QuotesList> {
         return;
       }
 
-      final data = docList.data();
-      data['id'] = docList.id;
+      final data = docList.data;
+      data['id'] = docList.documentID;
       quotesList = UserQuotesList.fromJSON(data);
 
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
-        .doc(quotesList.id)
+        .document(quotesList.id)
         .collection('quotes')
         .limit(limit)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -382,15 +380,15 @@ class _QuoteListState extends State<QuotesList> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
       setState(() {
-        hasNext = snapshot.size == limit;
+        hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
 
@@ -414,17 +412,17 @@ class _QuoteListState extends State<QuotesList> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
-        .doc(quotesList.id)
+        .document(quotesList.id)
         .collection('quotes')
-        .startAfter(snapshot: lastDoc)
+        .startAfterDocument(lastDoc)
         .limit(limit)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
         });
@@ -432,16 +430,16 @@ class _QuoteListState extends State<QuotesList> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
       setState(() {
-        hasNext = snapshot.size == limit;
+        hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
 
@@ -469,13 +467,13 @@ class _QuoteListState extends State<QuotesList> {
         return;
       }
 
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
-        .doc(widget.listId)
+        .document(widget.listId)
         .collection('quotes')
-        .doc(quote.id)
+        .document(quote.id)
         .delete();
 
     } catch (error) {

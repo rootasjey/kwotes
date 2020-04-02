@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -259,17 +259,17 @@ class _AdminQuotesState extends State<AdminQuotes> {
   void addQuotidian(Quote quote) async {
     try {
       // Decide the next date
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotidians')
-        .where('lang', '==', Language.current)
-        .orderBy('date', 'desc')
+        .where('lang', isEqualTo:  Language.current)
+        .orderBy('date', descending: true)
         .limit(1)
-        .get();
+        .getDocuments();
 
       String id = '';
       DateTime nextDate;
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         final now = DateTime.now();
         nextDate = now;
 
@@ -282,8 +282,9 @@ class _AdminQuotesState extends State<AdminQuotes> {
         id = '${now.year}:$month:$day:${Language.current}';
 
       } else {
-        final first = snapshot.docs.first;
-        final DateTime lastDate = first.data()['date'];
+        final first = snapshot.documents.first;
+        final Timestamp lastTimestamp = first.data['date'];
+        final DateTime lastDate = lastTimestamp.toDate();
 
         nextDate = lastDate.add(
           Duration(days: 1)
@@ -298,10 +299,10 @@ class _AdminQuotesState extends State<AdminQuotes> {
         id = '${nextDate.year}:$nextMonth:$nextDay:${Language.current}';
       }
 
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('quotidians')
-        .doc(id)
-        .set({
+        .document(id)
+        .setData({
           'createdAt': DateTime.now(),
           'date': nextDate,
           'lang': Language.current,
@@ -332,15 +333,6 @@ class _AdminQuotesState extends State<AdminQuotes> {
             },
           }
         });
-
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            'The quote has been successfully added to quotidians.'
-          ),
-        )
-      );
 
     } catch (error) {
       debugPrint(error.toString());
@@ -388,13 +380,13 @@ class _AdminQuotesState extends State<AdminQuotes> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('lang', '==', Language.current)
+        .where('lang', isEqualTo: Language.current)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -403,15 +395,15 @@ class _AdminQuotesState extends State<AdminQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -434,14 +426,14 @@ class _AdminQuotesState extends State<AdminQuotes> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('lang', '==', Language.current)
-        .startAfter(snapshot: lastDoc)
+        .where('lang', isEqualTo: Language.current)
+        .startAfterDocument(lastDoc)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -450,15 +442,15 @@ class _AdminQuotesState extends State<AdminQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.insert(quotes.length - 1, quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoadingMore = false;

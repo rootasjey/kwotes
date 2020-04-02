@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -412,9 +412,9 @@ class _QuotidiansState extends State<Quotidians> {
 
   void deleteQuotidian(Quotidian quotidian) async {
     try {
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('quotidians')
-        .doc(quotidian.id)
+        .document(quotidian.id)
         .delete();
 
       setState(() {
@@ -449,13 +449,13 @@ class _QuotidiansState extends State<Quotidians> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotidians')
-        .where('lang', '==', Language.current)
+        .where('lang', isEqualTo: Language.current)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -464,15 +464,15 @@ class _QuotidiansState extends State<Quotidians> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quotidian = Quotidian.fromJSON(data);
         quotidians.add(quotidian);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -493,14 +493,14 @@ class _QuotidiansState extends State<Quotidians> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotidians')
-        .where('lang', '==', Language.current)
-        .startAfter(snapshot: lastDoc)
+        .where('lang', isEqualTo: Language.current)
+        .startAfterDocument(lastDoc)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -509,9 +509,9 @@ class _QuotidiansState extends State<Quotidians> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quotidian = Quotidian.fromJSON(data);
         quotidians.insert(quotidians.length - 1, quotidian);

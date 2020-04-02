@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/snack.dart';
@@ -235,14 +235,14 @@ class _AddToListButtonState extends State<AddToListButton> {
         return;
       }
 
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
         .limit(limit)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -251,18 +251,18 @@ class _AddToListButtonState extends State<AddToListButton> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quoteList = UserQuotesList.fromJSON(data);
         userQuotesLists.add(quoteList);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
-        hasNext = snapshot.size == limit;
+        hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
 
@@ -293,15 +293,15 @@ class _AddToListButtonState extends State<AddToListButton> {
         return;
       }
 
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
-        .startAfter(snapshot: lastDoc)
+        .startAfterDocument(lastDoc)
         .limit(limit)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -310,18 +310,18 @@ class _AddToListButtonState extends State<AddToListButton> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quoteList = UserQuotesList.fromJSON(data);
         userQuotesLists.add(quoteList);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
-        hasNext = snapshot.size == limit;
+        hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
 
@@ -432,11 +432,11 @@ class _AddToListButtonState extends State<AddToListButton> {
         return;
       }
 
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
-        .doc(listId)
+        .document(listId)
         .collection('quotes')
         .add({
           'author': {
@@ -478,9 +478,9 @@ class _AddToListButtonState extends State<AddToListButton> {
         return null;
       }
 
-      final docRef = await FirestoreApp.instance
+      final docRef = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('lists')
         .add({
           'createdAt'   : DateTime.now(),
@@ -493,7 +493,7 @@ class _AddToListButtonState extends State<AddToListButton> {
 
       final doc = await docRef.get();
 
-      return doc.id;
+      return doc.documentID;
 
     } catch (error) {
       debugPrint(error.toString());

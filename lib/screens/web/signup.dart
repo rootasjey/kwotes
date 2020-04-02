@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -313,10 +313,10 @@ class _SignupState extends State<Signup> {
         return;
       }
 
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(user.uid)
-        .set({
+        .document(user.uid)
+        .setData({
           'email': user.email,
           'flag': '',
           'lang': 'en',

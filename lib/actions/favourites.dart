@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/snack.dart';
@@ -33,23 +33,23 @@ Future<bool> addToFavourites({
       quote = quotidian.quote;
     }
 
-    final doc = await FirestoreApp.instance
+    final doc = await Firestore.instance
       .collection('users')
-      .doc(userAuth.uid)
+      .document(userAuth.uid)
       .collection('favourites')
-      .doc(quote.id)
+      .document(quote.id)
       .get();
 
     if (doc.exists) {
       return false;
     }
 
-    await FirestoreApp.instance
+    await Firestore.instance
       .collection('users')
-      .doc(userAuth.uid)
+      .document(userAuth.uid)
       .collection('favourites')
-      .doc(quote.id)
-      .set({
+      .document(quote.id)
+      .setData({
         'author'        : {
           'id'          : quote.author.id,
           'name'        : quote.author.name,
@@ -88,11 +88,11 @@ Future<bool> isFavourite({
 }) async {
 
   try {
-    final doc = await FirestoreApp.instance
+    final doc = await Firestore.instance
       .collection('users')
-      .doc(userUid)
+      .document(userUid)
       .collection('favourites')
-      .doc(quoteId)
+      .document(quoteId)
       .get();
 
     return doc.exists;
@@ -128,22 +128,22 @@ Future<bool> removeFromFavourites({
       quote = quotidian.quote;
     }
 
-    final doc = await FirestoreApp.instance
+    final doc = await Firestore.instance
       .collection('users')
-      .doc(userAuth.uid)
+      .document(userAuth.uid)
       .collection('favourites')
-      .doc(quote.id)
+      .document(quote.id)
       .get();
 
     if (!doc.exists) {
       return false;
     }
 
-    await FirestoreApp.instance
+    await Firestore.instance
       .collection('users')
-      .doc(userAuth.uid)
+      .document(userAuth.uid)
       .collection('favourites')
-      .doc(quote.id)
+      .document(quote.id)
       .delete();
 
     return true;

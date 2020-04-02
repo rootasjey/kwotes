@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -308,7 +308,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     final tempComments = tempQuote.comments;
 
     tempComments.forEach((tempComment) {
-      FirestoreApp.instance
+      Firestore.instance
         .collection('comments')
         .add({
           'commentId' : '',
@@ -328,19 +328,19 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
 
     // Anonymous author
     if (author.name.isEmpty) {
-      final anonymousSnap = await FirestoreApp.instance
+      final anonymousSnap = await Firestore.instance
         .collection('authors')
-        .where('name', '==', 'Anonymous')
-        .get();
+        .where('name', isEqualTo: 'Anonymous')
+        .getDocuments();
 
-      if (anonymousSnap.empty) {
+      if (anonymousSnap.documents.isEmpty) {
         throw ErrorDescription('Document not found for Anonymous author.');
       }
 
-      final firstDoc = anonymousSnap.docs.first;
+      final firstDoc = anonymousSnap.documents.first;
 
       return Author(
-        id: firstDoc.id,
+        id: firstDoc.documentID,
         name: 'Anonymous',
       );
     }
@@ -352,22 +352,22 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       );
     }
 
-    final existingSnapshot = await FirestoreApp.instance
+    final existingSnapshot = await Firestore.instance
       .collection('authors')
-      .where('name', '==', author.name)
-      .get();
+      .where('name', isEqualTo: author.name)
+      .getDocuments();
 
-    if (!existingSnapshot.empty) {
-      final existingAuthor = existingSnapshot.docs.first;
-      final data = existingAuthor.data();
+    if (existingSnapshot.documents.isNotEmpty) {
+      final existingAuthor = existingSnapshot.documents.first;
+      final data = existingAuthor.data;
 
       return Author(
-        id: existingAuthor.id,
+        id: existingAuthor.documentID,
         name: data['name'],
       );
     }
 
-    final newAuthor = await FirestoreApp.instance
+    final newAuthor = await Firestore.instance
       .collection('authors')
       .add({
         'job'         : author.job,
@@ -385,7 +385,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       });
 
     return Author(
-      id: newAuthor.id,
+      id: newAuthor.documentID,
       name: author.name,
     );
   }
@@ -404,22 +404,22 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       );
     }
 
-    final existingSnapshot = await FirestoreApp.instance
+    final existingSnapshot = await Firestore.instance
       .collection('references')
-      .where('name', '==', reference.name)
-      .get();
+      .where('name', isEqualTo: reference.name)
+      .getDocuments();
 
-    if (!existingSnapshot.empty) {
-      final existingRef = existingSnapshot.docs.first;
-      final data = existingRef.data();
+    if (existingSnapshot.documents.isNotEmpty) {
+      final existingRef = existingSnapshot.documents.first;
+      final data = existingRef.data;
 
       return Reference(
-        id: existingRef.id,
+        id: existingRef.documentID,
         name: data['name'],
       );
     }
 
-    final newReference = await FirestoreApp.instance
+    final newReference = await Firestore.instance
       .collection('references')
       .add({
         'createdAt' : DateTime.now(),
@@ -441,7 +441,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       });
 
     return Reference(
-      id: newReference.id,
+      id: newReference.documentID,
       name: reference.name,
     );
   }
@@ -491,9 +491,9 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     });
 
     try {
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('tempquotes')
-        .doc(tempQuote.id)
+        .document(tempQuote.id)
         .delete();
 
     } catch (error) {
@@ -523,12 +523,12 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('tempquotes')
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -537,15 +537,15 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -568,13 +568,13 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('tempquotes')
-        .startAfter(snapshot: lastDoc)
+        .startAfterDocument(lastDoc)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -583,9 +583,9 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.insert(tempQuotes.length - 1, quote);
@@ -631,7 +631,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       final topics = createTopicsMap(tempQuote);
 
       // 5.Format data and add new quote
-      final docQuote = await FirestoreApp.instance
+      final docQuote = await Firestore.instance
         .collection('quotes')
         .add({
           'author'        : {
@@ -661,14 +661,14 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
 
       // 6.Create comment if any
       await createComments(
-        quoteId: docQuote.id,
+        quoteId: docQuote.documentID,
         tempQuote: tempQuote,
       );
 
       // 7.Delete temp quote
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('tempquotes')
-        .doc(tempQuote.id)
+        .document(tempQuote.id)
         .delete();
 
     } catch (error) {

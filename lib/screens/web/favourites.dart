@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
@@ -5,7 +6,6 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -333,22 +333,20 @@ class _FavouritesState extends State<Favourites> {
     });
 
     try {
-      // User check
       userAuth = userAuth ?? await getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
       }
 
-      // Data
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('favourites')
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           isLoading = false;
         });
@@ -356,15 +354,15 @@ class _FavouritesState extends State<Favourites> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -398,15 +396,15 @@ class _FavouritesState extends State<Favourites> {
         FluroRouter.router.navigateTo(context, SigninRoute);
       }
 
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('favourites')
-        .startAfter(snapshot: lastDoc)
+        .startAfter(lastDoc)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -415,15 +413,15 @@ class _FavouritesState extends State<Favourites> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoadingMore = false;

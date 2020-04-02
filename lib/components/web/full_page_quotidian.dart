@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -376,9 +376,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     day = day.length == 2 ? day : '0$day';
 
     try {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('quotidians')
-        .doc('${now.year}:$month:$day:$_prevLang')
+        .document('${now.year}:$month:$day:$_prevLang')
         .get();
 
       if (!doc.exists) {
@@ -390,7 +390,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       }
 
       setState(() {
-        _quotidian = Quotidian.fromJSON(doc.data());
+        _quotidian = Quotidian.fromJSON(doc.data);
         isLoading = false;
       });
 

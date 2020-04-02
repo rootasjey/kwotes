@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -209,7 +209,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     Map<String, bool> topics,
   }) async {
 
-    await FirestoreApp.instance
+    await Firestore.instance
       .collection('tempquotes')
       .add({
         'author'        : {
@@ -269,15 +269,15 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         FluroRouter.router.navigateTo(context, SigninRoute);
       }
 
-      final user = await FirestoreApp.instance
+      final user = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .get();
 
       if (!user.exists) { return; }
 
       setState(() {
-        canManage = user.data()['rights']['user:managequote'] == true;
+        canManage = user.data['rights']['user:managequote'] == true;
       });
 
     } catch (error) {
@@ -349,21 +349,21 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
     try {
       // !NOTE: Use cloud function instead.
-      final user = await FirestoreApp.instance
+      final user = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .get();
 
-      int today = user.data()['quota']['today'];
+      int today = user.data['quota']['today'];
       today++;
 
-      int proposed = user.data()['stats']['proposed'];
+      int proposed = user.data['stats']['proposed'];
       proposed++;
 
-      await FirestoreApp.instance
+      await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
-        .update(data: {
+        .document(userAuth.uid)
+        .updateData({
           'quota.today': today,
           'stats.proposed': proposed,
         });
@@ -419,10 +419,10 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     Map<String, bool> topics,
   }) async {
 
-    await FirestoreApp.instance
+    await Firestore.instance
       .collection('tempquotes')
-      .doc(AddQuoteInputs.id)
-      .set({
+      .document(AddQuoteInputs.id)
+      .setData({
         'author': {
           'id'          : AddQuoteInputs.authorId,
           'job'         : AddQuoteInputs.authorJob,

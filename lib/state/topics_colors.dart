@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:memorare/components/web/firestore_app.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:mobx/mobx.dart';
 
@@ -14,16 +14,16 @@ abstract class TopicsColorsBase with Store {
 
   @action
   Future fetchTopicsColors() async {
-    final snapshot = await FirestoreApp.instance
+    final snapshot = await Firestore.instance
       .collection('topics')
-      .get();
+      .getDocuments();
 
-    if (snapshot.empty) { return; }
+    if (snapshot.documents.isEmpty) { return; }
 
     final List<TopicColor> list = [];
 
-    snapshot.forEach((doc) {
-      final topicColor = TopicColor.fromJSON(doc.data());
+    snapshot.documents.forEach((doc) {
+      final topicColor = TopicColor.fromJSON(doc.data);
       list.add(topicColor);
     });
 

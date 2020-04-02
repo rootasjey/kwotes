@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -339,11 +339,11 @@ class _TopicPageState extends State<TopicPage> {
     }
 
     try {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .collection('favourites')
-        .doc(quoteId)
+        .document(quoteId)
         .get();
 
       setState(() {
@@ -365,14 +365,14 @@ class _TopicPageState extends State<TopicPage> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('topics.$topicName', '==', true)
-        .where('lang', '==', appUserLang.current)
+        .where('topics.$topicName', isEqualTo: true)
+        .where('lang', isEqualTo: appUserLang.current)
         .limit(10)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -381,15 +381,15 @@ class _TopicPageState extends State<TopicPage> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -408,15 +408,15 @@ class _TopicPageState extends State<TopicPage> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('topics.$topicName', '==', true)
-        .where('lang', '==', appUserLang.current)
-        .startAfter(snapshot: lastDoc)
+        .where('topics.$topicName', isEqualTo: true)
+        .where('lang', isEqualTo: appUserLang.current)
+        .startAfterDocument(lastDoc)
         .limit(10)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -424,15 +424,15 @@ class _TopicPageState extends State<TopicPage> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoadingMore = false;

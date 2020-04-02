@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
@@ -233,7 +233,6 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     });
 
     try {
-      // User check
       userAuth = await getUserAuth();
 
       if (userAuth == null) {
@@ -241,15 +240,14 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         return;
       }
 
-      // Data
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('user.id', '==', userAuth.uid)
-        .where('lang', '==', Language.current)
+        .where('user.id', isEqualTo: userAuth.uid)
+        .where('lang', isEqualTo: Language.current)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           isLoading = false;
         });
@@ -257,15 +255,15 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastDoc = snapshot.documents.last;
 
       setState(() {
         isLoading = false;
@@ -293,15 +291,15 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     });
 
     try {
-      final snapshot = await FirestoreApp.instance
+      final snapshot = await Firestore.instance
         .collection('quotes')
-        .where('user.id', '==', userAuth.uid)
-        .where('lang', '==', Language.current)
-        .startAfter(snapshot: lastDoc)
+        .where('user.id', isEqualTo: userAuth.uid)
+        .where('lang', isEqualTo: Language.current)
+        .startAfterDocument(lastDoc)
         .limit(30)
-        .get();
+        .getDocuments();
 
-      if (snapshot.empty) {
+      if (snapshot.documents.isEmpty) {
         setState(() {
           isLoadingMore = false;
         });
@@ -309,9 +307,9 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         return;
       }
 
-      snapshot.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
         quotes.insert(quotes.length - 1, quote);

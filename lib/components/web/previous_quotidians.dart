@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/types/quotidian.dart';
@@ -104,9 +104,9 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
     final localLang = await Language.fetch(null);
 
     try {
-      final doc = await FirestoreApp.instance
+      final doc = await Firestore.instance
         .collection('quotidians')
-        .doc('${yesterday.year}:$month:$day:$localLang')
+        .document('${yesterday.year}:$month:$day:$localLang')
         .get();
 
       if (!doc.exists) {
@@ -118,7 +118,7 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
       }
 
       setState(() {
-        quotidian = Quotidian.fromJSON(doc.data());
+        quotidian = Quotidian.fromJSON(doc.data);
         isLoading = false;
       });
 

@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/discover_card.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 
@@ -131,32 +131,32 @@ class _DiscoverState extends State<Discover> {
     });
 
     try {
-      final refsSnapshot = await FirestoreApp.instance
+      final refsSnapshot = await Firestore.instance
         .collection('references')
-        .orderBy('updatedAt', 'desc')
+        .orderBy('updatedAt', descending: true)
         .limit(1)
-        .get();
+        .getDocuments();
 
-      if (!refsSnapshot.empty) {
-        refsSnapshot.forEach((doc) {
-          final data = doc.data();
-          data['id'] = doc.id;
+      if (refsSnapshot.documents.isNotEmpty) {
+        refsSnapshot.documents.forEach((doc) {
+          final data = doc.data;
+          data['id'] = doc.documentID;
 
           final ref = Reference.fromJSON(data);
           _references.add(ref);
         });
       }
 
-      final authorsSnapshot = await FirestoreApp.instance
+      final authorsSnapshot = await Firestore.instance
         .collection('authors')
-        .orderBy('updatedAt', 'desc')
+        .orderBy('updatedAt', descending: true)
         .limit(2)
-        .get();
+        .getDocuments();
 
-      if (!authorsSnapshot.empty) {
-        authorsSnapshot.forEach((doc) {
-          final data = doc.data();
-          data['id'] = doc.id;
+      if (authorsSnapshot.documents.isNotEmpty) {
+        authorsSnapshot.documents.forEach((doc) {
+          final data = doc.data;
+          data['id'] = doc.documentID;
 
           final author = Author.fromJSON(data);
           _authors.add(author);

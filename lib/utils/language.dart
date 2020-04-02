@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/state/user_lang.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 
@@ -42,13 +42,13 @@ class Language {
       return savedLang ?? 'en';
      }
 
-    final user = await FirestoreApp.instance
+    final user = await Firestore.instance
       .collection('users')
-      .doc(userAuth.uid)
+      .document(userAuth.uid)
       .get();
 
     if (user.exists) {
-      current = user.data()['lang'];
+      current = user.data['lang'];
     }
 
     return current;

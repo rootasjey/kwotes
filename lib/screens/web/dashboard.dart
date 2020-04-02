@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/firestore_app.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
@@ -602,16 +602,16 @@ class _DashboardState extends State<Dashboard> {
         return;
       }
 
-      final user = await FirestoreApp.instance
+      final user = await Firestore.instance
         .collection('users')
-        .doc(userAuth.uid)
+        .document(userAuth.uid)
         .get();
 
       if (!user.exists) { return; }
 
       setState(() {
         isCheckingAuth = false;
-        canManage = user.data()['rights']['user:managequote'] == true;
+        canManage = user.data['rights']['user:managequote'] == true;
       });
 
     } catch (error) {
