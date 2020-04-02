@@ -22,32 +22,34 @@
   <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-analytics.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-firestore.js"></script>
+
+  <!-- This script installs service_worker.js to provide PWA functionality to
+          application. For more information, see:
+          https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      databaseURL: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+      measurementId: "",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/flutter_service_worker.js');
+      });
+    }
+  </script>
+
   <script src="main.dart.js" type="application/javascript"></script>
-
-    <!-- This script installs service_worker.js to provide PWA functionality to
-           application. For more information, see:
-           https://developers.google.com/web/fundamentals/primers/service-workers -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('/flutter_service_worker.js');
-        });
-
-         // Your web app's Firebase configuration
-        var firebaseConfig = {
-          apiKey: "",
-          authDomain: "",
-          databaseURL: "",
-          projectId: "",
-          storageBucket: "",
-          messagingSenderId: "",
-          appId: "",
-          measurementId: ""
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        // firebase.analytics();
-      }
-    </script>
 </body>
 </html>
