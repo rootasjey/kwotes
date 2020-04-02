@@ -216,7 +216,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: GestureDetector(
         onTap: () {
-          final id = _quotidian.quote.author.id;
+          final id = _quotidian.quote.mainReference.id;
 
           FluroRouter.router.navigateTo(
             context,
