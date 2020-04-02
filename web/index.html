@@ -32,6 +32,21 @@
         window.addEventListener('load', function () {
           navigator.serviceWorker.register('/flutter_service_worker.js');
         });
+
+         // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "",
+          authDomain: "",
+          databaseURL: "",
+          projectId: "",
+          storageBucket: "",
+          messagingSenderId: "",
+          appId: "",
+          measurementId: ""
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        // firebase.analytics();
       }
     </script>
 </body>

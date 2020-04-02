@@ -1,9 +1,7 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:firebase/firebase.dart' as Firebase;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/app_keys.dart';
-import 'package:memorare/common/firebase_config.dart';
 import 'package:memorare/main_mobile.dart';
 import 'package:memorare/main_web.dart';
 import 'package:memorare/models/http_clients.dart';
@@ -14,19 +12,6 @@ import 'package:memorare/utils/router.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  if (Firebase.apps.isEmpty) {
-    Firebase.initializeApp(
-      apiKey: FirebaseConfig.apiKey,
-      authDomain: FirebaseConfig.authDomain,
-      databaseURL: FirebaseConfig.databaseURL,
-      projectId: FirebaseConfig.projectId,
-      storageBucket: FirebaseConfig.storageBucket,
-      messagingSenderId: FirebaseConfig.messagingSenderId,
-      appId: FirebaseConfig.appId,
-      measurementId: FirebaseConfig.measurementId,
-    );
-  }
-
   FluroRouter.setupRouter();
   appTopicsColors.fetchTopicsColors();
 
