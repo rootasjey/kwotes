@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 
 void main() {
   FluroRouter.setupRouter();
-
   return runApp(App());
 }
 
