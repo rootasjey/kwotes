@@ -383,6 +383,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('lang', isEqualTo: Language.current)
+        .orderBy('createdAt', descending: true)
         .limit(30)
         .getDocuments();
 
@@ -429,6 +430,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('lang', isEqualTo: Language.current)
+        .orderBy('createdAt', descending: true)
         .startAfterDocument(lastDoc)
         .limit(30)
         .getDocuments();
