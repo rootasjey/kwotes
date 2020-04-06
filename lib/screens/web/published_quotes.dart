@@ -244,6 +244,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         .collection('quotes')
         .where('user.id', isEqualTo: userAuth.uid)
         .where('lang', isEqualTo: Language.current)
+        .orderBy('createdAt', descending: true)
         .limit(30)
         .getDocuments();
 
@@ -295,6 +296,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         .collection('quotes')
         .where('user.id', isEqualTo: userAuth.uid)
         .where('lang', isEqualTo: Language.current)
+        .orderBy('createdAt', descending: true)
         .startAfterDocument(lastDoc)
         .limit(30)
         .getDocuments();
