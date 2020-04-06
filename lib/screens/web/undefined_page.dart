@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class UndefinedPage extends StatefulWidget {
   final String name;
@@ -85,7 +85,7 @@ class _UndefinedPageState extends State<UndefinedPage> {
           padding: const EdgeInsets.only(top: 100.0),
           child: FlatButton(
             onPressed: () {
-              FluroRouter.router.navigateTo(context, HomeRoute);
+              FluroRouter.router.navigateTo(context, RootRoute);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

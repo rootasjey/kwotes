@@ -4,8 +4,8 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 List<TopicColor> _topics = [];
 

@@ -11,8 +11,8 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class PublishedQuotes extends StatefulWidget {
   @override

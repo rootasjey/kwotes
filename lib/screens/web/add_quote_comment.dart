@@ -5,7 +5,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/router.dart';
 
 class AddQuoteComment extends StatefulWidget {
   @override

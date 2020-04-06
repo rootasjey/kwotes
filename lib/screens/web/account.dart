@@ -13,8 +13,8 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 
 class Account extends StatefulWidget {

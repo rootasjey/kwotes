@@ -37,37 +37,39 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       return emptyContainer();
     }
 
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        return ListView(
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 50.0,
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    quoteName(
-                      screenWidth: MediaQuery.of(context).size.width,
-                    ),
+    return Scaffold(
+        body: OrientationBuilder(
+        builder: (context, orientation) {
+          return ListView(
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 50.0,
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      quoteName(
+                        screenWidth: MediaQuery.of(context).size.width,
+                      ),
 
-                    animatedDivider(),
+                      animatedDivider(),
 
-                    authorName(),
+                      authorName(),
 
-                    if (quotidian.quote.mainReference?.name != null &&
-                      quotidian.quote.mainReference.name.length > 0)
-                      referenceName(),
-                  ],
+                      if (quotidian.quote.mainReference?.name != null &&
+                        quotidian.quote.mainReference.name.length > 0)
+                        referenceName(),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            // userSection(),
-          ],
-        );
-      },
+              // userSection(),
+            ],
+          );
+        },
+      ),
     );
   }
 

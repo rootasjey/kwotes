@@ -9,8 +9,8 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/auth.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 
 class QuotesLists extends StatefulWidget {

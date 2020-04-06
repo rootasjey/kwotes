@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 void onLongPressNavBack(BuildContext context) {
   if (AddQuoteInputs.navigatedFromPath == 'dashboard') {
@@ -13,5 +13,5 @@ void onLongPressNavBack(BuildContext context) {
     return;
   }
 
-  FluroRouter.router.navigateTo(context, HomeRoute);
+  FluroRouter.router.navigateTo(context, RootRoute);
 }

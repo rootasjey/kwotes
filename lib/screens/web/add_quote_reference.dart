@@ -7,8 +7,8 @@ import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class AddQuoteReference extends StatefulWidget {
   @override

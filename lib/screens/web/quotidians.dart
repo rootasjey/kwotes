@@ -12,8 +12,8 @@ import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Quotidians extends StatefulWidget {

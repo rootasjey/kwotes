@@ -5,8 +5,8 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/auth.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class EditPassword extends StatefulWidget {
   @override

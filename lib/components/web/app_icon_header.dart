@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class AppIconHeader extends StatelessWidget {
   final EdgeInsetsGeometry padding;
@@ -25,7 +25,7 @@ class AppIconHeader extends StatelessWidget {
           width: size,
           height: size,
           child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, HomeRoute),
+            onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
           ),
         ),
       ),

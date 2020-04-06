@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class HorizontalCard extends StatefulWidget {
   final String authorId;

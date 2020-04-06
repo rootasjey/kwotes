@@ -7,7 +7,7 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 

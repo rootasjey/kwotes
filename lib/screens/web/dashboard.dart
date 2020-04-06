@@ -9,8 +9,8 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/user_connection.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -519,7 +519,7 @@ class _DashboardState extends State<Dashboard> {
                     setUserDisconnected();
                     appLocalStorage.saveCredentials(email: '', password: '');
 
-                    FluroRouter.router.navigateTo(context, HomeRoute);
+                    FluroRouter.router.navigateTo(context, RootRoute);
                   },
                   icon: Icon(
                     Icons.exit_to_app,

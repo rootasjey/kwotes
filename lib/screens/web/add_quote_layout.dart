@@ -7,8 +7,8 @@ import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/utils/auth.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 
 class AddQuoteLayout extends StatefulWidget {
@@ -157,7 +157,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                     icon: Icon(Icons.home, size: 40.0,),
                     title: 'Home',
                     onTap: () {
-                      FluroRouter.router.navigateTo(context, HomeRoute);
+                      FluroRouter.router.navigateTo(context, RootRoute);
                     },
                   ),
               ],

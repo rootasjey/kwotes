@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/utils/route_names.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 
 class DiscoverCard extends StatelessWidget {
   final String id;

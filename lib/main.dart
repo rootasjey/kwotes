@@ -8,11 +8,10 @@ import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/router.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  FluroRouter.setupRouter();
   return runApp(App());
 }
 
@@ -21,6 +20,11 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
+  AppState() {
+    if (kIsWeb) { FluroRouter.setupWebRouter(); }
+    else { FluroRouter.setupMobileRouter(); }
+  }
+
   @override
   void initState() {
     super.initState();

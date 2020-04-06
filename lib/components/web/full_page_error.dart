@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/router.dart';
 
 class FullPageError extends StatelessWidget {
   final String message;

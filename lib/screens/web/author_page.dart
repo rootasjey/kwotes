@@ -9,7 +9,7 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/utils/router.dart';
+import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supercharged/supercharged.dart';
