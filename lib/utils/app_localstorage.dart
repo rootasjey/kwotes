@@ -1,16 +1,20 @@
-import 'dart:html';
-
+import 'package:cross_local_storage/cross_local_storage.dart';
 import 'package:flutter/material.dart';
 
 class AppLocalStorage {
-  static Storage _localStorage = window.localStorage;
+  static LocalStorageInterface _localStorage;
+
+  Future initialize() async {
+    if (_localStorage != null) { return; }
+    _localStorage = await LocalStorage.getInstance();
+  }
 
   bool getAutoBrightness() {
-    return _localStorage['autoBrightness'] == 'false' ? false : true;
+    return _localStorage.getBool('autoBrightness') ?? true;
   }
 
   Brightness getBrightness() {
-    final brightness = _localStorage['brightness'] == 'dark' ?
+    final brightness = _localStorage.getString('brightness') == 'dark' ?
       Brightness.dark : Brightness.light;
 
     return brightness;
@@ -19,30 +23,33 @@ class AppLocalStorage {
   Map<String, String> getCredentials() {
     final credentials = Map<String, String>();
 
-    credentials['email'] = _localStorage['email'];
-    credentials['password'] = _localStorage['password'];
+    credentials['email'] = _localStorage.getString('email');
+    credentials['password'] = _localStorage.getString('password');
 
     return credentials;
   }
 
-  String getLang() => _localStorage['lang'];
+  String getLang() => _localStorage.getString('lang');
 
   void saveAutoBrightness(bool value) {
-    _localStorage['autoBrightness'] = value.toString();
+    _localStorage.setBool('autoBrightness', value);
   }
 
   void saveBrightness(Brightness brightness) {
     final strBrightness = brightness == Brightness.dark ? 'dark' : 'light';
-    _localStorage['brightness'] = strBrightness;
+    _localStorage.setString('strBrightness', strBrightness);
   }
 
-  void saveEmail(String email) => _localStorage['email'] = email;
-  void saveLang(String lang) => _localStorage['lang'] = lang;
+  void saveEmail(String email) => _localStorage.setString('email', email);
+  void saveLang(String lang) => _localStorage.setString('lang', lang);
 
   void saveCredentials({String email, String password}) {
-    _localStorage['email'] = email;
-    _localStorage['password'] = password;
+    _localStorage.setString('email', email);
+    _localStorage.setString('password', password);
   }
+
+  void saveQuotidiansLang(String lang) => _localStorage.setString('quotidians_lang', lang);
+  String getQuotidiansLang() => _localStorage.getString('quotidians_lang') ?? 'en';
 }
 
 final appLocalStorage = AppLocalStorage();
