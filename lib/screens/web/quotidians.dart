@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/footer.dart';
@@ -28,6 +29,7 @@ class _QuotidiansState extends State<Quotidians> {
   bool isLoading      = false;
   bool isLoadingMore  = false;
   bool hasNext        = true;
+  int limit           = 30;
 
   final _scrollController = ScrollController();
   bool isFabVisible = false;
@@ -66,7 +68,8 @@ class _QuotidiansState extends State<Quotidians> {
 
           Column(
             children: <Widget>[
-              loadMoreButton(),
+              if (hasNext)
+                loadMoreButton(),
               NavBackFooter(),
             ],
           ),
@@ -89,27 +92,6 @@ class _QuotidiansState extends State<Quotidians> {
     }
 
     return gridQuotes();
-  }
-
-  Widget createMonthTitle(DateTime date) {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            vertical: 12.0,
-          ),
-          child: SizedBox(
-            width: 100.0,
-            child: Divider(thickness: 2.0,),
-          ),
-        ),
-
-        Text(
-          getMonthFromNumber(date.month),
-        ),
-      ],
-    );
   }
 
   Widget emptyContainer() {
@@ -233,27 +215,28 @@ class _QuotidiansState extends State<Quotidians> {
         delegate: SliverAppBarDelegate(
           minHeight: 60.0,
           maxHeight: 100.0,
-          child: Container(
-            padding: const EdgeInsets.only(top: 20.0),
-            color: stateColors.background == Colors.black ?
-                Color(0xFF303030) : Color(0xFFEEEEEE),
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    '$month $year',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
+          child: Observer(
+            builder: (_) {
+              return Container(
+                padding: const EdgeInsets.only(top: 20.0),
+                color: stateColors.background == Colors.black ?
+                  Color(0xFF303030) : Color(0xFFEEEEEE),
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        '$month $year',
+                      ),
 
-                  SizedBox(
-                    width: 100.0,
-                    child: Divider(thickness: 2,),
-                  )
-                ],
-              ),
-            ),
+                      SizedBox(
+                        width: 100.0,
+                        child: Divider(thickness: 2,),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -337,6 +320,14 @@ class _QuotidiansState extends State<Quotidians> {
                     )
                   ),
                 ],
+              ),
+            ),
+
+            Positioned(
+              bottom: 15.0,
+              right: 60.0,
+              child: Text(
+                quotidian.date.day.toString(),
               ),
             ),
           ],
@@ -452,7 +443,8 @@ class _QuotidiansState extends State<Quotidians> {
       final snapshot = await Firestore.instance
         .collection('quotidians')
         .where('lang', isEqualTo: Language.current)
-        .limit(30)
+        .orderBy('date', descending: false)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -475,29 +467,34 @@ class _QuotidiansState extends State<Quotidians> {
       lastDoc = snapshot.documents.last;
 
       setState(() {
+        hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
 
     } catch (error) {
+      debugPrint(error.toString());
+
       setState(() {
+        hasNext = false;
         isLoading = false;
       });
     }
   }
 
   void fetchMoreQuotidians() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
 
-    setState(() {
-      isLoadingMore = true;
-    });
+    isLoadingMore = true;
 
     try {
       final snapshot = await Firestore.instance
         .collection('quotidians')
         .where('lang', isEqualTo: Language.current)
+        .orderBy('date', descending: false)
         .startAfterDocument(lastDoc)
-        .limit(30)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -514,14 +511,18 @@ class _QuotidiansState extends State<Quotidians> {
         data['id'] = doc.documentID;
 
         final quotidian = Quotidian.fromJSON(data);
-        quotidians.insert(quotidians.length - 1, quotidian);
+        quotidians.add(quotidian);
       });
 
       setState(() {
+        hasNext = snapshot.documents.length == limit;
+        lastDoc = snapshot.documents.last;
         isLoadingMore = false;
       });
 
     } catch (error) {
+      debugPrint(error.toString());
+
       setState(() {
         isLoadingMore = false;
       });
