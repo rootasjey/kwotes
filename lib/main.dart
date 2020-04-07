@@ -63,10 +63,10 @@ class AppState extends State<App> {
             stateColors.themeData = theme;
 
             if (kIsWeb) {
-              return MainWeb(theme: theme,);
+              return MainWeb();
             }
 
-            return MainMobile(theme: theme,);
+            return MainMobile();
           },
         ) :
         MaterialApp(

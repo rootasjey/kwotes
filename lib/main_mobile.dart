@@ -5,10 +5,6 @@ import 'package:memorare/state/colors.dart';
 import 'package:supercharged/supercharged.dart';
 
 class MainMobile extends StatefulWidget {
-  final ThemeData theme;
-
-  MainMobile({this.theme});
-
   @override
   MainMobileState createState() => MainMobileState();
 }
@@ -24,7 +20,7 @@ class MainMobileState extends State<MainMobile> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Out Of Context',
-      theme: widget.theme,
+      theme: stateColors.themeData,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       onGenerateRoute: FluroRouter.router.generator,

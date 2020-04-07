@@ -9,9 +9,6 @@ import 'package:memorare/router/router.dart';
 import 'package:supercharged/supercharged.dart';
 
 class MainWeb extends StatefulWidget {
-  final ThemeData theme;
-  MainWeb({Key key, this.theme}) : super(key: key);
-
   @override
   _MainWebState createState() => _MainWebState();
 }
@@ -28,7 +25,7 @@ class _MainWebState extends State<MainWeb> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Out Of Context',
-      theme: widget.theme,
+      theme: stateColors.themeData,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       onGenerateRoute: FluroRouter.router.generator,
