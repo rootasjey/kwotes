@@ -1,12 +1,12 @@
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/queries.dart';
-import 'package:memorare/screens/quotes_by_topics.dart';
-import 'package:memorare/types/colors.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/types/topic_color.dart';
 
-List<String> _topicsList = [];
+List<TopicColor> _topicsList = [];
 
 class Topics extends StatefulWidget {
   @override
@@ -14,183 +14,107 @@ class Topics extends StatefulWidget {
 }
 
 class _TopicsState extends State<Topics> {
-  List<String> topicsList = [];
-  bool isLoading = false;
-  bool hasErrors = false;
-  bool hasConnection = true;
-  String exceptionMessage =  '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      topicsList = _topicsList;
-    });
-  }
-
-  @override
-  didChangeDependencies () {
-    super.didChangeDependencies();
-
-    if (topicsList.length > 0) {
-      return;
-    }
-
-    DataConnectionChecker().hasConnection
-      .then((_hasConnection) {
-        hasConnection = _hasConnection;
-
-        if (!hasConnection) {
-          setState(() {
-            isLoading = false;
-          });
-
-          return;
-        }
-
-        fetchTopics();
-      });
-  }
-
-  @override
-  dispose() {
-    _topicsList = topicsList;
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (!isLoading && !hasConnection) {
-      return EmptyView(
-        title: 'No connection',
-        description: 'The app cannot reach Internet right now.',
-        onRefresh: () {
-          DataConnectionChecker().hasConnection
-            .then((_hasConnection) {
-              if (!hasConnection) { return; }
-
-              fetchTopics();
-            });
-        },
-      );
-    }
-
-    if (isLoading) {
-      return LoadingComponent();
-    }
-
-    if (!isLoading && hasErrors) {
-      return EmptyView(
-        title: 'Topics',
-        description: exceptionMessage.isNotEmpty ?
-          exceptionMessage : 'An unexpected error ocurred. Please try again.',
-        onRefresh: () {
-          fetchTopics();
-        },
-      );
-    }
-
-    List<Widget> topicChips = [];
-
-    for (var topic in topicsList) {
-      topicChips.add(topicChip(topic));
-    }
-
-    if (topicChips.length == 0) {
-      return EmptyView(
-        title: 'Topics',
-        description: 'Sorry, no topic could be retrieved for now.',
-        onRefresh: () {
-          fetchTopics();
-        },
-      );
-    }
-
     return RefreshIndicator(
       onRefresh: () async {
-        await fetchTopics();
+        _topicsList.clear();
+        _topicsList = appTopicsColors.shuffle(max: 3);
         return null;
       },
       child: ListView(
-        padding: EdgeInsets.all(20.0),
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 40.0),
+            padding: EdgeInsets.only(top: 40.0),
             child: Text(
               'Topics',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 40.0),
+              style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
 
-          Wrap(
-            alignment: WrapAlignment.center,
-            children: topicChips,
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                '3 Topics you might like',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+
+          Divider(height: 60.0,),
+
+          topicsColorsCards(),
+
+          FadeInY(
+            delay: 5.0,
+            beginY: 100.0,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: FlatButton(
+                  onPressed: () {
+                    // FluroRouter.router.navigateTo(context, TopicsRoute);
+                  },
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: stateColors.primary),
+                    borderRadius: BorderRadius.circular(2.0),
+                  ),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      'Discover more topics'
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget topicChip(String topic) {
-    final chipColor = ThemeColor.topicColor(topic);
+  Widget topicsColorsCards() {
+    int count = 0;
 
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: ActionChip(
-        elevation: 2.0,
-        backgroundColor: Colors.transparent,
-        shape: StadiumBorder(side: BorderSide(color: chipColor, width: 3.0)),
-        labelPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return QuotesByTopics(topic: topic,);
-              }
-            )
-          );
-        },
-        label: Text(
-          topic,
-          style: TextStyle(
-            fontSize: 18,
+    return Observer(
+      builder: (context) {
+        if (_topicsList.length == 0) {
+          _topicsList = appTopicsColors.shuffle(max: 3);
+        }
+
+        return Center(
+          child: Wrap(
+            children: _topicsList.map((topicColor) {
+              count++;
+
+              return FadeInY(
+                beginY: 100.0,
+                endY: 0.0,
+                delay: count.toDouble(),
+                child: TopicCardColor(
+                  size: 100.0,
+                  elevation: 6.0,
+                  color: Color(topicColor.decimal),
+                  name: '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              );
+            }).toList(),
           ),
-        ),
-      ),
+        );
+      },
     );
-  }
-
-  Future fetchTopics() async {
-    setState(() {
-      isLoading = true;
-      hasErrors = false;
-    });
-
-    hasConnection = await DataConnectionChecker().hasConnection;
-
-    if (!hasConnection) {
-      setState(() {
-        isLoading = false;
-        hasErrors = true;
-      });
-
-      return;
-    }
-
-    return Queries.topics(context)
-      .then((topicsResp) {
-        setState(() {
-          topicsList = topicsResp;
-          isLoading = false;
-        });
-      })
-      .catchError((err) {
-        setState(() {
-          hasErrors = true;
-          isLoading = false;
-        });
-      });
   }
  }
