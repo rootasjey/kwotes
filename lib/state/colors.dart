@@ -20,6 +20,8 @@ abstract class StateColorsBase with Store {
 
   Color primary = Color(0xFF796AD2);
 
+  ThemeData themeData;
+
   @action
   void refreshTheme(Brightness brightness) {
     if (brightness == Brightness.dark) {
