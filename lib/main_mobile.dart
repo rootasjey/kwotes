@@ -1,7 +1,9 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class MainMobile extends StatefulWidget {
@@ -13,6 +15,7 @@ class MainMobileState extends State<MainMobile> {
   @override
   void initState() {
     super.initState();
+    checkConnection();
     loadBrightness();
   }
 
@@ -25,6 +28,18 @@ class MainMobileState extends State<MainMobile> {
       initialRoute: '/',
       onGenerateRoute: FluroRouter.router.generator,
     );
+  }
+
+  void checkConnection() async {
+    final hasConnection = await DataConnectionChecker().hasConnection;
+
+    if (!hasConnection) {
+      showSnack(
+        context: context,
+        message: "It seems that you're offline",
+        type: SnackType.error,
+      );
+    }
   }
 
   void loadBrightness() {
