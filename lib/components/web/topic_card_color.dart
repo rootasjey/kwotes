@@ -5,10 +5,16 @@ import 'package:memorare/router/router.dart';
 class TopicCardColor extends StatelessWidget {
   final String name;
   final Color color;
+  final double size;
+  final double elevation;
+  final TextStyle style;
 
   TopicCardColor({
     this.color,
     this.name = '',
+    this.size = 70.0,
+    this.elevation = 1.0,
+    this.style,
   });
 
   @override
@@ -18,12 +24,13 @@ class TopicCardColor extends StatelessWidget {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 70.0,
-            width: 70.0,
+            height: size,
+            width: size,
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              elevation: elevation,
               color: color,
               child: InkWell(
                 onTap: () {
@@ -43,6 +50,7 @@ class TopicCardColor extends StatelessWidget {
               child: Text(
                 name,
                 overflow: TextOverflow.ellipsis,
+                style: style,
               ),
             ),
           ),
