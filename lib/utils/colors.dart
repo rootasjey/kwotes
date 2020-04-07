@@ -19,3 +19,8 @@ Color darken(Color color, [double amount = .1]) {
 
   return hslDark.toColor();
 }
+
+class CustomColors {
+  static Color softDark = Color(0xFF303030);
+  static Color softLight = Color(0xFFEEEEEE);
+}

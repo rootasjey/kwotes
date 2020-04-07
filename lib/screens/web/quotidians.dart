@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/footer.dart';
@@ -12,10 +11,12 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
+import 'package:memorare/utils/colors.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Quotidians extends StatefulWidget {
@@ -38,14 +39,34 @@ class _QuotidiansState extends State<Quotidians> {
 
   var lastDoc;
 
+  ReactionDisposer colorDisposer;
+  Color backgroundColor;
+
   @override
   initState() {
     super.initState();
 
     selectedLang = Language.frontend(appLocalStorage.getQuotidiansLang());
-    print('selectedLang: $selectedLang');
+
+    colorDisposer = autorun((_) {
+      final color = stateColors.background == Colors.black ?
+        CustomColors.softDark : CustomColors.softLight;
+
+      if (backgroundColor != color) {
+        setState(() {
+          backgroundColor = color;
+        });
+      }
+    });
+
     checkAuth();
     fetchQuotidians();
+  }
+
+  @override
+  void dispose() {
+    if (colorDisposer != null) { colorDisposer(); }
+    super.dispose();
   }
 
   @override
@@ -157,7 +178,9 @@ class _QuotidiansState extends State<Quotidians> {
             floating: true,
             snap: true,
             expandedHeight: 340.0,
-            backgroundColor: Colors.transparent,
+            // backgroundColor: Colors.transparent,
+            // backgroundColor: stateColors.primary,
+            backgroundColor: backgroundColor,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
@@ -204,7 +227,13 @@ class _QuotidiansState extends State<Quotidians> {
                             .map((String value) {
                               return DropdownMenuItem(
                                 value: value,
-                                child: Text(value,)
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                    // color: Colors.white,
+                                    // backgroundColor: stateColors.primary,
+                                  ),
+                                ),
                               );
                             })
                             .toList(),
@@ -248,28 +277,23 @@ class _QuotidiansState extends State<Quotidians> {
         delegate: SliverAppBarDelegate(
           minHeight: 60.0,
           maxHeight: 100.0,
-          child: Observer(
-            builder: (_) {
-              return Container(
-                padding: const EdgeInsets.only(top: 20.0),
-                color: stateColors.background == Colors.black ?
-                  Color(0xFF303030) : Color(0xFFEEEEEE),
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        '$month $year',
-                      ),
-
-                      SizedBox(
-                        width: 100.0,
-                        child: Divider(thickness: 2,),
-                      )
-                    ],
+          child: Container(
+            padding: const EdgeInsets.only(top: 20.0),
+            color: backgroundColor,
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    '$month $year',
                   ),
-                ),
-              );
-            },
+
+                  SizedBox(
+                    width: 100.0,
+                    child: Divider(thickness: 2,),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
