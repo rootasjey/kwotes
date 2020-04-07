@@ -10,6 +10,7 @@ import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
@@ -30,6 +31,7 @@ class _QuotidiansState extends State<Quotidians> {
   bool isLoadingMore  = false;
   bool hasNext        = true;
   int limit           = 30;
+  String selectedLang = 'en';
 
   final _scrollController = ScrollController();
   bool isFabVisible = false;
@@ -39,6 +41,9 @@ class _QuotidiansState extends State<Quotidians> {
   @override
   initState() {
     super.initState();
+
+    selectedLang = Language.frontend(appLocalStorage.getQuotidiansLang());
+    print('selectedLang: $selectedLang');
     checkAuth();
     fetchQuotidians();
   }
@@ -151,7 +156,7 @@ class _QuotidiansState extends State<Quotidians> {
           SliverAppBar(
             floating: true,
             snap: true,
-            expandedHeight: 320.0,
+            expandedHeight: 340.0,
             backgroundColor: Colors.transparent,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
@@ -176,6 +181,34 @@ class _QuotidiansState extends State<Quotidians> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+
+                    FadeInY(
+                      delay: 1.4,
+                      beginY: 50.0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: DropdownButton<String>(
+                          elevation: 3,
+                          value: selectedLang,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              selectedLang = newValue;
+                            });
+
+                            fetchQuotidians();
+                            appLocalStorage.saveQuotidiansLang(Language.backend(selectedLang));
+                          },
+                          items: ['English', 'Français']
+                            .map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value,)
+                              );
+                            })
+                            .toList(),
+                        ),
                       ),
                     ),
                   ],
@@ -439,10 +472,14 @@ class _QuotidiansState extends State<Quotidians> {
       isLoading = true;
     });
 
+    quotidians.clear();
+
+    final lang = Language.backend(selectedLang);
+
     try {
       final snapshot = await Firestore.instance
         .collection('quotidians')
-        .where('lang', isEqualTo: Language.current)
+        .where('lang', isEqualTo: lang)
         .orderBy('date', descending: false)
         .limit(limit)
         .getDocuments();
@@ -487,11 +524,12 @@ class _QuotidiansState extends State<Quotidians> {
     }
 
     isLoadingMore = true;
+    final lang = Language.backend(selectedLang);
 
     try {
       final snapshot = await Firestore.instance
         .collection('quotidians')
-        .where('lang', isEqualTo: Language.current)
+        .where('lang', isEqualTo: lang)
         .orderBy('date', descending: false)
         .startAfterDocument(lastDoc)
         .limit(limit)
