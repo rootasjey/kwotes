@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
@@ -29,6 +32,16 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        body: OrientationBuilder(
+        builder: (context, orientation) {
+          return body();
+        },
+      ),
+    );
+  }
+
+  Widget body() {
     if (isLoading && quotidian == null) {
       return LoadingComponent();
     }
@@ -37,39 +50,52 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       return emptyContainer();
     }
 
-    return Scaffold(
-        body: OrientationBuilder(
-        builder: (context, orientation) {
-          return ListView(
-            children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 50.0,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      quoteName(
-                        screenWidth: MediaQuery.of(context).size.width,
-                      ),
-
-                      animatedDivider(),
-
-                      authorName(),
-
-                      if (quotidian.quote.mainReference?.name != null &&
-                        quotidian.quote.mainReference.name.length > 0)
-                        referenceName(),
-                    ],
-                  ),
+    return ListView(
+      children: <Widget>[
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 50.0,
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                quoteName(
+                  screenWidth: MediaQuery.of(context).size.width,
                 ),
-              ),
 
-              // userSection(),
-            ],
-          );
-        },
-      ),
+                animatedDivider(),
+
+                authorName(),
+
+                if (quotidian.quote.mainReference?.name != null &&
+                  quotidian.quote.mainReference.name.length > 0)
+                  referenceName(),
+              ],
+            ),
+          ),
+        ),
+
+        // userSection(),
+
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 200.0),
+            child: FlatButton(
+              onPressed: () {
+                FluroRouter.router.navigateTo(context, HomeRoute);
+              },
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: stateColors.primary),
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text('Home'),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -111,7 +137,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             opacity: value,
             child: GestureDetector(
               onTap: () {
-                final id = quotidian.quote.author.id;
+                // final id = quotidian.quote.author.id;
 
                 // FluroRouter.router.navigateTo(
                 //   context,
@@ -176,7 +202,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: GestureDetector(
         onTap: () {
-          final id = quotidian.quote.author.id;
+          // final id = quotidian.quote.author.id;
 
           // FluroRouter.router.navigateTo(
           //   context,
