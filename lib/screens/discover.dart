@@ -98,7 +98,7 @@ class _DiscoverState extends State<Discover> {
           beginY: 100.0,
           child: discoverCard(
             title: reference.name,
-            imgUrl: reference.imgUrl,
+            imgUrl: reference.urls.image,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -125,7 +125,7 @@ class _DiscoverState extends State<Discover> {
           beginY: 100.0,
           child: discoverCard(
             title: author.name,
-            imgUrl: author.imgUrl,
+            imgUrl: author.urls.image,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
