@@ -47,15 +47,12 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget build(BuildContext context) {
     final themeColor = Provider.of<ThemeColor>(context);
     final accent = themeColor.accent;
-    final backgroundColor = themeColor.background;
 
     if (isLoading) {
       return Scaffold(
         body: LoadingComponent(
           title: 'Loading my quotes in validation...',
           padding: EdgeInsets.symmetric(horizontal: 30.0),
-          color: backgroundColor,
-          backgroundColor: Colors.transparent,
         ),
       );
     }
@@ -65,8 +62,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         body: LoadingComponent(
           title: 'Loading quote...',
           padding: EdgeInsets.symmetric(horizontal: 30.0),
-          color: backgroundColor,
-          backgroundColor: Colors.transparent,
         ),
       );
     }

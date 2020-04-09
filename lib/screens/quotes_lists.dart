@@ -93,7 +93,6 @@ class _QuotesListsState extends State<QuotesLists> {
         if (isLoading) {
           return LoadingComponent(
             title: 'Loading your lists...',
-            color: themeColor.background,
             padding: EdgeInsets.all(30.0),
           );
         }

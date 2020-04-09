@@ -156,7 +156,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         if (isLoading) {
           return LoadingComponent(
             title: 'Loading the $displayedName list...',
-            color: themeColor.background,
             padding: EdgeInsets.all(30.0),
           );
         }
@@ -173,7 +172,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         if (isDeletingList == true) {
           return LoadingComponent(
             title: 'Deleting $displayedName list...',
-            color: themeColor.background,
             padding: EdgeInsets.all(30.0),
           );
         }

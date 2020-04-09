@@ -75,8 +75,6 @@ class _QuotidiansState extends State<Quotidians> {
 
     if (isLoading) {
       return LoadingComponent(
-        backgroundColor: Colors.transparent,
-        color: ThemeColor.primary,
         title: 'Loading quotidians...',
       );
     }

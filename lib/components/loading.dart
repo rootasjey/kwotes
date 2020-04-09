@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
 
 class LoadingComponent extends StatelessWidget {
-  final Color backgroundColor;
-  final Color color;
   final EdgeInsets padding;
   final String title;
 
   LoadingComponent({
-    this.backgroundColor = Colors.transparent,
-    this.color = Colors.white,
     this.title = 'Loading...',
     this.padding
   });
@@ -19,9 +16,6 @@ class LoadingComponent extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height - 100,
       padding: padding,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,14 +23,13 @@ class LoadingComponent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 20.0),
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(color),
+              valueColor: AlwaysStoppedAnimation(stateColors.primary),
             ),
           ),
           Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: color,
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),

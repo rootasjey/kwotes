@@ -41,7 +41,6 @@ class _DraftsState extends State<Drafts> {
   Widget build(BuildContext context) {
     final themeColor = Provider.of<ThemeColor>(context);
     final accent = themeColor.accent;
-    final backgroundColor = themeColor.background;
 
     return Scaffold(
       appBar: AppBar(
@@ -102,7 +101,6 @@ class _DraftsState extends State<Drafts> {
         if (isLoading) {
           return LoadingComponent(
             title: 'Loading your drafts...',
-            color: themeColor.background,
             padding: EdgeInsets.all(30.0),
           );
         }
@@ -112,8 +110,6 @@ class _DraftsState extends State<Drafts> {
             body: LoadingComponent(
               title: 'Loading quote...',
               padding: EdgeInsets.symmetric(horizontal: 30.0),
-              color: backgroundColor,
-              backgroundColor: Colors.transparent,
             ),
           );
         }

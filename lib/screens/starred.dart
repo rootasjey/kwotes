@@ -38,7 +38,6 @@ class _StarredState extends State<Starred> {
   Widget build(BuildContext context) {
     final themeColor = Provider.of<ThemeColor>(context);
     final color = themeColor.accent;
-    final backgroundColor = themeColor.background;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,8 +106,6 @@ class _StarredState extends State<Starred> {
             return LoadingComponent(
               title: 'Loading favorites quotes',
               padding: EdgeInsets.symmetric(horizontal: 30.0),
-              color: backgroundColor,
-              backgroundColor: Colors.transparent,
             );
           }
 
