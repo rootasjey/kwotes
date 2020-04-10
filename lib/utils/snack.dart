@@ -11,23 +11,17 @@ void showSnack({BuildContext context, String message, SnackType type}) {
   Flushbar(
     backgroundColor: color,
     duration: 5.seconds,
-    messageText: Row(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 20.0),
-          child: Icon(
-            iconData,
-            color: Colors.white,
-          ),
-        ),
-
-        Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ],
+    icon: Icon(
+      iconData,
+      color: Colors.white,
+    ),
+    messageText: Text(
+      message,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 5,
+      style: TextStyle(
+        color: Colors.white,
+      ),
     ),
   )..show(context);
 }
