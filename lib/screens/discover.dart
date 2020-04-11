@@ -37,7 +37,6 @@ class _DiscoverState extends State<Discover> {
         builder: (BuildContext context) {
           if (isLoading) {
             return LoadingComponent(
-              backgroundColor: Colors.transparent,
               title: 'Loading Discover section...',
             );
           }
