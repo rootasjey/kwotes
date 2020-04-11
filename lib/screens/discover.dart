@@ -227,11 +227,20 @@ class _DiscoverState extends State<Discover> {
       final authorsSnapshot = await Firestore.instance
         .collection('authors')
         .orderBy('updatedAt', descending: true)
-        .limit(2)
+        .limit(4)
         .getDocuments();
 
-      if (authorsSnapshot.documents.isNotEmpty) {
-        authorsSnapshot.documents.forEach((doc) {
+      final snapDocs = authorsSnapshot.documents.sublist(0);
+
+      if (snapDocs.isNotEmpty) {
+        snapDocs
+          .removeWhere((element) {
+            return _references.any((ref) {
+              return ref.name == element.data['name'];
+            });
+          });
+
+        snapDocs.take(2).forEach((doc) {
           final data = doc.data;
           data['id'] = doc.documentID;
 
