@@ -131,14 +131,17 @@ class _DashboardState extends State<Dashboard> {
             showDialog(
               context: context,
               barrierDismissible: true,
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: avatarUrl.isEmpty ?
-                    Image.asset('assets/images/user-${stateColors.iconExt}.png', width: 100.0) :
+              builder: (context) {
+                return AlertDialog(
+                  content: avatarUrl.isEmpty ?
+                    Image.asset(
+                      'assets/images/user-${stateColors.iconExt}.png',
+                      width: 100.0,
+                      scale: .8,
+                    ) :
                     Image.asset(path, width: 100.0),
                 );
-              },
+              }
             );
           },
         ),
