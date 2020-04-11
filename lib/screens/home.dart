@@ -3,7 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/push_notifications.dart';
-import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/dashboard.dart';
 import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/state/colors.dart';
@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   static List<Widget> _listScreens = <Widget>[
     Discover(),
     Topics(),
-    Account(),
+    Dashboard(),
   ];
 
   @override

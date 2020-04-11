@@ -50,6 +50,19 @@ class AppLocalStorage {
 
   void saveQuotidiansLang(String lang) => _localStorage.setString('quotidians_lang', lang);
   String getQuotidiansLang() => _localStorage.getString('quotidians_lang') ?? 'en';
+
+  void saveUserName(String userName) => _localStorage.setString('username', userName);
+  String getUserName() => _localStorage.getString('username') ?? '';
+
+  void saveUserUid(String userName) => _localStorage.setString('user_uid', userName);
+  String getUserUid() => _localStorage.getString('user_uid') ?? '';
+
+  Future clearUserAuthData() async {
+    await _localStorage.remove('username');
+    await _localStorage.remove('email');
+    await _localStorage.remove('password');
+    await _localStorage.remove('user_uid');
+  }
 }
 
 final appLocalStorage = AppLocalStorage();

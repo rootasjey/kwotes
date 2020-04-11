@@ -1,13 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/models/http_clients.dart';
-import 'package:memorare/models/user_data.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/credentials.dart';
-import 'package:memorare/types/user_data.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/snack.dart';
 
 class Signin extends StatefulWidget {
   @override
@@ -17,11 +17,25 @@ class Signin extends StatefulWidget {
 class SigninState extends State<Signin> {
   final formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  double beginY = 100.0;
+
   String email = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: stateColors.primary,
+        title: Text(
+          'Sign in',
+        )
+      ),
+      body: body(),
+    );
+  }
+
+  Widget body() {
     if (isLoading) {
       return LoadingComponent(title: 'Signing in...',);
     }
@@ -36,149 +50,34 @@ class SigninState extends State<Signin> {
                 padding: EdgeInsets.all(40.0),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        'Sign in into your existing account.',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    FadeInY(
+                      delay: 1.0,
+                      beginY: beginY,
+                      child: subtitle(),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 40.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          TextFormField(
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.email),
-                              labelText: 'Email',
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (value) {
-                              email = value;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Email login cannot be empty';
-                              }
 
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
+                    FadeInY(
+                      delay: 2.0,
+                      beginY: beginY,
+                      child: emailInput(),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          TextFormField(
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.lock_outline),
-                              labelText: 'Password',
-                            ),
-                            obscureText: true,
-                            onChanged: (value) {
-                              password = value;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Password login cannot be empty';
-                              }
 
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
+                    FadeInY(
+                      delay: 3.0,
+                      beginY: beginY,
+                      child: passwordInput(),
                     ),
-                    Mutation(
-                      builder: (RunMutation runMutation, QueryResult result) {
-                        return Padding(
-                          padding: EdgeInsets.only(top: 60.0),
-                          child: RaisedButton(
-                            color: Color(0xFF2ECC71),
-                            onPressed: () {
-                              setState(() {
-                                isLoading = true;
-                              });
 
-                              runMutation({
-                                'email': email,
-                                'password': password,
-                              });
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Sign in',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Icon(Icons.arrow_forward, color: Colors.white,),
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                        );
-                      },
-                      options: MutationOptions(
-                        documentNode: parseString(mutationSignin()),
-                        onCompleted: (dynamic resultData) {
-                          setState(() {
-                            isLoading = false;
-                          });
+                    FadeInY(
+                      delay: 4.0,
+                      beginY: beginY,
+                      child: gotoSignUpButton(),
+                    ),
 
-                          if (resultData == null) { return; }
-
-                          Map<String, dynamic> signinJson = resultData['signin'];
-
-                          var userData = UserData.fromJSON(signinJson);
-                          var userDataModel = Provider.of<UserDataModel>(context, listen: false);
-
-                          userDataModel
-                            ..update(userData)
-                            ..setAuthenticated(true)
-                            ..saveToFile(signinJson);
-
-                          Credentials(email: email, password: password).saveToFile();
-
-                          Provider.of<HttpClientsModel>(context, listen: false).setToken(token: userData.token);
-
-                          Navigator.of(context).pop();
-                        },
-                        onError: (OperationException error) {
-                          setState(() {
-                            isLoading = false;
-                          });
-
-                          for (var error in error.graphqlErrors) {
-                            Scaffold.of(context)
-                              .showSnackBar(
-                                SnackBar(
-                                  backgroundColor: ThemeColor.error,
-                                  content: Text(
-                                    '${error.message}',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              );
-                          }
-                        }
-                      ),
+                    FadeInY(
+                      delay: 5.0,
+                      beginY: beginY,
+                      child: validationButton(),
                     ),
                   ],
                 ),
@@ -190,19 +89,168 @@ class SigninState extends State<Signin> {
     );
   }
 
-  String mutationSignin() {
-    return """
-      mutation Signin(\$email: String!, \$password: String!) {
-        signin(email: \$email, password: \$password) {
-          id
-          imgUrl
-          email
-          lang
-          name
-          rights
-          token
-        }
+  Widget emailInput() {
+    return Padding(
+      padding: EdgeInsets.only(top: 60.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autofocus: true,
+            decoration: InputDecoration(
+              icon: Icon(Icons.email, color: stateColors.primary),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: stateColors.primary,),
+              ),
+              labelText: 'Email',
+              labelStyle: TextStyle(color: stateColors.primary,),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            onChanged: (value) {
+              email = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Email cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget gotoSignUpButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0),
+      child: FlatButton(
+        onPressed: () {
+          FluroRouter.router.navigateTo(context, SignupRoute);
+        },
+        child: Text(
+          "I don't have an account"
+        )
+      ),
+    );
+  }
+
+  Widget passwordInput() {
+    return Padding(
+      padding: EdgeInsets.only(top: 30.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.lock_outline, color: stateColors.primary,),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: stateColors.primary,),
+              ),
+              labelText: 'Password',
+              labelStyle: TextStyle(color: stateColors.primary,),
+            ),
+            obscureText: true,
+            onChanged: (value) {
+              password = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Password cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget subtitle() {
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Text(
+        'Sign in into your existing account.',
+        style: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget validationButton() {
+    return Padding(
+      padding: EdgeInsets.only(top: 100.0),
+      child: FlatButton(
+        onPressed: () {
+          signin();
+        },
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: stateColors.primary),
+          borderRadius: BorderRadius.circular(2.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Sign in',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Icon(Icons.arrow_forward,),
+              )
+            ],
+          )
+        ),
+      ),
+    );
+  }
+
+  Future signin() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+      if (authResult.user == null) {
+        throw Error();
       }
-    """;
+
+      final userAuth = authResult.user;
+
+      appLocalStorage.saveCredentials(email: email, password: password);
+      appLocalStorage.saveUserName(userAuth.displayName);
+      appLocalStorage.saveUserUid(userAuth.uid);
+
+      setUserConnected();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      FluroRouter.router.navigateTo(context, HomeRoute);
+
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      showSnack(
+        context: context,
+        message: 'Invalid email or password',
+        type: SnackType.error,
+      );
+    }
   }
 }

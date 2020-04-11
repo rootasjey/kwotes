@@ -11,9 +11,20 @@ class FluroRouter {
       RootRoute,
       handler: MobileRouteHandlers.quotidianHandler,
     );
+
     router.define(
       HomeRoute,
       handler: MobileRouteHandlers.homeHandler,
+    );
+
+    router.define(
+      SigninRoute,
+      handler: MobileRouteHandlers.signinHandler,
+    );
+
+    router.define(
+      SignupRoute,
+      handler: MobileRouteHandlers.signupHandler,
     );
   }
 
