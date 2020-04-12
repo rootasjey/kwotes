@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/types/colors.dart';
+import 'package:memorare/utils/snack.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ButtonLink extends StatelessWidget {
@@ -26,16 +27,9 @@ class ButtonLink extends StatelessWidget {
             return;
           }
 
-          Scaffold.of(context)
-            .showSnackBar(
-              SnackBar(
-                backgroundColor: ThemeColor.error,
-                content: Text(
-                  'Could not launch $url',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            );
+          showSnack(
+            message: 'Could not launch $url',
+          );
         },
         color: ThemeColor.primary,
         child: Padding(
