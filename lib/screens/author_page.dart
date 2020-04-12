@@ -1,22 +1,20 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/button_link.dart';
-import 'package:memorare/components/error.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/medium_quote_card.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/utils/animation.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AuthorPage extends StatefulWidget {
   final String id;
-  final String authorName;
-  AuthorPage({this.id, this.authorName});
+
+  AuthorPage({this.id});
 
   @override
   _AuthorPageState createState() => _AuthorPageState();
@@ -25,12 +23,12 @@ class AuthorPage extends StatefulWidget {
 class _AuthorPageState extends State<AuthorPage> {
   Author author;
   List<Quote> quotes = [];
+
   bool areQuotesLoading = false;
   bool areQuotesLoaded = false;
-
   bool isLoading = false;
-  bool hasErrors = false;
-  Error error;
+
+  double beginY = 100.0;
 
   @override
   void didChangeDependencies() {
@@ -42,94 +40,155 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        if (!isLoading && hasErrors) {
-          return ErrorComponent(
-            description: error != null ? error.toString() : '',
+        if (!isLoading && author == null) {
+          return Container(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Icon(
+                    Icons.sentiment_neutral,
+                    size: 40.0,
+                  ),
+                ),
+
+                Text(
+                  "Sorry, no data found for the specified author"
+                ),
+              ],
+            ),
           );
         }
 
         if (isLoading) {
           return LoadingComponent(
-            title: 'Loading ${widget.authorName}...',
+            title: 'Loading author...',
             padding: EdgeInsets.all(30.0),
           );
         }
 
-        final themeColor = Provider.of<ThemeColor>(context);
+        return authorBody();
+      }),
+    );
+  }
 
-        return NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
+  Widget authorBody() {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+          return false;
+        }
 
-            if (!areQuotesLoading && !areQuotesLoaded) {
-              if (quotes.length > 0) { return false; }
+        if (!areQuotesLoading && !areQuotesLoaded) {
+          if (quotes.length > 0) { return false; }
 
-              areQuotesLoading = true;
+          areQuotesLoading = true;
 
-              Queries.quotesByAuthor(context, widget.id)
-                .then((quotesResp) {
-                  WidgetsBinding.instance.addPostFrameCallback((duration) {
-                    setState(() {
-                      quotes = quotesResp.entries;
-                      areQuotesLoading = false;
-                      areQuotesLoaded = true;
-                    });
-                  });
-                })
-                .catchError((err) {
-                  WidgetsBinding.instance.addPostFrameCallback((duration) {
-                    setState(() {
-                      error = err;
-                      areQuotesLoading = false;
-                      areQuotesLoaded = true;
-                    });
-                  });
+          Firestore.instance
+            .collection('quotes')
+            .where('author.id', isEqualTo: widget.id)
+            .limit(1)
+            .getDocuments()
+            .then((querySnap) {
+              if (querySnap.documents.length == 0) { return; }
+              // final quotesList = <Quote>[];
+
+              querySnap.documents.forEach((element) {
+                final data = element.data;
+                data['id'] = element.documentID;
+                quotes.add(Quote.fromJSON(data));
+              });
+
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  areQuotesLoaded = true;
+                  areQuotesLoading = false;
                 });
-            }
+              });
+            }).catchError((error) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  areQuotesLoaded = true;
+                  areQuotesLoading = false;
+                });
+              });
+            });
+        }
 
-            return false;
-          },
-          child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+        return false;
+      },
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+        children: <Widget>[
+          Stack(
             children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    alignment: AlignmentDirectional.center,
-                    child: Column(
-                      children: <Widget>[
-                        avatar(),
-
-                        name(),
-
-                        job(themeColor.background),
-
-                        summary(),
-
-                        buttonsLinks(),
-
-                        if (areQuotesLoading)
-                          Padding(
-                            padding: EdgeInsets.only(top: 40),
-                            child: LinearProgressIndicator(),
-                          ),
-
-                        Divider(),
-
-                        authorQuotes(),
-                      ],
+              Container(
+                alignment: AlignmentDirectional.center,
+                child: Column(
+                  children: <Widget>[
+                    FadeInY(
+                      beginY: beginY,
+                      delay: 1.0,
+                      child: avatar(),
                     ),
-                  ),
 
-                  backButton(),
-                ],
+                    FadeInY(
+                      beginY: beginY,
+                      delay: 2.0,
+                      child: name(),
+                    ),
+
+                    FadeInY(
+                      beginY: beginY,
+                      delay: 3.0,
+                      child: job(),
+                    ),
+
+                    FadeInY(
+                      beginY: beginY,
+                      delay: 4.0,
+                      child: summary(),
+                    ),
+
+                    FadeInY(
+                      beginY: beginY,
+                      delay: 5.0,
+                      child: buttonsLinks(),
+                    ),
+
+                    if (areQuotesLoading)
+                      Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: LinearProgressIndicator(),
+                      ),
+
+                    ControlledAnimation(
+                      delay: 2.seconds,
+                      duration: 1.seconds,
+                      tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
+                      builder: (_, value) {
+                        return SizedBox(
+                          width: value,
+                          child: Divider(),
+                        );
+                      },
+                    ),
+
+                    FadeInY(
+                      beginY: beginY,
+                      delay: 6.0,
+                      child: authorQuote(),
+                    ),
+                  ],
+                ),
               ),
+
+              backButton(),
             ],
           ),
-        );
-      }),
+        ],
+      ),
     );
   }
 
@@ -138,7 +197,8 @@ class _AuthorPageState extends State<AuthorPage> {
       padding: EdgeInsets.only(top: 70.0),
       child: InkWell(
         onTap: () {
-          if (author.imgUrl == null || author.imgUrl.length == 0) {
+          if (author.urls.image == null ||
+            author.urls.image.length == 0) {
             return;
           }
 
@@ -148,21 +208,21 @@ class _AuthorPageState extends State<AuthorPage> {
             builder: (BuildContext context) {
               return AlertDialog(
                 content: Container(
-                  child: Image(image: NetworkImage(author.imgUrl),),
+                  child: Image(image: NetworkImage(author.urls.image),),
                 ),
               );
             }
           );
         },
-        child: author.imgUrl != null && author.imgUrl.length > 0 ?
+        child: author.urls.image != null && author.urls.image.length > 0 ?
           CircleAvatar(
             radius: 90.0,
-            backgroundColor: ThemeColor.primary,
-            backgroundImage: NetworkImage(author.imgUrl)
+            backgroundColor: stateColors.primary,
+            backgroundImage: NetworkImage(author.urls.image)
           ):
           CircleAvatar(
             radius: 90.0,
-            backgroundColor: ThemeColor.primary,
+            backgroundColor: stateColors.primary,
             child: Text(
               author.name.substring(0, 2).toUpperCase(),
               style: TextStyle(
@@ -188,16 +248,17 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget job(Color color) {
+  Widget job() {
     return Padding(
       padding: EdgeInsets.only(top: 10.0),
-      child: Text(
-        author.job,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: color,
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
+      child: Opacity(
+        opacity: .7,
+        child: Text(
+          author.job,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
         ),
       ),
     );
@@ -212,7 +273,6 @@ class _AuthorPageState extends State<AuthorPage> {
       padding: padding,
       child: Text(
         author.summary,
-        textAlign: TextAlign.justify,
         style: TextStyle(
           fontSize: 22.0,
           fontWeight: FontWeight.w100,
@@ -223,8 +283,8 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget buttonsLinks() {
-    final wikiUrlDefined = author.wikiUrl != null && author.wikiUrl.length > 0;
-    final urlDefined = author.url != null && author.url.length > 0;
+    final wikiUrlDefined = author.urls.wikipedia!= null && author.urls.wikipedia.length > 0;
+    final urlDefined = author.urls.website != null && author.urls.website.length > 0;
 
     return Column(
       children: <Widget>[
@@ -233,7 +293,7 @@ class _AuthorPageState extends State<AuthorPage> {
             icon: Icon(IconsMore.wikipedia_w, color: Colors.white,),
             padding: EdgeInsets.only(top: 10.0),
             text: 'Open Wikipedia',
-            url: author.wikiUrl,
+            url: author.urls.wikipedia,
           ),
 
         if (urlDefined)
@@ -241,75 +301,52 @@ class _AuthorPageState extends State<AuthorPage> {
             icon: Icon(IconsMore.earth, color: Colors.white),
             padding: EdgeInsets.only(top: 10.0),
             text: 'Open website',
-            url: author.url,
+            url: author.urls.website,
           ),
       ],
     );
   }
 
-  Widget authorQuotes() {
-    return quotes.length > 0 ?
-      Padding(
+  Widget authorQuote() {
+    if (quotes.length > 0) {
+      final quote = quotes.first;
+
+      return Padding(
         padding: EdgeInsets.only(top: 40.0),
-        child: SizedBox(
-          height: 330.0,
-          child: Swiper(
-            itemCount: quotes.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Center(
-                child: MediumQuoteCard(
-                  quote: quotes.elementAt(index),
-                  onLike: () async {
-                  setState(() { // optimistic
-                    quotes.elementAt(index).starred = true;
-                  });
+        child: Column(
+          children: <Widget>[
+            Divider(),
 
-                  final booleanMessage = await Mutations.star(
-                    context,
-                    quotes.elementAt(index).id
-                  );
-
-                  if (!booleanMessage.boolean) {
-                    setState(() { // rollback
-                      quotes.elementAt(index).starred = false;
-                    });
-
-                    Flushbar(
-                      duration: Duration(seconds: 2),
-                      backgroundColor: ThemeColor.error,
-                      message: booleanMessage.message,
-                    )..show(context);
-                  }
-                },
-                onUnlike: () async {
-                  setState(() { // optimistic
-                    quotes.elementAt(index).starred = false;
-                  });
-
-                  final booleanMessage = await Mutations.unstar(
-                    context,
-                    quotes.elementAt(index).id
-                  );
-
-                  if (!booleanMessage.boolean) {
-                    setState(() { // rollback
-                      quotes.elementAt(index).starred = true;
-                    });
-
-                    Flushbar(
-                      duration: Duration(seconds: 2),
-                      backgroundColor: ThemeColor.error,
-                      message: booleanMessage.message,
-                    )..show(context);
-                  }
-                },
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Opacity(
+                opacity: .7,
+                child: Text(
+                  'Quote',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+
+            GestureDetector(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 60.0),
+                child: createHeroQuoteAnimation(
+                  isMobile: true,
+                  quote: quote,
+                  screenWidth: MediaQuery.of(context).size.width,
+                ),
+              ),
+            ),
+          ],
         ),
-      ) :
-      Padding(padding: EdgeInsets.zero);
+      );
+    }
+
+    return Padding(padding: EdgeInsets.zero);
   }
 
   Widget backButton() {
@@ -330,25 +367,36 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  void fetchAuthor() {
+  void fetchAuthor() async {
     setState(() {
       isLoading = true;
     });
 
-    Queries.author(context, widget.id)
-      .then((authorResp) {
-        setState(() {
-          author = authorResp;
-          hasErrors = false;
-          isLoading = false;
-        });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          hasErrors = false;
-          isLoading = false;
-        });
+    try {
+      final docSnap = await Firestore.instance
+        .collection('authors')
+        .document(widget.id)
+        .get();
+
+      if (!docSnap.exists) {
+        isLoading = false;
+        return;
+      }
+
+      final data = docSnap.data;
+      data['id'] = docSnap.documentID;
+
+      setState(() {
+        author = Author.fromJSON(data);
+        isLoading = false;
       });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

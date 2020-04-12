@@ -131,7 +131,6 @@ class _DiscoverState extends State<Discover> {
                   builder: (BuildContext context) {
                     return AuthorPage(
                       id: author.id,
-                      authorName: author.name,
                     );
                   }
                 )

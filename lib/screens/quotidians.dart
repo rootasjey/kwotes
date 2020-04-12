@@ -291,7 +291,6 @@ class _QuotidiansState extends State<Quotidians> {
             builder: (context) {
               return AuthorPage(
                 id: quote.author.id,
-                authorName: quote.author.name,
               );
             }
           )
@@ -473,7 +472,6 @@ class _QuotidiansState extends State<Quotidians> {
             builder: (context) {
               return AuthorPage(
                 id: quote.author.id,
-                authorName: quote.author.name,
               );
             }
           )

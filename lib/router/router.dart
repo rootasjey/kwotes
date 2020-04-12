@@ -8,13 +8,18 @@ class FluroRouter {
 
   static void setupMobileRouter() {
     router.define(
-      RootRoute,
-      handler: MobileRouteHandlers.quotidianHandler,
+      AuthorRoute,
+      handler: MobileRouteHandlers.authorHandler,
     );
 
     router.define(
       HomeRoute,
       handler: MobileRouteHandlers.homeHandler,
+    );
+
+    router.define(
+      RootRoute,
+      handler: MobileRouteHandlers.quotidianHandler,
     );
 
     router.define(

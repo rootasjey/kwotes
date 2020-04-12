@@ -120,7 +120,6 @@ class MediumQuoteCard extends StatelessWidget {
               builder: (context) {
                 return AuthorPage(
                   id: quote.author.id,
-                  authorName: quote.author.name,
                 );
               }
             )

@@ -133,7 +133,6 @@ class _QuotePageState extends State<QuotePage> {
             builder: (context) {
               return AuthorPage(
                 id: author.id,
-                authorName: author.name,
               );
             }
           )
