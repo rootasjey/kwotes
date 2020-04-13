@@ -236,8 +236,18 @@ class _TopicPageState extends State<TopicPage> {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            LoadingAnimation(
-              title: 'Loading ${widget.name} quotes...',
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                top: 150.0,
+              ),
+              child: LoadingAnimation(
+                title: 'Loading ${widget.name} quotes...',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
             ),
           ]
         ),

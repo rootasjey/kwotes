@@ -3,8 +3,12 @@ import 'package:memorare/state/colors.dart';
 
 class LoadingAnimation extends StatelessWidget {
   final String title;
+  final TextStyle style;
 
-  LoadingAnimation({this.title = 'Loading...'});
+  LoadingAnimation({
+    this.style = const TextStyle(fontSize: 40.0,),
+    this.title = 'Loading...',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +38,7 @@ class LoadingAnimation extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: Text(
             title,
-            style: TextStyle(
-              fontSize: 40.0,
-            ),
+            style: style
           ),
         ),
       ],
