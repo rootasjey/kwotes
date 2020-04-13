@@ -11,6 +11,7 @@ import 'package:memorare/types/user_data.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// TODO: Delete this component
 class ErrorComponent extends StatelessWidget {
   final String description;
   final String title;
