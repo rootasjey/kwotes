@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/screens/reference_page.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 
@@ -99,15 +99,9 @@ class _DiscoverState extends State<Discover> {
             title: reference.name,
             imgUrl: reference.urls.image,
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return ReferencePage(
-                      id: reference.id,
-                      referenceName: reference.name,
-                    );
-                  }
-                )
+              FluroRouter.router.navigateTo(
+                context,
+                ReferenceRoute.replaceFirst(':id', reference.id),
               );
             }
           ),
@@ -126,14 +120,9 @@ class _DiscoverState extends State<Discover> {
             title: author.name,
             imgUrl: author.urls.image,
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return AuthorPage(
-                      id: author.id,
-                    );
-                  }
-                )
+              FluroRouter.router.navigateTo(
+                context,
+                AuthorRoute.replaceFirst(':id', author.id),
               );
             }
           ),

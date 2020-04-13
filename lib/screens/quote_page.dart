@@ -1,5 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/colors.dart';
 import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/error.dart';
@@ -8,7 +10,6 @@ import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quotes_by_topics.dart';
-import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -162,15 +163,9 @@ class _QuotePageState extends State<QuotePage> {
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return ReferencePage(
-                id: reference.id,
-                referenceName: reference.name,
-              );
-            }
-          )
+        FluroRouter.router.navigateTo(
+          context,
+          ReferenceRoute.replaceFirst(':id', reference.id),
         );
       },
       child: Padding(

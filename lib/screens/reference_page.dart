@@ -1,23 +1,21 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/button_link.dart';
-import 'package:memorare/components/error.dart';
+import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/medium_quote_card.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/utils/animation.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:supercharged/supercharged.dart';
 
 class ReferencePage extends StatefulWidget {
   final String id;
-  final String referenceName;
 
-  ReferencePage({this.id, this.referenceName});
+  ReferencePage({this.id});
 
   @override
   ReferencePageState createState() => ReferencePageState();
@@ -30,8 +28,8 @@ class ReferencePageState extends State<ReferencePage> {
   bool areQuotesLoaded = false;
 
   bool isLoading = false;
-  bool hasErrors = false;
-  Error error;
+
+  final double beginY = 100.0;
 
   @override
   void didChangeDependencies() {
@@ -43,99 +41,149 @@ class ReferencePageState extends State<ReferencePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        if (!isLoading && hasErrors) {
-          return ErrorComponent(
-            description: error != null ? error.toString() : '',
-          );
-        }
-
         if (isLoading) {
           return LoadingComponent(
-            title: 'Loading ${widget.referenceName}...',
+            title: 'Loading reference...',
             padding: EdgeInsets.all(30.0),
           );
         }
 
-        final themeColor = Provider.of<ThemeColor>(context);
-
-        return NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (!areQuotesLoading && !areQuotesLoaded) {
-              if (quotes.length > 0) { return false; }
-
-              areQuotesLoading = true;
-
-              Queries.quotesByReference(context, widget.id)
-                .then((quotesResp) {
-                  setState(() {
-                    quotes = quotesResp.entries;
-                    areQuotesLoading = false;
-                    areQuotesLoaded = true;
-                  });
-                })
-                .catchError((err) {
-                  setState(() {
-                    error = err;
-                    areQuotesLoading = false;
-                    areQuotesLoaded = true;
-                  });
-                });
-            }
-
-            return false;
-          },
-          child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    alignment: AlignmentDirectional.center,
-                    child: Column(
-                      children: <Widget>[
-                        picture(),
-
-                        name(),
-
-                        type(themeColor.background),
-
-                        summary(),
-
-                        buttonsLinks(),
-
-                        if (areQuotesLoading)
-                          Padding(
-                            padding: EdgeInsets.only(top: 40),
-                            child: LinearProgressIndicator(),
-                          ),
-
-                        Divider(),
-
-                        referenceQuotes(),
-                      ],
-                    ),
-                  ),
-
-                  backButton(),
-                ],
-              ),
-            ],
-          ),
-        );
+        return body();
       }),
     );
   }
 
-  Widget picture() {
+  Widget body() {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+          return false;
+        }
+
+        if (!areQuotesLoading && !areQuotesLoaded) {
+          if (quotes.length > 0) { return false; }
+
+          areQuotesLoading = true;
+
+          Firestore.instance
+            .collection('quotes')
+            .where('mainReference.id', isEqualTo: widget.id)
+            .limit(1)
+            .getDocuments()
+            .then((querySnap) {
+              if (querySnap.documents.length == 0) { return; }
+
+              querySnap.documents.forEach((element) {
+                final data = element.data;
+                data['id'] = element.documentID;
+                quotes.add(Quote.fromJSON(data));
+              });
+
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  areQuotesLoaded = true;
+                  areQuotesLoading = false;
+                });
+              });
+            })
+            .catchError((error) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  areQuotesLoaded = true;
+                  areQuotesLoading = false;
+                });
+              });
+            });
+        }
+
+        return false;
+      },
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              reference == null ?
+                ErrorContainer(
+                  message: 'Oops! There was an error while loading a reference',
+                ) :
+                refBody(),
+
+              backButton(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget refBody() {
+    return Container(
+      alignment: AlignmentDirectional.center,
+      child: Column(
+        children: <Widget>[
+          FadeInY(
+            beginY: beginY,
+            delay: 1.0,
+            child: avatar(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 2.0,
+            child: name(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 3.0,
+            child: type(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 4.0,
+            child: summary(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 5.0,
+            child: buttonsLinks(),
+          ),
+
+          if (areQuotesLoading)
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: LinearProgressIndicator(),
+            ),
+
+          ControlledAnimation(
+            delay: 2.seconds,
+            duration: 1.seconds,
+            tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
+            builder: (_, value) {
+              return SizedBox(
+                width: value,
+                child: Divider(),
+              );
+            },
+          ),
+
+          mainQuote(),
+        ],
+      ),
+    );
+  }
+
+  Widget avatar() {
+    final imageUrl = reference.urls.image;
+
     return Padding(
       padding: EdgeInsets.only(top: 70.0),
       child: InkWell(
         onTap: () {
-          if (reference.imgUrl == null || reference.imgUrl.length == 0) {
+          if (imageUrl == null || imageUrl.length == 0) {
             return;
           }
 
@@ -145,13 +193,13 @@ class ReferencePageState extends State<ReferencePage> {
             builder: (BuildContext context) {
               return AlertDialog(
                 content: Container(
-                  child: Image(image: NetworkImage(reference.imgUrl),),
+                  child: Image(image: NetworkImage(imageUrl),),
                 ),
               );
             }
           );
         },
-        child: reference.imgUrl != null && reference.imgUrl.length > 0 ?
+        child: imageUrl != null && imageUrl.length > 0 ?
           SizedBox(
             width: 200,
             height: 200,
@@ -159,7 +207,7 @@ class ReferencePageState extends State<ReferencePage> {
               elevation: 5.0,
               color: ThemeColor.primary,
               child: Image.network(
-                reference.imgUrl,
+                imageUrl,
                 fit: BoxFit.cover,
               )
             ),
@@ -183,144 +231,6 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget name() {
-    return Padding(
-      padding: EdgeInsets.only(top: 50.0),
-      child: Text(
-        reference.name,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: 25.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget type(Color color) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Text(
-        reference.type.primary,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: color,
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget summary() {
-    final padding = reference.summary != null && reference.summary.length > 0 ?
-      EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0):
-      EdgeInsets.zero;
-
-    return Padding(
-      padding: padding,
-      child: Text(
-        reference.summary,
-        textAlign: TextAlign.justify,
-        style: TextStyle(
-          fontSize: 22.0,
-          fontWeight: FontWeight.w100,
-          height: 1.5,
-        ),
-      ),
-    );
-  }
-
-  Widget buttonsLinks() {
-    final wikiUrlDefined = reference.wikiUrl != null && reference.wikiUrl.length > 0;
-    final urlDefined = reference.wikiUrl != null && reference.wikiUrl.length > 0;
-
-    return Column(
-      children: <Widget>[
-        if (wikiUrlDefined)
-          ButtonLink(
-            icon: Icon(IconsMore.wikipedia_w, color: Colors.white,),
-            padding: EdgeInsets.only(top: 10.0),
-            text: 'Open Wikipedia',
-            url: reference.wikiUrl,
-          ),
-
-        if (urlDefined)
-          ButtonLink(
-            icon: Icon(IconsMore.earth, color: Colors.white),
-            padding: EdgeInsets.only(top: 10.0),
-            text: 'Open website',
-            url: reference.wikiUrl,
-          ),
-      ],
-    );
-  }
-
-  Widget referenceQuotes() {
-    return quotes.length > 0 ?
-      Padding(
-        padding: EdgeInsets.only(top: 40.0),
-        child: SizedBox(
-          height: 330.0,
-          child: Swiper(
-            itemCount: quotes.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Center(
-                child: MediumQuoteCard(
-                  quote: quotes.elementAt(index),
-                  onLike: () async {
-                    setState(() { // optimistic
-                      quotes.elementAt(index).starred = true;
-                    });
-
-                    final booleanMessage = await Mutations.star(
-                      context,
-                      quotes.elementAt(index).id
-                    );
-
-                    if (!booleanMessage.boolean) {
-                      setState(() { // rollback
-                        quotes.elementAt(index).starred = false;
-                      });
-
-                      Flushbar(
-                        duration: Duration(seconds: 2),
-                        backgroundColor: ThemeColor.error,
-                        message: booleanMessage.message,
-                      )..show(context);
-                    }
-                    },
-                  onUnlike: () async {
-                    setState(() { // optimistic
-                      quotes.elementAt(index).starred = false;
-                    });
-
-                    final booleanMessage = await Mutations.unstar(
-                      context,
-                      quotes.elementAt(index).id
-                    );
-
-                    if (!booleanMessage.boolean) {
-                      setState(() { // rollback
-                        quotes.elementAt(index).starred = true;
-                      });
-
-                      Flushbar(
-                        duration: Duration(seconds: 2),
-                        backgroundColor: ThemeColor.error,
-                        message: booleanMessage.message,
-                      )..show(context);
-                    }
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-      ) :
-      Padding(padding: EdgeInsets.zero);
-  }
-
   Widget backButton() {
     return Positioned(
       left: 0.0,
@@ -339,25 +249,181 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  void fetchReference() {
+  Widget buttonsLinks() {
+    final urls = reference.urls;
+
+    final hasWiki = urls.wikipedia != null && urls.wikipedia.length > 0;
+    final hasWebsite = urls.website != null && urls.website.length > 0;
+
+    return Column(
+      children: <Widget>[
+        if (hasWiki)
+          ButtonLink(
+            icon: Icon(IconsMore.wikipedia_w, color: Colors.white,),
+            padding: EdgeInsets.only(top: 10.0),
+            text: 'Open Wikipedia',
+            url: urls.wikipedia,
+          ),
+
+        if (hasWebsite)
+          ButtonLink(
+            icon: Icon(IconsMore.earth, color: Colors.white),
+            padding: EdgeInsets.only(top: 10.0),
+            text: 'Open website',
+            url: urls.website,
+          ),
+      ],
+    );
+  }
+
+  Widget name() {
+    return Padding(
+      padding: EdgeInsets.only(top: 50.0),
+      child: Text(
+        reference.name,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: 25.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget mainQuote() {
+    if (quotes.length > 0) {
+      final quote = quotes.first;
+
+      return Padding(
+        padding: EdgeInsets.only(top: 40.0),
+        child: Column(
+          children: <Widget>[
+            Divider(),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Opacity(
+                opacity: .7,
+                child: Text(
+                  'Quote',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+            ),
+
+            GestureDetector(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 60.0,
+                  horizontal: 5.0,
+                ),
+                child: createHeroQuoteAnimation(
+                  isMobile: true,
+                  quote: quote,
+                  screenWidth: MediaQuery.of(context).size.width,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(padding: EdgeInsets.zero);
+  }
+
+  Widget summary() {
+    final summary = reference.summary;
+    final padding = summary != null && summary.length > 0 ?
+      EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0):
+      EdgeInsets.zero;
+
+    return Padding(
+      padding: padding,
+      child: Text(
+        summary,
+        style: TextStyle(
+          fontSize: 22.0,
+          fontWeight: FontWeight.w100,
+          height: 1.5,
+        ),
+      ),
+    );
+  }
+
+  Widget type() {
+    final type = reference.type;
+
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 20.0),
+          child: Opacity(
+            opacity: .7,
+            child: Text(
+              type.primary,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ),
+
+        if (type.secondary != null && type.secondary.length > 0)
+          Padding(
+            padding: EdgeInsets.only(top: 5.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                type.secondary,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void fetchReference() async {
     setState(() {
       isLoading = true;
     });
 
-    Queries.reference(context, widget.id)
-      .then((referenceResp) {
+    try {
+      final docSnap  = await Firestore.instance
+        .collection('references')
+        .document(widget.id)
+        .get();
+
+      if (!docSnap.exists) {
         setState(() {
-          reference = referenceResp;
-          hasErrors = false;
           isLoading = false;
         });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          hasErrors = false;
-          isLoading = false;
-        });
+
+        return;
+      }
+
+      final data = docSnap.data;
+      data['id'] = docSnap.documentID;
+
+      setState(() {
+        reference = Reference.fromJSON(data);
+        isLoading = false;
       });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

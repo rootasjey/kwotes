@@ -18,6 +18,11 @@ class FluroRouter {
     );
 
     router.define(
+      ReferenceRoute,
+      handler: MobileRouteHandlers.reference,
+    );
+
+    router.define(
       RootRoute,
       handler: MobileRouteHandlers.quotidianHandler,
     );

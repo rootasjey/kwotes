@@ -9,9 +9,10 @@ import 'package:memorare/components/loading.dart';
 import 'package:memorare/data/mutations.dart';
 import 'package:memorare/data/queries.dart';
 import 'package:memorare/models/http_clients.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/quote_page.dart';
-import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
@@ -284,16 +285,13 @@ class _QuotidiansState extends State<Quotidians> {
   }
 
   Widget author(Quote quote) {
+    final author = quote.author;
+
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return AuthorPage(
-                id: quote.author.id,
-              );
-            }
-          )
+        FluroRouter.router.navigateTo(
+          context,
+          AuthorRoute.replaceFirst(':id', author.id),
         );
       },
       child: Padding(
@@ -302,8 +300,8 @@ class _QuotidiansState extends State<Quotidians> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              quote.author.name.length < 150 ?
-                quote.author.name :
+              author.name.length < 150 ?
+                author.name :
                 '${quote.author.name.substring(0, 150)}...',
               style: TextStyle(
                 fontSize: 20,
@@ -347,15 +345,9 @@ class _QuotidiansState extends State<Quotidians> {
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return ReferencePage(
-                id: reference.id,
-                referenceName: reference.name,
-              );
-            }
-          )
+        FluroRouter.router.navigateTo(
+          context,
+          ReferenceRoute.replaceFirst(':id', reference.id),
         );
       },
       child: Padding(
