@@ -36,6 +36,11 @@ class FluroRouter {
       SignupRoute,
       handler: MobileRouteHandlers.signup,
     );
+
+    router.define(
+      TopicsRoute,
+      handler: MobileRouteHandlers.topics,
+    );
   }
 
   static void setupWebRouter() {

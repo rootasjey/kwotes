@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
@@ -62,7 +64,7 @@ class _TopicsState extends State<Topics> {
                 padding: const EdgeInsets.only(top: 50.0),
                 child: FlatButton(
                   onPressed: () {
-                    // FluroRouter.router.navigateTo(context, TopicsRoute);
+                    FluroRouter.router.navigateTo(context, TopicsRoute);
                   },
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: stateColors.primary),

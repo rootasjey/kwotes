@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/all_topics.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/full_page_quotidian.dart';
 import 'package:memorare/screens/home.dart';
@@ -31,4 +32,8 @@ class MobileRouteHandlers {
   static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Signup());
+
+  static Handler topics = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AllTopics());
 }
