@@ -16,6 +16,9 @@ abstract class StateColorsBase with Store {
   Color background = Colors.white;
 
   @observable
+  Color softBackground = Color(0xFFEEEEEE);
+
+  @observable
   String iconExt = 'light';
 
   Color primary = Color(0xFF796AD2);
@@ -27,12 +30,14 @@ abstract class StateColorsBase with Store {
     if (brightness == Brightness.dark) {
       foreground = Colors.white;
       background = Colors.black;
+      softBackground = Color(0xFF303030);
       iconExt = 'light';
       return;
     }
 
     foreground = Colors.black;
     background = Colors.white;
+    softBackground = Color(0xFFEEEEEE);
     iconExt = 'dark';
   }
 }

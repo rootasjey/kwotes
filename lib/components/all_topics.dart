@@ -83,8 +83,7 @@ class _AllTopicsState extends State<AllTopics> {
                   floating: true,
                   snap: true,
                   expandedHeight: 100.0,
-                  backgroundColor: stateColors.background == Colors.white ?
-                    Colors.white : Colors.black12,
+                  backgroundColor: stateColors.softBackground,
                   automaticallyImplyLeading: false,
                   flexibleSpace: Stack(
                     children: <Widget>[

@@ -43,6 +43,23 @@ mixin _$StateColors on StateColorsBase, Store {
     }, _$backgroundAtom, name: '${_$backgroundAtom.name}_set');
   }
 
+  final _$softBackgroundAtom = Atom(name: 'StateColorsBase.softBackground');
+
+  @override
+  Color get softBackground {
+    _$softBackgroundAtom.context.enforceReadPolicy(_$softBackgroundAtom);
+    _$softBackgroundAtom.reportObserved();
+    return super.softBackground;
+  }
+
+  @override
+  set softBackground(Color value) {
+    _$softBackgroundAtom.context.conditionallyRunInAction(() {
+      super.softBackground = value;
+      _$softBackgroundAtom.reportChanged();
+    }, _$softBackgroundAtom, name: '${_$softBackgroundAtom.name}_set');
+  }
+
   final _$iconExtAtom = Atom(name: 'StateColorsBase.iconExt');
 
   @override
@@ -76,7 +93,7 @@ mixin _$StateColors on StateColorsBase, Store {
   @override
   String toString() {
     final string =
-        'foreground: ${foreground.toString()},background: ${background.toString()},iconExt: ${iconExt.toString()}';
+        'foreground: ${foreground.toString()},background: ${background.toString()},softBackground: ${softBackground.toString()},iconExt: ${iconExt.toString()}';
     return '{$string}';
   }
 }
