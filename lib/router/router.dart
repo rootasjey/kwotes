@@ -38,6 +38,11 @@ class FluroRouter {
     );
 
     router.define(
+      TopicRoute,
+      handler: MobileRouteHandlers.topic,
+    );
+
+    router.define(
       TopicsRoute,
       handler: MobileRouteHandlers.topics,
     );

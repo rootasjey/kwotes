@@ -7,6 +7,7 @@ import 'package:memorare/screens/home.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
+import 'package:memorare/screens/topic_page.dart';
 
 class MobileRouteHandlers {
   static Handler author = Handler(
@@ -32,6 +33,10 @@ class MobileRouteHandlers {
   static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Signup());
+
+  static Handler topic = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          TopicPage(name: params['name'][0]));
 
   static Handler topics = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
