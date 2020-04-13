@@ -9,12 +9,12 @@ class FluroRouter {
   static void setupMobileRouter() {
     router.define(
       AuthorRoute,
-      handler: MobileRouteHandlers.authorHandler,
+      handler: MobileRouteHandlers.author,
     );
 
     router.define(
       HomeRoute,
-      handler: MobileRouteHandlers.homeHandler,
+      handler: MobileRouteHandlers.home,
     );
 
     router.define(
@@ -24,169 +24,169 @@ class FluroRouter {
 
     router.define(
       RootRoute,
-      handler: MobileRouteHandlers.quotidianHandler,
+      handler: MobileRouteHandlers.quotidian,
     );
 
     router.define(
       SigninRoute,
-      handler: MobileRouteHandlers.signinHandler,
+      handler: MobileRouteHandlers.signin,
     );
 
     router.define(
       SignupRoute,
-      handler: MobileRouteHandlers.signupHandler,
+      handler: MobileRouteHandlers.signup,
     );
   }
 
   static void setupWebRouter() {
     router.define(
       AboutRoute,
-      handler: WebRouteHandlers.aboutHandler,
+      handler: WebRouteHandlers.about,
     );
 
     router.define(
       AccountRoute,
-      handler: WebRouteHandlers.accountHandler,
+      handler: WebRouteHandlers.account,
     );
 
     router.define(
       AddQuoteContentRoute,
-      handler: WebRouteHandlers.addQuoteHandler,
+      handler: WebRouteHandlers.addQuote,
     );
 
     router.define(
       AddQuoteAuthorRoute,
-      handler: WebRouteHandlers.addQuoteAuthorHandler,
+      handler: WebRouteHandlers.addQuoteAuthor,
     );
 
     router.define(
       AddQuoteCommentRoute,
-      handler: WebRouteHandlers.addQuoteCommentHandler,
+      handler: WebRouteHandlers.addQuoteComment,
     );
 
     router.define(
       AddQuoteReferenceRoute,
-      handler: WebRouteHandlers.addQuoteReferenceHandler,
+      handler: WebRouteHandlers.addQuoteReference,
     );
 
     router.define(
       AddQuoteTopicsRoute,
-      handler: WebRouteHandlers.addQuoteTopicsHandler,
+      handler: WebRouteHandlers.addQuoteTopics,
     );
 
     router.define(
       AdminTempQuotesRoute,
-      handler: WebRouteHandlers.adminTempQuotesHandler,
+      handler: WebRouteHandlers.adminTempQuotes,
     );
 
     router.define(
       AuthorRoute,
-      handler: WebRouteHandlers.authorHandler,
+      handler: WebRouteHandlers.author,
     );
 
     router.define(
       ContactRoute,
-      handler: WebRouteHandlers.contactHandler,
+      handler: WebRouteHandlers.contact,
     );
 
     router.define(
       DashboardRoute,
-      handler: WebRouteHandlers.dashboardHandler,
+      handler: WebRouteHandlers.dashboard,
     );
 
     router.define(
       DeleteAccountRoute,
-      handler: WebRouteHandlers.deleteAccountHandler,
+      handler: WebRouteHandlers.deleteAccount,
     );
 
     router.define(
       EditEmailRoute,
-      handler: WebRouteHandlers.editEmailHandler,
+      handler: WebRouteHandlers.editEmail,
     );
 
     router.define(
       EditPasswordRoute,
-      handler: WebRouteHandlers.editPasswordHandler,
+      handler: WebRouteHandlers.editPassword,
     );
 
     router.define(
       FavouritesRoute,
-      handler: WebRouteHandlers.favouritesHandler,
+      handler: WebRouteHandlers.favourites,
     );
 
     router.define(
       RootRoute,
-      handler: WebRouteHandlers.homeHandler,
+      handler: WebRouteHandlers.home,
     );
 
     router.define(
       ListRoute,
-      handler: WebRouteHandlers.listHandler,
+      handler: WebRouteHandlers.list,
     );
 
     router.define(
       ListsRoute,
-      handler: WebRouteHandlers.listsHandler,
+      handler: WebRouteHandlers.lists,
     );
 
     router.define(
       PrivacyRoute,
-      handler: WebRouteHandlers.privacyHandler,
+      handler: WebRouteHandlers.privacy,
     );
 
     router.define(
       PublishedQuotesRoute,
-      handler: WebRouteHandlers.publishedQuotesHandler,
+      handler: WebRouteHandlers.publishedQuotes,
     );
 
     router.define(
       QuotePageRoute,
-      handler: WebRouteHandlers.quotePageHandler,
+      handler: WebRouteHandlers.quotePage,
     );
 
     router.define(
       QuotesRoute,
-      handler: WebRouteHandlers.quotesPageHandler,
+      handler: WebRouteHandlers.quotesPage,
     );
 
     router.define(
       QuotidiansRoute,
-      handler: WebRouteHandlers.quotidiansHandler,
+      handler: WebRouteHandlers.quotidians,
     );
 
     router.define(
       ReferenceRoute,
-      handler: WebRouteHandlers.referenceHandler,
+      handler: WebRouteHandlers.reference,
     );
 
     router.define(
       SigninRoute,
-      handler: WebRouteHandlers.signinHandler,
+      handler: WebRouteHandlers.signin,
     );
 
     router.define(
       SignupRoute,
-      handler: WebRouteHandlers.signupHandler,
+      handler: WebRouteHandlers.signup,
     );
 
     router.define(
       TempQuotesRoute,
-      handler: WebRouteHandlers.tempQuotesHandler,
+      handler: WebRouteHandlers.tempQuotes,
     );
 
     router.define(
       TopicRoute,
-      handler: WebRouteHandlers.topicHandler,
+      handler: WebRouteHandlers.topic,
     );
 
     router.define(
       TopicsRoute,
-      handler: WebRouteHandlers.topicsHandler,
+      handler: WebRouteHandlers.topics,
     );
 
     router.define(
       UndefinedRoute,
-      handler: WebRouteHandlers.undefinedHandler,
+      handler: WebRouteHandlers.undefined,
     );
   }
 }

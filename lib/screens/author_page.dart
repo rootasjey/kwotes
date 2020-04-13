@@ -92,7 +92,6 @@ class _AuthorPageState extends State<AuthorPage> {
             .getDocuments()
             .then((querySnap) {
               if (querySnap.documents.length == 0) { return; }
-              // final quotesList = <Quote>[];
 
               querySnap.documents.forEach((element) {
                 final data = element.data;

@@ -44,123 +44,123 @@ class WebRouteHandlers {
     );
   }
 
-  static Handler aboutHandler = Handler(
+  static Handler about = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(About()));
 
-  static Handler accountHandler = Handler(
+  static Handler account = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Account()));
 
-  static Handler addQuoteHandler = Handler(
+  static Handler addQuote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteContent());
 
-  static Handler addQuoteAuthorHandler = Handler(
+  static Handler addQuoteAuthor = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteAuthor());
 
-  static Handler addQuoteCommentHandler = Handler(
+  static Handler addQuoteComment = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteComment());
 
-  static Handler addQuoteReferenceHandler = Handler(
+  static Handler addQuoteReference = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteReference());
 
-  static Handler addQuoteTopicsHandler = Handler(
+  static Handler addQuoteTopics = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuoteTopics());
 
-  static Handler adminTempQuotesHandler = Handler(
+  static Handler adminTempQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AdminTempQuotes());
 
-  static Handler authorHandler = Handler(
+  static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(AuthorPage(id: params['id'][0],)));
 
-  static Handler contactHandler = Handler(
+  static Handler contact = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Contact()));
 
-  static Handler dashboardHandler = Handler(
+  static Handler dashboard = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Dashboard()));
 
-  static Handler deleteAccountHandler = Handler(
+  static Handler deleteAccount = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(DeleteAccount()));
 
-  static Handler editEmailHandler = Handler(
+  static Handler editEmail = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(EditEmail()));
 
-  static Handler editPasswordHandler = Handler(
+  static Handler editPassword = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(EditPassword()));
 
-  static Handler favouritesHandler = Handler(
+  static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Favourites());
 
-  static Handler homeHandler = Handler(
+  static Handler home = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Home());
 
-  static Handler listHandler = Handler(
+  static Handler list = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           QuotesList(listId: params['id'][0],));
 
-  static Handler listsHandler = Handler(
+  static Handler lists = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           QuotesLists());
 
-  static Handler privacyHandler = Handler(
+  static Handler privacy = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(PrivacyTerms()));
 
-  static Handler publishedQuotesHandler = Handler(
+  static Handler publishedQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           PublishedQuotes());
 
-  static Handler quotePageHandler = Handler(
+  static Handler quotePage = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(QuotePage(quoteId: params['id'][0],)));
 
-  static Handler quotesPageHandler = Handler(
+  static Handler quotesPage = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AdminQuotes());
 
-  static Handler quotidiansHandler = Handler(
+  static Handler quotidians = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Quotidians());
 
-  static Handler referenceHandler = Handler(
+  static Handler reference = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(ReferencePage(id: params['id'][0])));
 
-  static Handler signinHandler = Handler(
+  static Handler signin = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Signin()));
 
-  static Handler signupHandler = Handler(
+  static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Signup()));
 
-  static Handler topicHandler = Handler(
+  static Handler topic = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           TopicPage(name: params['name'][0]));
 
-  static Handler topicsHandler = Handler(
+  static Handler topics = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AllTopics());
 
-  static Handler tempQuotesHandler = Handler(
+  static Handler tempQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           TempQuotes());
 
-  static Handler undefinedHandler = Handler(
+  static Handler undefined = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
 }

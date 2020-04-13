@@ -73,7 +73,9 @@ class _DiscoverState extends State<Discover> {
                     ),
                   )
                 ),
+
                 Divider(height: 60.0,),
+
                 Wrap(
                   alignment: WrapAlignment.center,
                   children: cardsList(),

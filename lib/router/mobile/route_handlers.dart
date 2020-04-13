@@ -8,15 +8,15 @@ import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 
 class MobileRouteHandlers {
-  static Handler authorHandler = Handler(
+  static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AuthorPage(id: params['id'][0]));
 
-  static Handler homeHandler = Handler(
+  static Handler home = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Home());
 
-  static Handler quotidianHandler = Handler(
+  static Handler quotidian = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           FullPageQuotidian());
 
@@ -24,11 +24,11 @@ class MobileRouteHandlers {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           ReferencePage(id: params['id'][0]));
 
-  static Handler signinHandler = Handler(
+  static Handler signin = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Signin());
 
-  static Handler signupHandler = Handler(
+  static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Signup());
 }
