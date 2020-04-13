@@ -137,12 +137,12 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             opacity: value,
             child: GestureDetector(
               onTap: () {
-                // final id = quotidian.quote.author.id;
+                final id = quotidian.quote.author.id;
 
-                // FluroRouter.router.navigateTo(
-                //   context,
-                //   AuthorRoute.replaceFirst(':id', id)
-                // );
+                FluroRouter.router.navigateTo(
+                  context,
+                  AuthorRoute.replaceFirst(':id', id)
+                );
               },
               child: Text(
                 quotidian.quote.author.name,
@@ -202,12 +202,12 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: GestureDetector(
         onTap: () {
-          // final id = quotidian.quote.author.id;
+          final id = quotidian.quote.author.id;
 
-          // FluroRouter.router.navigateTo(
-          //   context,
-          //   ReferenceRoute.replaceFirst(':id', id)
-          // );
+          FluroRouter.router.navigateTo(
+            context,
+            ReferenceRoute.replaceFirst(':id', id)
+          );
         },
         child: Text(
           quotidian.quote.mainReference.name,
