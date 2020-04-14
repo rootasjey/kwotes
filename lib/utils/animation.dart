@@ -6,14 +6,30 @@ import 'package:simple_animations/simple_animations.dart';
 
 /// Create a widget animating a quote's name.
 /// Decides which animation is most suited for the quote.
-Widget createHeroQuoteAnimation({Quote quote, double screenWidth, bool isMobile = false,}) {
+Widget createHeroQuoteAnimation({
+  Quote quote,
+  double screenWidth,
+  TextStyle style,
+  bool isMobile = false,
+}) {
   final quoteName = quote.name;
   final denominator = dividerNumber(screenWidth: screenWidth, isMobile: isMobile);
   final fontSize = FontSize.hero(quote.name) / denominator;
 
+  if (style == null) {
+    style = TextStyle(
+      fontSize: fontSize,
+    );
+
+  } else {
+    style = style.merge(TextStyle(
+      fontSize: fontSize,
+    ));
+  }
+
   if (quoteName.contains(',')) {
     return createPunctuationAnimation(
-      fontSize: fontSize,
+      style: style,
       quote: quote,
       punctuation: ', ',
       screenWidth: screenWidth,
@@ -22,7 +38,7 @@ Widget createHeroQuoteAnimation({Quote quote, double screenWidth, bool isMobile 
 
   if (quoteName.contains('. ')) {
     return createPunctuationAnimation(
-      fontSize: fontSize,
+      style: style,
       quote: quote,
       punctuation: '. ',
       screenWidth: screenWidth,
@@ -31,7 +47,7 @@ Widget createHeroQuoteAnimation({Quote quote, double screenWidth, bool isMobile 
 
   if (quoteName.contains('; ')) {
     return createPunctuationAnimation(
-      fontSize: fontSize,
+      style: style,
       quote: quote,
       punctuation: '; ',
       screenWidth: screenWidth,
@@ -40,7 +56,7 @@ Widget createHeroQuoteAnimation({Quote quote, double screenWidth, bool isMobile 
 
   if (quoteName.length > 90) {
     return createLengthAnimation(
-      fontSize: fontSize,
+      style: style,
       quote: quote,
       screenWidth: screenWidth,
     );
@@ -54,9 +70,7 @@ Widget createHeroQuoteAnimation({Quote quote, double screenWidth, bool isMobile 
         opacity: value,
         child: Text(
           quote.name,
-          style: TextStyle(
-            fontSize: fontSize,
-          ),
+          style: style,
         ),
       );
     },
@@ -73,7 +87,7 @@ Widget createPunctuationAnimation({
   Quote quote,
   String punctuation,
   double screenWidth,
-  double fontSize,
+  TextStyle style,
 }) {
 
   final quoteName = quote.name;
@@ -108,9 +122,7 @@ Widget createPunctuationAnimation({
         beginY: 50.0,
         delay: delayFactor * 3.0,
         child: Text(word,
-          style: TextStyle(
-            fontSize: fontSize,
-          ),
+          style: style,
         ),
       );
     });
@@ -123,7 +135,7 @@ Widget createPunctuationAnimation({
 }
 
 /// Create animations according to the quote's length.
-Widget createLengthAnimation({Quote quote, double screenWidth, double fontSize}) {
+Widget createLengthAnimation({Quote quote, double screenWidth, TextStyle style}) {
   final quoteName = quote.name;
 
   final half = quoteName.length ~/ 2;
@@ -148,9 +160,7 @@ Widget createLengthAnimation({Quote quote, double screenWidth, double fontSize})
         beginY: 50.0,
         delay: delayFactor * 3.0,
         child: Text(word,
-          style: TextStyle(
-            fontSize: fontSize,
-          ),
+          style: style,
         ),
       );
     });
