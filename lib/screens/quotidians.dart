@@ -320,7 +320,7 @@ class _QuotidiansState extends State<Quotidians> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return QuotePage(quoteId: quote.id,);
+              return QuotePage(id: quote.id,);
             }
           )
         );
@@ -436,7 +436,7 @@ class _QuotidiansState extends State<Quotidians> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return QuotePage(quoteId: quote.id,);
+              return QuotePage(id: quote.id,);
             }
           )
         );

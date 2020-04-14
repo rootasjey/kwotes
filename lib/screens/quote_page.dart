@@ -1,24 +1,27 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
+import 'package:memorare/components/web/loading_animation.dart';
+import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
-import 'package:memorare/utils/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/utils/animation.dart';
 import 'package:memorare/components/add_to_list_button.dart';
-import 'package:memorare/components/error.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
-import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/screens/quotes_by_topics.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:share/share.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:supercharged/supercharged.dart';
 
 class QuotePage extends StatefulWidget {
-  final String quoteId;
+  final String id;
 
-  QuotePage({this.quoteId});
+  QuotePage({this.id});
 
   @override
   _QuotePageState createState() => _QuotePageState();
@@ -29,13 +32,14 @@ class _QuotePageState extends State<QuotePage> {
   Color topicColor;
 
   bool isLoading = false;
-  bool hasErrors = false;
-  Error error;
+
+  FirebaseUser userAuth;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (quote != null) { return; }
+
     fetchQuote();
   }
 
@@ -43,16 +47,15 @@ class _QuotePageState extends State<QuotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        if (!isLoading && hasErrors) {
-          return ErrorComponent(
-            description: error != null ? error.toString() : '',
+        if (isLoading) {
+          return LoadingAnimation(
+            title: 'Loading quote...',
           );
         }
 
-        if (isLoading) {
-          return LoadingComponent(
-            title: 'Loading quote...',
-            padding: EdgeInsets.all(30.0),
+        if (!isLoading && quote == null) {
+          return ErrorContainer(
+            message: "Sorry, we couldn't load the quote. Try again later.",
           );
         }
 
@@ -67,13 +70,13 @@ class _QuotePageState extends State<QuotePage> {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    content(),
+                    quoteName(),
 
                     Padding(padding: EdgeInsets.only(top: 40.0),),
 
-                    author(),
+                    authorName(),
 
-                    reference(),
+                    referenceName(),
 
                     topics(),
 
@@ -90,63 +93,180 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
-  Widget content() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0,),
-      color: topicColor,
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Card(
-            color: lighten(topicColor),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30.0,
-                vertical: 50.0
+  Widget actionButtons() {
+    return Observer(
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 50.0),
+                iconSize: 30.0,
+                icon: Icon(Icons.share,),
+                onPressed: () {
+                  final RenderBox box = context.findRenderObject();
+                  final sharingText = '${quote.name} - ${quote.author.name}';
+
+                  Share.share(
+                    sharingText,
+                    subject: 'Out Of Context',
+                    sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+                  );
+                },
               ),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    '${quote.name}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: FontSize.bigCard(quote.name),
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                ],
-              ),
-            ),
+              if (isUserConnected.value)
+                AddToListButton(
+                  context: context,
+                  quoteId: quote.id,
+                  size: 40.0,
+                ),
+
+              if (isUserConnected.value)
+                favButton(),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget author() {
+  Widget authorName() {
     final author = quote.author;
 
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return AuthorPage(
-                id: author.id,
-              );
-            }
+    return ControlledAnimation(
+      delay: 1.seconds,
+      duration: 1.seconds,
+      tween: Tween(begin: 0.0, end: 0.8),
+      child: FlatButton(
+        onPressed: () {
+          final id = author.id;
+
+          FluroRouter.router.navigateTo(
+            context,
+            AuthorRoute.replaceFirst(':id', id)
+          );
+        },
+        child: Text(
+          author.name,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
+      ),
+      builderWithChild: (context, child, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
+          child: Opacity(
+            opacity: value,
+            child: child,
           )
         );
       },
-      child: Row(
+    );
+  }
+
+  Widget backButton() {
+    return Positioned(
+      left: 5.0,
+      top: 20.0,
+      child: Material(
+        color: Colors.transparent,
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back, color: Colors.white,),
+        ),
+      )
+    );
+  }
+
+  Widget favButton() {
+    if (quote.starred) {
+      return IconButton(
+        padding: EdgeInsets.all(30.0),
+        iconSize: 40.0,
+        icon: Icon(Icons.favorite,),
+        onPressed: () async {
+          setState(() { // optimistic
+            quote.starred = false;
+          });
+
+          // await Firestore.instance
+          //   .collection('users')
+          //   .document()
+
+          // final booleanMessage = await Mutations.unstar(context, quote.id);
+
+          // if (!booleanMessage.boolean) {
+          //   setState(() { // rollback
+          //     quote.starred = true;
+          //   });
+
+          //   Flushbar(
+          //     duration: Duration(seconds: 2),
+          //     backgroundColor: ThemeColor.error,
+          //     message: booleanMessage.message,
+          //   )..show(context);
+          // }
+        },
+      );
+    }
+
+    return IconButton(
+      padding: EdgeInsets.symmetric(horizontal: 50.0),
+      iconSize: 30.0,
+      icon: Icon(Icons.favorite_border,),
+      onPressed: () async {
+        setState(() { // optimistic
+          quote.starred = true;
+        });
+
+        // final booleanMessage = await Mutations.star(context, quote.id);
+
+        // if (!booleanMessage.boolean) {
+        //   setState(() { // rollback
+        //     quote.starred = false;
+        //   });
+
+        //   Flushbar(
+        //     duration: Duration(seconds: 2),
+        //     backgroundColor: ThemeColor.error,
+        //     message: booleanMessage.message,
+        //   )..show(context);
+        // }
+      },
+    );
+  }
+
+  Widget quoteName() {
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 40.0,
+      ),
+      color: topicColor,
+      height: size.height,
+      width: size.width,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            '${author.name}',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 30.0,
+            ),
+            child: createHeroQuoteAnimation(
+              isMobile: true,
+              quote: quote,
+              screenWidth: size.width,
+              style: TextStyle(
+                color: Colors.white,
+              )
             ),
           ),
         ],
@@ -154,7 +274,7 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
-  Widget reference() {
+  Widget referenceName() {
     if (quote.references == null || quote.references.length == 0) {
       return Padding(padding: EdgeInsets.zero,);
     }
@@ -184,163 +304,83 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget topics() {
-   final topicsDefined = quote.topics != null && quote.topics.length > 0;
+    final topics = quote.topics;
+   final topicsDefined = topics != null && topics.length > 0;
 
     return topicsDefined ?
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40.0),
-        child: Wrap(
-          children: quote.topics.map<Widget>((topic) {
-            final color = ThemeColor.topicColor(topic);
+      Column(
+        children: <Widget>[
+          Divider(),
+          Padding(padding: const EdgeInsets.only(top: 50.0)),
 
-            return Padding(
-              padding: EdgeInsets.all(5.0),
-              child: ActionChip(
-                shape: StadiumBorder(side: BorderSide(color: color, width: 3.0)),
-                backgroundColor: Colors.transparent,
-                labelPadding: EdgeInsets.all(5.0),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return QuotesByTopics(topic: topic,);
-                      }
-                    )
-                  );
-                },
-                label: Text(
-                  topic,
-                  style: TextStyle(
-                    fontSize: 18,
+          SizedBox(
+            height: 220.0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: topics.length,
+              itemBuilder: (context, index) {
+                final topic = topics.elementAt(index);
+                final topicColor = appTopicsColors.find(topic);
+
+                return FadeInX(
+                  beginX: 100.0,
+                  endX: 0.0,
+                  delay: index.toDouble(),
+                  child: TopicCardColor(
+                    size: 80.0,
+                    elevation: 6.0,
+                    color: Color(topicColor.decimal),
+                    name: topic,
+                    displayName: topic,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
+                );
+              },
+            ),
+          ),
+
+          Divider(),
+        ],
       ) :
       Padding(padding: EdgeInsets.zero,);
   }
 
-  Widget actionButtons() {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          IconButton(
-            padding: EdgeInsets.all(30.0),
-            iconSize: 40.0,
-            icon: Icon(Icons.share,),
-            onPressed: () {
-              final RenderBox box = context.findRenderObject();
-              final sharingText = '${quote.name} - ${quote.author.name}';
-
-              Share.share(
-                sharingText,
-                subject: 'Out Of Context',
-                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-              );
-            },
-          ),
-
-          AddToListButton(
-            context: context,
-            quoteId: quote.id,
-            size: 40.0,
-          ),
-
-          if (!quote.starred)
-            IconButton(
-              padding: EdgeInsets.all(30.0),
-              iconSize: 40.0,
-              icon: Icon(Icons.favorite_border,),
-              onPressed: () async {
-                setState(() { // optimistic
-                  quote.starred = true;
-                });
-
-                final booleanMessage = await Mutations.star(context, quote.id);
-
-                if (!booleanMessage.boolean) {
-                  setState(() { // rollback
-                    quote.starred = false;
-                  });
-
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ThemeColor.error,
-                    message: booleanMessage.message,
-                  )..show(context);
-                }
-              },
-            ),
-
-          if (quote.starred)
-            IconButton(
-              padding: EdgeInsets.all(30.0),
-              iconSize: 40.0,
-              icon: Icon(Icons.favorite,),
-              onPressed: () async {
-                setState(() { // optimistic
-                  quote.starred = false;
-                });
-
-                final booleanMessage = await Mutations.unstar(context, quote.id);
-
-                if (!booleanMessage.boolean) {
-                  setState(() { // rollback
-                    quote.starred = true;
-                  });
-
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ThemeColor.error,
-                    message: booleanMessage.message,
-                  )..show(context);
-                }
-              },
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget backButton() {
-    return Positioned(
-      left: 5.0,
-      top: 20.0,
-      child: Material(
-        color: Colors.transparent,
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
-        ),
-      )
-    );
-  }
-
-  void fetchQuote() {
+  void fetchQuote() async {
     setState(() {
       isLoading = true;
     });
 
-    Queries.quote(context, widget.quoteId)
-      .then((quoteResp) {
+    try {
+      final docSnap = await Firestore.instance
+        .collection('quotes')
+        .document(widget.id)
+        .get();
+
+      if (!docSnap.exists) {
         setState(() {
-          quote = quoteResp;
           isLoading = false;
-          hasErrors = false;
         });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          isLoading = false;
-          hasErrors = true;
-        });
+
+        return;
+      }
+
+      final data = docSnap.data;
+      data['id'] = docSnap.documentID;
+
+      setState(() {
+        quote = Quote.fromJSON(data);
+        isLoading = false;
       });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

@@ -30,7 +30,7 @@ class AppNotifications {
 
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuotePage(quoteId: payload,))
+          MaterialPageRoute(builder: (context) => QuotePage(id: payload,))
         );
       }
     );
