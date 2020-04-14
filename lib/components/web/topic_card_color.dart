@@ -3,17 +3,19 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 
 class TopicCardColor extends StatelessWidget {
-  final String name;
   final Color color;
-  final double size;
+  final String displayName;
   final double elevation;
+  final String name;
+  final double size;
   final TextStyle style;
 
   TopicCardColor({
     this.color,
+    this.displayName = '',
+    this.elevation = 1.0,
     this.name = '',
     this.size = 70.0,
-    this.elevation = 1.0,
     this.style,
   });
 
@@ -48,7 +50,8 @@ class TopicCardColor extends StatelessWidget {
             child: Opacity(
               opacity: .5,
               child: Text(
-                name,
+                displayName != null && displayName.length > 0 ?
+                  displayName : name,
                 overflow: TextOverflow.ellipsis,
                 style: style,
               ),
