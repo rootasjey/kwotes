@@ -7,6 +7,7 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
+import 'package:supercharged/supercharged.dart';
 
 List<TopicColor> _topicsList = [];
 
@@ -17,13 +18,26 @@ class Topics extends StatefulWidget {
 
 class _TopicsState extends State<Topics> {
   final limit = 4;
+  bool ignoreCount = false;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _topicsList.clear();
-        _topicsList = appTopicsColors.shuffle(max: limit);
+        setState(() {
+          ignoreCount = true;
+          _topicsList.clear();
+        });
+
+        Future.delayed(
+          50.milliseconds,
+          () {
+            setState(() {
+              ignoreCount = false;
+            });
+          }
+        );
+
         return null;
       },
       child: ListView(
@@ -92,7 +106,7 @@ class _TopicsState extends State<Topics> {
 
     return Observer(
       builder: (context) {
-        if (_topicsList.length == 0) {
+        if (_topicsList.length == 0 && !ignoreCount) {
           _topicsList = appTopicsColors.shuffle(max: limit);
         }
 
@@ -101,10 +115,11 @@ class _TopicsState extends State<Topics> {
           children: _topicsList.map((topicColor) {
             count++;
 
-            String name = '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}';
+            String name = topicColor.name;
+            String displayName = '${name.substring(0, 1).toUpperCase()}${name.substring(1)}';
 
-            if (name.length > 9) {
-              name = '${name.substring(0, 8)}...';
+            if (displayName.length > 9) {
+              displayName = '${displayName.substring(0, 8)}...';
             }
 
             return FadeInY(
@@ -116,6 +131,7 @@ class _TopicsState extends State<Topics> {
                 elevation: 6.0,
                 color: Color(topicColor.decimal),
                 name: name,
+                displayName: displayName,
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
