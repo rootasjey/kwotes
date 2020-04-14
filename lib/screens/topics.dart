@@ -16,12 +16,14 @@ class Topics extends StatefulWidget {
 }
 
 class _TopicsState extends State<Topics> {
+  final limit = 4;
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
         _topicsList.clear();
-        _topicsList = appTopicsColors.shuffle(max: 3);
+        _topicsList = appTopicsColors.shuffle(max: limit);
         return null;
       },
       child: ListView(
@@ -43,7 +45,7 @@ class _TopicsState extends State<Topics> {
             child: Opacity(
               opacity: .6,
               child: Text(
-                '3 Topics you might like',
+                '$limit Topics you might like',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
@@ -91,30 +93,35 @@ class _TopicsState extends State<Topics> {
     return Observer(
       builder: (context) {
         if (_topicsList.length == 0) {
-          _topicsList = appTopicsColors.shuffle(max: 3);
+          _topicsList = appTopicsColors.shuffle(max: limit);
         }
 
-        return Center(
-          child: Wrap(
-            children: _topicsList.map((topicColor) {
-              count++;
+        return Wrap(
+          alignment: WrapAlignment.spaceEvenly,
+          children: _topicsList.map((topicColor) {
+            count++;
 
-              return FadeInY(
-                beginY: 100.0,
-                endY: 0.0,
-                delay: count.toDouble(),
-                child: TopicCardColor(
-                  size: 100.0,
-                  elevation: 6.0,
-                  color: Color(topicColor.decimal),
-                  name: '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
+            String name = '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}';
+
+            if (name.length > 9) {
+              name = '${name.substring(0, 8)}...';
+            }
+
+            return FadeInY(
+              beginY: 100.0,
+              endY: 0.0,
+              delay: count.toDouble(),
+              child: TopicCardColor(
+                size: 100.0,
+                elevation: 6.0,
+                color: Color(topicColor.decimal),
+                name: name,
+                style: TextStyle(
+                  fontSize: 20.0,
                 ),
-              );
-            }).toList(),
-          ),
+              ),
+            );
+          }).toList(),
         );
       },
     );
