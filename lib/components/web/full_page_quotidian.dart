@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
@@ -30,7 +29,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   bool isPrevFav = false;
   bool hasFetchedFav = false;
   bool isLoading = false;
-  FirebaseUser userAuth;
 
   ReactionDisposer disposeFav;
   ReactionDisposer disposeLang;
@@ -347,12 +345,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void fetchIsFav({DateTime updatedAt}) async {
-    userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
-
-    if (userAuth == null) {
-      return;
-    }
-
     final isCurrentFav = await isFavourite(
       quoteId: _quotidian.quote.id,
     );
