@@ -41,7 +41,7 @@ Future<bool> addToFavourites({
       .get();
 
     if (doc.exists) {
-      return false;
+      return true;
     }
 
     await Firestore.instance
@@ -136,7 +136,7 @@ Future<bool> removeFromFavourites({
       .get();
 
     if (!doc.exists) {
-      return false;
+      return true;
     }
 
     await Firestore.instance
