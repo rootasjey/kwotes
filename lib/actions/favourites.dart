@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/snack.dart';
@@ -14,7 +14,7 @@ Future<bool> addToFavourites({
 }) async {
 
   try {
-    final userAuth = await FirebaseAuth.instance.currentUser();
+    final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
       showSnack(
@@ -84,13 +84,14 @@ Future<bool> addToFavourites({
 /// False otherwise.
 Future<bool> isFavourite({
   String quoteId,
-  String userUid,
 }) async {
+
+  final userAuth = await userState.userAuth;
 
   try {
     final doc = await Firestore.instance
       .collection('users')
-      .document(userUid)
+      .document(userAuth.uid)
       .collection('favourites')
       .document(quoteId)
       .get();
@@ -112,7 +113,7 @@ Future<bool> removeFromFavourites({
 }) async {
 
   try {
-    final userAuth = await FirebaseAuth.instance.currentUser();
+    final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
       showSnack(

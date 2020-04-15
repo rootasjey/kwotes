@@ -354,7 +354,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     }
 
     final isCurrentFav = await isFavourite(
-      userUid: userAuth.uid,
       quoteId: _quotidian.quote.id,
     );
 

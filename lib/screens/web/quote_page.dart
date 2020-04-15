@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
@@ -10,6 +9,7 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/animation.dart';
@@ -31,8 +31,6 @@ class _QuotePageState extends State<QuotePage> {
   bool isLoading;
   Quote quote;
   List<TopicColor> topicColors = [];
-
-  FirebaseUser userAuth;
 
   @override
   void initState() {
@@ -254,15 +252,15 @@ class _QuotePageState extends State<QuotePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: userAuth == null ?
-              null : () async {
+            onPressed: userState.isUserConnected ?
+              () async {
                 if (quote.starred) {
                   removeQuoteFromFav();
                   return;
                 }
 
                 addQuoteToFav();
-            },
+            } : null,
             icon: quote.starred ?
               Icon(Icons.favorite) :
               Icon(Icons.favorite_border),
@@ -280,7 +278,7 @@ class _QuotePageState extends State<QuotePage> {
 
           AddToListButton(
             quote: quote,
-            isDisabled: userAuth == null,
+            isDisabled: !userState.isUserConnected,
           ),
         ],
       ),
@@ -365,11 +363,8 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Future fetchIsFav() async {
-    userAuth = await FirebaseAuth.instance.currentUser();
-
-    if (userAuth != null) {
+    if (userState.isUserConnected) {
       final isFav = await isFavourite(
-        userUid: userAuth.uid,
         quoteId: quote.id,
       );
 
