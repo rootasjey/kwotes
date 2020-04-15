@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
@@ -32,8 +32,6 @@ class _QuotePageState extends State<QuotePage> {
   Color topicColor;
 
   bool isLoading = false;
-
-  FirebaseUser userAuth;
 
   @override
   void didChangeDependencies() {
@@ -191,23 +189,16 @@ class _QuotePageState extends State<QuotePage> {
             quote.starred = false;
           });
 
-          // await Firestore.instance
-          //   .collection('users')
-          //   .document()
+          final success = await addToFavourites(
+            context: context,
+            quote: quote,
+          );
 
-          // final booleanMessage = await Mutations.unstar(context, quote.id);
-
-          // if (!booleanMessage.boolean) {
-          //   setState(() { // rollback
-          //     quote.starred = true;
-          //   });
-
-          //   Flushbar(
-          //     duration: Duration(seconds: 2),
-          //     backgroundColor: ThemeColor.error,
-          //     message: booleanMessage.message,
-          //   )..show(context);
-          // }
+          if (!success) {
+            setState(() {
+              quote.starred = true;
+            });
+          }
         },
       );
     }
@@ -221,19 +212,16 @@ class _QuotePageState extends State<QuotePage> {
           quote.starred = true;
         });
 
-        // final booleanMessage = await Mutations.star(context, quote.id);
+        final success = await removeFromFavourites(
+          context: context,
+          quote: quote,
+        );
 
-        // if (!booleanMessage.boolean) {
-        //   setState(() { // rollback
-        //     quote.starred = false;
-        //   });
-
-        //   Flushbar(
-        //     duration: Duration(seconds: 2),
-        //     backgroundColor: ThemeColor.error,
-        //     message: booleanMessage.message,
-        //   )..show(context);
-        // }
+        if (!success) {
+          setState(() {
+            quote.starred = false;
+          });
+        }
       },
     );
   }
