@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/snack.dart';
@@ -46,8 +46,6 @@ class _AddToListButtonState extends State<AddToListButton> {
 
   bool hasErrors = false;
   Error error;
-
-  FirebaseUser userAuth;
 
   var lastDoc;
 
@@ -229,7 +227,7 @@ class _AddToListButtonState extends State<AddToListButton> {
 
     try {
       userQuotesLists.clear();
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         return;
@@ -287,7 +285,7 @@ class _AddToListButtonState extends State<AddToListButton> {
     isLoadingMore = true;
 
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         return;
@@ -426,7 +424,7 @@ class _AddToListButtonState extends State<AddToListButton> {
     final quote = widget.quote;
 
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         return;
@@ -472,7 +470,7 @@ class _AddToListButtonState extends State<AddToListButton> {
 
   Future<String> createList() async {
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         return null;
