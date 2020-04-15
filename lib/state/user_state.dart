@@ -1,5 +1,5 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_state.g.dart';
@@ -27,6 +27,11 @@ abstract class UserStateBase with Store {
     }
 
     await setAuth();
+
+    if (_userAuth == null) {
+      await _signin();
+    }
+
     return _userAuth;
   }
 
@@ -48,6 +53,32 @@ abstract class UserStateBase with Store {
   @action
   void setUserDisconnected() {
     isUserConnected = true;
+  }
+
+  @action
+  void _setUserAuth(FirebaseUser user) {
+    _userAuth = user;
+  }
+
+  /// Signin user with credentials if FirebaseAuth is null.
+  Future _signin() async {
+    final credentialsMap = appLocalStorage.getCredentials();
+
+    final email = credentialsMap['email'];
+    final password = credentialsMap['password'];
+
+    if ((email == null || email.isEmpty) || (password == null || password.isEmpty)) {
+      return null;
+    }
+
+    final auth = await FirebaseAuth.instance
+      .signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+    _setUserAuth(auth.user);
+    setUserConnected();
   }
 
   @action
