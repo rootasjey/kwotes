@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/loading_animation.dart';
@@ -14,7 +15,6 @@ import 'package:memorare/utils/animation.dart';
 import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:share/share.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -106,13 +106,9 @@ class _QuotePageState extends State<QuotePage> {
                 iconSize: 30.0,
                 icon: Icon(Icons.share,),
                 onPressed: () {
-                  final RenderBox box = context.findRenderObject();
-                  final sharingText = '${quote.name} - ${quote.author.name}';
-
-                  Share.share(
-                    sharingText,
-                    subject: 'Out Of Context',
-                    sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+                  shareFromMobile(
+                    context: context,
+                    quote: quote,
                   );
                 },
               ),
