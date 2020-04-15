@@ -8,9 +8,7 @@ import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/state/user_connection.dart';
-import 'package:memorare/state/user_fav.dart';
-import 'package:memorare/state/user_lang.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
 import 'package:memorare/utils/language.dart';
@@ -42,7 +40,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     super.initState();
 
     disposeLang = autorun((_) {
-      if (_quotidian != null && _prevLang == appUserLang.current) {
+      if (_quotidian != null && _prevLang == userState.lang) {
         return;
       }
 
@@ -50,7 +48,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     });
 
     disposeFav = autorun((_) {
-      final updatedAt = stateUserFav.updatedAt;
+      final updatedAt = userState.updatedFavAt;
       fetchIsFav(updatedAt: updatedAt);
     });
   }
@@ -309,7 +307,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget userSection() {
     return Observer(builder: (context) {
-      if (isUserConnected.value) {
+      if (userState.isUserConnected) {
         if (!hasFetchedFav) { fetchIsFav(); }
 
         hasFetchedFav = true;

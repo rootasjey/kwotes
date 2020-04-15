@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/state/user_lang.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -271,7 +271,7 @@ class _FooterState extends State<Footer> {
       .collection('users')
       .document(userAuth.uid)
       .updateData({
-          'lang': appUserLang.current,
+          'lang': userState.lang,
         }
       );
 

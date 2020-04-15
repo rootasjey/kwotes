@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
-import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
@@ -272,7 +272,7 @@ class _SigninState extends State<Signin> {
       });
 
       if (user != null) {
-        setUserConnected();
+        userState.setUserConnected();
         FluroRouter.router.navigateTo(context, DashboardRoute);
       }
 
@@ -324,7 +324,7 @@ class _SigninState extends State<Signin> {
       final lang = await Language.fetch(result.user);
       Language.setLang(lang);
 
-      setUserConnected();
+      userState.setUserConnected();
 
     } catch (error) {
       debugPrint(error.toString());

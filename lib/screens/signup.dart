@@ -6,7 +6,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
@@ -431,7 +431,7 @@ class SignupState extends State<Signup> {
 
         appLocalStorage.saveUserName(username);
 
-        setUserConnected();
+        userState.setUserConnected();
 
         setState(() {
           isCompleted = true;

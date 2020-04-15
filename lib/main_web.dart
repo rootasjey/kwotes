@@ -1,7 +1,7 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
@@ -68,7 +68,7 @@ class _MainWebState extends State<MainWeb> {
     final userAuth = await getUserAuth();
 
     if (userAuth != null) {
-      setUserConnected();
+      userState.setUserConnected();
     }
 
     Language.fetchAndPopulate(userAuth);

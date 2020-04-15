@@ -9,7 +9,7 @@ import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/animation.dart';
 import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/types/colors.dart';
@@ -116,14 +116,14 @@ class _QuotePageState extends State<QuotePage> {
                   );
                 },
               ),
-              if (isUserConnected.value)
+              if (userState.isUserConnected)
                 AddToListButton(
                   context: context,
                   quoteId: quote.id,
                   size: 40.0,
                 ),
 
-              if (isUserConnected.value)
+              if (userState.isUserConnected)
                 favButton(),
             ],
           ),

@@ -10,7 +10,7 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/state/user_lang.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -404,7 +404,7 @@ class _TopicPageState extends State<TopicPage> {
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('topics.$topicName', isEqualTo: true)
-        .where('lang', isEqualTo: appUserLang.current)
+        .where('lang', isEqualTo: userState.lang)
         .limit(10)
         .getDocuments();
 
@@ -447,7 +447,7 @@ class _TopicPageState extends State<TopicPage> {
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('topics.$topicName', isEqualTo: true)
-        .where('lang', isEqualTo: appUserLang.current)
+        .where('lang', isEqualTo: userState.lang)
         .startAfterDocument(lastDoc)
         .limit(10)
         .getDocuments();

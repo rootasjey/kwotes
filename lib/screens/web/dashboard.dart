@@ -6,7 +6,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
@@ -516,7 +516,7 @@ class _DashboardState extends State<Dashboard> {
                 child: IconButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
-                    setUserDisconnected();
+                    userState.setUserDisconnected();
                     appLocalStorage.saveCredentials(email: '', password: '');
 
                     FluroRouter.router.navigateTo(context, RootRoute);

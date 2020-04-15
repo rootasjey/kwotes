@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/horizontal_card.dart';
-import 'package:memorare/state/user_lang.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:mobx/mobx.dart';
@@ -24,7 +24,7 @@ class _PreviousQuotidiansState extends State<PreviousQuotidians> {
 
     disposeLang = autorun((reaction) {
       fetchPreviousQuotidian(
-        lang: appUserLang.current,
+        lang: userState.lang,
       );
     });
   }

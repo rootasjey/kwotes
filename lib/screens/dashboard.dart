@@ -15,7 +15,7 @@ import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/starred.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_connection.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
@@ -51,10 +51,10 @@ class _DashboardState extends State<Dashboard> {
               greetings = 'Hi Stranger!';
             }
 
-            if (prevIsAuthenticated != isUserConnected.value) {
-              prevIsAuthenticated = isUserConnected.value;
+            if (prevIsAuthenticated != userState.isUserConnected) {
+              prevIsAuthenticated = userState.isUserConnected;
 
-              if (isUserConnected.value) { fetchUserPP(); }
+              if (userState.isUserConnected) { fetchUserPP(); }
               else { avatarUrl = ''; }
             }
 
@@ -81,7 +81,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
 
-                isUserConnected.value ?
+                userState.isUserConnected ?
                   Column(children: authWidgets(context),) :
                   Column(children: guestWidgets(context)),
               ],
@@ -393,7 +393,7 @@ class _DashboardState extends State<Dashboard> {
       child: RaisedButton(
         color: Provider.of<ThemeColor>(context).accent,
         onPressed: () async {
-          setUserDisconnected();
+          userState.setUserDisconnected();
           await appLocalStorage.clearUserAuthData();
           await FirebaseAuth.instance.signOut();
 
