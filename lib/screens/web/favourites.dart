@@ -41,7 +41,7 @@ class _FavouritesState extends State<Favourites> {
   @override
   initState() {
     super.initState();
-    fetchFavQuotes();
+    fatch();
   }
 
   @override
@@ -103,7 +103,7 @@ class _FavouritesState extends State<Favourites> {
             }
 
             if (hasNext && !isLoadingMore) {
-              fetchMoreFavQuotes();
+              fetchMore();
             }
 
             return false;
@@ -327,7 +327,7 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
-  void fetchFavQuotes() async {
+  void fatch() async {
     setState(() {
       isLoading = true;
     });
@@ -384,7 +384,7 @@ class _FavouritesState extends State<Favourites> {
     }
   }
 
-  void fetchMoreFavQuotes() async {
+  void fetchMore() async {
     setState(() {
       isLoadingMore = true;
     });
