@@ -42,11 +42,7 @@ class _OrderLangButtonState extends State<OrderLangButton> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               orderSection(),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0),
-                child: langSection(),
-              ),
+              langSection(),
             ],
           )
         );
@@ -57,7 +53,12 @@ class _OrderLangButtonState extends State<OrderLangButton> {
   Widget langSection() {
     return Column(
       children: <Widget>[
-        Text('Language'),
+        Divider(height: 30.0,),
+
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text('Language'),
+        ),
 
         Wrap(
           spacing: 20.0,
@@ -112,7 +113,10 @@ class _OrderLangButtonState extends State<OrderLangButton> {
   Widget orderSection() {
     return Column(
       children: <Widget>[
-        Text('Order'),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text('Order'),
+        ),
 
         Wrap(
           spacing: 20.0,
