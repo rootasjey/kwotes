@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/delete_tempquote.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -221,7 +222,7 @@ class _TempQuotesState extends State<TempQuotes> {
                   ),
                   onSelected: (value) {
                     if (value == 'delete') {
-                      deleteTempQuote(tempQuote);
+                      deleteAction(tempQuote);
                       return;
                     }
 
@@ -304,25 +305,20 @@ class _TempQuotesState extends State<TempQuotes> {
     });
   }
 
-  void deleteTempQuote(TempQuote tempQuote) async {
+  void deleteAction(TempQuote tempQuote) async {
     int index = tempQuotes.indexOf(tempQuote);
 
     setState(() {
-      tempQuotes.remove(tempQuote);
+      tempQuotes.removeAt(index);
     });
 
-    try {
-      await Firestore.instance
-        .collection('tempquotes')
-        .document(tempQuote.id)
-        .delete();
+    final success = await deleteTempQuote(
+      context: context,
+      tempQuote: tempQuote,
+    );
 
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        tempQuotes.insert(index, tempQuote);
-      });
+    if (!success) {
+      tempQuotes.insert(index, tempQuote);
 
       showSnack(
         context: context,
