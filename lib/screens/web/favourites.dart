@@ -332,6 +332,8 @@ class _FavouritesState extends State<Favourites> {
       isLoading = true;
     });
 
+    quotes.clear();
+
     try {
       userAuth = userAuth ?? await getUserAuth();
 
