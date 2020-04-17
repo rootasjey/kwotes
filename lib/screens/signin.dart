@@ -186,7 +186,7 @@ class SigninState extends State<Signin> {
       padding: EdgeInsets.only(top: 100.0),
       child: FlatButton(
         onPressed: () {
-          signin();
+          signIn();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(color: stateColors.primary),
@@ -214,7 +214,7 @@ class SigninState extends State<Signin> {
     );
   }
 
-  Future signin() async {
+  Future signIn() async {
     setState(() {
       isLoading = true;
     });
