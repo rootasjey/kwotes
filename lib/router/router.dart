@@ -23,11 +23,6 @@ class FluroRouter {
     );
 
     router.define(
-      ReferenceRoute,
-      handler: MobileRouteHandlers.reference,
-    );
-
-    router.define(
       QuotePageRoute,
       handler: MobileRouteHandlers.quote,
     );
@@ -35,6 +30,11 @@ class FluroRouter {
     router.define(
       RootRoute,
       handler: MobileRouteHandlers.quotidian,
+    );
+
+    router.define(
+      ReferenceRoute,
+      handler: MobileRouteHandlers.reference,
     );
 
     router.define(
