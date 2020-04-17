@@ -1,8 +1,11 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -17,6 +20,7 @@ class MainMobileState extends State<MainMobile> {
     super.initState();
     checkConnection();
     loadBrightness();
+    autoLogin();
   }
 
   @override
@@ -28,6 +32,35 @@ class MainMobileState extends State<MainMobile> {
       initialRoute: '/',
       onGenerateRoute: FluroRouter.router.generator,
     );
+  }
+
+  // TODO: Move to main?
+  void autoLogin() async {
+    try {
+      final credentials = appLocalStorage.getCredentials();
+
+      if (credentials == null) { return; }
+
+      final email = credentials['email'];
+      final password = credentials['password'];
+
+      if ((email == null || email.isEmpty) || (password == null || password.isEmpty)) {
+        return;
+      }
+
+      final authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+      if (authResult.user == null) {
+        throw Error();
+      }
+
+      appLocalStorage.saveUserName(authResult.user.displayName);
+      userState.setUserConnected();
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
   void checkConnection() async {
