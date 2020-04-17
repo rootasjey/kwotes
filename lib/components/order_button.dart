@@ -37,58 +37,56 @@ class _OrderButtonState extends State<OrderButton> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text('Order'),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text('Order'),
+              ),
 
               Wrap(
+                spacing: 20.0,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ChoiceChip(
-                      label: Text(
-                        'First added',
-                        style: TextStyle(
-                          color: !widget.descending ?
-                            Colors.white :
-                            stateColors.foreground,
-                        ),
+                  ChoiceChip(
+                    label: Text(
+                      'First added',
+                      style: TextStyle(
+                        color: !widget.descending ?
+                          Colors.white :
+                          stateColors.foreground,
                       ),
-                      padding: EdgeInsets.all(5.0),
-                      selected: !widget.descending,
-                      selectedColor: stateColors.primary,
-                      onSelected: (selected) {
-                        if (widget.onOrderChanged != null) {
-                          final newOrder = !widget.descending;
-                          widget.onOrderChanged(newOrder);
-                        }
-
-                        Navigator.pop(context);
-                      },
                     ),
+                    padding: EdgeInsets.all(5.0),
+                    selected: !widget.descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (widget.onOrderChanged != null) {
+                        final newOrder = !widget.descending;
+                        widget.onOrderChanged(newOrder);
+                      }
+
+                      Navigator.pop(context);
+                    },
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ChoiceChip(
-                      label: Text(
-                        'Last added',
-                        style: TextStyle(
-                          color: widget.descending ?
-                            Colors.white :
-                            stateColors.foreground,
-                        ),
+                  ChoiceChip(
+                    label: Text(
+                      'Last added',
+                      style: TextStyle(
+                        color: widget.descending ?
+                          Colors.white :
+                          stateColors.foreground,
                       ),
-                      padding: EdgeInsets.all(5.0),
-                      selected: widget.descending,
-                      selectedColor: stateColors.primary,
-                      onSelected: (selected) {
-                        if (widget.onOrderChanged != null) {
-                          final newOrder = !widget.descending;
-                          widget.onOrderChanged(newOrder);
-                        }
-
-                        Navigator.pop(context);
-                      },
                     ),
+                    padding: EdgeInsets.all(5.0),
+                    selected: widget.descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (widget.onOrderChanged != null) {
+                        final newOrder = !widget.descending;
+                        widget.onOrderChanged(newOrder);
+                      }
+
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),
