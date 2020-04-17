@@ -37,7 +37,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
   @override
   initState() {
     super.initState();
-    fetchQuotes();
+    fetch();
   }
 
   @override
@@ -121,7 +121,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         }
 
         if (hasNext && !isLoadingMore) {
-          fetchMoreQuotes();
+          fetchMore();
         }
 
         return false;
@@ -210,7 +210,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
         onPressed: () {
-          fetchMoreQuotes();
+          fetchMore();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(
@@ -227,7 +227,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     );
   }
 
-  void fetchQuotes() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -284,7 +284,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     }
   }
 
-  void fetchMoreQuotes() async {
+  void fetchMore() async {
     if (lastDoc == null) { return; }
 
     setState(() {
