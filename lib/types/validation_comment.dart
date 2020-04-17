@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ValidationComment {
   final String name;
   final DateTime updatedAt;
@@ -10,7 +12,7 @@ class ValidationComment {
   factory ValidationComment.fromJSON(Map<String, dynamic> json) {
     return ValidationComment(
       name: json['name'],
-      updatedAt: json['updatedAt'],
+      updatedAt: (json['updatedAt'] as Timestamp).toDate(),
     );
   }
 }

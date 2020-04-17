@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/partial_user.dart';
 import 'package:memorare/types/reference.dart';
@@ -69,7 +70,7 @@ class TempQuote {
     return TempQuote(
       author        : _author,
       comments      : _comments,
-      createdAt     : json['createdAt'],
+      createdAt     : (json['createdAt'] as Timestamp).toDate(),
       id            : json['id'],
       lang          : json['lang'],
       mainReference : _mainReference,
@@ -77,7 +78,7 @@ class TempQuote {
       references    : referencesList,
       region        : json['region'],
       topics        : topicsList,
-      updatedAt     : json['updatedAt'],
+      updatedAt     : (json['updatedAt'] as Timestamp).toDate(),
       user          : _user,
       validation    : _validation,
     );

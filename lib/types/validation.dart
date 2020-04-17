@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:memorare/types/validation_comment.dart';
 
 class Validation {
@@ -17,7 +18,7 @@ class Validation {
         ValidationComment.fromJSON(json['comment']) : null,
 
       status: json['status'],
-      updatedAt: json['updatedAt'],
+      updatedAt: (json['updatedAt'] as Timestamp).toDate(),
     );
   }
 }
