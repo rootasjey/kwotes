@@ -26,7 +26,6 @@ class _FavouritesState extends State<Favourites> {
   bool isLoading      = false;
   bool isLoadingMore  = false;
   int limit           = 30;
-  int order           = -1;
   bool descending     = true;
 
   ScrollController _scrollController = ScrollController();
