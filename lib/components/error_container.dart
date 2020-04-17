@@ -3,19 +3,23 @@ import 'package:memorare/state/colors.dart';
 
 class ErrorContainer extends StatelessWidget {
   final String message;
+  final Function onPressed;
 
-  ErrorContainer({this.message = 'Oops! There was an error'});
+  ErrorContainer({
+    this.onPressed,
+    this.message = 'Oops! There was an error.',
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: <Widget>[
           Icon(Icons.sentiment_neutral, size: 40.0),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
             child: Text(
               message,
               style: TextStyle(
@@ -25,12 +29,20 @@ class ErrorContainer extends StatelessWidget {
           ),
 
           FlatButton(
-            onPressed: () {},
+            onPressed: onPressed,
             shape: RoundedRectangleBorder(
               side: BorderSide(color: stateColors.primary),
               borderRadius: BorderRadius.circular(2.0),
             ),
-            child: null,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                'Refresh',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
           ),
         ],
       )
