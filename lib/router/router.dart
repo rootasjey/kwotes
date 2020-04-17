@@ -13,6 +13,11 @@ class FluroRouter {
     );
 
     router.define(
+      FavouritesRoute,
+      handler: MobileRouteHandlers.favourites,
+    );
+
+    router.define(
       HomeRoute,
       handler: MobileRouteHandlers.home,
     );

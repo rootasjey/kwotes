@@ -12,7 +12,6 @@ import 'package:memorare/screens/app_page_settings.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_lists.dart';
-import 'package:memorare/screens/starred.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -300,15 +299,12 @@ class _DashboardState extends State<Dashboard> {
     return FlatButton(
       child: ListTile(
         leading: Icon(Icons.favorite, size: 30.0,),
-        title: Text('Favorites', style: TextStyle(fontSize: 20.0),),
+        title: Text('Favourites', style: TextStyle(fontSize: 20.0),),
       ),
       onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return Starred();
-            }
-          )
+        FluroRouter.router.navigateTo(
+          context,
+          FavouritesRoute,
         );
       },
     );
