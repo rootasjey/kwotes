@@ -11,7 +11,6 @@ import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/app_page_settings.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
-import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -327,12 +326,9 @@ class _DashboardState extends State<Dashboard> {
         title: Text('Lists', style: TextStyle(fontSize: 20.0),),
       ),
       onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return QuotesLists();
-            }
-          )
+        FluroRouter.router.navigateTo(
+          context,
+          ListsRoute,
         );
       },
     );

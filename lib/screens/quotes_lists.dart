@@ -1,16 +1,17 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/error.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
-import 'package:memorare/screens/quotes_list.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/order_button.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/loading_animation.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/pagination.dart';
-import 'package:memorare/types/quotes_list.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/types/user_quotes_list.dart';
+import 'package:memorare/utils/snack.dart';
 
 class QuotesLists extends StatefulWidget {
   @override
@@ -18,437 +19,506 @@ class QuotesLists extends StatefulWidget {
 }
 
 class _QuotesListsState extends State<QuotesLists> {
-  List<QuotesList> lists = [];
-  bool isLoading = false;
-  bool hasErrors = false;
-  Error error;
+  bool descending     = true;
+  bool hasErrors      = false;
+  bool hasNext        = true;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  int limit           = 10;
 
-  int order = -1;
+  final _scrollController = ScrollController();
 
-  Pagination pagination = Pagination();
-  bool isLoadingMoreLists = false;
-  ScrollController listScrollController = ScrollController();
+  List<UserQuotesList> userQuotesLists = [];
 
-  String newListName = '';
-  String newListDescription = '';
+  var lastDoc;
 
-  String updateListName = '';
-  String updateListDescription = '';
+  String newName            = '';
+  String newDescription     = '';
+  String newIconUrl         = '';
+  bool newIsPublic          = false;
+
+  String updateName         = '';
+  String updateDescription  = '';
+  bool updateIsPublic       = false;
+
+  String oldName            = '';
+  String oldDescription     = '';
+  bool oldIsPublic          = false;
 
   @override
-  didChangeDependencies() {
-    super.didChangeDependencies();
-    fetchLists();
+  initState() {
+    super.initState();
+    fetch();
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final accent = themeColor.accent;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        title: InkWell(
-          onTap: () {
-            if (lists.length == 0) { return; }
-
-            listScrollController.animateTo(
-              0,
-              duration: Duration(seconds: 2),
-              curve: Curves.easeOutQuint,
-            );
-          },
-          child: Text(
-            'Lists',
-            style: TextStyle(
-              color: accent,
-              fontSize: 30.0,
-            ),
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: accent,),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showCreateListDialog();
+      body: body(),
+      floatingActionButton: Observer(
+        builder: (_) {
+          return FloatingActionButton(
+            onPressed: () => showCreateListDialog(),
+            child: Icon(Icons.add),
+            backgroundColor: stateColors.primary,
+            foregroundColor: stateColors.foreground,
+          );
         },
-        child: Icon(Icons.add, color: Colors.white,),
-        backgroundColor: accent,
       ),
-      body: Builder(builder: (BuildContext context) {
-        if (!isLoading && hasErrors) {
-          return ErrorComponent(
-            description: error != null ? error.toString() : '',
-          );
-        }
+    );
+  }
 
-        if (isLoading) {
-          return LoadingComponent(
-            title: 'Loading your lists...',
-            padding: EdgeInsets.all(30.0),
-          );
-        }
+  Widget body() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+            return false;
+          }
 
-        if (lists.length == 0) {
-          return EmptyView(
-            icon: Icon(Icons.list, size: 60.0),
-            title: 'No personalized lists',
-            description: 'You have no list yet. You can create a thematic one.',
-            onRefresh: () async {
-              await fetchLists();
-              return null;
-            },
-            onTapDescription: () {
-              showCreateListDialog();
-            },
-          );
-        }
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            await fetchLists();
-            return null;
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollNotif) {
-              if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-                  return false;
-              }
+          return false;
+        },
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: <Widget>[
+            appBar(),
+            bodyListContent(),
+          ],
+        ),
+      )
+    );
+  }
 
-              if (pagination.hasNext && !isLoadingMoreLists) {
-                fetchMoreLists();
-              }
+  Widget appBar() {
+    return Observer(
+      builder: (_) {
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          expandedHeight: 120.0,
+          backgroundColor: stateColors.softBackground,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Stack(
+            children: <Widget>[
+              FadeInY(
+                delay: 1.0,
+                beginY: 50.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: FlatButton(
+                    onPressed: () {
+                      if (userQuotesLists.length == 0) { return; }
 
-              return false;
-            },
-            child: ListView.separated(
-              controller: listScrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
-              itemCount: lists.length,
-              separatorBuilder: (context, index) {
-                return Divider();
-              },
-              itemBuilder: (BuildContext context, int index) {
-                final item = lists.elementAt(index);
-
-                return ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return QuotesListScreen(
-                            id: item.id,
-                            name: item.name,
-                            description: item.description,
-                          );
-                        }
-                      )
-                    );
-                  },
-                  trailing: moreButton(quotesList: item, index: index),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        item.name,
+                      _scrollController.animateTo(
+                        0,
+                        duration: Duration(seconds: 2),
+                        curve: Curves.easeOutQuint
+                      );
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 60.0,
+                      child: Text(
+                        'Lists',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 25.0,
                         ),
                       ),
-                      if (item.description != null)
-                        Opacity(
-                          opacity: .6,
-                          child: Text(
-                            item.description,
-                          ),
-                        ),
-                    ],
-                  )
-                );
-              },
-            )
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                right: 20.0,
+                top: 50.0,
+                child: OrderButton(
+                  ascendingText: 'First updated',
+                  descending: descending,
+                  descendingText: 'Last updated',
+                  onOrderChanged: (newDescending) {
+                    descending = newDescending;
+                    fetch();
+                  },
+                ),
+              ),
+
+              Positioned(
+                left: 20.0,
+                top: 50.0,
+                child: IconButton(
+                  onPressed: () {
+                    FluroRouter.router.pop(context);
+                  },
+                  tooltip: 'Back',
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
+            ],
           ),
         );
-      }),
-    );
-  }
-
-  Widget moreButton({int index, QuotesList quotesList}) {
-    return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert),
-      onSelected: (value) async {
-        if (value == 'delete') {
-          showDeleteListDialog(quotesList: quotesList, index: index);
-          return;
-        }
-
-        if (value == 'edit') {
-          showEditListDialog(index: index, quotesList: quotesList);
-          return;
-        }
       },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem(
-          value: 'delete',
-          child: ListTile(
-            leading: Icon(Icons.delete),
-            title: Text(
-              'Delete',
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'edit',
-          child: ListTile(
-            leading: Icon(Icons.edit),
-            title: Text(
-              'Edit',
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
-  Future fetchLists({bool reset = false}) {
-    setState(() {
-      isLoading = true;
-    });
+  Widget bodyListContent() {
+    if (isLoading) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            Padding(
+              padding: const EdgeInsets.only(top: 200.0),
+              child: LoadingAnimation(),
+            ),
+          ]
+        ),
+      );
+    }
 
-    final fetchPolicy = reset == false ?
-        FetchPolicy.cacheAndNetwork :
-        FetchPolicy.networkOnly;
+    if (!isLoading && hasErrors) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 150.0),
+            child: ErrorContainer(
+              onPressed: () {
+                fetch();
+              },
+            ),
+          ),
+        ]),
+      );
+    }
 
-    return Queries.lists(
-      context: context,
-      limit: pagination.limit,
-      order: order,
-      skip: pagination.skip,
-      fetchPolicy: fetchPolicy,
+    if (userQuotesLists.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child:
+              Container(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  children: <Widget>[
+                    Opacity(
+                      opacity: .8,
+                      child: Icon(
+                        Icons.format_list_bulleted,
+                        size: 120.0,
+                        color: Color(0xFFFF005C),
+                      ),
+                    ),
 
-    ).then((quotesListsResp) {
-      setState(() {
-        isLoading = false;
-        hasErrors = false;
-        lists = quotesListsResp.entries;
-        pagination = quotesListsResp.pagination;
-      });
-    })
-    .catchError((err) {
-      error = err;
-      isLoading = false;
-      hasErrors = true;
-    });
+                    Opacity(
+                      opacity: .8,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 60.0),
+                        child: Text(
+                          "You've created no list yet",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                      child: Opacity(
+                        opacity: .6,
+                        child: Text(
+                          "You can create one by taping on the '+' button" ,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    IconButton(
+                      onPressed: () {
+                        showCreateListDialog();
+                      },
+                      icon: Icon(Icons.add,),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return sliverQuotesList();
   }
 
-  Future fetchMoreLists() {
-    isLoadingMoreLists = true;
+  Widget cardItem({Widget iconImg, UserQuotesList quoteList}) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: 500.0,
+            height: 120.0,
+            child: Card(
+              child: InkWell(
+                onTap: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    ListRoute.replaceFirst(':id', quoteList.id),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Stack(
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          iconImg,
 
-    return Queries.lists(
-      context: context,
-      limit: pagination.limit,
-      order: order,
-      skip: pagination.nextSkip,
-      fetchPolicy: FetchPolicy.networkOnly,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  quoteList.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                                Opacity(
+                                  opacity: .6,
+                                  child: Text(
+                                    quoteList.description,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
 
-    ).then((quotesListsResp) {
-      setState(() {
-        lists.addAll(quotesListsResp.entries);
-        pagination = quotesListsResp.pagination;
-        isLoadingMoreLists = false;
-      });
-    })
-    .catchError((err) {
-      isLoadingMoreLists = false;
-    });
+                      Positioned(
+                        right: 0.0,
+                        top: 15.0,
+                        child: PopupMenuButton<String>(
+                          onSelected: (value) {
+                            if (value == 'delete') {
+                              showDeleteListDialog(quoteList);
+                              return;
+                            }
+
+                            if (value == 'edit') {
+                              showEditListDialog(quoteList);
+                              return;
+                            }
+                          },
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: ListTile(
+                                leading: Icon(Icons.edit),
+                                title: Text('Edit'),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: ListTile(
+                                leading: Icon(Icons.delete_outline),
+                                title: Text('Delete'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget sliverQuotesList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final quoteList = userQuotesLists.elementAt(index);
+
+          final iconImg = quoteList.iconUrl.isNotEmpty ?
+            Image.network(quoteList.iconUrl, width: 40.0, height: 40.0,) :
+            Image.asset('assets/images/layers-${stateColors.iconExt}.png', width: 40.0, height: 40.0,);
+
+          return FadeInY(
+            delay: 2.0 + index.toDouble() * 0.1,
+            beginY: 50.0,
+            child: cardItem(
+              iconImg: iconImg,
+              quoteList: quoteList,
+            ),
+          );
+        },
+        childCount: userQuotesLists.length,
+      ),
+    );
   }
 
   void showCreateListDialog() {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final accent = themeColor.accent;
-
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text(
-            'Create a new list'
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                labelStyle: TextStyle(color: accent),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: accent,
-                    width: 2.0
-                  ),
-                ),
+        return StatefulBuilder(
+          builder: (context, childSetState) {
+            return SimpleDialog(
+              title: Text(
+                'Create a new list'
               ),
-              onChanged: (newValue) {
-                newListName = newValue;
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 10.0),),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(color: accent),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: accent,
-                    width: 2.0
-                  ),
-                ),
-              ),
-              onChanged: (newValue) {
-                newListDescription = newValue;
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 20.0),),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Cancel',
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
+                  ),
+                  child: TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: TextStyle(color: stateColors.primary),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: stateColors.primary,
+                          width: 2.0
+                        ),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      newName = newValue;
+                    },
                   ),
                 ),
 
-                RaisedButton(
-                  color: accent,
-                  onPressed: () {
-                    createNewList();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Create',
-                    style: TextStyle(color: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
                   ),
-                )
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: TextStyle(color: stateColors.primary),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: stateColors.primary,
+                          width: 2.0
+                        ),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      newDescription = newValue;
+                    },
+                    onSubmitted: (_) {
+                      createList();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                        value: newIsPublic,
+                        onChanged: (newValue) {
+                          childSetState(() {
+                            newIsPublic = newValue;
+                          });
+                        },
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Opacity(
+                          opacity: .6,
+                          child: Text(
+                            'Is public?'
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Divider(height: 15.0,),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Cancel',
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                      ),
+
+                      RaisedButton(
+                        color: stateColors.primary,
+                        onPressed: () {
+                          createList();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Create',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
-            ),
-          ],
+            );
+          }
         );
       }
     );
   }
 
-  void showEditListDialog({QuotesList quotesList, int index}) {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final accent = themeColor.accent;
-
-    final name = quotesList.name;
-    final description = quotesList.description;
-
-    updateListName = name;
-    updateListDescription = description;
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text(
-            'Edit $name',
-            overflow: TextOverflow.ellipsis,
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                labelStyle: TextStyle(color: accent),
-                hintText: name,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: accent,
-                    width: 2.0
-                  ),
-                ),
-              ),
-              onChanged: (newValue) {
-                updateListName = newValue;
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 10.0),),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(color: accent),
-                hintText: description,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: accent,
-                    width: 2.0
-                  ),
-                ),
-              ),
-              onChanged: (newValue) {
-                updateListDescription = newValue;
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 20.0),),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    updateListName = '';
-                    updateListDescription = '';
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Cancel',
-                  ),
-                ),
-
-                RaisedButton(
-                  color: accent,
-                  onPressed: () {
-                    updateList(quotesList: quotesList, index: index);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          ],
-        );
-      }
-    );
-  }
-
-  void showDeleteListDialog({QuotesList quotesList, int index}) {
-    final id = quotesList.id;
+  void showDeleteListDialog(UserQuotesList quotesList) {
     final name = quotesList.name;
 
     showDialog(
@@ -484,7 +554,7 @@ class _QuotesListsState extends State<QuotesLists> {
             RaisedButton(
               color: ThemeColor.error,
               onPressed: () {
-                deleteList(id: id, index: index);
+                deleteList(quotesList);
                 Navigator.of(context).pop();
               },
               child: Padding(
@@ -501,90 +571,401 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
-  void createNewList() {
-    Mutations.createList(
+  void showEditListDialog(UserQuotesList quotesList) {
+    updateName = quotesList.name;
+    updateDescription = quotesList.description;
+    updateIsPublic = quotesList.isPublic;
+
+    showDialog(
       context: context,
-      name: newListName,
-      description: newListDescription
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, childSetState) {
+            return SimpleDialog(
+              title: Text(
+                'Edit $updateName',
+                overflow: TextOverflow.ellipsis,
+              ),
+              // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
+                  ),
+                  child: TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: TextStyle(color: stateColors.primary),
+                      hintText: updateName,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: stateColors.primary,
+                          width: 2.0
+                        ),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      updateName = newValue;
+                    },
+                  ),
+                ),
 
-    ).then((quotesListResp) {
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: TextStyle(color: stateColors.primary),
+                      hintText: updateDescription,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: stateColors.primary,
+                          width: 2.0
+                        ),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      updateDescription = newValue;
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                        value: updateIsPublic,
+                        onChanged: (newValue) {
+                          childSetState(() {
+                            updateIsPublic = newValue;
+                          });
+                        },
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Opacity(
+                          opacity: .6,
+                          child: Text(
+                            'Is public?'
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Divider(height: 15.0,),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          updateName = '';
+                          updateDescription = '';
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Cancel',
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                      ),
+
+                      RaisedButton(
+                        color: stateColors.primary,
+                        onPressed: () {
+                          updateList(quotesList);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Update',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      }
+    );
+  }
+
+  // --------------------------
+  // ^
+  // |_ Silent widget functions
+  // --------------------------
+
+  void createList() async {
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final docRef = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .add({
+          'createdAt'   : DateTime.now(),
+          'description' : newDescription,
+          'name'        : newName,
+          'iconUrl'     : newIconUrl,
+          'isPublic'    : newIsPublic,
+          'updatedAt'   : DateTime.now(),
+        });
+
+      final doc = await docRef.get();
+
+      final data = doc.data;
+      data['id'] = doc.documentID;
+
+      final quoteList = UserQuotesList.fromJSON(data);
+
       setState(() {
-        lists.add(quotesListResp);
+        userQuotesLists.add(quoteList);
       });
-    })
-    .catchError((err) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        backgroundColor: ThemeColor.error,
-        message: 'Could not create your new list. Try again later or contact us.',
-      )..show(context);
-    });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      showSnack(
+        context: context,
+        message: 'There was and issue while creating the list. Try again later',
+        type: SnackType.error,
+      );
+    }
   }
 
-  void deleteList({String id, int index}) {
-    final itemToDelete = lists.elementAt(index);
+  void deleteList(UserQuotesList quoteList) async {
+    int index = userQuotesLists.indexOf(quoteList);
 
     setState(() {
-      lists.removeAt(index);
+      userQuotesLists.removeAt(index);
     });
 
-    Mutations.deleteList(context, id)
-      .then((booleanMessage) {
-        if (booleanMessage.boolean) { // rollback
-          return;
-        }
+    try {
+      final userAuth = await userState.userAuth;
 
-        setState(() {
-          lists.insert(index, itemToDelete);
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      // Add a new document containing information
+      // to delete the subcollection (in order to delete its documents).
+      await Firestore.instance
+        .collection('todelete')
+        .add({
+          'objectId': quoteList.id,
+          'path': 'users/<userId>/lists/<listId>/quotes',
+          'userId': userAuth.uid,
+          'target': 'list',
+          'type': 'subcollection',
         });
-      })
-      .catchError((err) {
-        setState(() {
-          lists.insert(index, itemToDelete);
-        });
+
+      // Delete the quote collection doc.
+      await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .document(quoteList.id)
+        .delete();
+
+    } catch (error) {
+      setState(() {
+        userQuotesLists.insert(index, quoteList);
       });
+
+      debugPrint(error);
+
+      showSnack(
+        context: context,
+        message: 'There was and issue while deleting the list. Try again later',
+        type: SnackType.error,
+      );
+    }
   }
 
-  void updateList({QuotesList quotesList, int index}) {
-    final listToUpdate = lists.elementAt(index);
-
-    final id = listToUpdate.id;
-    final name = updateListName;
-    final description = updateListDescription;
-
-    final oldName = listToUpdate.name;
-    final oldDescription = listToUpdate.description;
-
+  Future fetch() async {
     setState(() {
-      listToUpdate.name = updateListName;
-      listToUpdate.description = updateListDescription;
+      isLoading = true;
     });
 
-    Mutations.updateList(context, id, name, description)
-      .then((resp) {
-        if (!resp.boolean) {
-          setState(() {
-            listToUpdate.name = oldName;
-            listToUpdate.description = oldDescription;
-          });
+    try {
+      userQuotesLists.clear();
 
-          Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: 'Could not update your list. Try again later or contact us.',
-          )..show(context);
-        }
-      }).catchError((err) {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final snapshot = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .orderBy('updatedAt', descending: descending)
+        .limit(limit)
+        .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
         setState(() {
-          listToUpdate.name = oldName;
-          listToUpdate.description = oldDescription;
+          hasNext = false;
+          isLoading = false;
         });
 
-        Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: 'Could not update your list. Try again later or contact us.',
-          )..show(context);
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quoteList = UserQuotesList.fromJSON(data);
+        userQuotesLists.add(quoteList);
       });
+
+      lastDoc = snapshot.documents.last;
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
+        isLoading = false;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void fetchMore() async {
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final snapshot = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .orderBy('updatedAt', descending: descending)
+        .startAfterDocument(lastDoc)
+        .limit(limit)
+        .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoadingMore = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quoteList = UserQuotesList.fromJSON(data);
+        userQuotesLists.add(quoteList);
+      });
+
+      lastDoc = snapshot.documents.last;
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
+        isLoadingMore = false;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
+  }
+
+  void updateList(UserQuotesList quotesList) async {
+    oldDescription = quotesList.description;
+    oldName = quotesList.name;
+    oldIsPublic = quotesList.isPublic;
+
+    setState(() { // optimistic
+      quotesList.description = updateDescription;
+      quotesList.name = updateName;
+      quotesList.isPublic = updateIsPublic;
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .document(quotesList.id)
+        .updateData({
+          'description' : updateDescription,
+          'name'        : updateName,
+          'isPublic'    : updateIsPublic,
+          'updatedAt'   : DateTime.now(),
+        });
+
+      setState(() {});
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() { // rollback
+        quotesList.description = oldDescription;
+        quotesList.name = oldName;
+        quotesList.isPublic = oldIsPublic;
+      });
+
+      showSnack(
+        context: context,
+        message: 'There was and issue while updating the list. Try again later',
+        type: SnackType.error,
+      );
+    }
   }
 }

@@ -23,6 +23,11 @@ class FluroRouter {
     );
 
     router.define(
+      ListsRoute,
+      handler: MobileRouteHandlers.lists,
+    );
+
+    router.define(
       QuotePageRoute,
       handler: MobileRouteHandlers.quote,
     );
