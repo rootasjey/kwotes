@@ -75,7 +75,6 @@ flutter:
     - assets/images/app-icon-64.png
     - assets/images/boy-dark.png
     - assets/images/boy-light.png
-    - assets/images/bulb-75.png
     - assets/images/delete-user-dark.png
     - assets/images/delete-user-light.png
     - assets/images/employee-dark.png
@@ -86,7 +85,6 @@ flutter:
     - assets/images/layers-light.png
     - assets/images/lock-dark.png
     - assets/images/lock-light.png
-    - assets/images/monk.png
     - assets/images/jeje-profile.jpg
     - assets/images/page-not-found-4.png
     - assets/images/profile-dark.png

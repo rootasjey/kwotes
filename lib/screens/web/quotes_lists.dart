@@ -7,6 +7,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
@@ -218,12 +219,12 @@ class _QuotesListsState extends State<QuotesLists> {
 
           final iconImg = quoteList.iconUrl.isNotEmpty ?
             Image.network(quoteList.iconUrl, width: 40.0, height: 40.0,) :
-            Image.asset('assets/images/bulb-75.png', width: 40.0, height: 40.0,);
+            Image.asset('assets/images/layers-${stateColors.iconExt}.png', width: 40.0, height: 40.0,);
 
           return FadeInY(
             delay: 2.0 + index.toDouble() * 0.1,
             beginY: 50.0,
-            child: cardList(
+            child: cardItem(
               iconImg: iconImg,
               quoteList: quoteList,
             ),
@@ -234,7 +235,7 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
-  Widget cardList({Widget iconImg, UserQuotesList quoteList}) {
+  Widget cardItem({Widget iconImg, UserQuotesList quoteList}) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
@@ -328,11 +329,11 @@ class _QuotesListsState extends State<QuotesLists> {
     });
 
     try {
-      // User check
       userAuth = userAuth ?? getUserAuth();
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
       }
 
       // Add a new document containing information
@@ -458,6 +459,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
       }
 
       final docRef = await Firestore.instance

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/quote.dart';
 
 class QuoteRow extends StatelessWidget {
@@ -39,7 +40,7 @@ class QuoteRow extends StatelessWidget {
                         backgroundColor: Color(0xFFF56098),
                         backgroundImage: quote.author.imgUrl.length > 1 ?
                           NetworkImage(quote.author.imgUrl) :
-                          AssetImage('assets/images/monk.png'),
+                          AssetImage('assets/images/user-${stateColors.iconExt}.png'),
                         child: Text('${quote.author.name.substring(0,1)}'),
                       ),
                     ),

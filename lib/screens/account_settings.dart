@@ -5,6 +5,7 @@ import 'package:memorare/screens/edit_avatar.dart';
 import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_name.dart';
 import 'package:memorare/screens/edit_password.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             CircleAvatar(
                               backgroundImage: userData.data.imgUrl.length > 0 ?
                                 NetworkImage('${userData.data.imgUrl}') :
-                                AssetImage('assets/images/monk.png'),
+                                AssetImage('assets/images/user-${stateColors.iconExt}.png'),
                               maxRadius: 50.0,
                             ),
                             Positioned(
