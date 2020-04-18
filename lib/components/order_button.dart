@@ -4,9 +4,13 @@ import 'package:memorare/state/colors.dart';
 class OrderButton extends StatefulWidget {
   final bool descending;
   final Function onOrderChanged;
+  final String ascendingText;
+  final String descendingText;
 
   OrderButton({
+    this.ascendingText = 'First added',
     this.descending,
+    this.descendingText = 'Last added',
     this.onOrderChanged,
   });
 
@@ -47,7 +51,7 @@ class _OrderButtonState extends State<OrderButton> {
                 children: <Widget>[
                   ChoiceChip(
                     label: Text(
-                      'First added',
+                      widget.ascendingText,
                       style: TextStyle(
                         color: !widget.descending ?
                           Colors.white :
@@ -69,7 +73,7 @@ class _OrderButtonState extends State<OrderButton> {
 
                   ChoiceChip(
                     label: Text(
-                      'Last added',
+                      widget.descendingText,
                       style: TextStyle(
                         color: widget.descending ?
                           Colors.white :
