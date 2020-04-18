@@ -38,6 +38,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     super.initState();
     fetch();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
