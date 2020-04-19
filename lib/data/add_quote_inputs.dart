@@ -108,6 +108,7 @@ class AddQuoteInputs {
           ),
           urls    : Urls(
             affiliate : ref.urls.affiliate,
+            amazon    : ref.urls.amazon,
             facebook  : ref.urls.facebook,
             image     : ref.urls.image,
             netflix   : ref.urls.netflix,
