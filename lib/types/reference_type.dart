@@ -1,6 +1,6 @@
 class ReferenceType {
-  final String primary;
-  final String secondary;
+  String primary;
+  String secondary;
 
   ReferenceType({
     this.primary = '',

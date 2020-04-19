@@ -232,8 +232,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         'lang'          : AddQuoteInputs.lang,
         'name'          : AddQuoteInputs.name,
         'mainReference' : {
-          'id'  : AddQuoteInputs.refId,
-          'name': AddQuoteInputs.refName,
+          'id'  : AddQuoteInputs.reference.id,
+          'name': AddQuoteInputs.reference.name,
         },
         'references'    : references,
         'region'        : AddQuoteInputs.region,
@@ -319,23 +319,22 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
     final references = List<Map<String, dynamic>>();
 
-    if (AddQuoteInputs.refName.isNotEmpty) {
+    if (AddQuoteInputs.reference.name.isNotEmpty) {
       references.add(
         {
-          'imgUrl'      : AddQuoteInputs.refImgUrl,
-          'lang'        : AddQuoteInputs.refLang,
+          'lang'        : AddQuoteInputs.reference.lang,
           'links'       : [],
-          'name'        : AddQuoteInputs.refName,
-          'summary'     : AddQuoteInputs.refSummary,
+          'name'        : AddQuoteInputs.reference.name,
+          'summary'     : AddQuoteInputs.reference.summary,
           'type'        : {
-            'primary'   : AddQuoteInputs.refPrimaryType,
-            'secondary' : AddQuoteInputs.refSecondaryType,
+            'primary'   : AddQuoteInputs.reference.type.primary,
+            'secondary' : AddQuoteInputs.reference.type.secondary,
           },
           'urls'        : {
-            'affiliate' : AddQuoteInputs.refAffiliateUrl,
-            'image'     : AddQuoteInputs.refImgUrl,
-            'website'   : AddQuoteInputs.refUrl,
-            'wikipedia' : AddQuoteInputs.refWikiUrl,
+            'affiliate' : AddQuoteInputs.reference.urls.affiliate,
+            'image'     : AddQuoteInputs.reference.urls.image,
+            'website'   : AddQuoteInputs.reference.urls.website,
+            'wikipedia' : AddQuoteInputs.reference.urls.wikipedia,
           },
         }
       );
@@ -443,8 +442,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         'lang'          : AddQuoteInputs.lang,
         'name'          : AddQuoteInputs.name,
         'mainReference' : {
-          'id'  : AddQuoteInputs.refId,
-          'name': AddQuoteInputs.refName,
+          'id'  : AddQuoteInputs.reference.id,
+          'name': AddQuoteInputs.reference.name,
         },
         'references'    : references,
         'region'        : AddQuoteInputs.region,

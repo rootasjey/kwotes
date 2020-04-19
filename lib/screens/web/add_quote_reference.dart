@@ -45,16 +45,16 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   @override
   initState() {
     setState(() {
-      imgUrl = AddQuoteInputs.refImgUrl;
-      lang  = AddQuoteInputs.refLang;
+      imgUrl = AddQuoteInputs.reference.urls.image;
+      lang  = AddQuoteInputs.reference.lang;
 
-      _affiliateUrlController.text  = AddQuoteInputs.refAffiliateUrl;
-      _nameController.text          = AddQuoteInputs.refName;
-      _primaryTypeController.text   = AddQuoteInputs.refPrimaryType;
-      _secondaryTypeController.text = AddQuoteInputs.refSecondaryType;
-      _summaryController.text       = AddQuoteInputs.refSummary;
-      _urlController.text           = AddQuoteInputs.refUrl;
-      _wikiUrlController.text       = AddQuoteInputs.refWikiUrl;
+      _affiliateUrlController.text  = AddQuoteInputs.reference.urls.affiliate;
+      _nameController.text          = AddQuoteInputs.reference.name;
+      _primaryTypeController.text   = AddQuoteInputs.reference.type.primary;
+      _secondaryTypeController.text = AddQuoteInputs.reference.type.secondary;
+      _summaryController.text       = AddQuoteInputs.reference.summary;
+      _urlController.text           = AddQuoteInputs.reference.urls.website;
+      _wikiUrlController.text       = AddQuoteInputs.reference.urls.wikipedia;
     });
 
     super.initState();
@@ -285,7 +285,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             onChanged: (newValue) {
               setState(() {
                 lang = newValue;
-                AddQuoteInputs.refLang = newValue;
+                AddQuoteInputs.reference.lang = newValue;
               });
             },
             items: langs.map<DropdownMenuItem<String>>((value) {
@@ -313,7 +313,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               maxLines: null,
               onChanged: (newValue) {
                 summary = newValue;
-                AddQuoteInputs.refSummary = newValue;
+                AddQuoteInputs.reference.summary = newValue;
               },
             ),
           ),
@@ -336,7 +336,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             ),
             onChanged: (newValue) {
               wikiUrl = newValue;
-              AddQuoteInputs.refWikiUrl = newValue;
+              AddQuoteInputs.reference.urls.wikipedia = newValue;
             },
           ),
         ),
@@ -354,7 +354,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               ),
               onChanged: (newValue) {
                 url = newValue;
-                AddQuoteInputs.refUrl = newValue;
+                AddQuoteInputs.reference.urls.website = newValue;
               },
             ),
           ),
@@ -373,7 +373,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               ),
               onChanged: (newValue) {
                 url = newValue;
-                AddQuoteInputs.refAffiliateUrl = newValue;
+                AddQuoteInputs.reference.urls.affiliate = newValue;
               },
             ),
           ),
@@ -396,7 +396,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           ),
           onChanged: (newValue) {
             name = newValue;
-            AddQuoteInputs.refName = newValue;
+            AddQuoteInputs.reference.name = newValue;
           },
         ),
       ),
@@ -442,7 +442,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               ),
               onChanged: (newValue) {
                 primaryType = newValue;
-                AddQuoteInputs.refPrimaryType= newValue;
+                AddQuoteInputs.reference.type.primary = newValue;
               },
             ),
 
@@ -456,7 +456,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               ),
               onChanged: (newValue) {
                 secondaryType = newValue;
-                AddQuoteInputs.refSecondaryType = newValue;
+                AddQuoteInputs.reference.type.secondary  = newValue;
               },
             ),
           ],
@@ -534,7 +534,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   imgUrl = tempImgUrl;
                 });
 
-                AddQuoteInputs.refImgUrl = imgUrl;
+                AddQuoteInputs.reference.urls.image = imgUrl;
                 Navigator.of(context).pop();
               },
             ),

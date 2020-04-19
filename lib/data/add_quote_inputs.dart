@@ -1,4 +1,6 @@
 import 'package:memorare/types/author.dart';
+import 'package:memorare/types/reference.dart';
+import 'package:memorare/types/reference_type.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/urls.dart';
 
@@ -20,22 +22,7 @@ class AddQuoteInputs {
   static Author author = Author();
 
   /// If not empty, the reference already exists.
-  static String refAffiliateUrl     = '';
-  static String refAmazonUrl        = '';
-  static String refPrimeVideoUrl    = '';
-  static String refFacebookUrl      = '';
-  static String refId               = '';
-  static String refImgUrl           = '';
-  static String refLang             = 'en';
-  static String refName             = '';
-  static String refNetflixUrl       = '';
-  static String refSummary          = '';
-  static String refPrimaryType      = '';
-  static String refSecondaryType    = '';
-  static String refTwitterUrl       = '';
-  static String refUrl              = '';
-  static String refWikiUrl          = '';
-  static String refYouTubeUrl       = '';
+  static Reference reference = Reference();
 
   static String comment             = '';
   static String region              = '';
@@ -72,16 +59,7 @@ class AddQuoteInputs {
   }
 
   static void clearReference() {
-    refAffiliateUrl   = '';
-    refId             = '';
-    refImgUrl         = '';
-    refLang           = 'en';
-    refName           = '';
-    refSummary        = '';
-    refPrimaryType    = '';
-    refSecondaryType  = '';
-    refUrl            = '';
-    refWikiUrl        = '';
+    reference = Reference();
   }
 
   static void clearStatus() {
@@ -122,16 +100,28 @@ class AddQuoteInputs {
       if (tempQuote.references.length > 0) {
         final ref = tempQuote.references.first;
 
-        refAffiliateUrl   = ref.urls.affiliate;
-        refId             = ref.id;
-        refImgUrl         = ref.urls.image;
-        refLang           = ref.lang;
-        refName           = ref.name;
-        refPrimaryType    = ref.type.primary;
-        refSecondaryType  = ref.type.secondary;
-        refSummary        = ref.summary;
-        refUrl            = ref.urls.website;
-        refWikiUrl        = ref.urls.wikipedia;
+        reference = Reference(
+          id      : ref.id,
+          lang    : ref.lang,
+          name    : ref.name,
+          summary : ref.summary,
+          type    : ReferenceType(
+            primary   : ref.type.primary,
+            secondary : ref.type.secondary,
+          ),
+          urls    : Urls(
+            affiliate : ref.urls.affiliate,
+            facebook  : ref.urls.facebook,
+            image     : ref.urls.image,
+            netflix   : ref.urls.netflix,
+            primeVideo: ref.urls.primeVideo,
+            twitch    : ref.urls.twitch,
+            twitter   : ref.urls.twitter,
+            website   : ref.urls.website,
+            wikipedia : ref.urls.wikipedia,
+            youTube   : ref.urls.youTube,
+          ),
+        );
       }
 
       if (tempQuote.comments.length > 0) {

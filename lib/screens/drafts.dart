@@ -359,14 +359,14 @@ class _DraftsState extends State<Drafts> {
         if (tempQuote.references != null && tempQuote.references.length > 0) {
           final ref = tempQuote.references.first;
 
-          AddQuoteInputs.refImgUrl        = ref.imgUrl;
-          AddQuoteInputs.refLang          = ref.lang;
-          AddQuoteInputs.refName          = ref.name;
-          AddQuoteInputs.refSecondaryType = ref.subType;
-          AddQuoteInputs.refSummary       = ref.summary;
-          AddQuoteInputs.refPrimaryType   = ref.type.primary;
-          AddQuoteInputs.refUrl           = ref.url;
-          AddQuoteInputs.refWikiUrl       = ref.wikiUrl;
+          AddQuoteInputs.reference.urls.image     = ref.urls.image;
+          AddQuoteInputs.reference.lang           = ref.lang;
+          AddQuoteInputs.reference.name           = ref.name;
+          AddQuoteInputs.reference.type.secondary = ref.type.secondary;
+          AddQuoteInputs.reference.summary        = ref.summary;
+          AddQuoteInputs.reference.type.primary   = ref.type.primary;
+          AddQuoteInputs.reference.urls.website   = ref.url;
+          AddQuoteInputs.reference.urls.wikipedia = ref.wikiUrl;
         }
 
         AddQuoteInputs.isCompleted    = false;
