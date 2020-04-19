@@ -221,9 +221,16 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           'updatedAt'   : DateTime.now(),
           'urls': {
             'affiliate' : AddQuoteInputs.author.urls.affiliate,
+            'amazon'    : AddQuoteInputs.author.urls.amazon,
+            'facebook'  : AddQuoteInputs.author.urls.facebook,
             'image'     : AddQuoteInputs.author.urls.image,
+            'netflix'   : AddQuoteInputs.author.urls.netflix,
+            'primeVideo': AddQuoteInputs.author.urls.primeVideo,
+            'twitch'    : AddQuoteInputs.author.urls.twitch,
+            'twitter'   : AddQuoteInputs.author.urls.twitter,
             'website'   : AddQuoteInputs.author.urls.website,
             'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
+            'youTube'   : AddQuoteInputs.author.urls.youTube,
           }
         },
         'comments'      : comments,
@@ -321,19 +328,26 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     if (AddQuoteInputs.reference.name.isNotEmpty) {
       references.add(
         {
-          'lang'        : AddQuoteInputs.reference.lang,
-          'links'       : [],
-          'name'        : AddQuoteInputs.reference.name,
-          'summary'     : AddQuoteInputs.reference.summary,
-          'type'        : {
-            'primary'   : AddQuoteInputs.reference.type.primary,
-            'secondary' : AddQuoteInputs.reference.type.secondary,
+          'lang'          : AddQuoteInputs.reference.lang,
+          'links'         : [],
+          'name'          : AddQuoteInputs.reference.name,
+          'summary'       : AddQuoteInputs.reference.summary,
+          'type'          : {
+            'primary'     : AddQuoteInputs.reference.type.primary,
+            'secondary'   : AddQuoteInputs.reference.type.secondary,
           },
-          'urls'        : {
-            'affiliate' : AddQuoteInputs.reference.urls.affiliate,
-            'image'     : AddQuoteInputs.reference.urls.image,
-            'website'   : AddQuoteInputs.reference.urls.website,
-            'wikipedia' : AddQuoteInputs.reference.urls.wikipedia,
+          'urls'          : {
+            'affiliate'   : AddQuoteInputs.reference.urls.affiliate,
+            'amazon'      : AddQuoteInputs.reference.urls.amazon,
+            'facebook'    : AddQuoteInputs.reference.urls.facebook,
+            'image'       : AddQuoteInputs.reference.urls.image,
+            'netflix'     : AddQuoteInputs.reference.urls.netflix,
+            'primeVideo'  : AddQuoteInputs.reference.urls.primeVideo,
+            'twitch'      : AddQuoteInputs.reference.urls.twitch,
+            'twitter'     : AddQuoteInputs.reference.urls.twitter,
+            'website'     : AddQuoteInputs.reference.urls.website,
+            'wikipedia'   : AddQuoteInputs.reference.urls.wikipedia,
+            'youTube'     : AddQuoteInputs.reference.urls.youTube,
           },
         }
       );

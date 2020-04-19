@@ -325,19 +325,57 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget links() {
     return Column(
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: _affiliateUrlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.shopping_cart),
+                labelText: 'Amazon URL'
+              ),
+              onChanged: (newValue) {
+                url = newValue;
+                AddQuoteInputs.reference.urls.affiliate = newValue;
+              },
+            ),
+          ),
+        ),
+
         SizedBox(
           width: 300,
           child: TextField(
             controller: _wikiUrlController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              prefixIcon: Icon(IconsMore.wikipedia_w),
-              labelText: 'Wikipedia URL'
+              prefixIcon: Icon(Icons.video_library),
+              labelText: 'Netflix URL'
             ),
             onChanged: (newValue) {
               wikiUrl = newValue;
-              AddQuoteInputs.reference.urls.wikipedia = newValue;
+              AddQuoteInputs.reference.urls.netflix = newValue;
             },
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: _affiliateUrlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.ondemand_video),
+                labelText: 'PrimeVideo URL'
+              ),
+              onChanged: (newValue) {
+                url = newValue;
+                AddQuoteInputs.reference.urls.primeVideo = newValue;
+              },
+            ),
           ),
         ),
 
@@ -360,6 +398,22 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           ),
         ),
 
+        SizedBox(
+          width: 300,
+          child: TextField(
+            controller: _wikiUrlController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(IconsMore.wikipedia_w),
+              labelText: 'Wikipedia URL'
+            ),
+            onChanged: (newValue) {
+              wikiUrl = newValue;
+              AddQuoteInputs.reference.urls.wikipedia = newValue;
+            },
+          ),
+        ),
+
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: SizedBox(
@@ -368,12 +422,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: _affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.monetization_on),
-                labelText: 'Affiliate URL'
+                prefixIcon: Icon(Icons.video_library),
+                labelText: 'YouTube URL'
               ),
               onChanged: (newValue) {
                 url = newValue;
-                AddQuoteInputs.reference.urls.affiliate = newValue;
+                AddQuoteInputs.reference.urls.youTube = newValue;
               },
             ),
           ),
