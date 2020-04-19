@@ -268,7 +268,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                             sampleTopics.remove(topic);
                           });
 
-                          AddQuoteInputs.topics.add(topic.name);
+                          AddQuoteInputs.quote.topics.add(topic.name);
                         },
                       ),
                     ),
@@ -308,7 +308,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       selectedTopics.remove(topic);
                     });
 
-                    AddQuoteInputs.topics.removeWhere((element) => element == topic.name);
+                    AddQuoteInputs.quote.topics
+                      .removeWhere((element) => element == topic.name);
                   },
                 ),
               );
@@ -380,7 +381,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   void populateSelectedTopics() {
-    AddQuoteInputs.topics.forEach((topicName) {
+    AddQuoteInputs.quote.topics.forEach((topicName) {
       selectedTopics.add(
         appTopicsColors.find(topicName)
       );

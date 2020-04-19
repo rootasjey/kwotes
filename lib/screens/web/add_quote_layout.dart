@@ -37,7 +37,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     super.initState();
     checkAuth();
 
-    if (AddQuoteInputs.id.isNotEmpty) {
+    if (AddQuoteInputs.quote.id.isNotEmpty) {
       fabText = 'Save';
       fabIcon = Icon(Icons.save);
     }
@@ -81,7 +81,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
     if (isProposing) {
       return FullPageLoading(
-        title: AddQuoteInputs.id.isEmpty ?
+        title: AddQuoteInputs.quote.id.isEmpty ?
           'Proposing quote...' : 'Saving quote...',
       );
     }
@@ -137,9 +137,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                   icon: Icon(Icons.add, size: 40.0,),
                   title: 'Add another quote',
                   onTap: () {
-                    AddQuoteInputs.clearQuoteName();
+                    AddQuoteInputs.clearQuoteData();
                     AddQuoteInputs.clearTopics();
-                    AddQuoteInputs.clearQuoteId();
                     AddQuoteInputs.clearComment();
                     FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
                   },
@@ -229,8 +228,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         },
         'comments'      : comments,
         'createdAt'     : DateTime.now(),
-        'lang'          : AddQuoteInputs.lang,
-        'name'          : AddQuoteInputs.name,
+        'lang'          : AddQuoteInputs.quote.lang,
+        'name'          : AddQuoteInputs.quote.name,
         'mainReference' : {
           'id'  : AddQuoteInputs.reference.id,
           'name': AddQuoteInputs.reference.name,
@@ -287,7 +286,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   }
 
   void proposeQuote() async {
-    if (AddQuoteInputs.name.isEmpty) {
+    if (AddQuoteInputs.quote.name.isEmpty) {
       showSnack(
         context: context,
         message: "The quote's content cannot be empty.",
@@ -297,7 +296,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       return;
     }
 
-    if (AddQuoteInputs.topics.length == 0) {
+    if (AddQuoteInputs.quote.topics.length == 0) {
       showSnack(
         context: context,
         message: 'You must select at least 1 topics for the quote.',
@@ -342,7 +341,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
     final topics = Map<String, bool>();
 
-    AddQuoteInputs.topics.forEach((topic) {
+    AddQuoteInputs.quote.topics.forEach((topic) {
       topics[topic] = true;
     });
 
@@ -367,7 +366,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           'stats.proposed': proposed,
         });
 
-      if (AddQuoteInputs.id.isEmpty) {
+      if (AddQuoteInputs.quote.id.isEmpty) {
         await addNewTempQuote(
           comments: comments,
           references: references,
@@ -389,7 +388,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
       showSnack(
         context: context,
-        message: AddQuoteInputs.id.isEmpty ?
+        message: AddQuoteInputs.quote.id.isEmpty ?
           'Your quote has been successfully proposed.' :
           'Your quote has been successfully edited',
         type: SnackType.success,
@@ -420,7 +419,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
     await Firestore.instance
       .collection('tempquotes')
-      .document(AddQuoteInputs.id)
+      .document(AddQuoteInputs.quote.id)
       .setData({
         'author': {
           'id'          : AddQuoteInputs.author.id,
@@ -439,8 +438,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         },
         'comments'      : comments,
         'createdAt'     : DateTime.now(),
-        'lang'          : AddQuoteInputs.lang,
-        'name'          : AddQuoteInputs.name,
+        'lang'          : AddQuoteInputs.quote.lang,
+        'name'          : AddQuoteInputs.quote.name,
         'mainReference' : {
           'id'  : AddQuoteInputs.reference.id,
           'name': AddQuoteInputs.reference.name,

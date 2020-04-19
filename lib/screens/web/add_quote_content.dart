@@ -38,8 +38,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     _nameFocusNode = FocusNode();
     _clearFocusNode = FocusNode();
 
-    _nameController.text = AddQuoteInputs.name;
-    lang = AddQuoteInputs.lang;
+    _nameController.text = AddQuoteInputs.quote.name;
+    lang = AddQuoteInputs.quote.lang;
   }
 
   @override
@@ -124,7 +124,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           FlatButton(
             focusNode: _clearFocusNode,
             onPressed: () {
-              AddQuoteInputs.clearQuoteName();
+              AddQuoteInputs.quote.name = '';
               _nameController.clear();
               _nameFocusNode.requestFocus();
             },
@@ -280,7 +280,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       onChanged: (newValue) {
         setState(() {
           lang = newValue;
-          AddQuoteInputs.lang = newValue;
+          AddQuoteInputs.quote.lang = newValue;
         });
       },
       items: langs.map<DropdownMenuItem<String>>((value) {
@@ -304,7 +304,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         textCapitalization: TextCapitalization.sentences,
         onChanged: (newValue) {
           name = newValue;
-          AddQuoteInputs.name = newValue;
+          AddQuoteInputs.quote.name = newValue;
         },
         decoration: InputDecoration(
           hintText: 'Type your quote there',

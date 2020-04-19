@@ -121,7 +121,7 @@ class _AddQuoteState extends State<AddQuote> {
             onValidate: () => validateQuote(),
             onSaveDraft: () => saveDraft(),
             onAddAnotherQuote: () {
-              AddQuoteInputs.clearQuoteName();
+              AddQuoteInputs.quote.name = '';
               AddQuoteInputs.clearStatus();
               _pageController.jumpToPage(0);
             },
@@ -132,11 +132,11 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void validateQuote() async {
-    final booleanMessage = AddQuoteInputs.id.isEmpty ?
+    final booleanMessage = AddQuoteInputs.quote.id.isEmpty ?
       await Mutations.createTempQuote(context: context) :
       await Mutations.updateTempQuote(context: context);
 
-    String successMessage = AddQuoteInputs.id.isEmpty ?
+    String successMessage = AddQuoteInputs.quote.id.isEmpty ?
       'Your quote has been successfully proposed.':
       'Your quote has been successfully saved.';
 

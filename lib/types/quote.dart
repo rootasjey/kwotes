@@ -4,10 +4,10 @@ import 'reference.dart';
 class Quote {
   final Author author;
   final String id;
-  final String lang;
-  final String name;
+  String lang;
+  String name;
   final Reference mainReference;
-  /// Useful when the quote is in a list.
+  /// Match the quote's id in the 'quotes' collection.
   final String quoteId;
   final List<Reference> references;
   bool starred;

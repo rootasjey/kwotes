@@ -342,10 +342,10 @@ class _DraftsState extends State<Drafts> {
         isLoadingTempQuote = false;
 
         AddQuoteInputs.comment  = tempQuote.comments.length > 0 ? tempQuote.comments.first : '';
-        AddQuoteInputs.id       = tempQuote.id;
-        AddQuoteInputs.name     = tempQuote.name;
-        AddQuoteInputs.lang     = tempQuote.lang;
-        AddQuoteInputs.topics   = tempQuote.topics;
+        // AddQuoteInputs.id       = tempQuote.id;
+        // AddQuoteInputs.name     = tempQuote.name;
+        // AddQuoteInputs.lang     = tempQuote.lang;
+        // AddQuoteInputs.topics   = tempQuote.topics;
 
         if (tempQuote.author != null) {
           AddQuoteInputs.author.urls.image      = tempQuote.author.imgUrl;

@@ -1,4 +1,5 @@
 import 'package:memorare/types/author.dart';
+import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/reference_type.dart';
 import 'package:memorare/types/temp_quote.dart';
@@ -9,14 +10,11 @@ class AddQuoteInputs {
   /// from Dashboard or Admin temp quote?
   static String navigatedFromPath = '';
 
-  /// Quote's id if this is an edit.
-  static String id                  = '';
-  static String name                = '';
-  static String lang                = 'en';
-  static List<String> topics        = [];
+  /// Quote's id is not empty if this is an edit.
+  static Quote quote = Quote();
 
   /// Draft's quote id (filled when creating a new quote).
-  static String draftId             = '';
+  static String draftId = '';
 
   /// If not empty, the author already exists.
   static Author author = Author();
@@ -35,8 +33,7 @@ class AddQuoteInputs {
   static void clearAll() {
     clearAuthor();
     clearComment();
-    clearQuoteId();
-    clearQuoteName();
+    clearQuoteData();
     clearReference();
     clearStatus();
     clearTopics();
@@ -50,12 +47,10 @@ class AddQuoteInputs {
     comment = '';
   }
 
-  static void clearQuoteId() {
-    id = '';
-  }
-
-  static void clearQuoteName() {
-    name = '';
+  static void clearQuoteData({bool keepLang = true}) {
+    quote = Quote(
+      lang: keepLang ? quote.lang : 'en',
+    );
   }
 
   static void clearReference() {
@@ -68,14 +63,16 @@ class AddQuoteInputs {
   }
 
   static void clearTopics() {
-    topics.clear();
+    quote.topics.clear();
   }
 
   static populateWithTempQuote(TempQuote tempQuote) {
-      id     = tempQuote.id;
-      name   = tempQuote.name;
-      lang   = tempQuote.lang;
-      topics = tempQuote.topics;
+      quote = Quote(
+        id: tempQuote.id,
+        name: tempQuote.name,
+        lang: tempQuote.lang,
+        topics: tempQuote.topics,
+      );
 
       author = Author(
         id      : tempQuote.author.id,

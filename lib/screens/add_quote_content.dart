@@ -33,8 +33,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   void initState() {
     super.initState();
 
-    _nameController.text = AddQuoteInputs.name;
-    lang = AddQuoteInputs.lang;
+    _nameController.text = AddQuoteInputs.quote.name;
+    lang = AddQuoteInputs.quote.lang;
   }
 
   @override
@@ -60,7 +60,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                     textCapitalization: TextCapitalization.sentences,
                     onChanged: (newValue) {
                       name = newValue;
-                      AddQuoteInputs.name = newValue;
+                      AddQuoteInputs.quote.name = newValue;
                     },
                     decoration: InputDecoration(
                       hintText: 'Type your quote there',
@@ -82,7 +82,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
                     children: <Widget>[
                       FlatButton(
                         onPressed: () {
-                          AddQuoteInputs.clearQuoteName();
+                          AddQuoteInputs.quote.name = '';
                           _nameController.clear();
                         },
                         child: Opacity(
@@ -155,7 +155,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       onChanged: (newValue) {
         setState(() {
           lang = newValue;
-          AddQuoteInputs.lang = newValue;
+          AddQuoteInputs.quote.lang = newValue;
         });
       },
       items: langs.map<DropdownMenuItem<String>>((value) {

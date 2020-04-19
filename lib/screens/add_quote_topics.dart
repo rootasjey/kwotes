@@ -33,7 +33,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   @override
   void initState() {
     setState(() {
-      topics.addAll(AddQuoteInputs.topics);
+      topics.addAll(AddQuoteInputs.quote.topics);
     });
 
     super.initState();
@@ -206,7 +206,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                     topics.removeWhere((entry) => entry == topic);
                   });
 
-                  AddQuoteInputs.topics = topics;
+                  AddQuoteInputs.quote.topics.clear();
+                  AddQuoteInputs.quote.topics.addAll(topics);
                 },
               ),
             );
@@ -275,7 +276,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                         sampleTopics.removeWhere((entry) => entry == topic);
                       });
 
-                      AddQuoteInputs.topics = topics;
+                      AddQuoteInputs.quote.topics.clear();
+                      AddQuoteInputs.quote.topics.addAll(topics);
                     },
                   ),
                 );
@@ -391,7 +393,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       topics.add(topic);
     });
 
-    AddQuoteInputs.topics = topics;
+    AddQuoteInputs.quote.topics.clear();
+    AddQuoteInputs.quote.topics.addAll(topics);
   }
 
   Future<List<String>> fetchSampleTopics() {
