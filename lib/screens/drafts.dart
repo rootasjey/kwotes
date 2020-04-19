@@ -348,12 +348,12 @@ class _DraftsState extends State<Drafts> {
         AddQuoteInputs.topics   = tempQuote.topics;
 
         if (tempQuote.author != null) {
-          AddQuoteInputs.authorImgUrl   = tempQuote.author.imgUrl;
-          AddQuoteInputs.authorJob      = tempQuote.author.job;
-          AddQuoteInputs.authorName     = tempQuote.author.name;
-          AddQuoteInputs.authorSummary  = tempQuote.author.summary;
-          AddQuoteInputs.authorUrl      = tempQuote.author.url;
-          AddQuoteInputs.authorWikiUrl  = tempQuote.author.wikiUrl;
+          AddQuoteInputs.author.urls.image      = tempQuote.author.imgUrl;
+          AddQuoteInputs.author.job             = tempQuote.author.job;
+          AddQuoteInputs.author.name            = tempQuote.author.name;
+          AddQuoteInputs.author.summary         = tempQuote.author.summary;
+          AddQuoteInputs.author.urls.website    = tempQuote.author.url;
+          AddQuoteInputs.author.urls.wikipedia  = tempQuote.author.wikiUrl;
         }
 
         if (tempQuote.references != null && tempQuote.references.length > 0) {

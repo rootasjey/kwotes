@@ -1,4 +1,6 @@
+import 'package:memorare/types/author.dart';
 import 'package:memorare/types/temp_quote.dart';
+import 'package:memorare/types/urls.dart';
 
 class AddQuoteInputs {
   /// Navigated to new quote page
@@ -15,26 +17,25 @@ class AddQuoteInputs {
   static String draftId             = '';
 
   /// If not empty, the author already exists.
-  static String authorAffiliateUrl  = '';
-  static String authorId            = '';
-  static String authorImgUrl        = '';
-  static String authorName          = '';
-  static String authorJob           = '';
-  static String authorSummary       = '';
-  static String authorUrl           = '';
-  static String authorWikiUrl       = '';
+  static Author author = Author();
 
   /// If not empty, the reference already exists.
   static String refAffiliateUrl     = '';
+  static String refAmazonUrl        = '';
+  static String refPrimeVideoUrl    = '';
+  static String refFacebookUrl      = '';
   static String refId               = '';
   static String refImgUrl           = '';
   static String refLang             = 'en';
   static String refName             = '';
+  static String refNetflixUrl       = '';
   static String refSummary          = '';
   static String refPrimaryType      = '';
   static String refSecondaryType    = '';
+  static String refTwitterUrl       = '';
   static String refUrl              = '';
   static String refWikiUrl          = '';
+  static String refYouTubeUrl       = '';
 
   static String comment             = '';
   static String region              = '';
@@ -55,14 +56,7 @@ class AddQuoteInputs {
   }
 
   static void clearAuthor() {
-    authorAffiliateUrl  = '';
-    authorId            = '';
-    authorImgUrl        = '';
-    authorName          = '';
-    authorJob           = '';
-    authorSummary       = '';
-    authorUrl           = '';
-    authorWikiUrl       = '';
+    author = Author();
   }
 
   static void clearComment() {
@@ -105,14 +99,25 @@ class AddQuoteInputs {
       lang   = tempQuote.lang;
       topics = tempQuote.topics;
 
-      authorAffiliateUrl = tempQuote.author.urls.affiliate;
-      authorId           = tempQuote.author.id;
-      authorImgUrl       = tempQuote.author.urls.image;
-      authorJob          = tempQuote.author.job;
-      authorName         = tempQuote.author.name;
-      authorSummary      = tempQuote.author.summary;
-      authorUrl          = tempQuote.author.urls.website;
-      authorWikiUrl      = tempQuote.author.urls.wikipedia;
+      author = Author(
+        id      : tempQuote.author.id,
+        job     : tempQuote.author.job,
+        name    : tempQuote.author.name,
+        summary : tempQuote.author.summary,
+        urls: Urls(
+          affiliate : tempQuote.author.urls.affiliate,
+          amazon    : tempQuote.author.urls.amazon,
+          facebook  : tempQuote.author.urls.facebook,
+          image     : tempQuote.author.urls.image,
+          netflix   : tempQuote.author.urls.netflix,
+          primeVideo: tempQuote.author.urls.primeVideo,
+          twitch    : tempQuote.author.urls.twitch,
+          twitter   : tempQuote.author.urls.twitter,
+          website   : tempQuote.author.urls.website,
+          wikipedia : tempQuote.author.urls.wikipedia,
+          youTube   : tempQuote.author.urls.youTube,
+        ),
+      );
 
       if (tempQuote.references.length > 0) {
         final ref = tempQuote.references.first;

@@ -42,14 +42,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   @override
   void initState() {
     setState(() {
-      imgUrl = AddQuoteInputs.authorImgUrl;
+      imgUrl = AddQuoteInputs.author.urls.image;
 
-      _affiliateUrlController.text  = AddQuoteInputs.authorAffiliateUrl;
-      _nameController.text          = AddQuoteInputs.authorName;
-      _jobController.text           = AddQuoteInputs.authorJob;
-      _summaryController.text       = AddQuoteInputs.authorSummary;
-      _urlController.text           = AddQuoteInputs.authorUrl;
-      _wikiController.text          = AddQuoteInputs.authorWikiUrl;
+      _affiliateUrlController.text  = AddQuoteInputs.author.urls.affiliate;
+      _nameController.text          = AddQuoteInputs.author.name;
+      _jobController.text           = AddQuoteInputs.author.job;
+      _summaryController.text       = AddQuoteInputs.author.summary;
+      _urlController.text           = AddQuoteInputs.author.urls.website;
+      _wikiController.text          = AddQuoteInputs.author.urls.wikipedia;
     });
 
     super.initState();
@@ -57,7 +57,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   dispose() {
-    AddQuoteInputs.authorImgUrl = imgUrl;
+    AddQuoteInputs.author.urls.image = imgUrl;
     super.dispose();
   }
 
@@ -284,7 +284,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             ),
             onChanged: (newValue) {
               wikiUrl = newValue;
-              AddQuoteInputs.authorWikiUrl = newValue;
+              AddQuoteInputs.author.urls.wikipedia = newValue;
             },
           ),
         ),
@@ -301,7 +301,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               ),
               onChanged: (newValue) {
                 url = newValue;
-                AddQuoteInputs.authorUrl = newValue;
+                AddQuoteInputs.author.urls.website = newValue;
               },
             ),
           ),
@@ -319,7 +319,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               ),
               onChanged: (newValue) {
                 affiliateUrl = newValue;
-                AddQuoteInputs.authorAffiliateUrl = newValue;
+                AddQuoteInputs.author.urls.affiliate = newValue;
               },
             ),
           ),
@@ -343,7 +343,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             ),
             onChanged: (newValue) {
               name = newValue;
-              AddQuoteInputs.authorName = newValue;
+              AddQuoteInputs.author.name = newValue;
             },
           ),
         ),
@@ -358,7 +358,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             ),
             onChanged: (newValue) {
               job = newValue;
-              AddQuoteInputs.authorJob = newValue;
+              AddQuoteInputs.author.job = newValue;
             },
           ),
         ),
@@ -381,7 +381,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         maxLines: null,
         onChanged: (newValue) {
           summary = newValue;
-          AddQuoteInputs.authorSummary = newValue;
+          AddQuoteInputs.author.summary = newValue;
         },
       ),
     );
@@ -477,7 +477,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   imgUrl = _tempImgUrl;
                 });
 
-                AddQuoteInputs.authorImgUrl = imgUrl;
+                AddQuoteInputs.author.urls.image = imgUrl;
                 Navigator.of(context).pop();
               },
             ),

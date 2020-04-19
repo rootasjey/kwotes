@@ -213,18 +213,18 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       .collection('tempquotes')
       .add({
         'author'        : {
-          'id'          : AddQuoteInputs.authorId,
-          'job'         : AddQuoteInputs.authorJob,
+          'id'          : AddQuoteInputs.author.id,
+          'job'         : AddQuoteInputs.author.job,
           'jobLang'     : {},
-          'name'        : AddQuoteInputs.authorName,
-          'summary'     : AddQuoteInputs.authorSummary,
+          'name'        : AddQuoteInputs.author.name,
+          'summary'     : AddQuoteInputs.author.summary,
           'summaryLang' : {},
           'updatedAt'   : DateTime.now(),
           'urls': {
-            'affiliate' : AddQuoteInputs.authorAffiliateUrl,
-            'image'     : AddQuoteInputs.authorImgUrl,
-            'website'   : AddQuoteInputs.authorUrl,
-            'wikipedia' : AddQuoteInputs.authorWikiUrl,
+            'affiliate' : AddQuoteInputs.author.urls.affiliate,
+            'image'     : AddQuoteInputs.author.urls.image,
+            'website'   : AddQuoteInputs.author.urls.website,
+            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
           }
         },
         'comments'      : comments,
@@ -424,18 +424,18 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       .document(AddQuoteInputs.id)
       .setData({
         'author': {
-          'id'          : AddQuoteInputs.authorId,
-          'job'         : AddQuoteInputs.authorJob,
+          'id'          : AddQuoteInputs.author.id,
+          'job'         : AddQuoteInputs.author.job,
           'jobLang'     : {},
-          'name'        : AddQuoteInputs.authorName,
-          'summary'     : AddQuoteInputs.authorSummary,
+          'name'        : AddQuoteInputs.author.name,
+          'summary'     : AddQuoteInputs.author.summary,
           'summaryLang' : {},
           'updatedAt'   : DateTime.now(),
           'urls': {
-            'affiliate' : AddQuoteInputs.authorAffiliateUrl,
-            'image'     : AddQuoteInputs.authorImgUrl,
-            'website'   : AddQuoteInputs.authorUrl,
-            'wikipedia' : AddQuoteInputs.authorWikiUrl,
+            'affiliate' : AddQuoteInputs.author.urls.affiliate,
+            'image'     : AddQuoteInputs.author.urls.website,
+            'website'   : AddQuoteInputs.author.urls.website,
+            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
           }
         },
         'comments'      : comments,

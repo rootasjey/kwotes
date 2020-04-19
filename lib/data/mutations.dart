@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/data/mutationsOperations.dart';
 import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
@@ -67,24 +66,6 @@ class Mutations {
       MutationOptions(
         documentNode: MutationsOperations.createDraft,
         variables: {
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-          'lang'          : AddQuoteInputs.lang,
-          'name'          : AddQuoteInputs.name,
-          'topics'        : AddQuoteInputs.topics,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSecondaryType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refPrimaryType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
         }
       )
     ).then((queryResult) {
@@ -102,24 +83,6 @@ class Mutations {
       MutationOptions(
         documentNode: MutationsOperations.createTempQuote,
         variables: {
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-          'lang'          : AddQuoteInputs.lang,
-          'name'          : AddQuoteInputs.name,
-          'topics'        : AddQuoteInputs.topics,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSecondaryType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refPrimaryType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
         }
       )
     ).then((queryResult) {
@@ -318,25 +281,6 @@ class Mutations {
       MutationOptions(
         documentNode: MutationsOperations.updateDraft,
         variables: {
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-          'id'            : AddQuoteInputs.draftId,
-          'lang'          : AddQuoteInputs.lang,
-          'name'          : AddQuoteInputs.name,
-          'topics'        : AddQuoteInputs.topics,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSecondaryType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refPrimaryType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
         }
       )
     ).then((queryResult) {
@@ -470,25 +414,6 @@ class Mutations {
       MutationOptions(
         documentNode: MutationsOperations.updateTempQuote,
         variables: {
-          'authorImgUrl'  : AddQuoteInputs.authorImgUrl,
-          'authorJob'     : AddQuoteInputs.authorJob,
-          'authorName'    : AddQuoteInputs.authorName,
-          'authorSummary' : AddQuoteInputs.authorSummary,
-          'authorUrl'     : AddQuoteInputs.authorUrl,
-          'authorWikiUrl' : AddQuoteInputs.authorWikiUrl,
-          'comment'       : AddQuoteInputs.comment,
-          'id'            : AddQuoteInputs.id,
-          'lang'          : AddQuoteInputs.lang,
-          'name'          : AddQuoteInputs.name,
-          'topics'        : AddQuoteInputs.topics,
-          'refImgUrl'     : AddQuoteInputs.refImgUrl,
-          'refLang'       : AddQuoteInputs.refLang,
-          'refName'       : AddQuoteInputs.refName,
-          'refSubType'    : AddQuoteInputs.refSecondaryType,
-          'refSummary'    : AddQuoteInputs.refSummary,
-          'refType'       : AddQuoteInputs.refPrimaryType,
-          'refUrl'        : AddQuoteInputs.refUrl,
-          'refWikiUrl'    : AddQuoteInputs.refWikiUrl,
         }
       )
     ).then((queryResult) {

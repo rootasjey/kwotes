@@ -3,10 +3,12 @@ import 'package:memorare/types/urls.dart';
 class Author {
   final String id;
   final String imgUrl;
-  final String job;
-  final String name;
-  final String summary;
+  String job;
+  String name;
+  String summary;
+  /// Deprecated
   final String url;
+  /// Deprecated
   final String wikiUrl;
   final Urls urls;
 
