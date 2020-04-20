@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
@@ -271,13 +271,13 @@ class _SignupState extends State<Signup> {
     });
 
     try {
-      final user = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       setState(() {
         isCheckingAuth = false;
       });
 
-      if (user != null) {
+      if (userAuth != null) {
         FluroRouter.router.navigateTo(context, DashboardRoute);
       }
 

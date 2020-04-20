@@ -8,9 +8,9 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/colors.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:memorare/utils/language.dart';
@@ -437,7 +437,7 @@ class _QuotidiansState extends State<Quotidians> {
     });
 
     try {
-      final userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         setState(() {

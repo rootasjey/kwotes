@@ -7,7 +7,6 @@ part 'user_state.g.dart';
 class UserState = UserStateBase with _$UserState;
 
 abstract class UserStateBase with Store {
-  @observable
   FirebaseUser _userAuth;
 
   @observable
@@ -20,24 +19,18 @@ abstract class UserStateBase with Store {
   @observable
   DateTime updatedFavAt = DateTime.now();
 
-  @computed
   Future<FirebaseUser> get userAuth async {
     if (_userAuth != null) {
       return _userAuth;
     }
 
-    await setAuth();
+    _userAuth = await FirebaseAuth.instance.currentUser();
 
     if (_userAuth == null) {
       await _signin();
     }
 
     return _userAuth;
-  }
-
-  @action
-  Future setAuth() async {
-    _userAuth = await FirebaseAuth.instance.currentUser();
   }
 
   @action
@@ -53,11 +46,6 @@ abstract class UserStateBase with Store {
   @action
   void setUserDisconnected() {
     isUserConnected = true;
-  }
-
-  @action
-  void _setUserAuth(FirebaseUser user) {
-    _userAuth = user;
   }
 
   /// Signin user with credentials if FirebaseAuth is null.
@@ -77,8 +65,8 @@ abstract class UserStateBase with Store {
         password: password,
       );
 
-    _setUserAuth(auth.user);
-    setUserConnected();
+    _userAuth = auth.user;
+    isUserConnected = true;
   }
 
   @action

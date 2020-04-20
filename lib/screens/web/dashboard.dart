@@ -8,7 +8,6 @@ import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -20,7 +19,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  FirebaseUser userAuth;
   bool canManage = false;
   bool isCheckingAuth = false;
 
@@ -356,12 +354,20 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget greetings() {
-    if (userAuth == null) {
+    final displayName = appLocalStorage.getUserName();
+    final credentials = appLocalStorage.getCredentials();
+
+    String email = '';
+
+    if (credentials != null && credentials['email'] != null) {
+      email = credentials['email'];
+    }
+
+    if (!userState.isUserConnected) {
       return Padding(padding: EdgeInsets.zero,);
     }
 
-    final name = userAuth.displayName != null ?
-      userAuth.displayName : userAuth.email;
+    final name = displayName != null ? displayName : email;
 
     return ControlledAnimation(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -591,7 +597,7 @@ class _DashboardState extends State<Dashboard> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         setState(() {

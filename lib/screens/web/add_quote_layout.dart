@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/utils/auth.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
@@ -26,7 +25,6 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   bool isProposing    = false;
   String errorMessage = '';
 
-  FirebaseUser userAuth;
   bool canManage = false;
 
   String fabText = 'Propose';
@@ -208,55 +206,62 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     Map<String, bool> topics,
   }) async {
 
-    await Firestore.instance
-      .collection('tempquotes')
-      .add({
-        'author'        : {
-          'id'          : AddQuoteInputs.author.id,
-          'job'         : AddQuoteInputs.author.job,
-          'jobLang'     : {},
-          'name'        : AddQuoteInputs.author.name,
-          'summary'     : AddQuoteInputs.author.summary,
-          'summaryLang' : {},
-          'updatedAt'   : DateTime.now(),
-          'urls': {
-            'affiliate' : AddQuoteInputs.author.urls.affiliate,
-            'amazon'    : AddQuoteInputs.author.urls.amazon,
-            'facebook'  : AddQuoteInputs.author.urls.facebook,
-            'image'     : AddQuoteInputs.author.urls.image,
-            'netflix'   : AddQuoteInputs.author.urls.netflix,
-            'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-            'twitch'    : AddQuoteInputs.author.urls.twitch,
-            'twitter'   : AddQuoteInputs.author.urls.twitter,
-            'website'   : AddQuoteInputs.author.urls.website,
-            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-            'youTube'   : AddQuoteInputs.author.urls.youTube,
-          }
-        },
-        'comments'      : comments,
-        'createdAt'     : DateTime.now(),
-        'lang'          : AddQuoteInputs.quote.lang,
-        'name'          : AddQuoteInputs.quote.name,
-        'mainReference' : {
-          'id'  : AddQuoteInputs.reference.id,
-          'name': AddQuoteInputs.reference.name,
-        },
-        'references'    : references,
-        'region'        : AddQuoteInputs.region,
-        'topics'        : topics,
-        'user': {
-          'id': userAuth.uid,
-        },
-        'updatedAt'     : DateTime.now(),
-        'validation'    : {
-          'comment'     : {
-            'name'      : '',
-            'updatedAt' : DateTime.now(),
+    try {
+      final userAuth = await userState.userAuth;
+
+      await Firestore.instance
+        .collection('tempquotes')
+        .add({
+          'author'        : {
+            'id'          : AddQuoteInputs.author.id,
+            'job'         : AddQuoteInputs.author.job,
+            'jobLang'     : {},
+            'name'        : AddQuoteInputs.author.name,
+            'summary'     : AddQuoteInputs.author.summary,
+            'summaryLang' : {},
+            'updatedAt'   : DateTime.now(),
+            'urls': {
+              'affiliate' : AddQuoteInputs.author.urls.affiliate,
+              'amazon'    : AddQuoteInputs.author.urls.amazon,
+              'facebook'  : AddQuoteInputs.author.urls.facebook,
+              'image'     : AddQuoteInputs.author.urls.image,
+              'netflix'   : AddQuoteInputs.author.urls.netflix,
+              'primeVideo': AddQuoteInputs.author.urls.primeVideo,
+              'twitch'    : AddQuoteInputs.author.urls.twitch,
+              'twitter'   : AddQuoteInputs.author.urls.twitter,
+              'website'   : AddQuoteInputs.author.urls.website,
+              'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
+              'youTube'   : AddQuoteInputs.author.urls.youTube,
+            }
           },
-          'status'      : 'proposed',
-          'updatedAt'   : DateTime.now(),
-        }
-      });
+          'comments'      : comments,
+          'createdAt'     : DateTime.now(),
+          'lang'          : AddQuoteInputs.quote.lang,
+          'name'          : AddQuoteInputs.quote.name,
+          'mainReference' : {
+            'id'  : AddQuoteInputs.reference.id,
+            'name': AddQuoteInputs.reference.name,
+          },
+          'references'    : references,
+          'region'        : AddQuoteInputs.region,
+          'topics'        : topics,
+          'user': {
+            'id': userAuth.uid,
+          },
+          'updatedAt'     : DateTime.now(),
+          'validation'    : {
+            'comment'     : {
+              'name'      : '',
+              'updatedAt' : DateTime.now(),
+            },
+            'status'      : 'proposed',
+            'updatedAt'   : DateTime.now(),
+          }
+        });
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
   void checkAuth() async {
@@ -265,7 +270,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -360,6 +365,8 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
       // !NOTE: Use cloud function instead.
       final user = await Firestore.instance
         .collection('users')
@@ -431,6 +438,9 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     Map<String, bool> topics,
   }) async {
 
+    try {
+      final userAuth = await userState.userAuth;
+
     await Firestore.instance
       .collection('tempquotes')
       .document(AddQuoteInputs.quote.id)
@@ -474,5 +484,9 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           'updatedAt'   : DateTime.now(),
         }
       });
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 }

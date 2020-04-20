@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
@@ -14,7 +13,6 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
@@ -33,8 +31,6 @@ class _FavouritesState extends State<Favourites> {
   bool isFabVisible = false;
 
   List<Quote> quotes = [];
-
-  FirebaseUser userAuth;
 
   var lastDoc;
 
@@ -335,10 +331,15 @@ class _FavouritesState extends State<Favourites> {
     quotes.clear();
 
     try {
-      userAuth = userAuth ?? await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
+        setState(() {
+          isLoading = false;
+        });
+
         FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
       }
 
       final snapshot = await Firestore.instance
@@ -378,11 +379,6 @@ class _FavouritesState extends State<Favourites> {
         message: 'There was an issue while fetching your favourites.',
         type: SnackType.error,
       );
-
-      if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
-        return;
-      }
     }
   }
 
@@ -392,7 +388,7 @@ class _FavouritesState extends State<Favourites> {
     });
 
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);

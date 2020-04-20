@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
@@ -10,10 +9,10 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
@@ -41,8 +40,6 @@ class _QuoteListState extends State<QuotesList> {
   bool isFabVisible = false;
 
   List<Quote> quotes = [];
-
-  FirebaseUser userAuth;
 
   var lastDoc;
 
@@ -333,9 +330,13 @@ class _QuoteListState extends State<QuotesList> {
     try {
       quotes.clear();
 
-      userAuth = userAuth ?? await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
+        setState(() {
+          isLoading = true;
+        });
+
         FluroRouter.router.navigateTo(context, SigninRoute);
         return;
       }
@@ -398,11 +399,6 @@ class _QuoteListState extends State<QuotesList> {
       setState(() {
         isLoading = false;
       });
-
-      if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
-        return;
-      }
     }
   }
 
@@ -412,6 +408,17 @@ class _QuoteListState extends State<QuotesList> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        setState(() {
+          isLoadingMore = false;
+        });
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
       final snapshot = await Firestore.instance
         .collection('users')
         .document(userAuth.uid)
@@ -460,7 +467,7 @@ class _QuoteListState extends State<QuotesList> {
     });
 
     try {
-      userAuth = userAuth ?? await FirebaseAuth.instance.currentUser();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);

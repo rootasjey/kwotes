@@ -12,8 +12,8 @@ import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
@@ -339,9 +339,13 @@ class _TempQuotesState extends State<TempQuotes> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
+        setState(() {
+          isLoading = false;
+        });
+
         FluroRouter.router.navigateTo(context, SigninRoute);
         return;
       }

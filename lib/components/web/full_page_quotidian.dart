@@ -10,14 +10,12 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
-import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
-Quotidian _quotidian;
 String _prevLang;
 
 class FullPageQuotidian extends StatefulWidget {
@@ -30,6 +28,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   bool hasFetchedFav = false;
   bool isLoading = false;
 
+  Quotidian quotidian;
+
   ReactionDisposer disposeFav;
   ReactionDisposer disposeLang;
 
@@ -38,11 +38,12 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     super.initState();
 
     disposeLang = autorun((_) {
-      if (_quotidian != null && _prevLang == userState.lang) {
+      if (quotidian != null && _prevLang == userState.lang) {
         return;
       }
 
-      checkAuthAndFetch();
+      _prevLang = userState.lang;
+      fetch();
     });
 
     disposeFav = autorun((_) {
@@ -66,13 +67,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading && _quotidian == null) {
+    if (isLoading && quotidian == null) {
       return FullPageLoading(
         title: 'Loading quotidian...',
       );
     }
 
-    if (_quotidian == null) {
+    if (quotidian == null) {
       return emptyContainer();
     }
 
@@ -95,8 +96,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
                     authorName(),
 
-                    if (_quotidian.quote.mainReference?.name != null &&
-                      _quotidian.quote.mainReference.name.length > 0)
+                    if (quotidian.quote.mainReference?.name != null &&
+                      quotidian.quote.mainReference.name.length > 0)
                       referenceName(),
                   ],
                 ),
@@ -111,7 +112,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget animatedDivider() {
-    final topicColor = appTopicsColors.find(_quotidian.quote.topics.first);
+    final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
     final color = topicColor != null ?
       Color(topicColor.decimal) :
       Colors.white;
@@ -148,7 +149,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             opacity: value,
             child: GestureDetector(
               onTap: () {
-                final id = _quotidian.quote.author.id;
+                final id = quotidian.quote.author.id;
 
                 FluroRouter.router.navigateTo(
                   context,
@@ -156,7 +157,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 );
               },
               child: Text(
-                _quotidian.quote.author.name,
+                quotidian.quote.author.name,
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
@@ -195,11 +196,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       onTap: () {
         FluroRouter.router.navigateTo(
           context,
-          QuotePageRoute.replaceFirst(':id', _quotidian.quote.id),
+          QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
         );
       },
       child: createHeroQuoteAnimation(
-        quote: _quotidian.quote,
+        quote: quotidian.quote,
         screenWidth: screenWidth,
       ),
     );
@@ -212,7 +213,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: GestureDetector(
         onTap: () {
-          final id = _quotidian.quote.mainReference.id;
+          final id = quotidian.quote.mainReference.id;
 
           FluroRouter.router.navigateTo(
             context,
@@ -220,7 +221,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           );
         },
         child: Text(
-          _quotidian.quote.mainReference.name,
+          quotidian.quote.mainReference.name,
           style: TextStyle(
             fontSize: 18.0,
           ),
@@ -291,13 +292,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
               onPressed: () async {
-                shareTwitter(quote: _quotidian.quote);
+                shareTwitter(quote: quotidian.quote);
               },
               icon: Icon(Icons.share),
             ),
           ),
 
-          AddToListButton(quote: _quotidian.quote,),
+          AddToListButton(quote: quotidian.quote,),
         ],
       ),
     );
@@ -325,7 +326,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     final result = await addToFavourites(
       context: context,
-      quotidian: _quotidian,
+      quotidian: quotidian,
     );
 
     if (!result) {
@@ -335,18 +336,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     }
   }
 
-  void checkAuthAndFetch() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    _prevLang = await Language.fetch(null);
-    fetchQuotidian();
-  }
-
   void fetchIsFav({DateTime updatedAt}) async {
     final isCurrentFav = await isFavourite(
-      quoteId: _quotidian.quote.id,
+      quoteId: quotidian.quote.id,
     );
 
     if (isPrevFav != isCurrentFav) {
@@ -355,7 +347,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     }
   }
 
-  void fetchQuotidian() async {
+  void fetch() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final now = DateTime.now();
 
     String month = now.month.toString();
@@ -379,7 +375,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       }
 
       setState(() {
-        _quotidian = Quotidian.fromJSON(doc.data);
+        quotidian = Quotidian.fromJSON(doc.data);
         isLoading = false;
       });
 
@@ -400,7 +396,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     final result = await removeFromFavourites(
       context: context,
-      quotidian: _quotidian,
+      quotidian: quotidian,
     );
 
     if (!result) {

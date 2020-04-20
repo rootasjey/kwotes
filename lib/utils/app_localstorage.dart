@@ -29,7 +29,7 @@ class AppLocalStorage {
     return credentials;
   }
 
-  String getLang() => _localStorage.getString('lang');
+  String getLang() => _localStorage.getString('lang') ?? 'en';
 
   void saveAutoBrightness(bool value) {
     _localStorage.setBool('autoBrightness', value);

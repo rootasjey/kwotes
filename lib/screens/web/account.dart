@@ -10,8 +10,8 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -27,8 +27,6 @@ class _AccountState extends State<Account> {
   bool isLoadingLang      = false;
   bool isLoadingImageURL  = false;
   bool isThemeAuto        = true;
-
-  FirebaseUser userAuth;
 
   String avatarUrl      = '';
   String displayName    = '';
@@ -491,7 +489,7 @@ class _AccountState extends State<Account> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -526,10 +524,20 @@ class _AccountState extends State<Account> {
   }
 
   void fetchLang() async {
-    await Language.fetch(userAuth);
+    final userAuth = await userState.userAuth;
+    if (userAuth == null) { return; }
+
+    final user = await Firestore.instance
+      .collection('users')
+      .document(userAuth.uid)
+      .get();
+
+    if (!user.exists) { return; }
+
+    final lang = user.data['lang'];
 
     setState(() {
-      selectedLang = Language.frontend(Language.current);
+      selectedLang = Language.frontend(lang);
     });
   }
 
@@ -556,6 +564,9 @@ class _AccountState extends State<Account> {
       final userUpdateInfo = UserUpdateInfo();
       userUpdateInfo.displayName = displayName;
 
+      final userAuth = await userState.userAuth;
+      if (userAuth == null) { throw Error(); }
+
       await userAuth.updateProfile(userUpdateInfo);
 
       await Firestore.instance
@@ -574,10 +585,10 @@ class _AccountState extends State<Account> {
       });
 
       showSnack(
-      context: context,
-      message: 'Your display name has been successfully updated.',
-      type: SnackType.success,
-    );
+        context: context,
+        message: 'Your display name has been successfully updated.',
+        type: SnackType.success,
+      );
 
     } catch (error) {
       debugPrint(error.toString());
@@ -600,6 +611,8 @@ class _AccountState extends State<Account> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
       await Firestore.instance
         .collection('users')
         .document(userAuth.uid)
@@ -638,6 +651,9 @@ class _AccountState extends State<Account> {
     Language.setLang(lang);
 
     try {
+      final userAuth = await userState.userAuth;
+      if (userAuth == null) { throw Error(); }
+
       await Firestore.instance
         .collection('users')
         .document(userAuth.uid)

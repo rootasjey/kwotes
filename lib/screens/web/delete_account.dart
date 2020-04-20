@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/utils/auth.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 
@@ -18,7 +18,6 @@ class _DeleteAccountState extends State<DeleteAccount> {
   bool isCompleted    = false;
   bool isCheckingAuth = false;
 
-  FirebaseUser userAuth;
   String password = '';
 
   double beginY   = 100.0;
@@ -261,7 +260,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -283,6 +282,17 @@ class _DeleteAccountState extends State<DeleteAccount> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        setState(() {
+          isDeleting = false;
+        });
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
       final credentials = EmailAuthProvider.getCredential(
         email: userAuth.email,
         password: password,

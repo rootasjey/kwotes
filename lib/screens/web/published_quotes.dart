@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -8,8 +7,8 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -29,7 +28,6 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
   final _scrollController = ScrollController();
   bool isFabVisible = false;
 
-  FirebaseUser userAuth;
   bool canManage = false;
 
   var lastDoc;
@@ -233,7 +231,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
@@ -276,11 +274,6 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
       setState(() {
         isLoading = false;
       });
-
-      if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
-        return;
-      }
     }
   }
 
@@ -292,6 +285,12 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        throw Error();
+      }
+
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('user.id', isEqualTo: userAuth.uid)

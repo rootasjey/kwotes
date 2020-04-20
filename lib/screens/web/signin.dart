@@ -5,7 +5,6 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -265,13 +264,13 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final user = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       setState(() {
         isCheckingAuth = false;
       });
 
-      if (user != null) {
+      if (userAuth != null) {
         userState.setUserConnected();
         FluroRouter.router.navigateTo(context, DashboardRoute);
       }

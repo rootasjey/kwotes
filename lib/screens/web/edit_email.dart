@@ -5,7 +5,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/utils/auth.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 
@@ -17,8 +17,6 @@ class EditEmail extends StatefulWidget {
 class _EditEmailState extends State<EditEmail> {
   String email = '';
   String password = '';
-
-  FirebaseUser userAuth;
 
   bool isCheckingAuth = false;
   bool isUpdating     = false;
@@ -246,7 +244,7 @@ class _EditEmailState extends State<EditEmail> {
     });
 
     try {
-      userAuth = await getUserAuth();
+      final userAuth = await userState.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -267,6 +265,17 @@ class _EditEmailState extends State<EditEmail> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        setState(() {
+          isUpdating = false;
+        });
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
       final credentials = EmailAuthProvider.getCredential(
         email: userAuth.email,
         password: password,

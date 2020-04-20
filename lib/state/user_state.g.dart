@@ -9,30 +9,6 @@ part of 'user_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$UserState on UserStateBase, Store {
-  Computed<Future<FirebaseUser>> _$userAuthComputed;
-
-  @override
-  Future<FirebaseUser> get userAuth => (_$userAuthComputed ??=
-          Computed<Future<FirebaseUser>>(() => super.userAuth))
-      .value;
-
-  final _$_userAuthAtom = Atom(name: 'UserStateBase._userAuth');
-
-  @override
-  FirebaseUser get _userAuth {
-    _$_userAuthAtom.context.enforceReadPolicy(_$_userAuthAtom);
-    _$_userAuthAtom.reportObserved();
-    return super._userAuth;
-  }
-
-  @override
-  set _userAuth(FirebaseUser value) {
-    _$_userAuthAtom.context.conditionallyRunInAction(() {
-      super._userAuth = value;
-      _$_userAuthAtom.reportChanged();
-    }, _$_userAuthAtom, name: '${_$_userAuthAtom.name}_set');
-  }
-
   final _$langAtom = Atom(name: 'UserStateBase.lang');
 
   @override
@@ -84,13 +60,6 @@ mixin _$UserState on UserStateBase, Store {
     }, _$updatedFavAtAtom, name: '${_$updatedFavAtAtom.name}_set');
   }
 
-  final _$setAuthAsyncAction = AsyncAction('setAuth');
-
-  @override
-  Future<dynamic> setAuth() {
-    return _$setAuthAsyncAction.run(() => super.setAuth());
-  }
-
   final _$UserStateBaseActionController =
       ActionController(name: 'UserStateBase');
 
@@ -137,7 +106,7 @@ mixin _$UserState on UserStateBase, Store {
   @override
   String toString() {
     final string =
-        'lang: ${lang.toString()},isUserConnected: ${isUserConnected.toString()},updatedFavAt: ${updatedFavAt.toString()},userAuth: ${userAuth.toString()}';
+        'lang: ${lang.toString()},isUserConnected: ${isUserConnected.toString()},updatedFavAt: ${updatedFavAt.toString()}';
     return '{$string}';
   }
 }
