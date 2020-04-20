@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/app_keys.dart';
@@ -9,6 +10,7 @@ import 'package:memorare/models/http_clients.dart';
 import 'package:memorare/models/user_data.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -36,6 +38,11 @@ class AppState extends State<App> {
 
     appLocalStorage.initialize()
       .then((value) {
+        final savedLang = appLocalStorage.getLang();
+        userState.setLang(savedLang);
+
+        autoLogin();
+
         setState(() {
           isReady = true;
         });
@@ -76,5 +83,33 @@ class AppState extends State<App> {
           ),
         ),
     );
+  }
+
+  void autoLogin() async {
+    try {
+      final credentials = appLocalStorage.getCredentials();
+
+      if (credentials == null) { return; }
+
+      final email = credentials['email'];
+      final password = credentials['password'];
+
+      if ((email == null || email.isEmpty) || (password == null || password.isEmpty)) {
+        return;
+      }
+
+      final authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+      if (authResult.user == null) {
+        throw Error();
+      }
+
+      appLocalStorage.saveUserName(authResult.user.displayName);
+      userState.setUserConnected();
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 }
