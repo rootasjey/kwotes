@@ -46,7 +46,7 @@ class _QuoteListState extends State<QuotesList> {
   @override
   initState() {
     super.initState();
-    fetchQuotes();
+    fetch();
   }
 
   @override
@@ -106,7 +106,7 @@ class _QuoteListState extends State<QuotesList> {
             }
 
             if (hasNext && !isLoadingMore) {
-              fetchMoreQuotes();
+              fetchMore();
             }
 
             return false;
@@ -322,7 +322,7 @@ class _QuoteListState extends State<QuotesList> {
     );
   }
 
-  void fetchQuotes() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -402,7 +402,7 @@ class _QuoteListState extends State<QuotesList> {
     }
   }
 
-  void fetchMoreQuotes() async {
+  void fetchMore() async {
     setState(() {
       isLoadingMore = true;
     });

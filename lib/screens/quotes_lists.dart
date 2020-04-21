@@ -26,7 +26,7 @@ class _QuotesListsState extends State<QuotesLists> {
   bool isLoadingMore  = false;
   int limit           = 10;
 
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
 
   List<UserQuotesList> userQuotesLists = [];
 
@@ -87,7 +87,7 @@ class _QuotesListsState extends State<QuotesLists> {
           return false;
         },
         child: CustomScrollView(
-          controller: _scrollController,
+          controller: scrollController,
           slivers: <Widget>[
             appBar(),
             bodyListContent(),
@@ -117,7 +117,7 @@ class _QuotesListsState extends State<QuotesLists> {
                     onPressed: () {
                       if (userQuotesLists.length == 0) { return; }
 
-                      _scrollController.animateTo(
+                      scrollController.animateTo(
                         0,
                         duration: Duration(seconds: 2),
                         curve: Curves.easeOutQuint
