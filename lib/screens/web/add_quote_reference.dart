@@ -16,45 +16,40 @@ class AddQuoteReference extends StatefulWidget {
 }
 
 class _AddQuoteReferenceState extends State<AddQuoteReference> {
-  final beginY = 100.0;
-  final delay = 1.0;
+  final beginY    = 100.0;
+  final delay     = 1.0;
   final delayStep = 1.2;
-
-  String affiliateUrl   = '';
-  String imgUrl         = '';
-  String lang           = 'en';
-  String name           = '';
-  String primaryType    = '';
-  String secondaryType  = '';
-  String summary        = '';
-  String url            = '';
-  String wikiUrl        = '';
 
   String tempImgUrl = '';
 
   List<String> langs = ['en', 'fr'];
 
   final affiliateUrlController   = TextEditingController();
+  final amazonController         = TextEditingController();
   final nameController           = TextEditingController();
+  final netflixController        = TextEditingController();
   final primaryTypeController    = TextEditingController();
+  final primevideoController     = TextEditingController();
   final secondaryTypeController  = TextEditingController();
   final summaryController        = TextEditingController();
-  final urlController            = TextEditingController();
+  final websiteUrlController     = TextEditingController();
   final wikiUrlController        = TextEditingController();
+  final youtubeUrlController     = TextEditingController();
 
   @override
   initState() {
     setState(() {
-      imgUrl = AddQuoteInputs.reference.urls.image;
-      lang  = AddQuoteInputs.reference.lang;
-
-      affiliateUrlController.text  = AddQuoteInputs.reference.urls.affiliate;
-      nameController.text          = AddQuoteInputs.reference.name;
-      primaryTypeController.text   = AddQuoteInputs.reference.type.primary;
-      secondaryTypeController.text = AddQuoteInputs.reference.type.secondary;
-      summaryController.text       = AddQuoteInputs.reference.summary;
-      urlController.text           = AddQuoteInputs.reference.urls.website;
-      wikiUrlController.text       = AddQuoteInputs.reference.urls.wikipedia;
+      affiliateUrlController.text   = AddQuoteInputs.reference.urls.affiliate;
+      amazonController.text         = AddQuoteInputs.reference.urls.amazon;
+      nameController.text           = AddQuoteInputs.reference.name;
+      netflixController.text        = AddQuoteInputs.reference.urls.netflix;
+      primevideoController.text     = AddQuoteInputs.reference.urls.primeVideo;
+      primaryTypeController.text    = AddQuoteInputs.reference.type.primary;
+      secondaryTypeController.text  = AddQuoteInputs.reference.type.secondary;
+      summaryController.text        = AddQuoteInputs.reference.summary;
+      websiteUrlController.text     = AddQuoteInputs.reference.urls.website;
+      wikiUrlController.text        = AddQuoteInputs.reference.urls.wikipedia;
+      youtubeUrlController.text     = AddQuoteInputs.reference.urls.youTube;
     });
 
     super.initState();
@@ -165,14 +160,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       onPressed: () {
         AddQuoteInputs.clearReference();
 
-        imgUrl = '';
+        AddQuoteInputs.reference.urls.image = '';
 
         affiliateUrlController.clear();
         nameController.clear();
         primaryTypeController.clear();
         secondaryTypeController.clear();
         summaryController.clear();
-        urlController.clear();
+        websiteUrlController.clear();
         wikiUrlController.clear();
       },
       child: Opacity(
@@ -257,12 +252,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     return Padding(
       padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
       child: Card(
-        child: imgUrl.length > 0 ?
+        child: AddQuoteInputs.reference.urls.image.length > 0 ?
           Ink.image(
             width: 250.0,
             height: 300.0,
             fit: BoxFit.cover,
-            image: NetworkImage(imgUrl),
+            image: NetworkImage(AddQuoteInputs.reference.urls.image),
             child: InkWell(
               onTap: () => showImageDialog(),
             ),
@@ -288,7 +283,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         Padding(
           padding: EdgeInsets.only(top: 20.0),
           child: DropdownButton<String>(
-            value: lang,
+            value: AddQuoteInputs.reference.lang,
             style: TextStyle(
               color: stateColors.primary,
               fontSize: 20.0,
@@ -300,7 +295,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             ),
             onChanged: (newValue) {
               setState(() {
-                lang = newValue;
                 AddQuoteInputs.reference.lang = newValue;
               });
             },
@@ -328,7 +322,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               minLines: 10,
               maxLines: null,
               onChanged: (newValue) {
-                summary = newValue;
                 AddQuoteInputs.reference.summary = newValue;
               },
             ),
@@ -346,14 +339,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: affiliateUrlController,
+              controller: amazonController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.shopping_cart),
                 labelText: 'Amazon URL'
               ),
               onChanged: (newValue) {
-                url = newValue;
                 AddQuoteInputs.reference.urls.affiliate = newValue;
               },
             ),
@@ -363,14 +355,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         SizedBox(
           width: 300,
           child: TextField(
-            controller: wikiUrlController,
+            controller: netflixController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.video_library),
               labelText: 'Netflix URL'
             ),
             onChanged: (newValue) {
-              wikiUrl = newValue;
               AddQuoteInputs.reference.urls.netflix = newValue;
             },
           ),
@@ -381,14 +372,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: affiliateUrlController,
+              controller: primevideoController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.ondemand_video),
                 labelText: 'PrimeVideo URL'
               ),
               onChanged: (newValue) {
-                url = newValue;
                 AddQuoteInputs.reference.urls.primeVideo = newValue;
               },
             ),
@@ -400,14 +390,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: urlController,
+              controller: websiteUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(IconsMore.earth),
                 labelText: 'Website URL'
               ),
               onChanged: (newValue) {
-                url = newValue;
                 AddQuoteInputs.reference.urls.website = newValue;
               },
             ),
@@ -424,7 +413,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               labelText: 'Wikipedia URL'
             ),
             onChanged: (newValue) {
-              wikiUrl = newValue;
               AddQuoteInputs.reference.urls.wikipedia = newValue;
             },
           ),
@@ -435,14 +423,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: affiliateUrlController,
+              controller: youtubeUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.video_library),
                 labelText: 'YouTube URL'
               ),
               onChanged: (newValue) {
-                url = newValue;
                 AddQuoteInputs.reference.urls.youTube = newValue;
               },
             ),
@@ -465,7 +452,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             labelText: 'Name',
           ),
           onChanged: (newValue) {
-            name = newValue;
             AddQuoteInputs.reference.name = newValue;
           },
         ),
@@ -511,7 +497,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 labelText: 'Primary type (TV Show, Movie, ...)',
               ),
               onChanged: (newValue) {
-                primaryType = newValue;
                 AddQuoteInputs.reference.type.primary = newValue;
               },
             ),
@@ -525,7 +510,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 labelText: 'Secondary type (Horror, Thriller, ...)',
               ),
               onChanged: (newValue) {
-                secondaryType = newValue;
                 AddQuoteInputs.reference.type.secondary  = newValue;
               },
             ),
@@ -572,7 +556,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     autofocus: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: imgUrl.length > 0 ? imgUrl : 'URL',
+                      labelText: AddQuoteInputs.reference.urls.image.length > 0 ?
+                        AddQuoteInputs.reference.urls.image : 'URL',
                     ),
                     onChanged: (newValue) {
                       tempImgUrl = newValue;
@@ -601,10 +586,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               ),
               onPressed: () {
                 setState(() {
-                  imgUrl = tempImgUrl;
+                  AddQuoteInputs.reference.urls.image = tempImgUrl;
                 });
 
-                AddQuoteInputs.reference.urls.image = imgUrl;
                 Navigator.of(context).pop();
               },
             ),
