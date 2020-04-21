@@ -16,12 +16,9 @@ class AddQuoteContent extends StatefulWidget {
 }
 
 class _AddQuoteContentState extends State<AddQuoteContent> {
-  final beginY = 100.0;
-  final delay = 1.0;
+  final beginY    = 100.0;
+  final delay     = 1.0;
   final delayStep = 1.2;
-
-  String lang = 'en';
-  String name = '';
 
   bool isKeyHandled = false;
 
@@ -30,16 +27,14 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   List<String> langs = ['en', 'fr'];
 
-  final _nameController = TextEditingController();
+  final nameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     nameFocusNode = FocusNode();
     clearFocusNode = FocusNode();
-
-    _nameController.text = AddQuoteInputs.quote.name;
-    lang = AddQuoteInputs.quote.lang;
+    nameController.text = AddQuoteInputs.quote.name;
   }
 
   @override
@@ -141,7 +136,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
             focusNode: clearFocusNode,
             onPressed: () {
               AddQuoteInputs.quote.name = '';
-              _nameController.clear();
+              nameController.clear();
               nameFocusNode.requestFocus();
             },
             child: Opacity(
@@ -283,7 +278,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   Widget langSelect() {
     return DropdownButton<String>(
-      value: lang,
+      value: AddQuoteInputs.quote.lang,
       style: TextStyle(
         color: stateColors.primary,
         fontSize: 20.0,
@@ -295,7 +290,6 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       ),
       onChanged: (newValue) {
         setState(() {
-          lang = newValue;
           AddQuoteInputs.quote.lang = newValue;
         });
       },
@@ -315,11 +309,10 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         maxLines: null,
         autofocus: true,
         focusNode: nameFocusNode,
-        controller: _nameController,
+        controller: nameController,
         keyboardType: TextInputType.multiline,
         textCapitalization: TextCapitalization.sentences,
         onChanged: (newValue) {
-          name = newValue;
           AddQuoteInputs.quote.name = newValue;
         },
         decoration: InputDecoration(
