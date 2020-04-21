@@ -23,13 +23,26 @@ class Author {
     this.wikiUrl  = '',
   });
 
+  factory Author.empty() {
+    return Author(
+      id      : '',
+      imgUrl  : '',
+      job     : '',
+      name    : '',
+      summary : '',
+      url     : '',
+      urls    : Urls(),
+      wikiUrl : '',
+    );
+  }
+
   factory Author.fromJSON(Map<String, dynamic> json) {
     final _urls = json['urls'] != null ?
       Urls.fromJSON(json['urls']) : Urls();
 
     return Author(
-      id      : json['id'] ?? null,
-      imgUrl  : json['imgUrl'] != null ? json['imgUrl'] : '',
+      id      : json['id'] ?? '',
+      imgUrl  : json['imgUrl'] ?? '',
       job     : json['job'],
       name    : json['name'],
       summary : json['summary'],

@@ -11,16 +11,16 @@ class AddQuoteInputs {
   static String navigatedFromPath = '';
 
   /// Quote's id is not empty if this is an edit.
-  static Quote quote = Quote();
+  static Quote quote = Quote.empty();
 
   /// Draft's quote id (filled when creating a new quote).
   static String draftId = '';
 
   /// If not empty, the author already exists.
-  static Author author = Author();
+  static Author author = Author.empty();
 
   /// If not empty, the reference already exists.
-  static Reference reference = Reference();
+  static Reference reference = Reference.empty();
 
   static String comment             = '';
   static String region              = '';
@@ -40,7 +40,7 @@ class AddQuoteInputs {
   }
 
   static void clearAuthor() {
-    author = Author();
+    author = Author.empty();
   }
 
   static void clearComment() {
@@ -48,13 +48,14 @@ class AddQuoteInputs {
   }
 
   static void clearQuoteData({bool keepLang = true}) {
-    quote = Quote(
-      lang: keepLang ? quote.lang : 'en',
-    );
+    final prevLang = quote.lang;
+
+    quote = Quote.empty();
+    quote.lang = keepLang ? prevLang : 'en';
   }
 
   static void clearReference() {
-    reference = Reference();
+    reference = Reference.empty();
   }
 
   static void clearStatus() {

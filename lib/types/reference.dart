@@ -24,6 +24,20 @@ class Reference {
     this.wikiUrl,
   });
 
+  factory Reference.empty() {
+    return Reference(
+      id          : '',
+      lang        : 'en',
+      links       : [],
+      name        : '',
+      summary     : '',
+      type        : ReferenceType(),
+      url         : '',
+      urls        : Urls(),
+      wikiUrl     : '',
+    );
+  }
+
   factory Reference.fromJSON(Map<String, dynamic> json) {
     final _links = List<String>();
 

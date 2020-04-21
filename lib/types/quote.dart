@@ -25,6 +25,20 @@ class Quote {
     this.topics,
   });
 
+  factory Quote.empty() {
+    return Quote(
+      author        : Author.empty(),
+      id            : '',
+      lang          : 'en',
+      name          : '',
+      mainReference : Reference.empty(),
+      quoteId       : '',
+      references    : [],
+      starred       : false,
+      topics        : [],
+    );
+  }
+
   factory Quote.fromJSON(Map<String, dynamic> json) {
     List<Reference> _references = [];
     List<String> _topics = [];
