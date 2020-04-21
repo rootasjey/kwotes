@@ -441,49 +441,56 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     try {
       final userAuth = await userState.userAuth;
 
-    await Firestore.instance
-      .collection('tempquotes')
-      .document(AddQuoteInputs.quote.id)
-      .setData({
-        'author': {
-          'id'          : AddQuoteInputs.author.id,
-          'job'         : AddQuoteInputs.author.job,
-          'jobLang'     : {},
-          'name'        : AddQuoteInputs.author.name,
-          'summary'     : AddQuoteInputs.author.summary,
-          'summaryLang' : {},
-          'updatedAt'   : DateTime.now(),
-          'urls': {
-            'affiliate' : AddQuoteInputs.author.urls.affiliate,
-            'image'     : AddQuoteInputs.author.urls.website,
-            'website'   : AddQuoteInputs.author.urls.website,
-            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          }
-        },
-        'comments'      : comments,
-        'createdAt'     : DateTime.now(),
-        'lang'          : AddQuoteInputs.quote.lang,
-        'name'          : AddQuoteInputs.quote.name,
-        'mainReference' : {
-          'id'  : AddQuoteInputs.reference.id,
-          'name': AddQuoteInputs.reference.name,
-        },
-        'references'    : references,
-        'region'        : AddQuoteInputs.region,
-        'topics'        : topics,
-        'user': {
-          'id': userAuth.uid,
-        },
-        'updatedAt'     : DateTime.now(),
-        'validation'    : {
-          'comment': {
-            'name'      : '',
-            'updatedAt' : DateTime.now(),
+      await Firestore.instance
+        .collection('tempquotes')
+        .document(AddQuoteInputs.quote.id)
+        .setData({
+          'author': {
+            'id'          : AddQuoteInputs.author.id,
+            'job'         : AddQuoteInputs.author.job,
+            'jobLang'     : {},
+            'name'        : AddQuoteInputs.author.name,
+            'summary'     : AddQuoteInputs.author.summary,
+            'summaryLang' : {},
+            'updatedAt'   : DateTime.now(),
+            'urls': {
+              'affiliate' : AddQuoteInputs.author.urls.affiliate,
+              'amazon'    : AddQuoteInputs.author.urls.amazon,
+              'facebook'  : AddQuoteInputs.author.urls.facebook,
+              'image'     : AddQuoteInputs.author.urls.image,
+              'netflix'   : AddQuoteInputs.author.urls.netflix,
+              'primeVideo': AddQuoteInputs.author.urls.primeVideo,
+              'twitch'    : AddQuoteInputs.author.urls.twitch,
+              'twitter'   : AddQuoteInputs.author.urls.twitter,
+              'website'   : AddQuoteInputs.author.urls.website,
+              'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
+              'youTube'   : AddQuoteInputs.author.urls.youTube,
+            }
           },
-          'status'      : 'proposed',
-          'updatedAt'   : DateTime.now(),
-        }
-      });
+          'comments'      : comments,
+          'createdAt'     : DateTime.now(),
+          'lang'          : AddQuoteInputs.quote.lang,
+          'name'          : AddQuoteInputs.quote.name,
+          'mainReference' : {
+            'id'  : AddQuoteInputs.reference.id,
+            'name': AddQuoteInputs.reference.name,
+          },
+          'references'    : references,
+          'region'        : AddQuoteInputs.region,
+          'topics'        : topics,
+          'user': {
+            'id': userAuth.uid,
+          },
+          'updatedAt'     : DateTime.now(),
+          'validation'    : {
+            'comment': {
+              'name'      : '',
+              'updatedAt' : DateTime.now(),
+            },
+            'status'      : 'proposed',
+            'updatedAt'   : DateTime.now(),
+          }
+        });
 
     } catch (error) {
       debugPrint(error.toString());
