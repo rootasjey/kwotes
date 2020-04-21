@@ -20,45 +20,37 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final delay         = 1.0;
   final delayStep     = 1.2;
 
-  String affiliateUrl = '';
-  String imgUrl       = '';
-  String name         = '';
-  String job          = '';
-  String summary      = '';
-  String url          = '';
-  String wikiUrl      = '';
+  String tempImgUrl = '';
 
-  String _tempImgUrl = '';
-
-  final affiliateUrlController = TextEditingController();
-  final nameController         = TextEditingController();
-  final jobController          = TextEditingController();
-  final summaryController      = TextEditingController();
-  final urlController          = TextEditingController();
-  final wikiController         = TextEditingController();
+  final affiliateUrlController  = TextEditingController();
+  final facebookUrlController   = TextEditingController();
+  final nameController          = TextEditingController();
+  final jobController           = TextEditingController();
+  final summaryController       = TextEditingController();
+  final twitchUrlController     = TextEditingController();
+  final twitterUrlController    = TextEditingController();
+  final urlController           = TextEditingController();
+  final wikiController          = TextEditingController();
+  final ytUrlController         = TextEditingController();
 
   final _nameFocusNode = FocusNode();
 
   @override
   void initState() {
     setState(() {
-      imgUrl = AddQuoteInputs.author.urls.image;
-
-      affiliateUrlController.text  = AddQuoteInputs.author.urls.affiliate;
-      nameController.text          = AddQuoteInputs.author.name;
-      jobController.text           = AddQuoteInputs.author.job;
-      summaryController.text       = AddQuoteInputs.author.summary;
-      urlController.text           = AddQuoteInputs.author.urls.website;
-      wikiController.text          = AddQuoteInputs.author.urls.wikipedia;
+      affiliateUrlController.text   = AddQuoteInputs.author.urls.affiliate;
+      facebookUrlController.text    = AddQuoteInputs.author.urls.facebook;
+      nameController.text           = AddQuoteInputs.author.name;
+      jobController.text            = AddQuoteInputs.author.job;
+      summaryController.text        = AddQuoteInputs.author.summary;
+      twitchUrlController.text      = AddQuoteInputs.author.urls.twitch;
+      twitterUrlController.text     = AddQuoteInputs.author.urls.twitter;
+      urlController.text            = AddQuoteInputs.author.urls.website;
+      wikiController.text           = AddQuoteInputs.author.urls.wikipedia;
+      ytUrlController.text           = AddQuoteInputs.author.urls.youTube;
     });
 
     super.initState();
-  }
-
-  @override
-  dispose() {
-    AddQuoteInputs.author.urls.image = imgUrl;
-    super.dispose();
   }
 
   @override
@@ -109,9 +101,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: imgUrl.length > 0 ?
+        child: AddQuoteInputs.author.urls.image.length > 0 ?
           Ink.image(
-            image: NetworkImage(imgUrl),
+            image: NetworkImage(AddQuoteInputs.author.urls.image),
             fit: BoxFit.cover,
             width: 200.0,
             height: 200.0,
@@ -198,7 +190,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       onPressed: () {
         AddQuoteInputs.clearAuthor();
 
-        imgUrl = '';
+        AddQuoteInputs.author.urls.image = '';
 
         affiliateUrlController.clear();
         nameController.clear();
@@ -296,14 +288,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(IconsMore.wikipedia_w),
-              labelText: 'Wikipedia URL'
+              labelText: 'Wikipedia'
             ),
             onChanged: (newValue) {
-              wikiUrl = newValue;
               AddQuoteInputs.author.urls.wikipedia = newValue;
             },
           ),
         ),
+
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: SizedBox(
@@ -313,15 +305,87 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(IconsMore.earth),
-                labelText: 'Website URL'
+                labelText: 'Website'
               ),
               onChanged: (newValue) {
-                url = newValue;
                 AddQuoteInputs.author.urls.website = newValue;
               },
             ),
           ),
         ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: twitchUrlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.ondemand_video),
+                labelText: 'Twitch'
+              ),
+              onChanged: (newValue) {
+                AddQuoteInputs.author.urls.twitch = newValue;
+              },
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: twitterUrlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(IconsMore.twitter),
+                labelText: 'Twitter'
+              ),
+              onChanged: (newValue) {
+                AddQuoteInputs.author.urls.twitter = newValue;
+              },
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: facebookUrlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(IconsMore.facebook),
+                labelText: 'Facebook'
+              ),
+              onChanged: (newValue) {
+                AddQuoteInputs.author.urls.facebook = newValue;
+              },
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: SizedBox(
+            width: 300,
+            child: TextField(
+              controller: ytUrlController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.video_library),
+                labelText: 'YouTube'
+              ),
+              onChanged: (newValue) {
+                AddQuoteInputs.author.urls.youTube = newValue;
+              },
+            ),
+          ),
+        ),
+
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: SizedBox(
@@ -331,10 +395,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.monetization_on),
-                labelText: 'Affiliate URL'
+                labelText: 'Affiliate'
               ),
               onChanged: (newValue) {
-                affiliateUrl = newValue;
                 AddQuoteInputs.author.urls.affiliate = newValue;
               },
             ),
@@ -358,7 +421,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               labelText: 'Name',
             ),
             onChanged: (newValue) {
-              name = newValue;
               AddQuoteInputs.author.name = newValue;
             },
           ),
@@ -373,7 +435,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               labelText: 'Job',
             ),
             onChanged: (newValue) {
-              job = newValue;
               AddQuoteInputs.author.job = newValue;
             },
           ),
@@ -396,7 +457,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         minLines: 10,
         maxLines: null,
         onChanged: (newValue) {
-          summary = newValue;
           AddQuoteInputs.author.summary = newValue;
         },
       ),
@@ -462,10 +522,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     autofocus: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: imgUrl.length > 0 ? imgUrl : 'URL',
+                      labelText: AddQuoteInputs.author.urls.image.length > 0 ?
+                        AddQuoteInputs.author.urls.image : 'URL',
                     ),
                     onChanged: (newValue) {
-                      _tempImgUrl = newValue;
+                      tempImgUrl = newValue;
                     },
                   ),
                 ],
@@ -490,10 +551,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               ),
               onPressed: () {
                 setState(() {
-                  imgUrl = _tempImgUrl;
+                  AddQuoteInputs.author.urls.image = tempImgUrl;
                 });
 
-                AddQuoteInputs.author.urls.image = imgUrl;
                 Navigator.of(context).pop();
               },
             ),
