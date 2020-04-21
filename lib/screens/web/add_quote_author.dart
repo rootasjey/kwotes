@@ -76,6 +76,22 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ),
 
           Positioned(
+            right: 120.0,
+            top: 85.0,
+            child: IconButton(
+              onPressed: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  AddQuoteReferenceRoute,
+                );
+              },
+              icon: Icon(
+                Icons.arrow_forward,
+              ),
+            ),
+          ),
+
+          Positioned(
             right: 50.0,
             top: 70.0,
             child: helpButton(),
