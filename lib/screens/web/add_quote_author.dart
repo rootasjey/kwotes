@@ -30,12 +30,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   String _tempImgUrl = '';
 
-  final _affiliateUrlController = TextEditingController();
-  final _nameController         = TextEditingController();
-  final _jobController          = TextEditingController();
-  final _summaryController      = TextEditingController();
-  final _urlController          = TextEditingController();
-  final _wikiController         = TextEditingController();
+  final affiliateUrlController = TextEditingController();
+  final nameController         = TextEditingController();
+  final jobController          = TextEditingController();
+  final summaryController      = TextEditingController();
+  final urlController          = TextEditingController();
+  final wikiController         = TextEditingController();
 
   final _nameFocusNode = FocusNode();
 
@@ -44,12 +44,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     setState(() {
       imgUrl = AddQuoteInputs.author.urls.image;
 
-      _affiliateUrlController.text  = AddQuoteInputs.author.urls.affiliate;
-      _nameController.text          = AddQuoteInputs.author.name;
-      _jobController.text           = AddQuoteInputs.author.job;
-      _summaryController.text       = AddQuoteInputs.author.summary;
-      _urlController.text           = AddQuoteInputs.author.urls.website;
-      _wikiController.text          = AddQuoteInputs.author.urls.wikipedia;
+      affiliateUrlController.text  = AddQuoteInputs.author.urls.affiliate;
+      nameController.text          = AddQuoteInputs.author.name;
+      jobController.text           = AddQuoteInputs.author.job;
+      summaryController.text       = AddQuoteInputs.author.summary;
+      urlController.text           = AddQuoteInputs.author.urls.website;
+      wikiController.text          = AddQuoteInputs.author.urls.wikipedia;
     });
 
     super.initState();
@@ -184,12 +184,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
         imgUrl = '';
 
-        _affiliateUrlController.clear();
-        _nameController.clear();
-        _summaryController.clear();
-        _jobController.clear();
-        _urlController.clear();
-        _wikiController.clear();
+        affiliateUrlController.clear();
+        nameController.clear();
+        summaryController.clear();
+        jobController.clear();
+        urlController.clear();
+        wikiController.clear();
 
         _nameFocusNode.requestFocus();
       },
@@ -276,7 +276,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         SizedBox(
           width: 300,
           child: TextField(
-            controller: _wikiController,
+            controller: wikiController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(IconsMore.wikipedia_w),
@@ -293,7 +293,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _urlController,
+              controller: urlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(IconsMore.earth),
@@ -311,7 +311,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _affiliateUrlController,
+              controller: affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.monetization_on),
@@ -334,7 +334,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         SizedBox(
           width: 200.0,
           child: TextField(
-            controller: _nameController,
+            controller: nameController,
             autofocus: true,
             focusNode: _nameFocusNode,
             textCapitalization: TextCapitalization.sentences,
@@ -351,7 +351,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         SizedBox(
           width: 200.0,
           child: TextField(
-            controller: _jobController,
+            controller: jobController,
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Job',
@@ -370,7 +370,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 100.0),
       child: TextField(
-        controller: _summaryController,
+        controller: summaryController,
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           border: OutlineInputBorder(),

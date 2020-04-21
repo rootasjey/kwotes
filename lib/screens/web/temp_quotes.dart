@@ -31,7 +31,7 @@ class _TempQuotesState extends State<TempQuotes> {
 
   bool hasNext = true;
 
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
   bool isFabVisible = false;
 
   FirebaseUser userAuth;
@@ -50,7 +50,7 @@ class _TempQuotesState extends State<TempQuotes> {
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
           onPressed: () {
-            _scrollController.animateTo(
+            scrollController.animateTo(
               0.0,
               duration: Duration(seconds: 1),
               curve: Curves.easeOut,
@@ -112,7 +112,7 @@ class _TempQuotesState extends State<TempQuotes> {
         return false;
       },
       child: CustomScrollView(
-        controller: _scrollController,
+        controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
             floating: true,

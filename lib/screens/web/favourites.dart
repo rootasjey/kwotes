@@ -27,7 +27,7 @@ class _FavouritesState extends State<Favourites> {
   bool isLoadingMore = false;
   bool hasNext = true;
 
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
   bool isFabVisible = false;
 
   List<Quote> quotes = [];
@@ -46,7 +46,7 @@ class _FavouritesState extends State<Favourites> {
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
           onPressed: () {
-            _scrollController.animateTo(
+            scrollController.animateTo(
               0.0,
               duration: Duration(seconds: 1),
               curve: Curves.easeOut,
@@ -105,7 +105,7 @@ class _FavouritesState extends State<Favourites> {
             return false;
           },
           child: CustomScrollView(
-            controller: _scrollController,
+            controller: scrollController,
             slivers: <Widget>[
               SliverAppBar(
                 floating: true,

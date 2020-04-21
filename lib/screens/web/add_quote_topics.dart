@@ -29,20 +29,20 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   List<TopicColor> sampleTopics = [];
   List<TopicColor> selectedTopics = [];
 
-  FocusNode _keyboardFocusNode;
+  FocusNode keyboardFocusNode;
 
   @override
   void initState() {
     super.initState();
-    _keyboardFocusNode = FocusNode();
+    keyboardFocusNode = FocusNode();
 
     populateSelectedTopics();
   }
 
   @override
   void dispose() {
-    if (_keyboardFocusNode != null) {
-      _keyboardFocusNode.dispose();
+    if (keyboardFocusNode != null) {
+      keyboardFocusNode.dispose();
     }
 
     super.dispose();
@@ -79,7 +79,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       width: 500.0,
       child: RawKeyboardListener(
         autofocus: true,
-        focusNode: _keyboardFocusNode,
+        focusNode: keyboardFocusNode,
         onKey: keyHandler,
         child: Column(
           children: <Widget>[

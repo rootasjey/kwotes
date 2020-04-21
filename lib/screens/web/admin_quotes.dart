@@ -27,7 +27,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
   bool isLoadingMore  = false;
   bool hasNext        = true;
 
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
   bool isFabVisible = false;
 
   bool canManage = false;
@@ -47,7 +47,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
           onPressed: () {
-            _scrollController.animateTo(
+            scrollController.animateTo(
               0.0,
               duration: Duration(seconds: 1),
               curve: Curves.easeOut,
@@ -132,7 +132,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
         return false;
       },
       child: CustomScrollView(
-        controller: _scrollController,
+        controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
             floating: true,

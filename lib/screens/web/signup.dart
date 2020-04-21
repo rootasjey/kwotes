@@ -23,7 +23,7 @@ class _SignupState extends State<Signup> {
   bool isCompleted    = false;
   bool isSigningUp    = false;
 
-  final _passwordNode = FocusNode();
+  final passwordNode = FocusNode();
 
   @override
   initState() {
@@ -34,7 +34,7 @@ class _SignupState extends State<Signup> {
   @override
   void dispose() {
     super.dispose();
-    _passwordNode.dispose();
+    passwordNode.dispose();
   }
 
   @override
@@ -209,7 +209,7 @@ class _SignupState extends State<Signup> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextFormField(
-              focusNode: _passwordNode,
+              focusNode: passwordNode,
               decoration: InputDecoration(
                 icon: Icon(Icons.lock_outline),
                 labelText: 'Password',

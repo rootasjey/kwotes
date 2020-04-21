@@ -34,13 +34,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   List<String> langs = ['en', 'fr'];
 
-  final _affiliateUrlController   = TextEditingController();
-  final _nameController           = TextEditingController();
-  final _primaryTypeController    = TextEditingController();
-  final _secondaryTypeController  = TextEditingController();
-  final _summaryController        = TextEditingController();
-  final _urlController            = TextEditingController();
-  final _wikiUrlController        = TextEditingController();
+  final affiliateUrlController   = TextEditingController();
+  final nameController           = TextEditingController();
+  final primaryTypeController    = TextEditingController();
+  final secondaryTypeController  = TextEditingController();
+  final summaryController        = TextEditingController();
+  final urlController            = TextEditingController();
+  final wikiUrlController        = TextEditingController();
 
   @override
   initState() {
@@ -48,13 +48,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       imgUrl = AddQuoteInputs.reference.urls.image;
       lang  = AddQuoteInputs.reference.lang;
 
-      _affiliateUrlController.text  = AddQuoteInputs.reference.urls.affiliate;
-      _nameController.text          = AddQuoteInputs.reference.name;
-      _primaryTypeController.text   = AddQuoteInputs.reference.type.primary;
-      _secondaryTypeController.text = AddQuoteInputs.reference.type.secondary;
-      _summaryController.text       = AddQuoteInputs.reference.summary;
-      _urlController.text           = AddQuoteInputs.reference.urls.website;
-      _wikiUrlController.text       = AddQuoteInputs.reference.urls.wikipedia;
+      affiliateUrlController.text  = AddQuoteInputs.reference.urls.affiliate;
+      nameController.text          = AddQuoteInputs.reference.name;
+      primaryTypeController.text   = AddQuoteInputs.reference.type.primary;
+      secondaryTypeController.text = AddQuoteInputs.reference.type.secondary;
+      summaryController.text       = AddQuoteInputs.reference.summary;
+      urlController.text           = AddQuoteInputs.reference.urls.website;
+      wikiUrlController.text       = AddQuoteInputs.reference.urls.wikipedia;
     });
 
     super.initState();
@@ -151,13 +151,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
         imgUrl = '';
 
-        _affiliateUrlController.clear();
-        _nameController.clear();
-        _primaryTypeController.clear();
-        _secondaryTypeController.clear();
-        _summaryController.clear();
-        _urlController.clear();
-        _wikiUrlController.clear();
+        affiliateUrlController.clear();
+        nameController.clear();
+        primaryTypeController.clear();
+        secondaryTypeController.clear();
+        summaryController.clear();
+        urlController.clear();
+        wikiUrlController.clear();
       },
       child: Opacity(
         opacity: 0.6,
@@ -302,7 +302,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 400,
             child: TextField(
-              controller: _summaryController,
+              controller: summaryController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -330,7 +330,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _affiliateUrlController,
+              controller: affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.shopping_cart),
@@ -347,7 +347,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         SizedBox(
           width: 300,
           child: TextField(
-            controller: _wikiUrlController,
+            controller: wikiUrlController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.video_library),
@@ -365,7 +365,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _affiliateUrlController,
+              controller: affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.ondemand_video),
@@ -384,7 +384,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _urlController,
+              controller: urlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(IconsMore.earth),
@@ -401,7 +401,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         SizedBox(
           width: 300,
           child: TextField(
-            controller: _wikiUrlController,
+            controller: wikiUrlController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(IconsMore.wikipedia_w),
@@ -419,7 +419,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: _affiliateUrlController,
+              controller: affiliateUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.video_library),
@@ -443,7 +443,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         padding: const EdgeInsets.only(top: 10.0),
         child: TextField(
           autofocus: true,
-          controller: _nameController,
+          controller: nameController,
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             labelText: 'Name',
@@ -489,7 +489,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         child: Column(
           children: <Widget>[
             TextField(
-              controller: _primaryTypeController,
+              controller: primaryTypeController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: 'Primary type (TV Show, Movie, ...)',
@@ -503,7 +503,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             Padding(padding: const EdgeInsets.only(bottom: 10.0)),
 
             TextField(
-              controller: _secondaryTypeController,
+              controller: secondaryTypeController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: 'Secondary type (Horror, Thriller, ...)',

@@ -19,13 +19,13 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
 
   String comment = '';
 
-  final _commentController = TextEditingController();
-  final _commentFocusNode = FocusNode();
+  final commentController = TextEditingController();
+  final commentFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _commentController.text = AddQuoteInputs.comment;
+    commentController.text = AddQuoteInputs.comment;
   }
 
   @override
@@ -121,8 +121,8 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               minLines: 2,
               maxLines: null,
               autofocus: true,
-              controller: _commentController,
-              focusNode: _commentFocusNode,
+              controller: commentController,
+              focusNode: commentFocusNode,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -143,8 +143,8 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               FlatButton(
                 onPressed: () {
                   AddQuoteInputs.comment = '';
-                  _commentController.clear();
-                  _commentFocusNode.requestFocus();
+                  commentController.clear();
+                  commentFocusNode.requestFocus();
                 },
                 child: Opacity(
                   opacity: 0.6,

@@ -34,7 +34,7 @@ class _QuotidiansState extends State<Quotidians> {
   int limit           = 30;
   String selectedLang = 'en';
 
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
   bool isFabVisible = false;
 
   var lastDoc;
@@ -75,7 +75,7 @@ class _QuotidiansState extends State<Quotidians> {
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
           onPressed: () {
-            _scrollController.animateTo(
+            scrollController.animateTo(
               0.0,
               duration: Duration(seconds: 1),
               curve: Curves.easeOut,
@@ -172,7 +172,7 @@ class _QuotidiansState extends State<Quotidians> {
         return false;
       },
       child: CustomScrollView(
-        controller: _scrollController,
+        controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
             floating: true,

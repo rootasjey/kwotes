@@ -25,8 +25,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   bool isKeyHandled = false;
 
-  FocusNode _nameFocusNode;
-  FocusNode _clearFocusNode;
+  FocusNode nameFocusNode;
+  FocusNode clearFocusNode;
 
   List<String> langs = ['en', 'fr'];
 
@@ -35,8 +35,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   @override
   void initState() {
     super.initState();
-    _nameFocusNode = FocusNode();
-    _clearFocusNode = FocusNode();
+    nameFocusNode = FocusNode();
+    clearFocusNode = FocusNode();
 
     _nameController.text = AddQuoteInputs.quote.name;
     lang = AddQuoteInputs.quote.lang;
@@ -44,8 +44,8 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   @override
   void dispose() {
-    _nameFocusNode.dispose();
-    _clearFocusNode.dispose();
+    nameFocusNode.dispose();
+    clearFocusNode.dispose();
     super.dispose();
   }
 
@@ -122,11 +122,11 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           FlatButton(
-            focusNode: _clearFocusNode,
+            focusNode: clearFocusNode,
             onPressed: () {
               AddQuoteInputs.quote.name = '';
               _nameController.clear();
-              _nameFocusNode.requestFocus();
+              nameFocusNode.requestFocus();
             },
             child: Opacity(
               opacity: 0.6,
@@ -298,7 +298,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       child: TextField(
         maxLines: null,
         autofocus: true,
-        focusNode: _nameFocusNode,
+        focusNode: nameFocusNode,
         controller: _nameController,
         keyboardType: TextInputType.multiline,
         textCapitalization: TextCapitalization.sentences,

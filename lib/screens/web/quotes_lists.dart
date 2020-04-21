@@ -24,7 +24,7 @@ class _QuotesListsState extends State<QuotesLists> {
   bool hasNext        = true;
   int limit           = 10;
 
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
   bool isFabVisible = false;
 
   List<UserQuotesList> userQuotesLists = [];
@@ -48,7 +48,7 @@ class _QuotesListsState extends State<QuotesLists> {
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
           onPressed: () {
-            _scrollController.animateTo(
+            scrollController.animateTo(
               0.0,
               duration: Duration(seconds: 1),
               curve: Curves.easeOut,
@@ -101,7 +101,7 @@ class _QuotesListsState extends State<QuotesLists> {
         return false;
       },
       child: CustomScrollView(
-        controller: _scrollController,
+        controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
             floating: true,
