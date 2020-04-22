@@ -6,17 +6,22 @@ import 'package:url_launcher/url_launcher.dart';
 /// Sahre the target quote to twitter.
 Future shareTwitter({Quote quote}) async {
   final quoteName = quote.name;
-  final authorName = quote.author.name;
+  final authorName = quote.author?.name ?? '';
+  final referenceName = quote.mainReference?.name ?? '';
 
-  String quoteAndAuthor = '"$quoteName"';
+  String sharingText = quoteName;
 
   if (authorName.isNotEmpty) {
-    quoteAndAuthor += ' — $authorName';
+    sharingText += ' — $authorName';
+  }
+
+  if (referenceName != null && referenceName.length > 0) {
+    sharingText += ' — $referenceName';
   }
 
   final hashtags = '&hashtags=outofcontext';
 
-  final url = 'https://twitter.com/intent/tweet?via=outofcontextapp&text=$quoteAndAuthor$hashtags';
+  final url = 'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags';
   await launch(url);
 }
 
