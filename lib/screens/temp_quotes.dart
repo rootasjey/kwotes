@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/actions/delete_tempquote.dart';
+import 'package:memorare/actions/tempquotes.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
