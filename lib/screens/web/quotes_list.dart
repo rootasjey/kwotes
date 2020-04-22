@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/lists.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -334,7 +335,7 @@ class _QuoteListState extends State<QuotesList> {
 
       if (userAuth == null) {
         setState(() {
-          isLoading = true;
+          isLoading = false;
         });
 
         FluroRouter.router.navigateTo(context, SigninRoute);
@@ -466,29 +467,22 @@ class _QuoteListState extends State<QuotesList> {
       quotes.removeAt(index);
     });
 
-    try {
-      final userAuth = await userState.userAuth;
+    final success = await removeFromList(
+      context: context,
+      id: widget.listId,
+      quote: quote,
+    );
 
-      if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
-        return;
-      }
-
-      await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(widget.listId)
-        .collection('quotes')
-        .document(quote.id)
-        .delete();
-
-    } catch (error) {
-      debugPrint(error.toString());
-
+    if (!success) {
       setState(() {
         quotes.insert(index, quote);
       });
+
+      showSnack(
+        context: context,
+        message: "Sorry, could not remove the quote from your list. Please try again later.",
+        type: SnackType.error,
+      );
     }
   }
 }
