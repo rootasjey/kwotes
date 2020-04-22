@@ -6,6 +6,7 @@ import 'package:memorare/screens/favourites.dart';
 import 'package:memorare/screens/full_page_quotidian.dart';
 import 'package:memorare/screens/home.dart';
 import 'package:memorare/screens/quote_page.dart';
+import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
@@ -28,6 +29,10 @@ class MobileRouteHandlers {
   static Handler lists = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           QuotesLists());
+
+  static Handler list = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          QuotesList(id: params['id'][0],));
 
   static Handler quote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

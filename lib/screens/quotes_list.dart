@@ -1,396 +1,604 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/error.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/medium_quote_card.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/lists.dart';
+import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/loading_animation.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/pagination.dart';
-import 'package:memorare/types/quotes_list.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/types/quote.dart';
+import 'package:memorare/types/user_quotes_list.dart';
+import 'package:memorare/utils/snack.dart';
 
-class QuotesListScreen extends StatefulWidget {
+class QuotesList extends StatefulWidget {
   final String id;
-  final String name;
-  final String description;
 
-  QuotesListScreen({this.description, this.id, this.name});
+  QuotesList({this.id,});
 
   @override
-  _QuotesListScreenState createState() => _QuotesListScreenState();
+  _QuotesListState createState() => _QuotesListState();
 }
 
-class _QuotesListScreenState extends State<QuotesListScreen> {
-  QuotesList quotesList;
-
+class _QuotesListState extends State<QuotesList> {
+  bool descending     = true;
+  bool hasErrors      = false;
+  bool hasNext        = true;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
   bool isDeletingList = false;
-  bool isLoading = false;
-  bool isLoadingMoreQuotes = false;
-  bool hasErrors = false;
-  Error error;
+  int limit           = 10;
+
+  var lastDoc;
+  final scrollController = ScrollController();
+
+  List<Quote> quotes = [];
+  UserQuotesList quotesList;
 
   ScrollController listScrollController = ScrollController();
 
-  int order = 1;
-
-  Pagination pagination = Pagination();
-
-  String displayedName = '';
-  String displayedDescription = '';
-
-  String oldName = '';
-  String oldDescription = '';
-
   String updateListName = '';
-  String updateListDescription = '';
+  String updateListDesc = '';
+  bool updateListIsPublic   = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    setState(() {
-      displayedName = widget.name;
-      displayedDescription = widget.description;
-    });
-
-    fetchQuotes(widget.id);
+  initState() {
+    super.initState();
+    fetch();
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final accent = themeColor.accent;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'delete') {
-                showDeleteListDialog();
-                return;
-              }
-
-              if (value == 'edit') {
-                showEditListDialog();
-                return;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                value: 'delete',
-                child: ListTile(
-                  leading: Icon(Icons.delete),
-                  title: Text('Delete'),
-                )
-              ),
-              PopupMenuItem(
-                value: 'edit',
-                child: ListTile(
-                  leading: Icon(Icons.edit),
-                  title: Text('Edit'),
-                )
-              ),
-            ],
-          ),
-        ],
-        title: InkWell(
-          onTap: () {
-            if (quotesList == null || quotesList.quotes.length == 0) {
-              return;
-            }
-
-            listScrollController.animateTo(
-              0,
-              duration: Duration(seconds: 2),
-              curve: Curves.easeOutQuint,
-            );
-          },
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  displayedName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: accent,
-                    fontSize: 30.0,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Opacity(
-                  opacity: .6,
-                  child: Text(
-                    displayedDescription,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    )
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: accent,),
-        ),
-      ),
-      body: Builder(builder: (BuildContext context) {
-        if (!isLoading && hasErrors) {
-          return ErrorComponent(
-            description: error != null ? error.toString() : '',
-          );
-        }
-
-        if (isLoading) {
-          return LoadingComponent(
-            title: 'Loading the $displayedName list...',
-            padding: EdgeInsets.all(30.0),
-          );
-        }
-
-        if (quotesList.quotes.length == 0) {
-          return Center(
-            child: EmptyView(
-              title: 'Empty',
-              description: 'You have no quotes in this list yet.',
-            ),
-          );
-        }
-
-        if (isDeletingList == true) {
-          return LoadingComponent(
-            title: 'Deleting $displayedName list...',
-            padding: EdgeInsets.all(30.0),
-          );
-        }
-
-        List<Widget> quotesCards = [];
-
-        for (var i = 0; i < quotesList.quotes.length; i++) {
-          final quote = quotesList.quotes.elementAt(i);
-          quotesCards.add(
-            MediumQuoteCard(
-              quote: quote,
-              onRemove: () {
-                removeFromList(i);
-              },
-              onRemoveText: 'Remove from $displayedName',
-            ),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            await fetchQuotes(widget.id);
-            return null;
-          },
-          child: NotificationListener(
-            onNotification: (ScrollNotification scrollNotif) {
-              if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-                  return false;
-              }
-
-              if (pagination.hasNext && !isLoadingMoreQuotes) {
-                // fetchMoreLists();
-              }
-
-              return false;
-            },
-            child: ListView(
-              controller: listScrollController,
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
-              children: <Widget>[
-                ...quotesCards,
-              ],
-            ),
-          ),
-        );
-      }),
+      body: body(),
     );
   }
 
-  Future fetchQuotes(String id) {
+  Widget body() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+            return false;
+          }
+
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            appBar(),
+            bodyListContent(),
+          ],
+        ),
+      )
+    );
+  }
+
+  Widget appBar() {
+    return Observer(
+      builder: (_) {
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          expandedHeight: 120.0,
+          backgroundColor: stateColors.softBackground,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Stack(
+            children: <Widget>[
+              FadeInY(
+                delay: 1.0,
+                beginY: 50.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: FlatButton(
+                    onPressed: () {
+                      if (quotes.length == 0) { return; }
+
+                      scrollController.animateTo(
+                        0,
+                        duration: Duration(seconds: 2),
+                        curve: Curves.easeOutQuint
+                      );
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 60.0,
+                      child: Text(
+                        quotesList != null ?
+                          quotesList.name : 'Lists',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                right: 20.0,
+                top: 50.0,
+                child: PopupMenuButton(
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'delete':
+                        showDeleteListDialog();
+                        break;
+                      case 'edit':
+                        showEditListDialog();
+                        break;
+                      default:
+                    }
+                  },
+                  itemBuilder: (context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: ListTile(
+                        leading: Icon(Icons.delete_outline),
+                        title: Text('Delete'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Edit'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Positioned(
+                left: 20.0,
+                top: 50.0,
+                child: IconButton(
+                  onPressed: () {
+                    FluroRouter.router.pop(context);
+                  },
+                  tooltip: 'Back',
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget bodyListContent() {
+    if (isLoading) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            Padding(
+              padding: const EdgeInsets.only(top: 200.0),
+              child: LoadingAnimation(),
+            ),
+          ]
+        ),
+      );
+    }
+
+    if (!isLoading && hasErrors) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 150.0),
+            child: ErrorContainer(
+              onPressed: () {
+                fetch();
+              },
+            ),
+          ),
+        ]),
+      );
+    }
+
+    if (quotes.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child:
+              Container(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 80.0),
+                      child: Opacity(
+                        opacity: .8,
+                        child: Icon(
+                          Icons.chat_bubble_outline,
+                          size: 100.0,
+                          color: Color(0xFFFF005C),
+                        ),
+                      ),
+                    ),
+
+                    Opacity(
+                      opacity: .8,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 60.0),
+                        child: Text(
+                          'No quote yet',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                      child: Opacity(
+                        opacity: .6,
+                        child: Text(
+                          "You can add some from other pages" ,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return sliverQuotesList();
+  }
+
+  Widget sliverQuotesList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final quote = quotes.elementAt(index);
+          final topicColor = appTopicsColors.find(quote.topics.first);
+
+          return FadeInY(
+            beginY: 100.0,
+            delay: index * 1.0,
+            child: InkWell(
+              onTap: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  QuotePageRoute.replaceFirst(':id', quote.id),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(top: 20.0),),
+
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      quote.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+
+                  Center(
+                    child: IconButton(
+                      onPressed: () {
+                        showQuoteSheet(quote);
+                      },
+                      icon: Icon(
+                        Icons.more_horiz,
+                        color: topicColor != null ?
+                        Color(topicColor.decimal) : stateColors.primary,
+                      ),
+                    ),
+                  ),
+
+                  Padding(padding: const EdgeInsets.only(top: 10.0),),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        },
+        childCount: quotes.length,
+      ),
+    );
+  }
+
+  Future fetch() async {
     setState(() {
       isLoading = true;
     });
 
-    pagination = Pagination();
+    try {
+      quotes.clear();
+      final userAuth = await userState.userAuth;
 
-    return Queries.listById(
-      context: context,
-      id: id,
-      limit: pagination.limit,
-      order: order,
-      skip: pagination.skip,
-      )
-      .then((quotesListResp) {
+      if (userAuth == null) {
         setState(() {
-          quotesList = quotesListResp;
-          pagination = quotesListResp.pagination;
           isLoading = false;
         });
-      })
-      .catchError((err) {
+
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final docList = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .document(widget.id)
+        .get();
+
+      if (!docList.exists) {
+        showSnack(
+          context: context,
+          message: "This list doesn't' exist anymore",
+          type: SnackType.error,
+        );
+
+        FluroRouter.router.pop(context);
+        return;
+      }
+
+      final data = docList.data;
+      data['id'] = docList.documentID;
+      quotesList = UserQuotesList.fromJSON(data);
+
+      updateListIsPublic = quotesList.isPublic;
+
+      final collSnap = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .document(quotesList.id)
+        .collection('quotes')
+        .limit(limit)
+        .getDocuments();
+
+      if (collSnap.documents.isEmpty) {
         setState(() {
-          error = err;
+          hasNext = false;
           isLoading = false;
-          hasErrors = true;
         });
+
+        return;
+      }
+
+      collSnap.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
       });
+
+      setState(() {
+        hasNext = collSnap.documents.length == limit;
+        isLoading = false;
+      });
+
+    } catch (err) {
+      debugPrint(err.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
-  Future fetchMoreQuotes(String id) {
-    isLoadingMoreQuotes = true;
-
-    return Queries.listById(
-      context: context,
-      id: id,
-      limit: pagination.limit,
-      order: order,
-      skip: pagination.nextSkip,
-      )
-      .then((quotesListResp) {
-        setState(() {
-          quotesList.quotes.addAll(quotesListResp.quotes);
-          pagination = quotesListResp.pagination;
-          isLoadingMoreQuotes = false;
-        });
-      })
-      .catchError((err) {
-        isLoadingMoreQuotes = false;
-      });
-  }
-
-  void removeFromList(int index) {
-    final quote = quotesList.quotes.elementAt(index);
-
-    setState(() { // optimistic
-      quotesList.quotes.removeAt(index);
+  void fetchMore() async {
+    setState(() {
+      isLoadingMore = true;
     });
 
-    Mutations.removeFromList(context, widget.id, quote.id)
-      .then((booleanMessage) {
-        if (!booleanMessage.boolean) {
-          setState(() {
-            quotesList.quotes.insert(index, quote);
-          });
+    try {
+      final userAuth = await userState.userAuth;
 
-          Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: booleanMessage.message,
-          )..show(context);
-        }
-      })
-      .catchError((err) {
+      if (userAuth == null) {
         setState(() {
-            quotesList.quotes.insert(index, quote);
-          });
+          isLoadingMore = false;
+        });
 
-          Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: err != null ?
-              err.toString() :
-              'Could not remove the quote. Try again or contact us.',
-          )..show(context);
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final snapshot = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('lists')
+        .document(quotesList.id)
+        .collection('quotes')
+        .startAfterDocument(lastDoc)
+        .limit(limit)
+        .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
       });
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
+        isLoadingMore = false;
+      });
+
+    } catch (err) {
+      debugPrint(err.toString());
+
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
   }
 
   void showEditListDialog() {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final accent = themeColor.accent;
-
     updateListName = quotesList.name;
-    updateListDescription = quotesList.description;
+    updateListDesc = quotesList.description;
+    updateListIsPublic = quotesList.isPublic;
 
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text(
-            'Edit ${quotesList.name}',
-            overflow: TextOverflow.ellipsis,
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                labelStyle: TextStyle(color: accent),
-                hintText: quotesList.name,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: accent,
-                    width: 2.0
-                  ),
-                ),
+        return StatefulBuilder(
+          builder: (context, childSetState) {
+            return SimpleDialog(
+              title: Text(
+                'Edit ${quotesList.name}',
+                overflow: TextOverflow.ellipsis,
               ),
-              onChanged: (newValue) {
-                updateListName = newValue;
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 10.0),),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(color: accent),
-                hintText: updateListDescription,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: accent,
-                    width: 2.0
-                  ),
-                ),
-              ),
-              onChanged: (newValue) {
-                updateListDescription = newValue;
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 20.0),),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    updateListName = '';
-                    updateListDescription = '';
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Cancel',
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
+                  ),
+                  child: TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: TextStyle(color: stateColors.primary),
+                      hintText: quotesList.name,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: stateColors.primary,
+                          width: 2.0
+                        ),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      updateListName = newValue;
+                    },
                   ),
                 ),
 
-                RaisedButton(
-                  color: accent,
-                  onPressed: () {
-                    updateList();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 10.0,
                   ),
-                )
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: TextStyle(color: stateColors.primary),
+                      hintText: quotesList.description,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: stateColors.primary,
+                          width: 2.0
+                        ),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      updateListDesc = newValue;
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                        value: updateListIsPublic,
+                        onChanged: (newValue) {
+                          childSetState(() {
+                            updateListIsPublic = newValue;
+                          });
+                        },
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Opacity(
+                          opacity: .6,
+                          child: Text(
+                            'Is public?'
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Divider(height: 15.0,),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          updateListName = '';
+                          updateListDesc = '';
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Cancel',
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                      ),
+
+                      RaisedButton(
+                        color: stateColors.primary,
+                        onPressed: () {
+                          update();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Update',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
-            ),
-          ],
+            );
+          }
         );
       }
     );
@@ -432,8 +640,8 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             RaisedButton(
               color: ThemeColor.error,
               onPressed: () {
-                deleteList();
                 Navigator.of(context).pop();
+                delete();
               },
               child: Padding(
                 padding: EdgeInsets.all(10.0),
@@ -449,75 +657,135 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     );
   }
 
-  void deleteList() {
+  void showQuoteSheet(Quote quote) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 60.0,
+          ),
+          child: Wrap(
+            spacing: 30.0,
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              IconButton(
+                iconSize: 40.0,
+                tooltip: 'Delete',
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  removeQuote(quote);
+                },
+                icon: Opacity(
+                  opacity: .6,
+                  child: Icon(
+                    Icons.delete_outline,
+                  ),
+                ),
+              ),
+
+              IconButton(
+                iconSize: 40.0,
+                tooltip: 'Delete',
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  shareFromMobile(
+                    context: context,
+                    quote: quote,
+                  );
+                },
+                icon: Opacity(
+                  opacity: .6,
+                  child: Icon(
+                    Icons.share,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  void delete() async {
     setState(() {
       isDeletingList = true;
     });
 
-    Mutations.deleteList(context, widget.id)
-      .then((booleanMessage) {
-        if (booleanMessage.boolean) { // rollback
-          Navigator.of(context).pop();
-          return;
-        }
+    final success = await deleteList(
+      context: context,
+      id: widget.id,
+    );
 
-        Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            message: booleanMessage.message,
-          )..show(context);
-      })
-      .catchError((err) {
-        Flushbar(
-          duration: Duration(seconds: 3),
-          backgroundColor: ThemeColor.error,
-          message: err != null ?
-            err.toString() :
-            'Could not update your list. Try again later or contact us.',
-        )..show(context);
-      });
-  }
-
-  void updateList() {
     setState(() {
-      oldName = displayedName;
-      oldDescription = displayedDescription;
-
-      displayedName = updateListName;
-      displayedDescription = updateListDescription;
+      isDeletingList = false;
     });
 
-    Mutations.updateList(
-      context,
-      widget.id,
-      updateListName,
-      updateListDescription
-    ).then((resp) {
-      if (!resp.boolean) {
-        setState(() {
-          displayedName = oldName;
-          displayedDescription = oldDescription;
-        });
+    if (!success) {
+      showSnack(
+        context: context,
+        message: 'There was and issue while deleting the list. Try again later',
+        type: SnackType.error,
+      );
 
-        Flushbar(
-          duration: Duration(seconds: 3),
-          backgroundColor: ThemeColor.error,
-          message: resp.message,
-        )..show(context);
-      }
-    }).catchError((err) {
+      return;
+    }
+
+    Navigator.pop(context, true);
+  }
+
+  void removeQuote(Quote quote) async {
+    int index = quotes.indexOf(quote);
+
+    setState(() {
+      quotes.removeAt(index);
+    });
+
+    final success = await removeFromList(
+      context: context,
+      id: widget.id,
+      quote: quote,
+    );
+
+    if (!success) {
       setState(() {
-        displayedName = oldName;
-        displayedDescription = oldDescription;
+        quotes.insert(index, quote);
       });
 
-      Flushbar(
-          duration: Duration(seconds: 3),
-          backgroundColor: ThemeColor.error,
-          message: err != null ?
-            err.toString() :
-            'Could not update your list. Try again later or contact us.',
-        )..show(context);
+      showSnack(
+        context: context,
+        message: "Sorry, could not remove the quote from your list. Please try again later.",
+        type: SnackType.error,
+      );
+    }
+  }
+
+  void update() async {
+    final success = await updateList(
+      context     : context,
+      id          : widget.id,
+      name        : updateListName,
+      description : updateListDesc,
+      isPublic    : updateListIsPublic,
+      iconUrl     : quotesList.iconUrl,
+    );
+
+    if (!success){
+      showSnack(
+        context: context,
+        message: "Sorry, could not update your list. Please try again later.",
+        type: SnackType.error,
+      );
+
+      return;
+    }
+
+    setState(() {
+      quotesList.name = updateListName;
+      quotesList.description = updateListDesc;
+      quotesList.isPublic = updateListIsPublic;
     });
   }
 }
