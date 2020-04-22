@@ -23,8 +23,8 @@ Future shareTwitter({Quote quote}) async {
 void shareFromMobile({Quote quote, BuildContext context}) {
   final RenderBox box = context.findRenderObject();
   final quoteName = quote.name;
-  final authorName = quote.author.name;
-  final referenceName = quote.mainReference.name;
+  final authorName = quote.author?.name ?? '';
+  final referenceName = quote.mainReference?.name ?? '';
 
   String sharingText = quoteName;
 
