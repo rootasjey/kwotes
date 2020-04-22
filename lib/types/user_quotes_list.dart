@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserQuotesList {
   final DateTime createdAt;
   String description;
-  final String iconUrl;
+  String iconUrl;
   final String id;
   String name;
   bool isPublic;
