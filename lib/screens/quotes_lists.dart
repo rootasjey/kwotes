@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/lists.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -61,7 +62,7 @@ class _QuotesListsState extends State<QuotesLists> {
             onPressed: () => showCreateListDialog(),
             child: Icon(Icons.add),
             backgroundColor: stateColors.primary,
-            foregroundColor: stateColors.foreground,
+            foregroundColor: Colors.white,
           );
         },
       ),
@@ -274,11 +275,17 @@ class _QuotesListsState extends State<QuotesLists> {
             height: 120.0,
             child: Card(
               child: InkWell(
-                onTap: () {
-                  FluroRouter.router.navigateTo(
+                onTap: () async {
+                  final mustRefresh = await FluroRouter.router.navigateTo(
                     context,
                     ListRoute.replaceFirst(':id', quoteList.id),
                   );
+
+                  if (mustRefresh == null) { return; }
+
+                  if (mustRefresh) {
+                    fetch();
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
@@ -441,7 +448,7 @@ class _QuotesListsState extends State<QuotesLists> {
                       newDescription = newValue;
                     },
                     onSubmitted: (_) {
-                      createList();
+                      create();
                       Navigator.of(context).pop();
                     },
                   ),
@@ -499,7 +506,7 @@ class _QuotesListsState extends State<QuotesLists> {
                       RaisedButton(
                         color: stateColors.primary,
                         onPressed: () {
-                          createList();
+                          create();
                           Navigator.of(context).pop();
                         },
                         child: Text(
@@ -714,48 +721,28 @@ class _QuotesListsState extends State<QuotesLists> {
   // |_ Silent widget functions
   // --------------------------
 
-  void createList() async {
-    try {
-      final userAuth = await userState.userAuth;
+  void create() async {
+    final quotesList = await createList(
+      context: context,
+      name: newName,
+      description: newDescription,
+      iconUrl: newIconUrl,
+      isPublic: newIsPublic,
+    );
 
-      if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
-        return;
-      }
-
-      final docRef = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .add({
-          'createdAt'   : DateTime.now(),
-          'description' : newDescription,
-          'name'        : newName,
-          'iconUrl'     : newIconUrl,
-          'isPublic'    : newIsPublic,
-          'updatedAt'   : DateTime.now(),
-        });
-
-      final doc = await docRef.get();
-
-      final data = doc.data;
-      data['id'] = doc.documentID;
-
-      final quoteList = UserQuotesList.fromJSON(data);
-
-      setState(() {
-        userQuotesLists.add(quoteList);
-      });
-
-    } catch (error) {
-      debugPrint(error.toString());
-
+    if (quotesList == null) {
       showSnack(
         context: context,
         message: 'There was and issue while creating the list. Try again later',
         type: SnackType.error,
       );
+
+      return;
     }
+
+    setState(() {
+      userQuotesLists.add(quotesList);
+    });
   }
 
   void deleteList(UserQuotesList quoteList) async {
