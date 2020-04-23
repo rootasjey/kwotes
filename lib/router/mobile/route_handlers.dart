@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/all_topics.dart';
+import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/favourites.dart';
 import 'package:memorare/screens/full_page_quotidian.dart';
@@ -14,6 +15,10 @@ import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/topic_page.dart';
 
 class MobileRouteHandlers {
+  static Handler addQuote = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AddQuote());
+
   static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AuthorPage(id: params['id'][0]));
