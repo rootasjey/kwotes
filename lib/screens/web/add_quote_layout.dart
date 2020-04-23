@@ -98,15 +98,13 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         children: <Widget>[
           AppIconHeader(),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 0.0),
-            child: Text(
-              'Your quote has been successfully proposed!',
-              style: TextStyle(
-                fontSize: 22.0,
-              ),
+          Text(
+            'Your quote has been successfully proposed!',
+            style: TextStyle(
+              fontSize: 22.0,
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Opacity(
@@ -149,7 +147,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                     onTap: () {
                       FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
                     },
-                  ):
+                  ) :
                   navCard(
                     icon: Icon(Icons.home, size: 40.0,),
                     title: 'Home',
@@ -278,6 +276,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
       }
 
       final user = await Firestore.instance
@@ -292,6 +291,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       });
 
     } catch (error) {
+      debugPrint(error.toString());
       isCheckingAuth = false;
       FluroRouter.router.navigateTo(context, SigninRoute);
     }
