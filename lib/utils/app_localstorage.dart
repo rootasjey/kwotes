@@ -40,6 +40,24 @@ class AppLocalStorage {
     _localStorage.setString('strBrightness', strBrightness);
   }
 
+  void saveDraft({String draftString}) {
+    List<String> drafts = _localStorage.getStringList('drafts') ?? [];
+    drafts.clear();
+
+    drafts.add(draftString);
+    _localStorage.setStringList('drafts', drafts);
+  }
+
+  void clearDrafts() {
+    List<String> drafts = [];
+    _localStorage.setStringList('drafts', drafts);
+  }
+
+  List<String> getDrafts() {
+    List<String> drafts = _localStorage.getStringList('drafts') ?? [];
+    return drafts;
+  }
+
   void saveEmail(String email) => _localStorage.setString('email', email);
   void saveLang(String lang) => _localStorage.setString('lang', lang);
 
@@ -49,12 +67,15 @@ class AppLocalStorage {
   }
 
   void saveQuotidiansLang(String lang) => _localStorage.setString('quotidians_lang', lang);
+
   String getQuotidiansLang() => _localStorage.getString('quotidians_lang') ?? 'en';
 
   void saveUserName(String userName) => _localStorage.setString('username', userName);
+
   String getUserName() => _localStorage.getString('username') ?? '';
 
   void saveUserUid(String userName) => _localStorage.setString('user_uid', userName);
+
   String getUserUid() => _localStorage.getString('user_uid') ?? '';
 
   Future clearUserAuthData() async {
