@@ -20,14 +20,12 @@ class AddQuoteComment extends StatefulWidget {
 }
 
 class _AddQuoteCommentState extends State<AddQuoteComment> {
-  String comment = '';
-
-  final _commentController = TextEditingController();
+  final commentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _commentController.text = AddQuoteInputs.comment;
+    commentController.text = AddQuoteInputs.comment;
   }
 
   @override
@@ -99,14 +97,13 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
           child: SizedBox(
             width: 300.0,
             child: TextField(
-              controller: _commentController,
+              controller: commentController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Add a comment about the quote'
               ),
               onChanged: (newValue) {
-                comment = newValue;
                 AddQuoteInputs.comment = newValue;
               },
             ),
@@ -120,7 +117,8 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
             children: <Widget>[
               FlatButton(
                 onPressed: () {
-                  _commentController.clear();
+                  AddQuoteInputs.comment = '';
+                  commentController.clear();
                 },
                 child: Opacity(
                   opacity: 0.6,
@@ -196,7 +194,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- Comment is optional',
+                    '• Comment is optional',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
@@ -205,7 +203,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- Use it if you want to specify the context, the hidden meaning of the quote or something related',
+                    '• Use it if you want to specify the context, the hidden meaning of the quote or something related',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
