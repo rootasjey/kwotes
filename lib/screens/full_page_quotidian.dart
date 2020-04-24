@@ -77,22 +77,20 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
         // userSection(),
 
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 200.0),
-            child: FlatButton(
-              onPressed: () {
-                FluroRouter.router.navigateTo(context, HomeRoute);
-              },
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: stateColors.primary),
-                borderRadius: BorderRadius.circular(2.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text('Home'),
-              ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 200.0),
+          child: MaterialButton(
+            onPressed: () {
+              FluroRouter.router.navigateTo(context, HomeRoute);
+            },
+            color: stateColors.primary,
+            textColor: Colors.white,
+            child: Icon(
+              Icons.close,
+              size: 36,
             ),
+            padding: EdgeInsets.all(16),
+            shape: CircleBorder(),
           ),
         ),
       ],
