@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gql/language.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/models/http_clients.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/types/topic_color.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AddQuoteTopics extends StatefulWidget {
   final int maxSteps;
@@ -25,32 +27,26 @@ class AddQuoteTopics extends StatefulWidget {
 }
 
 class _AddQuoteTopicsState extends State<AddQuoteTopics> {
-  List<String> topics = [];
-  List<String> sampleTopics = [];
+  List<TopicColor> selectedTopics = [];
+  List<TopicColor> allTopics = [];
 
-  TextEditingController _textEditingController = TextEditingController();
+  final beginY    = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
+
+  TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
-    setState(() {
-      topics.addAll(AddQuoteInputs.quote.topics);
-    });
-
     super.initState();
-  }
 
-  @override
-  void didChangeDependencies() {
-    if (sampleTopics.length > 0) { return; }
+    if (selectedTopics.length == 0) {
+      populateSelectedTopics();
+    }
 
-    fetchSampleTopics()
-      .then((sampleResults) {
-        setState(() {
-          sampleTopics = sampleResults;
-        });
-      });
-
-    super.didChangeDependencies();
+    if (allTopics.length == 0) {
+      fetchTopics();
+     }
   }
 
   @override
@@ -69,23 +65,19 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   Widget content() {
-    final themeColor = Provider.of<ThemeColor>(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         header(),
 
-        textInput(themeColor),
+        if (selectedTopics.length == 0)
+          emptyTopics(),
 
-        if (topics.length == 0)
-          emptyTopics(themeColor),
+        if (selectedTopics.length > 0)
+          selectedTopicsSection(),
 
-        if (topics.length > 0)
-          addedTopics(themeColor),
-
-        if (sampleTopics.length > 0)
-          sampleTopicsSection(themeColor),
+        if (allTopics.length > 0)
+          allTopicsSection(),
 
         helpButton(),
       ],
@@ -119,171 +111,191 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget textInput(ThemeColor themeColor) {
-    final color = themeColor.accent;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 40.0,
-        right: 40.0,
-        bottom: 40.0,
-        top: 80.0,
-      ),
-      child: RawKeyboardListener(
-        focusNode: FocusNode(),
-        onKey: (event) {
-          final keyId = event.logicalKey.keyId;
-
-          if (keyId == 4295426088 || keyId == 32 || keyId == 54 || keyId == 44) {
-            final text = _textEditingController.text.trim();
-
-            if (text.length == 0) {
-              return;
-            }
-
-            onAddTopic(text);
-            _textEditingController.clear();
-          }
-        },
-        child: TextField(
-          keyboardType: TextInputType.multiline,
-          controller: _textEditingController,
-          textInputAction: TextInputAction.go,
-          decoration: InputDecoration(
-            hintText: 'Add a new topic',
-            border: OutlineInputBorder(),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: color,
-                width: 2.0,
-              )
+  Widget emptyTopics() {
+    return FadeInY(
+      delay: delay + (1 * delayStep),
+      beginY: beginY,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 60.0,
+          left: 20.0,
+          right: 20.0,
+        ),
+        child: Opacity(
+          opacity: .6,
+          child: Text(
+            'You have not added any topic yet.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18.0,
             ),
           ),
-          onChanged: (value) {
-            if (value.endsWith(',') || value.endsWith(';') || value.endsWith(' ')) {
-              final computed = value.trim().replaceAll(',', '').replaceAll(';', '');
-              onAddTopic(computed);
-              _textEditingController.clear();
-            }
-          },
-          onSubmitted: (value) {
-            onAddTopic(value);
-            _textEditingController.clear();
-          },
-        ),
-      )
-    );
-  }
-
-  Widget emptyTopics(ThemeColor themeColor) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
-      child: Text(
-        'You have not added any topic yet.',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18.0,
-          color: themeColor.background,
         ),
       ),
     );
   }
 
-  Widget addedTopics(ThemeColor themeColor) {
-    return Column(
-      children: <Widget>[
-        Wrap(
-          children: topics.map<Widget>((topic) {
-            return Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Chip(
-                backgroundColor: ThemeColor.topicColor(topic),
-                padding: EdgeInsets.all(5.0),
-                label: Text(topic, style: TextStyle(color: Colors.white),),
-                deleteIconColor: Colors.white,
-                onDeleted: () {
-                  setState(() {
-                    topics.removeWhere((entry) => entry == topic);
-                  });
+  Widget selectedTopicsSection() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 50.0,
+      ),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 200.0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: selectedTopics.length,
+              itemBuilder: (context, index) {
+                final topicColor = selectedTopics.elementAt(index);
+                final name = topicColor.name;
 
-                  AddQuoteInputs.quote.topics.clear();
-                  AddQuoteInputs.quote.topics.addAll(topics);
-                },
-              ),
-            );
-          }).toList(),
-        ),
+                return FadeInY(
+                  beginY: 100.0,
+                  endY: 0.0,
+                  delay: index * 1.0,
+                  child: TopicCardColor(
+                    onColorTap: () {
+                      setState(() {
+                        allTopics.add(topicColor);
+                        selectedTopics.remove(topicColor);
+                      });
 
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: FlatButton(
-            padding: EdgeInsets.all(10.0),
-            onPressed: () {
-              setState(() {
-                AddQuoteInputs.clearTopics();
-                topics.clear();
-              });
-            },
-            child: Text(
-              'Clear all topics',
-              style: TextStyle(
-                color: themeColor.background,
+                      AddQuoteInputs.quote.topics
+                        .removeWhere((element) => element == topicColor.name);
+                    },
+                    size: 100.0,
+                    elevation: 6.0,
+                    color: Color(topicColor.decimal),
+                    name: name,
+                    displayName: name,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          FadeInY(
+            beginY: 50.0,
+            child: FlatButton(
+              padding: EdgeInsets.all(10.0),
+              onPressed: () {
+                setState(() {
+                  AddQuoteInputs.clearTopics();
+                  selectedTopics.clear();
+
+                  allTopics.clear();
+                  allTopics.addAll(appTopicsColors.topicsColors);
+                });
+              },
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Clear all topics',
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget sampleTopicsSection(ThemeColor themeColor) {
+  Widget allTopicsSection() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
-          Divider(height: 60.0,),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: Text(
-              'Sample topics',
-              style: TextStyle(
-                fontSize: 22.0,
+          ControlledAnimation(
+            duration: 1.seconds,
+            delay: 1.seconds,
+            tween: Tween(begin: 0.0, end: 500.0),
+            builder: (_, value) {
+              return SizedBox(
+                width: value,
+                child: Divider(height: 80.0,),
+              );
+            },
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (2 * delayStep),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Text(
+                'All topics',
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
               ),
             ),
           ),
 
-          Text(
-            'Select some of the following sample topics to categorize the quote.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: themeColor.background,
-              fontSize: 20.0,
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-            child: Wrap(
-              children: sampleTopics.map<Widget>((topic) {
-                return Padding(
-                  padding: EdgeInsets.only(right: 5.0),
-                  child: ActionChip(
-                    padding: EdgeInsets.all(5.0),
-                    label: Text(topic),
-                    onPressed: () {
-                      setState(() {
-                        topics.add(topic);
-                        sampleTopics.removeWhere((entry) => entry == topic);
-                      });
-
-                      AddQuoteInputs.quote.topics.clear();
-                      AddQuoteInputs.quote.topics.addAll(topics);
-                    },
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (3 * delayStep),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Select some of the available topics to categorize the quote.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 17.0,
                   ),
-                );
-              }).toList(),
+                ),
+              ),
             ),
           ),
+
+          Observer(builder: (context) {
+            if (allTopics.length == 0) {
+              allTopics.addAll(appTopicsColors.topicsColors);
+            }
+
+            return SizedBox(
+              height: 200.0,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: allTopics.length,
+                itemBuilder: (context, index) {
+                  final topicColor = allTopics.elementAt(index);
+                  final name = topicColor.name;
+
+                  return FadeInY(
+                    beginY: 100.0,
+                    endY: 0.0,
+                    delay: index * 1.0,
+                    child: TopicCardColor(
+                      onColorTap: () {
+                        setState(() {
+                          selectedTopics.add(topicColor);
+                          allTopics.remove(topicColor);
+                        });
+
+                        AddQuoteInputs.quote.topics.add(topicColor.name);
+                      },
+                      size: 80.0,
+                      elevation: 6.0,
+                      color: Color(topicColor.decimal),
+                      name: name,
+                      displayName: name,
+                      style: TextStyle(
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -382,51 +394,19 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  void onAddTopic(String topic) {
-    if (topic == null || topic.length == 0) {
-      return;
-    }
-
-    if (topics.contains(topic)) { return; }
-
+  void fetchTopics() {
     setState(() {
-      topics.add(topic);
+      allTopics = appTopicsColors.topicsColors.sublist(0);
     });
-
-    AddQuoteInputs.quote.topics.clear();
-    AddQuoteInputs.quote.topics.addAll(topics);
   }
 
-  Future<List<String>> fetchSampleTopics() {
-    List<String> sampleResults = [];
-
-    final client = Provider.of<HttpClientsModel>(context).defaultClient;
-
-    final String randomTopics = """
-      query {
-        randomTopics
-      }
-    """;
-
-    return client.value.query(
-      QueryOptions(
-        documentNode: parseString(randomTopics),
-      )
-    ).then((queryResult) {
-      if (queryResult.hasException) {
-        return sampleResults;
-      }
-
-      final Map<String, dynamic> json = queryResult.data;
-
-      for (var topic in json['randomTopics']) {
-        sampleResults.add(topic);
-      }
-
-      return sampleResults;
-
-    }).catchError((error) {
-      return sampleResults;
+  void populateSelectedTopics() {
+    AddQuoteInputs.quote.topics.forEach((topicName) {
+      selectedTopics.add(
+        appTopicsColors.find(topicName)
+      );
     });
+
+    setState(() {});
   }
 }
