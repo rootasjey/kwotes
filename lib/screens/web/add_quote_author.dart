@@ -190,14 +190,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       onPressed: () {
         AddQuoteInputs.clearAuthor();
 
-        AddQuoteInputs.author.urls.image = '';
-
         affiliateUrlController.clear();
         nameController.clear();
         summaryController.clear();
         jobController.clear();
         urlController.clear();
         wikiController.clear();
+
+        setState(() {});
 
         _nameFocusNode.requestFocus();
       },
