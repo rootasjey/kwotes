@@ -552,7 +552,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- Reference information are optional',
+                    '• Reference information are optional',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
@@ -561,7 +561,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- If you select the reference\'s name in the dropdown list, other fields can stay empty',
+                    '• If you select the reference\'s name in the dropdown list, other fields can stay empty',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
