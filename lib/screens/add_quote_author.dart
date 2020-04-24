@@ -374,11 +374,16 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       onPressed: () {
         AddQuoteInputs.clearAuthor();
 
+        amazonUrlController.clear();
+        facebookUrlController.clear();
+        jobController.clear();
         nameController.clear();
         summaryController.clear();
-        jobController.clear();
+        twitchUrlController.clear();
+        twitterUrlController.clear();
         websiteUrlController.clear();
         wikiUrlController.clear();
+        youTubeUrlController.clear();
 
         setState(() {});
       },
