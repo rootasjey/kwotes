@@ -9,12 +9,16 @@ class TopicCardColor extends StatelessWidget {
   final String name;
   final double size;
   final TextStyle style;
+  final Function onColorTap;
+  final Function onTextTap;
 
   TopicCardColor({
     this.color,
     this.displayName = '',
     this.elevation = 1.0,
     this.name = '',
+    this.onColorTap,
+    this.onTextTap,
     this.size = 70.0,
     this.style,
   });
@@ -36,6 +40,11 @@ class TopicCardColor extends StatelessWidget {
               color: color,
               child: InkWell(
                 onTap: () {
+                  if (onColorTap != null) {
+                    onColorTap();
+                    return;
+                  }
+
                   FluroRouter.router.navigateTo(
                     context,
                     TopicRoute.replaceFirst(':name', name)
@@ -49,11 +58,14 @@ class TopicCardColor extends StatelessWidget {
             padding: const EdgeInsets.only(top: 5.0),
             child: Opacity(
               opacity: .5,
-              child: Text(
-                displayName != null && displayName.length > 0 ?
-                  displayName : name,
-                overflow: TextOverflow.ellipsis,
-                style: style,
+              child: InkWell(
+                onTap: onTextTap,
+                child: Text(
+                  displayName != null && displayName.length > 0 ?
+                    displayName : name,
+                  overflow: TextOverflow.ellipsis,
+                  style: style,
+                ),
               ),
             ),
           ),
