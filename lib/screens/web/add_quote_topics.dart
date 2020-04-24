@@ -7,12 +7,10 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -89,8 +87,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   Widget body() {
-    final themeColor = Provider.of<ThemeColor>(context);
-
     return SizedBox(
       width: 500.0,
       child: RawKeyboardListener(
@@ -105,10 +101,10 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             ),
 
             selectedTopics.length == 0 ?
-              emptyTopics(themeColor) :
-              selectedTopicsSection(themeColor),
+              emptyTopics() :
+              selectedTopicsSection(),
 
-            sampleTopicsSection(themeColor),
+            sampleTopicsSection(),
 
             AddQuoteNavButtons(
               onPrevPressed: () => FluroRouter.router.pop(context),
@@ -120,7 +116,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget emptyTopics(ThemeColor themeColor) {
+  Widget emptyTopics() {
     return FadeInY(
       delay: delay + (1 * delayStep),
       beginY: beginY,
@@ -207,7 +203,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget sampleTopicsSection(ThemeColor themeColor) {
+  Widget sampleTopicsSection() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -298,7 +294,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget selectedTopicsSection(ThemeColor themeColor) {
+  Widget selectedTopicsSection() {
     double index = 0.0;
 
     return Padding(
@@ -344,7 +340,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                     selectedTopics.clear();
 
                     sampleTopics.clear();
-                    sampleTopics.addAll(ThemeColor.topicsColors);
+                    sampleTopics.addAll(appTopicsColors.topicsColors);
                   });
                 },
                 child: Opacity(
