@@ -183,10 +183,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   Widget quoteName({double screenWidth}) {
     return GestureDetector(
       onTap: () {
-        // FluroRouter.router.navigateTo(
-        //   context,
-        //   QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
-        // );
+        FluroRouter.router.navigateTo(
+          context,
+          QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
+        );
       },
       child: createHeroQuoteAnimation(
         isMobile: true,
