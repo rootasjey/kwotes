@@ -146,6 +146,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               },
               child: Text(
                 quotidian.quote.author.name,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
