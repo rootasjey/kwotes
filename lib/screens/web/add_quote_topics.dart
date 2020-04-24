@@ -24,7 +24,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   final delay     = 1.0;
   final delayStep = 1.2;
 
-  List<TopicColor> sampleTopics = [];
+  List<TopicColor> allTopics = [];
   List<TopicColor> selectedTopics = [];
 
   FocusNode keyboardFocusNode;
@@ -104,7 +104,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               emptyTopics() :
               selectedTopicsSection(),
 
-            sampleTopicsSection(),
+            allTopicsSection(),
 
             AddQuoteNavButtons(
               onPrevPressed: () => FluroRouter.router.pop(context),
@@ -203,7 +203,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget sampleTopicsSection() {
+  Widget allTopicsSection() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -252,8 +252,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           Observer(builder: (context) {
             int factor = 1;
 
-            if (sampleTopics.length == 0) {
-              sampleTopics.addAll(appTopicsColors.topicsColors);
+            if (allTopics.length == 0) {
+              allTopics.addAll(appTopicsColors.topicsColors);
 
             } else { factor = 0; }
 
@@ -263,7 +263,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
               child: Wrap(
-                children: sampleTopics.map<Widget>((topic) {
+                children: allTopics.map<Widget>((topic) {
                   index++;
 
                   return FadeInY(
@@ -277,7 +277,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                         onPressed: () {
                           setState(() {
                             selectedTopics.add(topic);
-                            sampleTopics.remove(topic);
+                            allTopics.remove(topic);
                           });
 
                           AddQuoteInputs.quote.topics.add(topic.name);
@@ -316,7 +316,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                   deleteIconColor: Colors.white,
                   onDeleted: () {
                     setState(() {
-                      sampleTopics.add(topic);
+                      allTopics.add(topic);
                       selectedTopics.remove(topic);
                     });
 
@@ -339,8 +339,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                     AddQuoteInputs.clearTopics();
                     selectedTopics.clear();
 
-                    sampleTopics.clear();
-                    sampleTopics.addAll(appTopicsColors.topicsColors);
+                    allTopics.clear();
+                    allTopics.addAll(appTopicsColors.topicsColors);
                   });
                 },
                 child: Opacity(
