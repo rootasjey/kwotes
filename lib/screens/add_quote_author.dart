@@ -287,7 +287,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               controller: twitchUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.ondemand_video),
+                prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/twitch.png',
+                  ),
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
+                ),
                 labelText: 'Twitch'
               ),
               onChanged: (newValue) {
@@ -305,7 +316,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               controller: twitterUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(IconsMore.twitter),
+                prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/twitter.png',
+                  ),
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
+                ),
                 labelText: 'Twitter'
               ),
               onChanged: (newValue) {
@@ -321,7 +343,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             controller: youTubeUrlController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.video_library),
+              prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/youtube.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
               labelText: 'YouTube'
             ),
             onChanged: (newValue) {
@@ -338,7 +371,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               controller: facebookUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(IconsMore.facebook),
+                prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 6.0,),
+                  child: Image.asset(
+                    'assets/images/facebook.png',
+                  ),
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
+                ),
                 labelText: 'Facebook'
               ),
               onChanged: (newValue) {
@@ -356,7 +397,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               controller: amazonUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.shopping_cart),
+                prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 6.0,),
+                  child: Image.asset(
+                    'assets/images/amazon.png',
+                  ),
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
+                ),
                 labelText: 'Amazon'
               ),
               onChanged: (newValue) {

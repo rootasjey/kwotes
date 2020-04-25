@@ -344,7 +344,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: amazonUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.shopping_cart),
+                prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/amazon.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
                 labelText: 'Amazon'
               ),
               onChanged: (newValue) {
@@ -362,7 +373,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: facebookUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(IconsMore.facebook),
+                prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/facebook.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
                 labelText: 'Facebook'
               ),
               onChanged: (newValue) {
@@ -378,7 +400,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             controller: twitterUrlController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              prefixIcon: Icon(IconsMore.twitter),
+              prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/twitter.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
               labelText: 'Twitter'
             ),
             onChanged: (newValue) {
@@ -395,7 +428,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: twitchUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.ondemand_video),
+                prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/twitch.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
                 labelText: 'Twitch'
               ),
               onChanged: (newValue) {
@@ -413,7 +457,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: netflixUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.video_label),
+                prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/netflix.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
                 labelText: 'Netflix'
               ),
               onChanged: (newValue) {
@@ -431,7 +486,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: primeVideoUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.personal_video),
+                prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/prime-video.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
                 labelText: 'Prime Video'
               ),
               onChanged: (newValue) {
@@ -449,7 +515,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               controller: youTubeUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.video_library),
+                prefixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 6.0,
+                  end: 3.0,
+                ),
+                child: Image.asset(
+                  'assets/images/youtube.png',
+                ),
+              ),
+              prefixIconConstraints: BoxConstraints(
+                maxWidth: 36.0,
+              ),
                 labelText: 'YouTube'
               ),
               onChanged: (newValue) {
