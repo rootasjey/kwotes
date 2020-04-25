@@ -60,7 +60,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            content(),
+            body(),
             backButton(),
             forwardButton(),
           ],
@@ -69,7 +69,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  Widget content() {
+  Widget body() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -162,7 +162,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 25.0),
+              padding: EdgeInsets.only(top: 45.0),
               child: Text(
                 'Add author',
                 style: TextStyle(
@@ -447,7 +447,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget backButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       left: 10.0,
       child: Opacity(
         opacity: 0.6,
@@ -465,7 +465,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget forwardButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       right: 10.0,
       child: Opacity(
         opacity: 0.6,

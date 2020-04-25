@@ -55,7 +55,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            content(),
+            body(),
             backButton(),
             forwardButton(),
           ],
@@ -64,7 +64,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget content() {
+  Widget body() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -88,7 +88,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 25.0),
+          padding: EdgeInsets.only(top: 45.0),
           child: Text(
             'Add topics',
             style: TextStyle(
@@ -303,7 +303,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   Widget backButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       left: 10.0,
       child: Opacity(
         opacity: 0.6,
@@ -321,7 +321,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   Widget forwardButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       right: 10.0,
       child: Opacity(
         opacity: 0.6,

@@ -25,24 +25,45 @@ class _AddQuoteLastStepState extends State<AddQuoteLastStep> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        content(),
+        body(),
         backButton(),
       ],
     );
   }
 
-  Widget content() {
+  Widget body() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        sendComponent(),
+        header(),
+
+        Padding(
+          padding: EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+            top: 100.0,
+            bottom: 80.0,
+          ),
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Alright! \n\n If you are satisfied with the quote you provided, you can now propose it to moderators',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24.0,
+              ),
+            ),
+          )
+        ),
+
+        buttons(),
       ],
     );
   }
 
   Widget backButton() {
     return Positioned(
-      top: 30.0,
+      top: 50.0,
       left: 10.0,
       child: Opacity(
         opacity: 0.6,
@@ -58,12 +79,58 @@ class _AddQuoteLastStepState extends State<AddQuoteLastStep> {
     );
   }
 
-  Widget sendComponent() {
+  Widget buttons() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+
+            if (widget.onPropose != null) {
+              widget.onPropose();
+            }
+          },
+          color: ThemeColor.success,
+          child: Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Text(
+              'Propose',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+              ),
+            ),
+          )
+        ),
+
+        Padding(padding: const EdgeInsets.only(top: 20.0)),
+
+        FlatButton(
+          onPressed: () {
+            if (widget.onPreviousStep != null) {
+              FocusScope.of(context).requestFocus(FocusNode());
+              widget.onSaveDraft();
+            }
+          },
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Save draft',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget header() {
+    return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 25.0),
+          padding: EdgeInsets.only(top: 65.0),
           child: Text(
             'Last step!',
             style: TextStyle(
@@ -72,6 +139,7 @@ class _AddQuoteLastStepState extends State<AddQuoteLastStep> {
             ),
           ),
         ),
+
         Opacity(
           opacity: 0.6,
           child: Text(
@@ -81,63 +149,6 @@ class _AddQuoteLastStepState extends State<AddQuoteLastStep> {
               fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 60.0),
-          child: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Alright! \n If you are satisfied with the data you provided, you can now propose your quote to moderators.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24.0,
-              ),
-            ),
-          )
-        ),
-
-        Column(
-          children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                FocusScope.of(context).requestFocus(FocusNode());
-
-                if (widget.onPropose != null) {
-                  widget.onPropose();
-                }
-              },
-              color: ThemeColor.success,
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text(
-                  'Validate',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
-                ),
-              )
-            ),
-
-            FlatButton(
-              onPressed: () {
-                if (widget.onPreviousStep != null) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  widget.onSaveDraft();
-                }
-              },
-              child: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  'Save draft',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            )
-          ],
         ),
       ],
     );

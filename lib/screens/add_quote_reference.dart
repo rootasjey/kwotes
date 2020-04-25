@@ -67,7 +67,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            content(),
+            body(),
             backButton(),
             forwardButton(),
           ],
@@ -76,7 +76,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget content() {
+  Widget body() {
     final themeColor = Provider.of<ThemeColor>(context);
 
     return Column(
@@ -103,7 +103,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 25.0),
+              padding: EdgeInsets.only(top: 45.0),
               child: Text(
                 'Add reference',
                 style: TextStyle(
@@ -571,7 +571,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget backButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       left: 10.0,
       child: Opacity(
         opacity: 0.6,
@@ -589,7 +589,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget forwardButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       right: 10.0,
       child: Opacity(
         opacity: 0.6,

@@ -34,7 +34,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            content(),
+            body(),
             backButton(),
             forwardButton(),
           ],
@@ -43,7 +43,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
     );
   }
 
-  Widget content() {
+  Widget body() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -63,7 +63,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 25.0),
+              padding: EdgeInsets.only(top: 45.0),
               child: Text(
                 'Add comment',
                 style: TextStyle(
@@ -136,7 +136,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
 
   Widget backButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       left: 10.0,
       child: Opacity(
         opacity: 0.6,
@@ -154,7 +154,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
 
   Widget forwardButton() {
     return Positioned(
-      top: 10.0,
+      top: 30.0,
       right: 10.0,
       child: Opacity(
         opacity: 0.6,
