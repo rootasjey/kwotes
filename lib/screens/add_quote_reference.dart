@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/types/colors.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,10 @@ class AddQuoteReference extends StatefulWidget {
   final int maxSteps;
   final Function onNextStep;
   final Function onPreviousStep;
+
+  final beginY    = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
 
   AddQuoteReference({
     Key key,
@@ -25,6 +30,10 @@ class AddQuoteReference extends StatefulWidget {
 class _AddQuoteReferenceState extends State<AddQuoteReference> {
   String tempImgUrl = '';
   List<String> langs = ['en', 'fr'];
+
+  final beginY    = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
 
   final amazonUrlController     = TextEditingController();
   final facebookUrlController   = TextEditingController();
@@ -102,26 +111,34 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 45.0),
-              child: Text(
-                'Add reference',
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
+            FadeInY(
+              delay: delay + (1 * delayStep),
+              beginY: beginY,
+              child: Padding(
+                padding: EdgeInsets.only(top: 45.0),
+                child: Text(
+                  'Add reference',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ],
         ),
 
-        Opacity(
-          opacity: 0.6,
-          child: Text(
-            '${widget.step}/${widget.maxSteps}',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+        FadeInY(
+          delay: delay + (2 * delayStep),
+          beginY: beginY,
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              '${widget.step}/${widget.maxSteps}',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         )
@@ -132,82 +149,90 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget avatar() {
     final imageUrl = AddQuoteInputs.reference.urls.image;
 
-    return Padding(
-      padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
-      child: InkWell(
-        onTap: () {
-          return showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Image URL'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusDirectional.all(Radius.circular(5.0)),
-                ),
-                content: TextField(
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: imageUrl.length > 0 ? imageUrl : 'Type a new URL',
+    return FadeInY(
+        delay: delay + (3 * delayStep),
+        beginY: beginY,
+        child: Padding(
+        padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
+        child: InkWell(
+          onTap: () {
+            return showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Image URL'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusDirectional.all(Radius.circular(5.0)),
                   ),
-                  onChanged: (newValue) {
-                    tempImgUrl = newValue;
-                  },
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Cancel', style: TextStyle(color: ThemeColor.error),),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+                  content: TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: imageUrl.length > 0 ? imageUrl : 'Type a new URL',
+                    ),
+                    onChanged: (newValue) {
+                      tempImgUrl = newValue;
                     },
                   ),
-                  FlatButton(
-                    child: Text('Save',),
-                    onPressed: () {
-                      setState(() {
-                        AddQuoteInputs.reference.urls.image = tempImgUrl;
-                      });
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Cancel', style: TextStyle(color: ThemeColor.error),),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Save',),
+                      onPressed: () {
+                        setState(() {
+                          AddQuoteInputs.reference.urls.image = tempImgUrl;
+                        });
 
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            }
-          );
-        },
-        child: imageUrl.length > 0 ?
-        Card(
-          child: Image.network(
-            imageUrl,
-            height: 250.0,
-            width: 200.0,
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              }
+            );
+          },
+          child: imageUrl.length > 0 ?
+          Card(
+            child: Image.network(
+              imageUrl,
+              height: 250.0,
+              width: 200.0,
+            ),
+          ) :
+          Card(
+            child: SizedBox(
+              height: 250.0,
+              width: 200.0,
+              child: Icon(Icons.add, size: 50.0,),
+            ),
           ),
-        ) :
-        Card(
-          child: SizedBox(
-            height: 250.0,
-            width: 200.0,
-            child: Icon(Icons.add, size: 50.0,),
-          ),
-        ),
-      )
+        )
+      ),
     );
   }
 
   Widget nameField() {
-    return SizedBox(
-      width: 200.0,
-      child: TextField(
-        controller: nameController,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          labelText: 'Name',
+    return FadeInY(
+      delay: delay + (4 * delayStep),
+      beginY: beginY,
+      child: SizedBox(
+        width: 200.0,
+        child: TextField(
+          controller: nameController,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+            labelText: 'Name',
+          ),
+          onChanged: (newValue) {
+            AddQuoteInputs.reference.name = newValue;
+          },
         ),
-        onChanged: (newValue) {
-          AddQuoteInputs.reference.name = newValue;
-        },
       ),
     );
   }
@@ -215,30 +240,39 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget typesFields() {
     return Column(
       children: <Widget>[
-        SizedBox(
-          width: 200.0,
-          child: TextField(
-            controller: primaryTypeController,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: 'Primary type',
+        FadeInY(
+          delay: delay + (5 * delayStep),
+          beginY: beginY,
+          child: SizedBox(
+            width: 200.0,
+            child: TextField(
+              controller: primaryTypeController,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: 'Primary type',
+              ),
+              onChanged: (newValue) {
+                AddQuoteInputs.reference.type.primary = newValue;
+              },
             ),
-            onChanged: (newValue) {
-              AddQuoteInputs.reference.type.primary = newValue;
-            },
           ),
         ),
-        SizedBox(
-          width: 200.0,
-          child: TextField(
-            controller: secondaryTypeController,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: 'Ssecondary type',
+
+        FadeInY(
+          delay: delay + (6 * delayStep),
+          beginY: beginY,
+          child: SizedBox(
+            width: 200.0,
+            child: TextField(
+              controller: secondaryTypeController,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: 'Ssecondary type',
+              ),
+              onChanged: (newValue) {
+                AddQuoteInputs.reference.type.secondary = newValue;
+              },
             ),
-            onChanged: (newValue) {
-              AddQuoteInputs.reference.type.secondary = newValue;
-            },
           ),
         ),
       ],
@@ -248,50 +282,58 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget langAndSummary(ThemeColor themeColor) {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 20.0),
-          child: DropdownButton<String>(
-            value: AddQuoteInputs.reference.lang,
-            style: TextStyle(
-              color: themeColor.accent,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+        FadeInY(
+          delay: delay + (7 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: DropdownButton<String>(
+              value: AddQuoteInputs.reference.lang,
+              style: TextStyle(
+                color: themeColor.accent,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+              underline: Container(
+                color: themeColor.accent,
+                height: 2.0,
+              ),
+              onChanged: (newValue) {
+                setState(() {
+                  AddQuoteInputs.reference.lang = newValue;
+                });
+              },
+              items: langs.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem(
+                  value: value,
+                  child: Text(value.toUpperCase()),
+                );
+              }).toList(),
             ),
-            underline: Container(
-              color: themeColor.accent,
-              height: 2.0,
-            ),
-            onChanged: (newValue) {
-              setState(() {
-                AddQuoteInputs.reference.lang = newValue;
-              });
-            },
-            items: langs.map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(value.toUpperCase()),
-              );
-            }).toList(),
           ),
         ),
 
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 50.0),
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: summaryController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Summary',
-                alignLabelWithHint: true,
+        FadeInY(
+          delay: delay + (8 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 50.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: summaryController,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Summary',
+                  alignLabelWithHint: true,
+                ),
+                minLines: 4,
+                maxLines: null,
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.summary= newValue;
+                },
               ),
-              minLines: 4,
-              maxLines: null,
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.summary= newValue;
-              },
             ),
           ),
         ),
@@ -302,236 +344,271 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget links() {
     return Column(
       children: <Widget>[
-        SizedBox(
-          width: 300,
-          child: TextField(
-            controller: wikiUrlController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(IconsMore.wikipedia_w),
-              labelText: 'Wikipedia'
-            ),
-            onChanged: (newValue) {
-              AddQuoteInputs.reference.urls.wikipedia = newValue;
-            },
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
+        FadeInY(
+          delay: delay + (9 * delayStep),
+          beginY: beginY,
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: websiteUrlController,
+              controller: wikiUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(IconsMore.earth),
-                labelText: 'Website'
+                prefixIcon: Icon(IconsMore.wikipedia_w),
+                labelText: 'Wikipedia'
               ),
               onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.website = newValue;
+                AddQuoteInputs.reference.urls.wikipedia = newValue;
               },
             ),
           ),
         ),
 
-
-        Padding(
-          padding: const EdgeInsets.only(top: 25.0),
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: amazonUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+        FadeInY(
+          delay: delay + (10 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: websiteUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconsMore.earth),
+                  labelText: 'Website'
                 ),
-                child: Image.asset(
-                  'assets/images/amazon.png',
-                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.website = newValue;
+                },
               ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
-              ),
-                labelText: 'Amazon'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.amazon = newValue;
-              },
             ),
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: facebookUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+        FadeInY(
+          delay: delay + (11 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: amazonUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/amazon.png',
+                  ),
                 ),
-                child: Image.asset(
-                  'assets/images/facebook.png',
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
                 ),
+                  labelText: 'Amazon'
+                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.amazon = newValue;
+                },
               ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
-              ),
-                labelText: 'Facebook'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.facebook = newValue;
-              },
             ),
           ),
         ),
 
-        SizedBox(
-          width: 300,
-          child: TextField(
-            controller: twitterUrlController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+        FadeInY(
+          delay: delay + (12 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: facebookUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/facebook.png',
+                  ),
                 ),
-                child: Image.asset(
-                  'assets/images/twitter.png',
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
                 ),
+                  labelText: 'Facebook'
+                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.facebook = newValue;
+                },
               ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
-              ),
-              labelText: 'Twitter'
             ),
-            onChanged: (newValue) {
-              AddQuoteInputs.reference.urls.twitter = newValue;
-            },
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.only(top: 45.0),
+        FadeInY(
+          delay: delay + (13 * delayStep),
+          beginY: beginY,
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: twitchUrlController,
+              controller: twitterUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/twitter.png',
+                  ),
                 ),
-                child: Image.asset(
-                  'assets/images/twitch.png',
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
                 ),
-              ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
-              ),
-                labelText: 'Twitch'
+                labelText: 'Twitter'
               ),
               onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.twitch = newValue;
+                AddQuoteInputs.reference.urls.twitter = newValue;
               },
             ),
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: netflixUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+        FadeInY(
+          delay: delay + (14 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 45.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: twitchUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/twitch.png',
+                  ),
                 ),
-                child: Image.asset(
-                  'assets/images/netflix.png',
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
                 ),
+                  labelText: 'Twitch'
+                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.twitch = newValue;
+                },
               ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
-              ),
-                labelText: 'Netflix'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.netflix = newValue;
-              },
             ),
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0.0),
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: primeVideoUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+        FadeInY(
+          delay: delay + (15 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: netflixUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/netflix.png',
+                  ),
                 ),
-                child: Image.asset(
-                  'assets/images/prime-video.png',
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
                 ),
+                  labelText: 'Netflix'
+                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.netflix = newValue;
+                },
               ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
-              ),
-                labelText: 'Prime Video'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.primeVideo = newValue;
-              },
             ),
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: youTubeUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 6.0,
-                  end: 3.0,
+        FadeInY(
+          delay: delay + (16 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: primeVideoUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/prime-video.png',
+                  ),
                 ),
-                child: Image.asset(
-                  'assets/images/youtube.png',
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
                 ),
+                  labelText: 'Prime Video'
+                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.primeVideo = newValue;
+                },
               ),
-              prefixIconConstraints: BoxConstraints(
-                maxWidth: 36.0,
+            ),
+          ),
+        ),
+
+        FadeInY(
+          delay: delay + (17 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: SizedBox(
+              width: 300,
+              child: TextField(
+                controller: youTubeUrlController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 6.0,
+                    end: 3.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/youtube.png',
+                  ),
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: 36.0,
+                ),
+                  labelText: 'YouTube'
+                ),
+                onChanged: (newValue) {
+                  AddQuoteInputs.reference.urls.youTube = newValue;
+                },
               ),
-                labelText: 'YouTube'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.youTube = newValue;
-              },
             ),
           ),
         ),
