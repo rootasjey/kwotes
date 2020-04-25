@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/state/colors.dart';
 
 class AddQuoteContent extends StatefulWidget {
   final int maxSteps;
@@ -27,20 +27,22 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   List<String> langs = ['en', 'fr'];
 
-  final _nameController = TextEditingController();
+  final nameController = TextEditingController();
+
+  final beginY    = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
 
   @override
   void initState() {
     super.initState();
 
-    _nameController.text = AddQuoteInputs.quote.name;
+    nameController.text = AddQuoteInputs.quote.name;
     lang = AddQuoteInputs.quote.lang;
   }
 
   @override
   Widget build(BuildContext context) {
-    final accent = Provider.of<ThemeColor>(context).accent;
-
     return ListView(
       children: <Widget>[
         Stack(
@@ -50,57 +52,24 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
               children: <Widget>[
                 header(),
 
-                Padding(
-                  padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 40.0),
-                  child: TextField(
-                    maxLines: null,
-                    autofocus: true,
-                    controller: _nameController,
-                    keyboardType: TextInputType.multiline,
-                    textCapitalization: TextCapitalization.sentences,
-                    onChanged: (newValue) {
-                      name = newValue;
-                      AddQuoteInputs.quote.name = newValue;
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Type your quote there',
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: accent,
-                          width: 2.0,
-                        )
-                      ),
-                    ),
-                  ),
-                ),
+                textInput(),
+
+                langSelect(),
 
                 Padding(
-                  padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
+                  padding: const EdgeInsets.only(
+                    top: 50.0,
+                    left: 10.0,
+                    right: 10.0,
+                  ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          AddQuoteInputs.quote.name = '';
-                          _nameController.clear();
-                        },
-                        child: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Clear quote content',
-                          ),
-                        )
-                      ),
+                      saveDraftButton(),
+                      helpButton(),
                     ],
                   ),
                 ),
-
-                langSelect(accent),
-
-                saveDraftButton(),
-
-                helpButton(),
               ],
             ),
 
@@ -115,24 +84,32 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   Widget header() {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 45.0),
-          child: Text(
-            'Add content',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
+        FadeInY(
+          delay: delay + (1 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.only(top: 45.0),
+            child: Text(
+              'Add content',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
 
-        Opacity(
-          opacity: 0.6,
-          child: Text(
-            '${widget.step}/${widget.maxSteps}',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+        FadeInY(
+          delay: delay + (2 * delayStep),
+          beginY: beginY,
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              '${widget.step}/${widget.maxSteps}',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         )
@@ -140,30 +117,34 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget langSelect(Color color) {
-    return DropdownButton<String>(
-      value: lang,
-      style: TextStyle(
-        color: color,
-        fontSize: 20.0,
-        fontWeight: FontWeight.bold,
+  Widget langSelect() {
+    return FadeInY(
+      delay: delay + (5 * delayStep),
+      beginY: beginY,
+      child: DropdownButton<String>(
+        value: lang,
+        style: TextStyle(
+          color: stateColors.primary,
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ),
+        underline: Container(
+          height: 2.0,
+          color: stateColors.primary,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            lang = newValue;
+            AddQuoteInputs.quote.lang = newValue;
+          });
+        },
+        items: langs.map<DropdownMenuItem<String>>((value) {
+          return DropdownMenuItem(
+            value: value,
+            child: Text(value.toUpperCase()),
+          );
+        }).toList(),
       ),
-      underline: Container(
-        height: 2.0,
-        color: color,
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          lang = newValue;
-          AddQuoteInputs.quote.lang = newValue;
-        });
-      },
-      items: langs.map<DropdownMenuItem<String>>((value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value.toUpperCase()),
-        );
-      }).toList(),
     );
   }
 
@@ -202,113 +183,206 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   }
 
   Widget saveDraftButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: FlatButton(
-        padding: EdgeInsets.all(10.0),
-        onPressed: () {
-          if (widget.onNextStep != null) {
-            widget.onSaveDraft();
-          }
-        },
-        child: Opacity(
-          opacity: 0.6,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.save),
-              ),
-              Text('Save to drafts'),
-            ],
+    return Column(
+      children: <Widget>[
+        MaterialButton(
+          onPressed: () {
+            if (widget.onSaveDraft != null) {
+              widget.onSaveDraft();
+            }
+          },
+          color: stateColors.primary,
+          textColor: Colors.white,
+          child: Icon(
+            Icons.save_alt,
+            size: 32,
           ),
-        )
-      ),
+          padding: EdgeInsets.all(16),
+          shape: CircleBorder(),
+        ),
+
+        Opacity(
+          opacity: 0.6,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Text('Save to drafts'),
+          ),
+        ),
+      ],
     );
   }
 
   Widget helpButton() {
-    return IconButton(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return ListView(
-              padding: EdgeInsets.all(40.0),
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(bottom: 40.0),
-                  child: Text(
-                    'Help',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25.0,
-                    ),
-                  ),
-                ),
+    return FadeInY(
+      delay: delay + (7 * delayStep),
+      beginY: beginY,
+      child: Column(
+        children: <Widget>[
+          MaterialButton(
+            onPressed: () {
+              showHelpSheet();
+            },
+            color: stateColors.primary,
+            textColor: Colors.white,
+            child: Icon(
+              Icons.help_outline,
+              size: 32,
+            ),
+            padding: EdgeInsets.all(16),
+            shape: CircleBorder(),
+          ),
 
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    '- Only the quote\'s content is required for submission',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
+          Opacity(
+            opacity: 0.6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text('Help'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showHelpSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ListView(
+          padding: EdgeInsets.all(40.0),
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(bottom: 40.0),
+              child: Text(
+                'Help',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25.0,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    '- Your quote should be short (<200 characters), catchy and memorable',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                '• Only the quote\'s content is required for submission',
+                style: TextStyle(
+                  fontSize: 17.0,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    '- Quotes with a reference are preferred. A reference can be a movie, a book, a song, a game or from any cultural material',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                '• Your quote should be short (<200 characters), catchy and memorable',
+                style: TextStyle(
+                  fontSize: 17.0,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    '- The moderators can reject, remove or modify your quotes without notice, before or after validation',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                '• Quotes with a reference are preferred. A reference can be a movie, a book, a song, a game or from any cultural material',
+                style: TextStyle(
+                  fontSize: 17.0,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    '- Explicit, offensive and disrespectful words and ideas can be rejected',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                '• The moderators can reject, remove or modify your quotes without notice, before or after validation',
+                style: TextStyle(
+                  fontSize: 17.0,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    '- Long press the green validation button (with a check mark) at any step to save your quote in drafts',
-                    style: TextStyle(
-                      fontSize: 17.0,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                '• Explicit, offensive and disrespectful words and ideas can be rejected',
+                style: TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                '• Long press the green validation button (with a check mark) at any step to save your quote in drafts',
+                style: TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Widget textInput() {
+    return Column(
+      children: <Widget>[
+        FadeInY(
+          delay: delay + (3 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 40.0,
+              right: 40.0,
+              top: 100.0,
+            ),
+            child: TextField(
+              maxLines: null,
+              autofocus: true,
+              controller: nameController,
+              keyboardType: TextInputType.multiline,
+              textCapitalization: TextCapitalization.sentences,
+              onChanged: (newValue) {
+                name = newValue;
+                AddQuoteInputs.quote.name = newValue;
+              },
+              decoration: InputDecoration(
+                hintText: 'Type your quote there',
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: stateColors.primary,
+                    width: 2.0,
+                  )
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        FadeInY(
+          delay: delay + (4 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.only(right: 25.0, bottom: 60.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    AddQuoteInputs.quote.name = '';
+                    nameController.clear();
+                  },
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      'Clear quote content',
                     ),
-                  ),
+                  )
                 ),
               ],
-            );
-          }
-        );
-      },
-      icon: Icon(Icons.help),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
