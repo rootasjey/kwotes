@@ -102,7 +102,7 @@ class About extends StatelessWidget {
             launch('https://icons8.com');
           },
           child: Text(
-            '• https://icons8.com',
+            '• Icons8',
             style: TextStyle(
               fontSize: 20.0,
             ),
@@ -117,7 +117,22 @@ class About extends StatelessWidget {
             launch('https://orioniconlibrary.com');
           },
           child: Text(
-            '• https://orioniconlibrary.com',
+            '• Orion Icon Librairy',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+      ),
+
+      Opacity(
+        opacity: .6,
+        child: FlatButton(
+          onPressed: () {
+            launch('https://www.flaticon.com/authors/pixel-perfect');
+          },
+          child: Text(
+            '• Pixel Perfect',
             style: TextStyle(
               fontSize: 20.0,
             ),

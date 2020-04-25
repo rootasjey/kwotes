@@ -70,6 +70,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/api.json
+    - assets/images/amazon.png
     - assets/images/app-icon-32.png
     - assets/images/app-icon-512.png
     - assets/images/app-icon-64.png
@@ -79,6 +80,7 @@ flutter:
     - assets/images/delete-user-light.png
     - assets/images/employee-dark.png
     - assets/images/employee-light.png
+    - assets/images/facebook.png
     - assets/images/lady-light.png
     - assets/images/lady-dark.png
     - assets/images/layers-dark.png
@@ -86,15 +88,22 @@ flutter:
     - assets/images/lock-dark.png
     - assets/images/lock-light.png
     - assets/images/jeje-profile.jpg
+    - assets/images/netflix.png
     - assets/images/page-not-found-4.png
+    - assets/images/prime-video.png
     - assets/images/profile-dark.png
     - assets/images/profile-light.png
     - assets/images/textbook-dark.png
     - assets/images/textbook-light.png
+    - assets/images/twitch.png
+    - assets/images/twitter.png
     - assets/images/user-dark.png
     - assets/images/user-light.png
     - assets/images/write-email-dark.png
     - assets/images/write-email-light.png
+    - assets/images/wikipedia-dark.png
+    - assets/images/wikipedia-light.png
+    - assets/images/youtube.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
