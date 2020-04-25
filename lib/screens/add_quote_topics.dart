@@ -87,23 +87,32 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   Widget header() {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 45.0),
-          child: Text(
-            'Add topics',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
+        FadeInY(
+          delay: delay + (1 * delayStep),
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.only(top: 45.0),
+            child: Text(
+              'Add topics',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-        Opacity(
-          opacity: 0.6,
-          child: Text(
-            '${widget.step}/${widget.maxSteps}',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+
+        FadeInY(
+          delay: delay + (2 * delayStep),
+          beginY: beginY,
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              '${widget.step}/${widget.maxSteps}',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         )
@@ -117,7 +126,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       beginY: beginY,
       child: Padding(
         padding: EdgeInsets.only(
-          top: 60.0,
+          top: 80.0,
           left: 20.0,
           right: 20.0,
         ),
@@ -361,7 +370,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- Topics should be in english plain words',
+                    '• Topics should be in english plain words',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
@@ -370,7 +379,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- Topics are used to categorize the quote',
+                    '• Topics are used to categorize the quote',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
@@ -379,7 +388,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    '- Already used topics are preferred',
+                    '• Already used topics are preferred',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
