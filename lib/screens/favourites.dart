@@ -168,9 +168,7 @@ class _FavouritesState extends State<Favourites> {
           Padding(
             padding: const EdgeInsets.only(top: 150.0),
             child: ErrorContainer(
-              onPressed: () {
-                fetch();
-              },
+              onRefresh: () => fetch(),
             ),
           ),
         ]),

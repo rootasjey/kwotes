@@ -3,10 +3,10 @@ import 'package:memorare/state/colors.dart';
 
 class ErrorContainer extends StatelessWidget {
   final String message;
-  final Function onPressed;
+  final Function onRefresh;
 
   ErrorContainer({
-    this.onPressed,
+    this.onRefresh,
     this.message = 'Oops! There was an error.',
   });
 
@@ -32,7 +32,7 @@ class ErrorContainer extends StatelessWidget {
           ),
 
           FlatButton(
-            onPressed: onPressed,
+            onPressed: onRefresh,
             shape: RoundedRectangleBorder(
               side: BorderSide(color: stateColors.primary),
               borderRadius: BorderRadius.circular(2.0),

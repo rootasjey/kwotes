@@ -173,9 +173,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           Padding(
             padding: const EdgeInsets.only(top: 150.0),
             child: ErrorContainer(
-              onPressed: () {
-                fetch();
-              },
+              onRefresh: () => fetch(),
             ),
           ),
         ]),

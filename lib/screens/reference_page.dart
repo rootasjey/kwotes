@@ -108,7 +108,7 @@ class ReferencePageState extends State<ReferencePage> {
                   padding: const EdgeInsets.only(top: 150.0),
                   child: ErrorContainer(
                     message: 'Oops! There was an error while loading the reference',
-                    onPressed: () => fetch(),
+                    onRefresh: () => fetch(),
                   ),
                 ) :
                 refBody(),
