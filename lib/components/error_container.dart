@@ -19,11 +19,14 @@ class ErrorContainer extends StatelessWidget {
           Icon(Icons.sentiment_neutral, size: 40.0),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-            child: Text(
-              message,
-              style: TextStyle(
-                fontSize: 20.0,
+            padding: const EdgeInsets.symmetric(vertical: 60.0),
+            child: Opacity(
+              opacity: .8,
+              child: Text(
+                message,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
               ),
             ),
           ),
