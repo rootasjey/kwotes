@@ -198,7 +198,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   Widget referenceName() {
     return GestureDetector(
       onTap: () {
-        final id = quotidian.quote.author.id;
+        final id = quotidian.quote.mainReference.id;
 
         FluroRouter.router.navigateTo(
           context,
