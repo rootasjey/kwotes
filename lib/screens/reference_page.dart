@@ -32,8 +32,8 @@ class ReferencePageState extends State<ReferencePage> {
   final double beginY = 100.0;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     fetchReference();
   }
 
@@ -104,8 +104,12 @@ class ReferencePageState extends State<ReferencePage> {
           Stack(
             children: <Widget>[
               reference == null ?
-                ErrorContainer(
-                  message: 'Oops! There was an error while loading a reference',
+                Padding(
+                  padding: const EdgeInsets.only(top: 150.0),
+                  child: ErrorContainer(
+                    message: 'Oops! There was an error while loading the reference',
+                    onPressed: () => fetchReference(),
+                  ),
                 ) :
                 refBody(),
 
