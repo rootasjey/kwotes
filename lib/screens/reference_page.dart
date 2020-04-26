@@ -34,7 +34,7 @@ class ReferencePageState extends State<ReferencePage> {
   @override
   void initState() {
     super.initState();
-    fetchReference();
+    fetch();
   }
 
   @override
@@ -108,7 +108,7 @@ class ReferencePageState extends State<ReferencePage> {
                   padding: const EdgeInsets.only(top: 150.0),
                   child: ErrorContainer(
                     message: 'Oops! There was an error while loading the reference',
-                    onPressed: () => fetchReference(),
+                    onPressed: () => fetch(),
                   ),
                 ) :
                 refBody(),
@@ -395,7 +395,7 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  void fetchReference() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
