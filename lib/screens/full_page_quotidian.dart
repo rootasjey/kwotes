@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -53,7 +54,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     return ListView(
       children: <Widget>[
         SizedBox(
-          height: MediaQuery.of(context).size.height - 50.0,
+          height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: EdgeInsets.all(20.0),
             child: Column(
@@ -63,19 +64,19 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   screenWidth: MediaQuery.of(context).size.width,
                 ),
 
-                animatedDivider(),
+                authorDivider(),
 
                 authorName(),
-
-                if (quotidian.quote.mainReference?.name != null &&
-                  quotidian.quote.mainReference.name.length > 0)
-                  referenceName(),
               ],
             ),
           ),
         ),
 
         // userSection(),
+
+        if (quotidian.quote.mainReference?.name != null &&
+          quotidian.quote.mainReference.name.length > 0)
+          referenceName(),
 
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 200.0),
@@ -97,7 +98,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget animatedDivider() {
+  Widget authorDivider() {
     final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
     final color = topicColor != null ?
       Color(topicColor.decimal) :
@@ -195,34 +196,78 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget referenceName() {
+    return GestureDetector(
+      onTap: () {
+        final id = quotidian.quote.author.id;
+
+        FluroRouter.router.navigateTo(
+          context,
+          ReferenceRoute.replaceFirst(':id', id)
+        );
+      },
+      child: Column(
+        children: <Widget>[
+          referenceDivider(),
+
+          FadeInY(
+            beginY: 100.0,
+            delay: 1.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Reference',
+                ),
+              ),
+            ),
+          ),
+
+          FadeInY(
+            beginY: 100.0,
+            delay: 1.2,
+            child: SizedBox(
+              width: 100.0,
+              child: Divider(),
+            ),
+          ),
+
+          FadeInY(
+            beginY: 100.0,
+            delay: 1.4,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 30.0,
+                bottom: 60.0,
+              ),
+              child: Opacity(
+                opacity: .8,
+                child: Text(
+                  quotidian.quote.mainReference.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          referenceDivider(),
+        ],
+      ),
+    );
+  }
+
+  Widget referenceDivider() {
+    final width = MediaQuery.of(context).size.width;
+
     return ControlledAnimation(
       delay: 2.seconds,
       duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 0.6),
-      child: GestureDetector(
-        onTap: () {
-          final id = quotidian.quote.author.id;
-
-          FluroRouter.router.navigateTo(
-            context,
-            ReferenceRoute.replaceFirst(':id', id)
-          );
-        },
-        child: Text(
-          quotidian.quote.mainReference.name,
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-      builderWithChild: (context, child, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          )
-        );
+      tween: Tween(begin: 0.0, end: width),
+      builder: (_, value) {
+        return Divider(thickness: 2.0,);
       },
     );
   }
