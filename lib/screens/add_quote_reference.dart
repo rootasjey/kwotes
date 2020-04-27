@@ -47,7 +47,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   final primaryTypeController   = TextEditingController();
   final websiteUrlController    = TextEditingController();
   final wikiUrlController       = TextEditingController();
-  final youTubeUrlController    = TextEditingController();
+  final youtubeUrlController    = TextEditingController();
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       summaryController.text        = AddQuoteInputs.reference.summary;
       websiteUrlController.text     = AddQuoteInputs.reference.urls.website;
       wikiUrlController.text        = AddQuoteInputs.reference.urls.wikipedia;
-      youTubeUrlController.text     = AddQuoteInputs.reference.urls.youTube;
+      youtubeUrlController.text     = AddQuoteInputs.reference.urls.youtube;
     });
 
     super.initState();
@@ -588,7 +588,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             child: SizedBox(
               width: 300,
               child: TextField(
-                controller: youTubeUrlController,
+                controller: youtubeUrlController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   prefixIcon: Padding(
@@ -606,7 +606,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   labelText: 'YouTube'
                 ),
                 onChanged: (newValue) {
-                  AddQuoteInputs.reference.urls.youTube = newValue;
+                  AddQuoteInputs.reference.urls.youtube = newValue;
                 },
               ),
             ),
@@ -633,7 +633,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         twitterUrlController.clear();
         websiteUrlController.clear();
         wikiUrlController.clear();
-        youTubeUrlController.clear();
+        youtubeUrlController.clear();
 
         setState(() {});
       },

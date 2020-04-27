@@ -9,7 +9,7 @@ class Urls {
   String twitter;
   String website;
   String wikipedia;
-  String youTube;
+  String youtube;
 
   Urls({
     this.affiliate  = '',
@@ -22,7 +22,7 @@ class Urls {
     this.twitter    = '',
     this.website    = '',
     this.wikipedia  = '',
-    this.youTube    = '',
+    this.youtube    = '',
   });
 
   factory Urls.fromJSON(Map<String, dynamic> json) {
@@ -37,7 +37,7 @@ class Urls {
       twitter     : json['twitter']     ?? '',
       website     : json['website']     ?? '',
       wikipedia   : json['wikipedia']   ?? '',
-      youTube     : json['youTube']     ?? '',
+      youtube     : json['youtube']     ?? '',
     );
   }
 }

@@ -112,7 +112,7 @@ Future<bool> saveDraft({
           'twitter'   : AddQuoteInputs.author.urls.twitter,
           'website'   : AddQuoteInputs.author.urls.website,
           'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          'youTube'   : AddQuoteInputs.author.urls.youTube,
+          'youtube'   : AddQuoteInputs.author.urls.youtube,
         }
       },
       'comments'      : comments,
@@ -189,7 +189,7 @@ Future<bool> saveOfflineDraft({
           'twitter'   : AddQuoteInputs.author.urls.twitter,
           'website'   : AddQuoteInputs.author.urls.website,
           'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          'youTube'   : AddQuoteInputs.author.urls.youTube,
+          'youtube'   : AddQuoteInputs.author.urls.youtube,
         }
       },
       'comments'      : comments,

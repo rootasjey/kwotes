@@ -49,7 +49,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       summaryController.text        = AddQuoteInputs.reference.summary;
       websiteUrlController.text     = AddQuoteInputs.reference.urls.website;
       wikiUrlController.text        = AddQuoteInputs.reference.urls.wikipedia;
-      youtubeUrlController.text     = AddQuoteInputs.reference.urls.youTube;
+      youtubeUrlController.text     = AddQuoteInputs.reference.urls.youtube;
     });
 
     super.initState();
@@ -430,7 +430,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 labelText: 'YouTube URL'
               ),
               onChanged: (newValue) {
-                AddQuoteInputs.reference.urls.youTube = newValue;
+                AddQuoteInputs.reference.urls.youtube = newValue;
               },
             ),
           ),

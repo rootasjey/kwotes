@@ -31,7 +31,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final twitterUrlController    = TextEditingController();
   final urlController           = TextEditingController();
   final wikiController          = TextEditingController();
-  final ytUrlController         = TextEditingController();
+  final youtubeUrlController    = TextEditingController();
 
   final _nameFocusNode = FocusNode();
 
@@ -47,7 +47,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       twitterUrlController.text     = AddQuoteInputs.author.urls.twitter;
       urlController.text            = AddQuoteInputs.author.urls.website;
       wikiController.text           = AddQuoteInputs.author.urls.wikipedia;
-      ytUrlController.text           = AddQuoteInputs.author.urls.youTube;
+      youtubeUrlController.text     = AddQuoteInputs.author.urls.youtube;
     });
 
     super.initState();
@@ -373,14 +373,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           child: SizedBox(
             width: 300,
             child: TextField(
-              controller: ytUrlController,
+              controller: youtubeUrlController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.video_library),
                 labelText: 'YouTube'
               ),
               onChanged: (newValue) {
-                AddQuoteInputs.author.urls.youTube = newValue;
+                AddQuoteInputs.author.urls.youtube = newValue;
               },
             ),
           ),

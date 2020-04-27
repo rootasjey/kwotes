@@ -35,7 +35,7 @@ Future addNewTempQuote({
           'twitter'   : AddQuoteInputs.author.urls.twitter,
           'website'   : AddQuoteInputs.author.urls.website,
           'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          'youTube'   : AddQuoteInputs.author.urls.youTube,
+          'youtube'   : AddQuoteInputs.author.urls.youtube,
         }
       },
       'comments'      : comments,
@@ -194,7 +194,7 @@ List<Map<String, dynamic>> formatReferences() {
         'twitter'     : AddQuoteInputs.reference.urls.twitter,
         'website'     : AddQuoteInputs.reference.urls.website,
         'wikipedia'   : AddQuoteInputs.reference.urls.wikipedia,
-        'youTube'     : AddQuoteInputs.reference.urls.youTube,
+        'youtube'     : AddQuoteInputs.reference.urls.youtube,
       },
     }
   );
@@ -234,7 +234,7 @@ Future saveExistingTempQuote({
           'twitter'   : AddQuoteInputs.author.urls.twitter,
           'website'   : AddQuoteInputs.author.urls.website,
           'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          'youTube'   : AddQuoteInputs.author.urls.youTube,
+          'youtube'   : AddQuoteInputs.author.urls.youtube,
         }
       },
       'comments'      : comments,

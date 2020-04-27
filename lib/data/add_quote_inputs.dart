@@ -91,7 +91,7 @@ class AddQuoteInputs {
           twitter   : tempQuote.author.urls.twitter,
           website   : tempQuote.author.urls.website,
           wikipedia : tempQuote.author.urls.wikipedia,
-          youTube   : tempQuote.author.urls.youTube,
+          youtube   : tempQuote.author.urls.youtube,
         ),
       );
 
@@ -118,7 +118,7 @@ class AddQuoteInputs {
             twitter   : ref.urls.twitter,
             website   : ref.urls.website,
             wikipedia : ref.urls.wikipedia,
-            youTube   : ref.urls.youTube,
+            youtube   : ref.urls.youtube,
           ),
         );
       }

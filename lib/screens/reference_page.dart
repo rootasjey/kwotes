@@ -321,10 +321,10 @@ class ReferencePageState extends State<ReferencePage> {
               imageUrl: 'assets/images/twitter.png',
             ),
 
-          if (urls.youTube.isNotEmpty)
+          if (urls.youtube.isNotEmpty)
             refLinkCard(
-              name: 'youtube',
-              url: urls.youTube,
+              name: 'Youtube',
+              url: urls.youtube,
               imageUrl: 'assets/images/youtube.png',
             ),
         ],

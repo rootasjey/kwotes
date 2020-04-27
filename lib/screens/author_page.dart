@@ -488,10 +488,10 @@ class _AuthorPageState extends State<AuthorPage> {
               imageUrl: 'assets/images/twitter.png',
             ),
 
-          if (urls.youTube.isNotEmpty)
+          if (urls.youtube.isNotEmpty)
             customLinkCard(
-              name: 'youtube',
-              url: urls.youTube,
+              name: 'Youtube',
+              url: urls.youtube,
               imageUrl: 'assets/images/youtube.png',
             ),
         ],
