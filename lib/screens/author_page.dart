@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/common/icons_more_icons.dart';
-import 'package:memorare/components/button_link.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
@@ -29,11 +30,15 @@ class _AuthorPageState extends State<AuthorPage> {
   bool isLoading = false;
 
   double beginY = 100.0;
+  double delay = 0.0;
+
+  TextOverflow nameEllipsis = TextOverflow.ellipsis;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    fetchAuthor();
+  void initState() {
+    super.initState();
+    delay = 0.0;
+    fetch();
   }
 
   @override
@@ -68,12 +73,51 @@ class _AuthorPageState extends State<AuthorPage> {
           );
         }
 
-        return authorBody();
+        return bodyData();
       }),
     );
   }
 
-  Widget authorBody() {
+  Widget avatar() {
+    return InkWell(
+      onTap: () {
+        if (author.urls.image == null ||
+          author.urls.image.length == 0) {
+          return;
+        }
+
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Container(
+                child: Image(image: NetworkImage(author.urls.image),),
+              ),
+            );
+          }
+        );
+      },
+      child: author.urls.image != null && author.urls.image.length > 0 ?
+        CircleAvatar(
+          radius: 90.0,
+          backgroundColor: stateColors.primary,
+          backgroundImage: NetworkImage(author.urls.image)
+        ):
+        CircleAvatar(
+          radius: 90.0,
+          backgroundColor: stateColors.primary,
+          child: Text(
+            author.name.substring(0, 2).toUpperCase(),
+            style: TextStyle(
+              fontSize: 50.0,
+            ),
+          ),
+        ),
+    );
+  }
+
+  Widget bodyData() {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotif) {
         if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
@@ -126,23 +170,7 @@ class _AuthorPageState extends State<AuthorPage> {
                 alignment: AlignmentDirectional.center,
                 child: Column(
                   children: <Widget>[
-                    FadeInY(
-                      beginY: beginY,
-                      delay: 1.0,
-                      child: avatar(),
-                    ),
-
-                    FadeInY(
-                      beginY: beginY,
-                      delay: 2.0,
-                      child: name(),
-                    ),
-
-                    FadeInY(
-                      beginY: beginY,
-                      delay: 3.0,
-                      child: job(),
-                    ),
+                    hero(),
 
                     FadeInY(
                       beginY: beginY,
@@ -153,7 +181,7 @@ class _AuthorPageState extends State<AuthorPage> {
                     FadeInY(
                       beginY: beginY,
                       delay: 5.0,
-                      child: buttonsLinks(),
+                      child: links(),
                     ),
 
                     if (areQuotesLoading)
@@ -162,22 +190,10 @@ class _AuthorPageState extends State<AuthorPage> {
                         child: LinearProgressIndicator(),
                       ),
 
-                    ControlledAnimation(
-                      delay: 2.seconds,
-                      duration: 1.seconds,
-                      tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
-                      builder: (_, value) {
-                        return SizedBox(
-                          width: value,
-                          child: Divider(),
-                        );
-                      },
-                    ),
-
                     FadeInY(
                       beginY: beginY,
                       delay: 6.0,
-                      child: authorQuote(),
+                      child: quoteSection(),
                     ),
                   ],
                 ),
@@ -191,122 +207,102 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget avatar() {
-    return Padding(
-      padding: EdgeInsets.only(top: 70.0),
-      child: InkWell(
-        onTap: () {
-          if (author.urls.image == null ||
-            author.urls.image.length == 0) {
-            return;
-          }
+  Widget customLinkCard({
+    String name,
+    String url,
+    String imageUrl,
+  }) {
 
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Container(
-                  child: Image(image: NetworkImage(author.urls.image),),
-                ),
-              );
-            }
-          );
-        },
-        child: author.urls.image != null && author.urls.image.length > 0 ?
-          CircleAvatar(
-            radius: 90.0,
-            backgroundColor: stateColors.primary,
-            backgroundImage: NetworkImage(author.urls.image)
-          ):
-          CircleAvatar(
-            radius: 90.0,
-            backgroundColor: stateColors.primary,
-            child: Text(
-              author.name.substring(0, 2).toUpperCase(),
-              style: TextStyle(
-                fontSize: 50.0,
-              ),
-            ),
+    delay += 1.0;
+
+    return FadeInX(
+      beginX: 50.0,
+      delay: delay,
+      child: LinkCard(
+        name: name,
+        url: url,
+        imageUrl: imageUrl,
+      ),
+    );
+  }
+
+  Widget hero() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FadeInY(
+            beginY: beginY,
+            delay: 1.0,
+            child: avatar(),
           ),
-      )
+
+          FadeInY(
+            beginY: beginY,
+            delay: 2.0,
+            child: name(),
+          ),
+
+          ControlledAnimation(
+            delay: 2.seconds,
+            duration: 1.seconds,
+            tween: Tween(begin: 0.0, end: 100.0),
+            builder: (_, value) {
+              return SizedBox(
+                width: value,
+                child: Divider(height: 20.0,),
+              );
+            },
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 3.0,
+            child: job(),
+          ),
+        ],
+      ),
     );
   }
 
   Widget name() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0),
-      child: Text(
-        author.name,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: 25.0,
-          fontWeight: FontWeight.bold,
+      child: FlatButton(
+        onPressed: () {
+          setState(() {
+            nameEllipsis = nameEllipsis == TextOverflow.ellipsis ?
+              TextOverflow.visible : TextOverflow.ellipsis;
+          });
+        },
+        child: Text(
+          author.name,
+          overflow: nameEllipsis,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
   }
 
   Widget job() {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Opacity(
-        opacity: .7,
-        child: Text(
-          author.job,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget summary() {
-    final padding = author.summary != null && author.summary.length > 0 ?
-      EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0):
-      EdgeInsets.zero;
-
-    return Padding(
-      padding: padding,
+    return Opacity(
+      opacity: .7,
       child: Text(
-        author.summary,
+        author.job,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontSize: 22.0,
-          fontWeight: FontWeight.w100,
-          height: 1.5,
+          fontSize: 18.0,
         ),
       ),
     );
   }
 
-  Widget buttonsLinks() {
-    final wikiUrlDefined = author.urls.wikipedia!= null && author.urls.wikipedia.length > 0;
-    final urlDefined = author.urls.website != null && author.urls.website.length > 0;
-
-    return Column(
-      children: <Widget>[
-        if (wikiUrlDefined)
-          ButtonLink(
-            icon: Icon(IconsMore.wikipedia_w, color: Colors.white,),
-            padding: EdgeInsets.only(top: 10.0),
-            text: 'Open Wikipedia',
-            url: author.urls.wikipedia,
-          ),
-
-        if (urlDefined)
-          ButtonLink(
-            icon: Icon(IconsMore.earth, color: Colors.white),
-            padding: EdgeInsets.only(top: 10.0),
-            text: 'Open website',
-            url: author.urls.website,
-          ),
-      ],
-    );
-  }
-
-  Widget authorQuote() {
+  Widget quoteSection() {
     if (quotes.length > 0) {
       final quote = quotes.first;
 
@@ -348,6 +344,129 @@ class _AuthorPageState extends State<AuthorPage> {
     return Padding(padding: EdgeInsets.zero);
   }
 
+  Widget summary() {
+    return Column(
+      children: <Widget>[
+        Divider(),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'SUMMARY',
+              style: TextStyle(
+                fontSize: 17.0,
+              ),
+            ),
+          ),
+        ),
+
+        SizedBox(
+          width: 100.0,
+          child: Divider(),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 60.0,
+          ),
+          child: Text(
+            author.summary,
+            style: TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.w100,
+              height: 1.5,
+            ),
+          ),
+        ),
+
+        Divider(),
+      ],
+    );
+  }
+
+  Widget links() {
+    final urls = author.urls;
+
+    return SizedBox(
+      height: 200.0,
+      child: ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          if (urls.wikipedia.isNotEmpty)
+            Observer(
+              builder: (_) {
+                return customLinkCard(
+                  name: 'Wikipedia',
+                  url: urls.wikipedia,
+                  imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                );
+              },
+            ),
+
+          if (urls.website.isNotEmpty)
+            customLinkCard(
+              name: 'Website',
+              url: urls.website,
+              imageUrl: 'assets/images/world-globe.png',
+            ),
+
+          if (urls.amazon.isNotEmpty)
+            customLinkCard(
+              name: 'Amazon',
+              url: urls.amazon,
+              imageUrl: 'assets/images/amazon.png',
+            ),
+
+          if (urls.facebook.isNotEmpty)
+            customLinkCard(
+              name: 'Facebook',
+              url: urls.facebook,
+              imageUrl: 'assets/images/facebook.png',
+            ),
+
+          if (urls.netflix.isNotEmpty)
+            customLinkCard(
+              name: 'Netflix',
+              url: urls.netflix,
+              imageUrl: 'assets/images/netflix.png',
+            ),
+
+          if (urls.primeVideo.isNotEmpty)
+            customLinkCard(
+              name: 'Prime Video',
+              url: urls.primeVideo,
+              imageUrl: 'assets/images/prime-video.png',
+            ),
+
+          if (urls.twitch.isNotEmpty)
+            customLinkCard(
+              name: 'Twitch',
+              url: urls.twitch,
+              imageUrl: 'assets/images/twitch.png',
+            ),
+
+          if (urls.twitter.isNotEmpty)
+            customLinkCard(
+              name: 'Twitter',
+              url: urls.twitter,
+              imageUrl: 'assets/images/twitter.png',
+            ),
+
+          if (urls.youTube.isNotEmpty)
+            customLinkCard(
+              name: 'youtube',
+              url: urls.youTube,
+              imageUrl: 'assets/images/youtube.png',
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget backButton() {
     return Positioned(
       left: 0.0,
@@ -366,7 +485,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  void fetchAuthor() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -387,6 +506,10 @@ class _AuthorPageState extends State<AuthorPage> {
 
       setState(() {
         author = Author.fromJSON(data);
+
+        nameEllipsis = author.name.length > 42 ?
+          TextOverflow.ellipsis : TextOverflow.visible;
+
         isLoading = false;
       });
 
