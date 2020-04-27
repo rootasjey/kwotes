@@ -76,7 +76,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
         if (quotidian.quote.mainReference?.name != null &&
           quotidian.quote.mainReference.name.length > 0)
-          referenceName(),
+          referenceSection(),
 
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 200.0),
@@ -195,66 +195,57 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget referenceName() {
-    return GestureDetector(
-      onTap: () {
-        final id = quotidian.quote.mainReference.id;
+  Widget referenceCard() {
+    final refName = quotidian.quote.mainReference.name;
 
-        FluroRouter.router.navigateTo(
-          context,
-          ReferenceRoute.replaceFirst(':id', id)
-        );
-      },
-      child: Column(
-        children: <Widget>[
-          referenceDivider(),
+    return SizedBox(
+      width: 170,
+      height: 220,
+      child: Card(
+        elevation: 2.0,
+        semanticContainer: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: InkWell(
+          onTap: () {
+            final id = quotidian.quote.mainReference.id;
 
-          FadeInY(
-            beginY: 100.0,
-            delay: 1.0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: Opacity(
-                opacity: .6,
+            FluroRouter.router.navigateTo(
+              context,
+              ReferenceRoute.replaceFirst(':id', id)
+            );
+          },
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  'Reference',
-                ),
-              ),
-            ),
-          ),
-
-          FadeInY(
-            beginY: 100.0,
-            delay: 1.2,
-            child: SizedBox(
-              width: 100.0,
-              child: Divider(),
-            ),
-          ),
-
-          FadeInY(
-            beginY: 100.0,
-            delay: 1.4,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 30.0,
-                bottom: 60.0,
-              ),
-              child: Opacity(
-                opacity: .8,
-                child: Text(
-                  quotidian.quote.mainReference.name,
-                  textAlign: TextAlign.center,
+                  refName.length > 65 ?
+                  '${refName.substring(0, 64)}...' :
+                  refName,
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 20.0,
                   ),
                 ),
               ),
-            ),
-          ),
 
-          referenceDivider(),
-        ],
+              Positioned(
+                right: 10.0,
+                bottom: 10.0,
+                child: Opacity(
+                  opacity: .6,
+                  child:
+                  Image.asset(
+                    'assets/images/textbook-${stateColors.iconExt}.png',
+                    width: 40.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
       ),
     );
   }
@@ -267,8 +258,56 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: width),
       builder: (_, value) {
-        return Divider(thickness: 2.0,);
+        return SizedBox(
+          width: value,
+          child: Divider(thickness: 2.0,),
+        );
       },
+    );
+  }
+
+  Widget referenceSection() {
+    return Column(
+      children: <Widget>[
+        referenceDivider(),
+
+        FadeInY(
+          beginY: 100.0,
+          delay: 1.0,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Reference',
+              ),
+            ),
+          ),
+        ),
+
+        FadeInY(
+          beginY: 100.0,
+          delay: 1.2,
+          child: SizedBox(
+            width: 100.0,
+            child: Divider(),
+          ),
+        ),
+
+        FadeInY(
+          beginY: 100.0,
+          delay: 1.4,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 30.0,
+              bottom: 60.0,
+            ),
+            child: referenceCard(),
+          ),
+        ),
+
+        referenceDivider(),
+      ],
     );
   }
 
