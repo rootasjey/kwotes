@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading.dart';
@@ -261,10 +262,14 @@ class ReferencePageState extends State<ReferencePage> {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           if (urls.wikipedia.isNotEmpty)
-            refLinkCard(
-              name: 'Wikipedia',
-              url: urls.wikipedia,
-              imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+            Observer(
+              builder: (_) {
+                return refLinkCard(
+                  name: 'Wikipedia',
+                  url: urls.wikipedia,
+                  imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                );
+              },
             ),
 
           if (urls.website.isNotEmpty)
