@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -250,46 +251,6 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget linkCard({
-    String name,
-    String url,
-    String imageUrl,
-  }) {
-
-    delay += 1.0;
-
-    return FadeInX(
-      beginX: 50.0,
-      delay: delay,
-      child: SizedBox(
-        width: 150.0,
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                imageUrl,
-                height: 60.0,
-                width: 60.0,
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  name,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  )
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget links() {
     final urls = reference.urls;
 
@@ -300,63 +261,63 @@ class ReferencePageState extends State<ReferencePage> {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           if (urls.wikipedia.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Wikipedia',
               url: urls.wikipedia,
               imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
             ),
 
           if (urls.website.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Website',
               url: urls.website,
               imageUrl: 'assets/images/world-globe.png',
             ),
 
           if (urls.amazon.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Amazon',
               url: urls.amazon,
               imageUrl: 'assets/images/amazon.png',
             ),
 
           if (urls.facebook.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Facebook',
               url: urls.facebook,
               imageUrl: 'assets/images/facebook.png',
             ),
 
           if (urls.netflix.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Netflix',
               url: urls.netflix,
               imageUrl: 'assets/images/netflix.png',
             ),
 
           if (urls.primeVideo.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Prime Video',
               url: urls.primeVideo,
               imageUrl: 'assets/images/prime-video.png',
             ),
 
           if (urls.twitch.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Twitch',
               url: urls.twitch,
               imageUrl: 'assets/images/twitch.png',
             ),
 
           if (urls.twitter.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'Twitter',
               url: urls.twitter,
               imageUrl: 'assets/images/twitter.png',
             ),
 
           if (urls.youTube.isNotEmpty)
-            linkCard(
+            refLinkCard(
               name: 'youtube',
               url: urls.youTube,
               imageUrl: 'assets/images/youtube.png',
@@ -432,6 +393,25 @@ class ReferencePageState extends State<ReferencePage> {
     }
 
     return Padding(padding: EdgeInsets.zero);
+  }
+
+  Widget refLinkCard({
+    String name,
+    String url,
+    String imageUrl,
+  }) {
+
+    delay += 1.0;
+
+    return FadeInX(
+      beginX: 50.0,
+      delay: delay,
+      child: LinkCard(
+        name: name,
+        url: url,
+        imageUrl: imageUrl,
+      ),
+    );
   }
 
   Widget summary() {
