@@ -7,17 +7,14 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/screens/account_settings.dart';
-import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/app_page_settings.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -90,24 +87,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future fetchUserPP() async {
-    final userAuth = await FirebaseAuth.instance.currentUser();
-
-    final user = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .get();
-
-    final data = user.data;
-    final String imageUrl = data['urls']['image'];
-
-    if (avatarUrl == imageUrl) { return; }
-
-    setState(() {
-      avatarUrl = imageUrl;
-    });
-  }
-
   Widget avatar() {
     String path = avatarUrl.replaceFirst('local:', '');
     path = 'assets/images/$path-${stateColors.iconExt}.png';
@@ -162,26 +141,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget addQuoteButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.add, size: 30.0,),
-        title: Text('Add a new quote', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () {
-        AddQuoteInputs.clearAll();
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return AddQuote();
-            }
-          )
-        );
-      },
-    );
-  }
-
   Widget appSettingsButton() {
     return FlatButton(
       child: ListTile(
@@ -200,19 +159,24 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget actionsButtons() {
+    return SizedBox(
+      height: 125.0,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        children: <Widget>[
+          signoutButton(),
+          newQuoteButton(),
+          quotidianButton(),
+        ],
+      ),
+    );
+  }
+
   List<Widget> authWidgets(BuildContext context) {
     return [
-      FadeInY(
-        delay: 3.0,
-        beginY: beginY,
-        child: signoutButton(),
-      ),
-
-      FadeInY(
-        delay: 4.0,
-        beginY: beginY,
-        child: accountSettings(),
-      ),
+      actionsButtons(),
 
       Padding(
         padding: EdgeInsets.only(top: 20.0),
@@ -232,41 +196,35 @@ class _DashboardState extends State<Dashboard> {
             FadeInY(
               delay: 5.0,
               beginY: beginY,
-              child: addQuoteButton(),
+              child: draftsButton(),
             ),
 
             FadeInY(
               delay: 6.0,
               beginY: beginY,
-              child: draftsButton(),
+              child: listsButton(),
             ),
 
             FadeInY(
               delay: 7.0,
               beginY: beginY,
-              child: listsButton(),
+              child: tempQuotesButton(),
             ),
 
             FadeInY(
               delay: 8.0,
               beginY: beginY,
-              child: tempQuotesButton(),
+              child: favButton(),
             ),
 
             FadeInY(
               delay: 9.0,
               beginY: beginY,
-              child: favButton(),
-            ),
-
-            FadeInY(
-              delay: 10.0,
-              beginY: beginY,
               child: pubQuotesButton(),
             ),
 
             FadeInY(
-              delay: 11.0,
+              delay: 10.0,
               beginY: beginY,
               child: appSettingsButton(),
             ),
@@ -334,6 +292,48 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget newQuoteButton() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      width: 100.0,
+      child: Column(
+        children: <Widget>[
+          Observer(
+            builder: (_) {
+              return Material(
+                color: stateColors.foreground.withOpacity(.5),
+                elevation: 1,
+                shape: CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: IconButton(
+                  onPressed: () {
+                    AddQuoteInputs.clearAll();
+                    AddQuoteInputs.navigatedFromPath = 'dashboard';
+                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+                  },
+                  icon: Icon(
+                    Icons.add,
+                    color: stateColors.background,
+                  ),
+                ),
+              );
+            },
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'New quote',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget pubQuotesButton() {
     return FlatButton(
       child: ListTile(
@@ -349,6 +349,46 @@ class _DashboardState extends State<Dashboard> {
           )
         );
       },
+    );
+  }
+
+  Widget quotidianButton() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      width: 100.0,
+      child: Column(
+        children: <Widget>[
+          Observer(
+            builder: (_) {
+              return Material(
+                color: stateColors.foreground.withOpacity(.5),
+                elevation: 1,
+                shape: CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: IconButton(
+                  onPressed: () {
+                    FluroRouter.router.navigateTo(context, RootRoute);
+                  },
+                  icon: Icon(
+                    Icons.wb_sunny,
+                    color: stateColors.background,
+                  ),
+                ),
+              );
+            },
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'Quotidian',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -380,28 +420,49 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget signoutButton() {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: RaisedButton(
-        color: Provider.of<ThemeColor>(context).accent,
-        onPressed: () async {
-          userState.setUserDisconnected();
-          await appLocalStorage.clearUserAuthData();
-          await FirebaseAuth.instance.signOut();
+    return Container(
+      width: 100.0,
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          Observer(
+            builder: (_) {
+              return Material(
+                color: stateColors.foreground.withOpacity(.5),
+                elevation: 1,
+                shape: CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: IconButton(
+                  onPressed: () async {
+                    await appLocalStorage.clearUserAuthData();
+                    await FirebaseAuth.instance.signOut();
+                    userState.setUserDisconnected();
 
-          showSnack(
-            context: context,
-            message: 'You have been successfully disconnected.',
-            type: SnackType.success,
-          );
-        },
-        child: Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Text(
-            'Sign Out',
-            style: TextStyle(color: Colors.white, fontSize: 20.0),
+                    showSnack(
+                      context: context,
+                      message: 'You have been successfully disconnected.',
+                      type: SnackType.success,
+                    );
+                  },
+                  icon: Icon(
+                    Icons.exit_to_app,
+                    color: stateColors.background,
+                  ),
+                ),
+              );
+            },
           ),
-        ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'Sign out',
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -422,5 +483,23 @@ class _DashboardState extends State<Dashboard> {
         );
       },
     );
+  }
+
+  Future fetchUserPP() async {
+    final userAuth = await FirebaseAuth.instance.currentUser();
+
+    final user = await Firestore.instance
+      .collection('users')
+      .document(userAuth.uid)
+      .get();
+
+    final data = user.data;
+    final String imageUrl = data['urls']['image'];
+
+    if (avatarUrl == imageUrl) { return; }
+
+    setState(() {
+      avatarUrl = imageUrl;
+    });
   }
 }
