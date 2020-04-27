@@ -44,14 +44,13 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   @override
   Widget build(BuildContext context) {
     final isFABVisible = isProposing || isCompleted || isCheckingAuth;
+
     return Scaffold(
       floatingActionButton:
       isFABVisible ?
-      Padding(padding: EdgeInsets.zero,) :
+      Padding(padding: EdgeInsets.zero) :
       FloatingActionButton.extended(
-        onPressed: () {
-          proposeQuote();
-        },
+        onPressed: () => proposeQuote(),
         label: Text(fabText),
         foregroundColor: Colors.white,
         icon: fabIcon,
