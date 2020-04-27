@@ -71,7 +71,7 @@ class _AddQuoteState extends State<AddQuote> {
     return Scaffold(
       floatingActionButton: isFabVisible ?
         InkWell(
-          onLongPress: () => saveQuoteAsraft(),
+          onLongPress: () => saveQuoteAsDraft(),
           child: FloatingActionButton(
             foregroundColor: Colors.white,
             backgroundColor: ThemeColor.success,
@@ -79,7 +79,7 @@ class _AddQuoteState extends State<AddQuote> {
               FocusScope.of(context).requestFocus(FocusNode());
               propose();
             },
-            child: Icon(Icons.check,),
+            child: Icon(Icons.send,),
           ),
         ) :
         Padding(padding: EdgeInsets.zero,),
@@ -241,7 +241,7 @@ class _AddQuoteState extends State<AddQuote> {
           step: 1,
           maxSteps: maxSteps,
           onNextStep: () => onNextPage(),
-          onSaveDraft: () => saveQuoteAsraft(),
+          onSaveDraft: () => saveQuoteAsDraft(),
         ),
 
         AddQuoteTopics(
@@ -277,7 +277,7 @@ class _AddQuoteState extends State<AddQuote> {
           maxSteps: maxSteps,
           onPreviousStep: () => onPreviousPage(),
           onPropose: () => propose(),
-          onSaveDraft: () => saveQuoteAsraft(),
+          onSaveDraft: () => saveQuoteAsDraft(),
         ),
       ],
     );
@@ -399,7 +399,7 @@ class _AddQuoteState extends State<AddQuote> {
     actionResult = ActionType.offline;
   }
 
-  void saveQuoteAsraft() async {
+  void saveQuoteAsDraft() async {
     actionIntent = ActionType.draft;
 
     setState(() {
