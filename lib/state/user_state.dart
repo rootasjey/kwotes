@@ -45,7 +45,7 @@ abstract class UserStateBase with Store {
 
   @action
   void setUserDisconnected() {
-    isUserConnected = true;
+    isUserConnected = false;
   }
 
   /// Signin user with credentials if FirebaseAuth is null.
