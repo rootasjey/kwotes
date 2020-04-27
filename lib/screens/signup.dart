@@ -22,11 +22,23 @@ class SignupState extends State<Signup> {
 
   bool arePasswordsEqual = true;
 
-  String confirmPassword = '';
-  String email = '';
-  String name = '';
-  String password = '';
-  String username = '';
+  String confirmPassword  = '';
+  String email            = '';
+  String name             = '';
+  String password         = '';
+  String username         = '';
+
+  final emailNode = FocusNode();
+  final passwordNode = FocusNode();
+  final confirmPasswordNode = FocusNode();
+
+  @override
+  void dispose() {
+    emailNode.dispose();
+    passwordNode.dispose();
+    confirmPasswordNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +109,7 @@ class SignupState extends State<Signup> {
                     FadeInY(
                       delay: 6.0,
                       beginY: beginY,
-                      child: goToSignInButton(),
+                      child: signInButton(),
                     ),
 
                     FadeInY(
@@ -181,8 +193,9 @@ class SignupState extends State<Signup> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            focusNode: confirmPasswordNode,
             decoration: InputDecoration(
-              icon: Icon(Icons.lock_outline, color: stateColors.primary,),
+              icon: Icon(Icons.lock, color: stateColors.primary,),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: stateColors.primary,),
               ),
@@ -196,6 +209,7 @@ class SignupState extends State<Signup> {
               if (confirmPassword != password) { arePasswordsEqual = false; }
               else { arePasswordsEqual = true; }
             },
+            onFieldSubmitted: (_) => createAccount(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password cannot be empty';
@@ -220,7 +234,7 @@ class SignupState extends State<Signup> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autofocus: true,
+            focusNode: emailNode,
             decoration: InputDecoration(
               icon: Icon(Icons.email, color: stateColors.primary),
               focusedBorder: UnderlineInputBorder(
@@ -230,9 +244,9 @@ class SignupState extends State<Signup> {
               labelStyle: TextStyle(color: stateColors.primary,),
             ),
             keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              email = value;
-            },
+            textInputAction: TextInputAction.next,
+            onChanged: (value) => email = value,
+            onFieldSubmitted: (_) => emailNode.nextFocus(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Email cannot be empty';
@@ -246,7 +260,7 @@ class SignupState extends State<Signup> {
     );
   }
 
-  Widget goToSignInButton() {
+  Widget signInButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
       child: FlatButton(
@@ -267,6 +281,7 @@ class SignupState extends State<Signup> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            focusNode: passwordNode,
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline, color: stateColors.primary,),
               focusedBorder: UnderlineInputBorder(
@@ -276,9 +291,9 @@ class SignupState extends State<Signup> {
               labelStyle: TextStyle(color: stateColors.primary,),
             ),
             obscureText: true,
-            onChanged: (value) {
-              password = value;
-            },
+            textInputAction: TextInputAction.go,
+            onChanged: (value) => password = value,
+            onFieldSubmitted: (_) => confirmPasswordNode.requestFocus(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password cannot be empty';
@@ -314,17 +329,16 @@ class SignupState extends State<Signup> {
           TextFormField(
             autofocus: true,
             decoration: InputDecoration(
-              icon: Icon(Icons.email, color: stateColors.primary),
+              icon: Icon(Icons.person_outline, color: stateColors.primary),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: stateColors.primary,),
               ),
               labelText: 'Username',
               labelStyle: TextStyle(color: stateColors.primary,),
             ),
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              username = value;
-            },
+            textInputAction: TextInputAction.next,
+            onChanged: (value) => username = value,
+            onFieldSubmitted: (_) => emailNode.nextFocus(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Username cannot be empty';
@@ -342,9 +356,7 @@ class SignupState extends State<Signup> {
     return Padding(
       padding: EdgeInsets.only(top: 100.0),
       child: FlatButton(
-        onPressed: () {
-          createAccount();
-        },
+        onPressed: () => createAccount(),
         shape: RoundedRectangleBorder(
           side: BorderSide(color: stateColors.primary),
           borderRadius: BorderRadius.circular(2.0),
@@ -371,7 +383,7 @@ class SignupState extends State<Signup> {
     );
   }
 
-  Future createAccount() async {
+  void createAccount() async {
     setState(() {
       isLoading = true;
     });
