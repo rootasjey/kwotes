@@ -79,41 +79,71 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget avatar() {
-    return InkWell(
-      onTap: () {
-        if (author.urls.image == null ||
-          author.urls.image.length == 0) {
-          return;
-        }
-
-        showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: Container(
-                child: Image(image: NetworkImage(author.urls.image),),
-              ),
-            );
-          }
-        );
-      },
-      child: author.urls.image != null && author.urls.image.length > 0 ?
-        CircleAvatar(
-          radius: 90.0,
-          backgroundColor: stateColors.primary,
-          backgroundImage: NetworkImage(author.urls.image)
-        ):
-        CircleAvatar(
-          radius: 90.0,
-          backgroundColor: stateColors.primary,
-          child: Text(
-            author.name.substring(0, 2).toUpperCase(),
-            style: TextStyle(
-              fontSize: 50.0,
-            ),
+    if (author.urls.image != null && author.urls.image.length > 0) {
+      return Material(
+        elevation: 1.0,
+        shape: CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: Ink.image(
+          image: NetworkImage(author.urls.image),
+          fit: BoxFit.cover,
+          width: 200.0,
+          height: 200.0,
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Container(
+                      child: Image(
+                        image: NetworkImage(author.urls.image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }
+              );
+            },
           ),
         ),
+      );
+    }
+
+    return Material(
+      elevation: 1.0,
+      shape: CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Image.asset(
+            'assets/images/user-${stateColors.iconExt}.png',
+            width: 80.0,
+          ),
+        ),
+        onTap: () {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Container(
+                  height: 500.0,
+                  width: 500.0,
+                  child: Image(
+                    image: AssetImage('assets/images/user-${stateColors.iconExt}.png',),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            }
+          );
+        },
+      ),
     );
   }
 
@@ -193,7 +223,7 @@ class _AuthorPageState extends State<AuthorPage> {
                     FadeInY(
                       beginY: beginY,
                       delay: 6.0,
-                      child: quoteSection(),
+                      child: mainQuote(),
                     ),
                   ],
                 ),
@@ -302,42 +332,44 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget quoteSection() {
+  Widget mainQuote() {
     if (quotes.length > 0) {
       final quote = quotes.first;
 
-      return Padding(
-        padding: EdgeInsets.only(top: 40.0),
-        child: Column(
-          children: <Widget>[
-            Divider(),
+      return Column(
+        children: <Widget>[
+          Divider(height: 50.0,),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Opacity(
-                opacity: .7,
-                child: Text(
-                  'Quote',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'Quote',
+                style: TextStyle(
+                  fontSize: 16.0,
                 ),
               ),
             ),
+          ),
 
-            GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 60.0),
-                child: createHeroQuoteAnimation(
-                  isMobile: true,
-                  quote: quote,
-                  screenWidth: MediaQuery.of(context).size.width,
-                ),
+          SizedBox(
+            width: 100.0,
+            child: Divider(),
+          ),
+
+          GestureDetector(
+            onTap: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 60.0),
+              child: createHeroQuoteAnimation(
+                isMobile: true,
+                quote: quote,
+                screenWidth: MediaQuery.of(context).size.width,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
@@ -382,7 +414,7 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
         ),
 
-        Divider(),
+        Divider(height: 50.0,),
       ],
     );
   }
