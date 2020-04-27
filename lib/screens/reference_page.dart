@@ -124,7 +124,7 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget heroContent() {
+  Widget hero() {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -162,7 +162,7 @@ class ReferencePageState extends State<ReferencePage> {
       alignment: AlignmentDirectional.center,
       child: Column(
         children: <Widget>[
-          heroContent(),
+          hero(),
 
           FadeInY(
             beginY: beginY,
@@ -359,41 +359,38 @@ class ReferencePageState extends State<ReferencePage> {
     if (quotes.length > 0) {
       final quote = quotes.first;
 
-      return Padding(
-        padding: EdgeInsets.only(top: 40.0),
-        child: Column(
-          children: <Widget>[
-            Divider(),
+      return Column(
+        children: <Widget>[
+          Divider(height: 50.0,),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Opacity(
-                opacity: .7,
-                child: Text(
-                  'Quote',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'Quote',
+                style: TextStyle(
+                  fontSize: 16.0,
                 ),
               ),
             ),
+          ),
 
-            GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 60.0,
-                  horizontal: 5.0,
-                ),
-                child: createHeroQuoteAnimation(
-                  isMobile: true,
-                  quote: quote,
-                  screenWidth: MediaQuery.of(context).size.width,
-                ),
+          GestureDetector(
+            onTap: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 60.0,
+                horizontal: 5.0,
+              ),
+              child: createHeroQuoteAnimation(
+                isMobile: true,
+                quote: quote,
+                screenWidth: MediaQuery.of(context).size.width,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
@@ -426,10 +423,13 @@ class ReferencePageState extends State<ReferencePage> {
 
         Padding(
           padding: const EdgeInsets.only(top: 12.0),
-          child: Text(
-            'SUMMARY',
-            style: TextStyle(
-              fontSize: 17.0,
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'SUMMARY',
+              style: TextStyle(
+                fontSize: 17.0,
+              ),
             ),
           ),
         ),
@@ -454,7 +454,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         ),
 
-        Divider(),
+        Divider(height: 50.0,),
       ],
     );
   }
