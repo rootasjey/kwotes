@@ -119,38 +119,34 @@ class _DashboardState extends State<Dashboard> {
   Widget addQuoteButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Wrap(
+      child: Column(
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              Material(
-                color: Color(0xFF58595B),
-                elevation: 1,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  onPressed: () {
-                    AddQuoteInputs.clearAll();
-                    AddQuoteInputs.navigatedFromPath = 'dashboard';
-                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
+          Material(
+            color: Color(0xFF58595B),
+            elevation: 1,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: IconButton(
+              onPressed: () {
+                AddQuoteInputs.clearAll();
+                AddQuoteInputs.navigatedFromPath = 'dashboard';
+                FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+              },
+              icon: Icon(
+                Icons.add,
+                color: Colors.white,
               ),
+            ),
+          ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Opacity(
-                  opacity: .7,
-                  child: Text(
-                    'Add a qutoe',
-                  ),
-                ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'Add a qutoe',
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -510,40 +506,36 @@ class _DashboardState extends State<Dashboard> {
   Widget signOutButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Wrap(
+      child: Column(
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              Material(
-                color: Color(0xFF58595B),
-                elevation: 1,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    await appLocalStorage.clearUserAuthData();
-                    userState.setUserDisconnected();
+          Material(
+            color: Color(0xFF58595B),
+            elevation: 1,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: IconButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                await appLocalStorage.clearUserAuthData();
+                userState.setUserDisconnected();
 
-                    FluroRouter.router.navigateTo(context, RootRoute);
-                  },
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    color: Colors.white,
-                  ),
-                ),
+                FluroRouter.router.navigateTo(context, RootRoute);
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.white,
               ),
+            ),
+          ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Opacity(
-                  opacity: .7,
-                  child: Text(
-                    'Sign out',
-                  ),
-                ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Opacity(
+              opacity: .7,
+              child: Text(
+                'Sign out',
               ),
-            ],
+            ),
           ),
         ],
       ),
