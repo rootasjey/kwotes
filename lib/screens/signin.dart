@@ -15,12 +15,20 @@ class Signin extends StatefulWidget {
 }
 
 class SigninState extends State<Signin> {
-  final formKey = GlobalKey<FormState>();
-  bool isLoading = false;
-  double beginY = 100.0;
+  final formKey   = GlobalKey<FormState>();
+  bool isLoading  = false;
+  double beginY   = 100.0;
 
-  String email = '';
+  String email    = '';
   String password = '';
+
+  final passwordNode = FocusNode();
+
+  @override
+  void dispose() {
+    passwordNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +79,7 @@ class SigninState extends State<Signin> {
                     FadeInY(
                       delay: 4.0,
                       beginY: beginY,
-                      child: gotoSignUpButton(),
+                      child: signupButton(),
                     ),
 
                     FadeInY(
@@ -105,10 +113,10 @@ class SigninState extends State<Signin> {
               labelText: 'Email',
               labelStyle: TextStyle(color: stateColors.primary,),
             ),
+            textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              email = value;
-            },
+            onChanged: (value) => email = value,
+            onFieldSubmitted: (_) => passwordNode.nextFocus(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Email cannot be empty';
@@ -122,7 +130,7 @@ class SigninState extends State<Signin> {
     );
   }
 
-  Widget gotoSignUpButton() {
+  Widget signupButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
       child: FlatButton(
@@ -131,7 +139,7 @@ class SigninState extends State<Signin> {
         },
         child: Text(
           "I don't have an account"
-        )
+        ),
       ),
     );
   }
@@ -143,6 +151,7 @@ class SigninState extends State<Signin> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            focusNode: passwordNode,
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline, color: stateColors.primary,),
               focusedBorder: UnderlineInputBorder(
@@ -152,9 +161,9 @@ class SigninState extends State<Signin> {
               labelStyle: TextStyle(color: stateColors.primary,),
             ),
             obscureText: true,
-            onChanged: (value) {
-              password = value;
-            },
+            textInputAction: TextInputAction.go,
+            onChanged: (value) => password = value,
+            onFieldSubmitted: (value) => connectAccount(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password cannot be empty';
@@ -185,9 +194,7 @@ class SigninState extends State<Signin> {
     return Padding(
       padding: EdgeInsets.only(top: 100.0),
       child: FlatButton(
-        onPressed: () {
-          signIn();
-        },
+        onPressed: () => connectAccount(),
         shape: RoundedRectangleBorder(
           side: BorderSide(color: stateColors.primary),
           borderRadius: BorderRadius.circular(2.0),
@@ -214,7 +221,7 @@ class SigninState extends State<Signin> {
     );
   }
 
-  Future signIn() async {
+  void connectAccount() async {
     setState(() {
       isLoading = true;
     });
