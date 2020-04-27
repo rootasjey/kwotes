@@ -183,38 +183,42 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   }
 
   Widget saveDraftButton() {
-    return Column(
-      children: <Widget>[
-        MaterialButton(
-          onPressed: () {
-            if (widget.onSaveDraft != null) {
-              widget.onSaveDraft();
-            }
-          },
-          color: stateColors.primary,
-          textColor: Colors.white,
-          child: Icon(
-            Icons.save_alt,
-            size: 32,
+    return FadeInY(
+      delay: delay + (7 * delayStep),
+      beginY: beginY,
+      child: Column(
+        children: <Widget>[
+          MaterialButton(
+            onPressed: () {
+              if (widget.onSaveDraft != null) {
+                widget.onSaveDraft();
+              }
+            },
+            color: stateColors.primary,
+            textColor: Colors.white,
+            child: Icon(
+              Icons.save_alt,
+              size: 32,
+            ),
+            padding: EdgeInsets.all(16),
+            shape: CircleBorder(),
           ),
-          padding: EdgeInsets.all(16),
-          shape: CircleBorder(),
-        ),
 
-        Opacity(
-          opacity: 0.6,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text('Save to drafts'),
+          Opacity(
+            opacity: 0.6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text('Save to drafts'),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget helpButton() {
     return FadeInY(
-      delay: delay + (7 * delayStep),
+      delay: delay + (8 * delayStep),
       beginY: beginY,
       child: Column(
         children: <Widget>[
