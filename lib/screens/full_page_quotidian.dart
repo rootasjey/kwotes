@@ -1,12 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/favourites.dart';
+import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
@@ -24,6 +29,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   FirebaseUser userAuth;
 
   Quotidian quotidian;
+  bool hasFetchFav = false;
 
   @override
   void initState() {
@@ -72,7 +78,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           ),
         ),
 
-        // userSection(),
+        userActions(),
 
         if (quotidian.quote.mainReference?.name != null &&
           quotidian.quote.mainReference.name.length > 0)
@@ -311,6 +317,84 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
+  Widget userActions() {
+    final quote = quotidian.quote;
+
+    return Observer(
+      builder: (_) {
+        if (!hasFetchFav) {
+          print('fetch fav');
+          hasFetchFav = true;
+          fetchIsFav();
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              IconButton(
+                onPressed: userState.isUserConnected ?
+                  () async {
+                    if (quote.starred) {
+                      removeQuoteFromFav();
+                      return;
+                    }
+
+                    addQuoteToFav();
+                } : null,
+                icon: quote.starred ?
+                  Icon(Icons.favorite) :
+                  Icon(Icons.favorite_border),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: IconButton(
+                  onPressed: () async {
+                    shareFromMobile(
+                      context: context,
+                      quote: quote,
+                    );
+                  },
+                  icon: Icon(Icons.share),
+                ),
+              ),
+
+              AddToListButton(
+                quote: quote,
+                isDisabled: !userState.isUserConnected,
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  void addQuoteToFav() async {
+    final quote = quotidian.quote;
+
+    setState(() { // Optimistic result
+      quote.starred = true;
+    });
+
+    final result = await addToFavourites(
+      context: context,
+      quote: quote,
+    );
+
+    if (!result) {
+      setState(() {
+        quote.starred = false;
+      });
+    }
+  }
+
+  void fetchIsFav() async {
+    quotidian.quote.starred = await isFavourite(quoteId: quotidian.quote.id);
+  }
+
   void fetchQuotidian() async {
     setState(() {
       isLoading = true;
@@ -349,6 +433,25 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
       setState(() {
         isLoading = false;
+      });
+    }
+  }
+
+  void removeQuoteFromFav() async {
+    final quote = quotidian.quote;
+
+    setState(() { // Optimistic result
+      quote.starred = false;
+    });
+
+    final result = await removeFromFavourites(
+      context: context,
+      quote: quote,
+    );
+
+    if (!result) {
+      setState(() {
+        quote.starred = true;
       });
     }
   }
