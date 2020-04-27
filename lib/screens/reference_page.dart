@@ -376,6 +376,11 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
 
+          SizedBox(
+            width: 100.0,
+            child: Divider(),
+          ),
+
           GestureDetector(
             onTap: () {},
             child: Padding(
