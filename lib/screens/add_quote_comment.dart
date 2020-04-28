@@ -196,49 +196,55 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
       delay: delay + (5 * delayStep),
       beginY: beginY,
       child: IconButton(
+        icon: Icon(Icons.help),
+        iconSize: 40.0,
         padding: EdgeInsets.symmetric(vertical: 20.0),
         onPressed: () {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return ListView(
-                padding: EdgeInsets.all(40.0),
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 40.0),
-                    child: Text(
-                      'Help',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25.0,
+              return Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 40.0),
+                      child: Center(
+                        child: Text(
+                          'Help',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
 
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Comment is optional',
-                      style: TextStyle(
-                        fontSize: 17.0,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20.0),
+                      child: Text(
+                        '• Comment is optional',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Use it if you want to specify the context, the hidden meaning of the quote or something related',
-                      style: TextStyle(
-                        fontSize: 17.0,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20.0),
+                      child: Text(
+                        '• Use it if you want to specify the context, the hidden meaning of the quote or something related',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }
           );
         },
-        icon: Icon(Icons.help),
       ),
     );
   }
