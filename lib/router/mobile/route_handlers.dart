@@ -6,6 +6,7 @@ import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/favourites.dart';
 import 'package:memorare/screens/full_page_quotidian.dart';
 import 'package:memorare/screens/home.dart';
+import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
@@ -39,6 +40,10 @@ class MobileRouteHandlers {
   static Handler list = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           QuotesList(id: params['id'][0],));
+
+  static Handler pubQuotes = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          MyPublishedQuotes());
 
   static Handler quote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

@@ -8,7 +8,6 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/app_page_settings.dart';
-import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -324,15 +323,7 @@ class _DashboardState extends State<Dashboard> {
         leading: Icon(Icons.check, size: 30.0,),
         title: Text('Published', style: TextStyle(fontSize: 20.0),),
       ),
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return MyPublishedQuotes();
-            }
-          )
-        );
-      },
+      onPressed: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
     );
   }
 

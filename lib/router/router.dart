@@ -38,6 +38,11 @@ class FluroRouter {
     );
 
     router.define(
+      PublishedQuotesRoute,
+      handler: MobileRouteHandlers.pubQuotes,
+    );
+
+    router.define(
       QuotePageRoute,
       handler: MobileRouteHandlers.quote,
     );
