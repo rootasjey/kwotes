@@ -28,12 +28,12 @@ class AddQuote extends StatefulWidget {
 }
 
 class _AddQuoteState extends State<AddQuote> {
-  final int maxSteps = 6;
-  bool isFabVisible = true;
+  final int maxSteps  = 6;
+  bool isFabVisible   = true;
 
-  bool canManage = false;
-  bool isProposing = false;
-  bool isCompleted = false;
+  bool canManage      = false;
+  bool isProposing    = false;
+  bool isCompleted    = true;
 
   ActionType actionIntent;
   ActionType actionResult;
@@ -105,74 +105,96 @@ class _AddQuoteState extends State<AddQuote> {
 
   Widget completedContainer() {
     return Container(
-      padding: const EdgeInsets.all(60.0),
-      child: Column(
+      child: ListView(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 40.0),
-            child: Icon(
-              Icons.check_circle_outline,
-            ),
-          ),
-
-          Text(
-            getResultMessage(),
-            style: TextStyle(
-              fontSize: 22.0,
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                getResultSubMessage(),
-                style: TextStyle(
-                  fontSize: 17.0,
-                ),
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 100.0, bottom: 200.0),
-            child: Wrap(
-              spacing: 30.0,
+            padding: const EdgeInsets.symmetric(horizontal: 60.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                navCard(
-                  icon: Icon(Icons.dashboard, size: 40.0,),
-                  title: 'Dashboard',
-                  onTap: () => FluroRouter.router.navigateTo(context, DashboardRoute),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 60.0,
+                      bottom: 40.0,
+                    ),
+                    child: Icon(
+                      Icons.check_circle_outline,
+                      size: 80.0,
+                    ),
+                  ),
                 ),
 
-                navCard(
-                  icon: Icon(Icons.add, size: 40.0,),
-                  title: 'Add another quote',
-                  onTap: () {
-                    AddQuoteInputs.clearQuoteData();
-                    AddQuoteInputs.clearTopics();
-                    AddQuoteInputs.clearComment();
-                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
-                  },
+                Text(
+                  getResultMessage(),
+                  style: TextStyle(
+                    fontSize: 22.0,
+                  ),
                 ),
 
-                canManage ?
-                  navCard(
-                    icon: Icon(Icons.timer, size: 40.0,),
-                    title: 'Temporary quotes',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
-                    },
-                  ) :
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      getResultSubMessage(),
+                      style: TextStyle(
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 100.0,
+              bottom: 200.0,
+              left: 20.0,
+              right: 20.0,
+            ),
+            child: SizedBox(
+              height: 200.0,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
                   navCard(
                     icon: Icon(Icons.home, size: 40.0,),
                     title: 'Home',
+                    onTap: () => FluroRouter.router.navigateTo(context, HomeRoute),
+                  ),
+
+                  navCard(
+                    icon: Icon(Icons.add, size: 40.0,),
+                    title: 'New quote',
                     onTap: () {
-                      FluroRouter.router.navigateTo(context, RootRoute);
+                      AddQuoteInputs.clearQuoteData();
+                      AddQuoteInputs.clearTopics();
+                      AddQuoteInputs.clearComment();
+
+                      setState(() {
+                        isCompleted = false;
+                      });
                     },
                   ),
-              ],
+
+                  navCard(
+                    icon: Icon(Icons.timer, size: 40.0,),
+                    title: 'In validation',
+                    onTap: () {
+                      if (canManage) {
+                        FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+                        return;
+                      }
+
+                      FluroRouter.router.navigateTo(context, TempQuotesRoute);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -182,8 +204,8 @@ class _AddQuoteState extends State<AddQuote> {
 
   Widget navCard({Icon icon, Function onTap, String title,}) {
     return SizedBox(
-      width: 100.0,
-      height: 150.0,
+      width: 150.0,
+      height: 130.0,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -208,7 +230,7 @@ class _AddQuoteState extends State<AddQuote> {
                     title,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 17.0,
                     ),
                   ),
                 ),
