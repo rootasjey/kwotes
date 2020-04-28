@@ -33,7 +33,7 @@ class _AddQuoteState extends State<AddQuote> {
 
   bool canManage      = false;
   bool isProposing    = false;
-  bool isCompleted    = true;
+  bool isCompleted    = false;
 
   ActionType actionIntent;
   ActionType actionResult;
