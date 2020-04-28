@@ -297,26 +297,20 @@ class _DashboardState extends State<Dashboard> {
       width: 100.0,
       child: Column(
         children: <Widget>[
-          Observer(
-            builder: (_) {
-              return Material(
-                color: stateColors.foreground.withOpacity(.5),
-                elevation: 1,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  onPressed: () {
-                    AddQuoteInputs.clearAll();
-                    AddQuoteInputs.navigatedFromPath = 'dashboard';
-                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    color: stateColors.background,
-                  ),
-                ),
-              );
-            },
+          Material(
+            elevation: 4,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: IconButton(
+              onPressed: () {
+                AddQuoteInputs.clearAll();
+                AddQuoteInputs.navigatedFromPath = 'dashboard';
+                FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+              },
+              icon: Icon(
+                Icons.add,
+              ),
+            ),
           ),
 
           Padding(
@@ -357,24 +351,18 @@ class _DashboardState extends State<Dashboard> {
       width: 100.0,
       child: Column(
         children: <Widget>[
-          Observer(
-            builder: (_) {
-              return Material(
-                color: stateColors.foreground.withOpacity(.5),
-                elevation: 1,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.navigateTo(context, RootRoute);
-                  },
-                  icon: Icon(
-                    Icons.wb_sunny,
-                    color: stateColors.background,
-                  ),
-                ),
-              );
-            },
+          Material(
+            elevation: 4,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: IconButton(
+              onPressed: () {
+                FluroRouter.router.navigateTo(context, RootRoute);
+              },
+              icon: Icon(
+                Icons.wb_sunny,
+              ),
+            ),
           ),
 
           Padding(
@@ -424,32 +412,26 @@ class _DashboardState extends State<Dashboard> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
-          Observer(
-            builder: (_) {
-              return Material(
-                color: stateColors.foreground.withOpacity(.5),
-                elevation: 1,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  onPressed: () async {
-                    await appLocalStorage.clearUserAuthData();
-                    await FirebaseAuth.instance.signOut();
-                    userState.setUserDisconnected();
+          Material(
+            elevation: 4,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: IconButton(
+              onPressed: () async {
+                await appLocalStorage.clearUserAuthData();
+                await FirebaseAuth.instance.signOut();
+                userState.setUserDisconnected();
 
-                    showSnack(
-                      context: context,
-                      message: 'You have been successfully disconnected.',
-                      type: SnackType.success,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    color: stateColors.background,
-                  ),
-                ),
-              );
-            },
+                showSnack(
+                  context: context,
+                  message: 'You have been successfully disconnected.',
+                  type: SnackType.success,
+                );
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+              ),
+            ),
           ),
 
           Padding(
