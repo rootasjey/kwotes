@@ -214,9 +214,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           final topicColor = appTopicsColors.find(tempQuote.topics.first);
 
           return InkWell(
-            onTap: () {
-              editTempQuote(tempQuote);
-            },
+            onTap: () => editTempQuote(tempQuote),
+            onLongPress: () => showQuoteSheet(tempQuote: tempQuote),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -234,51 +233,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
                 Center(
                   child: IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                              vertical: 60.0,
-                            ),
-                            child: Wrap(
-                              spacing: 30.0,
-                              alignment: WrapAlignment.center,
-                              children: <Widget>[
-                                IconButton(
-                                  iconSize: 40.0,
-                                  tooltip: 'Delete',
-                                  onPressed: () {
-                                    deleteAction(tempQuote);
-                                  },
-                                  icon: Opacity(
-                                    opacity: .6,
-                                    child: Icon(
-                                      Icons.delete_outline,
-                                    ),
-                                  ),
-                                ),
-
-                                IconButton(
-                                  iconSize: 40.0,
-                                  onPressed: () {
-                                    editTempQuote(tempQuote);
-                                  },
-                                  icon: Opacity(
-                                    opacity: .6,
-                                    child: Icon(
-                                      Icons.edit,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      );
-                    },
+                    onPressed: () => showQuoteSheet(tempQuote: tempQuote),
                     icon: Icon(
                       Icons.more_horiz,
                       color: topicColor != null ?
@@ -429,5 +384,51 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         isLoadingMore = false;
       });
     }
+  }
+
+  void showQuoteSheet({TempQuote tempQuote}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 60.0,
+          ),
+          child: Wrap(
+            spacing: 30.0,
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              IconButton(
+                iconSize: 40.0,
+                tooltip: 'Delete',
+                onPressed: () {
+                  deleteAction(tempQuote);
+                },
+                icon: Opacity(
+                  opacity: .6,
+                  child: Icon(
+                    Icons.delete_outline,
+                  ),
+                ),
+              ),
+
+              IconButton(
+                iconSize: 40.0,
+                onPressed: () {
+                  editTempQuote(tempQuote);
+                },
+                icon: Opacity(
+                  opacity: .6,
+                  child: Icon(
+                    Icons.edit,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    );
   }
 }

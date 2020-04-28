@@ -222,6 +222,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                 QuotePageRoute.replaceFirst(':id', quote.id),
               );
             },
+            onLongPress: () => showQuoteSheet(quote: quote),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -239,41 +240,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
                 Center(
                   child: IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                              vertical: 60.0,
-                            ),
-                            child: Wrap(
-                              spacing: 30.0,
-                              alignment: WrapAlignment.center,
-                              children: <Widget>[
-                                IconButton(
-                                  iconSize: 40.0,
-                                  tooltip: 'Add to favourites',
-                                  onPressed: () {
-                                    addToFavourites(
-                                      context: context,
-                                      quote: quote,
-                                    );
-                                  },
-                                  icon: Opacity(
-                                    opacity: .6,
-                                    child: Icon(
-                                      Icons.favorite_border,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      );
-                    },
+                    onPressed: () => showQuoteSheet(quote: quote),
                     icon: Icon(
                       Icons.more_horiz,
                       color: topicColor != null ?
@@ -399,5 +366,41 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         isLoadingMore = false;
       });
     }
+  }
+
+  void showQuoteSheet({Quote quote}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 60.0,
+          ),
+          child: Wrap(
+            spacing: 30.0,
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              IconButton(
+                iconSize: 40.0,
+                tooltip: 'Add to favourites',
+                onPressed: () {
+                  addToFavourites(
+                    context: context,
+                    quote: quote,
+                  );
+                },
+                icon: Opacity(
+                  opacity: .6,
+                  child: Icon(
+                    Icons.favorite_border,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    );
   }
 }
