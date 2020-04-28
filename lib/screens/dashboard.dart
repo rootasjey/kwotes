@@ -8,7 +8,6 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/app_page_settings.dart';
-import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -239,15 +238,7 @@ class _DashboardState extends State<Dashboard> {
         leading: Icon(Icons.edit, size: 30.0,),
         title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
       ),
-      onPressed:() {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return Drafts();
-            }
-          )
-        );
-      },
+      onPressed: null,
     );
   }
 
