@@ -10,7 +10,6 @@ import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/screens/app_page_settings.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
-import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -474,13 +473,7 @@ class _DashboardState extends State<Dashboard> {
         title: Text('In validation', style: TextStyle(fontSize: 20.0),),
       ),
       onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return MyTempQuotes();
-            }
-          )
-        );
+        FluroRouter.router.navigateTo(context, TempQuotesRoute);
       },
     );
   }

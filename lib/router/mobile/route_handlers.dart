@@ -12,6 +12,7 @@ import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
+import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/topic_page.dart';
 
 class MobileRouteHandlers {
@@ -58,6 +59,10 @@ class MobileRouteHandlers {
   static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Signup());
+
+  static Handler tempquotes = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          MyTempQuotes());
 
   static Handler topic = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

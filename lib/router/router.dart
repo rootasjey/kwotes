@@ -63,6 +63,11 @@ class FluroRouter {
     );
 
     router.define(
+      TempQuotesRoute,
+      handler: MobileRouteHandlers.tempquotes,
+    );
+
+    router.define(
       TopicRoute,
       handler: MobileRouteHandlers.topic,
     );
