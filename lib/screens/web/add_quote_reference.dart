@@ -343,7 +343,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.shopping_cart),
-                labelText: 'Amazon URL'
+                labelText: 'Amazon'
               ),
               onChanged: (newValue) {
                 AddQuoteInputs.reference.urls.affiliate = newValue;
@@ -359,7 +359,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.video_library),
-              labelText: 'Netflix URL'
+              labelText: 'Netflix'
             ),
             onChanged: (newValue) {
               AddQuoteInputs.reference.urls.netflix = newValue;
@@ -376,7 +376,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.ondemand_video),
-                labelText: 'PrimeVideo URL'
+                labelText: 'PrimeVideo'
               ),
               onChanged: (newValue) {
                 AddQuoteInputs.reference.urls.primeVideo = newValue;
@@ -394,7 +394,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(IconsMore.earth),
-                labelText: 'Website URL'
+                labelText: 'Website'
               ),
               onChanged: (newValue) {
                 AddQuoteInputs.reference.urls.website = newValue;
@@ -410,7 +410,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(IconsMore.wikipedia_w),
-              labelText: 'Wikipedia URL'
+              labelText: 'Wikipedia'
             ),
             onChanged: (newValue) {
               AddQuoteInputs.reference.urls.wikipedia = newValue;
@@ -427,7 +427,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.video_library),
-                labelText: 'YouTube URL'
+                labelText: 'YouTube'
               ),
               onChanged: (newValue) {
                 AddQuoteInputs.reference.urls.youtube = newValue;
