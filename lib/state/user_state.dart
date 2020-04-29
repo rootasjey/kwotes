@@ -13,6 +13,9 @@ abstract class UserStateBase with Store {
   String lang = 'en';
 
   @observable
+  bool isQuotidianNotifActive = true;
+
+  @observable
   bool isUserConnected = false;
 
   /// Last time the favourites has been updated.
@@ -36,6 +39,12 @@ abstract class UserStateBase with Store {
   @action
   void setLang(String newLang) {
     lang = newLang;
+  }
+
+  @action
+  void setQuotidianNotifState(bool active) {
+    isQuotidianNotifActive = active;
+    appLocalStorage.saveQuotidianNotif(active);
   }
 
   @action

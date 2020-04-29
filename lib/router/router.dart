@@ -8,6 +8,11 @@ class FluroRouter {
 
   static void setupMobileRouter() {
     router.define(
+      AccountRoute,
+      handler: MobileRouteHandlers.account,
+    );
+
+    router.define(
       AddQuoteContentRoute,
       handler: MobileRouteHandlers.addQuote,
     );

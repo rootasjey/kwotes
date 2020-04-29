@@ -7,7 +7,6 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/screens/account_settings.dart';
-import 'package:memorare/screens/app_page_settings.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -138,20 +137,14 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget appSettingsButton() {
+  Widget settingsButton() {
     return FlatButton(
       child: ListTile(
         leading: Icon(Icons.settings, size: 30.0,),
-        title: Text('App settings', style: TextStyle(fontSize: 20.0),),
+        title: Text('Settings', style: TextStyle(fontSize: 20.0),),
       ),
       onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return AppPageSettings();
-            }
-          )
-        );
+        FluroRouter.router.navigateTo(context, AccountRoute);
       },
     );
   }
@@ -223,7 +216,7 @@ class _DashboardState extends State<Dashboard> {
             FadeInY(
               delay: 10.0,
               beginY: beginY,
-              child: appSettingsButton(),
+              child: settingsButton(),
             ),
           ],
         ),

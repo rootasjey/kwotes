@@ -84,6 +84,14 @@ class AppLocalStorage {
     await _localStorage.remove('password');
     await _localStorage.remove('user_uid');
   }
+
+  void saveQuotidianNotif(bool active) {
+    _localStorage.setBool('quotidian_notif', active);
+  }
+
+  bool getQuotidianNotif() {
+    return _localStorage.getBool('quotidian_notif') ?? false;
+  }
 }
 
 final appLocalStorage = AppLocalStorage();

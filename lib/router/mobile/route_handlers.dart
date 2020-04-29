@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/all_topics.dart';
+import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/favourites.dart';
@@ -17,6 +18,10 @@ import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/topic_page.dart';
 
 class MobileRouteHandlers {
+  static Handler account = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Account());
+
   static Handler addQuote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuote());

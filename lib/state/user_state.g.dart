@@ -26,6 +26,26 @@ mixin _$UserState on UserStateBase, Store {
     }, _$langAtom, name: '${_$langAtom.name}_set');
   }
 
+  final _$isQuotidianNotifActiveAtom =
+      Atom(name: 'UserStateBase.isQuotidianNotifActive');
+
+  @override
+  bool get isQuotidianNotifActive {
+    _$isQuotidianNotifActiveAtom.context
+        .enforceReadPolicy(_$isQuotidianNotifActiveAtom);
+    _$isQuotidianNotifActiveAtom.reportObserved();
+    return super.isQuotidianNotifActive;
+  }
+
+  @override
+  set isQuotidianNotifActive(bool value) {
+    _$isQuotidianNotifActiveAtom.context.conditionallyRunInAction(() {
+      super.isQuotidianNotifActive = value;
+      _$isQuotidianNotifActiveAtom.reportChanged();
+    }, _$isQuotidianNotifActiveAtom,
+        name: '${_$isQuotidianNotifActiveAtom.name}_set');
+  }
+
   final _$isUserConnectedAtom = Atom(name: 'UserStateBase.isUserConnected');
 
   @override
@@ -74,6 +94,16 @@ mixin _$UserState on UserStateBase, Store {
   }
 
   @override
+  void setQuotidianNotifState(bool active) {
+    final _$actionInfo = _$UserStateBaseActionController.startAction();
+    try {
+      return super.setQuotidianNotifState(active);
+    } finally {
+      _$UserStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setUserConnected() {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
@@ -106,7 +136,7 @@ mixin _$UserState on UserStateBase, Store {
   @override
   String toString() {
     final string =
-        'lang: ${lang.toString()},isUserConnected: ${isUserConnected.toString()},updatedFavAt: ${updatedFavAt.toString()}';
+        'lang: ${lang.toString()},isQuotidianNotifActive: ${isQuotidianNotifActive.toString()},isUserConnected: ${isUserConnected.toString()},updatedFavAt: ${updatedFavAt.toString()}';
     return '{$string}';
   }
 }
