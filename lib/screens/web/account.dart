@@ -153,20 +153,16 @@ class _AccountState extends State<Account> {
     if (isLoadingImageURL) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 60.0),
-        child: SizedBox(
-          width: 200.0,
-          height: 200.0,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  'Updating profile image...',
-                ),
-              ),
-            ],
+        child: Material(
+          elevation: 1.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          color: Colors.transparent,
+          child: InkWell(
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
       );
