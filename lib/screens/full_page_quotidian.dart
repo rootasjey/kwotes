@@ -57,6 +57,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       return emptyContainer();
     }
 
+    final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
+    final color = topicColor != null ?
+      Color(topicColor.decimal) :
+      Colors.white;
+
     return ListView(
       children: <Widget>[
         SizedBox(
@@ -70,8 +75,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   screenWidth: MediaQuery.of(context).size.width,
                 ),
 
-                authorDivider(),
-
+                authorDivider(color: color),
                 authorName(),
               ],
             ),
@@ -90,7 +94,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             onPressed: () {
               FluroRouter.router.navigateTo(context, HomeRoute);
             },
-            color: stateColors.primary,
+            color: color,
             textColor: Colors.white,
             child: Icon(
               Icons.close,
@@ -104,12 +108,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget authorDivider() {
-    final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
-    final color = topicColor != null ?
-      Color(topicColor.decimal) :
-      Colors.white;
-
+  Widget authorDivider({Color color}) {
     return ControlledAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
