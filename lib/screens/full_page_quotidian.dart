@@ -323,7 +323,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     return Observer(
       builder: (_) {
         if (!hasFetchFav) {
-          print('fetch fav');
           hasFetchFav = true;
           fetchIsFav();
         }
