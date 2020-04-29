@@ -28,6 +28,11 @@ class FluroRouter {
     );
 
     router.define(
+      EditEmailRoute,
+      handler: MobileRouteHandlers.editEmail,
+    );
+
+    router.define(
       HomeRoute,
       handler: MobileRouteHandlers.home,
     );

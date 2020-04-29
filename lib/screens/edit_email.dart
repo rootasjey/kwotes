@@ -1,10 +1,13 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/email_field.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/queries.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/utils/snack.dart';
 
 class EditEmail extends StatefulWidget {
   @override
@@ -12,84 +15,246 @@ class EditEmail extends StatefulWidget {
 }
 
 class _EditEmailState extends State<EditEmail> {
-  bool isLoading = false;
-  bool isCompleted = false;
-  String newEmail = '';
+  String email      = '';
+  String password   = '';
 
-  final emailFieldKey = GlobalKey<EmailFieldState>();
+  bool isUpdating   = false;
+  bool isCompleted  = false;
+
+  final beginY    = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
 
   @override
   Widget build(BuildContext context) {
-    final accent = Provider.of<ThemeColor>(context).accent;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        title: Text(
-          'Edit email',
-          style: TextStyle(
-            color: accent,
-            fontSize: 30.0,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            elevation: 1,
+            title: Text(
+              'Update email',
+              style: TextStyle(
+                fontSize: 25.0,
+              ),
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back,),
+            ),
           ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: accent,),
+      ),
+      body: body(),
+    );
+  }
+
+  Widget body() {
+    if (isCompleted) {
+      return completedScreen();
+    }
+
+    if (isUpdating) {
+      return updatingScreen();
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(40.0),
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            FadeInY(
+              delay: delay + (2 * delayStep),
+              beginY: beginY,
+              child: imageTitle(),
+            ),
+
+            FadeInY(
+              delay: delay + (3 * delayStep),
+              beginY: beginY,
+              child: emailInput(),
+            ),
+
+            FadeInY(
+              delay: delay + (4 * delayStep),
+              beginY: beginY,
+              child: passwordInput(),
+            ),
+
+            FadeInY(
+              delay: delay + (5 * delayStep),
+              beginY: beginY,
+              child: validationButton(),
+            ),
+
+            Padding(padding: const EdgeInsets.only(bottom: 200.0),),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget completedScreen() {
+    return Container(
+      padding: const EdgeInsets.all(40.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 80.0),
+            child: Icon(
+              Icons.check_circle_outline,
+              size: 80.0,
+              // color: Colors.green,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0,),
+            child: Text(
+              'Your email has been successfuly updated!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0,),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Check your inbox to validate your email. It may be in the junk folder.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget emailInput() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 80.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.email),
+              labelText: 'Enter your new email',
+            ),
+            onChanged: (value) {
+              email = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'New email cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget imageTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+      child: Image.asset(
+        'assets/images/write-email-${stateColors.iconExt}.png',
+        width: 100.0,
+      ),
+    );
+  }
+
+  Widget passwordInput() {
+    return Padding(
+      padding: EdgeInsets.only(top: 50.0, bottom: 80.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.lock_outline),
+              labelText: 'Entering your password',
+            ),
+            obscureText: true,
+            onChanged: (value) {
+              password = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Password login cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget textTitle() {
+    return Text(
+      'Update email',
+      style: TextStyle(
+        fontSize: 35.0,
+      ),
+    );
+  }
+
+  Widget updatingScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Text(
+              'Updating your email...',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget validationButton() {
+    return RaisedButton(
+      onPressed: () {
+        updateEmail();
+      },
+      color: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: stateColors.primary,
         ),
       ),
-      body: Builder(
-        builder: (context) {
-          if (isCompleted) {
-            return completionScreen();
-          }
-
-          if (isLoading){
-            return LoadingComponent(
-              padding: EdgeInsets.all(30.0),
-              title: 'Sending you a message to your new email address...',
-            );
-          }
-
-          return ListView(
-            padding: EdgeInsets.all(30.0),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 25.0),
-                    child: Text(
-                      'You will receive a message to your new email address inbox.',
-                      style: TextStyle(fontSize: 25.0),
-                    ),
-                  ),
-
-                  Opacity(
-                    opacity: 0.6,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 25.0),
-                      child: Text(
-                        'Click on the link inside this email to validate the change.',
-                        style: TextStyle(fontSize: 17.0),
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 40.0),
-                    child: EmailField(key: emailFieldKey,),
-                  ),
-
-                  buttons(),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          'Update',
+        ),
+      )
     );
   }
 
@@ -208,30 +373,57 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Future updateEmail() async {
+  void updateEmail() async {
     setState(() {
-      isLoading = true;
+      isUpdating = true;
     });
 
-    final booleanMessage = await Queries.updateEmailStepOne(context, newEmail);
+    try {
+      final userAuth = await userState.userAuth;
 
-    setState(() {
-      isLoading = false;
-    });
+      if (userAuth == null) {
+        setState(() {
+          isUpdating = false;
+        });
 
-    final success = booleanMessage.boolean ? true : false;
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
 
-    if (!success) {
-      Flushbar(
-        backgroundColor: ThemeColor.error,
-        message: booleanMessage.message,
-      )..show(context);
+      final credentials = EmailAuthProvider.getCredential(
+        email: userAuth.email,
+        password: password,
+      );
 
-      return;
+      final authResult = await userAuth.reauthenticateWithCredential(credentials);
+
+      await authResult.user.updateEmail(email);
+
+      await Firestore.instance
+        .collection('users')
+        .document(authResult.user.uid)
+        .updateData({
+            'email': email,
+          }
+        );
+
+      setState(() {
+        isUpdating = false;
+        isCompleted = true;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isUpdating = false;
+      });
+
+      showSnack(
+        context: context,
+        message: 'Error while updating your email. Please try again or contact us.',
+        type: SnackType.error,
+      );
     }
-
-    setState(() {
-      isCompleted = true;
-    });
   }
 }
