@@ -349,10 +349,18 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     });
 
     try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        throw Error();
+      }
+
       final snapshot = await Firestore.instance
         .collection('tempquotes')
         .startAfterDocument(lastDoc)
-        .limit(30)
+        .where('user.id', isEqualTo: userAuth.uid)
+        .orderBy('createdAt', descending: descending)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
