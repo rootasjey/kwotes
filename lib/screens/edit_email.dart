@@ -110,7 +110,6 @@ class _EditEmailState extends State<EditEmail> {
             child: Icon(
               Icons.check_circle_outline,
               size: 80.0,
-              // color: Colors.green,
             ),
           ),
 
