@@ -310,69 +310,6 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget completionScreen() {
-    return Container(
-      color: Colors.white,
-      height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.all(30.0),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 30.0),
-            child: Icon(
-              Icons.check_circle,
-              color: ThemeColor.success,
-              size: 90.0,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: Text(
-              'We\'ve sent you an email to your new address. Go to your inbox and click on the link to validate it.',
-              style: TextStyle(fontSize: 25.0),
-            ),
-          ),
-
-          Text(
-            'Do not forget to check your spam folder if you do not see the email.',
-            style: TextStyle(fontSize: 20.0),
-          ),
-
-          Padding(
-            padding: EdgeInsets.only(top: 60),
-            child: FlatButton(
-              color: ThemeColor.success,
-              onPressed: () { Navigator.of(context).pop(true); },
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(right: 10.0), child: Icon(Icons.check, color: Colors.white,),),
-                    Text('Will check', style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: FlatButton(
-              onPressed: () {
-                setState(() { isCompleted = false; });
-              },
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text('Try another email', style: TextStyle(fontSize: 20.0),),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void updateEmail() async {
     setState(() {
       isUpdating = true;
