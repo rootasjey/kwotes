@@ -31,8 +31,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   int order           = -1;
   bool descending     = false;
 
-  ScrollController _scrollController = ScrollController();
   List<TempQuote> tempQuotes = [];
+  ScrollController scrollController = ScrollController();
 
   var lastDoc;
 
@@ -68,7 +68,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           return false;
         },
         child: CustomScrollView(
-          controller: _scrollController,
+          controller: scrollController,
           slivers: <Widget>[
             appBar(),
             bodyListContent(),
@@ -98,7 +98,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                     onPressed: () {
                       if (tempQuotes.length == 0) { return; }
 
-                      _scrollController.animateTo(
+                      scrollController.animateTo(
                         0,
                         duration: Duration(seconds: 2),
                         curve: Curves.easeOutQuint
