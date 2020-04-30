@@ -5,6 +5,7 @@ import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/favourites.dart';
 import 'package:memorare/screens/full_page_quotidian.dart';
 import 'package:memorare/screens/home.dart';
@@ -38,6 +39,10 @@ class MobileRouteHandlers {
   static Handler editEmail = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           EditEmail());
+
+  static Handler editPassword = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          EditPassword());
 
   static Handler home = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

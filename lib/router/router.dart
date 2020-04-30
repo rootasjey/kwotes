@@ -33,6 +33,11 @@ class FluroRouter {
     );
 
     router.define(
+      EditPasswordRoute,
+      handler: MobileRouteHandlers.editPassword,
+    );
+
+    router.define(
       HomeRoute,
       handler: MobileRouteHandlers.home,
     );

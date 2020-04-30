@@ -1,10 +1,10 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/components/password_field.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 
 class EditPassword extends StatefulWidget {
   @override
@@ -12,221 +12,211 @@ class EditPassword extends StatefulWidget {
 }
 
 class _EditPasswordState extends State<EditPassword> {
-  String oldPassword = '';
-  String confirmPassword = '';
+  String password     = '';
+  String newPassword  = '';
 
-  bool isLoading = false;
-  bool isCompleted = false;
+  bool isUpdating     = false;
+  bool isCompleted    = false;
 
-  final newPasswordKey = GlobalKey<PasswordFieldState>();
-  final confirmPasswordFieldKey = GlobalKey<FormFieldState>();
+  double beginY   = 100.0;
+  final delay     = 1.0;
+  final delayStep = 1.2;
 
   @override
   Widget build(BuildContext context) {
-    final accent = Provider.of<ThemeColor>(context).accent;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        title: Text(
-          'Edit password',
-          style: TextStyle(
-            color: accent,
-            fontSize: 30.0,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: AppBar(
+            backgroundColor: stateColors.softBackground,
+            centerTitle: true,
+            elevation: 2,
+            title: Text(
+              'Update password',
+              style: TextStyle(
+                fontSize: 25.0,
+                color: stateColors.foreground,
+              ),
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: stateColors.foreground,
+              ),
+            ),
           ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: accent,),
-        ),
       ),
-      body: Builder(
-        builder: (context) {
-          if (isCompleted) {
-            return completionScreen();
-          }
-
-          if (isLoading) {
-            return LoadingComponent(
-              padding: EdgeInsets.all(30.0),
-              title: 'Saving your new passowrd...',
-            );
-          }
-
-          return ListView(
-            padding: EdgeInsets.all(30.0),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: Text(
-                      'Enter your current password and choose a new one.',
-                      style: TextStyle(fontSize: 25.0),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 40.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.lock),
-                        labelText: 'Old password'
-                      ),
-                      obscureText: true,
-                      onChanged: (value) {
-                        oldPassword = value;
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'The new URL cannot be empty';
-                        }
-
-                        return null;
-                      },
-                    ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.0),
-                    child: PasswordField(key: newPasswordKey, label: 'New password',),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        TextFormField(
-                          key: confirmPasswordFieldKey,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.lock_outline),
-                            labelText: 'Confirm Password',
-                            errorMaxLines: 2
-                          ),
-                          obscureText: true,
-                          onChanged: (value) {
-                            confirmPassword = value;
-                            confirmPasswordFieldKey.currentState.validate();
-                          },
-                          validator: (value) {
-                            if (confirmPassword.isEmpty) {
-                              return 'Password confirmation cannot be empty';
-                            }
-
-                            if (confirmPassword != newPasswordKey.currentState.fieldValue) {
-                              return 'Password and confirm password must match.';
-                            }
-
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  buttons(),
-                ],
-              ),
-            ],
-          );
-        },
-      )
+      body: body(),
     );
   }
 
-  Widget buttons() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+  Widget body() {
+    if (isCompleted) {
+      return completedScreen();
+    }
+
+    if (isUpdating) {
+      return updatingScreen();
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(40.0),
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 60),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: FlatButton(
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: RaisedButton(
-                  color: ThemeColor.success,
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Text(
-                      'Update',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  onPressed: () async {
-                    updatePassword();
-                  },
-                ),
-              ),
-            ],
-          ),
-        )
+        Column(
+          children: <Widget>[
+            FadeInY(
+              delay: delay + (1 * delayStep),
+              beginY: beginY,
+              child: imageTitle(),
+            ),
+
+            FadeInY(
+              delay: delay + (2 * delayStep),
+              beginY: beginY,
+              child: currentPasswordInput(),
+            ),
+
+            FadeInY(
+              delay: delay + (3 * delayStep),
+              beginY: beginY,
+              child: newPasswordInput(),
+            ),
+
+            FadeInY(
+              delay: delay + (4 * delayStep),
+              beginY: beginY,
+              child: validationButton(),
+            ),
+
+            Padding(padding: const EdgeInsets.only(bottom: 200.0),),
+          ],
+        ),
       ],
     );
   }
 
-  Widget completionScreen() {
+  Widget completedScreen() {
     return Container(
-      color: Colors.white,
-      height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.all(30.0),
+      padding: const EdgeInsets.all(40.0),
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 30.0),
+            padding: const EdgeInsets.only(top: 80.0),
             child: Icon(
-              Icons.check_circle,
-              color: ThemeColor.success,
-              size: 90.0,
+              Icons.check_circle_outline,
+              size: 80.0,
             ),
           ),
+
           Padding(
-            padding: EdgeInsets.only(top: 30.0, bottom: 20.0),
+            padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
             child: Text(
-              'Your password has been successfully updated!',
-              style: TextStyle(fontSize: 25.0),
+              'Your password has been successfuly updated.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget currentPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 80.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.lock_open),
+              labelText: 'Enter your current password',
+            ),
+            onChanged: (value) {
+              password = value;
+            },
+            obscureText: true,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Current password cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget imageTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+      child: Image.asset(
+        'assets/images/lock-${stateColors.iconExt}.png',
+        width: 100.0,
+      ),
+    );
+  }
+
+  Widget newPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0, bottom: 80.0,),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.lock_outline),
+              labelText: 'Enter your new password',
+            ),
+            obscureText: true,
+            onChanged: (value) {
+              newPassword = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'New password cannot be empty';
+              }
+
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget textTitle() {
+    return Text(
+      'Update password',
+      style: TextStyle(
+        fontSize: 35.0,
+      ),
+    );
+  }
+
+  Widget updatingScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(),
+
           Padding(
-            padding: EdgeInsets.only(top: 60),
-            child: FlatButton(
-              color: ThemeColor.success,
-              onPressed: () { Navigator.of(context).pop(true); },
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(right: 10.0), child: Icon(Icons.check, color: Colors.white,),),
-                    Text('Alright', style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                  ],
-                ),
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Text(
+              'Updating your password...',
+              style: TextStyle(
+                fontSize: 20.0,
               ),
             ),
           )
@@ -235,29 +225,70 @@ class _EditPasswordState extends State<EditPassword> {
     );
   }
 
-  Future updatePassword() async {
-    setState(() { isLoading = true; });
+  Widget validationButton() {
+    return RaisedButton(
+      onPressed: () {
+        updatePassword();
+      },
+      color: stateColors.softBackground,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: stateColors.primary,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          'Update',
+        ),
+      )
+    );
+  }
 
-    final booleanMessage = await Mutations
-      .updatePassword(context, oldPassword, confirmPassword);
-
+  void updatePassword() async {
     setState(() {
-      isLoading = false;
+      isUpdating = true;
     });
 
-    final success = booleanMessage.boolean;
+    try {
+      final userAuth = await userState.userAuth;
 
-    if (!success) {
-      Flushbar(
-        backgroundColor: ThemeColor.error,
-        message: booleanMessage.message,
-      )..show(context);
+      if (userAuth == null) {
+        setState(() {
+          isUpdating = false;
+        });
 
-      return;
+        FluroRouter.router.navigateTo(context, SigninRoute);
+        return;
+      }
+
+      final credentials = EmailAuthProvider.getCredential(
+        email: userAuth.email,
+        password: password,
+      );
+
+      final authResult = await userAuth.reauthenticateWithCredential(credentials);
+
+      await authResult.user.updatePassword(newPassword);
+
+      setState(() {
+        isUpdating = false;
+        isCompleted = true;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isUpdating = false;
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Error while updating your email. Please try again or contact us.'),
+        )
+      );
     }
-
-    setState(() {
-      isCompleted = true;
-    });
   }
 }
