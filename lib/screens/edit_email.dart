@@ -33,20 +33,24 @@ class _EditEmailState extends State<EditEmail> {
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: stateColors.softBackground,
             centerTitle: true,
             elevation: 1,
             title: Text(
               'Update email',
               style: TextStyle(
                 fontSize: 25.0,
+                color: stateColors.foreground,
               ),
             ),
             leading: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: Icon(Icons.arrow_back,),
+              icon: Icon(
+                Icons.arrow_back,
+                color: stateColors.foreground,
+              ),
             ),
           ),
         ),
@@ -242,7 +246,7 @@ class _EditEmailState extends State<EditEmail> {
       onPressed: () {
         updateEmail();
       },
-      color: Colors.transparent,
+      color: stateColors.softBackground,
       shape: RoundedRectangleBorder(
         side: BorderSide(
           color: stateColors.primary,
