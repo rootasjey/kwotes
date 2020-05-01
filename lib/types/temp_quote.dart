@@ -9,6 +9,8 @@ class TempQuote {
   final List<String> comments;
   final DateTime createdAt;
   final String id;
+  // To distinguish offline draft.
+  final bool isOffline;
   final String lang;
   final Reference mainReference;
   final String name;
@@ -24,6 +26,7 @@ class TempQuote {
     this.comments,
     this.createdAt,
     this.id,
+    this.isOffline = false,
     this.lang,
     this.mainReference,
     this.name,
@@ -72,6 +75,7 @@ class TempQuote {
       comments      : _comments,
       createdAt     : (json['createdAt'] as Timestamp).toDate(),
       id            : json['id'],
+      isOffline     : json['offline'] ?? false,
       lang          : json['lang'],
       mainReference : _mainReference,
       name          : json['name'],

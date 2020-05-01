@@ -7,6 +7,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
@@ -16,7 +17,7 @@ void clearOfflineDrafts() {
 
 Future<bool> deleteDraft({
   BuildContext context,
-  String id,
+  TempQuote draft,
 }) async {
 
   final userAuth = await userState.userAuth;
@@ -25,6 +26,8 @@ Future<bool> deleteDraft({
     FluroRouter.router.navigateTo(context, SigninRoute);
     return false;
   }
+
+  final id = draft.id;
 
   try {
     await Firestore.instance
@@ -172,6 +175,7 @@ Future<bool> saveOfflineDraft({
     Map<String, dynamic> draft = {
       'author'        : {
         'id'          : AddQuoteInputs.author.id,
+        'isOffline'   : true,
         'job'         : AddQuoteInputs.author.job,
         'jobLang'     : {},
         'name'        : AddQuoteInputs.author.name,
