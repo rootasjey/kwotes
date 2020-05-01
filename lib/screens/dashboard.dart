@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
@@ -156,9 +157,23 @@ class _DashboardState extends State<Dashboard> {
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         children: <Widget>[
-          signoutButton(),
-          newQuoteButton(),
-          quotidianButton(),
+          FadeInX(
+            delay: 1.0,
+            beginX: 50.0,
+            child: signoutButton(),
+          ),
+
+          FadeInX(
+            delay: 1.5,
+            beginX: 50.0,
+            child: newQuoteButton(),
+          ),
+
+          FadeInX(
+            delay: 2.0,
+            beginX: 50.0,
+            child: quotidianButton(),
+          ),
         ],
       ),
     );
