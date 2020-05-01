@@ -43,10 +43,23 @@ class SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: stateColors.primary,
-        title: Text(
-          'Sign up',
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          backgroundColor: stateColors.primary,
+          leading: Padding(
+            padding: const EdgeInsets.only(top: 17.0),
+            child: IconButton(
+              onPressed: () => FluroRouter.router.pop(context),
+              icon: Icon(Icons.arrow_back),
+            ),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Text(
+              'Sign up',
+            ),
+          ),
         ),
       ),
       body: body(),
