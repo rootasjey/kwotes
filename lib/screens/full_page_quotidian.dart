@@ -54,7 +54,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     }
 
     if (quotidian == null) {
-      return emptyContainer();
+      return errorView();
     }
 
     final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
@@ -162,20 +162,44 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget emptyContainer() {
+  Widget errorView() {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(Icons.warning, size: 40.0,),
+          Icon(Icons.warning, size: 80.0,),
 
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'Sorry, an unexpected error happended :(',
-              style: TextStyle(
-                fontSize: 35.0,
+            child: Opacity(
+              opacity: .8,
+              child: Text(
+                'Sorry, an unexpected error happended :(',
+                style: TextStyle(
+                  fontSize: 25.0,
+                ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 35.0),
+            child: FlatButton(
+              onPressed: () => fetchQuotidian(),
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: stateColors.primary,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  'Refresh',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
               ),
             ),
           ),
