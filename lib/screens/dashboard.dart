@@ -230,7 +230,7 @@ class _DashboardState extends State<Dashboard> {
         leading: Icon(Icons.edit, size: 30.0,),
         title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
       ),
-      onPressed: null,
+      onPressed: () => FluroRouter.router.navigateTo(context, DraftsRoute),
     );
   }
 

@@ -28,6 +28,11 @@ class FluroRouter {
     );
 
     router.define(
+      DraftsRoute,
+      handler: MobileRouteHandlers.drafts,
+    );
+
+    router.define(
       FavouritesRoute,
       handler: MobileRouteHandlers.favourites,
     );

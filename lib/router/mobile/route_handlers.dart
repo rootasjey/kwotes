@@ -5,6 +5,7 @@ import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/delete_account.dart';
+import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/favourites.dart';
@@ -36,6 +37,10 @@ class MobileRouteHandlers {
   static Handler deleteAccount = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           DeleteAccount());
+
+  static Handler drafts = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Drafts());
 
   static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

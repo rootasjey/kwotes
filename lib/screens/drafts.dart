@@ -1,16 +1,21 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/error.dart';
-import 'package:memorare/components/loading.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/drafts.dart';
+import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/order_button.dart';
+import 'package:memorare/components/web/empty_content.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
-import 'package:memorare/screens/add_quote.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/pagination.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/types/topic_color.dart';
+import 'package:memorare/utils/snack.dart';
 
 class Drafts extends StatefulWidget {
   @override
@@ -18,178 +23,260 @@ class Drafts extends StatefulWidget {
 }
 
 class _DraftsState extends State<Drafts> {
-  List<TempQuote> draftsList = [];
-  bool isLoading = false;
-  bool isLoadingTempQuote = false;
-  bool hasErrors = false;
-  Error error;
+  bool hasNext        = true;
+  bool hasErrors      = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  String lang         = 'en';
+  int limit           = 30;
+  int order           = -1;
+  bool descending     = true;
 
-  int order = -1;
+  List<TempQuote> drafts = [];
+  List<TempQuote> offlineDrafts = [];
+  ScrollController scrollController = ScrollController();
 
-  Pagination pagination = Pagination();
-  bool isLoadingMoreLists = false;
-  ScrollController listScrollController = ScrollController();
+  var lastDoc;
 
   @override
-  didChangeDependencies() {
-    super.didChangeDependencies();
-    fetchDrafts();
+  void initState() {
+    super.initState();
+    fetch();
   }
-
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Provider.of<ThemeColor>(context);
-    final accent = themeColor.accent;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        title: InkWell(
-          onTap: () {
-            if (draftsList.length == 0) { return; }
-
-            listScrollController.animateTo(
-              0,
-              duration: Duration(seconds: 2),
-              curve: Curves.easeOutQuint,
-            );
-          },
-          child: Text(
-            'Drafts',
-            style: TextStyle(
-              color: accent,
-              fontSize: 30.0,
-            ),
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back, color: accent,),
-        ),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'delete') {
-                deleteAllDrafts();
-                return;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                value: 'delete',
-                child: ListTile(
-                  leading: Icon(Icons.delete),
-                  title: Text('Delete all'),
-                )
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: Builder(builder: (BuildContext context) {
-        if (!isLoading && hasErrors) {
-          return ErrorComponent(
-            description: error != null ? error.toString() : '',
-          );
-        }
-
-        if (isLoading) {
-          return LoadingComponent(
-            title: 'Loading your drafts...',
-            padding: EdgeInsets.all(30.0),
-          );
-        }
-
-        if (isLoadingTempQuote) {
-          return Scaffold(
-            body: LoadingComponent(
-              title: 'Loading quote...',
-              padding: EdgeInsets.symmetric(horizontal: 30.0),
-            ),
-          );
-        }
-
-        if (draftsList.length == 0) {
-          return EmptyView(
-            icon: Icon(Icons.edit, size: 60.0),
-            title: 'No drafts',
-            description: 'You can save them when you are not ready to propose your quotes.',
-            onRefresh: () async {
-              await fetchDrafts();
-              return null;
-            },
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            await fetchDrafts();
-            return null;
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollNotif) {
-              if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-                  return false;
-              }
-
-              if (pagination.hasNext && !isLoadingMoreLists) {
-                fetchMoreDrafts();
-              }
-
-              return false;
-            },
-            child: ListView.separated(
-              controller: listScrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
-              itemCount: draftsList.length,
-              separatorBuilder: (context, index) {
-                return Divider();
-              },
-              itemBuilder: (BuildContext context, int index) {
-                final item = draftsList.elementAt(index);
-
-                return ListTile(
-                  onTap: () {
-                    editDraft(item);
-                  },
-                  trailing: moreButton(tempQuote: item, index: index),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        item.name,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    ],
-                  )
-                );
-              },
-            )
-          ),
-        );
-      }),
+      body: body()
     );
   }
 
-  Widget moreButton({int index, TempQuote tempQuote}) {
+  Widget body() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+            return false;
+          }
+
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            appBar(),
+            bodyListContent(),
+          ],
+        ),
+      )
+    );
+  }
+
+  Widget appBar() {
+    return Observer(
+      builder: (_) {
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          expandedHeight: 120.0,
+          backgroundColor: stateColors.softBackground,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Stack(
+            children: <Widget>[
+              FadeInY(
+                delay: 1.0,
+                beginY: 50.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: FlatButton(
+                    onPressed: () {
+                      if (drafts.length == 0) { return; }
+
+                      scrollController.animateTo(
+                        0,
+                        duration: Duration(seconds: 2),
+                        curve: Curves.easeOutQuint
+                      );
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 60.0,
+                      child: Text(
+                        'Drafts',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                right: 20.0,
+                top: 50.0,
+                child: OrderButton(
+                  descending: descending,
+                  onOrderChanged: (order) {
+                    setState(() {
+                      descending = order;
+                    });
+
+                    fetch();
+                  },
+                ),
+              ),
+
+              Positioned(
+                left: 20.0,
+                top: 50.0,
+                child: IconButton(
+                  onPressed: () {
+                    FluroRouter.router.pop(context);
+                  },
+                  tooltip: 'Back',
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget bodyListContent() {
+    if (isLoading) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            Padding(
+              padding: const EdgeInsets.only(top: 200.0),
+              child: LoadingAnimation(),
+            ),
+          ]
+        ),
+      );
+    }
+
+    if (!isLoading && hasErrors) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 150.0),
+            child: ErrorContainer(
+              onRefresh: () => fetch(),
+            ),
+          ),
+        ]),
+      );
+    }
+
+    if (drafts.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 60.0),
+                child: EmptyContent(
+                  icon: Opacity(
+                    opacity: .8,
+                    child: Icon(
+                      Icons.edit,
+                      size: 60.0,
+                      color: Color(0xFFFF005C),
+                    ),
+                  ),
+                  title: 'No drafts',
+                  subtitle: 'You can save them when you are not ready to propose your quotes.',
+                  onRefresh: () => fetch(),
+                ),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return sliverQuotesList();
+  }
+
+  Widget sliverQuotesList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final draft = drafts.elementAt(index);
+          final topic = draft.topics.length > 0 ? draft.topics.first : null;
+
+          TopicColor topicColor;
+
+          if (topic != null) {
+            topicColor = appTopicsColors.find(draft.topics.first);
+          } else {
+            topicColor = appTopicsColors.topicsColors.first;
+          }
+
+          return InkWell(
+            onTap: () => editDraft(draft),
+            onLongPress: () => showQuoteSheet(draft: draft, index: index),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.only(top: 20.0),),
+
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    draft.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+
+                Center(
+                  child: IconButton(
+                    onPressed: () => showQuoteSheet(draft: draft),
+                    icon: Icon(
+                      Icons.more_horiz,
+                      color: topicColor != null ?
+                      Color(topicColor.decimal) : stateColors.primary,
+                    ),
+                  ),
+                ),
+
+                Padding(padding: const EdgeInsets.only(top: 10.0),),
+                Divider(),
+              ],
+            ),
+          );
+        },
+        childCount: drafts.length,
+      ),
+    );
+  }
+
+  Widget moreButton({int index, TempQuote draft}) {
     return PopupMenuButton<String>(
       icon: Icon(Icons.more_vert),
       onSelected: (value) async {
         if (value == 'delete') {
-          deleteDraft(index, tempQuote);
+          deleteAction(draft: draft, index: index);
           return;
         }
 
         if (value == 'edit') {
-          editDraft(tempQuote);
+          editDraft(draft);
           return;
         }
       },
@@ -222,178 +309,203 @@ class _DraftsState extends State<Drafts> {
     );
   }
 
-  Future fetchDrafts() {
+  Future fetch() async {
     setState(() {
       isLoading = true;
     });
 
-    return Queries.drafts(
-      context: context,
-      limit: pagination.limit,
-      order: order,
-      skip: pagination.skip,
+    try {
+      fetchOffline();
 
-    ).then((draftsResp) {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        throw Error();
+      }
+
+      final snapColl = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('drafts')
+        .orderBy('createdAt', descending: descending)
+        .limit(limit)
+        .getDocuments();
+
+      if (snapColl.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapColl.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final draft = TempQuote.fromJSON(data);
+        drafts.add(draft);
+      });
+
+      lastDoc = snapColl.documents.last;
+
       setState(() {
         isLoading = false;
         hasErrors = false;
-        draftsList = draftsResp.entries;
-        pagination = draftsResp.pagination;
+        hasNext = snapColl.documents.length == limit;
       });
-    })
-    .catchError((err) {
+
+    } catch (error) {
+      debugPrint(error.toString());
+      hasErrors = true;
+    }
+  }
+
+  Future fetchMore() async {
+    if (lastDoc == null) { return; }
+
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        throw Error();
+      }
+
+      final snapColl = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('drafts')
+        .startAfterDocument(lastDoc)
+        .orderBy('createdAt', descending: descending)
+        .limit(limit)
+        .getDocuments();
+
+      if (snapColl.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapColl.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final draft = TempQuote.fromJSON(data);
+        drafts.add(draft);
+      });
+
+      lastDoc = snapColl.documents.last;
+
       setState(() {
-        error = err;
         isLoading = false;
-        hasErrors = true;
+        hasErrors = false;
+        hasNext = snapColl.documents.length == limit;
       });
-    });
+
+    } catch (error) {
+      debugPrint(error.toString());
+      hasErrors = true;
+    }
   }
 
-  Future fetchMoreDrafts() {
-    isLoadingMoreLists = true;
+  void fetchOffline() {
+    final savedDrafts = getOfflineDrafts();
+    drafts.addAll(savedDrafts);
+  }
 
-    return Queries.drafts(
+  void deleteAction({TempQuote draft, int index}) async {
+    setState(() {
+      drafts.removeAt(index);
+    });
+
+    final success = await deleteDraft(
       context: context,
-      limit: pagination.limit,
-      order: order,
-      skip: pagination.nextSkip,
+      draft: draft,
+    );
 
-    ).then((draftsResp) {
-      setState(() {
-        draftsList.addAll(draftsResp.entries);
-        pagination = draftsResp.pagination;
-        isLoadingMoreLists = false;
-      });
-    })
-    .catchError((err) {
-      setState(() {
-        isLoadingMoreLists = false;
-      });
-    });
+    if (!success) {
+      drafts.insert(index, draft);
+
+      showSnack(
+        context: context,
+        message: "Couldn't delete the temporary quote.",
+        type: SnackType.error,
+      );
+    }
   }
 
-  Future deleteDraft(int index, TempQuote draft) {
-    setState(() {
-      draftsList
-        .removeWhere((draftItem) => draftItem.id == draft.id);
-    });
+  void editDraft(TempQuote draft) async {
+    AddQuoteInputs.populateWithTempQuote(draft);
+    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+  }
 
-    return Mutations.deleteDraft(context: context, id: draft.id)
-      .then((booleanMessage) {})
-      .catchError((err) {
-        setState(() {
-          draftsList.insert(index, draft);
-        });
-
-        Flushbar(
-          duration: Duration(seconds: 3),
-          backgroundColor: ThemeColor.error,
-          messageText: Text(
-            'Could not delete the draft (${err.toString()}).',
-            style: TextStyle(color: Colors.white),
+  void showQuoteSheet({TempQuote draft, int index}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 60.0,
           ),
-        )..show(context);
-      });
-  }
+          child: Wrap(
+            spacing: 30.0,
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 40.0,
+                    tooltip: 'Delete',
+                    onPressed: () {
+                      deleteAction(draft: draft, index: index);
+                    },
+                    icon: Opacity(
+                      opacity: .6,
+                      child: Icon(
+                        Icons.delete_outline,
+                      ),
+                    ),
+                  ),
 
-  Future deleteAllDrafts() {
-    setState(() {
-      draftsList = [];
-    });
+                  Text(
+                    'Delete',
+                  ),
+                ],
+              ),
 
-    return Mutations.deleteAllDrafts(context: context)
-      .then((booleanMessage) {
-        if (!booleanMessage.boolean) {
-          fetchDrafts();
+              Column(
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 40.0,
+                    onPressed: () {
+                      editDraft(draft);
+                    },
+                    icon: Opacity(
+                      opacity: .6,
+                      child: Icon(
+                        Icons.edit,
+                      ),
+                    ),
+                  ),
 
-          Flushbar(
-            duration: Duration(seconds: 3),
-            backgroundColor: ThemeColor.error,
-            messageText: Text(
-              'Could not delete all your draft (${booleanMessage.message}).',
-              style: TextStyle(color: Colors.white),
-            ),
-          )..show(context);
-        }
-      })
-      .catchError((err) {
-        fetchDrafts();
-
-        Flushbar(
-          duration: Duration(seconds: 3),
-          backgroundColor: ThemeColor.error,
-          messageText: Text(
-            'Could not delete all your draft (${err.toString()}).',
-            style: TextStyle(color: Colors.white),
+                  Text(
+                    'Edit',
+                  ),
+                ],
+              ),
+            ],
           ),
-        )..show(context);
-      });
-  }
-
-  Future editDraft(TempQuote draft) {
-    setState(() {
-      isLoadingTempQuote = true;
-    });
-
-    return Queries
-      .draft(context: context, id: draft.id)
-      .then((tempQuote) {
-        isLoadingTempQuote = false;
-
-        AddQuoteInputs.comment  = tempQuote.comments.length > 0 ? tempQuote.comments.first : '';
-        // AddQuoteInputs.id       = tempQuote.id;
-        // AddQuoteInputs.name     = tempQuote.name;
-        // AddQuoteInputs.lang     = tempQuote.lang;
-        // AddQuoteInputs.topics   = tempQuote.topics;
-
-        if (tempQuote.author != null) {
-          AddQuoteInputs.author.urls.image      = tempQuote.author.imgUrl;
-          AddQuoteInputs.author.job             = tempQuote.author.job;
-          AddQuoteInputs.author.name            = tempQuote.author.name;
-          AddQuoteInputs.author.summary         = tempQuote.author.summary;
-          AddQuoteInputs.author.urls.website    = tempQuote.author.url;
-          AddQuoteInputs.author.urls.wikipedia  = tempQuote.author.wikiUrl;
-        }
-
-        if (tempQuote.references != null && tempQuote.references.length > 0) {
-          final ref = tempQuote.references.first;
-
-          AddQuoteInputs.reference.urls.image     = ref.urls.image;
-          AddQuoteInputs.reference.lang           = ref.lang;
-          AddQuoteInputs.reference.name           = ref.name;
-          AddQuoteInputs.reference.type.secondary = ref.type.secondary;
-          AddQuoteInputs.reference.summary        = ref.summary;
-          AddQuoteInputs.reference.type.primary   = ref.type.primary;
-          AddQuoteInputs.reference.urls.website   = ref.url;
-          AddQuoteInputs.reference.urls.wikipedia = ref.wikiUrl;
-        }
-
-        AddQuoteInputs.isCompleted    = false;
-        AddQuoteInputs.isSending      = false;
-        AddQuoteInputs.hasExceptions  = false;
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return AddQuote();
-            }
-          )
         );
-      })
-      .catchError((err) {
-        setState(() {
-          isLoadingTempQuote = false;
-        });
-
-        Flushbar(
-          duration: Duration(seconds: 3),
-          backgroundColor: ThemeColor.error,
-          messageText: Text(
-            'Sorry, there was an issue loading your draft (${err.toString()}).',
-            style: TextStyle(color: Colors.white),
-          ),
-        )..show(context);
-    });
+      }
+    );
   }
 }
