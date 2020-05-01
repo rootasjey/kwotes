@@ -246,7 +246,7 @@ class _DraftsState extends State<Drafts> {
 
                 Center(
                   child: IconButton(
-                    onPressed: () => showQuoteSheet(draft: draft),
+                    onPressed: () => showQuoteSheet(draft: draft, index: index),
                     icon: Icon(
                       Icons.more_horiz,
                       color: topicColor != null ?
@@ -466,6 +466,7 @@ class _DraftsState extends State<Drafts> {
                     iconSize: 40.0,
                     tooltip: 'Delete',
                     onPressed: () {
+                      FluroRouter.router.pop(context);
                       deleteAction(draft: draft, index: index);
                     },
                     icon: Opacity(
@@ -487,6 +488,7 @@ class _DraftsState extends State<Drafts> {
                   IconButton(
                     iconSize: 40.0,
                     onPressed: () {
+                      FluroRouter.router.pop(context);
                       editDraft(draft);
                     },
                     icon: Opacity(
