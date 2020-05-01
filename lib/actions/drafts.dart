@@ -231,3 +231,18 @@ Future<bool> saveOfflineDraft({
     return false;
   }
 }
+
+List<TempQuote> getOfflineDrafts() {
+  final drafts = List<TempQuote>();
+  final savedStringDrafts = appLocalStorage.getDrafts();
+
+  if (savedStringDrafts == null) { return drafts; }
+
+  savedStringDrafts.forEach((savedStringDraft) {
+    final data = jsonDecode(savedStringDraft);
+    final draft = TempQuote.fromJSON(data);
+    drafts.add(draft);
+  });
+
+  return drafts;
+}
