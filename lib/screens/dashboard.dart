@@ -363,9 +363,10 @@ class _DashboardState extends State<Dashboard> {
             onPressed: () {
               FluroRouter.router.navigateTo(context, SigninRoute);
             },
-            color: stateColors.background.withOpacity(0.3),
+            elevation: 4.0,
+            color: stateColors.softBackground,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: stateColors.primary),
+              side: BorderSide(color: stateColors.primary, width: 2.0),
               borderRadius: BorderRadius.circular(2.0),
             ),
             child: Padding(
