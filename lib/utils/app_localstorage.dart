@@ -42,7 +42,6 @@ class AppLocalStorage {
 
   void saveDraft({String draftString}) {
     List<String> drafts = _localStorage.getStringList('drafts') ?? [];
-    drafts.clear();
 
     drafts.add(draftString);
     _localStorage.setStringList('drafts', drafts);
