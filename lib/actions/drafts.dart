@@ -46,13 +46,17 @@ Future<bool> deleteDraft({
 }
 
 
-void deleteOfflineDraft({String createdAt}) {
+bool deleteOfflineDraft({String createdAt}) {
   final drafts = appLocalStorage.getDrafts();
 
   drafts.removeWhere((draftStr) {
     final draft = jsonDecode(draftStr) as Map<String, dynamic>;
     return draft['createdAt'] == createdAt;
   });
+
+  appLocalStorage.savedDraftsState(drafts);
+
+  return true;
 }
 
 Future<bool> saveDraft({
@@ -175,7 +179,6 @@ Future<bool> saveOfflineDraft({
     Map<String, dynamic> draft = {
       'author'        : {
         'id'          : AddQuoteInputs.author.id,
-        'isOffline'   : true,
         'job'         : AddQuoteInputs.author.job,
         'jobLang'     : {},
         'name'        : AddQuoteInputs.author.name,
@@ -198,6 +201,7 @@ Future<bool> saveOfflineDraft({
       },
       'comments'      : comments,
       'createdAt'     : DateTime.now().toString(),
+      'isOffline'     : true,
       'lang'          : AddQuoteInputs.quote.lang,
       'name'          : AddQuoteInputs.quote.name,
       'mainReference' : {

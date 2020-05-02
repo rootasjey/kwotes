@@ -97,13 +97,13 @@ class _AddQuoteState extends State<AddQuote> {
     }
 
     if (isCompleted) {
-      return completedContainer();
+      return completedView();
     }
 
     return stepperPageView();
   }
 
-  Widget completedContainer() {
+  Widget completedView() {
     return Container(
       child: ListView(
         children: <Widget>[
@@ -177,6 +177,7 @@ class _AddQuoteState extends State<AddQuote> {
 
                       setState(() {
                         isCompleted = false;
+                        isFabVisible = true;
                       });
                     },
                   ),
@@ -389,6 +390,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     setState(() {
       isProposing = true;
+      isFabVisible = false;
     });
 
     final success = await proposeQuote(context: context);
@@ -399,6 +401,17 @@ class _AddQuoteState extends State<AddQuote> {
         isProposing = false;
         isCompleted = true;
       });
+
+      if (AddQuoteInputs.isOfflineDraft) {
+        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+      }
+
+      if (AddQuoteInputs.draft != null) {
+        await deleteDraft(
+          context: context,
+          draft: AddQuoteInputs.draft,
+        );
+      }
 
       return;
     }
@@ -414,6 +427,10 @@ class _AddQuoteState extends State<AddQuote> {
         isCompleted = true;
       });
 
+      if (AddQuoteInputs.isOfflineDraft) {
+        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+      }
+
       return;
     }
 
@@ -427,6 +444,7 @@ class _AddQuoteState extends State<AddQuote> {
     setState(() {
       isProposing = true;
       isCompleted = true;
+      isFabVisible = false;
     });
 
     final success = await saveDraft(
@@ -440,13 +458,22 @@ class _AddQuoteState extends State<AddQuote> {
         isCompleted = true;
       });
 
+      if (AddQuoteInputs.isOfflineDraft) {
+        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+      }
+
       return;
     }
 
     final successOffline = await saveOfflineDraft(context: context);
 
     if (successOffline) {
-      actionResult = ActionType.offline;
+      setState(() {
+        actionResult = ActionType.offline;
+        isProposing = false;
+        isCompleted = true;
+      });
+
       return;
     }
 

@@ -6,6 +6,19 @@ import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/urls.dart';
 
 class AddQuoteInputs {
+  /// If not empty, the author already exists.
+  static Author author = Author.empty();
+
+  static String comment           = '';
+  static TempQuote draft;
+  static String exceptionMessage  = '';
+  static bool hasExceptions       = false;
+  static bool isSending           = false;
+  static bool isCompleted         = false;
+
+  /// True if the quote which is being is edited
+  static bool isOfflineDraft = false;
+
   /// Navigated to new quote page
   /// from Dashboard or Admin temp quote?
   static String navigatedFromPath = '';
@@ -13,22 +26,11 @@ class AddQuoteInputs {
   /// Quote's id is not empty if this is an edit.
   static Quote quote = Quote.empty();
 
-  /// Draft's quote id (filled when creating a new quote).
-  static String draftId = '';
-
-  /// If not empty, the author already exists.
-  static Author author = Author.empty();
-
   /// If not empty, the reference already exists.
   static Reference reference = Reference.empty();
 
-  static String comment             = '';
   static String region              = '';
 
-  static bool isSending             = false;
-  static bool isCompleted           = false;
-  static bool hasExceptions         = false;
-  static String exceptionMessage    = '';
 
   static void clearAll() {
     clearAuthor();
@@ -52,6 +54,8 @@ class AddQuoteInputs {
 
     quote = Quote.empty();
     quote.lang = keepLang ? prevLang : 'en';
+    draft = null;
+    isOfflineDraft = false;
   }
 
   static void clearReference() {
@@ -68,65 +72,65 @@ class AddQuoteInputs {
   }
 
   static populateWithTempQuote(TempQuote tempQuote) {
-      quote = Quote(
-        id: tempQuote.id,
-        name: tempQuote.name,
-        lang: tempQuote.lang,
-        topics: tempQuote.topics,
-      );
+    quote = Quote(
+      id: tempQuote.id ?? '',
+      name: tempQuote.name,
+      lang: tempQuote.lang,
+      topics: tempQuote.topics,
+    );
 
-      author = Author(
-        id      : tempQuote.author.id,
-        job     : tempQuote.author.job,
-        name    : tempQuote.author.name,
-        summary : tempQuote.author.summary,
-        urls: Urls(
-          affiliate : tempQuote.author.urls.affiliate,
-          amazon    : tempQuote.author.urls.amazon,
-          facebook  : tempQuote.author.urls.facebook,
-          image     : tempQuote.author.urls.image,
-          netflix   : tempQuote.author.urls.netflix,
-          primeVideo: tempQuote.author.urls.primeVideo,
-          twitch    : tempQuote.author.urls.twitch,
-          twitter   : tempQuote.author.urls.twitter,
-          website   : tempQuote.author.urls.website,
-          wikipedia : tempQuote.author.urls.wikipedia,
-          youtube   : tempQuote.author.urls.youtube,
+    author = Author(
+      id      : tempQuote.author.id,
+      job     : tempQuote.author.job,
+      name    : tempQuote.author.name,
+      summary : tempQuote.author.summary,
+      urls: Urls(
+        affiliate : tempQuote.author.urls.affiliate,
+        amazon    : tempQuote.author.urls.amazon,
+        facebook  : tempQuote.author.urls.facebook,
+        image     : tempQuote.author.urls.image,
+        netflix   : tempQuote.author.urls.netflix,
+        primeVideo: tempQuote.author.urls.primeVideo,
+        twitch    : tempQuote.author.urls.twitch,
+        twitter   : tempQuote.author.urls.twitter,
+        website   : tempQuote.author.urls.website,
+        wikipedia : tempQuote.author.urls.wikipedia,
+        youtube   : tempQuote.author.urls.youtube,
+      ),
+    );
+
+    if (tempQuote.references.length > 0) {
+      final ref = tempQuote.references.first;
+
+      reference = Reference(
+        id      : ref.id,
+        lang    : ref.lang,
+        name    : ref.name,
+        summary : ref.summary,
+        type    : ReferenceType(
+          primary   : ref.type.primary,
+          secondary : ref.type.secondary,
+        ),
+        urls    : Urls(
+          affiliate : ref.urls.affiliate,
+          amazon    : ref.urls.amazon,
+          facebook  : ref.urls.facebook,
+          image     : ref.urls.image,
+          netflix   : ref.urls.netflix,
+          primeVideo: ref.urls.primeVideo,
+          twitch    : ref.urls.twitch,
+          twitter   : ref.urls.twitter,
+          website   : ref.urls.website,
+          wikipedia : ref.urls.wikipedia,
+          youtube   : ref.urls.youtube,
         ),
       );
+    }
 
-      if (tempQuote.references.length > 0) {
-        final ref = tempQuote.references.first;
+    if (tempQuote.comments.length > 0) {
+      comment = tempQuote.comments.first;
+    }
 
-        reference = Reference(
-          id      : ref.id,
-          lang    : ref.lang,
-          name    : ref.name,
-          summary : ref.summary,
-          type    : ReferenceType(
-            primary   : ref.type.primary,
-            secondary : ref.type.secondary,
-          ),
-          urls    : Urls(
-            affiliate : ref.urls.affiliate,
-            amazon    : ref.urls.amazon,
-            facebook  : ref.urls.facebook,
-            image     : ref.urls.image,
-            netflix   : ref.urls.netflix,
-            primeVideo: ref.urls.primeVideo,
-            twitch    : ref.urls.twitch,
-            twitter   : ref.urls.twitter,
-            website   : ref.urls.website,
-            wikipedia : ref.urls.wikipedia,
-            youtube   : ref.urls.youtube,
-          ),
-        );
-      }
-
-      if (tempQuote.comments.length > 0) {
-        comment = tempQuote.comments.first;
-      }
-
-      region = tempQuote.region;
+    region = tempQuote.region;
   }
 }

@@ -236,11 +236,30 @@ class _DraftsState extends State<Drafts> {
 
                 Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    draft.name,
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      if (draft.isOffline)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15.0),
+                          child: ClipOval(
+                            child: Material(
+                              color: Colors.red,
+                              child: InkWell(
+                                splashColor: Colors.orange,
+                                child: SizedBox(width: 24, height: 24,),
+                                onTap: () => showOfflineHelper(),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      Text(
+                        draft.name,
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -312,6 +331,7 @@ class _DraftsState extends State<Drafts> {
   Future fetch() async {
     setState(() {
       isLoading = true;
+      drafts.clear();
     });
 
     try {
@@ -426,10 +446,17 @@ class _DraftsState extends State<Drafts> {
       drafts.removeAt(index);
     });
 
-    final success = await deleteDraft(
-      context: context,
-      draft: draft,
-    );
+    bool success = false;
+
+    if (draft.isOffline) {
+      success = deleteOfflineDraft(createdAt: draft.createdAt.toString());
+    }
+    else {
+      success = await deleteDraft(
+        context: context,
+        draft: draft,
+      );
+    }
 
     if (!success) {
       drafts.insert(index, draft);
@@ -443,8 +470,29 @@ class _DraftsState extends State<Drafts> {
   }
 
   void editDraft(TempQuote draft) async {
+    AddQuoteInputs.isOfflineDraft = draft.isOffline;
+    AddQuoteInputs.draft = draft;
     AddQuoteInputs.populateWithTempQuote(draft);
-    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+
+    await FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+
+    fetch();
+  }
+
+  void showOfflineHelper() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return AlertDialog(
+          content: Container(
+            child: Text(
+              "This quote is saved in your device's offline storage. You can save it in the cloud after an edit. It can prevent data loss."
+            ),
+          ),
+        );
+      }
+    );
   }
 
   void showQuoteSheet({TempQuote draft, int index}) {
