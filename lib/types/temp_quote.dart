@@ -70,10 +70,18 @@ class TempQuote {
     final List<dynamic> _dynamicList = json['comments'];
     final _comments = _dynamicList.length > 0 ? _dynamicList : List<String>();
 
+    final createdAt = json['createdAt'].runtimeType == String ?
+      DateTime.parse(json['createdAt']) :
+      (json['createdAt'] as Timestamp).toDate();
+
+    final updatedAt = json['updatedAt'].runtimeType == String ?
+      DateTime.parse(json['updatedAt']) :
+      (json['updatedAt'] as Timestamp).toDate();
+
     return TempQuote(
       author        : _author,
       comments      : _comments,
-      createdAt     : (json['createdAt'] as Timestamp).toDate(),
+      createdAt     : createdAt,
       id            : json['id'],
       isOffline     : json['offline'] ?? false,
       lang          : json['lang'],
@@ -82,7 +90,7 @@ class TempQuote {
       references    : referencesList,
       region        : json['region'],
       topics        : topicsList,
-      updatedAt     : (json['updatedAt'] as Timestamp).toDate(),
+      updatedAt     : updatedAt,
       user          : _user,
       validation    : _validation,
     );

@@ -10,9 +10,13 @@ class ValidationComment {
   });
 
   factory ValidationComment.fromJSON(Map<String, dynamic> json) {
+    final updatedAt = json['updatedAt'].runtimeType == String ?
+      DateTime.parse(json['updatedAt']) :
+      (json['updatedAt'] as Timestamp).toDate();
+
     return ValidationComment(
       name: json['name'],
-      updatedAt: (json['updatedAt'] as Timestamp).toDate(),
+      updatedAt: updatedAt,
     );
   }
 }
