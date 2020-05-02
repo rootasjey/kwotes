@@ -83,7 +83,7 @@ class TempQuote {
       comments      : _comments,
       createdAt     : createdAt,
       id            : json['id'],
-      isOffline     : json['offline'] ?? false,
+      isOffline     : json['isOffline'] ?? false,
       lang          : json['lang'],
       mainReference : _mainReference,
       name          : json['name'],
