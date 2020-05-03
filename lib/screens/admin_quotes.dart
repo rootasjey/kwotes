@@ -361,6 +361,7 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   void fetchMore() async {
     if (lastDoc == null) { return; }
+    isLoadingMore = true;
 
     try {
       final snapshot = await Firestore.instance
