@@ -41,7 +41,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
   initState() {
     super.initState();
     checkAuth();
-    fetchTempQuotes();
+    fetch();
   }
 
   @override
@@ -110,7 +110,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
         }
 
         if (hasNext && !isLoadingMore) {
-          fetchMoreTempQuotes();
+          fetchMore();
         }
 
         return false;
@@ -190,7 +190,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
                 ),
                 title: "There're no temporary quote at this moment",
                 subtitle: 'They will appear after people add new quotes',
-                onRefresh: () => fetchTempQuotes(),
+                onRefresh: () => fetch(),
               ),
             ),
           ]
@@ -214,7 +214,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
               width: 250.0,
               height: 250.0,
               child: TempQuoteCardGridItem(
-                onTap: () => editTempQuote(tempQuote),
+                onTap: () => editAction(tempQuote),
                 onLongPress: () => validateTempQuote(tempQuote),
                 tempQuote: tempQuote,
                 popupMenuButton: PopupMenuButton<String>(
@@ -225,12 +225,12 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
                   ),
                   onSelected: (value) {
                     if (value == 'delete') {
-                      deleteTempQuote(tempQuote);
+                      deleteAction(tempQuote);
                       return;
                     }
 
                     if (value == 'edit') {
-                      editTempQuote(tempQuote);
+                      editAction(tempQuote);
                       return;
                     }
 
@@ -281,7 +281,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
         onPressed: () {
-          fetchMoreTempQuotes();
+          fetchMore();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(
@@ -482,7 +482,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  void deleteTempQuote(TempQuote tempQuote) async {
+  void deleteAction(TempQuote tempQuote) async {
     int index = tempQuotes.indexOf(tempQuote);
 
     setState(() {
@@ -510,13 +510,13 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  void editTempQuote(TempQuote tempQuote) async {
+  void editAction(TempQuote tempQuote) async {
     AddQuoteInputs.navigatedFromPath = 'admintempquotes';
     AddQuoteInputs.populateWithTempQuote(tempQuote);
     FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
   }
 
-  void fetchTempQuotes() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -559,7 +559,7 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  void fetchMoreTempQuotes() async {
+  void fetchMore() async {
     if (lastDoc == null) { return; }
 
     setState(() {
