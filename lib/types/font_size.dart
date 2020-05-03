@@ -41,7 +41,7 @@ class FontSize {
 
     if (length < 100) { return 80.0; }
     else if (length < 200) { return 60.0; }
-    else if (length < 300) { return 40.0; }
+    else if (length < 400) { return 40.0; }
 
     return 30.0;
   }
