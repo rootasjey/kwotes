@@ -37,7 +37,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
   @override
   initState() {
     super.initState();
-    fetchQuotes();
+    fetch();
     checkAuth();
   }
 
@@ -126,7 +126,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
         }
 
         if (hasNext && !isLoadingMore) {
-          fetchMoreQuotes();
+          fetchMore();
         }
 
         return false;
@@ -237,7 +237,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
         onPressed: () {
-          fetchMoreQuotes();
+          fetchMore();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(
@@ -372,7 +372,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
     }
   }
 
-  void fetchQuotes() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -417,7 +417,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
     }
   }
 
-  void fetchMoreQuotes() async {
+  void fetchMore() async {
     if (lastDoc == null) { return; }
 
     setState(() {
