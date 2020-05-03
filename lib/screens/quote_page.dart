@@ -10,10 +10,10 @@ import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/animation.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
@@ -29,7 +29,7 @@ class QuotePage extends StatefulWidget {
 
 class _QuotePageState extends State<QuotePage> {
   Quote quote;
-  Color topicColor;
+  Color quoteColor;
   bool isLoading = false;
 
   @override
@@ -54,9 +54,12 @@ class _QuotePageState extends State<QuotePage> {
           );
         }
 
-        topicColor = quote.topics.length > 0 ?
-          ThemeColor.topicColor(quote.topics.first) :
-          ThemeColor.primary;
+        if (quote.topics.length > 0) {
+          final tc = appTopicsColors.find(quote.topics.first);
+          quoteColor = tc != null ? Color(tc.decimal) : stateColors.primary;
+        } else {
+          quoteColor = stateColors.primary;
+        }
 
         return ListView(
           padding: EdgeInsets.only(bottom: 70.0),
@@ -159,7 +162,7 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget backButton() {
     return Positioned(
-      left: 5.0,
+      left: 30.0,
       top: 20.0,
       child: Material(
         color: Colors.transparent,
@@ -167,7 +170,10 @@ class _QuotePageState extends State<QuotePage> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: getFontColor(quoteColor),
+          ),
         ),
       )
     );
@@ -229,7 +235,7 @@ class _QuotePageState extends State<QuotePage> {
         horizontal: 20.0,
         vertical: 40.0,
       ),
-      color: topicColor,
+      color: quoteColor,
       height: size.height,
       width: size.width,
       child: Column(
@@ -244,7 +250,7 @@ class _QuotePageState extends State<QuotePage> {
               quote: quote,
               screenWidth: size.width,
               style: TextStyle(
-                color: Colors.white,
+                color: getFontColor(quoteColor),
               )
             ),
           ),
@@ -361,5 +367,16 @@ class _QuotePageState extends State<QuotePage> {
         isLoading = false;
       });
     }
+  }
+
+  Color getFontColor(Color color) {
+    int above200 = 0;
+
+    if (color.blue > 200)   { above200++; }
+    if (color.green > 200)  { above200++; }
+    if (color.red > 200)    { above200++; }
+
+    if (above200 > 1) { return Color(0xFF303030); }
+    return Colors.white;
   }
 }
