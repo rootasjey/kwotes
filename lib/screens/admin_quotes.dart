@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/order_button.dart';
+import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/loading_animation.dart';
@@ -123,8 +123,16 @@ class AdminQuotesState extends State<AdminQuotes> {
               Positioned(
                 right: 20.0,
                 top: 50.0,
-                child: OrderButton(
+                child: OrderLangButton(
                   descending: descending,
+                  lang: lang,
+                  onLangChanged: (newLang) {
+                    setState(() {
+                      lang = newLang;
+                    });
+
+                    fetch();
+                  },
                   onOrderChanged: (order) {
                     setState(() {
                       descending = order;
@@ -353,10 +361,6 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   void fetchMore() async {
     if (lastDoc == null) { return; }
-
-    setState(() {
-      isLoadingMore = true;
-    });
 
     try {
       final snapshot = await Firestore.instance
