@@ -95,7 +95,6 @@ class AppLocalStorage {
   void saveLang(String lang) => _localStorage.setString('lang', lang);
 
   void savePageLang({String lang, String pageRoute}) {
-    _localStorage.remove('${pageRoute}_lang'); // TODO: delete
     final key = '$pageRoute?lang';
     _localStorage.setString(key, lang);
   }

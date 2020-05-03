@@ -30,15 +30,12 @@ class QuotePage extends StatefulWidget {
 class _QuotePageState extends State<QuotePage> {
   Quote quote;
   Color topicColor;
-
   bool isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (quote != null) { return; }
-
-    fetchQuote();
+  initState() {
+    super.initState();
+    fetch();
   }
 
   @override
@@ -330,7 +327,7 @@ class _QuotePageState extends State<QuotePage> {
       Padding(padding: EdgeInsets.zero,);
   }
 
-  void fetchQuote() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
