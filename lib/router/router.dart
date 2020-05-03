@@ -18,6 +18,11 @@ class FluroRouter {
     );
 
     router.define(
+      AdminTempQuotesRoute,
+      handler: MobileRouteHandlers.adminTempQuotes,
+    );
+
+    router.define(
       AuthorRoute,
       handler: MobileRouteHandlers.author,
     );

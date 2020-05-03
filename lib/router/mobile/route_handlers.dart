@@ -4,6 +4,7 @@ import 'package:memorare/components/all_topics.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote.dart';
 import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
@@ -30,6 +31,10 @@ class MobileRouteHandlers {
   static Handler addQuote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AddQuote());
+
+  static Handler adminTempQuotes = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AdminTempQuotes());
 
   static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
