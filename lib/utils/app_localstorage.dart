@@ -43,6 +43,18 @@ class AppLocalStorage {
 
   String getLang() => _localStorage.getString('lang') ?? 'en';
 
+  String getPageLang({String pageRoute}) {
+    final key = '$pageRoute?lang';
+    final lang = _localStorage.getString(key);
+    return lang ?? 'en';
+  }
+
+  bool getPageOrder({String pageRoute}) {
+    final key = '$pageRoute?order';
+    final descending = _localStorage.getBool(key);
+    return descending ?? true;
+  }
+
   String getQuotidiansLang() => _localStorage.getString('quotidians_lang') ?? 'en';
   bool getQuotidianNotif() => _localStorage.getBool('quotidian_notif') ?? false;
 
@@ -81,6 +93,17 @@ class AppLocalStorage {
 
   void saveEmail(String email) => _localStorage.setString('email', email);
   void saveLang(String lang) => _localStorage.setString('lang', lang);
+
+  void savePageLang({String lang, String pageRoute}) {
+    _localStorage.remove('${pageRoute}_lang'); // TODO: delete
+    final key = '$pageRoute?lang';
+    _localStorage.setString(key, lang);
+  }
+
+  void savePageOrder({bool descending, String pageRoute}) {
+    final key = '$pageRoute?order';
+    _localStorage.setBool(key, descending);
+  }
 
   void saveQuotidiansLang(String lang) => _localStorage.setString('quotidians_lang', lang);
 
