@@ -22,6 +22,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   String avatarUrl = '';
+  bool canManage = false;
   bool prevIsAuthenticated = false;
 
   double beginY = 100.0;
@@ -76,6 +77,9 @@ class _DashboardState extends State<Dashboard> {
                 userState.isUserConnected ?
                   Column(children: authWidgets(context),) :
                   Column(children: guestWidgets(context)),
+
+                if (canManage)
+                  ...adminWidgets(context),
               ],
             );
           }),
@@ -236,6 +240,27 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       ),
+    ];
+  }
+
+  List<Widget> adminWidgets(BuildContext context) {
+    return [
+      ControlledAnimation(
+        duration: 1.seconds,
+        tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
+        builder: (_, value) {
+          return SizedBox(
+            width: value,
+            child: Divider(height: 30.0),
+          );
+        },
+      ),
+
+      ListTile(
+        leading: Icon(Icons.question_answer, size: 30.0),
+        title: Text('All published', style: TextStyle(fontSize: 20.0),),
+        onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
+      )
     ];
   }
 
@@ -461,6 +486,8 @@ class _DashboardState extends State<Dashboard> {
 
     final data = user.data;
     final String imageUrl = data['urls']['image'];
+
+    canManage = data['rights']['user:managequote'];
 
     if (avatarUrl == imageUrl) { return; }
 

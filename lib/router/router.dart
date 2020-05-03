@@ -73,6 +73,11 @@ class FluroRouter {
     );
 
     router.define(
+      QuotesRoute,
+      handler: MobileRouteHandlers.quotes,
+    );
+
+    router.define(
       RootRoute,
       handler: MobileRouteHandlers.quotidian,
     );

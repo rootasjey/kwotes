@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/all_topics.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote.dart';
+import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
@@ -73,6 +74,10 @@ class MobileRouteHandlers {
   static Handler quote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           QuotePage(id: params['id'][0]));
+
+  static Handler quotes = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          AdminQuotes());
 
   static Handler quotidian = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
