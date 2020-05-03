@@ -15,6 +15,7 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/temp_quote.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
 class AdminQuotes extends StatefulWidget {
@@ -40,6 +41,7 @@ class AdminQuotesState extends State<AdminQuotes> {
   @override
   initState() {
     super.initState();
+    getSavedLangAndOrder();
     fetch();
   }
 
@@ -126,14 +128,24 @@ class AdminQuotesState extends State<AdminQuotes> {
                 child: OrderLangButton(
                   descending: descending,
                   lang: lang,
-                  onLangChanged: (newLang) {
+                  onLangChanged: (String newLang) {
+                    appLocalStorage.savePageLang(
+                      lang: newLang,
+                      pageRoute: QuotesRoute,
+                    );
+
                     setState(() {
                       lang = newLang;
                     });
 
                     fetch();
                   },
-                  onOrderChanged: (order) {
+                  onOrderChanged: (bool order) {
+                    appLocalStorage.savePageOrder(
+                      descending: order,
+                      pageRoute: QuotesRoute,
+                    );
+
                     setState(() {
                       descending = order;
                     });
@@ -402,6 +414,11 @@ class AdminQuotesState extends State<AdminQuotes> {
         isLoadingMore = false;
       });
     }
+  }
+
+  void getSavedLangAndOrder() {
+    lang = appLocalStorage.getPageLang(pageRoute: QuotesRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: QuotesRoute);
   }
 
   void showQuoteSheet({Quote quote}) {
