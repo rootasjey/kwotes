@@ -7,7 +7,6 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
-import 'package:memorare/screens/account_settings.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -127,33 +126,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget accountSettings() {
-    return IconButton(
-      icon: Icon(Icons.settings),
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return AccountSettings();
-            }
-          )
-        );
-      },
-    );
-  }
-
-  Widget settingsButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.settings, size: 30.0,),
-        title: Text('Settings', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () {
-        FluroRouter.router.navigateTo(context, AccountRoute);
-      },
-    );
-  }
-
   Widget actionsButtons() {
     return SizedBox(
       height: 125.0,
@@ -265,27 +237,18 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget draftsButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.edit, size: 30.0,),
-        title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () => FluroRouter.router.navigateTo(context, DraftsRoute),
+    return ListTile(
+      leading: Icon(Icons.edit, size: 30.0,),
+      title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
+      onTap: () => FluroRouter.router.navigateTo(context, DraftsRoute),
     );
   }
 
   Widget favButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.favorite, size: 30.0,),
-        title: Text('Favourites', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () {
-        FluroRouter.router.navigateTo(
-          context,
-          FavouritesRoute,
-        );
-      },
+    return ListTile(
+      leading: Icon(Icons.favorite, size: 30.0,),
+      title: Text('Favourites', style: TextStyle(fontSize: 20.0),),
+      onTap: ()=> FluroRouter.router.navigateTo(context, FavouritesRoute,),
     );
   }
 
@@ -300,17 +263,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget listsButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.list, size: 30.0,),
-        title: Text('Lists', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () {
-        FluroRouter.router.navigateTo(
-          context,
-          ListsRoute,
-        );
-      },
+    return ListTile(
+      leading: Icon(Icons.list, size: 30.0,),
+      title: Text('Lists', style: TextStyle(fontSize: 20.0),),
+      onTap: () => FluroRouter.router.navigateTo(context, ListsRoute,),
     );
   }
 
@@ -351,12 +307,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget pubQuotesButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.check, size: 30.0,),
-        title: Text('Published', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
+    return ListTile(
+      leading: Icon(Icons.check, size: 30.0,),
+      title: Text('Published', style: TextStyle(fontSize: 20.0),),
+      onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
     );
   }
 
@@ -391,6 +345,14 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget settingsButton() {
+    return ListTile(
+      leading: Icon(Icons.settings, size: 30.0,),
+      title: Text('Settings', style: TextStyle(fontSize: 20.0),),
+      onTap: () => FluroRouter.router.navigateTo(context, AccountRoute),
     );
   }
 
@@ -465,14 +427,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget tempQuotesButton() {
-    return FlatButton(
-      child: ListTile(
-        leading: Icon(Icons.timelapse, size: 30.0,),
-        title: Text('In validation', style: TextStyle(fontSize: 20.0),),
-      ),
-      onPressed: () {
-        FluroRouter.router.navigateTo(context, TempQuotesRoute);
-      },
+    return ListTile(
+      leading: Icon(Icons.timelapse, size: 30.0,),
+      title: Text('In validation', style: TextStyle(fontSize: 20.0),),
+      onTap: () => FluroRouter.router.navigateTo(context, TempQuotesRoute),
     );
   }
 
