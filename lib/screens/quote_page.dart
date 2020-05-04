@@ -387,6 +387,10 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Color getFontColor(Color color) {
+    if (color == null) {
+      return Colors.white;
+    }
+
     int above200 = 0;
 
     if (color.blue > 200)   { above200++; }
