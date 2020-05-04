@@ -41,8 +41,9 @@ class _QuotePageState extends State<QuotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (BuildContext context) {
-        return ListView(
+      body: RefreshIndicator(
+        onRefresh: () => fetch(),
+        child: ListView(
           padding: EdgeInsets.only(bottom: 70.0),
           children: <Widget>[
             Stack(
@@ -52,8 +53,8 @@ class _QuotePageState extends State<QuotePage> {
               ],
             ),
           ],
-        );
-      }),
+        ),
+      ),
     );
   }
 
@@ -367,7 +368,7 @@ class _QuotePageState extends State<QuotePage> {
       Padding(padding: EdgeInsets.zero,);
   }
 
-  void fetch() async {
+  Future fetch() async {
     setState(() {
       isLoading = true;
     });
