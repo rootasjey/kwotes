@@ -323,7 +323,7 @@ class QuotidiansState extends State<Quotidians> {
               onTap: () {
                 FluroRouter.router.navigateTo(
                   context,
-                  QuotePageRoute.replaceFirst(':id', quotidian.id),
+                  QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
                 );
               },
               onLongPress: () => showQuoteSheet(quotidian: quotidian),
