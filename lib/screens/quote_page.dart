@@ -59,9 +59,7 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget body() {
     if (isLoading) {
-      return LoadingAnimation(
-        title: 'Loading quote...',
-      );
+      return loadingView();
     }
 
     if (!isLoading && quote == null) {
@@ -233,6 +231,33 @@ class _QuotePageState extends State<QuotePage> {
           });
         }
       },
+    );
+  }
+
+  Widget loadingView() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: LoadingAnimation(
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Text(
+                    'Loading quote...',
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    )
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
