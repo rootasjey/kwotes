@@ -42,52 +42,46 @@ class _QuotePageState extends State<QuotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        if (isLoading) {
-          return LoadingAnimation(
-            title: 'Loading quote...',
-          );
-        }
-
-        if (!isLoading && quote == null) {
-          return ErrorContainer(
-            message: "Sorry, we couldn't load the quote. Try again later.",
-          );
-        }
-
-        if (quote.topics.length > 0) {
-          final tc = appTopicsColors.find(quote.topics.first);
-          quoteColor = tc != null ? Color(tc.decimal) : stateColors.primary;
-        } else {
-          quoteColor = stateColors.primary;
-        }
-
         return ListView(
           padding: EdgeInsets.only(bottom: 70.0),
           children: <Widget>[
             Stack(
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    quoteName(),
-
-                    Padding(padding: EdgeInsets.only(top: 40.0),),
-
-                    authorName(),
-
-                    referenceName(),
-
-                    topics(),
-
-                    actionButtons(),
-                  ],
-                ),
-
+                body(),
                 backButton(),
               ],
             ),
           ],
         );
       }),
+    );
+  }
+
+  Widget body() {
+    if (isLoading) {
+      return LoadingAnimation(
+        title: 'Loading quote...',
+      );
+    }
+
+    if (!isLoading && quote == null) {
+      return errorView();
+    }
+
+    return Column(
+      children: <Widget>[
+        quoteName(),
+
+        Padding(padding: EdgeInsets.only(top: 40.0),),
+
+        authorName(),
+
+        referenceName(),
+
+        topics(),
+
+        actionButtons(),
+      ],
     );
   }
 
@@ -176,6 +170,21 @@ class _QuotePageState extends State<QuotePage> {
           ),
         ),
       )
+    );
+  }
+
+  Widget errorView() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 200.0,
+        left: 30.0,
+        right: 30.0,
+      ),
+      child: ErrorContainer(
+        iconSize: 80.0,
+        message: "Sorry, we couldn't load the quote. Try again later.",
+        onRefresh: () => fetch(),
+      ),
     );
   }
 
@@ -355,8 +364,16 @@ class _QuotePageState extends State<QuotePage> {
       final data = docSnap.data;
       data['id'] = docSnap.documentID;
 
+      quote = Quote.fromJSON(data);
+
+      if (quote.topics.length > 0) {
+        final tc = appTopicsColors.find(quote.topics.first);
+        quoteColor = tc != null ? Color(tc.decimal) : stateColors.primary;
+      } else {
+        quoteColor = stateColors.primary;
+      }
+
       setState(() {
-        quote = Quote.fromJSON(data);
         isLoading = false;
       });
 
