@@ -178,7 +178,7 @@ class _QuoteListState extends State<QuotesList> {
       return SliverList(
         delegate: SliverChildListDelegate([
             LoadingAnimation(
-              title: 'Loading list...',
+              textTitle: 'Loading list...',
             ),
           ]
         ),

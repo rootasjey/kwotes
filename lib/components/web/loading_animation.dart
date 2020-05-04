@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:memorare/state/colors.dart';
 
 class LoadingAnimation extends StatelessWidget {
-  final String title;
   final TextStyle style;
+  final String textTitle;
+  final Widget title;
 
   LoadingAnimation({
     this.style = const TextStyle(fontSize: 40.0,),
-    this.title = 'Loading...',
+    this.textTitle = 'Loading...',
+    this.title,
   });
 
   @override
@@ -34,13 +36,15 @@ class LoadingAnimation extends StatelessWidget {
           ],
         ),
 
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text(
-            title,
-            style: style
+        title != null ?
+          title :
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              textTitle,
+              style: style
+            ),
           ),
-        ),
       ],
     );
   }

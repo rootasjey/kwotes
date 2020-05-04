@@ -243,7 +243,7 @@ class _TopicPageState extends State<TopicPage> {
                 top: 150.0,
               ),
               child: LoadingAnimation(
-                title: 'Loading ${widget.name} quotes...',
+                textTitle: 'Loading ${widget.name} quotes...',
                 style: TextStyle(
                   fontSize: 20.0,
                 ),

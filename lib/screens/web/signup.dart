@@ -63,7 +63,7 @@ class _SignupState extends State<Signup> {
       return Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: LoadingAnimation(
-          title: 'Signing up...',
+          textTitle: 'Signing up...',
         ),
       );
     }

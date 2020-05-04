@@ -180,7 +180,7 @@ class _TopicPageState extends State<TopicPage> {
       return SliverList(
         delegate: SliverChildListDelegate([
             LoadingAnimation(
-              title: 'Loading ${widget.name} quotes...',
+              textTitle: 'Loading ${widget.name} quotes...',
             ),
           ]
         ),

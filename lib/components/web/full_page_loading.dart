@@ -13,7 +13,7 @@ class FullPageLoading extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      child: LoadingAnimation(title: title),
+      child: LoadingAnimation(textTitle: title),
     );
   }
 }

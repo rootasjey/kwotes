@@ -168,7 +168,7 @@ class _FavouritesState extends State<Favourites> {
       return SliverList(
         delegate: SliverChildListDelegate([
             LoadingAnimation(
-              title: 'Loading your favourites...',
+              textTitle: 'Loading your favourites...',
             ),
           ]
         ),

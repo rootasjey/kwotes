@@ -153,7 +153,7 @@ class _AllTopicsState extends State<AllTopics> {
             delegate: SliverChildListDelegate(
               [
                 LoadingAnimation(
-                  title: 'Loading topics...',
+                  textTitle: 'Loading topics...',
                 ),
               ]
             ),
