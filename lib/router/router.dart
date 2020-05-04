@@ -83,6 +83,11 @@ class FluroRouter {
     );
 
     router.define(
+      QuotidiansRoute,
+      handler: MobileRouteHandlers.quotidians,
+    );
+
+    router.define(
       RootRoute,
       handler: MobileRouteHandlers.quotidian,
     );

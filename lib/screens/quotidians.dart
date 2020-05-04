@@ -1,679 +1,569 @@
-import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:memorare/components/add_to_list_button.dart';
-import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/error.dart';
-import 'package:memorare/components/loading.dart';
-import 'package:memorare/data/mutations.dart';
-import 'package:memorare/data/queries.dart';
-import 'package:memorare/models/http_clients.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/order_lang_button.dart';
+import 'package:memorare/components/web/empty_content.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/loading_animation.dart';
+import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
-import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/screens/quote_page.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:memorare/types/font_size.dart';
-import 'package:memorare/types/quote.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
-import 'package:provider/provider.dart';
-import 'package:share/share.dart';
-
-enum QuoteAction { addList, like, share }
-
-List<Quotidian> _quotidians = [];
+import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/converter.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Quotidians extends StatefulWidget {
   @override
-  _QuotidiansState createState() => _QuotidiansState();
+  QuotidiansState createState() => QuotidiansState();
 }
 
-class _QuotidiansState extends State<Quotidians> {
+class QuotidiansState extends State<Quotidians> {
+  bool canManage      = false;
+  bool hasNext        = true;
+  bool hasErrors      = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  String lang         = 'en';
+  int limit           = 30;
+  bool descending     = false;
+  final pageRoute     = QuotidiansRoute;
+
   List<Quotidian> quotidians = [];
-  List<String> days = ['today', '2 days ago', 'yesterday'];
+  List<GlobalKey> headersKeys = [];
+  ScrollController scrollController = ScrollController();
 
-  bool isLoading = false;
-  bool hasErrors = false;
-  bool hasConnection = true;
-  Error error;
-
-  bool isStarredFetched = false;
+  var lastDoc;
 
   @override
   initState() {
     super.initState();
-
-    setState(() {
-      quotidians = _quotidians;
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (quotidians.length > 0) {
-      return;
-    }
-
-    fetchQuotidians();
-  }
-
-  @override
-  void dispose() {
-    _quotidians = quotidians;
-    super.dispose();
+    getSavedLangAndOrder();
+    fetch();
   }
 
   @override
   Widget build(BuildContext context) {
-    final httpClients = Provider.of<HttpClientsModel>(context, listen: false);
+    return Scaffold(
+      body: body(),
+    );
+  }
 
-    if (httpClients.authClient != null && !isStarredFetched) {
-      fetchWhichStarred();
-    }
+  Widget body() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+            return false;
+          }
 
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            appBar(),
+            ...customScrollViewChild(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> customScrollViewChild() {
     if (isLoading) {
-      return LoadingComponent(
-        title: 'Loading quotidians...',
-      );
-    }
-
-    if (!hasConnection) {
-      return ErrorComponent(
-        description: 'The app cannot connect to Internet. Please check your connectivity or contact us if the problem persists.',
-        title: 'Quotidians',
-        onRefresh: () {
-          fetchQuotidians();
-        },
-      );
-    }
-
-    if (hasErrors) {
-      return EmptyView(
-        title: 'Quotidians',
-        description: error != null ?
-          error.toString() :
-          'An unexpected error ocurred. Please try again.',
-        onRefresh: () {
-          fetchQuotidians();
-        },
-      );
+      return [loadingView()];
     }
 
     if (quotidians.length == 0) {
-      return Column(
-        children: <Widget>[
-          EmptyView(
-            title: 'Quotidians',
-            description: 'It is odd. There is no quotidians for today 🤔. ',
-          ),
-          Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Text(
-                'Try again'
-              ),
-            ),
-          ),
-        ],
-      );
+      return [emptyView()];
     }
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        await fetchQuotidians();
-        return null;
-      },
-      child: ListView(
-        children: <Widget>[
-          Swiper(
-            itemHeight: MediaQuery.of(context).size.height - 80.0,
-            itemWidth: MediaQuery.of(context).size.width - 20.0,
-            itemCount: quotidians.length,
-            layout: SwiperLayout.STACK,
-            itemBuilder: (BuildContext context, int index) {
-              final quote = quotidians.elementAt(index).quote;
+    if (!isLoading && hasErrors) {
+      return [errorView()];
+    }
 
-              final orientation = MediaQuery.of(context).orientation;
-
-              return orientation == Orientation.portrait ?
-                portraitCard(quote: quote, index: index) :
-                landscapeCard(quote: quote, index: index);
-            },
-          ),
-        ],
-      ),
-    );
+    return groupsList();
   }
 
-  Widget portraitCard({Quote quote, int index}) {
-    final topicColor = quote.topics.length > 0 ?
-      ThemeColor.topicColor(quote.topics.first) :
-      ThemeColor.primary;
+  Widget appBar() {
+    return Observer(
+      builder: (_) {
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          expandedHeight: 120.0,
+          backgroundColor: stateColors.softBackground,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Stack(
+            children: <Widget>[
+              FadeInY(
+                delay: 1.0,
+                beginY: 50.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: FlatButton(
+                    onPressed: () {
+                      if (quotidians.length == 0) { return; }
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 560.0,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Card(
-                elevation: 5.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  side: BorderSide(
-                    color: topicColor,
-                    width: 5.0,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    content(quote),
-
-                    author(quote),
-
-                    if (quote.references.length > 0)
-                      reference(quote),
-
-                    actionIcons(quote),
-                  ],
-                ),
-              ),
-            )
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                days.elementAt(index),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget actionIcons(Quote quote) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 40.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          AddToListButton(quoteId: quote.id,),
-          IconButton(
-            icon: Icon(
-              Icons.share,
-              size: 30.0,
-            ),
-            onPressed: () {
-              final RenderBox box = context.findRenderObject();
-              final sharingText = '${quote.name} - ${quote.author.name}';
-
-              Share.share(
-                sharingText,
-                subject: 'Out Of Context',
-                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-              );
-            },
-          ),
-
-          if (!quote.starred)
-            IconButton(
-              icon: Icon(
-                Icons.favorite_border,
-                size: 30.0,
-              ),
-              onPressed: () async {
-                setState(() { // optimistic
-                  quote.starred = true;
-                });
-
-                final booleanMessage = await Mutations.star(context, quote.id);
-
-                if (!booleanMessage.boolean) {
-                  setState(() { // rollback
-                    quote.starred = false;
-                  });
-
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ThemeColor.error,
-                    message: booleanMessage.message,
-                  )..show(context);
-                }
-              },
-            ),
-
-          if (quote.starred)
-            IconButton(
-              icon: Icon(
-                Icons.favorite,
-                size: 30.0,
-              ),
-              onPressed: () async {
-                setState(() { // optimistic
-                  quote.starred = false;
-                });
-
-                final booleanMessage = await Mutations.unstar(context, quote.id);
-
-                if (!booleanMessage.boolean) {
-                  setState(() { // rollback
-                    quote.starred = true;
-                  });
-
-                  Flushbar(
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ThemeColor.error,
-                    message: booleanMessage.message,
-                  )..show(context);
-                }
-              },
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget author(Quote quote) {
-    final author = quote.author;
-
-    return InkWell(
-      onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          AuthorRoute.replaceFirst(':id', author.id),
-        );
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              author.name.length < 150 ?
-                author.name :
-                '${quote.author.name.substring(0, 150)}...',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget content(Quote quote) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return QuotePage(id: quote.id,);
-            }
-          )
-        );
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
-        child: Text(
-          quote.name.length < 200 ?
-          quote.name :
-          '${quote.name.substring(0, 200)}...',
-          style: TextStyle(
-            fontSize: FontSize.bigCard(quote.name),
-            fontWeight: FontWeight.bold
-          ),
-        ),
-      )
-    );
-  }
-
-  Widget reference(Quote quote) {
-    final reference = quote.references.first;
-
-    return InkWell(
-      onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          ReferenceRoute.replaceFirst(':id', reference.id),
-        );
-      },
-      child: Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              reference.name.length < 100 ?
-                reference.name :
-                '${reference.name.substring(0, 100)}...',
-              style: TextStyle(
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget landscapeCard({Quote quote, int index}) {
-    final topicColor = quote.topics.length > 0 ?
-      ThemeColor.topicColor(quote.topics.first) :
-      ThemeColor.primary;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 280.0,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Card(
-                elevation: 5.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  side: BorderSide(
-                    color: topicColor,
-                    width: 5.0,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        landscapeContent(quote),
-                      ],
+                      scrollController.animateTo(
+                        0,
+                        duration: Duration(seconds: 2),
+                        curve: Curves.easeOutQuint
+                      );
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 60.0,
+                      child: Text(
+                        'Scheduled quotidians',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
                     ),
-
-                    moreButton(context: context, quote: quote),
-                    landscapeDay(index),
-                  ],
-                ),
-              ),
-            )
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget landscapeDay(int index) {
-    return Positioned(
-      bottom: 10.0,
-      left: 30.0,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 5.0),
-        child: Opacity(
-          opacity: .6,
-          child: Text(
-            days.elementAt(index),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget landscapeContent(Quote quote) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return QuotePage(id: quote.id,);
-            }
-          )
-        );
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-        child: Text(
-          quote.name.length < 200 ?
-          quote.name :
-          '${quote.name.substring(0, 200)}...',
-          style: TextStyle(
-            fontSize: FontSize.landscapeBigCard(quote.name),
-            fontWeight: FontWeight.bold
-          ),
-        ),
-      )
-    );
-  }
-
-  Widget landcapeAuthor(Quote quote) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return AuthorPage(
-                id: quote.author.id,
-              );
-            }
-          )
-        );
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              quote.author.name.length < 150 ?
-                quote.author.name :
-                '${quote.author.name.substring(0, 150)}...',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget moreButton({Quote quote, BuildContext context}) {
-    final starred = quote.starred;
-
-    return Positioned(
-      bottom: 0,
-      right: 0,
-      child: PopupMenuButton<String>(
-        icon: Icon(Icons.more_horiz),
-        onSelected: (value) async {
-          if (value == 'like') {
-            setState(() { // optimistic
-              quote.starred = true;
-            });
-
-            final booleanMessage = await Mutations.star(context, quote.id);
-
-            if (!booleanMessage.boolean) {
-              setState(() { // rollback
-                quote.starred = false;
-              });
-
-              Flushbar(
-                duration: Duration(seconds: 2),
-                backgroundColor: ThemeColor.error,
-                message: booleanMessage.message,
-              )..show(context);
-            }
-            return;
-          }
-
-          if (value == 'unlike') {
-            setState(() { // optimistic
-              quote.starred = false;
-            });
-
-            final booleanMessage = await Mutations.unstar(context, quote.id);
-
-            if (!booleanMessage.boolean) {
-              setState(() { // rollback
-                quote.starred = true;
-              });
-
-              Flushbar(
-                duration: Duration(seconds: 2),
-                backgroundColor: ThemeColor.error,
-                message: booleanMessage.message,
-              )..show(context);
-            }
-            return;
-          }
-
-          if (value == 'addTo') {
-            return;
-          }
-
-          if (value == 'share') {
-            return;
-          }
-        },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          PopupMenuItem(
-            value: 'addTo',
-            child: AddToListButton(
-              context: context,
-              quoteId: quote.id,
-              type: ButtonType.tile,
-              onBeforeShowSheet: () => Navigator.pop(context),
-            ),
-          ),
-          PopupMenuItem(
-            value: 'share',
-            child: ListTile(
-              onTap: () {
-                Navigator.pop(context);
-
-                final RenderBox box = context.findRenderObject();
-                final sharingText = quote.author != null ?
-                  '${quote.name} - ${quote.author.name}' :
-                  quote.name;
-
-                Share.share(
-                  sharingText,
-                  subject: 'Out Of Context',
-                  sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-                );
-              },
-              leading: Icon(Icons.share),
-              title: Text(
-                'Share',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          ),
-          if (!starred)
-            const PopupMenuItem(
-              value: 'like',
-              child: ListTile(
-                leading: Icon(Icons.favorite_border),
-                title: Text(
-                  'Like',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
                   ),
                 ),
-              )
-            ),
-          if (starred)
-            const PopupMenuItem(
-              value: 'unlike',
-              child: ListTile(
-                leading: Icon(Icons.favorite),
-                title: Text(
-                  'Unlike',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
-                  ),
+              ),
+
+              Positioned(
+                right: 20.0,
+                top: 50.0,
+                child: OrderLangButton(
+                  descending: descending,
+                  lang: lang,
+                  onLangChanged: (String newLang) {
+                    appLocalStorage.savePageLang(
+                      lang: newLang,
+                      pageRoute: pageRoute,
+                    );
+
+                    setState(() {
+                      lang = newLang;
+                    });
+
+                    fetch();
+                  },
+                  onOrderChanged: (bool order) {
+                    appLocalStorage.savePageOrder(
+                      descending: order,
+                      pageRoute: pageRoute,
+                    );
+
+                    setState(() {
+                      descending = order;
+                    });
+
+                    fetch();
+                  },
                 ),
-              )
+              ),
+
+              Positioned(
+                left: 20.0,
+                top: 50.0,
+                child: IconButton(
+                  onPressed: () {
+                    FluroRouter.router.pop(context);
+                  },
+                  tooltip: 'Back',
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.sentiment_neutral,
+                  size: 120.0,
+                  color: Color(0xFFFF005C),
+                ),
+              ),
+              title: "You've no quote in validation at this moment",
+              subtitle: 'They will appear after you propose a new quote',
+              onRefresh: () => fetch(),
             ),
-        ],
+          ),
+        ]
       ),
     );
   }
 
-  Future fetchQuotidians() async {
-    setState(() {
-      isLoading = true;
+  Widget errorView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: ErrorContainer(
+            onRefresh: () => fetch(),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  List<Widget> groupsList() {
+    final Map<String, List<Quotidian>> groups = quotidians.groupBy(
+      (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
+    );
+
+    final List<Widget> groupedList = [];
+
+    groups.forEach((yearMonth, groupedQuotidians) {
+      final singleGroup = monthGroup(yearMonth, groupedQuotidians);
+      groupedList.addAll(singleGroup);
     });
 
-    hasConnection = await DataConnectionChecker().hasConnection;
+    return groupedList;
+  }
 
-    if (!hasConnection) {
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: LoadingAnimation(),
+          ),
+        ]
+      ),
+    );
+  }
+
+  List<Widget> monthGroup(String yearMonth, List<Quotidian> group) {
+    final splittedDate = yearMonth.split('-');
+
+    final year = splittedDate[0];
+    final month = getMonthFromNumber(splittedDate[1].toInt());
+
+    final headerKey = GlobalKey();
+    headersKeys.add(headerKey);
+
+    return [
+      SliverPersistentHeader(
+        key: headerKey,
+        pinned: true,
+        floating: false,
+        delegate: SliverAppBarDelegate(
+          minHeight: 80.0,
+          maxHeight: 80.0,
+          child: Container(
+            color: stateColors.softBackground,
+            child: FlatButton(
+              onPressed: () {
+                final renderObject = headerKey.currentContext.findRenderObject();
+                renderObject.showOnScreen(duration: 1.seconds);
+              },
+              onLongPress: () => deleteMonth(group),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 35.0,
+                  bottom: 10.0,
+                ),
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        '$month $year',
+                      ),
+
+                      SizedBox(
+                        width: 100.0,
+                        child: Divider(thickness: 2,),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      sliverQuotesList(group),
+    ];
+  }
+
+  Widget sliverQuotesList(List<Quotidian> group) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final quotidian = group.elementAt(index);
+          final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
+
+          return FadeInY(
+            delay: index * 1.0,
+            beginY: 50.0,
+            child: InkWell(
+              onTap: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  QuotePageRoute.replaceFirst(':id', quotidian.id),
+                );
+              },
+              onLongPress: () => showQuoteSheet(quotidian: quotidian),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(top: 20.0),),
+
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      quotidian.quote.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+
+                  Center(
+                    child: IconButton(
+                      onPressed: () => showQuoteSheet(quotidian: quotidian),
+                      icon: Icon(
+                        Icons.more_horiz,
+                        color: topicColor != null ?
+                        Color(topicColor.decimal) : stateColors.primary,
+                      ),
+                    ),
+                  ),
+
+                  Center(
+                    child: Opacity(
+                      opacity: .6,
+                      child: Text(
+                        quotidian.date.day.toString(),
+                      ),
+                    ),
+                  ),
+
+                  Padding(padding: const EdgeInsets.only(top: 10.0),),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        },
+        childCount: group.length,
+      ),
+    );
+  }
+
+  void deleteAction(Quotidian quotidian) async {
+    try {
+      await Firestore.instance
+        .collection('quotidians')
+        .document(quotidian.id)
+        .delete();
+
       setState(() {
+        quotidians.removeWhere((element) => element.id == quotidian.id);
+      });
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'The quotidian has been successfully deleted.'
+          ),
+        )
+      );
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Sorry, an error occurred while deleting the quotidian.'
+          ),
+        )
+      );
+    }
+  }
+
+  void deleteMonth(List<Quotidian> group) async {
+    print('delete month');
+
+    // NOTE: maybe do this job in a cloud function
+    group.forEach((quotidian) async {
+      await Firestore.instance
+        .collection('quotidians')
+        .document(quotidian.id)
+        .delete();
+
+      quotidians.removeWhere((element) => element.id == quotidian.id);
+    });
+
+    setState(() {});
+  }
+
+  Future fetch() async {
+    setState(() {
+      isLoading = true;
+      quotidians.clear();
+    });
+
+
+    try {
+      final snapshot = await Firestore.instance
+        .collection('quotidians')
+        .where('lang', isEqualTo: lang)
+        .orderBy('date', descending: descending)
+        .limit(limit)
+        .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quotidian = Quotidian.fromJSON(data);
+        quotidians.add(quotidian);
+      });
+
+      lastDoc = snapshot.documents.last;
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
 
-      Flushbar(
-        backgroundColor: ThemeColor.error,
-        message: 'The app cannot reach the network.',
-      )..show(context);
+    } catch (error) {
+      debugPrint(error.toString());
 
+      setState(() {
+        hasNext = false;
+        isLoading = false;
+      });
+    }
+  }
+
+  void fetchMore() async {
+    if (lastDoc == null) {
       return;
     }
 
-    return Queries.quotidians(context)
-      .then((resp) {
-        if (resp == null) {
-          return;
-        }
+    isLoadingMore = true;
 
-        resp.entries.insert(1, resp.entries.removeLast());
+    try {
+      final snapshot = await Firestore.instance
+        .collection('quotidians')
+        .where('lang', isEqualTo: lang)
+        .orderBy('date', descending: descending)
+        .startAfterDocument(lastDoc)
+        .limit(limit)
+        .getDocuments();
 
+      if (snapshot.documents.isEmpty) {
         setState(() {
-          hasErrors = false;
-          quotidians = resp.entries;
-          isLoading = false;
+          hasNext = false;
+          isLoadingMore = false;
         });
-      })
-      .catchError((err) {
-        setState(() {
-          error = err;
-          hasErrors = true;
-          isLoading = false;
-        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quotidian = Quotidian.fromJSON(data);
+        quotidians.add(quotidian);
       });
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
+        lastDoc = snapshot.documents.last;
+        isLoadingMore = false;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
   }
 
-  Future fetchWhichStarred() async {
-    isStarredFetched = true;
-
-    return Queries.quotidians(context)
-      .then((resp) {
-        resp.entries.insert(1, resp.entries.removeLast());
-
-        if (quotidians.length == 0) { return; }
-
-        for (var i = 0; i < quotidians.length; i++) {
-          quotidians.elementAt(i).quote.starred = resp.entries.elementAt(i).quote.starred;
-        }
-
-        setState(() {});
-      })
-      .catchError((err) {});
+  void getSavedLangAndOrder() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
   }
 
+  void showQuoteSheet({Quotidian quotidian}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 60.0,
+          ),
+          child: Wrap(
+            spacing: 30.0,
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 40.0,
+                    tooltip: 'Delete',
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
+                      deleteAction(quotidian);
+                    },
+                    icon: Opacity(
+                      opacity: .6,
+                      child: Icon(
+                        Icons.delete_outline,
+                      ),
+                    ),
+                  ),
+
+                  Text(
+                    'Delete',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
 }

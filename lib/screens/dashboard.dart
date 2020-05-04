@@ -238,7 +238,13 @@ class _DashboardState extends State<Dashboard> {
         leading: Icon(Icons.timelapse, size: 30.0),
         title: Text('All in validation', style: TextStyle(fontSize: 20.0),),
         onTap: () => FluroRouter.router.navigateTo(context, AdminTempQuotesRoute),
-      )
+      ),
+
+      ListTile(
+        leading: Icon(Icons.wb_sunny, size: 30.0),
+        title: Text('Quotidians', style: TextStyle(fontSize: 20.0),),
+        onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
+      ),
     ];
   }
 

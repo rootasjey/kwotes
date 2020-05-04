@@ -17,6 +17,7 @@ import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
+import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
@@ -87,6 +88,10 @@ class MobileRouteHandlers {
   static Handler quotidian = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           FullPageQuotidian());
+
+  static Handler quotidians = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Quotidians());
 
   static Handler reference = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
