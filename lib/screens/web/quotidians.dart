@@ -60,7 +60,7 @@ class _QuotidiansState extends State<Quotidians> {
     });
 
     checkAuth();
-    fetchQuotidians();
+    fetch();
   }
 
   @override
@@ -166,7 +166,7 @@ class _QuotidiansState extends State<Quotidians> {
         }
 
         if (hasNext && !isLoadingMore) {
-          fetchMoreQuotidians();
+          fetchMore();
         }
 
         return false;
@@ -178,8 +178,6 @@ class _QuotidiansState extends State<Quotidians> {
             floating: true,
             snap: true,
             expandedHeight: 340.0,
-            // backgroundColor: Colors.transparent,
-            // backgroundColor: stateColors.primary,
             backgroundColor: backgroundColor,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
@@ -220,7 +218,7 @@ class _QuotidiansState extends State<Quotidians> {
                               selectedLang = newValue;
                             });
 
-                            fetchQuotidians();
+                            fetch();
                             appLocalStorage.saveQuotidiansLang(Language.backend(selectedLang));
                           },
                           items: ['English', 'Français']
@@ -398,7 +396,7 @@ class _QuotidiansState extends State<Quotidians> {
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
         onPressed: () {
-          fetchMoreQuotidians();
+          fetchMore();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(
@@ -491,7 +489,7 @@ class _QuotidiansState extends State<Quotidians> {
     }
   }
 
-  void fetchQuotidians() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -542,7 +540,7 @@ class _QuotidiansState extends State<Quotidians> {
     }
   }
 
-  void fetchMoreQuotidians() async {
+  void fetchMore() async {
     if (lastDoc == null) {
       return;
     }
