@@ -4,9 +4,11 @@ import 'package:memorare/state/colors.dart';
 class ErrorContainer extends StatelessWidget {
   final String message;
   final Function onRefresh;
+  final double iconSize;
 
   ErrorContainer({
     this.onRefresh,
+    this.iconSize = 40.0,
     this.message = 'Oops! There was an error.',
   });
 
@@ -16,7 +18,7 @@ class ErrorContainer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: <Widget>[
-          Icon(Icons.sentiment_neutral, size: 40.0),
+          Icon(Icons.sentiment_neutral, size: iconSize),
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 60.0),
