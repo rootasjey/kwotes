@@ -388,7 +388,7 @@ class ReferencePageState extends State<ReferencePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 60.0,
-                horizontal: 5.0,
+                horizontal: 10.0,
               ),
               child: createHeroQuoteAnimation(
                 isMobile: true,
