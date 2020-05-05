@@ -13,7 +13,6 @@ import 'package:memorare/screens/add_quote_last_step.dart';
 import 'package:memorare/screens/add_quote_reference.dart';
 import 'package:memorare/screens/add_quote_topics.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/snack.dart';
 
 enum ActionType {
@@ -74,7 +73,7 @@ class _AddQuoteState extends State<AddQuote> {
           onLongPress: () => saveQuoteAsDraft(),
           child: FloatingActionButton(
             foregroundColor: Colors.white,
-            backgroundColor: ThemeColor.success,
+            backgroundColor: Colors.green,
             onPressed: () {
               FocusScope.of(context).requestFocus(FocusNode());
               propose();

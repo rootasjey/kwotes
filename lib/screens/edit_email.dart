@@ -6,7 +6,6 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/utils/snack.dart';
 
 class EditEmail extends StatefulWidget {
@@ -290,7 +289,7 @@ class _EditEmailState extends State<EditEmail> {
               Padding(
                 padding: EdgeInsets.all(10.0),
                 child: RaisedButton(
-                  color: ThemeColor.success,
+                  color: Colors.green,
                   child: Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Text(

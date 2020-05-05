@@ -8,10 +8,8 @@ import 'package:memorare/main_web.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   return runApp(App());
@@ -50,33 +48,30 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ThemeColor>(create: (context) => ThemeColor(),),
-      ],
-      child: isReady ?
-        DynamicTheme(
-          defaultBrightness: Brightness.light,
-          data: (brightness) => ThemeData(
-            fontFamily: 'Comfortaa',
-            brightness: brightness,
-          ),
-          themedWidgetBuilder: (context, theme) {
-            stateColors.themeData = theme;
-
-            if (kIsWeb) {
-              return MainWeb();
-            }
-
-            return MainMobile();
-          },
-        ) :
-        MaterialApp(
-          title: 'Out Of Context',
-          home: Scaffold(
-            body: FullPageLoading(),
-          ),
+    if (isReady) {
+      return DynamicTheme(
+        defaultBrightness: Brightness.light,
+        data: (brightness) => ThemeData(
+          fontFamily: 'Comfortaa',
+          brightness: brightness,
         ),
+        themedWidgetBuilder: (context, theme) {
+          stateColors.themeData = theme;
+
+          if (kIsWeb) {
+            return MainWeb();
+          }
+
+          return MainMobile();
+        },
+      );
+    }
+
+    return MaterialApp(
+      title: 'Out Of Context',
+      home: Scaffold(
+        body: FullPageLoading(),
+      ),
     );
   }
 

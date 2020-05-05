@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/state/colors.dart';
 
 class AddQuoteReference extends StatefulWidget {
   final int step;
@@ -86,8 +85,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget body() {
-    final themeColor = Provider.of<ThemeColor>(context);
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -95,7 +92,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         avatar(),
         nameField(),
         typesFields(),
-        langAndSummary(themeColor),
+        langAndSummary(),
         links(),
         clearButton(),
         helpButton(),
@@ -177,7 +174,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   ),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('Cancel', style: TextStyle(color: ThemeColor.error),),
+                      child: Text('Cancel', style: TextStyle(color: Colors.red),),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -279,7 +276,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget langAndSummary(ThemeColor themeColor) {
+  Widget langAndSummary() {
     return Column(
       children: <Widget>[
         FadeInY(
@@ -290,12 +287,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             child: DropdownButton<String>(
               value: AddQuoteInputs.reference.lang,
               style: TextStyle(
-                color: themeColor.accent,
+                color: stateColors.primary,
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
               underline: Container(
-                color: themeColor.accent,
+                color: stateColors.primary,
                 height: 2.0,
               ),
               onChanged: (newValue) {

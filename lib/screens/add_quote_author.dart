@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/types/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:memorare/state/colors.dart';
 
 class AddQuoteAuthor extends StatefulWidget {
   final int step;
@@ -125,7 +124,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('Cancel', style: TextStyle(color: ThemeColor.error),),
+                      child: Text('Cancel', style: TextStyle(color: Colors.red),),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -154,7 +153,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             child: Icon(
               Icons.add,
               size: 50.0,
-              color: Provider.of<ThemeColor>(context).accent,
+              color: stateColors.primary,
             ),
             backgroundColor: Colors.black12,
             radius: 80.0,

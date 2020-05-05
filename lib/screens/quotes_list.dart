@@ -11,7 +11,6 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/snack.dart';
@@ -636,7 +635,7 @@ class _QuotesListState extends State<QuotesList> {
               ),
             ),
             RaisedButton(
-              color: ThemeColor.error,
+              color: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();
                 delete();

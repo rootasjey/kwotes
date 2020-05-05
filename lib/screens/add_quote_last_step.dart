@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/types/colors.dart';
 
 class AddQuoteLastStep extends StatefulWidget {
   final int step;
@@ -106,7 +105,7 @@ class _AddQuoteLastStepState extends State<AddQuoteLastStep> {
                 widget.onPropose();
               }
             },
-            color: ThemeColor.success,
+            color: Colors.green,
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
