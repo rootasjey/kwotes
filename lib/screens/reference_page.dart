@@ -7,6 +7,7 @@ import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/animation.dart';
@@ -71,6 +72,7 @@ class ReferencePageState extends State<ReferencePage> {
           Firestore.instance
             .collection('quotes')
             .where('mainReference.id', isEqualTo: widget.id)
+            .where('lang', isEqualTo: userState.lang)
             .limit(1)
             .getDocuments()
             .then((querySnap) {
