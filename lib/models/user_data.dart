@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:memorare/data/queries.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../types/user_data.dart';
@@ -80,11 +79,6 @@ class UserDataModel extends ChangeNotifier {
   }
 
   Future fetchAndUpdate(BuildContext context) {
-    return Queries.userData(context)
-    .then((dataResp) {
-      update(dataResp);
-      saveToFile(_userData.toJSON());
-    });
   }
 
   void saveToFile(Map<String, dynamic> json) async {
