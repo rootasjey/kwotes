@@ -2,7 +2,6 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/app_keys.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/main_mobile.dart';
 import 'package:memorare/main_web.dart';
