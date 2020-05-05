@@ -6,6 +6,8 @@ import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
@@ -383,8 +385,13 @@ class ReferencePageState extends State<ReferencePage> {
             child: Divider(),
           ),
 
-          GestureDetector(
-            onTap: () {},
+          InkWell(
+            onTap: () {
+              FluroRouter.router.navigateTo(
+                context,
+                QuotePageRoute.replaceFirst(':id', quote.id),
+              );
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 60.0,
