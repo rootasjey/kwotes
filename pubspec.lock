@@ -148,13 +148,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.12"
-  connectivity:
-    dependency: transitive
-    description:
-      name: connectivity
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.6+2"
   convert:
     dependency: transitive
     description:
@@ -331,27 +324,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  gql:
-    dependency: transitive
-    description:
-      name: gql
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.11.1"
-  graphql:
-    dependency: transitive
-    description:
-      name: graphql
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1-beta.5"
-  graphql_flutter:
-    dependency: "direct main"
-    description:
-      name: graphql_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1-beta.5"
   graphs:
     dependency: transitive
     description:
@@ -569,13 +541,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.22.6"
   share:
     dependency: "direct main"
     description:
@@ -742,13 +707,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0+2"
-  uuid_enhanced:
-    dependency: transitive
-    description:
-      name: uuid_enhanced
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.2"
   vector_math:
     dependency: transitive
     description:
@@ -770,13 +728,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  websocket:
-    dependency: transitive
-    description:
-      name: websocket
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5"
   xml:
     dependency: transitive
     description:
@@ -793,4 +744,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"

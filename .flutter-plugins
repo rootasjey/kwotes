@@ -1,7 +1,6 @@
 # This is a generated file; do not edit or check into version control.
 cloud_firestore=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.13.4+2/
 cloud_firestore_web=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-0.1.1+2/
-connectivity=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.6+2/
 firebase_analytics=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-5.0.11/
 firebase_auth=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.15.5+3/
 firebase_auth_web=/Users/jeremiecorpinot/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-0.1.2/
