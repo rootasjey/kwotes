@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/main_mobile.dart';
 import 'package:memorare/main_web.dart';
-import 'package:memorare/models/user_data.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -53,7 +52,6 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserDataModel>(create: (context) => UserDataModel(),),
         ChangeNotifierProvider<ThemeColor>(create: (context) => ThemeColor(),),
       ],
       child: isReady ?
