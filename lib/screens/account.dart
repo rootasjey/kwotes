@@ -13,7 +13,6 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/app_settings.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/snack.dart';
@@ -47,7 +46,7 @@ class _AccountState extends State<Account> {
   @override
   initState() {
     super.initState();
-    isDailyQuoteActive = AppSettings.isQuotidianNotifActive;
+    // TODO: initialize isDailyQuoteActive var
 
     checkAuth();
     isThemeAuto = appLocalStorage.getAutoBrightness();
@@ -320,8 +319,6 @@ class _AccountState extends State<Account> {
             timer?.cancel();
             timer = Timer(
               Duration(seconds: 1), () {
-                AppSettings.updateQuotidianNotifActive(value);
-
                 toggleBackgroundTask();
               });
           },

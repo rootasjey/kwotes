@@ -1,15 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/types/quotidian.dart';
-import 'package:path_provider/path_provider.dart';
 
 class AppNotifications {
   static FlutterLocalNotificationsPlugin _plugin;
-
   static FlutterLocalNotificationsPlugin get plugin => _plugin;
 
   static void initialize({BuildContext context}) {
@@ -65,22 +60,5 @@ class AppNotifications {
       platformChannelSpecifics,
       payload: quotidian.quote.id
     );
-  }
-
-  static Future<Quotidian> getSavedQuotidian() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = '${directory.path}/quotidian';
-    final file = File(path);
-
-    try {
-      final str = file.readAsStringSync();
-      final json = jsonDecode(str);
-      final quotidian = Quotidian.fromJSON(json);
-
-      return quotidian;
-
-    } catch (e) {
-      return null;
-    }
   }
 }
