@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:memorare/components/error.dart';
 
 class HttpClientsModel extends ChangeNotifier {
   ValueNotifier<GraphQLClient> _client;
@@ -77,16 +76,6 @@ class HttpClientsModel extends ChangeNotifier {
           });
 
         if (!isJwtExpired) { return null; }
-
-        return ErrorComponent
-          .trySignin(context)
-          .then((tryResponse) {
-            if (tryResponse.hasErrors) {
-              return null;
-            }
-
-            return response.operation;
-          });
       }
     );
 
