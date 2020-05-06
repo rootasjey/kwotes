@@ -7,7 +7,6 @@ import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/loading_animation.dart';
-import 'package:memorare/components/web/sliver_appbar_delegate.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -15,6 +14,7 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/converter.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Quotidians extends StatefulWidget {
@@ -34,7 +34,6 @@ class QuotidiansState extends State<Quotidians> {
   final pageRoute     = QuotidiansRoute;
 
   List<Quotidian> quotidians = [];
-  List<GlobalKey> headersKeys = [];
   ScrollController scrollController = ScrollController();
 
   var lastDoc;
@@ -49,56 +48,30 @@ class QuotidiansState extends State<Quotidians> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
-    );
-  }
-
-  Widget body() {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            ...customScrollViewChild(),
-          ],
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: bodyContent(),
         ),
       ),
     );
   }
 
-  List<Widget> customScrollViewChild() {
-    if (isLoading) {
-      return [loadingView()];
-    }
-
-    if (quotidians.length == 0) {
-      return [emptyView()];
-    }
-
-    if (!isLoading && hasErrors) {
-      return [errorView()];
-    }
-
-    return groupsList();
-  }
-
-  Widget appBar() {
+  Widget appBar()  {
     return Observer(
       builder: (_) {
         return SliverAppBar(
@@ -190,6 +163,32 @@ class QuotidiansState extends State<Quotidians> {
     );
   }
 
+  Widget bodyContent() {
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: <Widget>[
+        appBar(),
+        customScrollViewChild(),
+      ],
+    );
+  }
+
+  Widget customScrollViewChild() {
+    if (isLoading) {
+      return loadingView();
+    }
+
+    if (quotidians.length == 0) {
+      return emptyView();
+    }
+
+    if (!isLoading && hasErrors) {
+      return errorView();
+    }
+
+    return groupsList();
+  }
+
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -228,7 +227,7 @@ class QuotidiansState extends State<Quotidians> {
     );
   }
 
-  List<Widget> groupsList() {
+  Widget groupsList() {
     final Map<String, List<Quotidian>> groups = quotidians.groupBy(
       (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
     );
@@ -240,7 +239,9 @@ class QuotidiansState extends State<Quotidians> {
       groupedList.addAll(singleGroup);
     });
 
-    return groupedList;
+    return SliverList(
+      delegate: SliverChildListDelegate(groupedList),
+    );
   }
 
   Widget loadingView() {
@@ -262,115 +263,108 @@ class QuotidiansState extends State<Quotidians> {
     final month = getMonthFromNumber(splittedDate[1].toInt());
 
     final headerKey = GlobalKey();
-    headersKeys.add(headerKey);
 
     return [
-      SliverPersistentHeader(
+      StickyHeader(
         key: headerKey,
-        pinned: true,
-        floating: false,
-        delegate: SliverAppBarDelegate(
-          minHeight: 80.0,
-          maxHeight: 80.0,
-          child: Container(
-            color: stateColors.softBackground,
-            child: FlatButton(
-              onPressed: () {
-                final renderObject = headerKey.currentContext.findRenderObject();
-                renderObject.showOnScreen(duration: 1.seconds);
-              },
-              onLongPress: () => deleteMonth(group),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 35.0,
-                  bottom: 10.0,
-                ),
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        '$month $year',
-                      ),
+        header: Container(
+          color: stateColors.softBackground,
+          child: FlatButton(
+            onPressed: () {
+              final renderObject = headerKey.currentContext.findRenderObject();
+              renderObject.showOnScreen(duration: 1.seconds);
+            },
+            onLongPress: () => deleteMonth(group),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 35.0,
+                bottom: 10.0,
+              ),
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      '$month $year',
+                    ),
 
-                      SizedBox(
-                        width: 100.0,
-                        child: Divider(thickness: 2,),
-                      ),
-                    ],
-                  ),
+                    SizedBox(
+                      width: 100.0,
+                      child: Divider(thickness: 2,),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
         ),
+        content: sliverQuotesList(group),
       ),
-
-      sliverQuotesList(group),
     ];
   }
 
   Widget sliverQuotesList(List<Quotidian> group) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final quotidian = group.elementAt(index);
-          final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
+    int index = 0;
 
-          return FadeInY(
-            delay: index * 1.0,
-            beginY: 50.0,
-            child: InkWell(
-              onTap: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
-                );
-              },
-              onLongPress: () => showQuoteSheet(quotidian: quotidian),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(top: 20.0),),
+    return Column(
+      children: group.map((quotidian) {
+        index++;
 
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
+        final topicColor = appTopicsColors
+          .find(quotidian.quote.topics.first);
+
+        return FadeInY(
+          delay: index * 1.0,
+          beginY: 50.0,
+          child: InkWell(
+            onTap: () {
+              FluroRouter.router.navigateTo(
+                context,
+                QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
+              );
+            },
+            onLongPress: () => showQuoteSheet(quotidian: quotidian),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.only(top: 20.0),),
+
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    quotidian.quote.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+
+                Center(
+                  child: IconButton(
+                    onPressed: () => showQuoteSheet(quotidian: quotidian),
+                    icon: Icon(
+                      Icons.more_horiz,
+                      color: topicColor != null ?
+                      Color(topicColor.decimal) : stateColors.primary,
+                    ),
+                  ),
+                ),
+
+                Center(
+                  child: Opacity(
+                    opacity: .6,
                     child: Text(
-                      quotidian.quote.name,
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
+                      quotidian.date.day.toString(),
                     ),
                   ),
+                ),
 
-                  Center(
-                    child: IconButton(
-                      onPressed: () => showQuoteSheet(quotidian: quotidian),
-                      icon: Icon(
-                        Icons.more_horiz,
-                        color: topicColor != null ?
-                        Color(topicColor.decimal) : stateColors.primary,
-                      ),
-                    ),
-                  ),
-
-                  Center(
-                    child: Opacity(
-                      opacity: .6,
-                      child: Text(
-                        quotidian.date.day.toString(),
-                      ),
-                    ),
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(top: 10.0),),
-                  Divider(),
-                ],
-              ),
+                Padding(padding: const EdgeInsets.only(top: 10.0),),
+                Divider(),
+              ],
             ),
-          );
-        },
-        childCount: group.length,
-      ),
+          ),
+        );
+      }).toList()
     );
   }
 
@@ -408,8 +402,6 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   void deleteMonth(List<Quotidian> group) async {
-    print('delete month');
-
     // NOTE: maybe do this job in a cloud function
     group.forEach((quotidian) async {
       await Firestore.instance
