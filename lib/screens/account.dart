@@ -35,18 +35,15 @@ class _AccountState extends State<Account> {
   String oldDisplayName = '';
   String selectedLang   = 'English';
 
-  Brightness currentBrightness;
-
   Brightness brightness;
+  Brightness currentBrightness;
   Timer timer;
-  bool isDailyQuoteActive = true;
 
   ScrollController _scrollController = ScrollController();
 
   @override
   initState() {
     super.initState();
-    // TODO: initialize isDailyQuoteActive var
 
     checkAuth();
     isThemeAuto = appLocalStorage.getAutoBrightness();
@@ -310,23 +307,25 @@ class _AccountState extends State<Account> {
           ],
         ),
 
-        SwitchListTile(
-          onChanged: (bool value) {
-            setState(() {
-              isDailyQuoteActive = value;
-            });
+        Observer(
+          builder: (context) {
+            return SwitchListTile(
+              onChanged: (bool value) {
+                userState.setQuotidianNotifState(value);
 
-            timer?.cancel();
-            timer = Timer(
-              Duration(seconds: 1), () {
-                toggleBackgroundTask();
-              });
+                timer?.cancel();
+                timer = Timer(
+                  Duration(seconds: 1),
+                  () => toggleBackgroundTask(value)
+                );
+              },
+              value: userState.isQuotidianNotifActive,
+              title: Text('Daily quote'),
+              secondary: userState.isQuotidianNotifActive ?
+                Icon(Icons.notifications_active):
+                Icon(Icons.notifications_off),
+            );
           },
-          value: isDailyQuoteActive,
-          title: Text('Daily quote'),
-          secondary: isDailyQuoteActive ?
-            Icon(Icons.notifications_active):
-            Icon(Icons.notifications_off),
         ),
       ],
     );
@@ -611,9 +610,9 @@ class _AccountState extends State<Account> {
     );
   }
 
-  void toggleBackgroundTask() {
-    if (isDailyQuoteActive == false) {
-      AppNotifications.plugin.cancelAll();
+  void toggleBackgroundTask(bool isActive) {
+    if (!isActive) {
+      AppNotifications.plugin?.cancelAll();
       return;
     }
   }
