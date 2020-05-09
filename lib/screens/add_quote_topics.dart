@@ -146,77 +146,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  Widget selectedTopicsSection() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 50.0,
-      ),
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 200.0,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: selectedTopics.length,
-              itemBuilder: (context, index) {
-                final topicColor = selectedTopics.elementAt(index);
-                final name = topicColor.name;
-
-                return FadeInY(
-                  beginY: 100.0,
-                  endY: 0.0,
-                  delay: index * 1.0,
-                  child: TopicCardColor(
-                    onColorTap: () {
-                      setState(() {
-                        allTopics.add(topicColor);
-                        selectedTopics.remove(topicColor);
-                      });
-
-                      AddQuoteInputs.quote.topics
-                        .removeWhere((element) => element == topicColor.name);
-                    },
-                    size: 100.0,
-                    elevation: 6.0,
-                    color: Color(topicColor.decimal),
-                    name: name,
-                    displayName: name,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          FadeInY(
-            beginY: 50.0,
-            child: FlatButton(
-              padding: EdgeInsets.all(10.0),
-              onPressed: () {
-                setState(() {
-                  AddQuoteInputs.clearTopics();
-                  selectedTopics.clear();
-
-                  allTopics.clear();
-                  allTopics.addAll(appTopicsColors.topicsColors);
-                });
-              },
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'Clear all topics',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget allTopicsSection() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -408,6 +337,77 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           }
         );
       },
+    );
+  }
+
+  Widget selectedTopicsSection() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 50.0,
+      ),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 200.0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: selectedTopics.length,
+              itemBuilder: (context, index) {
+                final topicColor = selectedTopics.elementAt(index);
+                final name = topicColor.name;
+
+                return FadeInY(
+                  beginY: 100.0,
+                  endY: 0.0,
+                  delay: index * 1.0,
+                  child: TopicCardColor(
+                    onColorTap: () {
+                      setState(() {
+                        allTopics.add(topicColor);
+                        selectedTopics.remove(topicColor);
+                      });
+
+                      AddQuoteInputs.quote.topics
+                        .removeWhere((element) => element == topicColor.name);
+                    },
+                    size: 100.0,
+                    elevation: 6.0,
+                    color: Color(topicColor.decimal),
+                    name: name,
+                    displayName: name,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          FadeInY(
+            beginY: 50.0,
+            child: FlatButton(
+              padding: EdgeInsets.all(10.0),
+              onPressed: () {
+                setState(() {
+                  AddQuoteInputs.clearTopics();
+                  selectedTopics.clear();
+
+                  allTopics.clear();
+                  allTopics.addAll(appTopicsColors.topicsColors);
+                });
+              },
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Clear all topics',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
