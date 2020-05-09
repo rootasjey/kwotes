@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
 import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
@@ -87,31 +88,28 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   }
 
   Widget body() {
-    return SizedBox(
-      width: 500.0,
-      child: RawKeyboardListener(
-        autofocus: true,
-        focusNode: keyboardFocusNode,
-        onKey: keyHandler,
-        child: Column(
-          children: <Widget>[
-            FadeInY(
-              beginY: beginY,
-              child: title(),
-            ),
+    return RawKeyboardListener(
+      autofocus: true,
+      focusNode: keyboardFocusNode,
+      onKey: keyHandler,
+      child: Column(
+        children: <Widget>[
+          FadeInY(
+            beginY: beginY,
+            child: title(),
+          ),
 
-            selectedTopics.length == 0 ?
-              emptyTopics() :
-              selectedTopicsSection(),
+          selectedTopics.length == 0 ?
+            emptyTopics() :
+            selectedTopicsSection(),
 
-            allTopicsSection(),
+          allTopicsSection(),
 
-            AddQuoteNavButtons(
-              onPrevPressed: () => FluroRouter.router.pop(context),
-              onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
-            ),
-          ],
-        ),
+          AddQuoteNavButtons(
+            onPrevPressed: () => FluroRouter.router.pop(context),
+            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
+          ),
+        ],
       ),
     );
   }
@@ -237,52 +235,62 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
           FadeInY(
             beginY: beginY,
             delay: delay + (3 * delayStep),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Select some of the available topics to categorize the quote.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20.0,
+            child: SizedBox(
+              width: 500.0,
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Select some of the available topics to categorize the quote.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
               ),
             ),
           ),
 
           Observer(builder: (context) {
-            int factor = 1;
-
             if (allTopics.length == 0) {
               allTopics.addAll(appTopicsColors.topicsColors);
 
-            } else { factor = 0; }
+            }
 
             int index = 0;
-            final initDely = (delay + (4 * delayStep)) * factor;
 
-            return Padding(
+            return Container(
+              width: 600.0,
               padding: const EdgeInsets.symmetric(vertical: 60.0),
               child: Wrap(
-                children: allTopics.map<Widget>((topic) {
+                children: allTopics.map<Widget>((topicColor) {
                   index++;
+                  final name = topicColor.name;
+                  final displayName = name.length < 5 ? name : '${name.substring(0, 4)}...';
+                  final fontSize = name.length > 5 ? 15.0 : 17.0;
 
                   return FadeInY(
-                    beginY: beginY,
-                    delay: (initDely + index) * factor,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 5.0),
-                      child: ActionChip(
-                        padding: EdgeInsets.all(5.0),
-                        label: Text(topic.name),
-                        onPressed: () {
-                          setState(() {
-                            selectedTopics.add(topic);
-                            allTopics.remove(topic);
-                          });
+                    beginY: 100.0,
+                    endY: 0.0,
+                    delay: index * 1.0,
+                    child: TopicCardColor(
+                      onColorTap: () {
+                        setState(() {
+                          selectedTopics.add(topicColor);
+                          allTopics.remove(topicColor);
+                        });
 
-                          AddQuoteInputs.quote.topics.add(topic.name);
-                        },
+                        AddQuoteInputs.quote.topics.add(topicColor.name);
+                      },
+                      size: 70.0,
+                      elevation: 6.0,
+                      outline: true,
+                      color: Color(topicColor.decimal),
+                      name: name,
+                      displayName: displayName,
+                      style: TextStyle(
+                        fontSize: fontSize,
                       ),
+                      tooltip: name,
                     ),
                   );
                 }).toList(),
@@ -303,28 +311,34 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
         children: <Widget>[
           Wrap(
             spacing: 20.0,
-            children: selectedTopics.map<Widget>((topic) {
+            children: selectedTopics.map<Widget>((topicColor) {
               index++;
+              final name = topicColor.name;
 
-              return FadeInY(
-                delay: index,
-                beginY: 10.0,
-                child: Chip(
-                  backgroundColor: Color(topic.decimal),
-                  padding: EdgeInsets.all(5.0),
-                  label: Text(topic.name, style: TextStyle(color: Colors.white),),
-                  deleteIconColor: Colors.white,
-                  onDeleted: () {
-                    setState(() {
-                      allTopics.add(topic);
-                      selectedTopics.remove(topic);
-                    });
+                return FadeInY(
+                  beginY: 100.0,
+                  endY: 0.0,
+                  delay: index * 1.0,
+                  child: TopicCardColor(
+                    onColorTap: () {
+                      setState(() {
+                        allTopics.add(topicColor);
+                        selectedTopics.remove(topicColor);
+                      });
 
-                    AddQuoteInputs.quote.topics
-                      .removeWhere((element) => element == topic.name);
-                  },
-                ),
-              );
+                      AddQuoteInputs.quote.topics
+                        .removeWhere((element) => element == topicColor.name);
+                    },
+                    size: 100.0,
+                    elevation: 6.0,
+                    color: Color(topicColor.decimal),
+                    name: name,
+                    displayName: name,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                );
             }).toList(),
           ),
 
