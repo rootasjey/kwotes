@@ -270,8 +270,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Card(
         child: AddQuoteInputs.reference.urls.image.length > 0 ?
           Ink.image(
-            width: 250.0,
-            height: 300.0,
+            width: 200.0,
+            height: 250.0,
             fit: BoxFit.cover,
             image: NetworkImage(AddQuoteInputs.reference.urls.image),
             child: InkWell(
@@ -279,8 +279,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             ),
           ) :
           SizedBox(
-            width: 250.0,
-            height: 300.0,
+            width: 200.0,
+            height: 250.0,
             child: InkWell(
               child: Opacity(
                 opacity: .6,
