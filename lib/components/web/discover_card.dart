@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -57,11 +58,29 @@ class _DiscoverCardState extends State<DiscoverCard> {
   }
 
   List<Widget> background() {
+    final isImageOk = widget.imageUrl != null &&
+      widget.imageUrl.length > 0;
+
     return [
       Positioned.fill(
-        child: Image.network(
+        child: isImageOk ?
+        Image.network(
           widget.imageUrl,
           fit: BoxFit.cover,
+        ) :
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 80.0,
+          ),
+          child: Observer(
+            builder: (context) {
+              return Image.asset(
+                widget.type == 'reference' ?
+                'assets/images/textbook-${stateColors.iconExt}.png' :
+                'assets/images/profile-${stateColors.iconExt}.png',
+              );
+            }
+          )
         ),
       ),
 
