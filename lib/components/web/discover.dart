@@ -93,6 +93,7 @@ class _DiscoverState extends State<Discover> {
           delay: count,
           child: DiscoverCard(
             id: author.id,
+            imageUrl: author.urls.image,
             name: author.name,
             summary: author.summary,
             type: 'author',
@@ -111,6 +112,7 @@ class _DiscoverState extends State<Discover> {
           delay: count,
           child: DiscoverCard(
             id: reference.id,
+            imageUrl: reference.urls.image,
             name: reference.name,
             summary: reference.summary,
           ),
