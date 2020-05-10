@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:supercharged/supercharged.dart';
 
-class TopicCardColor extends StatelessWidget {
+class TopicCardColor extends StatefulWidget {
   final Color color;
   final String displayName;
   final double elevation;
@@ -28,6 +29,21 @@ class TopicCardColor extends StatelessWidget {
   });
 
   @override
+  _TopicCardColorState createState() => _TopicCardColorState();
+}
+
+class _TopicCardColorState extends State<TopicCardColor> {
+  double growSize = 0.0;
+  double size;
+
+  @override
+  void initState() {
+    super.initState();
+    size = widget.size;
+    growSize = widget.size + 5.0;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -41,35 +57,43 @@ class TopicCardColor extends StatelessWidget {
   }
 
   Widget cardColor({BuildContext context}) {
-    final card = SizedBox(
+    final card = AnimatedContainer(
       height: size,
       width: size,
+      duration: 250.milliseconds,
+      curve: Curves.bounceInOut,
       child: Card(
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: outline ? color : Colors.transparent,
+            color: widget.outline ? widget.color : Colors.transparent,
           ),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        elevation: elevation,
-        color: outline ? Colors.transparent : color,
+        elevation: widget.elevation,
+        color: widget.outline ? Colors.transparent : widget.color,
         child: InkWell(
           onTap: () {
-            if (onColorTap != null) {
-              onColorTap();
+            if (widget.onColorTap != null) {
+              widget.onColorTap();
               return;
             }
 
             FluroRouter.router.navigateTo(
               context,
-              TopicRoute.replaceFirst(':name', name)
+              TopicRoute.replaceFirst(':name', widget.name)
             );
+          },
+          onHover: (isHover) {
+            if (isHover) { size = growSize; }
+            else { size = widget.size; }
+
+            setState(() {});
           },
         ),
       ),
     );
 
-    if (tooltip != null && tooltip.length > 0) {
+    if (widget.tooltip != null && widget.tooltip.length > 0) {
       return withTooltip(child: card);
     }
 
@@ -82,18 +106,18 @@ class TopicCardColor extends StatelessWidget {
       child: Opacity(
         opacity: .5,
         child: InkWell(
-          onTap: onTextTap,
+          onTap: widget.onTextTap,
           child: Text(
-            displayName != null && displayName.length > 0 ?
-              displayName : name,
+            widget.displayName != null && widget.displayName.length > 0 ?
+              widget.displayName : widget.name,
             overflow: TextOverflow.ellipsis,
-            style: style,
+            style: widget.style,
           ),
         ),
       ),
     );
 
-    if (tooltip != null && tooltip.length > 0) {
+    if (widget.tooltip != null && widget.tooltip.length > 0) {
       return withTooltip(child: text);
     }
 
@@ -102,7 +126,7 @@ class TopicCardColor extends StatelessWidget {
 
   Widget withTooltip({Widget child}) {
     return Tooltip(
-      message: name,
+      message: widget.name,
       child: child,
     );
   }
