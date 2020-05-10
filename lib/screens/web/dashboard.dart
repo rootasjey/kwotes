@@ -182,166 +182,228 @@ class _DashboardState extends State<Dashboard> {
 
         Padding(padding: const EdgeInsets.only(top: 20.0),),
 
-        adminPubQuotesCard(),
+        Wrap(
+          spacing: 20.0,
+          children: <Widget>[
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: sectionCard(
+                color: Color(0xFF00CF91),
+                onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
+                icon: Icon(
+                  Icons.cloud_done,
+                  color: Colors.white,
+                  size: 40.0,
+                ),
+                text: Text(
+                  'All published quotes',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ),
 
-        quotidiansCard(),
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: sectionCard(
+                color: Color(0xFFFFAF50),
+                onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
+                icon: Icon(
+                  Icons.wb_sunny,
+                  color: Colors.white,
+                  size: 40.0,
+                ),
+                text: Text(
+                  'Quotidians',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ),
 
-        adminTempQuotesCard(),
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: sectionCard(
+                color: Color(0xFF2E3F7F),
+                onTap: () => FluroRouter.router.navigateTo(context, AdminTempQuotesRoute),
+                icon: Icon(
+                  Icons.timelapse,
+                  color: Colors.white,
+                  size: 40.0,
+                ),
+                text: Text(
+                  'All in validation',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
-    );
-  }
-
-  Widget adminPubQuotesCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFF00CF91),
-          child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.cloud_done,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Published quotes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget adminTempQuotesCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFF2E3F7F),
-          child: InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.timelapse,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Temporary quotes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ),
-      ),
     );
   }
 
   Widget cardsList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 60.0),
-      child: Column(
+      padding: const EdgeInsets.symmetric(
+        vertical: 60.0,
+        horizontal: 40.0,
+      ),
+      child: Wrap(
+        spacing: 20.0,
         children: <Widget>[
           FadeInY(
             delay: 2.0,
             beginY: 50.0,
-            child: favouritesCard(),
+            child: sectionCard(
+              color: Color(0xFFFF005C),
+              onTap: () => FluroRouter.router.navigateTo(context, FavouritesRoute),
+              icon: Icon(
+                Icons.favorite,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              text: Text(
+                'Favourites',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
           ),
 
           FadeInY(
             delay: 2.10,
             beginY: 50.0,
-            child: listsCard(),
+            child: sectionCard(
+              color: Color(0xFF0260E8),
+              onTap: () => FluroRouter.router.navigateTo(context, ListsRoute),
+              icon: Icon(
+                Icons.list,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              text: Text(
+                'Lists',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
           ),
 
           FadeInY(
             delay: 2.25,
             beginY: 50.0,
-            child: tempQuotesCard(),
+            child: sectionCard(
+              color: Color(0xFF2E3F7F),
+              onTap: () => FluroRouter.router.navigateTo(context, TempQuotesRoute),
+              icon: Icon(
+                Icons.timelapse,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              text: Text(
+                'In validation',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
           ),
 
           FadeInY(
             delay: 2.5,
             beginY: 50.0,
-            child: pubQuotesCard(),
+            child: sectionCard(
+              color: Color(0xFF00CF91),
+              onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
+              icon: Icon(
+                Icons.cloud_done,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              text: Text(
+                'Published quotes',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
           ),
 
           FadeInY(
             delay: 2.75,
             beginY: 50.0,
-            child: accountSettingsCard(),
+            child: sectionCard(
+              color: Color(0xFF414042),
+              onTap: () => FluroRouter.router.navigateTo(context, AccountRoute),
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              text: Text(
+                'Account settings',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget favouritesCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFFFF005C),
-          child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, FavouritesRoute),
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
+  Widget sectionCard({
+    Icon icon,
+    Text text,
+    Function onTap,
+    Color color,
+  }) {
+    return SizedBox(
+      width: 200.0,
+      height: 250.0,
+      child: Card(
+        color: color,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                icon,
 
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Favourites',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: text,
+                ),
+              ],
             ),
           ),
         ),
@@ -386,123 +448,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget listsCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFF0260E8),
-          child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, ListsRoute),
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.list,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Lists',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget pubQuotesCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFF00CF91),
-          child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.cloud_done,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Published quotes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget quotidiansCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFFFFAF50),
-          child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.today,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Quotidians',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ),
-      ),
-    );
-  }
-
   Widget signOutButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -538,47 +483,6 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget tempQuotesCard() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: 700.0,
-        height: 200.0,
-        child: Card(
-          color: Color(0xFF2E3F7F),
-          child: InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(context, TempQuotesRoute);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.timelapse,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Temporary quotes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ),
       ),
     );
   }
