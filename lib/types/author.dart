@@ -6,10 +6,6 @@ class Author {
   String job;
   String name;
   String summary;
-  /// Deprecated
-  final String url;
-  /// Deprecated
-  final String wikiUrl;
   final Urls urls;
 
   Author({
@@ -18,9 +14,7 @@ class Author {
     this.job      = '',
     this.name     = '',
     this.summary  = '',
-    this.url      = '',
     this.urls,
-    this.wikiUrl  = '',
   });
 
   factory Author.empty() {
@@ -30,9 +24,7 @@ class Author {
       job     : '',
       name    : '',
       summary : '',
-      url     : '',
       urls    : Urls(),
-      wikiUrl : '',
     );
   }
 
@@ -46,9 +38,7 @@ class Author {
       job     : json['job'],
       name    : json['name'],
       summary : json['summary'],
-      url     : json['url'],
       urls    : _urls,
-      wikiUrl : json['wikiUrl'],
     );
   }
 
@@ -60,8 +50,6 @@ class Author {
     json['job']     = job;
     json['name']    = name;
     json['summary'] = summary;
-    json['url']     = url;
-    json['wikiUrl'] = wikiUrl;
 
     return json;
   }

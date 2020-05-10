@@ -8,7 +8,6 @@ class Reference {
   String name;
   String summary;
   final ReferenceType type;
-  final String url;
   final Urls urls;
   final String wikiUrl;
 
@@ -19,7 +18,6 @@ class Reference {
     this.name = '',
     this.summary = '',
     this.type,
-    this.url,
     this.urls,
     this.wikiUrl,
   });
@@ -32,7 +30,6 @@ class Reference {
       name        : '',
       summary     : '',
       type        : ReferenceType(),
-      url         : '',
       urls        : Urls(),
       wikiUrl     : '',
     );
@@ -60,7 +57,6 @@ class Reference {
       name        : json['name'] ?? '',
       summary     : json['summary'],
       type        : _type,
-      url         : json['url'],
       urls        : _urls,
       wikiUrl     : json['wikiUrl'],
     );
@@ -75,7 +71,6 @@ class Reference {
     json['name']        = name;
     json['summary']     = summary;
     json['type']        = type;
-    json['url']         = url;
     json['wikiUrl']     = wikiUrl;
 
     return json;
