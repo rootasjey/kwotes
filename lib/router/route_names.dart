@@ -26,6 +26,7 @@ const String ReferenceRoute         = '/reference/:id';
 const String RootRoute              = '/';
 const String SigninRoute            = '/signin';
 const String SignupRoute            = '/signup';
+const String TodayRoute             = '/today';
 const String TempQuotesRoute        = '/tempquotes';
 const String TopicRoute             = '/topic/:name';
 const String TopicsRoute            = '/topics';

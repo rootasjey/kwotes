@@ -260,6 +260,11 @@ class FluroRouter {
     );
 
     router.define(
+      TodayRoute,
+      handler: WebRouteHandlers.today,
+    );
+
+    router.define(
       TopicRoute,
       handler: WebRouteHandlers.topic,
     );

@@ -19,6 +19,10 @@ import 'package:supercharged/supercharged.dart';
 String _prevLang;
 
 class FullPageQuotidian extends StatefulWidget {
+  final bool noAuth;
+
+  FullPageQuotidian({this.noAuth = false,});
+
   @override
   _FullPageQuotidianState createState() => _FullPageQuotidianState();
 }
@@ -104,7 +108,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               ),
             ),
 
-            userSection(),
+            if (!widget.noAuth)
+              userSection(),
           ],
         );
       },

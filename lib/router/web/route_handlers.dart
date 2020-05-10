@@ -29,6 +29,7 @@ import 'package:memorare/screens/web/reference_page.dart';
 import 'package:memorare/screens/web/signin.dart';
 import 'package:memorare/screens/web/signup.dart';
 import 'package:memorare/screens/web/temp_quotes.dart';
+import 'package:memorare/screens/web/today.dart';
 import 'package:memorare/screens/web/topic_page.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
 
@@ -147,6 +148,10 @@ class WebRouteHandlers {
   static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Signup()));
+
+  static Handler today = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Today());
 
   static Handler topic = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
