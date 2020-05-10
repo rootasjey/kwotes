@@ -34,7 +34,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final wikiUrlController       = TextEditingController();
   final youtubeUrlController    = TextEditingController();
 
-  final _nameFocusNode = FocusNode();
+  final nameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -205,7 +205,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
         setState(() {});
 
-        _nameFocusNode.requestFocus();
+        nameFocusNode.requestFocus();
       },
       child: Opacity(
         opacity: 0.6,
@@ -495,7 +495,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           child: TextField(
             controller: nameController,
             autofocus: true,
-            focusNode: _nameFocusNode,
+            focusNode: nameFocusNode,
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Name',
