@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
-import 'package:memorare/push_notifications.dart';
 import 'package:memorare/screens/dashboard.dart';
 import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/topics.dart';
@@ -23,7 +22,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    // AppNotifications.initialize(context: context);
   }
 
   void _onItemTapped(int index) {
@@ -35,13 +33,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            child: _listScreens.elementAt(_selectedIndex),
-          ),
-          PushNotifications(),
-        ],
+      body: Container(
+        child: _listScreens.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [

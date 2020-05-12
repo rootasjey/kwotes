@@ -5,7 +5,6 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/app_notifications.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/settings_card.dart';
@@ -14,6 +13,7 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/app_notifications.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/snack.dart';
 

@@ -10,6 +10,7 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/push_notifications.dart';
 
 void main() {
   return runApp(App());
@@ -24,7 +25,10 @@ class AppState extends State<App> {
 
   AppState() {
     if (kIsWeb) { FluroRouter.setupWebRouter(); }
-    else { FluroRouter.setupMobileRouter(); }
+    else {
+      FluroRouter.setupMobileRouter();
+      PushNotifications.initialize();
+    }
   }
 
   @override
