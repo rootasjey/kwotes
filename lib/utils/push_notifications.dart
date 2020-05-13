@@ -1,17 +1,34 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotifications {
   static FirebaseMessaging fcm;
+  static StreamSubscription _streamSubscription;
 
-  static Future initialize() async {
+  static void initialize({String userUid}) async {
     fcm = FirebaseMessaging();
 
     if (Platform.isIOS) {
-      fcm.requestNotificationPermissions(IosNotificationSettings());
-    }
+      if (_streamSubscription != null) {
+        _streamSubscription.cancel();
+      }
 
+      _streamSubscription = fcm.onIosSettingsRegistered
+      .listen((event) {
+        postProcessInit(userUid);
+      });
+
+      fcm.requestNotificationPermissions(IosNotificationSettings());
+
+    } else {
+      postProcessInit(userUid);
+    }
+  }
+
+  static void postProcessInit(String userUid) {
     fcm.configure(
       onBackgroundMessage: backgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
@@ -25,29 +42,42 @@ class PushNotifications {
       },
     );
 
-    saveDeviceToken();
+    saveDeviceToken(userUid);
   }
 
-  static Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) {
+  static Future backgroundMessageHandler(Map<String, dynamic> message) {
     if (message.containsKey('data')) {
       // Handle data message
-      final dynamic data = message['data'];
+      // final dynamic data = message['data'];
     }
 
     if (message.containsKey('notification')) {
       // Handle notification message
-      final dynamic notification = message['notification'];
+      // final dynamic notification = message['notification'];
     }
 
     // Or do other work.
+    return null;
   }
 
-  static void saveDeviceToken() async {
+  static void saveDeviceToken(String userUid) async {
     final fcmToken = await fcm.getToken();
-    print(fcmToken);
     if (fcmToken == null) { return; }
 
-    // final tokenRef = db
-    //   .collection('user')
+    final tokenRef = await Firestore.instance
+      .collection('users')
+      .document(userUid)
+      .collection('tokens')
+      .document(fcmToken)
+      .get();
+
+    if (tokenRef.exists) { return; }
+
+    await tokenRef.reference.setData({
+      'token': fcmToken,
+      'createdAt': FieldValue.serverTimestamp(),
+      'platform': Platform.operatingSystem,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
   }
 }

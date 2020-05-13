@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading.dart';
@@ -7,6 +9,7 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/push_notifications.dart';
 import 'package:memorare/utils/snack.dart';
 
 class Signin extends StatefulWidget {
@@ -258,6 +261,10 @@ class SigninState extends State<Signin> {
       setState(() {
         isLoading = false;
       });
+
+      if (Platform.isAndroid || Platform.isIOS) {
+        PushNotifications.initialize(userUid: userAuth.uid);
+      }
 
       FluroRouter.router.navigateTo(context, HomeRoute);
 

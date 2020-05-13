@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -25,10 +27,7 @@ class AppState extends State<App> {
 
   AppState() {
     if (kIsWeb) { FluroRouter.setupWebRouter(); }
-    else {
-      FluroRouter.setupMobileRouter();
-      PushNotifications.initialize();
-    }
+    else { FluroRouter.setupMobileRouter(); }
   }
 
   @override
@@ -101,6 +100,10 @@ class AppState extends State<App> {
 
       appLocalStorage.saveUserName(authResult.user.displayName);
       userState.setUserConnected();
+
+      if (Platform.isAndroid || Platform.isIOS) {
+        PushNotifications.initialize(userUid: authResult.user.uid);
+      }
 
     } catch (error) {
       debugPrint(error.toString());
