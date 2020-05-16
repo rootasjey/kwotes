@@ -67,8 +67,14 @@ class TempQuote {
     final _validation = json['validation'] != null ?
       Validation.fromJSON(json['validation']) : null;
 
-    final List<dynamic> _dynamicList = json['comments'];
-    final _comments = _dynamicList.length > 0 ? _dynamicList : List<String>();
+    final List<dynamic> _rawComments = json['comments'];
+    final _comments = <String>[];
+
+    if (_rawComments != null) {
+      _rawComments.forEach((rawComment) {
+        _comments.add(rawComment);
+      });
+    }
 
     final createdAt = json['createdAt'].runtimeType == String ?
       DateTime.parse(json['createdAt']) :
