@@ -364,28 +364,6 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
-
-      // !NOTE: Use cloud function instead.
-      final user = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .get();
-
-      int today = user.data['quota']['today'];
-      today++;
-
-      int proposed = user.data['stats']['proposed'];
-      proposed++;
-
-      await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .updateData({
-          'quota.today': today,
-          'stats.proposed': proposed,
-        });
-
       if (AddQuoteInputs.quote.id.isEmpty) {
         await addNewTempQuote(
           comments: comments,

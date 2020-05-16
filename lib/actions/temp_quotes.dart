@@ -121,28 +121,6 @@ Future<bool> proposeQuote({
   });
 
   try {
-    final userAuth = await userState.userAuth;
-
-    final user = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .get();
-
-    int today = user.data['quota']['today'];
-    today++;
-
-    int proposed = user.data['stats']['proposed'];
-    proposed++;
-
-    // TODO: Use cloud function instead.
-    await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .updateData({
-        'quota.today': today,
-        'stats.proposed': proposed,
-      });
-
     if (AddQuoteInputs.quote.id.isEmpty) {
       await addNewTempQuote(
         comments: comments,
