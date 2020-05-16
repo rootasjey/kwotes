@@ -437,8 +437,14 @@ class SignupState extends State<Signup> {
             'today': 0,
           },
           'rights': {
-            'user:proposequote': true,
-            'user:readquote': true,
+            'user:managedata'     : false,
+            'user:manageauthor'   : false,
+            'user:managequote'    : false,
+            'user:managequotidian': false,
+            'user:managereference': false,
+            'user:proposequote'   : true,
+            'user:readquote'      : true,
+            'user:validatequote'  : false,
           },
           'stats': {
             'favourites': 0,
