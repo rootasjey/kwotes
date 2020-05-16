@@ -19,20 +19,21 @@ class FullPageError extends StatelessWidget {
         children: <Widget>[
           Icon(
             Icons.warning,
-            size: 50.0,
+            size: 70.0,
           ),
 
           Padding(
             padding: const EdgeInsets.only(
-              top: 20.0,
+              top: 40.0,
               bottom: 40.0
             ),
             child: Opacity(
               opacity: .6,
               child: Text(
                 message,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 25,
                 ),
               ),
             ),
