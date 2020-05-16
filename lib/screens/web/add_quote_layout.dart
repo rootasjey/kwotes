@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
@@ -203,62 +204,57 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     Map<String, bool> topics,
   }) async {
 
-    try {
-      final userAuth = await userState.userAuth;
+    final userAuth = await userState.userAuth;
 
-      await Firestore.instance
-        .collection('tempquotes')
-        .add({
-          'author'        : {
-            'id'          : AddQuoteInputs.author.id,
-            'job'         : AddQuoteInputs.author.job,
-            'jobLang'     : {},
-            'name'        : AddQuoteInputs.author.name,
-            'summary'     : AddQuoteInputs.author.summary,
-            'summaryLang' : {},
-            'updatedAt'   : DateTime.now(),
-            'urls': {
-              'affiliate' : AddQuoteInputs.author.urls.affiliate,
-              'amazon'    : AddQuoteInputs.author.urls.amazon,
-              'facebook'  : AddQuoteInputs.author.urls.facebook,
-              'image'     : AddQuoteInputs.author.urls.image,
-              'netflix'   : AddQuoteInputs.author.urls.netflix,
-              'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-              'twitch'    : AddQuoteInputs.author.urls.twitch,
-              'twitter'   : AddQuoteInputs.author.urls.twitter,
-              'website'   : AddQuoteInputs.author.urls.website,
-              'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-              'youtube'   : AddQuoteInputs.author.urls.youtube,
-            }
-          },
-          'comments'      : comments,
-          'createdAt'     : DateTime.now(),
-          'lang'          : AddQuoteInputs.quote.lang,
-          'name'          : AddQuoteInputs.quote.name,
-          'mainReference' : {
-            'id'  : AddQuoteInputs.reference.id,
-            'name': AddQuoteInputs.reference.name,
-          },
-          'references'    : references,
-          'region'        : AddQuoteInputs.region,
-          'topics'        : topics,
-          'user': {
-            'id': userAuth.uid,
-          },
-          'updatedAt'     : DateTime.now(),
-          'validation'    : {
-            'comment'     : {
-              'name'      : '',
-              'updatedAt' : DateTime.now(),
-            },
-            'status'      : 'proposed',
-            'updatedAt'   : DateTime.now(),
+    await Firestore.instance
+      .collection('tempquotes')
+      .add({
+        'author'        : {
+          'id'          : AddQuoteInputs.author.id,
+          'job'         : AddQuoteInputs.author.job,
+          'jobLang'     : {},
+          'name'        : AddQuoteInputs.author.name,
+          'summary'     : AddQuoteInputs.author.summary,
+          'summaryLang' : {},
+          'updatedAt'   : DateTime.now(),
+          'urls': {
+            'affiliate' : AddQuoteInputs.author.urls.affiliate,
+            'amazon'    : AddQuoteInputs.author.urls.amazon,
+            'facebook'  : AddQuoteInputs.author.urls.facebook,
+            'image'     : AddQuoteInputs.author.urls.image,
+            'netflix'   : AddQuoteInputs.author.urls.netflix,
+            'primeVideo': AddQuoteInputs.author.urls.primeVideo,
+            'twitch'    : AddQuoteInputs.author.urls.twitch,
+            'twitter'   : AddQuoteInputs.author.urls.twitter,
+            'website'   : AddQuoteInputs.author.urls.website,
+            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
+            'youtube'   : AddQuoteInputs.author.urls.youtube,
           }
-        });
-
-    } catch (error) {
-      debugPrint(error.toString());
-    }
+        },
+        'comments'      : comments,
+        'createdAt'     : DateTime.now(),
+        'lang'          : AddQuoteInputs.quote.lang,
+        'name'          : AddQuoteInputs.quote.name,
+        'mainReference' : {
+          'id'  : AddQuoteInputs.reference.id,
+          'name': AddQuoteInputs.reference.name,
+        },
+        'references'    : references,
+        'region'        : AddQuoteInputs.region,
+        'topics'        : topics,
+        'user': {
+          'id': userAuth.uid,
+        },
+        'updatedAt'     : DateTime.now(),
+        'validation'    : {
+          'comment'     : {
+            'name'      : '',
+            'updatedAt' : DateTime.now(),
+          },
+          'status'      : 'proposed',
+          'updatedAt'   : DateTime.now(),
+        }
+      });
   }
 
   void checkAuth() async {
@@ -384,28 +380,20 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
         isCompleted = true;
       });
 
-      showSnack(
-        context: context,
-        message: AddQuoteInputs.quote.id.isEmpty ?
-          'Your quote has been successfully proposed.' :
-          'Your quote has been successfully edited',
-        type: SnackType.success,
-      );
-
     } catch (error) {
       debugPrint(error.toString());
 
+      final success = await saveDraft(context: context);
+
+      final suffixMessage = success ?
+        "\nYour quote has been saved to your drafts instead." :
+        "\nPlease try again tomorrow";
+
       setState(() {
         isProposing = false;
-        errorMessage = error.toString();
+        errorMessage = "You've reached your quota for today.$suffixMessage";
         isCompleted = true;
       });
-
-      showSnack(
-        context: context,
-        message: 'There was an issue while proposing your new quote.',
-        type: SnackType.error,
-      );
     }
   }
 
@@ -415,62 +403,57 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     Map<String, bool> topics,
   }) async {
 
-    try {
-      final userAuth = await userState.userAuth;
+    final userAuth = await userState.userAuth;
 
-      await Firestore.instance
-        .collection('tempquotes')
-        .document(AddQuoteInputs.quote.id)
-        .setData({
-          'author': {
-            'id'          : AddQuoteInputs.author.id,
-            'job'         : AddQuoteInputs.author.job,
-            'jobLang'     : {},
-            'name'        : AddQuoteInputs.author.name,
-            'summary'     : AddQuoteInputs.author.summary,
-            'summaryLang' : {},
-            'updatedAt'   : DateTime.now(),
-            'urls': {
-              'affiliate' : AddQuoteInputs.author.urls.affiliate,
-              'amazon'    : AddQuoteInputs.author.urls.amazon,
-              'facebook'  : AddQuoteInputs.author.urls.facebook,
-              'image'     : AddQuoteInputs.author.urls.image,
-              'netflix'   : AddQuoteInputs.author.urls.netflix,
-              'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-              'twitch'    : AddQuoteInputs.author.urls.twitch,
-              'twitter'   : AddQuoteInputs.author.urls.twitter,
-              'website'   : AddQuoteInputs.author.urls.website,
-              'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-              'youtube'   : AddQuoteInputs.author.urls.youtube,
-            }
-          },
-          'comments'      : comments,
-          'createdAt'     : DateTime.now(),
-          'lang'          : AddQuoteInputs.quote.lang,
-          'name'          : AddQuoteInputs.quote.name,
-          'mainReference' : {
-            'id'  : AddQuoteInputs.reference.id,
-            'name': AddQuoteInputs.reference.name,
-          },
-          'references'    : references,
-          'region'        : AddQuoteInputs.region,
-          'topics'        : topics,
-          'user': {
-            'id': userAuth.uid,
-          },
-          'updatedAt'     : DateTime.now(),
-          'validation'    : {
-            'comment': {
-              'name'      : '',
-              'updatedAt' : DateTime.now(),
-            },
-            'status'      : 'proposed',
-            'updatedAt'   : DateTime.now(),
+    await Firestore.instance
+      .collection('tempquotes')
+      .document(AddQuoteInputs.quote.id)
+      .setData({
+        'author': {
+          'id'          : AddQuoteInputs.author.id,
+          'job'         : AddQuoteInputs.author.job,
+          'jobLang'     : {},
+          'name'        : AddQuoteInputs.author.name,
+          'summary'     : AddQuoteInputs.author.summary,
+          'summaryLang' : {},
+          'updatedAt'   : DateTime.now(),
+          'urls': {
+            'affiliate' : AddQuoteInputs.author.urls.affiliate,
+            'amazon'    : AddQuoteInputs.author.urls.amazon,
+            'facebook'  : AddQuoteInputs.author.urls.facebook,
+            'image'     : AddQuoteInputs.author.urls.image,
+            'netflix'   : AddQuoteInputs.author.urls.netflix,
+            'primeVideo': AddQuoteInputs.author.urls.primeVideo,
+            'twitch'    : AddQuoteInputs.author.urls.twitch,
+            'twitter'   : AddQuoteInputs.author.urls.twitter,
+            'website'   : AddQuoteInputs.author.urls.website,
+            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
+            'youtube'   : AddQuoteInputs.author.urls.youtube,
           }
-        });
-
-    } catch (error) {
-      debugPrint(error.toString());
-    }
+        },
+        'comments'      : comments,
+        'createdAt'     : DateTime.now(),
+        'lang'          : AddQuoteInputs.quote.lang,
+        'name'          : AddQuoteInputs.quote.name,
+        'mainReference' : {
+          'id'  : AddQuoteInputs.reference.id,
+          'name': AddQuoteInputs.reference.name,
+        },
+        'references'    : references,
+        'region'        : AddQuoteInputs.region,
+        'topics'        : topics,
+        'user': {
+          'id': userAuth.uid,
+        },
+        'updatedAt'     : DateTime.now(),
+        'validation'    : {
+          'comment': {
+            'name'      : '',
+            'updatedAt' : DateTime.now(),
+          },
+          'status'      : 'proposed',
+          'updatedAt'   : DateTime.now(),
+        }
+      });
   }
 }
