@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 const firestore = admin.firestore();
+const fcm = admin.messaging();
 
 export const incrementQuoteQuota = functions
   .region('europe-west3')
@@ -49,4 +50,82 @@ export const incrementQuoteQuota = functions
         'quota.date': admin.firestore.Timestamp.fromDate(date),
         'quota.current': current,
       });
+  });
+
+export const quotidiansMobileEN = functions
+  .region('europe-west3')
+  .pubsub
+  .schedule('every day 08:00')
+  .onRun(async (context) => {
+    const date = new Date(context.timestamp);
+
+    const monthNumber = date.getMonth() + 1;
+
+    const month = monthNumber     < 10 ? `0${monthNumber}`    : monthNumber;
+    const day   = date.getDate()  < 10 ? `0${date.getDate()}` : date.getDate();
+
+    const dateId = `${date.getFullYear()}:${month}:${day}:en`;
+
+    console.log(`quotidians EN - ${dateId}`);
+
+    const quotidian = await firestore
+      .collection('quotidians')
+      .doc(dateId)
+      .get();
+
+    if (!quotidian.exists) { return; }
+
+    const data = quotidian.data();
+    if (!data) { return; }
+
+    const quoteName = data['quote']['name'];
+
+    const payload: admin.messaging.MessagingPayload = {
+      notification: {
+        title: 'Quotidian',
+        body: quoteName,
+        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+      }
+    };
+
+    return await fcm.sendToTopic('quotidians-en', payload);
+  });
+
+export const quotidiansMobileFR = functions
+  .region('europe-west3')
+  .pubsub
+  .schedule('every day 08:00')
+  .onRun(async (context) => {
+    const date = new Date(context.timestamp);
+
+    const monthNumber = date.getMonth() + 1;
+
+    const month = monthNumber     < 10 ? `0${monthNumber}`    : monthNumber;
+    const day   = date.getDate()  < 10 ? `0${date.getDate()}` : date.getDate();
+
+    const dateId = `${date.getFullYear()}:${month}:${day}:fr`;
+
+    console.log(`quotidians FR - ${dateId}`);
+
+    const quotidian = await firestore
+      .collection('quotidians')
+      .doc(dateId)
+      .get();
+
+    if (!quotidian.exists) { return; }
+
+    const data = quotidian.data();
+    if (!data) { return; }
+
+    const quoteName = data['quote']['name'];
+
+    const payload: admin.messaging.MessagingPayload = {
+      notification: {
+        title: 'Quotidian',
+        body: quoteName,
+        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+      }
+    };
+
+    return await fcm.sendToTopic('quotidians-fr', payload);
   });
