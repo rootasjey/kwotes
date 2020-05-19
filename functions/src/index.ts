@@ -81,6 +81,9 @@ export const quotidiansMobileEN = functions
     const quoteName = data['quote']['name'];
 
     const payload: admin.messaging.MessagingPayload = {
+      data: {
+        path: `/quote/${data['quote']['id']}`,
+      },
       notification: {
         title: 'Quotidian',
         body: quoteName,
@@ -88,7 +91,8 @@ export const quotidiansMobileEN = functions
       }
     };
 
-    return await fcm.sendToTopic('quotidians-en', payload);
+    // TODO: add 'mobile' to topic
+    return await fcm.sendToTopic('quotidians-mobile-en', payload);
   });
 
 export const quotidiansMobileFR = functions
@@ -120,12 +124,15 @@ export const quotidiansMobileFR = functions
     const quoteName = data['quote']['name'];
 
     const payload: admin.messaging.MessagingPayload = {
+      data: {
+        path: `/quote/${data['quote']['id']}`,
+      },
       notification: {
         title: 'Quotidian',
         body: quoteName,
         clickAction: 'FLUTTER_NOTIFICATION_CLICK',
-      }
+      },
     };
 
-    return await fcm.sendToTopic('quotidians-fr', payload);
+    return await fcm.sendToTopic('quotidians-mobile-fr', payload);
   });
