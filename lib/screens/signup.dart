@@ -464,6 +464,7 @@ class SignupState extends State<Signup> {
         );
 
         appLocalStorage.saveUserName(username);
+        appLocalStorage.saveUserUid(user.uid);
 
         userState.setUserConnected();
 
@@ -473,7 +474,10 @@ class SignupState extends State<Signup> {
         });
 
         if (Platform.isAndroid || Platform.isIOS) {
-          PushNotifications.initialize(userUid: user.uid);
+          PushNotifications.initialize(
+            context: context,
+            userUid: user.uid,
+          );
         }
 
     } catch (error) {

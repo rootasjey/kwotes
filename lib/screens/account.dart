@@ -13,8 +13,8 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/app_notifications.dart';
 import 'package:memorare/utils/language.dart';
+import 'package:memorare/utils/push_notifications.dart';
 import 'package:memorare/utils/snack.dart';
 
 class Account extends StatefulWidget {
@@ -610,10 +610,21 @@ class _AccountState extends State<Account> {
     );
   }
 
-  void toggleBackgroundTask(bool isActive) {
-    if (!isActive) {
-      AppNotifications.plugin?.cancelAll();
-      return;
+  void toggleBackgroundTask(bool isActive) async {
+    final userAuth = await userState.userAuth;
+
+    final success = isActive ?
+      await PushNotifications.subMobileQuotidians(userAuth.uid) :
+      await PushNotifications.unsubMobileQuotidians(userAuth.uid);
+
+    if (!success) {
+      userState.setQuotidianNotifState(!userState.isQuotidianNotifActive);
+
+      showSnack(
+        context: context,
+        message: 'Sorry, there was an issue while updating your preferences. Try again in a moment.',
+        type: SnackType.error,
+      );
     }
   }
 
@@ -835,6 +846,10 @@ class _AccountState extends State<Account> {
       setState(() {
         isLoadingLang = false;
       });
+
+      if (userState.isQuotidianNotifActive) {
+        PushNotifications.updateQuotidiansSubLang(userAuth.uid);
+      }
 
       showSnack(
         context: context,

@@ -263,7 +263,10 @@ class SigninState extends State<Signin> {
       });
 
       if (Platform.isAndroid || Platform.isIOS) {
-        PushNotifications.initialize(userUid: userAuth.uid);
+        PushNotifications.initialize(
+          context: context,
+          userUid: userAuth.uid,
+        );
       }
 
       FluroRouter.router.navigateTo(context, HomeRoute);

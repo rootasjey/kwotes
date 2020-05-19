@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +10,6 @@ import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/push_notifications.dart';
 
 void main() {
   return runApp(App());
@@ -100,10 +97,6 @@ class AppState extends State<App> {
 
       appLocalStorage.saveUserName(authResult.user.displayName);
       userState.setUserConnected();
-
-      if (Platform.isAndroid || Platform.isIOS) {
-        PushNotifications.initialize(userUid: authResult.user.uid);
-      }
 
     } catch (error) {
       debugPrint(error.toString());
