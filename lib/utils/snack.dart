@@ -1,20 +1,35 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:supercharged/supercharged.dart';
 
-enum SnackType { error, success }
+enum SnackType { error, info, success }
 
-void showSnack({BuildContext context, String message, SnackType type}) {
-  Color color = type == SnackType.error ? Colors.red : Colors.green;
-  IconData iconData = type == SnackType.error ? Icons.error : Icons.check_circle;
+Future showSnack({
+  BuildContext context,
+  Function onTap,
+  String message,
+  String title,
+  SnackType type,
+}) {
+  Color color;
+  if (type == SnackType.error) { color = Colors.red; }
+  else if (type == SnackType.success) { color =  Colors.green; }
+  else { color = stateColors.softBackground; }
 
-  Flushbar(
+  IconData iconData;
+  if (type == SnackType.error) { iconData = Icons.error; }
+  else if (type == SnackType.success) { iconData = Icons.check_circle; }
+  else { iconData = Icons.info; }
+
+  return Flushbar(
     backgroundColor: color,
     duration: 5.seconds,
     icon: Icon(
       iconData,
       color: Colors.white,
     ),
+    title: title,
     messageText: Text(
       message,
       overflow: TextOverflow.ellipsis,
@@ -23,5 +38,6 @@ void showSnack({BuildContext context, String message, SnackType type}) {
         color: Colors.white,
       ),
     ),
-  )..show(context);
+    onTap: onTap,
+  ).show(context);
 }
