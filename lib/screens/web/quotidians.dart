@@ -33,6 +33,7 @@ class _QuotidiansState extends State<Quotidians> {
   bool hasNext        = true;
   int limit           = 30;
   String selectedLang = 'en';
+  final pageRoute     = QuotidiansRoute;
 
   final scrollController = ScrollController();
   bool isFabVisible = false;
@@ -46,7 +47,7 @@ class _QuotidiansState extends State<Quotidians> {
   initState() {
     super.initState();
 
-    selectedLang = Language.frontend(appLocalStorage.getQuotidiansLang());
+    selectedLang = Language.frontend(appLocalStorage.getPageLang(pageRoute: pageRoute));
 
     colorDisposer = autorun((_) {
       final color = stateColors.background == Colors.black ?
@@ -219,7 +220,10 @@ class _QuotidiansState extends State<Quotidians> {
                             });
 
                             fetch();
-                            appLocalStorage.saveQuotidiansLang(Language.backend(selectedLang));
+                            appLocalStorage.savePageLang(
+                              lang: Language.backend(selectedLang),
+                              pageRoute: pageRoute,
+                            );
                           },
                           items: ['English', 'Français']
                             .map((String value) {

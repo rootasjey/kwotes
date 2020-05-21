@@ -55,7 +55,6 @@ class AppLocalStorage {
     return descending ?? true;
   }
 
-  String getQuotidiansLang() => _localStorage.getString('quotidians_lang') ?? 'en';
   bool getQuotidianNotif() => _localStorage.getBool('quotidian_notif') ?? false;
 
   String getUserName() => _localStorage.getString('username') ?? '';
@@ -103,8 +102,6 @@ class AppLocalStorage {
     final key = '$pageRoute?order';
     _localStorage.setBool(key, descending);
   }
-
-  void saveQuotidiansLang(String lang) => _localStorage.setString('quotidians_lang', lang);
 
   void saveQuotidianNotif(bool active) {
     _localStorage.setBool('quotidian_notif', active);
