@@ -86,7 +86,7 @@ class AppLocalStorage {
     _localStorage.setStringList('drafts', drafts);
   }
 
-  void savedDraftsState(List<String> drafts) {
+  void setDrafts(List<String> drafts) {
     _localStorage.setStringList('drafts', drafts);
   }
 

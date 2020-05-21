@@ -54,7 +54,7 @@ bool deleteOfflineDraft({String createdAt}) {
     return draft['createdAt'] == createdAt;
   });
 
-  appLocalStorage.savedDraftsState(drafts);
+  appLocalStorage.setDrafts(drafts);
 
   return true;
 }
