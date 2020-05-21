@@ -99,7 +99,7 @@ class AppLocalStorage {
     _localStorage.setString(key, lang);
   }
 
-  void savePageOrder({bool descending, String pageRoute}) {
+  void setPageOrder({bool descending, String pageRoute}) {
     final key = '$pageRoute?order';
     _localStorage.setBool(key, descending);
   }

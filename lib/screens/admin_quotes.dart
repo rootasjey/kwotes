@@ -139,7 +139,7 @@ class AdminQuotesState extends State<AdminQuotes> {
                     fetch();
                   },
                   onOrderChanged: (bool order) {
-                    appLocalStorage.savePageOrder(
+                    appLocalStorage.setPageOrder(
                       descending: order,
                       pageRoute: QuotesRoute,
                     );

@@ -131,7 +131,7 @@ class QuotidiansState extends State<Quotidians> {
                     fetch();
                   },
                   onOrderChanged: (bool order) {
-                    appLocalStorage.savePageOrder(
+                    appLocalStorage.setPageOrder(
                       descending: order,
                       pageRoute: pageRoute,
                     );

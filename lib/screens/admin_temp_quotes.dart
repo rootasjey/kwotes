@@ -141,7 +141,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                     fetch();
                   },
                   onOrderChanged: (bool order) {
-                    appLocalStorage.savePageOrder(
+                    appLocalStorage.setPageOrder(
                       descending: order,
                       pageRoute: pageRoute,
                     );
