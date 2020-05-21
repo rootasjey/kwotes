@@ -145,23 +145,8 @@ class PushNotifications {
     });
   }
 
-  static Future<bool> subMobileQuotidians(String userUid) async {
+  static Future<bool> subMobileQuotidians({String lang}) async {
     try {
-      final user = await Firestore.instance
-        .collection('users')
-        .document(userUid)
-        .get();
-
-      if (!user.exists) { return false; }
-
-      final lang = user.data['lang'];
-
-      await user
-        .reference
-        .updateData({
-          'notificationsPreferences.devices.quotidians': true,
-        });
-
       await fcm.subscribeToTopic('quotidians-mobile-$lang');
       return true;
 
@@ -171,23 +156,8 @@ class PushNotifications {
     }
   }
 
-  static Future<bool> unsubMobileQuotidians(String userUid) async {
+  static Future<bool> unsubMobileQuotidians({String lang}) async {
     try {
-      final user = await Firestore.instance
-        .collection('users')
-        .document(userUid)
-        .get();
-
-      if (!user.exists) { return false; }
-
-      final lang = user.data['lang'];
-
-      await user
-        .reference
-        .updateData({
-          'notificationsPreferences.devices.quotidians': false,
-        });
-
       await fcm.unsubscribeFromTopic('quotidians-mobile-$lang');
       return true;
 
@@ -197,22 +167,15 @@ class PushNotifications {
     }
   }
 
-  static Future<bool> updateQuotidiansSubLang(String userUid) async {
+  static Future<bool> updateQuotidiansSubLang({String lang}) async {
     try {
-      final user = await Firestore.instance
-        .collection('users')
-        .document(userUid)
-        .get();
-
-      if (!user.exists) { return false; }
-
-      final lang = user.data['lang'];
-
       // Unsub from all
-      await fcm.unsubscribeFromTopic('quotidians-en');
-      await fcm.unsubscribeFromTopic('quotidians-fr');
+      ['en', 'fr']
+        .forEach((currLang) async {
+          await fcm.unsubscribeFromTopic('quotidians-mobile-$currLang');
+        });
 
-      await fcm.subscribeToTopic('quotidians-$lang');
+      await fcm.subscribeToTopic('quotidians-mobile-$lang');
       return true;
 
     } catch (error) {

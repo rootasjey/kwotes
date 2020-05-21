@@ -611,11 +611,11 @@ class _AccountState extends State<Account> {
   }
 
   void toggleBackgroundTask(bool isActive) async {
-    final userAuth = await userState.userAuth;
+    final lang = appLocalStorage.getLang();
 
     final success = isActive ?
-      await PushNotifications.subMobileQuotidians(userAuth.uid) :
-      await PushNotifications.unsubMobileQuotidians(userAuth.uid);
+      await PushNotifications.subMobileQuotidians(lang: lang) :
+      await PushNotifications.unsubMobileQuotidians(lang: lang);
 
     if (!success) {
       userState.setQuotidianNotifState(!userState.isQuotidianNotifActive);
@@ -683,17 +683,7 @@ class _AccountState extends State<Account> {
   }
 
   void fetchLang() async {
-    final userAuth = await userState.userAuth;
-    if (userAuth == null) { return; }
-
-    final user = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .get();
-
-    if (!user.exists) { return; }
-
-    final lang = user.data['lang'];
+    final lang = appLocalStorage.getLang();
 
     setState(() {
       selectedLang = Language.frontend(lang);
@@ -814,61 +804,28 @@ class _AccountState extends State<Account> {
   }
 
   void updateLang() async {
-    final lang = Language.backend(selectedLang);
-    userState.setLang(lang);
-
-    if (!userState.isUserConnected) { // offline only
-      showSnack(
-        context: context,
-        message: 'Your language has been successfully updated.',
-        type: SnackType.success,
-      );
-
-      return;
-    }
-
     setState(() {
       isLoadingLang = true;
     });
 
-    try {
-      final userAuth = await userState.userAuth;
-      if (userAuth == null) { throw Error(); }
+    final lang = Language.backend(selectedLang);
 
-      await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .updateData({
-            'lang': lang,
-          }
-        );
+    userState.setLang(lang);
+    appLocalStorage.saveLang(lang);
 
-      setState(() {
-        isLoadingLang = false;
-      });
-
-      if (userState.isQuotidianNotifActive) {
-        PushNotifications.updateQuotidiansSubLang(userAuth.uid);
-      }
-
-      showSnack(
-        context: context,
-        message: 'Your language has been successfully updated.',
-        type: SnackType.success,
-      );
-
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        isLoadingLang = false;
-      });
-
-      showSnack(
-        context: context,
-        message: 'Error while updating your language. Please try again or contact us.',
-        type: SnackType.error,
-      );
+    if (userState.isQuotidianNotifActive) {
+      final lang = appLocalStorage.getLang();
+      await PushNotifications.updateQuotidiansSubLang(lang: lang);
     }
+
+    setState(() {
+      isLoadingLang = false;
+    });
+
+    showSnack(
+      context: context,
+      message: 'Your language has been successfully updated.',
+      type: SnackType.success,
+    );
   }
 }
