@@ -810,8 +810,7 @@ class _AccountState extends State<Account> {
 
     final lang = Language.backend(selectedLang);
 
-    userState.setLang(lang);
-    appLocalStorage.saveLang(lang);
+    Language.setLang(lang);
 
     if (userState.isQuotidianNotifActive) {
       final lang = appLocalStorage.getLang();
