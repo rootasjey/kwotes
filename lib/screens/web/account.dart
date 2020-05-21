@@ -520,17 +520,7 @@ class _AccountState extends State<Account> {
   }
 
   void fetchLang() async {
-    final userAuth = await userState.userAuth;
-    if (userAuth == null) { return; }
-
-    final user = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .get();
-
-    if (!user.exists) { return; }
-
-    final lang = user.data['lang'];
+    final lang = appLocalStorage.getLang();
 
     setState(() {
       selectedLang = Language.frontend(lang);
@@ -646,36 +636,10 @@ class _AccountState extends State<Account> {
     final lang = Language.backend(selectedLang);
     Language.setLang(lang);
 
-    try {
-      final userAuth = await userState.userAuth;
-      if (userAuth == null) { throw Error(); }
-
-      await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .updateData({
-            'lang': lang,
-          }
-        );
-
-      showSnack(
-        context: context,
-        message: 'Your language has been successfully updated.',
-        type: SnackType.success,
-      );
-
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        isLoadingLang = false;
-      });
-
-      showSnack(
-        context: context,
-        message: 'Error while updating your language. Please try again or contact us.',
-        type: SnackType.error,
-      );
-    }
+    showSnack(
+      context: context,
+      message: 'Your language has been successfully updated.',
+      type: SnackType.success,
+    );
   }
 }
