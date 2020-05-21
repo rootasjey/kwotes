@@ -43,22 +43,25 @@ class PushNotifications {
   static void postProcessInit(String userUid) {
     fcm.configure(
       onLaunch: (Map<String, dynamic> payload) async {
-        debugPrint('onResume: $payload');
-        if (payload['notification'] == null) { return; }
-
-        final String path = payload['data']['path'];
+        String path = payload['data'] == null ?
+          payload['path'] : payload['data']['path'];
 
         if (path != null) {
           FluroRouter.router.navigateTo(_context, path);
         }
       },
       onMessage: (Map<String, dynamic> payload) async {
-        if (payload['notification'] == null) { return; }
+        final payloadBody = payload['notification'] ??
+          payload['aps']['alert'];
 
-        final String title = payload['notification']['title'];
-        final String body = payload['notification']['body'];
+        if (payloadBody == null) { return; }
 
-        if (payload['data'].length == 0) {
+        final String title = payloadBody['title'];
+        final String body = payloadBody['body'];
+
+        String path = payload['path'];
+
+        if ((payload['data'] == null || payload['data'].length == 0) && path == null) {
           await Flushbar(
             duration: 10.seconds,
             icon: Icon(
@@ -84,8 +87,11 @@ class PushNotifications {
           return;
         }
 
-        final String path = payload['data']['path'];
-        final String message = payload['data']['message'];
+        path = path ?? payload['data']['path'];
+
+        final String message = payload['data'] == null ?
+          payload['message'] :
+          payload['data']['message'];
 
         await Flushbar(
           duration: 10.seconds,
@@ -113,10 +119,9 @@ class PushNotifications {
         ).show(_context);
       },
       onResume: (Map<String, dynamic> payload) async {
-        debugPrint('onResume: $payload');
-        if (payload['notification'] == null) { return; }
-
-        final String path = payload['data']['path'];
+        String path = payload['data'] == null ?
+          payload['path'] :
+          payload['data']['path'];
 
         if (path != null) {
           FluroRouter.router.navigateTo(_context, path);
