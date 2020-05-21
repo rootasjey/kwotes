@@ -103,7 +103,7 @@ class AppLocalStorage {
     _localStorage.setBool(key, descending);
   }
 
-  void saveQuotidianNotif(bool active) {
+  void setQuotidianNotif(bool active) {
     _localStorage.setBool('quotidian_notif', active);
   }
 

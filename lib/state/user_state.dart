@@ -44,7 +44,7 @@ abstract class UserStateBase with Store {
   @action
   void setQuotidianNotifState(bool active) {
     isQuotidianNotifActive = active;
-    appLocalStorage.saveQuotidianNotif(active);
+    appLocalStorage.setQuotidianNotif(active);
   }
 
   @action
