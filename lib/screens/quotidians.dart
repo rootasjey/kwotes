@@ -119,7 +119,7 @@ class QuotidiansState extends State<Quotidians> {
                   descending: descending,
                   lang: lang,
                   onLangChanged: (String newLang) {
-                    appLocalStorage.savePageLang(
+                    appLocalStorage.setPageLang(
                       lang: newLang,
                       pageRoute: pageRoute,
                     );

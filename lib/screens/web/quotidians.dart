@@ -220,7 +220,7 @@ class _QuotidiansState extends State<Quotidians> {
                             });
 
                             fetch();
-                            appLocalStorage.savePageLang(
+                            appLocalStorage.setPageLang(
                               lang: Language.backend(selectedLang),
                               pageRoute: pageRoute,
                             );

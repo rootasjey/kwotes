@@ -127,7 +127,7 @@ class AdminQuotesState extends State<AdminQuotes> {
                   descending: descending,
                   lang: lang,
                   onLangChanged: (String newLang) {
-                    appLocalStorage.savePageLang(
+                    appLocalStorage.setPageLang(
                       lang: newLang,
                       pageRoute: QuotesRoute,
                     );
