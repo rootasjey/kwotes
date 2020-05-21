@@ -29,12 +29,8 @@ class PushNotifications {
         _streamSubscription.cancel();
       }
 
-      _streamSubscription = fcm.onIosSettingsRegistered
-      .listen((event) {
-        postProcessInit(userUid);
-      });
-
-      fcm.requestNotificationPermissions(IosNotificationSettings());
+      final isOk = await fcm.requestNotificationPermissions(IosNotificationSettings());
+      if (isOk) { postProcessInit(userUid); }
 
     } else {
       postProcessInit(userUid);
