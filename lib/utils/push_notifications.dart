@@ -29,7 +29,10 @@ class PushNotifications {
         _streamSubscription.cancel();
       }
 
-      final isOk = await fcm.requestNotificationPermissions(IosNotificationSettings());
+      final isOk = await fcm.requestNotificationPermissions(
+        IosNotificationSettings()
+      );
+
       if (isOk) { postProcessInit(userUid); }
 
     } else {
@@ -121,7 +124,9 @@ class PushNotifications {
       },
     );
 
-    saveDeviceToken(userUid);
+    if (userUid != null && userUid.length > 0) {
+      saveDeviceToken(userUid);
+    }
   }
 
   static void saveDeviceToken(String userUid) async {
