@@ -69,7 +69,7 @@ class AppLocalStorage {
     _localStorage.setBool('autoBrightness', value);
   }
 
-  void saveBrightness(Brightness brightness) {
+  void setBrightness(Brightness brightness) {
     final strBrightness = brightness == Brightness.dark ? 'dark' : 'light';
     _localStorage.setString('strBrightness', strBrightness);
   }

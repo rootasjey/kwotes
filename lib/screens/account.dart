@@ -536,7 +536,7 @@ class _AccountState extends State<Account> {
               DynamicTheme.of(context).setBrightness(currentBrightness);
               stateColors.refreshTheme(currentBrightness);
 
-              appLocalStorage.saveBrightness(currentBrightness);
+              appLocalStorage.setBrightness(currentBrightness);
 
               setState(() {});
             },
