@@ -65,7 +65,7 @@ class AppLocalStorage {
     _localStorage = await LocalStorage.getInstance();
   }
 
-  void saveAutoBrightness(bool value) {
+  void setAutoBrightness(bool value) {
     _localStorage.setBool('autoBrightness', value);
   }
 
