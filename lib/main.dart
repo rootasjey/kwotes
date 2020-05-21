@@ -95,7 +95,7 @@ class AppState extends State<App> {
         throw Error();
       }
 
-      appLocalStorage.saveUserName(authResult.user.displayName);
+      appLocalStorage.setUserName(authResult.user.displayName);
       userState.setUserConnected();
 
     } catch (error) {

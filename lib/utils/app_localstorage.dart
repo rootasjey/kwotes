@@ -107,7 +107,7 @@ class AppLocalStorage {
     _localStorage.setBool('quotidian_notif', active);
   }
 
-  void saveUserName(String userName) => _localStorage.setString('username', userName);
+  void setUserName(String userName) => _localStorage.setString('username', userName);
 
   void saveUserUid(String userName) => _localStorage.setString('user_uid', userName);
 }

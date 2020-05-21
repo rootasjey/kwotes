@@ -253,7 +253,7 @@ class SigninState extends State<Signin> {
       final userAuth = authResult.user;
 
       appLocalStorage.saveCredentials(email: email, password: password);
-      appLocalStorage.saveUserName(userAuth.displayName);
+      appLocalStorage.setUserName(userAuth.displayName);
       appLocalStorage.saveUserUid(userAuth.uid);
 
       userState.setUserConnected();
