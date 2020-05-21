@@ -91,7 +91,7 @@ class AppLocalStorage {
   }
 
   void saveEmail(String email) => _localStorage.setString('email', email);
-  void saveLang(String lang) => _localStorage.setString('lang', lang);
+  void setLang(String lang) => _localStorage.setString('lang', lang);
 
   void setPageLang({String lang, String pageRoute}) {
     final key = '$pageRoute?lang';

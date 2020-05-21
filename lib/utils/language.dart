@@ -61,6 +61,6 @@ class Language {
 
   static void setLang(String lang) {
     userState.setLang(lang);
-    appLocalStorage.saveLang(lang);
+    appLocalStorage.setLang(lang);
   }
 }
