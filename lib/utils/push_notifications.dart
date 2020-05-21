@@ -39,7 +39,6 @@ class PushNotifications {
 
   static void postProcessInit(String userUid) {
     fcm.configure(
-      onBackgroundMessage: backgroundMessageHandler,
       onLaunch: (Map<String, dynamic> payload) async {
         debugPrint('onResume: $payload');
         if (payload['notification'] == null) { return; }
@@ -123,21 +122,6 @@ class PushNotifications {
     );
 
     saveDeviceToken(userUid);
-  }
-
-  static Future backgroundMessageHandler(Map<String, dynamic> payload) {
-    if (payload.containsKey('data')) {
-      // Handle data message
-      // final dynamic data = message['data'];
-    }
-
-    if (payload.containsKey('notification')) {
-      // Handle notification message
-      // final dynamic notification = message['notification'];
-    }
-
-    // Or do other work.
-    return null;
   }
 
   static void saveDeviceToken(String userUid) async {
