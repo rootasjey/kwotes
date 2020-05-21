@@ -41,6 +41,7 @@ class _TopicsState extends State<Topics> {
         return null;
       },
       child: ListView(
+        padding: const EdgeInsets.only(bottom: 200.0),
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 40.0),

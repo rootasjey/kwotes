@@ -47,7 +47,10 @@ class _DiscoverState extends State<Discover> {
               return null;
             },
             child: ListView(
-              padding: EdgeInsets.symmetric(vertical: 50.0),
+              padding: EdgeInsets.only(
+                top: 50.0,
+                bottom: 200.0,
+              ),
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),

@@ -30,9 +30,11 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 50.0,
+        padding: EdgeInsets.only(
+          left: 20.0,
+          right: 20.0,
+          top: 50.0,
+          bottom: 200.0,
         ),
         children: <Widget>[
           Observer(builder: (context) {
