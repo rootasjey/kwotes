@@ -91,7 +91,6 @@ export const quotidiansMobileEN = functions
       }
     };
 
-    // TODO: add 'mobile' to topic
     return await fcm.sendToTopic('quotidians-mobile-en', payload);
   });
 
