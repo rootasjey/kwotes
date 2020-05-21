@@ -90,7 +90,6 @@ class AppLocalStorage {
     _localStorage.setStringList('drafts', drafts);
   }
 
-  void saveEmail(String email) => _localStorage.setString('email', email);
   void setLang(String lang) => _localStorage.setString('lang', lang);
 
   void setPageLang({String lang, String pageRoute}) {
