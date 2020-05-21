@@ -464,7 +464,7 @@ class SignupState extends State<Signup> {
         );
 
         appLocalStorage.setUserName(username);
-        appLocalStorage.saveUserUid(user.uid);
+        appLocalStorage.setUserUid(user.uid);
 
         userState.setUserConnected();
 

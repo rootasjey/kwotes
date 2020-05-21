@@ -109,7 +109,7 @@ class AppLocalStorage {
 
   void setUserName(String userName) => _localStorage.setString('username', userName);
 
-  void saveUserUid(String userName) => _localStorage.setString('user_uid', userName);
+  void setUserUid(String userName) => _localStorage.setString('user_uid', userName);
 }
 
 final appLocalStorage = AppLocalStorage();
