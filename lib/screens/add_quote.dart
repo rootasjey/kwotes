@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -14,6 +15,8 @@ import 'package:memorare/screens/add_quote_reference.dart';
 import 'package:memorare/screens/add_quote_topics.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:supercharged/supercharged.dart';
 
 enum ActionType {
   draft,
@@ -111,34 +114,62 @@ class _AddQuoteState extends State<AddQuote> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Center(
+                FadeInY(
+                  delay: 0.0,
+                  beginY: 50.0,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 100.0,
+                        bottom: 40.0,
+                      ),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 80.0,
+                      ),
+                    ),
+                  ),
+                ),
+
+                FadeInY(
+                  delay: 1.5,
+                  beginY: 50.0,
+                  child: Text(
+                    getResultMessage(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+
+                ControlledAnimation(
+                  duration: 1.seconds,
+                  tween: Tween(begin: 0.0, end: 100.0),
+                  builder: (context, value) {
+                    return Center(
+                      child: SizedBox(
+                        width: value,
+                        child: Divider(height: 100.0,),
+                      ),
+                    );
+                  },
+                ),
+
+                FadeInY(
+                  delay: 2.0,
+                  beginY: 50.0,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 60.0,
-                      bottom: 40.0,
-                    ),
-                    child: Icon(
-                      Icons.check_circle_outline,
-                      size: 80.0,
-                    ),
-                  ),
-                ),
-
-                Text(
-                  getResultMessage(),
-                  style: TextStyle(
-                    fontSize: 22.0,
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Opacity(
-                    opacity: .6,
-                    child: Text(
-                      getResultSubMessage(),
-                      style: TextStyle(
-                        fontSize: 17.0,
+                    padding: const EdgeInsets.only(top: 0.0),
+                    child: Opacity(
+                      opacity: .6,
+                      child: Text(
+                        getResultSubMessage(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
                       ),
                     ),
                   ),
@@ -154,19 +185,22 @@ class _AddQuoteState extends State<AddQuote> {
               left: 20.0,
               right: 20.0,
             ),
-            child: SizedBox(
-              height: 200.0,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  navCard(
-                    icon: Icon(Icons.home, size: 40.0,),
+            child: Column(
+              children: <Widget>[
+                FadeInY(
+                  delay: 3.0,
+                  beginY: 50.0,
+                  child: navCard(
+                    icon: Icon(Icons.dashboard, size: 40.0,),
                     title: 'Home',
                     onTap: () => FluroRouter.router.navigateTo(context, HomeRoute),
                   ),
+                ),
 
-                  navCard(
+                FadeInY(
+                  delay: 3.5,
+                  beginY: 50.0,
+                  child: navCard(
                     icon: Icon(Icons.add, size: 40.0,),
                     title: 'New quote',
                     onTap: () {
@@ -180,8 +214,12 @@ class _AddQuoteState extends State<AddQuote> {
                       });
                     },
                   ),
+                ),
 
-                  navCard(
+                FadeInY(
+                  delay: 4.0,
+                  beginY: 50.0,
+                  child: navCard(
                     icon: Icon(Icons.timer, size: 40.0,),
                     title: 'In validation',
                     onTap: () {
@@ -193,8 +231,8 @@ class _AddQuoteState extends State<AddQuote> {
                       FluroRouter.router.navigateTo(context, TempQuotesRoute);
                     },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -202,40 +240,47 @@ class _AddQuoteState extends State<AddQuote> {
     );
   }
 
-  Widget navCard({Icon icon, Function onTap, String title,}) {
-    return SizedBox(
-      width: 150.0,
-      height: 130.0,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(5.0),
-          )
-        ),
-        child: InkWell(
-          onTap: onTap,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Opacity(opacity: .8, child: icon),
-              ),
+  Widget navCard({
+    Icon icon,
+    Function onTap,
+    String title,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: SizedBox(
+        width: 300.0,
+        height: 80.0,
+        child: Card(
+          elevation: 4.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(5.0),
+            )
+          ),
+          child: InkWell(
+            onTap: onTap,
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Opacity(opacity: .5, child: icon),
+                ),
 
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Opacity(
-                  opacity: .6,
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 17.0,
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17.0,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
