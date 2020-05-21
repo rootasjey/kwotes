@@ -310,7 +310,7 @@ class _SigninState extends State<Signin> {
         return;
       }
 
-      appLocalStorage.saveCredentials(
+      appLocalStorage.setCredentials(
         email: email,
         password: password,
       );

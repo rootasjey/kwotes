@@ -74,7 +74,7 @@ class AppLocalStorage {
     _localStorage.setString('strBrightness', strBrightness);
   }
 
-  void saveCredentials({String email, String password}) {
+  void setCredentials({String email, String password}) {
     _localStorage.setString('email', email);
     _localStorage.setString('password', password);
   }
