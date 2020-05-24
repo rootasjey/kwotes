@@ -36,6 +36,11 @@ abstract class UserStateBase with Store {
     return _userAuth;
   }
 
+  /// To use chen user's data has changed.
+  void clearAuthCache() {
+    _userAuth = null;
+  }
+
   @action
   void setLang(String newLang) {
     lang = newLang;

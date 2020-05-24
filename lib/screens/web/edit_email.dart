@@ -293,6 +293,8 @@ class _EditEmailState extends State<EditEmail> {
           }
         );
 
+      userState.clearAuthCache();
+
       setState(() {
         isUpdating = false;
         isCompleted = true;
