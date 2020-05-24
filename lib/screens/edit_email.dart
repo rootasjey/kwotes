@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -135,7 +136,7 @@ class _EditEmailState extends State<EditEmail> {
                 'Check your inbox to validate your email. It may be in the junk folder.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 16.0,
                 ),
               ),
             ),
@@ -220,23 +221,8 @@ class _EditEmailState extends State<EditEmail> {
   }
 
   Widget updatingScreen() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child: Text(
-              'Updating your email...',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          )
-        ],
-      ),
+    return LoadingAnimation(
+      textTitle: 'Updating your email...',
     );
   }
 
