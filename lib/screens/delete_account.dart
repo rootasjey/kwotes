@@ -304,6 +304,8 @@ class DeleteAccountState extends State<DeleteAccount> {
 
       await userAuth.delete();
 
+      userState.signOut();
+
       setState(() {
         isDeleting = false;
         isCompleted = true;
