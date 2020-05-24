@@ -222,7 +222,15 @@ class _EditEmailState extends State<EditEmail> {
 
   Widget updatingScreen() {
     return LoadingAnimation(
-      textTitle: 'Updating your email...',
+      title: Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Text(
+          'Updating your email...',
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
+      )
     );
   }
 
