@@ -71,10 +71,12 @@ class SignupState extends State<Signup> {
 
   Widget body() {
     if (isLoading) {
-      return Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: LoadingAnimation(
-          textTitle: 'Creating your account...',
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: LoadingAnimation(
+            textTitle: 'Creating your account...',
+          ),
         ),
       );
     }
@@ -145,7 +147,6 @@ class SignupState extends State<Signup> {
 
   Widget completedScreen() {
     return Container(
-      color: Colors.white,
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.all(30.0),
       child: Column(
@@ -174,7 +175,7 @@ class SignupState extends State<Signup> {
             opacity: .7,
             child: Text(
               'Check your mail box and your spam folder to validate your account.',
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 16.0),
             ),
           ),
 
