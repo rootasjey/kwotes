@@ -453,7 +453,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future fetchUserPP() async {
-    final userAuth = await FirebaseAuth.instance.currentUser();
+    final userAuth = await userState.userAuth;
 
     final user = await Firestore.instance
       .collection('users')
