@@ -405,6 +405,16 @@ class SignupState extends State<Signup> {
       isLoading = true;
     });
 
+    if (username == null || username.isEmpty) {
+      showSnack(
+        context: context,
+        message: 'You must provide a valid username',
+        type: SnackType.error,
+      );
+
+      return;
+    }
+
     try {
       // ?NOTE: Triming because of TAB key on Desktop.
       final result = await FirebaseAuth.instance
