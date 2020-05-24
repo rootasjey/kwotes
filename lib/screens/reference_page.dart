@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/link_card.dart';
-import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
@@ -48,9 +48,8 @@ class ReferencePageState extends State<ReferencePage> {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
         if (isLoading) {
-          return LoadingComponent(
-            title: 'Loading reference...',
-            padding: EdgeInsets.all(30.0),
+          return LoadingAnimation(
+            textTitle: 'Loading reference...',
           );
         }
 

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/link_card.dart';
-import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
@@ -67,9 +67,8 @@ class _AuthorPageState extends State<AuthorPage> {
         }
 
         if (isLoading) {
-          return LoadingComponent(
-            title: 'Loading author...',
-            padding: EdgeInsets.all(30.0),
+          return LoadingAnimation(
+            textTitle: 'Loading author...',
           );
         }
 

@@ -6,7 +6,7 @@ import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/footer.dart';
-import 'package:memorare/components/web/loading_animation.dart';
+import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';

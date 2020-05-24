@@ -5,7 +5,7 @@ import 'package:memorare/actions/lists.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/loading_animation.dart';
+import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/footer.dart';
-import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
@@ -53,7 +53,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget body() {
     if (isLoading && quotidian == null) {
-      return LoadingComponent();
+      return LoadingAnimation();
     }
 
     if (quotidian == null) {

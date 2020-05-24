@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -38,8 +38,8 @@ class _DiscoverState extends State<Discover> {
       body: Builder(
         builder: (BuildContext context) {
           if (isLoading) {
-            return LoadingComponent(
-              title: 'Loading Discover section...',
+            return LoadingAnimation(
+              textTitle: 'Loading Discover section...',
             );
           }
 

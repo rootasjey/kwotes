@@ -6,7 +6,7 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/components/web/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';

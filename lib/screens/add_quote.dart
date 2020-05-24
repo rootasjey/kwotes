@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/actions/temp_quotes.dart';
-import 'package:memorare/components/loading.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
@@ -92,8 +92,8 @@ class _AddQuoteState extends State<AddQuote> {
 
   Widget body() {
     if (isProposing) {
-      return LoadingComponent(
-        title: AddQuoteInputs.quote.id.isEmpty ?
+      return LoadingAnimation(
+        textTitle: AddQuoteInputs.quote.id.isEmpty ?
           'Proposing quote...' : 'Saving quote...',
       );
     }

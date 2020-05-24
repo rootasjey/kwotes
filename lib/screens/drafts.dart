@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/loading_animation.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -159,8 +159,8 @@ class _DraftsState extends State<Drafts> {
       return SliverList(
         delegate: SliverChildListDelegate([
             Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
+              padding: const EdgeInsets.only(top: 150.0),
+              child:  LoadingAnimation(),
             ),
           ]
         ),
