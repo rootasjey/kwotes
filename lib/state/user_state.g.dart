@@ -124,6 +124,16 @@ mixin _$UserState on UserStateBase, Store {
   }
 
   @override
+  void signOut() {
+    final _$actionInfo = _$UserStateBaseActionController.startAction();
+    try {
+      return super.signOut();
+    } finally {
+      _$UserStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateFavDate() {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {

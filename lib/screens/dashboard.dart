@@ -412,7 +412,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () async {
                 await appLocalStorage.clearUserAuthData();
                 await FirebaseAuth.instance.signOut();
-                userState.setUserDisconnected();
+                userState.signOut();
 
                 setState(() {
                   canManage = false;

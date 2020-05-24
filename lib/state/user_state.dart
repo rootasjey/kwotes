@@ -79,6 +79,12 @@ abstract class UserStateBase with Store {
   }
 
   @action
+  void signOut() {
+    _userAuth = null;
+    isUserConnected = false;
+  }
+
+  @action
   void updateFavDate() {
     updatedFavAt = DateTime.now();
   }
