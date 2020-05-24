@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/loading.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 
@@ -110,6 +112,16 @@ class _DiscoverState extends State<Discover> {
               );
             }
           ),
+          // child: DiscoverCard(
+          //   id: reference.id,
+          //   elevation: 5.0,
+          //   imageUrl: reference.urls.image,
+          //   type: 'reference',
+          //   name: reference.name,
+          //   summary: reference.summary,
+          //   width: 170.0,
+          //   height: 270.0,
+          // ),
         )
       );
 
@@ -131,6 +143,16 @@ class _DiscoverState extends State<Discover> {
               );
             }
           ),
+          // child: DiscoverCard(
+          //   id: author.id,
+          //   elevation: 5.0,
+          //   imageUrl: author.urls.image,
+          //   type: 'author',
+          //   name: author.name,
+          //   summary: author.summary,
+          //   width: 170.0,
+          //   height: 270.0,
+          // ),
         )
       );
 
@@ -140,7 +162,15 @@ class _DiscoverState extends State<Discover> {
     return cards;
   }
 
-  Widget discoverCard({String title, String imgUrl, Function onTap}) {
+  Widget discoverCard({
+    String title,
+    String imgUrl,
+    Function onTap,
+    String type = 'author',
+  }) {
+    final isImageOk = imgUrl != null &&
+      imgUrl.length > 0;
+
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: SizedBox(
@@ -161,26 +191,49 @@ class _DiscoverState extends State<Discover> {
             },
             child: Stack(
               children: <Widget>[
-                if (imgUrl != null && imgUrl.length > 0)
+                isImageOk ?
                   Opacity(
-                      opacity: .3,
-                      child: Image.network(
-                        imgUrl,
-                        fit: BoxFit.cover,
-                        width: 170,
-                        height: 220,
-                      ),
+                    opacity: .3,
+                    child: Image.network(
+                      imgUrl,
+                      fit: BoxFit.cover,
+                      width: 170,
+                      height: 220,
                     ),
+                  ) :
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 80.0,
+                    ),
+                    child: Observer(
+                      builder: (context) {
+                        return Image.asset(
+                          type == 'reference' ?
+                          'assets/images/textbook-${stateColors.iconExt}.png' :
+                          'assets/images/profile-${stateColors.iconExt}.png',
+                        );
+                      }
+                    )
+                  ),
 
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    title.length > 65 ?
-                    '${title.substring(0, 64)}...' :
-                    title,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+                Positioned.fill(
+                  child: Container(
+                    color: Color.fromRGBO(0, 0, 0, .5),
+                  ),
+                ),
+
+                Positioned(
+                  bottom: 0.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      title.length > 65 ?
+                      '${title.substring(0, 64)}...' :
+                      title,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
