@@ -179,6 +179,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               opacity: .8,
               child: Text(
                 'Sorry, an unexpected error happended :(',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
