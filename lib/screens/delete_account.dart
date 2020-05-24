@@ -127,7 +127,7 @@ class DeleteAccountState extends State<DeleteAccount> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(top: 15.0,),
+            padding: const EdgeInsets.only(top: 45.0,),
             child: FlatButton(
               onPressed: () {
                 FluroRouter.router.navigateTo(
@@ -138,7 +138,7 @@ class DeleteAccountState extends State<DeleteAccount> {
               child: Opacity(
                 opacity: .6,
                 child: Text(
-                  'Back to home',
+                  'Back home',
                 ),
               ),
             ),
