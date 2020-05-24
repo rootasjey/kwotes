@@ -414,6 +414,10 @@ class _DashboardState extends State<Dashboard> {
                 await FirebaseAuth.instance.signOut();
                 userState.setUserDisconnected();
 
+                setState(() {
+                  canManage = false;
+                });
+
                 showSnack(
                   context: context,
                   message: 'You have been successfully disconnected.',
