@@ -87,7 +87,8 @@ Please [ask](mailto:github@outofcontext.app) if you have any doubt.
 
 # Screenshots
 
-Web
+## Web
+
 --------------------------------
 ![Web home](./screenshots/home_quote.png)
 --------------------------------
@@ -95,6 +96,9 @@ Web
 --------------------------------
 ![Web discover](./screenshots/home_topics.png)
 --------------------------------
-Mobile
---------------------------------
-![OOC mobile](./screenshots/collage_mobile.png)
+
+## Mobile
+
+| Quotidian | Discover | Topics |
+| :---------: | :------: | :---------: |
+| <img src="./screenshots/quotidian_mobile_dark.png" title="outofcontext quotidian mobile" width="200" /> | <img src="./screenshots/discover_mobile_dark.png" title="outofcontext quotidian mobile" width="200" /> |  <img src="./screenshots/topics_mobile_dark.png" title="outofcontext quotidian mobile" width="200" /> |
