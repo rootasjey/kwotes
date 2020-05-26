@@ -7,6 +7,7 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 
 class DeleteAccount extends StatefulWidget {
   @override
@@ -306,6 +307,9 @@ class _DeleteAccountState extends State<DeleteAccount> {
       .updateData({'flag': 'delete'});
 
       await userAuth.delete();
+
+      userState.signOut();
+      appLocalStorage.clearUserAuthData();
 
       setState(() {
         isDeleting = false;
