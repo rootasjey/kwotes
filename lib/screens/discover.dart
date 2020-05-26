@@ -112,16 +112,6 @@ class _DiscoverState extends State<Discover> {
               );
             }
           ),
-          // child: DiscoverCard(
-          //   id: reference.id,
-          //   elevation: 5.0,
-          //   imageUrl: reference.urls.image,
-          //   type: 'reference',
-          //   name: reference.name,
-          //   summary: reference.summary,
-          //   width: 170.0,
-          //   height: 270.0,
-          // ),
         )
       );
 
@@ -143,16 +133,6 @@ class _DiscoverState extends State<Discover> {
               );
             }
           ),
-          // child: DiscoverCard(
-          //   id: author.id,
-          //   elevation: 5.0,
-          //   imageUrl: author.urls.image,
-          //   type: 'author',
-          //   name: author.name,
-          //   summary: author.summary,
-          //   width: 170.0,
-          //   height: 270.0,
-          // ),
         )
       );
 
@@ -168,6 +148,7 @@ class _DiscoverState extends State<Discover> {
     Function onTap,
     String type = 'author',
   }) {
+
     final isImageOk = imgUrl != null &&
       imgUrl.length > 0;
 
@@ -227,10 +208,11 @@ class _DiscoverState extends State<Discover> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
-                      title.length > 65 ?
-                      '${title.substring(0, 64)}...' :
+                      title.length > 15 ?
+                      '${title.substring(0, 15)}...' :
                       title,
                       style: TextStyle(
+                        color: Colors.white,
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
                       ),
