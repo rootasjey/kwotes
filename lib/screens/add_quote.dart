@@ -415,7 +415,7 @@ class _AddQuoteState extends State<AddQuote> {
     }
 
     if (actionIntent == ActionType.tempquote && actionResult == ActionType.draft) {
-      return "We couldn't propose your quote at the moment (maybe you've reached your quote) but we saved it in your drafts";
+      return "We couldn't propose your quote at the moment (maybe you've reached your quota) but we saved it in your drafts";
     }
 
     if (actionIntent == ActionType.tempquote && actionResult == ActionType.offline) {
