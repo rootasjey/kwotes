@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:supercharged/supercharged.dart';
 
 class PushNotifications {
@@ -138,21 +139,26 @@ class PushNotifications {
     final fcmToken = await fcm.getToken();
     if (fcmToken == null) { return; }
 
-    final tokenRef = await Firestore.instance
-      .collection('users')
-      .document(userUid)
-      .collection('tokens')
-      .document(fcmToken)
-      .get();
+    try {
+      final tokenRef = await Firestore.instance
+        .collection('users')
+        .document(userUid)
+        .collection('tokens')
+        .document(fcmToken)
+        .get();
 
-    if (tokenRef.exists) { return; }
+      if (tokenRef.exists) { return; }
 
-    await tokenRef.reference.setData({
-      'token': fcmToken,
-      'createdAt': FieldValue.serverTimestamp(),
-      'platform': Platform.operatingSystem,
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+      await tokenRef.reference.setData({
+        'token': fcmToken,
+        'createdAt': FieldValue.serverTimestamp(),
+        'platform': Platform.operatingSystem,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+    } catch (error) {
+      appLocalStorage.clearUserAuthData();
+    }
   }
 
   static Future<bool> subMobileQuotidians({String lang}) async {
