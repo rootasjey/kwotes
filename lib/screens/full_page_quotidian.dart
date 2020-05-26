@@ -79,17 +79,26 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 ),
 
                 authorDivider(color: color),
-                authorName(),
+
+                FadeInY(
+                  beginY: 50.0,
+                  delay: 1.0,
+                  child: authorName(),
+                ),
+
+                if (quotidian.quote.mainReference?.name != null &&
+                  quotidian.quote.mainReference.name.length > 0)
+                  FadeInY(
+                    beginY: 100.0,
+                    delay: 2.0,
+                    child: referenceName(),
+                  ),
               ],
             ),
           ),
         ),
 
         userActions(),
-
-        if (quotidian.quote.mainReference?.name != null &&
-          quotidian.quote.mainReference.name.length > 0)
-          referenceSection(),
 
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 200.0),
@@ -122,7 +131,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       ),
       builderWithChild: (context, child, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
+          padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
           child: SizedBox(
             width: value,
             child: child,
@@ -133,35 +142,28 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget authorName() {
-    return ControlledAnimation(
-      delay: 1.seconds,
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 0.8),
-      builder: (context, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Opacity(
-            opacity: value,
-            child: GestureDetector(
-              onTap: () {
-                final id = quotidian.quote.author.id;
+    return FlatButton(
+      onPressed: () {
+        final id = quotidian.quote.author.id;
 
-                FluroRouter.router.navigateTo(
-                  context,
-                  AuthorRoute.replaceFirst(':id', id)
-                );
-              },
-              child: Text(
-                quotidian.quote.author.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                ),
-              ),
-            )
-          )
+        FluroRouter.router.navigateTo(
+          context,
+          AuthorRoute.replaceFirst(':id', id)
         );
       },
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Opacity(
+          opacity: .8,
+          child: Text(
+            quotidian.quote.author.name,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25.0,
+            ),
+          ),
+        )
+      ),
     );
   }
 
@@ -228,119 +230,29 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget referenceCard() {
+  Widget referenceName() {
     final refName = quotidian.quote.mainReference.name;
 
-    return SizedBox(
-      width: 170,
-      height: 220,
-      child: Card(
-        elevation: 2.0,
-        semanticContainer: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: InkWell(
-          onTap: () {
-            final id = quotidian.quote.mainReference.id;
+    return FlatButton(
+      onPressed: () {
+        final id = quotidian.quote.mainReference.id;
 
-            FluroRouter.router.navigateTo(
-              context,
-              ReferenceRoute.replaceFirst(':id', id)
-            );
-          },
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  refName.length > 65 ?
-                  '${refName.substring(0, 64)}...' :
-                  refName,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                ),
-              ),
-
-              Positioned(
-                right: 10.0,
-                bottom: 10.0,
-                child: Opacity(
-                  opacity: .6,
-                  child:
-                  Image.asset(
-                    'assets/images/textbook-${stateColors.iconExt}.png',
-                    width: 40.0,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-      ),
-    );
-  }
-
-  Widget referenceDivider() {
-    final width = MediaQuery.of(context).size.width;
-
-    return ControlledAnimation(
-      delay: 2.seconds,
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: width),
-      builder: (_, value) {
-        return SizedBox(
-          width: value,
-          child: Divider(thickness: 2.0,),
+        FluroRouter.router.navigateTo(
+          context,
+          ReferenceRoute.replaceFirst(':id', id)
         );
       },
-    );
-  }
-
-  Widget referenceSection() {
-    return Column(
-      children: <Widget>[
-        referenceDivider(),
-
-        FadeInY(
-          beginY: 100.0,
-          delay: 1.0,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Reference',
-              ),
-            ),
+      child: Opacity(
+        opacity: .5,
+        child: Text(
+          refName.length > 65 ?
+          '${refName.substring(0, 64)}...' :
+          refName,
+          style: TextStyle(
+            fontSize: 16.0,
           ),
         ),
-
-        FadeInY(
-          beginY: 100.0,
-          delay: 1.2,
-          child: SizedBox(
-            width: 100.0,
-            child: Divider(),
-          ),
-        ),
-
-        FadeInY(
-          beginY: 100.0,
-          delay: 1.4,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 30.0,
-              bottom: 60.0,
-            ),
-            child: referenceCard(),
-          ),
-        ),
-
-        referenceDivider(),
-      ],
+      ),
     );
   }
 
