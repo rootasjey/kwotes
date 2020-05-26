@@ -64,23 +64,28 @@ abstract class UserStateBase with Store {
 
   /// Signin user with credentials if FirebaseAuth is null.
   Future _signin() async {
-    final credentialsMap = appLocalStorage.getCredentials();
+    try {
+      final credentialsMap = appLocalStorage.getCredentials();
 
-    final email = credentialsMap['email'];
-    final password = credentialsMap['password'];
+      final email = credentialsMap['email'];
+      final password = credentialsMap['password'];
 
-    if ((email == null || email.isEmpty) || (password == null || password.isEmpty)) {
-      return null;
+      if ((email == null || email.isEmpty) || (password == null || password.isEmpty)) {
+        return null;
+      }
+
+      final auth = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+      _userAuth = auth.user;
+      isUserConnected = true;
+
+    } catch (error) {
+      appLocalStorage.clearUserAuthData();
     }
-
-    final auth = await FirebaseAuth.instance
-      .signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-    _userAuth = auth.user;
-    isUserConnected = true;
   }
 
   @action
