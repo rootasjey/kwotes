@@ -9,7 +9,7 @@ class LoadingAnimation extends StatelessWidget {
 
   LoadingAnimation({
     this.size = 100.0,
-    this.style = const TextStyle(fontSize: 30.0,),
+    this.style = const TextStyle(fontSize: 20.0,),
     this.textTitle = 'Loading...',
     this.title,
   });
@@ -27,6 +27,7 @@ class LoadingAnimation extends StatelessWidget {
             padding: const EdgeInsets.only(top: 40.0),
             child: Text(
               textTitle,
+              textAlign: TextAlign.center,
               style: style
             ),
           ),
