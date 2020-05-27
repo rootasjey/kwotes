@@ -190,7 +190,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                 icon: Opacity(
                   opacity: .8,
                   child: Icon(
-                    Icons.favorite_border,
+                    Icons.speaker_notes_off,
                     size: 120.0,
                     color: Color(0xFFFF005C),
                   ),
