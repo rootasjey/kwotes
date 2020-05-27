@@ -409,7 +409,6 @@ class _AddQuoteState extends State<AddQuote> {
         "It's time to let things happen";
     }
 
-
     if ((actionIntent == actionResult) && actionIntent == ActionType.draft) {
       return 'You can edit it later and propose it when you are ready';
     }
@@ -456,6 +455,17 @@ class _AddQuoteState extends State<AddQuote> {
           draft: AddQuoteInputs.draft,
         );
       }
+
+      return;
+    }
+
+    // Don't duplicate the draft (if it's already one)
+    if (AddQuoteInputs.draft != null) {
+      setState(() {
+        actionResult = ActionType.draft;
+        isProposing = false;
+        isCompleted = true;
+      });
 
       return;
     }
