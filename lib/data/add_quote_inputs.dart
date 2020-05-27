@@ -9,12 +9,8 @@ class AddQuoteInputs {
   /// If not empty, the author already exists.
   static Author author = Author.empty();
 
-  static String comment           = '';
+  static String comment = '';
   static TempQuote draft;
-  static String exceptionMessage  = '';
-  static bool hasExceptions       = false;
-  static bool isSending           = false;
-  static bool isCompleted         = false;
 
   /// True if the quote which is being is edited
   static bool isOfflineDraft = false;
@@ -37,7 +33,6 @@ class AddQuoteInputs {
     clearComment();
     clearQuoteData();
     clearReference();
-    clearStatus();
     clearTopics();
   }
 
@@ -60,11 +55,6 @@ class AddQuoteInputs {
 
   static void clearReference() {
     reference = Reference.empty();
-  }
-
-  static void clearStatus() {
-    isCompleted = false;
-    hasExceptions = false;
   }
 
   static void clearTopics() {
