@@ -7,6 +7,7 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/push_notifications.dart';
 import 'package:memorare/utils/snack.dart';
 
 class DeleteAccount extends StatefulWidget {
@@ -297,6 +298,7 @@ class DeleteAccountState extends State<DeleteAccount> {
       );
 
       await userAuth.reauthenticateWithCredential(credentials);
+      await PushNotifications.unsubMobileQuotidians(lang: userState.lang);
 
       await Firestore.instance
       .collection('users')
