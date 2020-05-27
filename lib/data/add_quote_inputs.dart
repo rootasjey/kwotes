@@ -25,7 +25,7 @@ class AddQuoteInputs {
   /// If not empty, the reference already exists.
   static Reference reference = Reference.empty();
 
-  static String region              = '';
+  static String region = '';
 
 
   static void clearAll() {
