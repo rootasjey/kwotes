@@ -304,6 +304,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
       if (snapshot.documents.isEmpty) {
         setState(() {
+          hasErrors = false;
           hasNext = false;
           isLoading = false;
         });
