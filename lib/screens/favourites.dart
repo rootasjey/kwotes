@@ -176,31 +176,35 @@ class _FavouritesState extends State<Favourites> {
     }
 
     if (quotes.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 120.0,
-                    color: Color(0xFFFF005C),
-                  ),
-                ),
-                title: "You've no quote in favourites at this moment",
-                subtitle: 'They will appear when you like quotes',
-                onRefresh: () => fetch(),
-              ),
-            ),
-          ]
-        ),
-      );
+      return emptyView();
     }
 
     return sliverQuotesList();
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.favorite_border,
+                  size: 120.0,
+                  color: Color(0xFFFF005C),
+                ),
+              ),
+              title: "You've no quote in favourites at this moment",
+              subtitle: 'They will appear when you like quotes',
+              onRefresh: () => fetch(),
+            ),
+          ),
+        ]
+      ),
+    );
   }
 
   Widget sliverQuotesList() {

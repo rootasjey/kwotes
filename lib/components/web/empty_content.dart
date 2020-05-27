@@ -38,14 +38,14 @@ class EmptyContent extends StatelessWidget {
 
           if (subtitle != null)
             Padding(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: Opacity(
-                opacity: .6,
+                opacity: .5,
                 child: Text(
                   subtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 17.0,
                   ),
                 ),
               ),
