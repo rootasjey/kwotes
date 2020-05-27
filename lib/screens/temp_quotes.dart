@@ -179,31 +179,35 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     }
 
     if (tempQuotes.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.sentiment_neutral,
-                    size: 120.0,
-                    color: Color(0xFFFF005C),
-                  ),
-                ),
-                title: "You've no quote in validation at this moment",
-                subtitle: 'They will appear after you propose a new quote',
-                onRefresh: () => fetch(),
-              ),
-            ),
-          ]
-        ),
-      );
+      return emptyView();
     }
 
     return sliverQuotesList();
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.timelapse,
+                  size: 120.0,
+                  color: Color(0xFFFF005C),
+                ),
+              ),
+              title: "You've no quote in validation at this moment",
+              subtitle: 'They will appear after you propose a new quote',
+              onRefresh: () => fetch(),
+            ),
+          ),
+        ]
+      ),
+    );
   }
 
   Widget sliverQuotesList() {
@@ -408,31 +412,48 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             spacing: 30.0,
             alignment: WrapAlignment.center,
             children: <Widget>[
-              IconButton(
-                iconSize: 40.0,
-                tooltip: 'Delete',
-                onPressed: () {
-                  deleteAction(tempQuote);
-                },
-                icon: Opacity(
-                  opacity: .6,
-                  child: Icon(
-                    Icons.delete_outline,
+              Column(
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 40.0,
+                    tooltip: 'Delete',
+                    onPressed: () {
+                      FluroRouter.router.pop(context);
+                      deleteAction(tempQuote);
+                    },
+                    icon: Opacity(
+                      opacity: .6,
+                      child: Icon(
+                        Icons.delete_outline,
+                      ),
+                    ),
                   ),
-                ),
+
+                  Text(
+                    'Delete',
+                  ),
+                ],
               ),
 
-              IconButton(
-                iconSize: 40.0,
-                onPressed: () {
-                  editTempQuote(tempQuote);
-                },
-                icon: Opacity(
-                  opacity: .6,
-                  child: Icon(
-                    Icons.edit,
+              Column(
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 40.0,
+                    onPressed: () {
+                      editTempQuote(tempQuote);
+                    },
+                    icon: Opacity(
+                      opacity: .6,
+                      child: Icon(
+                        Icons.edit,
+                      ),
+                    ),
                   ),
-                ),
+
+                  Text(
+                    'Edit'
+                  ),
+                ],
               ),
             ],
           ),
