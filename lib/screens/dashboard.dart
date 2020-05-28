@@ -272,7 +272,15 @@ class _DashboardState extends State<Dashboard> {
         delay: 3.0,
         beginY: beginY,
         child: signinButton(),
-      )
+      ),
+
+      Divider(height: 100.0,),
+
+      FadeInY(
+        delay: 4.0,
+        beginY: beginY,
+        child: settingsButton(),
+      ),
     ];
   }
 

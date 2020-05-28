@@ -62,34 +62,53 @@ class _AccountState extends State<Account> {
       builder: (_) {
         final isUserConnected = userState.isUserConnected;
 
+        if (isUserConnected) {
+          return Column(
+            children: <Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                child: Column(
+                  children: <Widget>[
+                    FadeInY(
+                      delay: 1.5,
+                      beginY: 50.0,
+                      child: avatar(isUserConnected),
+                    ),
+
+                    FadeInY(
+                      delay: 2.0,
+                      beginY: 50.0,
+                      child: inputDisplayName(isUserConnected),
+                    ),
+
+                    FadeInY(
+                      delay: 2.5,
+                      beginY: 50.0,
+                      child: langSelect(),
+                    ),
+                  ],
+                ),
+              ),
+
+              accountActions(isUserConnected),
+            ],
+          );
+        }
+
         return Column(
           children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height - 100.0,
-              child: Column(
-                children: <Widget>[
-                  FadeInY(
-                    delay: 1.5,
-                    beginY: 50.0,
-                    child: avatar(isUserConnected),
-                  ),
-
-                  FadeInY(
-                    delay: 2.0,
-                    beginY: 50.0,
-                    child: inputDisplayName(isUserConnected),
-                  ),
-
-                  FadeInY(
-                    delay: 2.5,
-                    beginY: 50.0,
+            Column(
+              children: <Widget>[
+                FadeInY(
+                  delay: 2.5,
+                  beginY: 50.0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 45.0),
                     child: langSelect(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-
-            accountActions(isUserConnected),
           ],
         );
       },
