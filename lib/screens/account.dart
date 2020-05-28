@@ -311,38 +311,46 @@ class _AccountState extends State<Account> {
   Widget backgroundTasks() {
     return Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
-              child: Text(
-                'Notifications',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 25.0,
+        FadeInY(
+          delay: 5.0,
+          beginY: 50.0,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
+                child: Text(
+                  'Notifications',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         Observer(
           builder: (context) {
-            return SwitchListTile(
-              onChanged: (bool value) {
-                userState.setQuotidianNotifState(value);
+            return FadeInY(
+              delay: 6.0,
+              beginY: 50.0,
+              child: SwitchListTile(
+                onChanged: (bool value) {
+                  userState.setQuotidianNotifState(value);
 
-                timer?.cancel();
-                timer = Timer(
-                  Duration(seconds: 1),
-                  () => toggleBackgroundTask(value)
-                );
-              },
-              value: userState.isQuotidianNotifActive,
-              title: Text('Daily quote'),
-              secondary: userState.isQuotidianNotifActive ?
-                Icon(Icons.notifications_active):
-                Icon(Icons.notifications_off),
+                  timer?.cancel();
+                  timer = Timer(
+                    Duration(seconds: 1),
+                    () => toggleBackgroundTask(value)
+                  );
+                },
+                value: userState.isQuotidianNotifActive,
+                title: Text('Daily quote'),
+                secondary: userState.isQuotidianNotifActive ?
+                  Icon(Icons.notifications_active):
+                  Icon(Icons.notifications_off),
+              ),
             );
           },
         ),
@@ -492,55 +500,67 @@ class _AccountState extends State<Account> {
   Widget themeSwitcher() {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            children: <Widget>[
-              Text(
-                'Theme',
-                style: TextStyle(
-                  fontSize: 25.0,
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'Theme',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15.0,
-            vertical: 30.0,
-          ),
-          child: Opacity(
-            opacity: .6,
-            child: Text(
-              'You can let the application to switch automatically depending of the time of the day or choose manually a theme',
-              style: TextStyle(
-                fontSize: 17.0,
+        FadeInY(
+          delay: 3.0,
+          beginY: 50.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 30.0,
+            ),
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'You can let the application to switch automatically depending of the time of the day or choose manually a theme',
+                style: TextStyle(
+                  fontSize: 17.0,
+                ),
               ),
             ),
           ),
         ),
 
-        SwitchListTile(
-          title: Text('Automatic theme'),
-          secondary: const Icon(Icons.autorenew),
-          value: isThemeAuto,
-          onChanged: (newValue) {
-            if (!newValue) {
-              currentBrightness = DynamicTheme.of(context).brightness;
-            }
+        FadeInY(
+          delay: 4.0,
+          beginY: 50.0,
+          child: SwitchListTile(
+            title: Text('Automatic theme'),
+            secondary: const Icon(Icons.autorenew),
+            value: isThemeAuto,
+            onChanged: (newValue) {
+              if (!newValue) {
+                currentBrightness = DynamicTheme.of(context).brightness;
+              }
 
-            appLocalStorage.setAutoBrightness(newValue);
+              appLocalStorage.setAutoBrightness(newValue);
 
-            if (newValue) {
-              setAutoBrightness();
-            }
+              if (newValue) {
+                setAutoBrightness();
+              }
 
-            setState(() {
-              isThemeAuto = newValue;
-            });
-          },
+              setState(() {
+                isThemeAuto = newValue;
+              });
+            },
+          ),
         ),
 
         if (!isThemeAuto)
