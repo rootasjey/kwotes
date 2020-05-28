@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -262,12 +260,7 @@ class SigninState extends State<Signin> {
         isLoading = false;
       });
 
-      if (Platform.isAndroid || Platform.isIOS) {
-        PushNotifications.initialize(
-          context: context,
-          userUid: userAuth.uid,
-        );
-      }
+      await PushNotifications.saveDeviceToken(userAuth.uid);
 
       FluroRouter.router.navigateTo(context, HomeRoute);
 

@@ -55,7 +55,9 @@ class AppLocalStorage {
     return descending ?? true;
   }
 
-  bool getQuotidianNotif() => _localStorage.getBool('quotidian_notif') ?? false;
+  bool isQuotidianNotifActive() {
+    return _localStorage.getBool('is_quotidian_notif_active') ?? true;
+  }
 
   String getUserName() => _localStorage.getString('username') ?? '';
   String getUserUid() => _localStorage.getString('user_uid') ?? '';
@@ -63,6 +65,10 @@ class AppLocalStorage {
   Future initialize() async {
     if (_localStorage != null) { return; }
     _localStorage = await LocalStorage.getInstance();
+  }
+
+  bool isDeviceSubNotifActive() {
+    return _localStorage.getBool('is_device_sub_notif_active') ?? false;
   }
 
   void setAutoBrightness(bool value) {
@@ -77,6 +83,10 @@ class AppLocalStorage {
   void setCredentials({String email, String password}) {
     _localStorage.setString('email', email);
     _localStorage.setString('password', password);
+  }
+
+  void setDeviceSubNotif(bool value) {
+    _localStorage.setBool('is_device_sub_notif_active', value);
   }
 
   void saveDraft({String draftString}) {
@@ -103,7 +113,7 @@ class AppLocalStorage {
   }
 
   void setQuotidianNotif(bool active) {
-    _localStorage.setBool('quotidian_notif', active);
+    _localStorage.setBool('is_quotidian_notif_active', active);
   }
 
   void setUserName(String userName) => _localStorage.setString('username', userName);

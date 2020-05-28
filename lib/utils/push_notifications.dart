@@ -19,7 +19,10 @@ class PushNotifications {
   static Color _kKeyPenumbraOpacity = Color(0x24000000); // alpha = 0.14
   static Color _kAmbientShadowOpacity = Color(0x1F000000); // alpha = 0.12
 
-  static void initialize({String userUid, BuildContext context}) async {
+  static void initialize({
+    String userUid,
+    BuildContext context,
+  }) async {
     if (fcm != null) { return; }
 
     _context = context;
@@ -34,14 +37,16 @@ class PushNotifications {
         IosNotificationSettings()
       );
 
-      if (isOk) { postProcessInit(userUid); }
+      if (isOk) {
+        postProcessInit(userUid: userUid);
+      }
 
     } else {
-      postProcessInit(userUid);
+      postProcessInit(userUid: userUid);
     }
   }
 
-  static void postProcessInit(String userUid) {
+  static void postProcessInit({String userUid}) {
     fcm.configure(
       onLaunch: (Map<String, dynamic> payload) async {
         String path = payload['data'] == null ?
@@ -133,9 +138,18 @@ class PushNotifications {
     if (userUid != null && userUid.length > 0) {
       saveDeviceToken(userUid);
     }
+
+    bool isDeviceSubNotif = appLocalStorage.isDeviceSubNotifActive();
+    bool isQuotidianNotifActive = appLocalStorage.isQuotidianNotifActive();
+
+    if (!isDeviceSubNotif && isQuotidianNotifActive) {
+      subMobileQuotidians();
+    }
   }
 
-  static void saveDeviceToken(String userUid) async {
+  static Future saveDeviceToken(String userUid) async {
+    if (userUid == null || userUid.isEmpty) { return; }
+
     final fcmToken = await fcm.getToken();
     if (fcmToken == null) { return; }
 
@@ -164,6 +178,7 @@ class PushNotifications {
   static Future<bool> subMobileQuotidians({String lang}) async {
     try {
       await fcm.subscribeToTopic('quotidians-mobile-$lang');
+      appLocalStorage.setDeviceSubNotif(true);
       return true;
 
     } catch (error) {
@@ -175,6 +190,7 @@ class PushNotifications {
   static Future<bool> unsubMobileQuotidians({String lang}) async {
     try {
       await fcm.unsubscribeFromTopic('quotidians-mobile-$lang');
+      appLocalStorage.setDeviceSubNotif(false);
       return true;
 
     } catch (error) {

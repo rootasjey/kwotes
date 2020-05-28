@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -420,22 +418,22 @@ class SignupState extends State<Signup> {
       final result = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
 
-      final user = result.user;
+      final userAuth = result.user;
 
-      if (user == null) {
+      if (userAuth == null) {
         throw Error();
       }
 
       final userUpdateInfo = UserUpdateInfo();
       userUpdateInfo.displayName = username;
 
-      user.updateProfile(userUpdateInfo);
+      userAuth.updateProfile(userUpdateInfo);
 
       await Firestore.instance
         .collection('users')
-        .document(user.uid)
+        .document(userAuth.uid)
         .setData({
-          'email': user.email,
+          'email': userAuth.email,
           'flag': '',
           'lang': 'en',
           'name': username,
@@ -466,7 +464,7 @@ class SignupState extends State<Signup> {
           'urls': {
             'image': '',
           },
-          'uid': user.uid,
+          'uid': userAuth.uid,
         });
 
         appLocalStorage.setCredentials(
@@ -475,21 +473,16 @@ class SignupState extends State<Signup> {
         );
 
         appLocalStorage.setUserName(username);
-        appLocalStorage.setUserUid(user.uid);
+        appLocalStorage.setUserUid(userAuth.uid);
 
         userState.setUserConnected();
+
+        await PushNotifications.saveDeviceToken(userAuth.uid);
 
         setState(() {
           isCompleted = true;
           isLoading = false;
         });
-
-        if (Platform.isAndroid || Platform.isIOS) {
-          PushNotifications.initialize(
-            context: context,
-            userUid: user.uid,
-          );
-        }
 
     } catch (error) {
       debugPrint(error.toString());
