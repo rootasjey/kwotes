@@ -77,7 +77,7 @@ class AppLocalStorage {
 
   void setBrightness(Brightness brightness) {
     final strBrightness = brightness == Brightness.dark ? 'dark' : 'light';
-    _localStorage.setString('strBrightness', strBrightness);
+    _localStorage.setString('brightness', strBrightness);
   }
 
   void setCredentials({String email, String password}) {

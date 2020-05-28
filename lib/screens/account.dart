@@ -547,7 +547,9 @@ class _AccountState extends State<Account> {
             value: isThemeAuto,
             onChanged: (newValue) {
               if (!newValue) {
-                currentBrightness = DynamicTheme.of(context).brightness;
+                currentBrightness = appLocalStorage.getBrightness();
+                DynamicTheme.of(context).setBrightness(currentBrightness);
+                stateColors.refreshTheme(currentBrightness);
               }
 
               appLocalStorage.setAutoBrightness(newValue);
@@ -564,21 +566,25 @@ class _AccountState extends State<Account> {
         ),
 
         if (!isThemeAuto)
-          SwitchListTile(
-            title: Text('Lights'),
-            secondary: const Icon(Icons.lightbulb_outline),
-            value: currentBrightness == Brightness.light,
-            onChanged: (newValue) {
-              currentBrightness = newValue ?
-                  Brightness.light : Brightness.dark;
+          FadeInY(
+            delay: 5.0,
+            beginY: 50.0,
+            child: SwitchListTile(
+              title: Text('Lights'),
+              secondary: const Icon(Icons.lightbulb_outline),
+              value: currentBrightness == Brightness.light,
+              onChanged: (newValue) {
+                currentBrightness = newValue ?
+                    Brightness.light : Brightness.dark;
 
-              DynamicTheme.of(context).setBrightness(currentBrightness);
-              stateColors.refreshTheme(currentBrightness);
+                DynamicTheme.of(context).setBrightness(currentBrightness);
+                stateColors.refreshTheme(currentBrightness);
 
-              appLocalStorage.setBrightness(currentBrightness);
+                appLocalStorage.setBrightness(currentBrightness);
 
-              setState(() {});
-            },
+                setState(() {});
+              },
+            ),
           ),
       ],
     );
