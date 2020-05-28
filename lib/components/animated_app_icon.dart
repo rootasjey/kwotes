@@ -50,10 +50,9 @@ class Spinnies extends StatefulWidget {
     List<SpinRect> rects,
   })  : this.rects = rects ??
             [
-              SpinRect(color: Color(0xFF0087E3), begin: 0.0, end: 1.0),
-              SpinRect(color: Color(0xFF86ED00), begin: 0.25, end: 1.25),
-              SpinRect(color: Color(0xFF99D500), begin: 0.5, end: 1.5),
-              SpinRect(color: Color(0xFF2362E5), begin: 0.75, end: 1.75),
+              SpinRect(color: Color(0xFF4B6ECC), begin: 0.0, end: 1.0),
+              SpinRect(color: Color(0xFF5279E1), begin: 0.25, end: 1.25),
+              SpinRect(color: Color(0xFF839DE3), begin: 0.5, end: 1.5),
             ],
         super(key: key);
 
