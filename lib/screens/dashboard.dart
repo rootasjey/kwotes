@@ -276,37 +276,20 @@ class _DashboardState extends State<Dashboard> {
 
       Divider(height: 100.0,),
 
+      FadeInX(
+        delay: 3.5,
+        beginX: beginY,
+        child: ListTile(
+          leading: Icon(Icons.wb_sunny, size: 30.0,),
+          title: Text('Quotidian', style: TextStyle(fontSize: 20.0),),
+          onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
+        ),
+      ),
+
       FadeInY(
         delay: 4.0,
         beginY: beginY,
-        child: FlatButton(
-          onPressed: () => FluroRouter.router.navigateTo(context, AccountRoute),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Opacity(
-              opacity: .7,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15.0),
-                    child: Icon(
-                      Icons.settings,
-                      size: 30.0,
-                    ),
-                  ),
-
-                  Text(
-                    'Settings',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        child: settingsButton(),
       ),
     ];
   }
