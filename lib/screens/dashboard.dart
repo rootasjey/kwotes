@@ -279,7 +279,34 @@ class _DashboardState extends State<Dashboard> {
       FadeInY(
         delay: 4.0,
         beginY: beginY,
-        child: settingsButton(),
+        child: FlatButton(
+          onPressed: () => FluroRouter.router.navigateTo(context, AccountRoute),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Opacity(
+              opacity: .7,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: Icon(
+                      Icons.settings,
+                      size: 30.0,
+                    ),
+                  ),
+
+                  Text(
+                    'Settings',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     ];
   }
