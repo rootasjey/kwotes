@@ -41,10 +41,13 @@ class _TopicsState extends State<Topics> {
         return null;
       },
       child: ListView(
-        padding: const EdgeInsets.only(bottom: 200.0),
+        padding: const EdgeInsets.only(
+          top: 50.0,
+          bottom: 200.0,
+        ),
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 40.0),
+            padding: EdgeInsets.only(top: 20.0),
             child: Text(
               'Topics',
               textAlign: TextAlign.center,
