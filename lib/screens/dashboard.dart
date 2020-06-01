@@ -276,9 +276,9 @@ class _DashboardState extends State<Dashboard> {
 
       Divider(height: 100.0,),
 
-      FadeInX(
+      FadeInY(
         delay: 3.5,
-        beginX: beginY,
+        beginY: beginY,
         child: ListTile(
           leading: Icon(Icons.wb_sunny, size: 30.0,),
           title: Text('Quotidian', style: TextStyle(fontSize: 20.0),),
