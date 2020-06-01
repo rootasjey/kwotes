@@ -70,7 +70,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: 60.0,
+              vertical: 20.0,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
