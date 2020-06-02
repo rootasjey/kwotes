@@ -65,13 +65,17 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       Color(topicColor.decimal) :
       Colors.white;
 
+    final horizontal = MediaQuery.of(context).size.width < 600.0 ?
+      40.0 :
+      60.0;
+
     return ListView(
       children: <Widget>[
         SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: 60.0,
+              horizontal: horizontal,
               vertical: 20.0,
             ),
             child: Column(
@@ -79,6 +83,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               children: <Widget>[
                 quoteName(
                   screenWidth: MediaQuery.of(context).size.width,
+                  screenHeight: MediaQuery.of(context).size.height,
                 ),
 
                 authorDivider(color: color),
@@ -217,7 +222,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget quoteName({double screenWidth}) {
+  Widget quoteName({double screenWidth, double screenHeight}) {
     return GestureDetector(
       onTap: () {
         FluroRouter.router.navigateTo(
@@ -229,6 +234,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         isMobile: true,
         quote: quotidian.quote,
         screenWidth: screenWidth,
+        screenHeight: screenHeight,
       ),
     );
   }

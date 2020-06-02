@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/types/font_size.dart';
@@ -8,12 +10,18 @@ import 'package:simple_animations/simple_animations.dart';
 /// Decides which animation is most suited for the quote.
 Widget createHeroQuoteAnimation({
   Quote quote,
-  double screenWidth,
+  double screenWidth = 1.0,
+  double screenHeight = 1.0,
   TextStyle style,
   bool isMobile = false,
 }) {
   final quoteName = quote.name;
-  final denominator = dividerNumber(screenWidth: screenWidth, isMobile: isMobile);
+  final denominator = dividerNumber(
+    isMobile    : isMobile,
+    screenWidth : screenWidth,
+    screenHeight: screenHeight,
+  );
+
   final fontSize = FontSize.hero(quote.name) / denominator;
 
   if (style == null) {
@@ -77,8 +85,15 @@ Widget createHeroQuoteAnimation({
   );
 }
 
-double dividerNumber({double screenWidth, bool isMobile = false,}) {
-  if (isMobile) { return 800 / screenWidth; }
+double dividerNumber({
+  double screenWidth,
+  double screenHeight,
+  bool isMobile = false,
+}) {
+  if (isMobile) {
+    return 800 / min(screenWidth, screenHeight);
+  }
+
   return 1452 / screenWidth;
 }
 
