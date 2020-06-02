@@ -284,6 +284,7 @@ class _QuotePageState extends State<QuotePage> {
               isMobile: true,
               quote: quote,
               screenWidth: size.width,
+              screenHeight: size.height,
               style: TextStyle(
                 color: getFontColor(quoteColor),
               )

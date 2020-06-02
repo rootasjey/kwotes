@@ -10,11 +10,14 @@ import 'package:simple_animations/simple_animations.dart';
 /// Decides which animation is most suited for the quote.
 Widget createHeroQuoteAnimation({
   Quote quote,
-  double screenWidth = 1.0,
-  double screenHeight = 1.0,
+  double screenWidth,
+  double screenHeight,
   TextStyle style,
   bool isMobile = false,
 }) {
+
+  screenHeight = screenHeight ?? screenWidth;
+
   final quoteName = quote.name;
   final denominator = dividerNumber(
     isMobile    : isMobile,

@@ -108,12 +108,9 @@ class _TopicPageState extends State<TopicPage> {
           thickness: 2.0,
       ),
       builderWithChild: (context, child, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: SizedBox(
-            width: value,
-            child: child,
-          ),
+        return SizedBox(
+          width: value,
+          child: child,
         );
       },
     );
@@ -282,6 +279,7 @@ class _TopicPageState extends State<TopicPage> {
     }
 
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -290,7 +288,12 @@ class _TopicPageState extends State<TopicPage> {
 
           return SizedBox(
             height: MediaQuery.of(context).size.height,
-            child: listItem(quote: quote, index: index, screenWidth: screenWidth),
+            child: listItem(
+              quote: quote,
+              index: index,
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+            ),
           );
         },
         childCount: quotes.length,
@@ -298,7 +301,12 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget listItem({Quote quote, int index, double screenWidth}) {
+  Widget listItem({
+    Quote quote,
+    int index,
+    double screenWidth,
+    double screenHeight,
+  }) {
     return InkWell(
       onTap: () {
         FluroRouter.router.navigateTo(
@@ -319,6 +327,7 @@ class _TopicPageState extends State<TopicPage> {
                 createHeroQuoteAnimation(
                   quote: quote,
                   screenWidth: screenWidth,
+                  screenHeight: screenHeight,
                   isMobile: true,
                 ),
               ],
