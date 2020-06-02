@@ -92,7 +92,7 @@ class AppState extends State<App> {
         .signInWithEmailAndPassword(email: email, password: password);
 
       if (authResult.user == null) {
-        throw Error();
+        return;
       }
 
       appLocalStorage.setUserName(authResult.user.displayName);
