@@ -138,7 +138,6 @@ class _AdminQuotesState extends State<AdminQuotes> {
             floating: true,
             snap: true,
             expandedHeight: 320.0,
-            backgroundColor: Colors.transparent,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[

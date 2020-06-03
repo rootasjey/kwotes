@@ -107,7 +107,6 @@ class _QuotesListsState extends State<QuotesLists> {
             floating: true,
             snap: true,
             expandedHeight: 320.0,
-            backgroundColor: Colors.transparent,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
