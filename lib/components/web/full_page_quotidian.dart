@@ -5,7 +5,6 @@ import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
@@ -257,12 +256,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 SigninRoute,
               );
             },
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: stateColors.primary),
-            ),
             color: Colors.black12,
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Sign in',
               ),
