@@ -1,7 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
-import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
