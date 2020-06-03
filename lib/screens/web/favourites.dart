@@ -24,6 +24,7 @@ class _FavouritesState extends State<Favourites> {
   bool isLoading = false;
   bool isLoadingMore = false;
   bool hasNext = true;
+  int limit = 30;
 
   final scrollController = ScrollController();
   bool isFabVisible = false;
@@ -332,12 +333,14 @@ class _FavouritesState extends State<Favourites> {
         .collection('users')
         .document(userAuth.uid)
         .collection('favourites')
-        .limit(30)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
           isLoading = false;
+          hasNext = false;
         });
 
         return;
@@ -355,6 +358,7 @@ class _FavouritesState extends State<Favourites> {
 
       setState(() {
         isLoading = false;
+        hasNext = limit == snapshot.documents.length;
       });
 
     } catch (error) {
@@ -384,8 +388,9 @@ class _FavouritesState extends State<Favourites> {
         .collection('users')
         .document(userAuth.uid)
         .collection('favourites')
-        .startAfter(lastDoc)
-        .limit(30)
+        .orderBy('createdAt', descending: true)
+        .startAfterDocument(lastDoc)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -409,6 +414,7 @@ class _FavouritesState extends State<Favourites> {
 
       setState(() {
         isLoadingMore = false;
+        hasNext = limit == snapshot.documents.length;
       });
 
     } catch (error) {
