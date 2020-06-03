@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/footer.dart';
 import'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/user_quotes_list.dart';
@@ -56,21 +54,9 @@ class _QuotesListsState extends State<QuotesLists> {
           },
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: body(),
-          ),
-
-          Column(
-            children: <Widget>[
-              NavBackFooter(),
-            ],
-          ),
-
-          Footer(),
-        ],
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: body(),
       ),
     );
   }

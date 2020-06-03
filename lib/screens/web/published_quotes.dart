@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -56,22 +54,9 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
           foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: body(),
-          ),
-
-          Column(
-            children: <Widget>[
-              loadMoreButton(),
-              NavBackFooter(),
-            ],
-          ),
-
-          Footer(),
-        ],
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: body(),
       ),
     );
   }

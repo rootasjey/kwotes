@@ -6,7 +6,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/state/colors.dart';
@@ -48,6 +47,15 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: <Widget>[
+          body(),
+        ],
+      ),
+    );
+  }
+  Widget body() {
     if (isCheckingAuth) {
       return FullPageLoading();
     }
@@ -90,7 +98,7 @@ class _AccountState extends State<Account> {
 
           themeSwitcher(),
 
-          NavBackFooter(),
+          Padding(padding: const EdgeInsets.only(bottom: 400.0)),
         ],
       ),
     );

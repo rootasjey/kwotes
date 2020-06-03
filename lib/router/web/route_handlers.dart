@@ -39,7 +39,6 @@ class WebRouteHandlers {
       body: ListView(
         children: <Widget>[
           component,
-          Footer(),
         ],
       ),
     );
@@ -51,7 +50,7 @@ class WebRouteHandlers {
 
   static Handler account = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(Account()));
+          Account());
 
   static Handler addQuote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

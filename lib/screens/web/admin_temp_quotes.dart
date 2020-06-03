@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
@@ -60,22 +58,9 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
           foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: gridQuotes(),
-          ),
-
-          Column(
-            children: <Widget>[
-              loadMoreButton(),
-              NavBackFooter(),
-            ],
-          ),
-
-          Footer(),
-        ],
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: gridQuotes(),
       ),
     );
   }

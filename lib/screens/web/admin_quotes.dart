@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -57,22 +55,9 @@ class _AdminQuotesState extends State<AdminQuotes> {
           foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: gridQuotes(),
-          ),
-
-          Column(
-            children: <Widget>[
-              loadMoreButton(),
-              NavBackFooter(),
-            ],
-          ),
-
-          Footer(),
-        ],
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: gridQuotes(),
       ),
     );
   }
