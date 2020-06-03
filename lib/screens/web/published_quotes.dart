@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -21,6 +22,7 @@ class PublishedQuotes extends StatefulWidget {
 class _PublishedQuotesState extends State<PublishedQuotes> {
   List<Quote> quotes = [];
 
+  int limit = 30;
   bool isLoading = false;
   bool isLoadingMore = false;
   bool hasNext = true;
@@ -78,21 +80,6 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
     if (isLoading) {
       return FullPageLoading(
         title: 'Loading published quotes...',
-      );
-    }
-
-    if (!isLoading && quotes.length == 0) {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            Icon(Icons.check_box_outline_blank, size: 80.0),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('You have no published quotes yet.'),
-            ),
-          ],
-        ),
       );
     }
 
@@ -175,35 +162,68 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
             ),
           ),
 
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.0,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final quote = quotes.elementAt(index);
-
-                return FadeInY(
-                  delay: 3.0 + index.toDouble(),
-                  beginY: 100.0,
-                  child: SizedBox(
-                    width: 250.0,
-                    height: 250.0,
-                    child: QuoteCardGridItem(
-                      quote: quote,
-                    ),
-                  ),
-                );
-              },
-              childCount: quotes.length,
-            ),
-          ),
+          gridContent(),
         ],
       ),
     );
   }
 
+  Widget gridContent() {
+    if (quotes.length == 0) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+            FadeInY(
+              delay: 2.0,
+              beginY: 50.0,
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.sentiment_neutral,
+                    size: 120.0,
+                    color: Color(0xFFFF005C),
+                  ),
+                ),
+                title: "You've no published quote at this moment",
+                subtitle: 'They will appear after your proposed quotes are validated',
+                onRefresh: () => fetch(),
+              ),
+            ),
+          ]
+        ),
+      );
+    }
+
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final quote = quotes.elementAt(index);
+
+          return FadeInY(
+            delay: 3.0 + index.toDouble(),
+            beginY: 100.0,
+            child: SizedBox(
+              width: 250.0,
+              height: 250.0,
+              child: QuoteCardGridItem(
+                quote: quote,
+              ),
+            ),
+          );
+        },
+        childCount: quotes.length,
+      ),
+    );
+  }
+
   Widget loadMoreButton() {
+    if (!hasNext) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
@@ -243,12 +263,13 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         .where('user.id', isEqualTo: userAuth.uid)
         .where('lang', isEqualTo: Language.current)
         .orderBy('createdAt', descending: true)
-        .limit(30)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
           isLoading = false;
+          hasNext = false;
         });
 
         return;
@@ -266,6 +287,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
 
       setState(() {
         isLoading = false;
+        hasNext = limit == snapshot.documents.length;
       });
 
     } catch (error) {
@@ -297,12 +319,13 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         .where('lang', isEqualTo: Language.current)
         .orderBy('createdAt', descending: true)
         .startAfterDocument(lastDoc)
-        .limit(30)
+        .limit(limit)
         .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
           isLoadingMore = false;
+          hasNext = false;
         });
 
         return;
@@ -318,6 +341,7 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
 
       setState(() {
         isLoadingMore = false;
+        hasNext = limit == snapshot.documents.length;
       });
 
     } catch (error) {
