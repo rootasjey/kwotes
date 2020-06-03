@@ -86,7 +86,7 @@ class About extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 120.0, bottom: 30.0),
           child: Text(
-            'THANKS',
+            'Credits',
             style: TextStyle(
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
@@ -95,48 +95,91 @@ class About extends StatelessWidget {
         ),
       ),
 
-      Opacity(
-        opacity: .6,
-        child: FlatButton(
-          onPressed: () {
-            launch('https://icons8.com');
-          },
-          child: Text(
-            '• Icons8',
-            style: TextStyle(
-              fontSize: 20.0,
+      FlatButton(
+        onPressed: () => launch('https://icons8.com'),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Text('💄'),
             ),
-          ),
+
+            Opacity(
+              opacity: .6,
+              child: Text(
+                'Icons by Icons8',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
 
-      Opacity(
-        opacity: .6,
-        child: FlatButton(
-          onPressed: () {
-            launch('https://orioniconlibrary.com');
-          },
-          child: Text(
-            '• Orion Icon Librairy',
-            style: TextStyle(
-              fontSize: 20.0,
+      FlatButton(
+        onPressed: () => launch('https://orioniconlibrary.com'),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Text('💄'),
             ),
-          ),
+
+            Opacity(
+              opacity: .6,
+              child: Text(
+                'Icons by Orion Icon Librairy',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
 
-      Opacity(
-        opacity: .6,
-        child: FlatButton(
-          onPressed: () {
-            launch('https://www.flaticon.com/authors/pixel-perfect');
-          },
-          child: Text(
-            '• Pixel Perfect',
-            style: TextStyle(
-              fontSize: 20.0,
+      FlatButton(
+        onPressed: () => launch('https://www.flaticon.com/authors/pixel-perfect'),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Text('💄'),
             ),
-          ),
+
+            Opacity(
+              opacity: .6,
+              child: Text(
+                'Icons by Pixel Perfect',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      FlatButton(
+        onPressed: () => launch('https://previewed.app/'),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Text('📷'),
+            ),
+
+            Opacity(
+              opacity: .6,
+              child: Text(
+                'Mobile app screenshots created with Previewed',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     ];
