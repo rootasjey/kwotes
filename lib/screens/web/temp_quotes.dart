@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/temp_quotes.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
@@ -99,54 +99,7 @@ class _TempQuotesState extends State<TempQuotes> {
       child: CustomScrollView(
         controller: scrollController,
         slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            expandedHeight: 320.0,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Stack(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    FadeInY(
-                      beginY: 50.0,
-                      child: AppIconHeader(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
-                      ),
-                    ),
-
-                    FadeInY(
-                      delay: 1.0,
-                      beginY: 50.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Temporary quotes',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                Positioned(
-                  left: 80.0,
-                  top: 50.0,
-                  child: IconButton(
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                    },
-                    tooltip: 'Back',
-                    icon: Icon(Icons.arrow_back),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          SliverAppHeader(title: 'In validation',),
 
           gridContent(),
         ],

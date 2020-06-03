@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -119,52 +119,7 @@ class _AdminQuotesState extends State<AdminQuotes> {
       child: CustomScrollView(
         controller: scrollController,
         slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            expandedHeight: 320.0,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Stack(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    FadeInY(
-                      beginY: 50.0,
-                      child: AppIconHeader(),
-                    ),
-
-                    FadeInY(
-                      delay: 1.0,
-                      beginY: 50.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'All published quotes',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                Positioned(
-                  left: 80.0,
-                  top: 85.0,
-                  child: IconButton(
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                    },
-                    tooltip: 'Back',
-                    icon: Icon(Icons.arrow_back),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          SliverAppHeader(title: 'All published quotes',),
 
           SliverGrid(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
