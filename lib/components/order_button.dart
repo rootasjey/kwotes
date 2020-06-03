@@ -36,7 +36,7 @@ class _OrderButtonState extends State<OrderButton> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
