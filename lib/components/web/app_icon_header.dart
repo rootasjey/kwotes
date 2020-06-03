@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 
-class AppIconHeader extends StatelessWidget {
+class AppIconHeader extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final double size;
 
@@ -12,9 +13,14 @@ class AppIconHeader extends StatelessWidget {
   });
 
   @override
+  _AppIconHeaderState createState() => _AppIconHeaderState();
+}
+
+class _AppIconHeaderState extends State<AppIconHeader> {
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding,
+      padding: widget.padding,
       child: Material(
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
@@ -22,13 +28,24 @@ class AppIconHeader extends StatelessWidget {
         child: Ink.image(
           image: AssetImage('assets/images/app-icon-64.png'),
           fit: BoxFit.cover,
-          width: size,
-          height: size,
+          width: widget.size,
+          height: widget.size,
           child: InkWell(
             onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
+            onLongPress: () => showFooter(),
           ),
         ),
       ),
+    );
+  }
+
+  void showFooter() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Footer(closeModalOnNav: true,);
+      },
     );
   }
 }

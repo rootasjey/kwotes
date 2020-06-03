@@ -10,8 +10,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatefulWidget {
   final ScrollController pageScrollController;
+  final bool closeModalOnNav;
 
-  Footer({this.pageScrollController});
+  Footer({
+    this.pageScrollController,
+    this.closeModalOnNav = false,
+  });
 
   @override
   _FooterState createState() => _FooterState();
@@ -23,7 +27,7 @@ class _FooterState extends State<Footer> {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 60.0,
-        vertical: 100.0,
+        vertical: 90.0,
       ),
       foregroundDecoration: BoxDecoration(
         color: Color.fromRGBO(0, 0, 0, 0.1),
@@ -103,6 +107,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () async {
+            onBeforeNav();
             await launch('https://github.com/outofcontextapp/app');
           },
           child: Opacity(
@@ -141,6 +146,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () async {
+            onBeforeNav();
             Language.setLang(Language.en);
             updateUserAccountLang();
           },
@@ -157,6 +163,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () {
+            onBeforeNav();
             Language.setLang(Language.fr);
             updateUserAccountLang();
           },
@@ -196,6 +203,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () {
+            onBeforeNav();
             FluroRouter.router.navigateTo(context, AboutRoute);
           },
           child: Opacity(
@@ -211,6 +219,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () {
+            onBeforeNav();
             FluroRouter.router.navigateTo(context, ContactRoute);
           },
           child: Opacity(
@@ -226,6 +235,7 @@ class _FooterState extends State<Footer> {
 
         FlatButton(
           onPressed: () {
+            onBeforeNav();
             FluroRouter.router.navigateTo(context, PrivacyRoute);
           },
           child: Opacity(
@@ -256,6 +266,12 @@ class _FooterState extends State<Footer> {
       message: 'Your language has been successfully updated.',
       type: SnackType.success,
     );
+  }
+
+  void onBeforeNav() {
+    if (widget.closeModalOnNav) {
+      Navigator.pop(context);
+    }
   }
 
   void updateUserAccountLang() async {
