@@ -18,12 +18,6 @@ import 'package:memorare/utils/snack.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 
-enum ActionType {
-  draft,
-  offline,
-  tempquote,
-}
-
 class AddQuote extends StatefulWidget {
   @override
   _AddQuoteState createState() => _AddQuoteState();
@@ -37,8 +31,8 @@ class _AddQuoteState extends State<AddQuote> {
   bool isProposing    = false;
   bool isCompleted    = false;
 
-  ActionType actionIntent;
-  ActionType actionResult;
+  AddQuoteType actionIntent;
+  AddQuoteType actionResult;
 
   final pageController = PageController(
     initialPage: 0,
@@ -136,7 +130,10 @@ class _AddQuoteState extends State<AddQuote> {
                   delay: 1.5,
                   beginY: 50.0,
                   child: Text(
-                    getResultMessage(),
+                    getResultMessage(
+                      actionIntent: actionIntent,
+                      actionResult: actionResult,
+                    ),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 25.0,
@@ -160,16 +157,16 @@ class _AddQuoteState extends State<AddQuote> {
                 FadeInY(
                   delay: 2.0,
                   beginY: 50.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 0.0),
-                    child: Opacity(
-                      opacity: .6,
-                      child: Text(
-                        getResultSubMessage(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 17.0,
-                        ),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      getResultSubMessage(
+                        actionIntent: actionIntent,
+                        actionResult: actionResult,
+                      ),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17.0,
                       ),
                     ),
                   ),
@@ -376,60 +373,8 @@ class _AddQuoteState extends State<AddQuote> {
     }
   }
 
-  String getResultMessage() {
-    if ((actionIntent == actionResult) && actionIntent == ActionType.tempquote) {
-      return AddQuoteInputs.quote.id.isEmpty ?
-        'Your quote has been successfully proposed' :
-        'Your quote has been successfully saved';
-    }
-
-    if ((actionIntent == actionResult) && actionIntent == ActionType.draft) {
-      return 'Your draft has been successfully saved';
-    }
-
-    if (actionIntent == ActionType.tempquote && actionResult == ActionType.draft) {
-      return "We saved your draft";
-    }
-
-    if (actionIntent == ActionType.tempquote && actionResult == ActionType.offline) {
-      return "We saved your offline draft";
-    }
-
-    if (actionIntent == ActionType.draft && actionResult == ActionType.offline) {
-      return "We saved your offline draft";
-    }
-
-    return 'Your quote has been successfully saved';
-  }
-
-  String getResultSubMessage() {
-    if ((actionIntent == actionResult) && actionIntent == ActionType.tempquote) {
-      return AddQuoteInputs.quote.id.isEmpty ?
-        'Soon, a moderator will review it and it will ba validated if everything is alright' :
-        "It's time to let things happen";
-    }
-
-    if ((actionIntent == actionResult) && actionIntent == ActionType.draft) {
-      return 'You can edit it later and propose it when you are ready';
-    }
-
-    if (actionIntent == ActionType.tempquote && actionResult == ActionType.draft) {
-      return "We couldn't propose your quote at the moment (maybe you've reached your quota) but we saved it in your drafts";
-    }
-
-    if (actionIntent == ActionType.tempquote && actionResult == ActionType.offline) {
-      return "It seems that you've no internet connection anymore, but we saved it in your offline drafts";
-    }
-
-    if (actionIntent == ActionType.draft && actionResult == ActionType.offline) {
-      return "It seems that you've no internet connection anymore, but we saved it in your offline drafts";
-    }
-
-    return "It's time to let things happen";
-  }
-
   void propose() async {
-    actionIntent = ActionType.tempquote;
+    actionIntent = AddQuoteType.tempquote;
 
     setState(() {
       isProposing = true;
@@ -440,7 +385,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     if (success) {
       setState(() {
-        actionResult = ActionType.tempquote;
+        actionResult = AddQuoteType.tempquote;
         isProposing = false;
         isCompleted = true;
       });
@@ -462,7 +407,7 @@ class _AddQuoteState extends State<AddQuote> {
     // Don't duplicate the draft (if it's already one)
     if (AddQuoteInputs.draft != null) {
       setState(() {
-        actionResult = ActionType.draft;
+        actionResult = AddQuoteType.draft;
         isProposing = false;
         isCompleted = true;
       });
@@ -476,24 +421,26 @@ class _AddQuoteState extends State<AddQuote> {
 
     if (successDraft) {
       setState(() {
-        actionResult = ActionType.draft;
+        actionResult = AddQuoteType.draft;
         isProposing = false;
         isCompleted = true;
       });
 
       if (AddQuoteInputs.isOfflineDraft) {
-        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+        deleteOfflineDraft(
+          createdAt: AddQuoteInputs.draft.createdAt.toString(),
+        );
       }
 
       return;
     }
 
     await saveOfflineDraft(context: context);
-    actionResult = ActionType.offline;
+    actionResult = AddQuoteType.offline;
   }
 
   void saveQuoteAsDraft() async {
-    actionIntent = ActionType.draft;
+    actionIntent = AddQuoteType.draft;
 
     setState(() {
       isProposing = true;
@@ -507,7 +454,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     if (success) {
       setState(() {
-        actionResult = ActionType.draft;
+        actionResult = AddQuoteType.draft;
         isProposing = false;
         isCompleted = true;
       });
@@ -523,7 +470,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     if (successOffline) {
       setState(() {
-        actionResult = ActionType.offline;
+        actionResult = AddQuoteType.offline;
         isProposing = false;
         isCompleted = true;
       });

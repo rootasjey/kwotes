@@ -5,6 +5,12 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/snack.dart';
 
+enum AddQuoteType {
+  draft,
+  offline,
+  tempquote,
+}
+
 Future addNewTempQuote({
   List<String> comments,
   List<Map<String, dynamic>> references,
@@ -81,6 +87,59 @@ Future<bool> deleteTempQuote({
     debugPrint(error.toString());
     return false;
   }
+}
+
+
+String getResultMessage({AddQuoteType actionIntent, AddQuoteType actionResult}) {
+  if ((actionIntent == actionResult) && actionIntent == AddQuoteType.tempquote) {
+    return AddQuoteInputs.quote.id.isEmpty ?
+      'Your quote has been successfully proposed' :
+      'Your quote has been successfully saved';
+  }
+
+  if ((actionIntent == actionResult) && actionIntent == AddQuoteType.draft) {
+    return 'Your draft has been successfully saved';
+  }
+
+  if (actionIntent == AddQuoteType.tempquote && actionResult == AddQuoteType.draft) {
+    return "We saved your draft";
+  }
+
+  if (actionIntent == AddQuoteType.tempquote && actionResult == AddQuoteType.offline) {
+    return "We saved your offline draft";
+  }
+
+  if (actionIntent == AddQuoteType.draft && actionResult == AddQuoteType.offline) {
+    return "We saved your offline draft";
+  }
+
+  return 'Your quote has been successfully saved';
+}
+
+String getResultSubMessage({AddQuoteType actionIntent, AddQuoteType actionResult}) {
+  if ((actionIntent == actionResult) && actionIntent == AddQuoteType.tempquote) {
+    return AddQuoteInputs.quote.id.isEmpty ?
+      'Soon, a moderator will review it and it will ba validated if everything is alright' :
+      "It's time to let things happen";
+  }
+
+  if ((actionIntent == actionResult) && actionIntent == AddQuoteType.draft) {
+    return 'You can edit it later and propose it when you are ready';
+  }
+
+  if (actionIntent == AddQuoteType.tempquote && actionResult == AddQuoteType.draft) {
+    return "We couldn't propose your quote at the moment (maybe you've reached your quota) but we saved it in your drafts";
+  }
+
+  if (actionIntent == AddQuoteType.tempquote && actionResult == AddQuoteType.offline) {
+    return "It seems that you've no internet connection anymore, but we saved it in your offline drafts";
+  }
+
+  if (actionIntent == AddQuoteType.draft && actionResult == AddQuoteType.offline) {
+    return "It seems that you've no internet connection anymore, but we saved it in your offline drafts";
+  }
+
+  return "It's time to let things happen";
 }
 
 Future<bool> proposeQuote({

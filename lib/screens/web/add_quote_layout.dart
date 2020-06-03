@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/drafts.dart';
+import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
@@ -9,7 +10,6 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
-import 'package:memorare/utils/snack.dart';
 
 class AddQuoteLayout extends StatefulWidget {
   final Widget child;
@@ -30,6 +30,10 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   String fabText = 'Propose';
   Icon fabIcon = Icon(Icons.send);
+  bool isFabVisible = true;
+
+  AddQuoteType actionIntent;
+  AddQuoteType actionResult;
 
   @override
   void initState() {
@@ -44,19 +48,18 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final isFABVisible = isProposing || isCompleted || isCheckingAuth;
-
     return Scaffold(
       floatingActionButton:
-      isFABVisible ?
-      Padding(padding: EdgeInsets.zero) :
-      FloatingActionButton.extended(
-        onPressed: () => proposeQuote(),
-        label: Text(fabText),
-        foregroundColor: Colors.white,
-        icon: fabIcon,
-        backgroundColor: Colors.green,
-      ),
+        isFabVisible ?
+          FloatingActionButton.extended(
+            onPressed: () => propose(),
+            label: Text(fabText),
+            foregroundColor: Colors.white,
+            icon: fabIcon,
+            backgroundColor: Colors.green,
+          ) :
+          Padding(padding: EdgeInsets.zero),
+
       body: ListView(
         children: <Widget>[
           body(),
@@ -85,34 +88,50 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     }
 
     if (isCompleted) {
-      return completedContainer();
+      return completedView();
     }
 
     return widget.child;
   }
 
-  Widget completedContainer() {
+  Widget completedView() {
     return Container(
       padding: const EdgeInsets.all(60.0),
       child: Column(
         children: <Widget>[
           AppIconHeader(),
 
-          Text(
-            'Your quote has been successfully proposed!',
-            style: TextStyle(
-              fontSize: 22.0,
+          Container(
+            width: 500.0,
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Opacity(
+              opacity: .8,
+              child: Text(
+                getResultMessage(
+                  actionIntent: actionIntent,
+                  actionResult: actionResult,
+                ),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
+              ),
             ),
           ),
 
-          Padding(
+          Container(
+            width: 500.0,
             padding: const EdgeInsets.only(top: 10.0),
             child: Opacity(
-              opacity: .6,
+              opacity: .5,
               child: Text(
-                'Soon, a moderator will review it and it will ba validated if everything is alright.',
+                getResultSubMessage(
+                  actionIntent: actionIntent,
+                  actionResult: actionResult,
+                ),
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 17.0,
                 ),
               ),
             ),
@@ -198,68 +217,10 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     );
   }
 
-  Future addNewTempQuote({
-    List<String> comments,
-    List<Map<String, dynamic>> references,
-    Map<String, bool> topics,
-  }) async {
-
-    final userAuth = await userState.userAuth;
-
-    await Firestore.instance
-      .collection('tempquotes')
-      .add({
-        'author'        : {
-          'id'          : AddQuoteInputs.author.id,
-          'job'         : AddQuoteInputs.author.job,
-          'jobLang'     : {},
-          'name'        : AddQuoteInputs.author.name,
-          'summary'     : AddQuoteInputs.author.summary,
-          'summaryLang' : {},
-          'updatedAt'   : DateTime.now(),
-          'urls': {
-            'affiliate' : AddQuoteInputs.author.urls.affiliate,
-            'amazon'    : AddQuoteInputs.author.urls.amazon,
-            'facebook'  : AddQuoteInputs.author.urls.facebook,
-            'image'     : AddQuoteInputs.author.urls.image,
-            'netflix'   : AddQuoteInputs.author.urls.netflix,
-            'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-            'twitch'    : AddQuoteInputs.author.urls.twitch,
-            'twitter'   : AddQuoteInputs.author.urls.twitter,
-            'website'   : AddQuoteInputs.author.urls.website,
-            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-            'youtube'   : AddQuoteInputs.author.urls.youtube,
-          }
-        },
-        'comments'      : comments,
-        'createdAt'     : DateTime.now(),
-        'lang'          : AddQuoteInputs.quote.lang,
-        'name'          : AddQuoteInputs.quote.name,
-        'mainReference' : {
-          'id'  : AddQuoteInputs.reference.id,
-          'name': AddQuoteInputs.reference.name,
-        },
-        'references'    : references,
-        'region'        : AddQuoteInputs.region,
-        'topics'        : topics,
-        'user': {
-          'id': userAuth.uid,
-        },
-        'updatedAt'     : DateTime.now(),
-        'validation'    : {
-          'comment'     : {
-            'name'      : '',
-            'updatedAt' : DateTime.now(),
-          },
-          'status'      : 'proposed',
-          'updatedAt'   : DateTime.now(),
-        }
-      });
-  }
-
   void checkAuth() async {
     setState(() {
       isCheckingAuth = true;
+      isFabVisible = false;
     });
 
     try {
@@ -267,6 +228,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
       setState(() {
         isCheckingAuth = false;
+        isFabVisible = true;
       });
 
       if (userAuth == null) {
@@ -292,168 +254,69 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     }
   }
 
-  void proposeQuote() async {
-    if (AddQuoteInputs.quote.name.isEmpty) {
-      showSnack(
-        context: context,
-        message: "The quote's content cannot be empty.",
-        type: SnackType.error,
-      );
-
-      return;
-    }
-
-    if (AddQuoteInputs.quote.topics.length == 0) {
-      showSnack(
-        context: context,
-        message: 'You must select at least 1 topics for the quote.',
-        type: SnackType.error,
-      );
-
-      return;
-    }
+  void propose() async {
+    actionIntent = AddQuoteType.tempquote;
 
     setState(() {
       isProposing = true;
+      isFabVisible = false;
     });
 
-    final comments = List<String>();
+    final success = await proposeQuote(context: context);
 
-    if (AddQuoteInputs.comment.isNotEmpty) {
-      comments.add(AddQuoteInputs.comment);
-    }
+    if (success) {
+      setState(() {
+        actionResult = AddQuoteType.tempquote;
+        isProposing = false;
+        isCompleted = true;
+      });
 
-    final references = List<Map<String, dynamic>>();
+      if (AddQuoteInputs.isOfflineDraft) {
+        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+      }
 
-    if (AddQuoteInputs.reference.name.isNotEmpty) {
-      references.add(
-        {
-          'lang'          : AddQuoteInputs.reference.lang,
-          'links'         : [],
-          'name'          : AddQuoteInputs.reference.name,
-          'summary'       : AddQuoteInputs.reference.summary,
-          'type'          : {
-            'primary'     : AddQuoteInputs.reference.type.primary,
-            'secondary'   : AddQuoteInputs.reference.type.secondary,
-          },
-          'urls'          : {
-            'affiliate'   : AddQuoteInputs.reference.urls.affiliate,
-            'amazon'      : AddQuoteInputs.reference.urls.amazon,
-            'facebook'    : AddQuoteInputs.reference.urls.facebook,
-            'image'       : AddQuoteInputs.reference.urls.image,
-            'netflix'     : AddQuoteInputs.reference.urls.netflix,
-            'primeVideo'  : AddQuoteInputs.reference.urls.primeVideo,
-            'twitch'      : AddQuoteInputs.reference.urls.twitch,
-            'twitter'     : AddQuoteInputs.reference.urls.twitter,
-            'website'     : AddQuoteInputs.reference.urls.website,
-            'wikipedia'   : AddQuoteInputs.reference.urls.wikipedia,
-            'youtube'     : AddQuoteInputs.reference.urls.youtube,
-          },
-        }
-      );
-    }
-
-    final topics = Map<String, bool>();
-
-    AddQuoteInputs.quote.topics.forEach((topic) {
-      topics[topic] = true;
-    });
-
-    try {
-      if (AddQuoteInputs.quote.id.isEmpty) {
-        await addNewTempQuote(
-          comments: comments,
-          references: references,
-          topics: topics,
-        );
-
-      } else {
-        await saveExistingTempQuote(
-          comments  : comments,
-          references: references,
-          topics    : topics,
+      if (AddQuoteInputs.draft != null) {
+        await deleteDraft(
+          context: context,
+          draft: AddQuoteInputs.draft,
         );
       }
 
-      setState(() {
-        isProposing = false;
-        isCompleted = true;
-      });
-
-    } catch (error) {
-      debugPrint(error.toString());
-
-      final success = await saveDraft(context: context);
-
-      final suffixMessage = success ?
-        "\nYour quote has been saved to your drafts instead." :
-        "\nPlease try again tomorrow";
-
-      setState(() {
-        isProposing = false;
-        errorMessage = "You've reached your quota for today.$suffixMessage";
-        isCompleted = true;
-      });
+      return;
     }
-  }
 
-  Future saveExistingTempQuote({
-    List<String> comments,
-    List<Map<String, dynamic>> references,
-    Map<String, bool> topics,
-  }) async {
-
-    final userAuth = await userState.userAuth;
-
-    await Firestore.instance
-      .collection('tempquotes')
-      .document(AddQuoteInputs.quote.id)
-      .setData({
-        'author': {
-          'id'          : AddQuoteInputs.author.id,
-          'job'         : AddQuoteInputs.author.job,
-          'jobLang'     : {},
-          'name'        : AddQuoteInputs.author.name,
-          'summary'     : AddQuoteInputs.author.summary,
-          'summaryLang' : {},
-          'updatedAt'   : DateTime.now(),
-          'urls': {
-            'affiliate' : AddQuoteInputs.author.urls.affiliate,
-            'amazon'    : AddQuoteInputs.author.urls.amazon,
-            'facebook'  : AddQuoteInputs.author.urls.facebook,
-            'image'     : AddQuoteInputs.author.urls.image,
-            'netflix'   : AddQuoteInputs.author.urls.netflix,
-            'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-            'twitch'    : AddQuoteInputs.author.urls.twitch,
-            'twitter'   : AddQuoteInputs.author.urls.twitter,
-            'website'   : AddQuoteInputs.author.urls.website,
-            'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-            'youtube'   : AddQuoteInputs.author.urls.youtube,
-          }
-        },
-        'comments'      : comments,
-        'createdAt'     : DateTime.now(),
-        'lang'          : AddQuoteInputs.quote.lang,
-        'name'          : AddQuoteInputs.quote.name,
-        'mainReference' : {
-          'id'  : AddQuoteInputs.reference.id,
-          'name': AddQuoteInputs.reference.name,
-        },
-        'references'    : references,
-        'region'        : AddQuoteInputs.region,
-        'topics'        : topics,
-        'user': {
-          'id': userAuth.uid,
-        },
-        'updatedAt'     : DateTime.now(),
-        'validation'    : {
-          'comment': {
-            'name'      : '',
-            'updatedAt' : DateTime.now(),
-          },
-          'status'      : 'proposed',
-          'updatedAt'   : DateTime.now(),
-        }
+      // Don't duplicate the draft (if it's already one)
+    if (AddQuoteInputs.draft != null) {
+      setState(() {
+        actionResult = AddQuoteType.draft;
+        isProposing = false;
+        isCompleted = true;
       });
+
+      return;
+    }
+
+    final successDraft = await saveDraft(
+      context: context,
+    );
+
+    if (successDraft) {
+      setState(() {
+        actionResult = AddQuoteType.draft;
+        isProposing = false;
+        isCompleted = true;
+      });
+
+      if (AddQuoteInputs.isOfflineDraft) {
+        deleteOfflineDraft(
+          createdAt: AddQuoteInputs.draft.createdAt.toString(),
+        );
+      }
+
+      return;
+    }
+
+    await saveOfflineDraft(context: context);
+    actionResult = AddQuoteType.offline;
   }
 }
