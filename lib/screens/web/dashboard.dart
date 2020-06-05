@@ -188,7 +188,7 @@ class _DashboardState extends State<Dashboard> {
             FadeInY(
               delay: 2.0,
               beginY: 50.0,
-              child: sectionCard(
+              child: itemCard(
                 color: Color(0xFF00CF91),
                 onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
                 icon: Icon(
@@ -210,7 +210,7 @@ class _DashboardState extends State<Dashboard> {
             FadeInY(
               delay: 2.0,
               beginY: 50.0,
-              child: sectionCard(
+              child: itemCard(
                 color: Color(0xFFFFAF50),
                 onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
                 icon: Icon(
@@ -232,7 +232,7 @@ class _DashboardState extends State<Dashboard> {
             FadeInY(
               delay: 2.0,
               beginY: 50.0,
-              child: sectionCard(
+              child: itemCard(
                 color: Color(0xFF2E3F7F),
                 onTap: () => FluroRouter.router.navigateTo(context, AdminTempQuotesRoute),
                 icon: Icon(
@@ -263,12 +263,13 @@ class _DashboardState extends State<Dashboard> {
         horizontal: 40.0,
       ),
       child: Wrap(
-        spacing: 20.0,
+        spacing: 30.0,
+        runSpacing: 30.0,
         children: <Widget>[
           FadeInY(
             delay: 2.0,
             beginY: 50.0,
-            child: sectionCard(
+            child: itemCard(
               color: Color(0xFFFF005C),
               onTap: () => FluroRouter.router.navigateTo(context, FavouritesRoute),
               icon: Icon(
@@ -290,7 +291,7 @@ class _DashboardState extends State<Dashboard> {
           FadeInY(
             delay: 2.10,
             beginY: 50.0,
-            child: sectionCard(
+            child: itemCard(
               color: Color(0xFF0260E8),
               onTap: () => FluroRouter.router.navigateTo(context, ListsRoute),
               icon: Icon(
@@ -312,7 +313,7 @@ class _DashboardState extends State<Dashboard> {
           FadeInY(
             delay: 2.25,
             beginY: 50.0,
-            child: sectionCard(
+            child: itemCard(
               color: Color(0xFF2E3F7F),
               onTap: () => FluroRouter.router.navigateTo(context, TempQuotesRoute),
               icon: Icon(
@@ -334,7 +335,7 @@ class _DashboardState extends State<Dashboard> {
           FadeInY(
             delay: 2.5,
             beginY: 50.0,
-            child: sectionCard(
+            child: itemCard(
               color: Color(0xFF00CF91),
               onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
               icon: Icon(
@@ -356,7 +357,28 @@ class _DashboardState extends State<Dashboard> {
           FadeInY(
             delay: 2.75,
             beginY: 50.0,
-            child: sectionCard(
+            child: itemCard(
+              onTap: () => FluroRouter.router.navigateTo(context, DraftsRoute),
+              icon: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              text: Text(
+                'Drafts',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+
+          FadeInY(
+            delay: 2.95,
+            beginY: 50.0,
+            child: itemCard(
               color: Color(0xFF414042),
               onTap: () => FluroRouter.router.navigateTo(context, AccountRoute),
               icon: Icon(
@@ -379,7 +401,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget sectionCard({
+  Widget itemCard({
     Icon icon,
     Text text,
     Function onTap,
@@ -390,6 +412,12 @@ class _DashboardState extends State<Dashboard> {
       height: 250.0,
       child: Card(
         color: color,
+        elevation: 3.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
         child: InkWell(
           onTap: onTap,
           child: Container(

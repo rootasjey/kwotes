@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
+import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
@@ -90,6 +91,10 @@ class WebRouteHandlers {
   static Handler deleteAccount = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(DeleteAccount()));
+
+  static Handler drafts = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Drafts());
 
   static Handler editEmail = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

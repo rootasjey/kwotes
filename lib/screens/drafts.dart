@@ -13,6 +13,7 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/snack.dart';
@@ -208,10 +209,14 @@ class _DraftsState extends State<Drafts> {
       );
     }
 
-    return sliverQuotesList();
+    if (MediaQuery.of(context).size.width > 300.0) {
+      return gridQuotes();
+    }
+
+    return listQuotes();
   }
 
-  Widget sliverQuotesList() {
+  Widget listQuotes() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -277,6 +282,64 @@ class _DraftsState extends State<Drafts> {
                 Padding(padding: const EdgeInsets.only(top: 10.0),),
                 Divider(),
               ],
+            ),
+          );
+        },
+        childCount: drafts.length,
+      ),
+    );
+  }
+
+  Widget gridQuotes() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+        crossAxisSpacing: 20.0,
+        mainAxisSpacing: 20.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final draft = drafts.elementAt(index);
+          final topicColor = appTopicsColors.find(draft.topics.first);
+
+          return FadeInY(
+            delay: 3.0 + index.toDouble(),
+            beginY: 100.0,
+            child: SizedBox(
+              width: 250.0,
+              height: 250.0,
+              child: Card(
+                child: InkWell(
+                  onTap: () => editDraft(draft),
+                  onLongPress: () => showQuoteSheet(draft: draft, index: index),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          draft.name.length > 115 ?
+                            '${draft.name.substring(0, 115)}...' : draft.name,
+                          style: TextStyle(
+                            fontSize: FontSize.gridItem(draft.name),
+                          ),
+                        ),
+                      ),
+
+                      Center(
+                        child: IconButton(
+                          onPressed: () => showQuoteSheet(draft: draft, index: index),
+                          icon: Icon(
+                            Icons.more_horiz,
+                            color: topicColor != null ?
+                            Color(topicColor.decimal) : stateColors.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         },

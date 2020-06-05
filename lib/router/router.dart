@@ -185,6 +185,11 @@ class FluroRouter {
     );
 
     router.define(
+      DraftsRoute,
+      handler: MobileRouteHandlers.drafts,
+    );
+
+    router.define(
       EditEmailRoute,
       handler: WebRouteHandlers.editEmail,
     );
