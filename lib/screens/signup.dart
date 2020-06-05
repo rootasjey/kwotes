@@ -441,9 +441,9 @@ class SignupState extends State<Signup> {
           'notifications': [],
           'pricing': 'free',
           'quota': {
-            'day': DateTime.now(),
+            'current': 0,
+            'date': DateTime.now(),
             'limit': 1,
-            'today': 0,
           },
           'rights': {
             'user:managedata'     : false,
