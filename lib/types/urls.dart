@@ -25,6 +25,19 @@ class Urls {
     this.youtube    = '',
   });
 
+  bool areLinksEmpty() {
+    return affiliate.isEmpty &&
+      amazon.isEmpty &&
+      facebook.isEmpty &&
+      netflix.isEmpty &&
+      primeVideo.isEmpty &&
+      twitch.isEmpty &&
+      twitter.isEmpty &&
+      website.isEmpty &&
+      wikipedia.isEmpty &&
+      youtube.isEmpty;
+  }
+
   factory Urls.fromJSON(Map<String, dynamic> json) {
     return Urls(
       affiliate   : json['affiliate']   ?? '',

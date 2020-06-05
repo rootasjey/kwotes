@@ -422,8 +422,6 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           ),
         ),
-
-        Divider(height: 50.0,),
       ],
     );
   }
@@ -431,80 +429,90 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget links() {
     final urls = author.urls;
 
-    return SizedBox(
-      height: 200.0,
-      child: ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          if (urls.wikipedia.isNotEmpty)
-            Observer(
-              builder: (_) {
-                return customLinkCard(
-                  name: 'Wikipedia',
-                  url: urls.wikipedia,
-                  imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
-                );
-              },
-            ),
+    if (urls.areLinksEmpty()) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
 
-          if (urls.website.isNotEmpty)
-            customLinkCard(
-              name: 'Website',
-              url: urls.website,
-              imageUrl: 'assets/images/world-globe.png',
-            ),
+    return Column(
+      children: <Widget>[
+        Divider(height: 50.0,),
 
-          if (urls.amazon.isNotEmpty)
-            customLinkCard(
-              name: 'Amazon',
-              url: urls.amazon,
-              imageUrl: 'assets/images/amazon.png',
-            ),
+        SizedBox(
+          height: 200.0,
+          child: ListView(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              if (urls.wikipedia.isNotEmpty)
+                Observer(
+                  builder: (_) {
+                    return customLinkCard(
+                      name: 'Wikipedia',
+                      url: urls.wikipedia,
+                      imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                    );
+                  },
+                ),
 
-          if (urls.facebook.isNotEmpty)
-            customLinkCard(
-              name: 'Facebook',
-              url: urls.facebook,
-              imageUrl: 'assets/images/facebook.png',
-            ),
+              if (urls.website.isNotEmpty)
+                customLinkCard(
+                  name: 'Website',
+                  url: urls.website,
+                  imageUrl: 'assets/images/world-globe.png',
+                ),
 
-          if (urls.netflix.isNotEmpty)
-            customLinkCard(
-              name: 'Netflix',
-              url: urls.netflix,
-              imageUrl: 'assets/images/netflix.png',
-            ),
+              if (urls.amazon.isNotEmpty)
+                customLinkCard(
+                  name: 'Amazon',
+                  url: urls.amazon,
+                  imageUrl: 'assets/images/amazon.png',
+                ),
 
-          if (urls.primeVideo.isNotEmpty)
-            customLinkCard(
-              name: 'Prime Video',
-              url: urls.primeVideo,
-              imageUrl: 'assets/images/prime-video.png',
-            ),
+              if (urls.facebook.isNotEmpty)
+                customLinkCard(
+                  name: 'Facebook',
+                  url: urls.facebook,
+                  imageUrl: 'assets/images/facebook.png',
+                ),
 
-          if (urls.twitch.isNotEmpty)
-            customLinkCard(
-              name: 'Twitch',
-              url: urls.twitch,
-              imageUrl: 'assets/images/twitch.png',
-            ),
+              if (urls.netflix.isNotEmpty)
+                customLinkCard(
+                  name: 'Netflix',
+                  url: urls.netflix,
+                  imageUrl: 'assets/images/netflix.png',
+                ),
 
-          if (urls.twitter.isNotEmpty)
-            customLinkCard(
-              name: 'Twitter',
-              url: urls.twitter,
-              imageUrl: 'assets/images/twitter.png',
-            ),
+              if (urls.primeVideo.isNotEmpty)
+                customLinkCard(
+                  name: 'Prime Video',
+                  url: urls.primeVideo,
+                  imageUrl: 'assets/images/prime-video.png',
+                ),
 
-          if (urls.youtube.isNotEmpty)
-            customLinkCard(
-              name: 'Youtube',
-              url: urls.youtube,
-              imageUrl: 'assets/images/youtube.png',
-            ),
-        ],
-      ),
+              if (urls.twitch.isNotEmpty)
+                customLinkCard(
+                  name: 'Twitch',
+                  url: urls.twitch,
+                  imageUrl: 'assets/images/twitch.png',
+                ),
+
+              if (urls.twitter.isNotEmpty)
+                customLinkCard(
+                  name: 'Twitter',
+                  url: urls.twitter,
+                  imageUrl: 'assets/images/twitter.png',
+                ),
+
+              if (urls.youtube.isNotEmpty)
+                customLinkCard(
+                  name: 'Youtube',
+                  url: urls.youtube,
+                  imageUrl: 'assets/images/youtube.png',
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
