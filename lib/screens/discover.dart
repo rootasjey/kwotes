@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/discover_card.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
-import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 
@@ -82,6 +79,8 @@ class _DiscoverState extends State<Discover> {
                 Divider(height: 60.0,),
 
                 Wrap(
+                  spacing: 10.0,
+                  runSpacing: 10.0,
                   alignment: WrapAlignment.center,
                   children: cardsList(),
                 ),
@@ -102,15 +101,18 @@ class _DiscoverState extends State<Discover> {
         FadeInY(
           delay: index,
           beginY: 100.0,
-          child: discoverCard(
-            title: reference.name,
-            imgUrl: reference.urls.image,
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                ReferenceRoute.replaceFirst(':id', reference.id),
-              );
-            }
+          child: DiscoverCard(
+            elevation: 5.0,
+            height: 240.0,
+            id: reference.id,
+            imageUrl: reference.urls.image,
+            name: reference.name,
+            padding: EdgeInsets.zero,
+            summary: reference.summary,
+            textHeight: 60.0,
+            titleFontSize: 15.0,
+            type: 'reference',
+            width: 170.0,
           ),
         )
       );
@@ -123,15 +125,18 @@ class _DiscoverState extends State<Discover> {
         FadeInY(
           delay: index,
           beginY: 100.0,
-          child: discoverCard(
-            title: author.name,
-            imgUrl: author.urls.image,
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                AuthorRoute.replaceFirst(':id', author.id),
-              );
-            }
+          child: DiscoverCard(
+            elevation: 5.0,
+            height: 220.0,
+            id: author.id,
+            imageUrl: author.urls.image,
+            name: author.name,
+            padding: EdgeInsets.zero,
+            summary: author.summary,
+            textHeight: 80.0,
+            titleFontSize: 15.0,
+            type: 'author',
+            width: 170.0,
           ),
         )
       );
@@ -140,91 +145,6 @@ class _DiscoverState extends State<Discover> {
     }
 
     return cards;
-  }
-
-  Widget discoverCard({
-    String title,
-    String imgUrl,
-    Function onTap,
-    String type = 'author',
-  }) {
-
-    final isImageOk = imgUrl != null &&
-      imgUrl.length > 0;
-
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: SizedBox(
-        width: 170,
-        height: 220,
-        child: Card(
-          elevation: 5.0,
-          semanticContainer: true,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: InkWell(
-            onTap: () {
-              if (onTap != null) {
-                onTap();
-              }
-            },
-            child: Stack(
-              children: <Widget>[
-                isImageOk ?
-                  Opacity(
-                    opacity: .3,
-                    child: Image.network(
-                      imgUrl,
-                      fit: BoxFit.cover,
-                      width: 170,
-                      height: 220,
-                    ),
-                  ) :
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 80.0,
-                    ),
-                    child: Observer(
-                      builder: (context) {
-                        return Image.asset(
-                          type == 'reference' ?
-                          'assets/images/textbook-${stateColors.iconExt}.png' :
-                          'assets/images/profile-${stateColors.iconExt}.png',
-                        );
-                      }
-                    )
-                  ),
-
-                Positioned.fill(
-                  child: Container(
-                    color: Color.fromRGBO(0, 0, 0, .5),
-                  ),
-                ),
-
-                Positioned(
-                  bottom: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      title.length > 15 ?
-                      '${title.substring(0, 15)}...' :
-                      title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ),
-      )
-    );
   }
 
   Future fetchAuthorsAndReferences() async {

@@ -6,11 +6,17 @@ import 'package:memorare/router/router.dart';
 import 'package:supercharged/supercharged.dart';
 
 class DiscoverCard extends StatefulWidget {
+  final double elevation;
+  final double height;
   final String id;
   final String imageUrl;
   final String name;
+  final EdgeInsetsGeometry padding;
   final String summary;
+  final double textHeight;
+  final double titleFontSize;
   final String type;
+  final double width;
 
   DiscoverCard({
     this.id,
@@ -18,6 +24,12 @@ class DiscoverCard extends StatefulWidget {
     this.name     = '',
     this.summary  = '',
     this.type     = 'reference',
+    this.height   = 270.0,
+    this.width    = 440.0,
+    this.padding  = const EdgeInsets.symmetric(horizontal: 20.0),
+    this.textHeight = 70,
+    this.titleFontSize = 20.0,
+    this.elevation = 3.0,
   });
 
   @override
@@ -25,17 +37,40 @@ class DiscoverCard extends StatefulWidget {
 }
 
 class _DiscoverCardState extends State<DiscoverCard> {
-  double opacity      = 0.5;
-  double width        = 270.0;
-  double height       = 440.0;
-  double elevation    = 3.0;
-  double textHeight   = 70.0;
-  double textOpacity  = 0.0;
+  double opacity = 0.5;
+  double width;
+  double height;
+  double elevation;
+  double textHeight;
+  double textOpacity = 0.0;
+  EdgeInsetsGeometry assetImgPadding;
+
+  @override
+  initState() {
+    super.initState();
+
+    setState(() {
+      width = widget.width;
+      height = widget.height;
+      textHeight = widget.textHeight;
+      elevation = widget.elevation;
+
+      assetImgPadding = width > 300.0 ?
+        const EdgeInsets.symmetric(
+          horizontal: 80.0,
+          vertical: 40.0,
+        ) :
+        const EdgeInsets.symmetric(
+          horizontal: 40.0,
+          vertical: 20.0,
+        );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      padding: widget.padding,
       child: AnimatedContainer(
         height: height,
         width: width,
@@ -43,8 +78,9 @@ class _DiscoverCardState extends State<DiscoverCard> {
         curve: Curves.bounceInOut,
         child: Card(
           elevation: elevation,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            borderRadius: BorderRadius.circular(10.0),
           ),
           child: Stack(
             children: <Widget>[
@@ -64,20 +100,19 @@ class _DiscoverCardState extends State<DiscoverCard> {
     return [
       Positioned.fill(
         child: isImageOk ?
-        Image.network(
-          widget.imageUrl,
+        Ink.image(
+          image: NetworkImage(widget.imageUrl),
           fit: BoxFit.cover,
         ) :
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 80.0,
-          ),
+          padding: assetImgPadding,
           child: Observer(
             builder: (context) {
               return Image.asset(
                 widget.type == 'reference' ?
                 'assets/images/textbook-${stateColors.iconExt}.png' :
                 'assets/images/profile-${stateColors.iconExt}.png',
+                alignment: Alignment.topCenter,
               );
             }
           )
@@ -99,15 +134,15 @@ class _DiscoverCardState extends State<DiscoverCard> {
           onHover: (isHover) {
             if (isHover) {
               opacity = 0.0;
-              width = 280.0;
-              height = 450.0;
-              elevation = 5.0;
+              width = widget.width + 10.0;
+              height = widget.height + 10.0;
+              elevation = widget.elevation + 2;
             }
             else {
               opacity = 0.5;
-              width = 270.0;
-              height = 440.0;
-              elevation = 3.0;
+              width = widget.width;
+              height = widget.height;
+              elevation = widget.elevation;
             }
 
             setState(() {});
@@ -137,10 +172,10 @@ class _DiscoverCardState extends State<DiscoverCard> {
         },
         onHover: (isHover) {
           if (isHover) {
-            textHeight = 180.0;
+            textHeight = widget.textHeight;
             textOpacity = .3;
           } else {
-            textHeight = 70.0;
+            textHeight = widget.textHeight * 2;
             textOpacity = .0;
           }
 
@@ -156,13 +191,13 @@ class _DiscoverCardState extends State<DiscoverCard> {
           child: Column(
             children: <Widget>[
               Opacity(
-                opacity: .7,
+                opacity: 1,
                 child: Text(
                   widget.name.length < 15 ?
                     widget.name : '${widget.name.substring(0, 14)}...',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: widget.titleFontSize,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
