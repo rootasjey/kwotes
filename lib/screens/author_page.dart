@@ -5,10 +5,11 @@ import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/utils/animation.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -357,14 +358,23 @@ class _AuthorPageState extends State<AuthorPage> {
             child: Divider(),
           ),
 
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 60.0),
-              child: createHeroQuoteAnimation(
-                isMobile: true,
-                quote: quote,
-                screenWidth: MediaQuery.of(context).size.width,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 100.0),
+            child: FlatButton(
+              onPressed: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  QuotePageRoute.replaceFirst(':id', quote.id)
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  quote.name,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
               ),
             ),
           ),
