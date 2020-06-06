@@ -335,10 +335,14 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget mainQuote() {
     if (quotes.length > 0) {
       final quote = quotes.first;
+      final width = MediaQuery.of(context).size.width;
 
       return Column(
         children: <Widget>[
-          Divider(height: 50.0,),
+          Divider(
+            height: 50.0,
+            thickness: 1.0,
+          ),
 
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -359,7 +363,9 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(bottom: 100.0),
+            padding: width > 400.0 ?
+              const EdgeInsets.symmetric(vertical: 100.0) :
+              const EdgeInsets.only(bottom: 100.0),
             child: FlatButton(
               onPressed: () {
                 FluroRouter.router.navigateTo(
@@ -386,9 +392,18 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget summary() {
+    final textWidget = Text(
+      author.summary,
+      style: TextStyle(
+        fontSize: 22.0,
+        fontWeight: FontWeight.w100,
+        height: 1.5,
+      ),
+    );
+
     return Column(
       children: <Widget>[
-        Divider(),
+        Divider(thickness: 1.0,),
 
         Padding(
           padding: const EdgeInsets.only(top: 12.0),
@@ -408,20 +423,23 @@ class _AuthorPageState extends State<AuthorPage> {
           child: Divider(),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 60.0,
-          ),
-          child: Text(
-            author.summary,
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.w100,
-              height: 1.5,
+        MediaQuery.of(context).size.width > 400.0 ?
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 120.0,
             ),
+            child: SizedBox(
+              width: 600.0,
+              child: textWidget,
+            ),
+          ) :
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 60.0,
+            ),
+            child: textWidget
           ),
-        ),
       ],
     );
   }
@@ -433,12 +451,20 @@ class _AuthorPageState extends State<AuthorPage> {
       return Padding(padding: EdgeInsets.zero,);
     }
 
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       children: <Widget>[
-        Divider(height: 50.0,),
+        Divider(
+          height: 50.0,
+          thickness: 1.0,
+        ),
 
-        SizedBox(
-          height: 200.0,
+        Container(
+          height: 370.0,
+          padding: width > 400.0 ?
+            const EdgeInsets.symmetric(vertical: 80.0) :
+            EdgeInsets.zero,
           child: ListView(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,

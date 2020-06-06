@@ -10,7 +10,7 @@ import 'package:memorare/screens/web/add_quote_content.dart';
 import 'package:memorare/screens/web/add_quote_reference.dart';
 import 'package:memorare/screens/web/add_quote_topics.dart';
 import 'package:memorare/screens/web/admin_temp_quotes.dart';
-import 'package:memorare/screens/web/author_page.dart';
+import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/delete_account.dart';
@@ -78,7 +78,7 @@ class WebRouteHandlers {
 
   static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(AuthorPage(id: params['id'][0],)));
+          AuthorPage(id: params['id'][0],));
 
   static Handler contact = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
