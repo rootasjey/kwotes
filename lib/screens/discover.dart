@@ -133,7 +133,7 @@ class _DiscoverState extends State<Discover> {
             name: author.name,
             padding: EdgeInsets.zero,
             summary: author.summary,
-            textHeight: 80.0,
+            textHeight: 60.0,
             titleFontSize: 15.0,
             type: 'author',
             width: 170.0,
