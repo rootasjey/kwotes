@@ -81,7 +81,7 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget avatar() {
     if (author.urls.image != null && author.urls.image.length > 0) {
       return Material(
-        elevation: 1.0,
+        elevation: 3.0,
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
@@ -113,7 +113,7 @@ class _AuthorPageState extends State<AuthorPage> {
     }
 
     return Material(
-      elevation: 1.0,
+      elevation: 3.0,
       shape: CircleBorder(),
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
@@ -349,7 +349,7 @@ class _AuthorPageState extends State<AuthorPage> {
             child: Opacity(
               opacity: .7,
               child: Text(
-                'Quote',
+                'QUOTE',
                 style: TextStyle(
                   fontSize: 16.0,
                 ),
