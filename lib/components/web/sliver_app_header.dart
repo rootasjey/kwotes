@@ -7,9 +7,10 @@ import 'package:memorare/state/colors.dart';
 
 class SliverAppHeader extends StatelessWidget {
   final String title;
-  final IconButton bottomButton;
+  final Widget bottomButton;
+  final Widget rightButton;
 
-  SliverAppHeader({this.title, this.bottomButton});
+  SliverAppHeader({this.title, this.bottomButton, this.rightButton});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,13 @@ class SliverAppHeader extends StatelessWidget {
                       ),
                     ),
                 ],
+              ),
+
+              if (this.rightButton != null)
+                Positioned(
+                right: 20.0,
+                top: 85.0,
+                child: this.rightButton,
               ),
 
               Positioned(
