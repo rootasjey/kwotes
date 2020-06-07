@@ -217,7 +217,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   Widget passwordInput() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 80.0, horizontal: 40.0),
+      padding: EdgeInsets.symmetric(vertical: 80.0,),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
