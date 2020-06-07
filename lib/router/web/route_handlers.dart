@@ -1,7 +1,9 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
+import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
@@ -10,7 +12,6 @@ import 'package:memorare/screens/web/add_quote_content.dart';
 import 'package:memorare/screens/web/add_quote_reference.dart';
 import 'package:memorare/screens/web/add_quote_topics.dart';
 import 'package:memorare/screens/web/admin_temp_quotes.dart';
-import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/delete_account.dart';
@@ -22,7 +23,6 @@ import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/screens/web/published_quotes.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/admin_quotes.dart';
-import 'package:memorare/screens/web/quotes_list.dart';
 import 'package:memorare/screens/web/quotes_lists.dart';
 import 'package:memorare/screens/web/quotidians.dart';
 import 'package:memorare/screens/web/reference_page.dart';
@@ -114,7 +114,7 @@ class WebRouteHandlers {
 
   static Handler list = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          QuotesList(listId: params['id'][0],));
+          QuotesList(id: params['id'][0],));
 
   static Handler lists = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
