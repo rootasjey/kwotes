@@ -25,7 +25,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    checkAuth();
+    chechAndGetUser();
   }
 
   @override
@@ -489,9 +489,10 @@ class _DashboardState extends State<Dashboard> {
             clipBehavior: Clip.hardEdge,
             child: IconButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
                 await appLocalStorage.clearUserAuthData();
+                await FirebaseAuth.instance.signOut();
                 userState.setUserDisconnected();
+                userState.signOut();
 
                 FluroRouter.router.navigateTo(context, RootRoute);
               },
@@ -516,7 +517,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void checkAuth() async {
+  void chechAndGetUser() async {
     setState(() {
       isCheckingAuth = true;
     });

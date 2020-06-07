@@ -5,7 +5,6 @@ import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/language.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 
@@ -319,9 +318,6 @@ class _SigninState extends State<Signin> {
         isSigningIn = false;
         isCompleted = true;
       });
-
-      final lang = await Language.fetch(result.user);
-      Language.setLang(lang);
 
       userState.setUserConnected();
 
