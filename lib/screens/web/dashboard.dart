@@ -358,6 +358,7 @@ class _DashboardState extends State<Dashboard> {
             delay: 2.75,
             beginY: 50.0,
             child: itemCard(
+              color: Color(0xFF414042),
               onTap: () => FluroRouter.router.navigateTo(context, DraftsRoute),
               icon: Icon(
                 Icons.edit,
