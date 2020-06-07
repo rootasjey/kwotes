@@ -409,7 +409,7 @@ class _QuotesListState extends State<QuotesList> {
       onTap: () {
         FluroRouter.router.navigateTo(
           context,
-          QuotePageRoute.replaceFirst(':id', quote.id),
+          QuotePageRoute.replaceFirst(':id', quote.quoteId),
         );
       },
       child: Column(
