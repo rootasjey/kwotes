@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -94,53 +94,7 @@ class _FavouritesState extends State<Favourites> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                expandedHeight: 320.0,
-                automaticallyImplyLeading: false,
-                flexibleSpace: Stack(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        FadeInY(
-                          beginY: 50.0,
-                          child: AppIconHeader(),
-                        ),
-
-                        FadeInY(
-                          delay: .5,
-                          beginY: 50.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Favourites',
-                                style: TextStyle(
-                                  fontSize: 30.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    Positioned(
-                      left: 80.0,
-                      top: 85.0,
-                      child: IconButton(
-                        onPressed: () {
-                          FluroRouter.router.pop(context);
-                        },
-                        tooltip: 'Back',
-                        icon: Icon(Icons.arrow_back),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
+              SliverAppHeader(title: 'Favourites',),
               listContent(screenWidth: screenWidth),
             ],
           ),

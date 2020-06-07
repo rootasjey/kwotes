@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -73,85 +73,23 @@ class _DraftsState extends State<Drafts> {
         child: CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
-            appBar(),
+            SliverAppHeader(
+              title: 'Drafts',
+              rightButton: OrderButton(
+                descending: descending,
+                onOrderChanged: (order) {
+                  setState(() {
+                    descending = order;
+                  });
+
+                  fetch();
+                },
+              ),
+            ),
             bodyListContent(),
           ],
         ),
       )
-    );
-  }
-
-  Widget appBar() {
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
-            children: <Widget>[
-              FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (drafts.length == 0) { return; }
-
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'Drafts',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: OrderButton(
-                  descending: descending,
-                  onOrderChanged: (order) {
-                    setState(() {
-                      descending = order;
-                    });
-
-                    fetch();
-                  },
-                ),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
