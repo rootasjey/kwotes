@@ -119,6 +119,7 @@ class _SigninState extends State<Signin> {
         emailInput(),
         passwordInput(),
         validationButton(),
+        noAccountButton(),
       ],
     );
   }
@@ -173,26 +174,28 @@ class _SigninState extends State<Signin> {
             ),
           ),
         ),
-
-        FadeInY(
-          delay: 1,
-          beginY: 50.0,
-          child: FlatButton(
-            onPressed: () {
-              FluroRouter.router.navigateTo(
-                context,
-                SignupRoute,
-              );
-            },
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                "I don't have an account"
-              ),
-            )
-          ),
-        ),
       ],
+    );
+  }
+
+  Widget noAccountButton() {
+    return FadeInY(
+      delay: 1,
+      beginY: 50.0,
+      child: FlatButton(
+        onPressed: () {
+          FluroRouter.router.navigateTo(
+            context,
+            SignupRoute,
+          );
+        },
+        child: Opacity(
+          opacity: .6,
+          child: Text(
+            "I don't have an account"
+          ),
+        )
+      ),
     );
   }
 
@@ -234,17 +237,20 @@ class _SigninState extends State<Signin> {
       delay: 2,
       beginY: 50.0,
       child: Padding(
-        padding: const EdgeInsets.only(top: 60.0),
-        child: FlatButton(
+        padding: const EdgeInsets.only(top: 80.0),
+        child: RaisedButton(
           onPressed: () {
             signIn();
           },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Sign me in'),
+                Text('Sign in'),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Icon(Icons.arrow_forward),
