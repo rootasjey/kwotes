@@ -322,7 +322,6 @@ class _SignupState extends State<Signup> {
           'lang': 'en',
           'name': '',
           'nameLowerCase': '',
-          'notifications': [],
           'pricing': 'free',
           'quota': {
             'current': 0,
@@ -344,7 +343,6 @@ class _SignupState extends State<Signup> {
             'lists': 0,
             'proposed': 0,
           },
-          'tokens': {},
           'urls': {
             'image': '',
           },
