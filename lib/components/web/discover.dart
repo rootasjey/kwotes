@@ -14,7 +14,6 @@ class Discover extends StatefulWidget {
 }
 
 class _DiscoverState extends State<Discover> {
-
   bool isLoading = false;
 
   @override
@@ -27,8 +26,6 @@ class _DiscoverState extends State<Discover> {
 
   @override
   Widget build(BuildContext context) {
-    final cards = createCards();
-
     return Container(
       foregroundDecoration: BoxDecoration(
         color: Color.fromRGBO(0, 0, 0, 0.05),
@@ -61,26 +58,14 @@ class _DiscoverState extends State<Discover> {
             ),
           ),
 
-          SizedBox(
-            height: 440.0,
-            child: ListView(
-              padding: EdgeInsets.symmetric(
-                vertical: 40.0,
-                horizontal: 20.0
-              ),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              children: cards,
-            ),
-          )
+          cardsItems(),
         ],
       )
     );
   }
 
-  List<Widget> createCards() {
+  Widget cardsItems() {
     List<Widget> cards = [];
-
     double count = 0;
 
     for (var author in _authors) {
@@ -120,7 +105,11 @@ class _DiscoverState extends State<Discover> {
       );
     }
 
-    return cards;
+    return Wrap(
+      spacing: 20.0,
+      runSpacing: 20.0,
+      children: cards,
+    );
   }
 
   void fetchAuthorsAndReferences() async {
