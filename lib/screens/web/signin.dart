@@ -301,10 +301,10 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final result = await FirebaseAuth.instance
+      final authResult = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
-      if (result.user == null) {
+      if (authResult.user == null) {
         showSnack(message: 'The password is incorrect or the user does not exists.');
         return;
       }
@@ -314,12 +314,18 @@ class _SigninState extends State<Signin> {
         password: password,
       );
 
+      userState.setUserConnected();
+
       setState(() {
         isSigningIn = false;
         isCompleted = true;
       });
 
-      userState.setUserConnected();
+      FluroRouter.router.navigateTo(
+        context,
+        DashboardRoute,
+        replace: true,
+      );
 
     } catch (error) {
       debugPrint(error.toString());
