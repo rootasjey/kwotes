@@ -256,11 +256,11 @@ class SigninState extends State<Signin> {
 
       userState.setUserConnected();
 
+      await PushNotifications.saveDeviceToken(userAuth.uid);
+
       setState(() {
         isLoading = false;
       });
-
-      await PushNotifications.saveDeviceToken(userAuth.uid);
 
       FluroRouter.router.navigateTo(context, HomeRoute);
 
