@@ -82,6 +82,39 @@ async function populateUserData(snapshot: functions.firestore.DocumentSnapshot) 
   };
 }
 
+// Prevent user's rights update.
+// TODO: Allow admins to update user's rights.
+export const updateUserCheck = functions
+  .region('europe-west3')
+  .firestore
+  .document('users/{userId}')
+  .onUpdate(async (change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+
+    if (!beforeData || !afterData) { return; }
+
+    if (typeof beforeData.rights === 'undefined' ||
+      typeof afterData.rights === 'undefined') {
+        return;
+      }
+
+    let isOk = true;
+
+    for (const [key, value] of Object.entries(afterData.rights)) {
+      const isEqual = value === beforeData.rights[key];
+
+      isOk = isOk && isEqual;
+    }
+
+    if (isOk) { return; }
+
+    return await change.after.ref
+      .update({
+        'rights': beforeData.rights,
+      });
+  });
+
 export const incrementQuoteQuota = functions
   .region('europe-west3')
   .firestore
