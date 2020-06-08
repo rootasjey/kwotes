@@ -34,11 +34,32 @@ export const newAccountCheck = functions
       };
     }
 
+    if (!await isUserNameOk(snapshot)) {
+      isOk = false;
+      data.name = `data.name-${Date.now()}`;
+      data.nameLowerCase = `data.name-${Date.now()}`;
+    }
+
     if (isOk) { return; }
 
     return await snapshot.ref
       .update(data);
   });
+
+async function isUserNameOk(snapshot: functions.firestore.DocumentSnapshot) {
+  const data = snapshot.data();
+  if (!data) { return; }
+
+  const nameLowerCase = data.nameLowerCase;
+
+  const usserNameSnap = await firestore
+    .collection('users')
+    .where('nameLowerCase', '==', nameLowerCase)
+    .limit(1)
+    .get();
+
+  return usserNameSnap.empty;
+}
 
 // Add all missing props.
 async function populateUserData(snapshot: functions.firestore.DocumentSnapshot) {
