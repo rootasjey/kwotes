@@ -5,6 +5,83 @@ admin.initializeApp();
 const firestore = admin.firestore();
 const fcm = admin.messaging();
 
+// Check that the new created doc is well-formatted.
+export const newAccountCheck = functions
+  .region('europe-west3')
+  .firestore
+  .document('users/{userId}')
+  .onCreate(async (snapshot, context) => {
+    let isOk = true;
+    let data = snapshot.data();
+
+    if (!data) {
+      isOk = false;
+      data = await populateUserData(snapshot);
+    }
+
+    // rights check
+    if (typeof data.rights === 'undefined') {
+      isOk = false;
+      data.rights = {
+        'user:managedata'     : false,
+        'user:manageauthor'   : false,
+        'user:managequote'    : false,
+        'user:managequotidian': false,
+        'user:managereference': false,
+        'user:proposequote'   : true,
+        'user:readquote'      : true,
+        'user:validatequote'  : false,
+      };
+    }
+
+    if (isOk) { return; }
+
+    return await snapshot.ref
+      .update(data);
+  });
+
+// Add all missing props.
+async function populateUserData(snapshot: functions.firestore.DocumentSnapshot) {
+  const user = await admin.auth().getUser(snapshot.id);
+  const email = typeof user !== 'undefined' ?
+    user.email : '';
+
+  return {
+    'email': email,
+    'flag': '',
+    'lang': 'en',
+    'name': '',
+    'nameLowerCase': '',
+    'notifications': [],
+    'pricing': 'free',
+    'quota': {
+      'current': 0,
+      'date': Date.now(),
+      'limit': 1,
+    },
+    'rights': {
+      'user:managedata': false,
+      'user:manageauthor': false,
+      'user:managequote': false,
+      'user:managequotidian': false,
+      'user:managereference': false,
+      'user:proposequote': true,
+      'user:readquote': true,
+      'user:validatequote': false,
+    },
+    'stats': {
+      'favourites': 0,
+      'lists': 0,
+      'proposed': 0,
+    },
+    'tokens': {},
+    'urls': {
+      'image': '',
+    },
+    'uid': snapshot.id,
+  };
+}
+
 export const incrementQuoteQuota = functions
   .region('europe-west3')
   .firestore
