@@ -24,9 +24,9 @@ class DiscoverCard extends StatefulWidget {
     this.name     = '',
     this.summary  = '',
     this.type     = 'reference',
-    this.height   = 270.0,
-    this.width    = 440.0,
-    this.padding  = const EdgeInsets.symmetric(horizontal: 20.0),
+    this.height   = 350.0,
+    this.width    = 270.0,
+    this.padding  = EdgeInsets.zero,
     this.textHeight = 70,
     this.titleFontSize = 20.0,
     this.elevation = 3.0,
@@ -172,10 +172,10 @@ class _DiscoverCardState extends State<DiscoverCard> {
         },
         onHover: (isHover) {
           if (isHover) {
-            textHeight = widget.textHeight;
+            textHeight = widget.textHeight * 2;
             textOpacity = .3;
           } else {
-            textHeight = widget.textHeight * 2;
+            textHeight = widget.textHeight;
             textOpacity = .0;
           }
 
