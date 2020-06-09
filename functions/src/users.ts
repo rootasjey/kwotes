@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-admin.initializeApp();
-const firestore = admin.firestore();
+import { adminApp } from './adminApp';
+
+const firestore = adminApp.firestore();
 
 async function checkNameLowerCaseUpdate(params: DataUpdateParams) {
   const { beforeData, afterData, payload, docId } = params;

@@ -1,9 +1,10 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 
-admin.initializeApp();
-const firestore = admin.firestore();
-const fcm = admin.messaging();
+import { adminApp } from './adminApp';
+
+const firestore = adminApp.firestore();
+const fcm = adminApp.messaging();
 
 export const quotidiansMobileEN = functions
   .region('europe-west3')

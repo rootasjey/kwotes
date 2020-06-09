@@ -1,8 +1,7 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import { adminApp } from './adminApp';
 
-admin.initializeApp();
-const firestore = admin.firestore();
+const firestore = adminApp.firestore();
 
 export const onFavAdded = functions
   .region('europe-west3')
