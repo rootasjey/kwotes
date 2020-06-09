@@ -52,13 +52,16 @@ async function isUserNameOk(snapshot: functions.firestore.DocumentSnapshot) {
 
   const nameLowerCase = data.nameLowerCase;
 
-  const usserNameSnap = await firestore
+  const userNamesSnap = await firestore
     .collection('users')
     .where('nameLowerCase', '==', nameLowerCase)
-    .limit(1)
+    .limit(2)
     .get();
 
-  return usserNameSnap.empty;
+  const trueMatch = userNamesSnap.docs
+    .filter((doc) => doc.id !== snapshot.id);
+
+  return trueMatch.length === 0;
 }
 
 export const onFavAdded = functions
