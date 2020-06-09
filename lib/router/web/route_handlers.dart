@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
@@ -107,6 +108,10 @@ class WebRouteHandlers {
   static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Favourites());
+
+  static Handler forgotPassword = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          ForgotPassword());
 
   static Handler home = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

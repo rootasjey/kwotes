@@ -42,12 +42,12 @@ class _SigninState extends State<Signin> {
         NavBackHeader(),
 
         Padding(
-        padding: const EdgeInsets.only(bottom: 300.0),
-        child: SizedBox(
-          width: 300.0,
-          child: body(),
+          padding: const EdgeInsets.only(bottom: 300.0),
+          child: SizedBox(
+            width: 320.0,
+            child: body(),
+          ),
         ),
-      ),
       ],
     );
   }
@@ -118,9 +118,37 @@ class _SigninState extends State<Signin> {
         formHeader(),
         emailInput(),
         passwordInput(),
+        forgotPassword(),
         validationButton(),
         noAccountButton(),
       ],
+    );
+  }
+
+  Widget forgotPassword() {
+    return FadeInY(
+      delay: 1,
+      beginY: 50.0,
+      child: FlatButton(
+        onPressed: () {
+          FluroRouter.router.navigateTo(context, ForgotPasswordRoute);
+        },
+        child: Opacity(
+          opacity: .6,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Icon(Icons.warning),
+              ),
+
+              Text(
+                "I forgot my password"
+              ),
+            ],
+          ),
+        )
+      ),
     );
   }
 
@@ -129,7 +157,10 @@ class _SigninState extends State<Signin> {
       delay: 1.5,
       beginY: 50.0,
       child: Padding(
-        padding: EdgeInsets.only(top: 40.0),
+        padding: EdgeInsets.only(
+          top: 40.0,
+          left: 15.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -158,23 +189,19 @@ class _SigninState extends State<Signin> {
   }
 
   Widget formHeader() {
-    return Column(
-      children: <Widget>[
-        FadeInY(
-          beginY: 50.0,
-          child: Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: Text(
-              'Sign in into your existing account.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+    return FadeInY(
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Text(
+          'Sign in into your existing account.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -204,7 +231,10 @@ class _SigninState extends State<Signin> {
       delay: 2,
       beginY: 50.0,
       child: Padding(
-        padding: EdgeInsets.only(top: 30.0),
+        padding: EdgeInsets.only(
+          top: 30.0,
+          left: 15.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

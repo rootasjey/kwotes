@@ -205,6 +205,11 @@ class FluroRouter {
     );
 
     router.define(
+      ForgotPasswordRoute,
+      handler: WebRouteHandlers.forgotPassword,
+    );
+
+    router.define(
       RootRoute,
       handler: WebRouteHandlers.home,
     );
