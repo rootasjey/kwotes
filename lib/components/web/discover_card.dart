@@ -193,9 +193,9 @@ class _DiscoverCardState extends State<DiscoverCard> {
               Opacity(
                 opacity: 1,
                 child: Text(
-                  widget.name.length < 15 ?
-                    widget.name : '${widget.name.substring(0, 14)}...',
+                  widget.name,
                   textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: widget.titleFontSize,
                     fontWeight: FontWeight.bold,
