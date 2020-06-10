@@ -22,8 +22,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -34,7 +32,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 300.0),
                 child: SizedBox(
-                  width: width > 500.0 ? 320.0 : width,
+                  width: 320,
                   child: body(),
                 ),
               ),
@@ -170,19 +168,38 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   Widget formHeader() {
-    return FadeInY(
-      beginY: 50.0,
-      child: Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Text(
-          'Enter your email. We will send a reset link to your mail box.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
+    return Column(
+      children: <Widget>[
+        FadeInY(
+          beginY: 50.0,
+          child: Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Text(
+              'Forgot Password',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-      ),
+
+        FadeInY(
+          beginY: 50.0,
+          child: Opacity(
+            opacity: .6,
+            child: Container(
+              width: 300.0,
+              padding: EdgeInsets.only(top: 10.0),
+              child: Text(
+                'We will send a reset link to your mail box',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -207,7 +224,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 Text('SEND LINK'),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
-                  child: Icon(Icons.arrow_forward),
+                  child: Icon(Icons.send),
                 )
               ],
             ),
