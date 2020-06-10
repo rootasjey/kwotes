@@ -137,7 +137,7 @@ class _SigninState extends State<Signin> {
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(
-          top: 40.0,
+          top: 60.0,
           left: 15.0,
         ),
         child: Column(
@@ -194,19 +194,34 @@ class _SigninState extends State<Signin> {
   }
 
   Widget header() {
-    return FadeInY(
-      beginY: 50.0,
-      child: Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Text(
-          'Sign in into your existing account.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
+    return Column(
+      children: <Widget>[
+        FadeInY(
+          beginY: 50.0,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              'Sign In',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-      ),
+
+        FadeInY(
+          delay: .3,
+          beginY: 50.0,
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'Connect to your existing account'
+            ),
+          ),
+        )
+      ],
     );
   }
 

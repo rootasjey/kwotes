@@ -141,7 +141,7 @@ class _SignupState extends State<Signup> {
       delay: .5,
       beginY: 50.0,
       child: Padding(
-        padding: EdgeInsets.only(top: 40.0),
+        padding: EdgeInsets.only(top: 60.0),
         child: TextFormField(
           autofocus: true,
           onFieldSubmitted: (_) => usernameNode.nextFocus(),
@@ -217,14 +217,25 @@ class _SignupState extends State<Signup> {
         FadeInY(
           beginY: 50.0,
           child: Padding(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.only(bottom: 10.0),
             child: Text(
-              'Sign up for a new account.',
+              'Sign Up',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 25.0,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+          ),
+        ),
+
+        FadeInY(
+          delay: .3,
+          beginY: 50.0,
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              'Create a new account'
             ),
           ),
         ),
