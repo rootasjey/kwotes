@@ -22,6 +22,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -32,7 +34,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 300.0),
                 child: SizedBox(
-                  width: 320.0,
+                  width: width > 500.0 ? 320.0 : width,
                   child: body(),
                 ),
               ),
@@ -61,6 +63,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   Widget completedContainer() {
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       children: <Widget>[
         Padding(
@@ -72,26 +76,30 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
         ),
 
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
-              child: Text(
-                "A password reset link has been sent to your mail box",
-                style: TextStyle(
-                  fontSize: 20.0,
+        Container(
+          width: width > 400.0 ? 320.0 : 280.0,
+          // padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
+                child: Text(
+                  "A password reset link has been sent to your mail box",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
               ),
-            ),
 
-            Opacity(
-              opacity: .6,
-              child: Text(
-                'Please check your spam folder too'
+              Opacity(
+                opacity: .6,
+                child: Text(
+                  'Please check your spam folder too'
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         Padding(
@@ -196,7 +204,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Send link'),
+                Text('SEND LINK'),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Icon(Icons.arrow_forward),
@@ -211,6 +219,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   void sendResetLink() async {
     try {
+      setState(() {
+        isLoading = true;
+        isCompleted = false;
+      });
+
       await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email);
 

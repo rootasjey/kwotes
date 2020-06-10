@@ -43,6 +43,11 @@ class FluroRouter {
     );
 
     router.define(
+      ForgotPasswordRoute,
+      handler: MobileRouteHandlers.forgotPassword,
+    );
+
+    router.define(
       EditEmailRoute,
       handler: MobileRouteHandlers.editEmail,
     );
