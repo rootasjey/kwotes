@@ -5,6 +5,8 @@ import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/quotes_list.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
@@ -27,8 +29,6 @@ import 'package:memorare/screens/web/admin_quotes.dart';
 import 'package:memorare/screens/web/quotes_lists.dart';
 import 'package:memorare/screens/web/quotidians.dart';
 import 'package:memorare/screens/web/reference_page.dart';
-import 'package:memorare/screens/web/signin.dart';
-import 'package:memorare/screens/web/signup.dart';
 import 'package:memorare/screens/web/temp_quotes.dart';
 import 'package:memorare/screens/web/today.dart';
 import 'package:memorare/screens/web/topic_page.dart';
@@ -151,11 +151,11 @@ class WebRouteHandlers {
 
   static Handler signin = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(Signin()));
+          Signin());
 
   static Handler signup = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(Signup()));
+          Signup());
 
   static Handler today = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

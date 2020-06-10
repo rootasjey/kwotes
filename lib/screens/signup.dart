@@ -1,442 +1,415 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
-import 'package:memorare/state/colors.dart';
+import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/push_notifications.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 
 class Signup extends StatefulWidget {
   @override
-  SignupState createState() => SignupState();
+  _SignupState createState() => _SignupState();
 }
 
-class SignupState extends State<Signup> {
-  bool isLoading    = false;
-  bool isCompleted  = false;
-  double beginY     = 100.0;
+class _SignupState extends State<Signup> {
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+  String username = '';
 
-  bool arePasswordsEqual = true;
+  bool isCheckingAuth = false;
+  bool isCompleted    = false;
+  bool isSigningUp    = false;
 
-  String confirmPassword  = '';
-  String email            = '';
-  String name             = '';
-  String password         = '';
-  String username         = '';
-
-  final emailNode = FocusNode();
+  final usernameNode = FocusNode();
   final passwordNode = FocusNode();
   final confirmPasswordNode = FocusNode();
 
   @override
+  initState() {
+    super.initState();
+    checkAuth();
+  }
+
+  @override
   void dispose() {
-    emailNode.dispose();
-    passwordNode.dispose();
-    confirmPasswordNode.dispose();
     super.dispose();
+    passwordNode.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: AppBar(
-          backgroundColor: stateColors.primary,
-          leading: Padding(
-            padding: const EdgeInsets.only(top: 17.0),
-            child: IconButton(
-              onPressed: () => FluroRouter.router.pop(context),
-              icon: Icon(Icons.arrow_back),
-            ),
+      body: ListView(
+        children: [
+          Column(
+            children: <Widget>[
+              NavBackHeader(),
+
+              Padding(
+                padding: const EdgeInsets.only(bottom: 300.0),
+                child: SizedBox(
+                  width: 300.0,
+                  child: body(),
+                ),
+              ),
+            ],
           ),
-          title: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Text(
-              'Sign up',
-            ),
-          ),
-        ),
+        ],
       ),
-      body: body(),
     );
   }
 
   Widget body() {
-    if (isLoading) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: LoadingAnimation(
-            textTitle: 'Creating your account...',
-          ),
+    if (isCompleted) {
+      return completedContainer();
+    }
+
+    if (isSigningUp) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 80.0),
+        child: LoadingAnimation(
+          textTitle: 'Signing up...',
         ),
       );
     }
 
-    if (isCompleted) {
-      return completedScreen();
-    }
+    return idleContainer();
+  }
 
-    return ListView(
+  Widget completedContainer() {
+    return Column(
       children: <Widget>[
-        Stack(
-          children: <Widget>[
-            Form(
-              child: Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Column(
-                  children: <Widget>[
-                    FadeInY(
-                      delay: 1.0,
-                      beginY: beginY,
-                      child: subtitle(),
-                    ),
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Icon(
+            Icons.check_circle,
+            size: 80.0,
+            color: Colors.green,
+          ),
+        ),
 
-                    FadeInY(
-                      delay: 2.0,
-                      beginY: beginY,
-                      child: usernameInput(),
-                    ),
-
-                    FadeInY(
-                      delay: 3.0,
-                      beginY: beginY,
-                      child: emailInput(),
-                    ),
-
-                    FadeInY(
-                      delay: 4.0,
-                      beginY: beginY,
-                      child: passwordInput(),
-                    ),
-
-                    FadeInY(
-                      delay: 5.0,
-                      beginY: beginY,
-                      child: confirmPasswordInput(),
-                    ),
-
-                    FadeInY(
-                      delay: 6.0,
-                      beginY: beginY,
-                      child: signInButton(),
-                    ),
-
-                    FadeInY(
-                      delay: 7.0,
-                      beginY: beginY,
-                      child: validationButton(),
-                    ),
-                  ],
-                ),
-              )
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
+          child: Text(
+            'Your account has been successfully created!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
             ),
-          ],
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0,),
+          child: FlatButton(
+            onPressed: () {
+              FluroRouter.router.navigateTo(
+                context,
+                DashboardRoute,
+              );
+            },
+            child: Opacity(
+              opacity: .6,
+              child: Text(
+                'Go to your dashboard',
+              ),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget completedScreen() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.all(30.0),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 30.0),
-            child: Icon(
-              Icons.check_circle,
-              color: stateColors.primary,
-              size: 90.0,
-            ),
-          ),
+  Widget emailInput() {
+    return FadeInY(
+      delay: .5,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              autofocus: true,
+              onFieldSubmitted: (_) => usernameNode.nextFocus(),
+              decoration: InputDecoration(
+                icon: Icon(Icons.email),
+                labelText: 'Email',
+              ),
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {
+                email = value;
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Email cannot be empty';
+                }
 
-          Padding(
-            padding: EdgeInsets.only(top: 40.0, bottom: 30.0),
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget header() {
+    return Column(
+      children: <Widget>[
+        FadeInY(
+          beginY: 50.0,
+          child: Padding(
+            padding: EdgeInsets.only(top: 10.0),
             child: Text(
-              'Your account has been successfully created!',
+              'Sign up for a new account.',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
 
-          Opacity(
-            opacity: .7,
-            child: Text(
-              'Check your mail box and your spam folder to validate your account.',
-              style: TextStyle(fontSize: 16.0),
-            ),
-          ),
+  Widget idleContainer() {
+    return Column(
+      children: <Widget>[
+        header(),
+        emailInput(),
+        usernameInput(),
+        passwordInput(),
+        confirmPasswordInput(),
+        validationButton(),
+        alreadyHaveAccountButton(),
+      ],
+    );
+  }
 
-          Padding(
-            padding: EdgeInsets.only(top: 60),
-            child: FlatButton(
-              color: stateColors.primary,
-              onPressed: () {
-                FluroRouter.router.navigateTo(context, HomeRoute);
+  Widget usernameInput() {
+    return FadeInY(
+      delay: 1.0,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              focusNode: usernameNode,
+              decoration: InputDecoration(
+                icon: Icon(Icons.person_outline,),
+                labelText: 'Username',
+              ),
+              textInputAction: TextInputAction.next,
+              onChanged: (value) => username = value,
+              onFieldSubmitted: (_) => passwordNode.nextFocus(),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'name cannot be empty';
+                }
+
+                return null;
               },
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(right: 10.0), child: Icon(Icons.check, color: Colors.white,),),
-                    Text('Alright', style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                  ],
-                ),
-              ),
             ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget confirmPasswordInput() {
-    return Padding(
-      padding: EdgeInsets.only(top: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            focusNode: confirmPasswordNode,
-            decoration: InputDecoration(
-              icon: Icon(Icons.lock, color: stateColors.primary,),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: stateColors.primary,),
-              ),
-              labelText: 'Confirm password',
-              labelStyle: TextStyle(color: stateColors.primary,),
-            ),
-            obscureText: true,
-            onChanged: (value) {
-              confirmPassword = value;
-
-              if (confirmPassword != password) { arePasswordsEqual = false; }
-              else { arePasswordsEqual = true; }
-            },
-            onFieldSubmitted: (_) => createAccount(),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Password cannot be empty';
-              }
-
-              if (value != password) {
-                return "Both passwords entered don't match";
-              }
-
-              return null;
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget emailInput() {
-    return Padding(
-      padding: EdgeInsets.only(top: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            focusNode: emailNode,
-            decoration: InputDecoration(
-              icon: Icon(Icons.email, color: stateColors.primary),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: stateColors.primary,),
-              ),
-              labelText: 'Email',
-              labelStyle: TextStyle(color: stateColors.primary,),
-            ),
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            onChanged: (value) => email = value,
-            onFieldSubmitted: (_) => emailNode.nextFocus(),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Email cannot be empty';
-              }
-
-              return null;
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget signInButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
-      child: FlatButton(
-        onPressed: () {
-          FluroRouter.router.navigateTo(context, SigninRoute);
-        },
-        child: Text(
-          "I already have an account"
+          ],
         ),
       ),
     );
   }
 
   Widget passwordInput() {
-    return Padding(
-      padding: EdgeInsets.only(top: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            focusNode: passwordNode,
-            decoration: InputDecoration(
-              icon: Icon(Icons.lock_outline, color: stateColors.primary,),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: stateColors.primary,),
+    return FadeInY(
+      delay: 1.5,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              focusNode: passwordNode,
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock_outline),
+                labelText: 'Password',
               ),
-              labelText: 'Password',
-              labelStyle: TextStyle(color: stateColors.primary,),
+              obscureText: true,
+              onChanged: (value) {
+                if (value.length == 0) { return; }
+                password = value;
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Password cannot be empty';
+                }
+
+                return null;
+              },
             ),
-            obscureText: true,
-            textInputAction: TextInputAction.go,
-            onChanged: (value) => password = value,
-            onFieldSubmitted: (_) => confirmPasswordNode.requestFocus(),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Password cannot be empty';
-              }
-
-              return null;
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget subtitle() {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Text(
-        'Sign up to a new account.',
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
+          ],
         ),
       ),
     );
   }
 
-  Widget usernameInput() {
-    return Padding(
-      padding: EdgeInsets.only(top: 60.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            autofocus: true,
-            decoration: InputDecoration(
-              icon: Icon(Icons.person_outline, color: stateColors.primary),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: stateColors.primary,),
+  Widget confirmPasswordInput() {
+    return FadeInY(
+      delay: 2.0,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(top: 30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              focusNode: confirmPasswordNode,
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock_outline),
+                labelText: 'Confirm password',
               ),
-              labelText: 'Username',
-              labelStyle: TextStyle(color: stateColors.primary,),
-            ),
-            textInputAction: TextInputAction.next,
-            onChanged: (value) => username = value,
-            onFieldSubmitted: (_) => emailNode.nextFocus(),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Username cannot be empty';
-              }
+              obscureText: true,
+              onChanged: (value) {
+                if (value.length == 0) { return; }
+                confirmPassword = value;
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Confirm password cannot be empty';
+                }
 
-              return null;
-            },
-          ),
-        ],
+                if (confirmPassword != password) {
+                  return "Passwords don't match";
+                }
+
+                return null;
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget validationButton() {
-    return Padding(
-      padding: EdgeInsets.only(top: 100.0),
-      child: FlatButton(
-        onPressed: () => createAccount(),
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: stateColors.primary),
-          borderRadius: BorderRadius.circular(2.0),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Sign up',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Icon(Icons.arrow_forward,),
-              )
-            ],
-          )
+    return FadeInY(
+      delay: 2.5,
+      beginY: 50.0,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 60.0),
+        child: RaisedButton(
+          onPressed: () {
+            createAccount();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('SIGN UP'),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Icon(Icons.arrow_forward),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  void createAccount() async {
+  Widget alreadyHaveAccountButton() {
+    return FadeInY(
+      delay: 3.0,
+      beginY: 50.0,
+      child: FlatButton(
+        onPressed: () {
+          FluroRouter.router.navigateTo(
+            context,
+            SigninRoute,
+          );
+        },
+        child: Opacity(
+          opacity: .6,
+          child: Text(
+            "I already have an account",
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        )
+      ),
+    );
+  }
+
+  void checkAuth() async {
     setState(() {
-      isLoading = true;
+      isCheckingAuth = true;
     });
 
-    if (username == null || username.isEmpty) {
-      showSnack(
-        context: context,
-        message: 'You must provide a valid username',
-        type: SnackType.error,
-      );
+    try {
+      final userAuth = await userState.userAuth;
 
-      return;
+      setState(() {
+        isCheckingAuth = false;
+      });
+
+      if (userAuth != null) {
+        FluroRouter.router.navigateTo(context, DashboardRoute);
+      }
+
+    } catch (error) {
+      setState(() {
+        isCheckingAuth = false;
+      });
     }
+  }
+
+  void createAccount() async {
+    final isOk = valuesChecks();
+    if (!isOk) { return; }
+
+    setState(() {
+      isSigningUp = true;
+    });
 
     try {
       // ?NOTE: Triming because of TAB key on Desktop.
       final result = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
 
-      final userAuth = result.user;
+      final user = result.user;
 
-      if (userAuth == null) {
-        throw Error();
+      if (user == null) {
+        setState(() {
+          isSigningUp = false;
+        });
+
+        showSnack(
+          context: context,
+          message: 'An occurred while creating your account. Please try again or contact us if the problem persists.',
+          type: SnackType.error,
+        );
+
+        return;
       }
-
-      final userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.displayName = username;
-
-      userAuth.updateProfile(userUpdateInfo);
 
       await Firestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .document(user.uid)
         .setData({
-          'email': userAuth.email,
+          'email': user.email,
           'flag': '',
           'lang': 'en',
-          'name': username,
+          'name': '',
           'nameLowerCase': '',
           'pricing': 'free',
           'quota': {
@@ -462,38 +435,61 @@ class SignupState extends State<Signup> {
           'urls': {
             'image': '',
           },
-          'uid': userAuth.uid,
+          'uid': user.uid,
         });
 
-        appLocalStorage.setCredentials(
-          email: email,
-          password: password,
-        );
+      appLocalStorage.setCredentials(
+        email: email,
+        password: password,
+      );
 
-        appLocalStorage.setUserName(username);
-        appLocalStorage.setUserUid(userAuth.uid);
-
-        userState.setUserConnected();
-
-        await PushNotifications.saveDeviceToken(userAuth.uid);
-
-        setState(() {
-          isCompleted = true;
-          isLoading = false;
-        });
+      setState(() {
+        isSigningUp = true;
+        isCompleted = true;
+      });
 
     } catch (error) {
       debugPrint(error.toString());
 
-      setState(() {
-        isLoading = false;
-      });
-
       showSnack(
         context: context,
-        message: 'An ocurred while creating your account. Try again later or contact us',
+        message: 'An occurred while creating your account. Please try again or contact us if the problem persists.',
         type: SnackType.error,
       );
     }
+  }
+
+  bool valuesChecks() {
+    if (confirmPassword != password) {
+      showSnack(
+        context: context,
+        message: "Password & confirm passwords don't match",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    if (username.isEmpty) {
+      showSnack(
+        context: context,
+        message: "Name cannot be empty",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      showSnack(
+        context: context,
+        message: "Password cannot be empty",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    return true;
   }
 }
