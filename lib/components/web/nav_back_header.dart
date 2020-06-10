@@ -11,18 +11,29 @@ class NavBackHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final top = width < 500.0 ? 20.0 : 85.0;
+    final left = width < 500.0 ? 30.0 : 80.0;
+
     return Stack(
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            width < 500.0 ?
+            AppIconHeader(
+              padding: const EdgeInsets.only(
+                top: 20.0,
+                bottom: 80.0,
+              ),
+            ) :
             AppIconHeader(),
           ],
         ),
 
         Positioned(
-          left: 80.0,
-          top: 85.0,
+          left: left,
+          top: top,
           child: GestureDetector(
             onLongPress: onLongPress,
             child: IconButton(
