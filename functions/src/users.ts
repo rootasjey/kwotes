@@ -34,6 +34,29 @@ export const checkEmailAvailable = functions
     };
   });
 
+export const checkNameAvailability = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data, context) => {
+    const name: string = data.name;
+
+    if (!(typeof name === 'string') || name.length === 0) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'one (string) argument "name" which is the name to check.');
+    }
+
+    const nameSnap = await firestore
+      .collection('users')
+      .where('nameLowerCase', '==', name.toLowerCase())
+      .limit(1)
+      .get();
+
+    return {
+      name: name,
+      isAvailable: nameSnap.empty,
+    };
+  });
+
 async function checkNameLowerCaseUpdate(params: DataUpdateParams) {
   const { beforeData, afterData, payload, docId } = params;
 
