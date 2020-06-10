@@ -5,7 +5,7 @@ import { adminApp } from './adminApp';
 
 const firestore = adminApp.firestore();
 
-export const checkEmailAvailable = functions
+export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
   .onCall(async (data, context) => {
@@ -13,7 +13,7 @@ export const checkEmailAvailable = functions
 
     if (!(typeof email === 'string') || email.length === 0) {
       throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'one argument "email" which is the email to check.');
+        'one (string) argument "email" which is the email to check.');
     }
 
 
