@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
@@ -20,6 +22,15 @@ class _SignupState extends State<Signup> {
   String password = '';
   String confirmPassword = '';
   String username = '';
+
+  bool isEmailAvailable = true;
+  bool isNameAvailable = true;
+
+  String emailErrorMessage = '';
+  String nameErrorMessage = '';
+
+  bool isCheckingEmail = false;
+  bool isCheckingName = false;
 
   bool isCheckingAuth = false;
   bool isCompleted    = false;
@@ -131,30 +142,71 @@ class _SignupState extends State<Signup> {
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(top: 40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              autofocus: true,
-              onFieldSubmitted: (_) => usernameNode.nextFocus(),
-              decoration: InputDecoration(
-                icon: Icon(Icons.email),
-                labelText: 'Email',
-              ),
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (value) {
-                email = value;
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Email cannot be empty';
-                }
+        child: TextFormField(
+          autofocus: true,
+          onFieldSubmitted: (_) => usernameNode.nextFocus(),
+          decoration: InputDecoration(
+            icon: Icon(Icons.email),
+            labelText: 'Email',
+          ),
+          keyboardType: TextInputType.emailAddress,
+          onChanged: (value) async {
+            email = value;
 
-                return null;
-              },
-            ),
-          ],
+            setState(() {
+              isCheckingEmail = true;
+            });
+
+            final wellFormatted = checkEmailFormat();
+
+            if (!wellFormatted) {
+              setState(() {
+                isCheckingEmail = false;
+                emailErrorMessage = 'The value is not a valid email address';
+              });
+
+              return;
+            }
+
+            final isAvailable = await checkEmailAvailability();
+
+            if (!isAvailable) {
+              setState(() {
+                isCheckingEmail = false;
+                emailErrorMessage = 'This email address is not available';
+              });
+
+              return;
+            }
+
+            setState(() {
+              isCheckingEmail = false;
+              emailErrorMessage = '';
+            });
+          },
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Email cannot be empty';
+            }
+
+            return null;
+          },
         ),
+      ),
+    );
+  }
+
+  Widget emailInputError() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+        left: 40.0,
+      ),
+      child: Text(
+        emailErrorMessage,
+        style: TextStyle(
+          color: Colors.red.shade300,
+        )
       ),
     );
   }
@@ -185,12 +237,26 @@ class _SignupState extends State<Signup> {
       children: <Widget>[
         header(),
         emailInput(),
+
+        if (isCheckingEmail)
+          emailProgress(),
+
+        if (emailErrorMessage.isNotEmpty)
+          emailInputError(),
+
         usernameInput(),
         passwordInput(),
         confirmPasswordInput(),
         validationButton(),
         alreadyHaveAccountButton(),
       ],
+    );
+  }
+
+  Widget emailProgress() {
+    return Container(
+      padding: const EdgeInsets.only(left: 40.0,),
+      child: LinearProgressIndicator(),
     );
   }
 
@@ -370,6 +436,30 @@ class _SignupState extends State<Signup> {
       setState(() {
         isCheckingAuth = false;
       });
+    }
+  }
+
+  bool checkEmailFormat() {
+    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}")
+      .hasMatch(email);
+  }
+
+  Future<bool> checkEmailAvailability() async {
+    try {
+      final callable = CloudFunctions(
+        app: FirebaseApp.instance,
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'users-checkEmailAvailability',
+      );
+
+      final resp = await callable.call({'email': email});
+      final isOk = resp.data['isAvailable'] as bool;
+      return isOk;
+
+    } catch (error) {
+      debugPrint(error.toString());
+      return false;
     }
   }
 
