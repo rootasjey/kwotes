@@ -5,6 +5,35 @@ import { adminApp } from './adminApp';
 
 const firestore = adminApp.firestore();
 
+export const checkEmailAvailable = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data, context) => {
+    const email: string = data.email;
+
+    if (!(typeof email === 'string') || email.length === 0) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'one argument "email" which is the email to check.');
+    }
+
+
+    if (!validateEmailFormat(email)) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'a valid email address.');
+    }
+
+    const emailSnap = await firestore
+      .collection('users')
+      .where('email', '==', email)
+      .limit(1)
+      .get();
+
+    return {
+      email,
+      isAvailable: emailSnap.empty,
+    };
+  });
+
 async function checkNameLowerCaseUpdate(params: DataUpdateParams) {
   const { beforeData, afterData, payload, docId } = params;
 
@@ -236,6 +265,25 @@ async function populateUserData(snapshot: functions.firestore.DocumentSnapshot) 
   };
 }
 
+function populateUserNameIfEmpty(
+  data: FirebaseFirestore.DocumentData,
+  payload: any,
+): FirebaseFirestore.DocumentData {
+
+  if (!data) { return payload; }
+  if (data.name && data.nameLowerCase) { return payload; }
+
+  let name = data.name || data.nameLowerCase;
+  name = name || `user-${Date.now()}`;
+
+  return {
+    ...payload, ...{
+      name: name,
+      nameLowerCase: name,
+    }
+  };
+}
+
 // Prevent user's rights update
 // and user name conflicts.
 // TODO: Allow admins to update user's rights.
@@ -268,21 +316,7 @@ export const updateUserCheck = functions
       .update(payload);
   });
 
-function populateUserNameIfEmpty(
-  data: FirebaseFirestore.DocumentData,
-  payload: any,
-):FirebaseFirestore.DocumentData {
-
-  if (!data) { return payload; }
-  if (data.name && data.nameLowerCase) { return payload; }
-
-  let name = data.name || data.nameLowerCase;
-  name = name || `user-${Date.now()}`;
-
-  return {
-    ...payload, ...{
-      name: name,
-      nameLowerCase: name,
-    }
-  };
+function validateEmailFormat(email: string) {
+  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
 }
