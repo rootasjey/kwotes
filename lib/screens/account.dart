@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/settings_card.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -57,7 +56,7 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget accounSettings() {
+  Widget accountSettings() {
     return Observer(
       builder: (_) {
         final isUserConnected = userState.isUserConnected;
@@ -68,6 +67,7 @@ class _AccountState extends State<Account> {
               Container(
                 height: MediaQuery.of(context).size.height - 100.0,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     FadeInY(
                       delay: 1.5,
@@ -83,6 +83,12 @@ class _AccountState extends State<Account> {
 
                     FadeInY(
                       delay: 2.5,
+                      beginY: 50.0,
+                      child: emailButton(),
+                    ),
+
+                    FadeInY(
+                      delay: 3.0,
                       beginY: 50.0,
                       child: langSelect(),
                     ),
@@ -119,62 +125,90 @@ class _AccountState extends State<Account> {
     return Observer(
       builder: (_) {
         return Padding(
-          padding: const EdgeInsets.only(
-            top: 10.0,
-            bottom: 60.0,
-          ),
-          child: SizedBox(
-            height: 200.0,
-            child: ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                FadeInX(
-                  delay: 3.0,
-                  beginX: 50.0,
-                  child: SettingsCard(
-                    elevation: 2.0,
-                    imagePath: 'assets/images/write-email-${stateColors.iconExt}.png',
-                    name: 'Email',
-                    onTap: isUserConnected ?
-                      () {
-                        FluroRouter.router.navigateTo(context, EditEmailRoute);
-                      } :
-                      null,
-                  ),
-                ),
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: Wrap(
+            spacing: 15.0,
+            children: <Widget>[
+              FadeInX(
+                delay: 3.0,
+                beginX: 50.0,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(10.0),
+                      width: 90.0,
+                      height: 90.0,
+                      child: Card(
+                        elevation: 4.0,
+                        child: InkWell(
+                          onTap: () {
+                            FluroRouter.router.navigateTo(context, EditPasswordRoute);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Image.asset(
+                              'assets/images/lock-${stateColors.iconExt}.png',
+                              width: 30.0,
+                              height: 30.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
 
-                FadeInX(
-                  delay: 3.5,
-                  beginX: 50.0,
-                  child: SettingsCard(
-                    elevation: 2.0,
-                    imagePath: 'assets/images/lock-${stateColors.iconExt}.png',
-                    name: 'Password',
-                    onTap: isUserConnected ?
-                      () {
-                        FluroRouter.router.navigateTo(context, EditPasswordRoute);
-                      } :
-                      null,
-                  ),
+                    Opacity(
+                      opacity: .8,
+                      child: Text(
+                        'Update password',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
 
-                FadeInX(
-                  delay: 4.0,
-                  beginX: 50.0,
-                  child: SettingsCard(
-                    elevation: 2.0,
-                    imagePath: 'assets/images/delete-user-${stateColors.iconExt}.png',
-                    name: 'Delete account',
-                    onTap: isUserConnected ?
-                      () {
-                        FluroRouter.router.navigateTo(context, DeleteAccountRoute);
-                      } :
-                      null,
-                  ),
-                )
-              ],
-            ),
+              FadeInX(
+                delay: 3.5,
+                beginX: 50.0,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(10.0),
+                      width: 90.0,
+                      height: 90.0,
+                      child: Card(
+                        elevation: 4.0,
+                        child: InkWell(
+                          onTap: () {
+                            FluroRouter.router.navigateTo(context, DeleteAccountRoute);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Image.asset(
+                              'assets/images/delete-user-${stateColors.iconExt}.png',
+                              width: 30.0,
+                              height: 30.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Opacity(
+                      opacity: .8,
+                      child: Text(
+                        'Delete account',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         );
       }
@@ -258,10 +292,9 @@ class _AccountState extends State<Account> {
           bottom: 60.0,
         ),
         child: Material(
-          elevation: 1.0,
+          elevation: 4.0,
           shape: CircleBorder(),
           clipBehavior: Clip.hardEdge,
-          color: Colors.transparent,
           child: InkWell(
             child: Padding(
               padding: const EdgeInsets.all(40.0),
@@ -281,10 +314,9 @@ class _AccountState extends State<Account> {
         bottom: 60.0,
       ),
       child: Material(
-        elevation: 1.0,
+        elevation: 4.0,
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
         child: InkWell(
           child: Padding(
             padding: const EdgeInsets.all(40.0),
@@ -379,10 +411,65 @@ class _AccountState extends State<Account> {
   Widget bodyListContent() {
     return SliverList(
       delegate: SliverChildListDelegate([
-        accounSettings(),
+        accountSettings(),
         Divider(height: 30.0),
         appSettings(),
       ]),
+    );
+  }
+
+  Widget emailButton() {
+    return FlatButton(
+      onPressed: () {
+        FluroRouter.router.navigateTo(context, EditEmailRoute);
+      },
+      onLongPress: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text('Email'),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 25.0,
+                    right: 25.0,
+                  ),
+                  child: Text(
+                    email,
+                    style: TextStyle(
+                      color: stateColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      },
+      child: Opacity(
+        opacity: .7,
+        child: SizedBox(
+          width: 250.0,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Icon(Icons.alternate_email),
+                // child: Image.asset(
+                //   'assets/images/write-email-${stateColors.iconExt}.png',
+                //   width: 30.0,
+                // ),
+              ),
+
+              Text(
+                email,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -434,7 +521,7 @@ class _AccountState extends State<Account> {
     }
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 40.0),
+      padding: EdgeInsets.only(bottom: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -476,24 +563,27 @@ class _AccountState extends State<Account> {
   }
 
   Widget langSelect() {
-    return DropdownButton<String>(
-      elevation: 3,
-      value: selectedLang,
-      onChanged: (String newValue) {
-        setState(() {
-          selectedLang = newValue;
-        });
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: DropdownButton<String>(
+        elevation: 3,
+        value: selectedLang,
+        onChanged: (String newValue) {
+          setState(() {
+            selectedLang = newValue;
+          });
 
-        updateLang();
-      },
-      items: ['English', 'Français']
-        .map((String value) {
-          return DropdownMenuItem(
-            value: value,
-            child: Text(value,)
-          );
-        })
-        .toList(),
+          updateLang();
+        },
+        items: ['English', 'Français']
+          .map((String value) {
+            return DropdownMenuItem(
+              value: value,
+              child: Text(value,)
+            );
+          })
+          .toList(),
+      ),
     );
   }
 
