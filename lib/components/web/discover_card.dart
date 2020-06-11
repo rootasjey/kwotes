@@ -62,7 +62,7 @@ class _DiscoverCardState extends State<DiscoverCard> {
         ) :
         const EdgeInsets.symmetric(
           horizontal: 40.0,
-          vertical: 20.0,
+          vertical: 35.0,
         );
     });
   }
