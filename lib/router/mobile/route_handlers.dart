@@ -8,6 +8,7 @@ import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/favourites.dart';
 import 'package:memorare/screens/forgot_password.dart';
@@ -23,7 +24,6 @@ import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/topic_page.dart';
-import 'package:memorare/screens/web/edit_email.dart';
 
 class MobileRouteHandlers {
   static Handler account = Handler(
