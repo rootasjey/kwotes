@@ -6,6 +6,10 @@ import 'package:memorare/screens/topics.dart';
 import 'package:memorare/state/colors.dart';
 
 class Home extends StatefulWidget {
+  final int initialIndex;
+
+  Home({this.initialIndex = 0,});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -22,6 +26,10 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      _selectedIndex = widget.initialIndex;
+    });
   }
 
   void _onItemTapped(int index) {
