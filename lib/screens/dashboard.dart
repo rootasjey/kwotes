@@ -481,7 +481,7 @@ class _DashboardState extends State<Dashboard> {
     final data = user.data;
     final String imageUrl = data['urls']['image'];
 
-    canManage = data['rights']['user:managequote'];
+    canManage = data['rights']['user:managequote'] ?? false;
 
     if (avatarUrl == imageUrl) { return; }
 
