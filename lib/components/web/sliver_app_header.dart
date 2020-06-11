@@ -10,17 +10,23 @@ class SliverAppHeader extends StatelessWidget {
   final Widget bottomButton;
   final Widget rightButton;
 
+  final double widthLimit = 500.0;
+
   SliverAppHeader({this.title, this.bottomButton, this.rightButton});
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final top = width < widthLimit ? 55.0 : 85.0;
+    final left = width < widthLimit ? 20.0 : 80.0;
+
     return Observer(
       builder: (context) {
         return SliverAppBar(
           floating: true,
           snap: true,
           backgroundColor: stateColors.softBackground,
-          expandedHeight: 320.0,
+          expandedHeight: width < widthLimit ? 150 : 320.0,
           automaticallyImplyLeading: false,
           flexibleSpace: Stack(
             children: <Widget>[
@@ -28,7 +34,11 @@ class SliverAppHeader extends StatelessWidget {
                 children: <Widget>[
                   FadeInY(
                     beginY: 50.0,
-                    child: AppIconHeader(),
+                    child: AppIconHeader(
+                      padding: width < widthLimit ?
+                        const EdgeInsets.only(top: 50.0, bottom: 20.0,) :
+                        const EdgeInsets.symmetric(vertical: 80.0),
+                    ),
                   ),
 
                   FadeInY(
@@ -62,13 +72,13 @@ class SliverAppHeader extends StatelessWidget {
               if (this.rightButton != null)
                 Positioned(
                 right: 20.0,
-                top: 85.0,
+                top: top,
                 child: this.rightButton,
               ),
 
               Positioned(
-                left: 80.0,
-                top: 85.0,
+                left: left,
+                top: top,
                 child: IconButton(
                   onPressed: () {
                     FluroRouter.router.pop(context);
