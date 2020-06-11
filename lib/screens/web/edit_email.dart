@@ -15,6 +15,7 @@ class EditEmail extends StatefulWidget {
 }
 
 class _EditEmailState extends State<EditEmail> {
+  String currentEmail = '';
   String email = '';
   String password = '';
 
@@ -34,8 +35,8 @@ class _EditEmailState extends State<EditEmail> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Scaffold(
+      body: ListView(
         children: <Widget>[
           NavBackHeader(),
           body(),
@@ -52,6 +53,9 @@ class _EditEmailState extends State<EditEmail> {
     if (isUpdating) {
       return updatingScreen();
     }
+
+    final width = MediaQuery.of(context).size.width;
+    final inputWidth = width < 500.0 ? 260.0 : width;
 
     return SizedBox(
       width: 400.0,
@@ -70,15 +74,21 @@ class _EditEmailState extends State<EditEmail> {
           ),
 
           FadeInY(
+            delay: delay + (2.5 * delayStep),
+            beginY: beginY,
+            child: emailButton(),
+          ),
+
+          FadeInY(
             delay: delay + (3 * delayStep),
             beginY: beginY,
-            child: emailInput(),
+            child: emailInput(width: inputWidth),
           ),
 
           FadeInY(
             delay: delay + (4 * delayStep),
             beginY: beginY,
-            child: passwordInput(),
+            child: passwordInput(width: inputWidth),
           ),
 
           FadeInY(
@@ -123,8 +133,60 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget emailInput() {
-    return Padding(
+  Widget emailButton() {
+    return FlatButton(
+      onPressed: () {
+        FluroRouter.router.navigateTo(context, EditEmailRoute);
+      },
+      onLongPress: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text('Email'),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 25.0,
+                    right: 25.0,
+                  ),
+                  child: Text(
+                    currentEmail,
+                    style: TextStyle(
+                      color: stateColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        );
+      },
+      child: Opacity(
+        opacity: .7,
+        child: SizedBox(
+          width: 250.0,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Icon(Icons.alternate_email),
+              ),
+
+              Text(
+                currentEmail,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget emailInput({double width}) {
+    return Container(
+      width: width ?? 400.0,
       padding: const EdgeInsets.only(top: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,14 +194,14 @@ class _EditEmailState extends State<EditEmail> {
           TextFormField(
             decoration: InputDecoration(
               icon: Icon(Icons.email),
-              labelText: 'Enter your new email',
+              labelText: 'New email',
             ),
             onChanged: (value) {
               email = value;
             },
             validator: (value) {
               if (value.isEmpty) {
-                return 'New email cannot be empty';
+                return 'The email cannot be empty';
               }
 
               return null;
@@ -160,8 +222,9 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget passwordInput() {
-    return Padding(
+  Widget passwordInput({double width}) {
+    return Container(
+      width: width ?? 400.0,
       padding: EdgeInsets.only(top: 50.0, bottom: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +232,7 @@ class _EditEmailState extends State<EditEmail> {
           TextFormField(
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline),
-              labelText: 'Entering your password',
+              labelText: 'Current password',
             ),
             obscureText: true,
             onChanged: (value) {
@@ -193,6 +256,7 @@ class _EditEmailState extends State<EditEmail> {
       'Update email',
       style: TextStyle(
         fontSize: 35.0,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
@@ -223,16 +287,10 @@ class _EditEmailState extends State<EditEmail> {
       onPressed: () {
         updateEmail();
       },
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: stateColors.primary,
-        ),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Text(
-          'Update',
+          'UPDATE EMAIL',
         ),
       )
     );
@@ -253,6 +311,10 @@ class _EditEmailState extends State<EditEmail> {
       if (userAuth == null) {
         FluroRouter.router.navigateTo(context, SigninRoute);
       }
+
+      setState(() {
+        currentEmail = userAuth.email;
+      });
 
     } catch (error) {
       FluroRouter.router.navigateTo(context, SigninRoute);

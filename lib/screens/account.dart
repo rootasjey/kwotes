@@ -456,10 +456,6 @@ class _AccountState extends State<Account> {
               Padding(
                 padding: const EdgeInsets.only(right: 15.0),
                 child: Icon(Icons.alternate_email),
-                // child: Image.asset(
-                //   'assets/images/write-email-${stateColors.iconExt}.png',
-                //   width: 30.0,
-                // ),
               ),
 
               Text(

@@ -99,7 +99,7 @@ class WebRouteHandlers {
 
   static Handler editEmail = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(EditEmail()));
+          EditEmail());
 
   static Handler editPassword = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
