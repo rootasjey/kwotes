@@ -42,6 +42,10 @@ class MobileRouteHandlers {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AuthorPage(id: params['id'][0]));
 
+  static Handler dashboard = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Home());
+
   static Handler deleteAccount = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           DeleteAccount());

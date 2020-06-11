@@ -28,6 +28,11 @@ class FluroRouter {
     );
 
     router.define(
+      DashboardRoute,
+      handler: MobileRouteHandlers.dashboard,
+    );
+
+    router.define(
       DeleteAccountRoute,
       handler: MobileRouteHandlers.deleteAccount,
     );
