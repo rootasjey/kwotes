@@ -63,6 +63,23 @@ mixin _$UserState on UserStateBase, Store {
     }, _$isUserConnectedAtom, name: '${_$isUserConnectedAtom.name}_set');
   }
 
+  final _$_nameAtom = Atom(name: 'UserStateBase._name');
+
+  @override
+  String get _name {
+    _$_nameAtom.context.enforceReadPolicy(_$_nameAtom);
+    _$_nameAtom.reportObserved();
+    return super._name;
+  }
+
+  @override
+  set _name(String value) {
+    _$_nameAtom.context.conditionallyRunInAction(() {
+      super._name = value;
+      _$_nameAtom.reportChanged();
+    }, _$_nameAtom, name: '${_$_nameAtom.name}_set');
+  }
+
   final _$updatedFavAtAtom = Atom(name: 'UserStateBase.updatedFavAt');
 
   @override
@@ -118,6 +135,16 @@ mixin _$UserState on UserStateBase, Store {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
       return super.setUserDisconnected();
+    } finally {
+      _$UserStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setUserName(dynamic newName) {
+    final _$actionInfo = _$UserStateBaseActionController.startAction();
+    try {
+      return super.setUserName(newName);
     } finally {
       _$UserStateBaseActionController.endAction(_$actionInfo);
     }

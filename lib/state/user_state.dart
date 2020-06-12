@@ -18,6 +18,9 @@ abstract class UserStateBase with Store {
   @observable
   bool isUserConnected = false;
 
+  @observable
+  String _name = '';
+
   /// Last time the favourites has been updated.
   @observable
   DateTime updatedFavAt = DateTime.now();
@@ -33,8 +36,14 @@ abstract class UserStateBase with Store {
       await _signin();
     }
 
+    if (_userAuth != null) {
+      setUserName(_userAuth.displayName);
+    }
+
     return _userAuth;
   }
+
+  String get name { return _name; }
 
   /// To use chen user's data has changed.
   void clearAuthCache() {
@@ -60,6 +69,11 @@ abstract class UserStateBase with Store {
   @action
   void setUserDisconnected() {
     isUserConnected = false;
+  }
+
+  @action
+  void setUserName(newName) {
+    _name = newName;
   }
 
   /// Signin user with credentials if FirebaseAuth is null.
