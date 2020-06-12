@@ -230,11 +230,19 @@ class _SigninState extends State<Signin> {
       delay: 2.5,
       beginY: 50.0,
       child: FlatButton(
-        onPressed: () {
-          FluroRouter.router.navigateTo(
+        onPressed: () async {
+          await FluroRouter.router.navigateTo(
             context,
             SignupRoute,
           );
+
+          if (userState.isUserConnected) {
+            await FluroRouter.router.navigateTo(
+              context,
+              DashboardRoute,
+              replace: true,
+            );
+          }
         },
         child: Opacity(
           opacity: .6,
