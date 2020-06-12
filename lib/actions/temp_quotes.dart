@@ -119,7 +119,7 @@ String getResultMessage({AddQuoteType actionIntent, AddQuoteType actionResult}) 
 String getResultSubMessage({AddQuoteType actionIntent, AddQuoteType actionResult}) {
   if ((actionIntent == actionResult) && actionIntent == AddQuoteType.tempquote) {
     return AddQuoteInputs.quote.id.isEmpty ?
-      'Soon, a moderator will review it and it will ba validated if everything is alright' :
+      'Soon, a moderator will review it and it will be validated if everything is alright' :
       "It's time to let things happen";
   }
 
