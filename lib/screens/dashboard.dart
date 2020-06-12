@@ -38,11 +38,16 @@ class _DashboardState extends State<Dashboard> {
         ),
         children: <Widget>[
           Observer(builder: (context) {
-            String userName = appLocalStorage.getUserName();
+            String userName = '';
+
+            if (userState.isUserConnected) {
+              userName = userState.name;
+            }
+
             String greetings = 'Welcome back $userName!';
 
             if (userName == null || userName.isEmpty) {
-              greetings = 'Hi Stranger!';
+              greetings = 'Hi!';
             }
 
             if (prevIsAuthenticated != userState.isUserConnected) {
