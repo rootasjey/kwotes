@@ -335,6 +335,14 @@ export const updateUserCheck = functions
 
     if (Object.keys(payload).length === 0) { return; }
 
+    if (payload.name) { // auto-update auth user
+      await admin
+      .auth()
+      .updateUser(change.after.id, {
+        displayName: payload.name,
+      });
+    }
+
     return await change.after.ref
       .update(payload);
   });
