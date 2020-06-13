@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
@@ -163,9 +162,9 @@ class _SignupState extends State<Signup> {
               isCheckingEmail = true;
             });
 
-            final wellFormatted = checkEmailFormat();
+            final isWellFormatted = checkEmailFormat(email);
 
-            if (!wellFormatted) {
+            if (!isWellFormatted) {
               setState(() {
                 isCheckingEmail = false;
                 emailErrorMessage = 'The value is not a valid email address';
@@ -182,7 +181,7 @@ class _SignupState extends State<Signup> {
             emailTimer = Timer(
               1.seconds,
               () async {
-                final isAvailable = await checkEmailAvailability();
+                final isAvailable = await checkEmailAvailability(email);
                 if (!isAvailable) {
                   setState(() {
                     isCheckingEmail = false;
@@ -348,7 +347,7 @@ class _SignupState extends State<Signup> {
                 nameTimer = Timer(
                   1.seconds,
                   () async {
-                    final isAvailable = await checkNameAvailability();
+                    final isAvailable = await checkNameAvailability(username);
 
                     if (!isAvailable) {
                       setState(() {
@@ -532,49 +531,6 @@ class _SignupState extends State<Signup> {
     }
   }
 
-  bool checkEmailFormat() {
-    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}")
-      .hasMatch(email);
-  }
-
-  Future<bool> checkEmailAvailability() async {
-    try {
-      final callable = CloudFunctions(
-        app: FirebaseApp.instance,
-        region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-checkEmailAvailability',
-      );
-
-      final resp = await callable.call({'email': email});
-      final isOk = resp.data['isAvailable'] as bool;
-      return isOk;
-
-    } catch (error) {
-      debugPrint(error.toString());
-      return false;
-    }
-  }
-
-  Future<bool> checkNameAvailability() async {
-    try {
-      final callable = CloudFunctions(
-        app: FirebaseApp.instance,
-        region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-checkNameAvailability',
-      );
-
-      final resp = await callable.call({'name': username});
-      final isOk = resp.data['isAvailable'] as bool;
-      return isOk;
-
-    } catch (error) {
-      debugPrint(error.toString());
-      return false;
-    }
-  }
-
   void createAccount() async {
     if (!valuesChecks()) { return; }
 
@@ -689,8 +645,8 @@ class _SignupState extends State<Signup> {
   }
 
   Future<bool> valuesAvailabilityCheck() async {
-    final isEmailOk = await checkEmailAvailability();
-    final isNameOk = await checkNameAvailability();
+    final isEmailOk = await checkEmailAvailability(email);
+    final isNameOk = await checkNameAvailability(username);
 
     return isEmailOk && isNameOk;
   }
