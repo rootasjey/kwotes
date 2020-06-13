@@ -394,7 +394,12 @@ class _AccountState extends State<Account> {
           context: context,
           builder: (context) {
             return SimpleDialog(
-              title: Text('Email'),
+              title: Text(
+                'Email',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
+              ),
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
@@ -549,7 +554,10 @@ class _AccountState extends State<Account> {
           builder: (context, childSetState) {
             return AlertDialog(
               title: Text(
-                'Update name',
+                'Update username',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
               content: SingleChildScrollView(
                 child: Column(
