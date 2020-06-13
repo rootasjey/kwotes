@@ -79,7 +79,7 @@ async function checkNameLowerCaseUpdate(params: DataUpdateParams) {
   const exactMatch = userNamesSnap.docs
     .filter((doc) => doc.id !== docId);
 
-  if (exactMatch.length > 0) {
+  if (exactMatch.length > 0) { // the name already exists
     const suffix = Date.now();
     payload.name = `${nameLowerCase}-${suffix}`;
     payload.nameLowerCase = `${nameLowerCase}-${suffix}`;
@@ -333,11 +333,13 @@ export const updateUserCheck = functions
 
     if (Object.keys(payload).length === 0) { return; }
 
-    if (payload.name) { // auto-update auth user
+    if (payload.nameLowerCase) { // auto-update auth user
+      const displayName = payload.name ?? afterData.name;
+
       await admin
       .auth()
       .updateUser(change.after.id, {
-        displayName: payload.name,
+        displayName: displayName,
       });
     }
 
