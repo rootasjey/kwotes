@@ -141,7 +141,7 @@ mixin _$UserState on UserStateBase, Store {
   }
 
   @override
-  void setUserName(dynamic newName) {
+  void setUserName(String newName) {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
       return super.setUserName(newName);

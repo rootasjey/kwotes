@@ -72,7 +72,7 @@ abstract class UserStateBase with Store {
   }
 
   @action
-  void setUserName(newName) {
+  void setUserName(String newName) {
     _name = newName;
   }
 
