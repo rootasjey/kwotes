@@ -61,7 +61,21 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await checkAuth();
+          return null;
+        },
+        child: NotificationListener<ScrollNotification>(
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: <Widget>[
+              appBar(),
+              body(),
+            ],
+          ),
+        )
+      ),
     );
   }
 
@@ -227,18 +241,14 @@ class _AccountState extends State<Account> {
   }
 
   Widget appBar() {
-    return Observer(
-      builder: (_) {
-        return SliverAppHeader(
-          title: 'Settings',
-          subTitle: 'You can update your account settings here',
-          onScrollToTop: () {
-            _scrollController.animateTo(
-              0,
-              duration: Duration(seconds: 2),
-              curve: Curves.easeOutQuint
-            );
-          },
+    return SliverAppHeader(
+      title: 'Settings',
+      subTitle: 'You can update your account settings here',
+      onScrollToTop: () {
+        _scrollController.animateTo(
+          0,
+          duration: Duration(seconds: 2),
+          curve: Curves.easeOutQuint
         );
       },
     );
@@ -365,24 +375,6 @@ class _AccountState extends State<Account> {
   }
 
   Widget body() {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await checkAuth();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
-  }
-
-  Widget bodyListContent() {
     return SliverList(
       delegate: SliverChildListDelegate([
         accountSettings(),
