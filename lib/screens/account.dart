@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -15,6 +16,7 @@ import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/push_notifications.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Account extends StatefulWidget {
   @override
@@ -27,11 +29,16 @@ class _AccountState extends State<Account> {
   bool isLoadingImageURL  = false;
   bool isThemeAuto        = true;
 
+  bool isNameAvailable = false;
+  bool isCheckingName = false;
+  String nameErrorMessage = '';
+  Timer nameTimer;
+
   String avatarUrl      = '';
-  String displayName    = '';
+  String newUserName    = '';
   String email          = '';
   String imageUrl       = '';
-  String oldDisplayName = '';
+  String currentUserName = '';
   String selectedLang   = 'English';
 
   Brightness brightness;
@@ -44,7 +51,9 @@ class _AccountState extends State<Account> {
   initState() {
     super.initState();
 
+    getLocalLang();
     checkAuth();
+
     isThemeAuto = appLocalStorage.getAutoBrightness();
     currentBrightness = DynamicTheme.of(context).brightness;
   }
@@ -80,6 +89,8 @@ class _AccountState extends State<Account> {
                       beginY: 50.0,
                       child: inputDisplayName(isUserConnected),
                     ),
+
+                    Padding(padding: const EdgeInsets.only(top: 20.0)),
 
                     FadeInY(
                       delay: 2.5,
@@ -218,53 +229,16 @@ class _AccountState extends State<Account> {
   Widget appBar() {
     return Observer(
       builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
-            children: <Widget>[
-              FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      _scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'Settings',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () => FluroRouter.router.pop(context),
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-            ],
-          ),
+        return SliverAppHeader(
+          title: 'Settings',
+          subTitle: 'You can update your account settings here',
+          onScrollToTop: () {
+            _scrollController.animateTo(
+              0,
+              duration: Duration(seconds: 2),
+              curve: Curves.easeOutQuint
+            );
+          },
         );
       },
     );
@@ -447,23 +421,39 @@ class _AccountState extends State<Account> {
           }
         );
       },
-      child: Opacity(
-        opacity: .7,
-        child: SizedBox(
-          width: 250.0,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 15.0),
-                child: Icon(Icons.alternate_email),
-              ),
+      child: SizedBox(
+        width: 250.0,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Icon(Icons.alternate_email),
+                ),
 
-              Text(
-                email,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+                Opacity(
+                  opacity: .7,
+                  child: Text(
+                    'Email',
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35.0),
+                  child: Text(
+                    email,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -516,69 +506,211 @@ class _AccountState extends State<Account> {
       );
     }
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: 250.0,
-            child: TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.person_outline),
-                labelText: oldDisplayName.isEmpty ? 'Display name' : oldDisplayName,
-              ),
-              readOnly: !isUserConnected,
-              keyboardType: TextInputType.text,
-              onChanged: (value) {
-                setState(() {
-                  displayName = value;
-                });
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Display name cannot be empty.';
-                }
+    return FlatButton(
+      onPressed: () {
+        showUpdateNameDialog();
+      },
+      child: SizedBox(
+        width: 250.0,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Icon(Icons.person_outline),
+                ),
 
-                return null;
-              },
+                Opacity(
+                  opacity: .7,
+                  child: Text(
+                    'Username',
+                  ),
+                ),
+              ],
             ),
-          ),
 
-          if (displayName.length > 0 && displayName != oldDisplayName && isUserConnected)
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: IconButton(
-                onPressed: () => updateDisplayName(),
-                icon: Icon(Icons.save, color: Colors.green,),
-              ),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35.0),
+                  child: Text(
+                    currentUserName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget langSelect() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: DropdownButton<String>(
-        elevation: 3,
-        value: selectedLang,
-        onChanged: (String newValue) {
-          setState(() {
-            selectedLang = newValue;
-          });
+  Future showUpdateNameDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, childSetState) {
+            return AlertDialog(
+              title: Text(
+                'Update name',
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.person_outline),
+                        labelText: currentUserName.isEmpty ? 'Display name' : currentUserName,
+                      ),
+                      keyboardType: TextInputType.text,
+                      onChanged: (value) async {
+                        childSetState(() {
+                          newUserName = value;
+                          isCheckingName = true;
+                        });
 
-          updateLang();
-        },
-        items: ['English', 'Français']
-          .map((String value) {
-            return DropdownMenuItem(
-              value: value,
-              child: Text(value,)
+                        if (nameTimer != null) {
+                          nameTimer.cancel();
+                          nameTimer = null;
+                        }
+
+                        nameTimer = Timer(
+                          1.seconds,
+                          () async {
+                            isNameAvailable = await checkNameAvailability(newUserName);
+
+                            if (!isNameAvailable) {
+                              childSetState(() {
+                                isCheckingName = false;
+                                nameErrorMessage = 'This name is not available';
+                              });
+
+                              return;
+                            }
+
+                            childSetState(() {
+                              isCheckingName = false;
+                              nameErrorMessage = '';
+                            });
+                          }
+                        );
+                      },
+                    ),
+
+                    if (isCheckingName)
+                      Container(
+                        width: 230.0,
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: LinearProgressIndicator(),
+                      ),
+
+                    if (nameErrorMessage.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0, top: 5.0),
+                        child: Text(
+                          nameErrorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    childSetState(() {
+                      isCheckingName = false;
+                      nameErrorMessage = '';
+                    });
+
+                    FluroRouter.router.pop(context);
+                  },
+                  child: Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  onPressed: isNameAvailable ? () {
+                    FluroRouter.router.pop(context);
+                    updateUserName();
+                  } : null,
+                  child: Text('UPDATE'),
+                ),
+              ],
             );
-          })
-          .toList(),
+          },
+        );
+      }
+    );
+  }
+
+  Widget langSelect() {
+    return Container(
+      width: 250.0,
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Icon(Icons.person_outline),
+              ),
+
+              Opacity(
+                opacity: .7,
+                child: Text(
+                  'Language',
+                ),
+              ),
+            ],
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 35.0),
+            child: Row(
+              children: <Widget>[
+                DropdownButton<String>(
+                  elevation: 3,
+                  value: selectedLang,
+                  isDense: true,
+                  style: TextStyle(
+                    color: stateColors.foreground,
+                    fontFamily: 'Comfortaa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      selectedLang = newValue;
+                    });
+
+                    updateLang();
+                  },
+                  items: ['English', 'Français']
+                    .map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value,)
+                      );
+                    })
+                    .toList(),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -778,7 +910,6 @@ class _AccountState extends State<Account> {
           isLoadingLang = false;
         });
 
-        getLocalLang();
         return;
       }
 
@@ -788,19 +919,19 @@ class _AccountState extends State<Account> {
         .get();
 
       final data = user.data;
-      final String imageUrl = data['urls']['image'];
+
+      avatarUrl = data['urls']['image'];
+      currentUserName = data['name'] ?? '';
+
+      userState.setUserName(currentUserName);
 
       setState(() {
-        oldDisplayName = userAuth.displayName ?? '';
-        avatarUrl = imageUrl;
         email = userAuth.email ?? '';
 
         isLoadingImageURL = false;
         isLoadingName = false;
         isLoadingLang = false;
       });
-
-      fetchLang();
 
     } catch (error) {
       debugPrint(error.toString());
@@ -811,14 +942,6 @@ class _AccountState extends State<Account> {
         isLoadingLang = false;
       });
     }
-  }
-
-  void fetchLang() async {
-    final lang = appLocalStorage.getLang();
-
-    setState(() {
-      selectedLang = Language.frontend(lang);
-    });
   }
 
   void getLocalLang() {
@@ -842,35 +965,43 @@ class _AccountState extends State<Account> {
     stateColors.refreshTheme(brightness);
   }
 
-  void updateDisplayName() async {
+  void updateUserName() async {
     setState(() {
       isLoadingName = true;
     });
 
     try {
-      // NOTE: Name unicity ?
-      final userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.displayName = displayName;
+      isNameAvailable = await checkNameAvailability(newUserName);
+
+      if (!isNameAvailable) {
+        setState(() {
+          isLoadingName = false;
+        });
+
+        showSnack(
+          context: context,
+          message: "The name $newUserName is not available",
+          type: SnackType.error,
+        );
+
+        return;
+      }
 
       final userAuth = await userState.userAuth;
       if (userAuth == null) { throw Error(); }
 
-      await userAuth.updateProfile(userUpdateInfo);
-
       await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .updateData({
-            'name': displayName,
-            'nameLowerCase': displayName.toLowerCase(),
-          }
-        );
+      .collection('users')
+      .document(userAuth.uid)
+      .updateData({'name': newUserName});
 
       setState(() {
         isLoadingName = false;
-        oldDisplayName = displayName;
-        displayName = '';
+        currentUserName = newUserName;
+        newUserName = '';
       });
+
+      userState.setUserName(currentUserName);
 
       showSnack(
         context: context,
@@ -887,7 +1018,7 @@ class _AccountState extends State<Account> {
 
       showSnack(
         context: context,
-        message: 'Error while updating your display name. Please try again or contact us.',
+        message: 'Oops, there was an error: ${error.toString()}',
         type: SnackType.error,
       );
     }
@@ -928,7 +1059,7 @@ class _AccountState extends State<Account> {
 
       showSnack(
         context: context,
-        message: 'Error while updating your image URL. Please try again or contact us.',
+        message: 'Oops, there was an error: ${error.toString()}',
         type: SnackType.error,
       );
     }
