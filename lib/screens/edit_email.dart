@@ -83,25 +83,25 @@ class _EditEmailState extends State<EditEmail> {
           child: Column(
             children: <Widget>[
               FadeInY(
-                delay: delay + (2.5 * delayStep),
+                delay: delay + (0 * delayStep),
                 beginY: beginY,
                 child: emailButton(),
               ),
 
               FadeInY(
-                delay: delay + (3 * delayStep),
+                delay: delay + (.5 * delayStep),
                 beginY: beginY,
                 child: emailInput(width: inputWidth),
               ),
 
               FadeInY(
-                delay: delay + (4 * delayStep),
+                delay: delay + (1 * delayStep),
                 beginY: beginY,
                 child: passwordInput(width: inputWidth),
               ),
 
               FadeInY(
-                delay: delay + (5 * delayStep),
+                delay: delay + (2 * delayStep),
                 beginY: beginY,
                 child: validationButton(),
               ),
