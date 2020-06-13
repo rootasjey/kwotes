@@ -112,10 +112,8 @@ async function checkNameUpdate(params: DataUpdateParams) {
   if (exactMatch.length > 0) { // not good
     payload['name'] = beforeData.name;
 
-  } else { // it's ok
-    if (beforeData.nameLowerCase !== afterData.nameLowerCase) {
-      payload['nameLowerCase'] = (afterData.name as string).toLowerCase();
-    }
+  } else if (beforeData.nameLowerCase !== nameLowerCase) { // it's ok
+    payload['nameLowerCase'] = (afterData.name as string).toLowerCase();
   }
 
   return payload;
