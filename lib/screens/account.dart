@@ -457,19 +457,21 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget ppCard({String imageName}) {
-    return SizedBox(
-      width: 130.0,
-      height: 130.0,
-      child: Card(
-        elevation: 2.0,
+  Widget ppCard({String imageName,}) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      width: 90.0,
+      child: Material(
+        elevation: 3.0,
+        color: stateColors.softBackground,
         shape: avatarUrl.replaceFirst('local:', '') == imageName ?
-          RoundedRectangleBorder(
+          CircleBorder(
             side: BorderSide(
               color: stateColors.primary,
             )
           ) :
-          RoundedRectangleBorder(),
+          CircleBorder(),
+        clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -834,58 +836,43 @@ class _AccountState extends State<Account> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              'Cancel',
+              'CANCEL',
             ),
           ),
         ),
       ],
-      content: SizedBox(
-        height: 260.0,
-        child: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    bottom: 40.0,
-                  ),
-                  child: Opacity(
-                    opacity: .6,
-                    child: SizedBox(
-                      width: 300.0,
-                      child: Text(
-                        'You can choose another profile picture',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    )
-                  ),
-                ),
-              ),
-
-              SizedBox(
-                height: 150.0,
-                width: MediaQuery.of(context).size.width,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  children: <Widget>[
-                    FadeInX(child: ppCard(imageName: 'boy'), delay: 1, beginX: 100.0,),
-                    FadeInX(child: ppCard(imageName: 'employee'), delay: 1.2, beginX: 100.0,),
-                    FadeInX(child: ppCard(imageName: 'lady'), delay: 1.3, beginX: 100.0,),
-                    FadeInX(child: ppCard(imageName: 'user'), delay: 1.4, beginX: 100.0,),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+      title: Text(
+        'Choose a profile picture',
+        style: TextStyle(
+          fontSize: 15.0,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      )
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 20.0,
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Divider(thickness: 2.0,),
+            SizedBox(
+              height: 150.0,
+              width: MediaQuery.of(context).size.width,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                children: <Widget>[
+                  FadeInX(child: ppCard(imageName: 'boy',), delay: 1, beginX: 50.0,),
+                  FadeInX(child: ppCard(imageName: 'employee'), delay: 1.2, beginX: 50.0,),
+                  FadeInX(child: ppCard(imageName: 'lady'), delay: 1.3, beginX: 50.0,),
+                  FadeInX(child: ppCard(imageName: 'user',), delay: 1.4, beginX: 50.0,),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
