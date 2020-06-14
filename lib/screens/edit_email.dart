@@ -165,10 +165,12 @@ class _EditEmailState extends State<EditEmail> {
                     ),
                   ),
                   children: <Widget>[
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 25.0,
                         right: 25.0,
+                        top: 10.0,
                       ),
                       child: Text(
                         currentEmail,
@@ -383,12 +385,29 @@ class _EditEmailState extends State<EditEmail> {
       onPressed: () {
         updateEmail();
       },
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Text(
-          'UPDATE EMAIL',
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
         ),
-      )
+      ),
+      child: SizedBox(
+        width: 240.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Text(
+                'UPDATE',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
