@@ -324,7 +324,7 @@ class _EditPasswordState extends State<EditPassword> {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 
