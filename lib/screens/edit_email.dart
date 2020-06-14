@@ -233,7 +233,7 @@ class _EditEmailState extends State<EditEmail> {
         children: <Widget>[
           TextFormField(
             autofocus: true,
-            onFieldSubmitted: (_) => passwordNode.nextFocus(),
+            onFieldSubmitted: (_) => passwordNode.requestFocus(),
             decoration: InputDecoration(
               icon: Icon(Icons.email),
               labelText: 'Email',
