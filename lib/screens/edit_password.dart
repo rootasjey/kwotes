@@ -139,23 +139,32 @@ class _EditPasswordState extends State<EditPassword> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  contentPadding: const EdgeInsets.all(25.0),
+                  // contentPadding: const EdgeInsets.all(25.0),
                   children: <Widget>[
-                    Text(
-                      "Choose at least a 6-characters password length",
-                      style: TextStyle(
-                      ),
-                    ),
-                    Padding(padding: const EdgeInsets.only(top: 15.0)),
-                    Text(
-                      "Choose a pass-phrase",
-                      style: TextStyle(
-                      ),
-                    ),
-                    Padding(padding: const EdgeInsets.only(top: 15.0)),
-                    Text(
-                      "Use special characters (e.g. *!#?)",
-                      style: TextStyle(
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Choose at least a 6-characters password length",
+                            style: TextStyle(
+                            ),
+                          ),
+                          Padding(padding: const EdgeInsets.only(top: 15.0)),
+                          Text(
+                            "Choose a pass-phrase",
+                            style: TextStyle(
+                            ),
+                          ),
+                          Padding(padding: const EdgeInsets.only(top: 15.0)),
+                          Text(
+                            "Use special characters (e.g. *!#?)",
+                            style: TextStyle(
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

@@ -558,11 +558,15 @@ class _AccountState extends State<Account> {
                 'Update username',
                 style: TextStyle(
                   fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               content: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
+                    Divider(),
+                    Padding(padding: const EdgeInsets.only(top: 8.0)),
+
                     TextFormField(
                       autofocus: true,
                       decoration: InputDecoration(
@@ -638,7 +642,8 @@ class _AccountState extends State<Account> {
                   child: Text(
                     'CANCEL',
                     style: TextStyle(
-                      color: Colors.red,
+                      color: stateColors.foreground.withOpacity(.6),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -647,7 +652,13 @@ class _AccountState extends State<Account> {
                     FluroRouter.router.pop(context);
                     updateUserName();
                   } : null,
-                  child: Text('UPDATE'),
+                  child: Text(
+                    'UPDATE',
+                    style: TextStyle(
+                      color: stateColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             );
