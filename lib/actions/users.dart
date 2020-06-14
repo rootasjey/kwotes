@@ -3,11 +3,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-bool checkEmailFormat(String email) {
-  return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}")
-    .hasMatch(email);
-}
-
 Future<bool> checkEmailAvailability(String email) async {
   try {
     final callable = CloudFunctions(
@@ -27,6 +22,11 @@ Future<bool> checkEmailAvailability(String email) async {
   }
 }
 
+bool checkEmailFormat(String email) {
+  return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}")
+    .hasMatch(email);
+}
+
 Future<bool> checkNameAvailability(String username) async {
   try {
     final callable = CloudFunctions(
@@ -44,4 +44,9 @@ Future<bool> checkNameAvailability(String username) async {
     debugPrint(error.toString());
     return false;
   }
+}
+
+bool checkUsernameFormat(String username) {
+  final str = RegExp("[a-zA-Z0-9_]{3,}").stringMatch(username);
+  return username == str;
 }
