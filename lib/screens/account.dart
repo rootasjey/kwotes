@@ -243,7 +243,7 @@ class _AccountState extends State<Account> {
   Widget appBar() {
     return SliverAppHeader(
       title: 'Settings',
-      subTitle: 'You can update your account settings here',
+      subTitle: 'View & update your account settings',
       onScrollToTop: () {
         _scrollController.animateTo(
           0,
@@ -338,7 +338,8 @@ class _AccountState extends State<Account> {
                   'Notifications',
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -717,6 +718,7 @@ class _AccountState extends State<Account> {
 
   Widget themeSwitcher() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         FadeInY(
           delay: 2.0,
@@ -728,7 +730,8 @@ class _AccountState extends State<Account> {
                 Text(
                   'Theme',
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -740,16 +743,18 @@ class _AccountState extends State<Account> {
           delay: 3.0,
           beginY: 50.0,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15.0,
-              vertical: 30.0,
+            padding: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              top: 15.0,
+              bottom: 30.0,
             ),
             child: Opacity(
               opacity: .6,
               child: Text(
-                'You can let the application to switch automatically depending of the time of the day or choose manually a theme',
+                themeDescription(),
                 style: TextStyle(
-                  fontSize: 17.0,
+                  fontSize: 15.0,
                 ),
               ),
             ),
@@ -963,6 +968,12 @@ class _AccountState extends State<Account> {
 
     DynamicTheme.of(context).setBrightness(brightness);
     stateColors.refreshTheme(brightness);
+  }
+
+  String themeDescription() {
+    return isThemeAuto ?
+      'It will be chosen accordingly to the time of the day' :
+      'Choose your theme manually';
   }
 
   void updateUserName() async {
