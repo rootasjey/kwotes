@@ -582,6 +582,19 @@ class _AccountState extends State<Account> {
                           isCheckingName = true;
                         });
 
+                        final isWellFormatted = checkUsernameFormat(newUserName);
+
+                        if (!isWellFormatted) {
+                          childSetState(() {
+                            isCheckingName = false;
+                            nameErrorMessage = newUserName.length < 3 ?
+                              'Please use at least 3 characters' :
+                              'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
+                          });
+
+                          return;
+                        }
+
                         if (nameTimer != null) {
                           nameTimer.cancel();
                           nameTimer = null;
