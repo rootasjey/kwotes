@@ -364,6 +364,7 @@ class DeleteAccountState extends State<DeleteAccount> {
       await userAuth.delete();
 
       userState.signOut();
+      userState.setUserName('');
       appLocalStorage.clearUserAuthData();
 
       setState(() {
