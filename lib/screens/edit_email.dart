@@ -52,7 +52,7 @@ class _EditEmailState extends State<EditEmail> {
         slivers: <Widget>[
           SliverAppHeader(
             title: 'Update email',
-            subTitle: 'If your old email is outdated',
+            subTitle: 'If your email is outdated',
           ),
           body(),
         ],
@@ -333,7 +333,7 @@ class _EditEmailState extends State<EditEmail> {
             focusNode: passwordNode,
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline),
-              labelText: 'Current password',
+              labelText: 'Password',
             ),
             obscureText: true,
             onChanged: (value) {
