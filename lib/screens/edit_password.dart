@@ -294,6 +294,9 @@ class _EditPasswordState extends State<EditPassword> {
       },
       color: stateColors.primary,
       shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
+        ),
       ),
       child: SizedBox(
         width: 240.0,
@@ -301,7 +304,7 @@ class _EditPasswordState extends State<EditPassword> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(18.0),
               child: Text(
                 'UPDATE',
                 style: TextStyle(
