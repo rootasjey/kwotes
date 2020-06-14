@@ -271,7 +271,7 @@ class _SignupState extends State<Signup> {
         if (emailErrorMessage.isNotEmpty)
           emailInputError(),
 
-        usernameInput(),
+        nameInput(),
 
         if (isCheckingName)
           nameProgress(),
@@ -294,29 +294,7 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget nameInputError() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 8.0,
-        left: 40.0,
-      ),
-      child: Text(
-        nameErrorMessage,
-        style: TextStyle(
-          color: Colors.red.shade300,
-        )
-      ),
-    );
-  }
-
-  Widget nameProgress() {
-    return Container(
-      padding: const EdgeInsets.only(left: 40.0,),
-      child: LinearProgressIndicator(),
-    );
-  }
-
-  Widget usernameInput() {
+  Widget nameInput() {
     return FadeInY(
       delay: 1.0,
       beginY: 50.0,
@@ -333,11 +311,23 @@ class _SignupState extends State<Signup> {
               ),
               textInputAction: TextInputAction.next,
               onChanged: (value) async {
-                username = value;
-
                 setState(() {
+                  username = value;
                   isCheckingName = true;
                 });
+
+                final isWellFormatted = checkUsernameFormat(username);
+
+                if (!isWellFormatted) {
+                  setState(() {
+                    isCheckingName = false;
+                    nameErrorMessage = username.length < 3 ?
+                      'Please use at least 3 characters' :
+                      'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
+                  });
+
+                  return;
+                }
 
                 if (nameTimer != null) {
                   nameTimer.cancel();
@@ -377,6 +367,28 @@ class _SignupState extends State<Signup> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget nameInputError() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+        left: 40.0,
+      ),
+      child: Text(
+        nameErrorMessage,
+        style: TextStyle(
+          color: Colors.red.shade300,
+        )
+      ),
+    );
+  }
+
+  Widget nameProgress() {
+    return Container(
+      padding: const EdgeInsets.only(left: 40.0,),
+      child: LinearProgressIndicator(),
     );
   }
 
@@ -652,6 +664,16 @@ class _SignupState extends State<Signup> {
   }
 
   bool valuesChecks() {
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      showSnack(
+        context: context,
+        message: "Password cannot be empty",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
     if (confirmPassword != password) {
       showSnack(
         context: context,
@@ -672,10 +694,22 @@ class _SignupState extends State<Signup> {
       return false;
     }
 
-    if (password.isEmpty || confirmPassword.isEmpty) {
+    if (!checkEmailFormat(email)) {
       showSnack(
         context: context,
-        message: "Password cannot be empty",
+        message: "The value specified is not a valid email",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    if (!checkUsernameFormat(username)) {
+      showSnack(
+        context: context,
+        message: username.length < 3 ?
+          'Please use at least 3 characters' :
+          'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)',
         type: SnackType.error,
       );
 
