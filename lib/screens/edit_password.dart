@@ -317,6 +317,7 @@ class _EditPasswordState extends State<EditPassword> {
               child: Text(
                 'UPDATE',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),

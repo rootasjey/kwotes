@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/router/route_names.dart';
@@ -318,8 +319,11 @@ class _SigninState extends State<Signin> {
         padding: const EdgeInsets.only(top: 80.0),
         child: RaisedButton(
           onPressed: () => signIn(),
+          color: stateColors.primary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(7.0),
+            ),
           ),
           child: Container(
             width: 250.0,
@@ -330,13 +334,14 @@ class _SigninState extends State<Signin> {
                 Text(
                   'SIGN IN',
                   style: TextStyle(
+                    color: Colors.white,
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
-                  child: Icon(Icons.arrow_forward),
+                  child: Icon(Icons.arrow_forward, color: Colors.white,),
                 )
               ],
             ),

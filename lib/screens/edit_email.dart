@@ -382,9 +382,7 @@ class _EditEmailState extends State<EditEmail> {
   Widget validationButton() {
     return RaisedButton(
       color: stateColors.primary,
-      onPressed: () {
-        updateEmail();
-      },
+      onPressed: () => updateEmail(),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(7.0),
@@ -400,6 +398,7 @@ class _EditEmailState extends State<EditEmail> {
               child: Text(
                 'UPDATE',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),
