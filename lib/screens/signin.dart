@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/state/user_state.dart';
@@ -369,7 +370,33 @@ class _SigninState extends State<Signin> {
     }
   }
 
+  bool inputValuesOk() {
+    if (!checkEmailFormat(email)) {
+      showSnack(
+        context: context,
+        message: "The value specified is not a valid email",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    if (password.isEmpty) {
+      showSnack(
+        context: context,
+        message: "Password cannot be empty",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
   void signIn() async {
+    if (!inputValuesOk()) { return; }
+
     setState(() {
       isSigningIn = true;
     });
