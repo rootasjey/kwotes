@@ -206,8 +206,16 @@ class _AccountState extends State<Account> {
                       child: Card(
                         elevation: 4.0,
                         child: InkWell(
-                          onTap: () {
-                            FluroRouter.router.navigateTo(context, DeleteAccountRoute);
+                          onTap: () async {
+                            await FluroRouter.router.navigateTo(context, DeleteAccountRoute);
+
+                            if (!userState.isUserConnected) {
+                              FluroRouter.router.navigateTo(
+                                context,
+                                DashboardRoute,
+                                replace: true,
+                              );
+                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
