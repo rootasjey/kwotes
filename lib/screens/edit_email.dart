@@ -437,7 +437,7 @@ class _EditEmailState extends State<EditEmail> {
   }
 
   void updateEmail() async {
-    if (!valuesCheck()) { return; }
+    if (!inputValuesOk()) { return; }
 
     setState(() {
       isUpdating = true;
@@ -513,7 +513,7 @@ class _EditEmailState extends State<EditEmail> {
     return await checkEmailAvailability(email);
   }
 
-  bool valuesCheck() {
+  bool inputValuesOk() {
     if (email.isEmpty) {
       showSnack(
         context: context,

@@ -566,7 +566,7 @@ class _SignupState extends State<Signup> {
   }
 
   void createAccount() async {
-    if (!valuesChecks()) { return; }
+    if (!inputValuesOk()) { return; }
 
     setState(() {
       isSigningUp = true;
@@ -685,7 +685,7 @@ class _SignupState extends State<Signup> {
     return isEmailOk && isNameOk;
   }
 
-  bool valuesChecks() {
+  bool inputValuesOk() {
     if (password.isEmpty || confirmPassword.isEmpty) {
       showSnack(
         context: context,
