@@ -397,17 +397,25 @@ class _DashboardState extends State<Dashboard> {
             onPressed: () {
               FluroRouter.router.navigateTo(context, SigninRoute);
             },
-            elevation: 4.0,
             color: stateColors.softBackground,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: stateColors.primary, width: 2.0),
-              borderRadius: BorderRadius.circular(2.0),
+              // side: BorderSide(color: stateColors.primary, width: 2.0),
+              borderRadius: BorderRadius.circular(7.0),
             ),
-            child: Padding(
+            child: Container(
+              width: 230.0,
               padding: EdgeInsets.all(15.0),
-              child: Text(
-                'Sign In',
-                style: TextStyle(fontSize: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'SIGN IN',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
