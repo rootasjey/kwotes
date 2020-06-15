@@ -101,6 +101,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                     FluroRouter.router.navigateTo(
                       context,
                       HomeRoute,
+                      replace: true,
                     );
                   },
                   child: Opacity(
@@ -229,9 +230,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   Widget validationButton() {
     return RaisedButton(
-      onPressed: () {
-        deleteAccount();
-      },
+      onPressed: () => deleteAccount(),
       color: stateColors.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -248,6 +247,7 @@ class DeleteAccountState extends State<DeleteAccount> {
               child: Text(
                 'DELETE ACCOUNT',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),

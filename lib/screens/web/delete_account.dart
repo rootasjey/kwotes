@@ -119,6 +119,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
               FluroRouter.router.navigateTo(
                 context,
                 RootRoute,
+                replace: true,
               );
             },
             child: Opacity(
