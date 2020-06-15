@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/router/route_names.dart';
@@ -64,10 +63,26 @@ class _SignupState extends State<Signup> {
         children: [
           Column(
             children: <Widget>[
-              NavBackHeader(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: IconButton(
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                      },
+                      icon: Icon(Icons.arrow_back),
+                    ),
+                  ),
+                ],
+              ),
 
               Padding(
-                padding: const EdgeInsets.only(bottom: 300.0),
+                padding: const EdgeInsets.only(
+                  top: 60.0,
+                  bottom: 300.0,
+                ),
                 child: SizedBox(
                   width: 300.0,
                   child: body(),
@@ -475,12 +490,19 @@ class _SignupState extends State<Signup> {
             onPressed: () {
               createAccount();
             },
-            child: Padding(
+            child: Container(
+              width: 250.0,
               padding: const EdgeInsets.all(15.0),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('SIGN UP'),
+                  Text(
+                    'SIGN UP',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: Icon(Icons.arrow_forward),

@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/router/route_names.dart';
@@ -42,10 +41,26 @@ class _SigninState extends State<Signin> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              NavBackHeader(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: IconButton(
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                      },
+                      icon: Icon(Icons.arrow_back),
+                    ),
+                  ),
+                ],
+              ),
 
               Padding(
-                padding: const EdgeInsets.only(bottom: 300.0),
+                padding: const EdgeInsets.only(
+                  top: 60.0,
+                  bottom: 300.0,
+                ),
                 child: SizedBox(
                   width: 320.0,
                   child: body(),
@@ -137,7 +152,7 @@ class _SigninState extends State<Signin> {
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(
-          top: 60.0,
+          top: 80.0,
           left: 15.0,
         ),
         child: Column(
@@ -300,18 +315,23 @@ class _SigninState extends State<Signin> {
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: RaisedButton(
-          onPressed: () {
-            signIn();
-          },
+          onPressed: () => signIn(),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5.0)),
           ),
-          child: Padding(
+          child: Container(
+            width: 250.0,
             padding: const EdgeInsets.all(15.0),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('SIGN IN'),
+                Text(
+                  'SIGN IN',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Icon(Icons.arrow_forward),
