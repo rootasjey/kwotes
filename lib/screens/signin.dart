@@ -6,6 +6,7 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/utils/snack.dart';
 
 class Signin extends StatefulWidget {
   @override
@@ -368,20 +369,6 @@ class _SigninState extends State<Signin> {
     }
   }
 
-  void showSnack({String message}) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      )
-    );
-  }
-
   void signIn() async {
     setState(() {
       isSigningIn = true;
@@ -392,7 +379,12 @@ class _SigninState extends State<Signin> {
         .signInWithEmailAndPassword(email: email, password: password);
 
       if (authResult.user == null) {
-        showSnack(message: 'The password is incorrect or the user does not exists.');
+        showSnack(
+          context: context,
+          type: SnackType.error,
+          message: 'The password is incorrect or the user does not exists.',
+        );
+
         return;
       }
 
@@ -418,6 +410,8 @@ class _SigninState extends State<Signin> {
       debugPrint(error.toString());
 
       showSnack(
+        context: context,
+        type: SnackType.error,
         message: 'The password is incorrect or the user does not exists.',
       );
 
