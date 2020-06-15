@@ -127,18 +127,18 @@ class _AccountState extends State<Account> {
         }
 
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                FadeInY(
-                  delay: 2.5,
-                  beginY: 50.0,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 45.0),
-                    child: langSelect(),
-                  ),
+            FadeInY(
+              delay: 2.5,
+              beginY: 50.0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 15.0,
+                  horizontal: 30.0,
                 ),
-              ],
+                child: langSelect(),
+              ),
             ),
           ],
         );
