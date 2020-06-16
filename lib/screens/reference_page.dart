@@ -12,7 +12,6 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
-import 'package:memorare/utils/animation.dart';
 
 class ReferencePage extends StatefulWidget {
   final String id;
