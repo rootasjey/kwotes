@@ -10,7 +10,7 @@
   <img src="./screenshots/ooc-letterhead-envelope.png" title="out of context home web" />
 </p>
 
-# Information
+# Status
 
 ![Website](https://img.shields.io/website?down_color=lightgrey&down_message=offline&style=for-the-badge&up_color=blue&up_message=online&url=https%3A%2F%2Fwww.outofcontext.app)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/outofcontextapp/app?style=for-the-badge)
