@@ -67,7 +67,7 @@ class _DiscoverState extends State<Discover> {
                   child: Opacity(
                     opacity: .6,
                     child: Text(
-                      'Uncover new authors and references.',
+                      'New authors and references.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
