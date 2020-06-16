@@ -1,14 +1,42 @@
 <p align="middle">
-  <img src="./assets/images/app-icon-512.png" title="outofcontext icon" width="254"/>
+  <img src="./assets/images/app-icon-512.png" title="outofcontext icon" width="200"/>
 </p>
 
 <h1 align="middle">Out Of Context</h1>
 
-<p align="middle">Outside the frame</p>
+<p align="middle">One quote delivered to you each day</p>
 
 <p align="middle">
-  <img src="./screenshots/ooc-scenario-1.gif" title="outofcontext home web" />
+  <img src="./screenshots/ooc-letterhead-envelope.png" title="out of context home web" />
 </p>
+
+# Information
+
+![Website](https://img.shields.io/website?down_color=lightgrey&down_message=offline&style=for-the-badge&up_color=blue&up_message=online&url=https%3A%2F%2Fwww.outofcontext.app)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/outofcontextapp/app?style=for-the-badge)
+![GitHub Release Date](https://img.shields.io/github/release-date/outofcontextapp/app?style=for-the-badge)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/outofcontextapp/app/latest?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/outofcontextapp/app?style=for-the-badge)
+
+# Download
+
+<span style="margin-right: 10px;">
+  <a href="https://apps.apple.com/us/app/out-of-context/id1516117110?ls=1">
+    <img src="./screenshots/app_store_badge.png" title="Ppp Store" width="200"/>
+  </a>
+</span>
+
+<span style="margin-right: 10px;">
+  <a href="https://play.google.com/store/apps/details?id=com.outofcontext.app">
+    <img src="./screenshots/google_play_badge.png" title="Play Store" width="200"/>
+  </a>
+</span>
+
+<span>
+  <a href="https://www.outofcontext.app">
+    <img src="./screenshots/web_badge.png" title="Web" width="200"/>
+  </a>
+</span>
 
 # Quickstart
 
@@ -49,7 +77,7 @@ git clone https://github.com/memorare/mobile.git
 flutter run lib/main.dart
 ```
 
-# Contibute
+# Contribute
 
 You won't be able to contribute to this project at the moment without explicit authorization due to the early development stage and the missing developers section.
 
@@ -69,6 +97,7 @@ class _DashboardState extends State<Dashboard> {
   FirebaseUser userAuth;
   bool canManage = false;
   // ...
+}
 ```
 
 * Class methods in priority order:
@@ -85,20 +114,16 @@ Please read the [LICENSE](./LICENSE) for more information.
 
 Please [ask](mailto:github@outofcontext.app) if you have any doubt.
 
+# Privacy Policy
+
+You can find the platform's privacy policy at: [https://tos.outofcontext.app](https://tos.outofcontext.app)
+
+# Help Center
+
+You can find the help center at: [https://help.outofcontext.app](https://help.outofcontext.app)
+
 # Screenshots
 
-## Web
-
---------------------------------
-![Web home](./screenshots/home_quote.png)
---------------------------------
-![Web discover](./screenshots/home_discover.png)
---------------------------------
-![Web discover](./screenshots/home_topics.png)
---------------------------------
-
-## Mobile
-
-| Quotidian | Discover | Topics |
-| :---------: | :------: | :---------: |
-| <img src="./screenshots/quotidian_mobile_dark.png" title="outofcontext quotidian mobile" width="200" /> | <img src="./screenshots/discover_mobile_dark.png" title="outofcontext quotidian mobile" width="200" /> |  <img src="./screenshots/topics_mobile_dark.png" title="outofcontext quotidian mobile" width="200" /> |
+<p align="middle">
+  <img src="./screenshots/ooc-mobile.png" title="out of context mobile" />
+</p>
