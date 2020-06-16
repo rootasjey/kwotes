@@ -7,20 +7,25 @@ class LinkCard extends StatelessWidget {
   final String imageUrl;
   final double width;
   final double height;
+  final EdgeInsets padding;
 
   LinkCard({
     this.name,
     this.url,
     this.imageUrl = 'assets/images/world-globe.png',
-    this.width = 60.0,
-    this.height = 60.0,
+    this.width = 50.0,
+    this.height = 50.0,
+    this.padding = EdgeInsets.zero,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150.0,
+    return Container(
+      width: 160.0,
+      height: 190.0,
+      padding: this.padding,
       child: Card(
+        elevation: 2.0,
         child: InkWell(
           onTap: url != null ? () => launch(url) : null,
           child: Column(
@@ -33,12 +38,12 @@ class LinkCard extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 12.0),
                 child: Text(
                   name,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 18.0,
                   )
                 ),
               ),

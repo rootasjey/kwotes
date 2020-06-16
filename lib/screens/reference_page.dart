@@ -267,7 +267,7 @@ class ReferencePageState extends State<ReferencePage> {
           if (urls.wikipedia.isNotEmpty)
             Observer(
               builder: (_) {
-                return refLinkCard(
+                return customLinkCard(
                   name: 'Wikipedia',
                   url: urls.wikipedia,
                   imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
@@ -276,56 +276,56 @@ class ReferencePageState extends State<ReferencePage> {
             ),
 
           if (urls.website.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Website',
               url: urls.website,
               imageUrl: 'assets/images/world-globe.png',
             ),
 
           if (urls.amazon.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Amazon',
               url: urls.amazon,
               imageUrl: 'assets/images/amazon.png',
             ),
 
           if (urls.facebook.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Facebook',
               url: urls.facebook,
               imageUrl: 'assets/images/facebook.png',
             ),
 
           if (urls.netflix.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Netflix',
               url: urls.netflix,
               imageUrl: 'assets/images/netflix.png',
             ),
 
           if (urls.primeVideo.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Prime Video',
               url: urls.primeVideo,
               imageUrl: 'assets/images/prime-video.png',
             ),
 
           if (urls.twitch.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Twitch',
               url: urls.twitch,
               imageUrl: 'assets/images/twitch.png',
             ),
 
           if (urls.twitter.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Twitter',
               url: urls.twitter,
               imageUrl: 'assets/images/twitter.png',
             ),
 
           if (urls.youtube.isNotEmpty)
-            refLinkCard(
+            customLinkCard(
               name: 'Youtube',
               url: urls.youtube,
               imageUrl: 'assets/images/youtube.png',
@@ -392,14 +392,26 @@ class ReferencePageState extends State<ReferencePage> {
               );
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 60.0,
-                horizontal: 10.0,
+              padding: const EdgeInsets.only(
+                top: 10.0,
+                bottom: 100.0,
               ),
-              child: createHeroQuoteAnimation(
-                isMobile: true,
-                quote: quote,
-                screenWidth: MediaQuery.of(context).size.width,
+              child: FlatButton(
+                onPressed: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    QuotePageRoute.replaceFirst(':id', quote.id)
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    quote.name,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -410,7 +422,7 @@ class ReferencePageState extends State<ReferencePage> {
     return Padding(padding: EdgeInsets.zero);
   }
 
-  Widget refLinkCard({
+  Widget customLinkCard({
     String name,
     String url,
     String imageUrl,
@@ -425,6 +437,7 @@ class ReferencePageState extends State<ReferencePage> {
         name: name,
         url: url,
         imageUrl: imageUrl,
+        padding: const EdgeInsets.only(right: 17.0),
       ),
     );
   }

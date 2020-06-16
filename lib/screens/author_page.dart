@@ -252,6 +252,7 @@ class _AuthorPageState extends State<AuthorPage> {
         name: name,
         url: url,
         imageUrl: imageUrl,
+        padding: const EdgeInsets.only(right: 17.0),
       ),
     );
   }
@@ -365,7 +366,7 @@ class _AuthorPageState extends State<AuthorPage> {
           Padding(
             padding: width > 400.0 ?
               const EdgeInsets.symmetric(vertical: 100.0) :
-              const EdgeInsets.only(bottom: 100.0),
+              const EdgeInsets.only(bottom: 100.0, top: 10.0,),
             child: FlatButton(
               onPressed: () {
                 FluroRouter.router.navigateTo(
@@ -461,7 +462,7 @@ class _AuthorPageState extends State<AuthorPage> {
         ),
 
         Container(
-          height: 370.0,
+          height: 200.0,
           padding: width > 400.0 ?
             const EdgeInsets.symmetric(vertical: 80.0) :
             EdgeInsets.zero,
