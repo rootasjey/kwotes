@@ -45,7 +45,7 @@ abstract class UserStateBase with Store {
 
   String get name { return _name; }
 
-  /// To use chen user's data has changed.
+  /// Use on sign out / user's data has changed.
   void clearAuthCache() {
     _userAuth = null;
   }

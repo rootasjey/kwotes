@@ -269,7 +269,7 @@ class About extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 120.0),
             child: Text(
-              'Whow is behind this project?',
+              'Who is behind this project?',
               style: TextStyle(
                 fontSize: 30.0,
                 fontWeight: FontWeight.bold,
