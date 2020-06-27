@@ -1,11 +1,11 @@
 {
-    "name": "mobile",
-    "short_name": "mobile",
+    "name": "Out Of Context",
+    "short_name": "ooc",
     "start_url": ".",
     "display": "minimal-ui",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "One quote each day.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
