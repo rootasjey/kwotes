@@ -53,8 +53,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       primaryTypeController.text    = AddQuoteInputs.reference.type.primary;
       secondaryTypeController.text  = AddQuoteInputs.reference.type.secondary;
       summaryController.text        = AddQuoteInputs.reference.summary;
-      twitterUrlController.text     = AddQuoteInputs.reference.summary;
-      twitchUrlController.text      = AddQuoteInputs.reference.summary;
+      twitterUrlController.text     = AddQuoteInputs.reference.urls.twitter;
+      twitchUrlController.text      = AddQuoteInputs.reference.urls.twitch;
       websiteUrlController.text     = AddQuoteInputs.reference.urls.website;
       wikiUrlController.text        = AddQuoteInputs.reference.urls.wikipedia;
       youtubeUrlController.text     = AddQuoteInputs.reference.urls.youtube;
