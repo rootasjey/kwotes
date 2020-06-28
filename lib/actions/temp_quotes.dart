@@ -239,7 +239,6 @@ List<Map<String, dynamic>> formatReferences() {
   return references;
 }
 
-
 Future saveExistingTempQuote({
   List<String> comments,
   List<Map<String, dynamic>> references,
