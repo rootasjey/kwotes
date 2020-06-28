@@ -63,21 +63,21 @@ mixin _$UserState on UserStateBase, Store {
     }, _$isUserConnectedAtom, name: '${_$isUserConnectedAtom.name}_set');
   }
 
-  final _$_nameAtom = Atom(name: 'UserStateBase._name');
+  final _$usernameAtom = Atom(name: 'UserStateBase.username');
 
   @override
-  String get _name {
-    _$_nameAtom.context.enforceReadPolicy(_$_nameAtom);
-    _$_nameAtom.reportObserved();
-    return super._name;
+  String get username {
+    _$usernameAtom.context.enforceReadPolicy(_$usernameAtom);
+    _$usernameAtom.reportObserved();
+    return super.username;
   }
 
   @override
-  set _name(String value) {
-    _$_nameAtom.context.conditionallyRunInAction(() {
-      super._name = value;
-      _$_nameAtom.reportChanged();
-    }, _$_nameAtom, name: '${_$_nameAtom.name}_set');
+  set username(String value) {
+    _$usernameAtom.context.conditionallyRunInAction(() {
+      super.username = value;
+      _$usernameAtom.reportChanged();
+    }, _$usernameAtom, name: '${_$usernameAtom.name}_set');
   }
 
   final _$updatedFavAtAtom = Atom(name: 'UserStateBase.updatedFavAt');
@@ -141,10 +141,10 @@ mixin _$UserState on UserStateBase, Store {
   }
 
   @override
-  void setUserName(String newName) {
+  void setUserName(String name) {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
-      return super.setUserName(newName);
+      return super.setUserName(name);
     } finally {
       _$UserStateBaseActionController.endAction(_$actionInfo);
     }
@@ -173,7 +173,7 @@ mixin _$UserState on UserStateBase, Store {
   @override
   String toString() {
     final string =
-        'lang: ${lang.toString()},isQuotidianNotifActive: ${isQuotidianNotifActive.toString()},isUserConnected: ${isUserConnected.toString()},updatedFavAt: ${updatedFavAt.toString()}';
+        'lang: ${lang.toString()},isQuotidianNotifActive: ${isQuotidianNotifActive.toString()},isUserConnected: ${isUserConnected.toString()},username: ${username.toString()},updatedFavAt: ${updatedFavAt.toString()}';
     return '{$string}';
   }
 }
