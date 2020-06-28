@@ -39,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         children: <Widget>[
           Observer(builder: (context) {
-            String userName = userState.name;
+            String userName = userState.username;
             String greetings = 'Welcome back $userName!';
 
             if (userName == null || userName.isEmpty) {
