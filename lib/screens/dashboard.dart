@@ -414,12 +414,11 @@ class _DashboardState extends State<Dashboard> {
             },
             color: stateColors.softBackground,
             shape: RoundedRectangleBorder(
-              // side: BorderSide(color: stateColors.primary, width: 2.0),
               borderRadius: BorderRadius.circular(7.0),
             ),
             child: Container(
               width: 230.0,
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
