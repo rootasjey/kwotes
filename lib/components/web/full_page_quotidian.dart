@@ -257,10 +257,25 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               );
             },
             color: Colors.black12,
-            child: Padding(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(7.0),
+              ),
+            ),
+            child: Container(
+              width: 200.0,
               padding: const EdgeInsets.all(15.0),
-              child: Text(
-                'Sign in',
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'SIGN IN',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           )
