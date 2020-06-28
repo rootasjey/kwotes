@@ -31,17 +31,16 @@ class AppState extends State<App> {
   void initState() {
     super.initState();
 
-    appLocalStorage.initialize()
-      .then((value) {
-        final savedLang = appLocalStorage.getLang();
-        userState.setLang(savedLang);
+    appLocalStorage.initialize().then((value) {
+      final savedLang = appLocalStorage.getLang();
+      userState.setLang(savedLang);
 
-        autoLogin();
+      autoLogin();
 
-        setState(() {
-          isReady = true;
-        });
+      setState(() {
+        isReady = true;
       });
+    });
 
     appTopicsColors.fetchTopicsColors();
   }
@@ -79,17 +78,20 @@ class AppState extends State<App> {
     try {
       final credentials = appLocalStorage.getCredentials();
 
-      if (credentials == null) { return; }
+      if (credentials == null) {
+        return;
+      }
 
       final email = credentials['email'];
       final password = credentials['password'];
 
-      if ((email == null || email.isEmpty) || (password == null || password.isEmpty)) {
+      if ((email == null || email.isEmpty) ||
+          (password == null || password.isEmpty)) {
         return;
       }
 
       final authResult = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(email: email, password: password);
 
       if (authResult.user == null) {
         return;
@@ -97,7 +99,6 @@ class AppState extends State<App> {
 
       appLocalStorage.setUserName(authResult.user.displayName);
       userState.setUserConnected();
-
     } catch (error) {
       debugPrint(error.toString());
     }
