@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -12,8 +13,6 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
@@ -307,139 +306,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     });
   }
 
-  Future<Author> createOrGetAuthor(TempQuote tempQuote) async {
-    final author = tempQuote.author;
-
-    // Anonymous author
-    if (author.name.isEmpty) {
-      final anonymousSnap = await Firestore.instance
-        .collection('authors')
-        .where('name', isEqualTo: 'Anonymous')
-        .getDocuments();
-
-      if (anonymousSnap.documents.isEmpty) {
-        throw ErrorDescription('Document not found for Anonymous author.');
-      }
-
-      final firstDoc = anonymousSnap.documents.first;
-
-      return Author(
-        id: firstDoc.documentID,
-        name: 'Anonymous',
-      );
-    }
-
-    if (author.id.isNotEmpty) {
-      return Author(
-        id: author.id,
-        name: author.name,
-      );
-    }
-
-    final existingSnapshot = await Firestore.instance
-      .collection('authors')
-      .where('name', isEqualTo: author.name)
-      .getDocuments();
-
-    if (existingSnapshot.documents.isNotEmpty) {
-      final existingAuthor = existingSnapshot.documents.first;
-      final data = existingAuthor.data;
-
-      return Author(
-        id: existingAuthor.documentID,
-        name: data['name'],
-      );
-    }
-
-    final newAuthor = await Firestore.instance
-      .collection('authors')
-      .add({
-        'job'         : author.job,
-        'jobLang'     : {},
-        'name'        : author.name,
-        'summary'     : author.summary,
-        'summaryLang' : {},
-        'updatedAt'   : DateTime.now(),
-        'urls'        : {
-          'affiliate' : author.urls.affiliate,
-          'image'     : author.urls.image,
-          'website'   : author.urls.website,
-          'wikipedia' : author.urls.wikipedia,
-        }
-      });
-
-    return Author(
-      id: newAuthor.documentID,
-      name: author.name,
-    );
-  }
-
-  Future<Reference> createOrGetReference(TempQuote tempQuote) async {
-    if (tempQuote.references.length == 0) {
-      return Reference();
-    }
-
-    final reference = tempQuote.references.first;
-
-    if (reference.id.isNotEmpty) {
-      return Reference(
-        id: reference.id,
-        name: reference.name,
-      );
-    }
-
-    final existingSnapshot = await Firestore.instance
-      .collection('references')
-      .where('name', isEqualTo: reference.name)
-      .getDocuments();
-
-    if (existingSnapshot.documents.isNotEmpty) {
-      final existingRef = existingSnapshot.documents.first;
-      final data = existingRef.data;
-
-      return Reference(
-        id: existingRef.documentID,
-        name: data['name'],
-      );
-    }
-
-    final newReference = await Firestore.instance
-      .collection('references')
-      .add({
-        'createdAt' : DateTime.now(),
-        'lang'      : reference.lang,
-        'linkedRefs': [],
-        'name'      : reference.name,
-        'summary'   : reference.summary,
-        'type'      : {
-          'primary'   : reference.type.primary,
-          'secondary' : reference.type.secondary,
-        },
-        'updatedAt' : DateTime.now(),
-        'urls'      : {
-          'affiliate' : reference.urls.affiliate,
-          'image'     : reference.urls.image,
-          'website'   : reference.urls.website,
-          'wikipedia' : reference.urls.wikipedia,
-        },
-      });
-
-    return Reference(
-      id: newReference.documentID,
-      name: reference.name,
-    );
-  }
-
-  Map<String, dynamic> createTopicsMap(TempQuote tempQuote) {
-    final Map<String, dynamic> topicsMap = {};
-
-      tempQuote.topics.forEach((topic) {
-        topicsMap[topic] = true;
-      });
-
-    return topicsMap;
-  }
-
   void deleteAction(TempQuote tempQuote) async {
     int index = tempQuotes.indexOf(tempQuote);
 
@@ -571,81 +437,24 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       tempQuotes.remove(tempQuote);
     });
 
-    try {
-      // 1.Get user (for uid)
-      final userAuth = await userState.userAuth;
+    final userAuth = await userState.userAuth;
 
-      // 2.Create or get author if any
-      final author = await createOrGetAuthor(tempQuote);
+    final isOk = await validateTempQuote(
+      tempQuote: tempQuote,
+      uid: userAuth.uid,
+    );
 
-      // 3.Create or get reference if any
-      final reference = await createOrGetReference(tempQuote);
-      final referencesArray = [];
+    if (isOk) { return; }
 
-      if (reference.id.isNotEmpty) {
-        referencesArray.add({
-          'id': reference.id,
-          'name': reference.name,
-        });
-      }
+    setState(() {
+      tempQuotes.insert(index, tempQuote);
+    });
 
-      // 4.Create topics map
-      final topics = createTopicsMap(tempQuote);
-
-      // 5.Format data and add new quote
-      final docQuote = await Firestore.instance
-        .collection('quotes')
-        .add({
-          'author'        : {
-            'id'          : author.id,
-            'name'        : author.name,
-          },
-          'createdAt'     : DateTime.now(),
-          'lang'          : tempQuote.lang,
-          'links'         : [],
-          'mainReference' : {
-            'id'  : reference.id,
-            'name': reference.name,
-          },
-          'name'          : tempQuote.name,
-          'references'    : referencesArray,
-          'region'        : tempQuote.region,
-          'stats': {
-            'likes'       : 0,
-            'shares'      : 0,
-          },
-          'topics'        : topics,
-          'updatedAt'     : DateTime.now(),
-          'user': {
-            'id': userAuth.uid,
-          }
-        });
-
-      // 6.Create comment if any
-      await createComments(
-        quoteId: docQuote.documentID,
-        tempQuote: tempQuote,
-      );
-
-      // 7.Delete temp quote
-      await Firestore.instance
-        .collection('tempquotes')
-        .document(tempQuote.id)
-        .delete();
-
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        tempQuotes.insert(index, tempQuote);
-      });
-
-      showSnack(
-        context: context,
-        message: "Couldn't validate the temporary quote. Details: ${error.toString()}",
-        type: SnackType.error,
-      );
-    }
+    showSnack(
+      context: context,
+      message: "Couldn't validate your temporary quote.",
+      type: SnackType.error,
+    );
   }
 
   void getSavedLangAndOrder() {
