@@ -12,7 +12,7 @@ class SliverAppHeader extends StatelessWidget {
   final String subTitle;
   final String title;
 
-  final double widthLimit = 500.0;
+  final double widthLimit = 600.0;
 
   SliverAppHeader({
     this.title,
