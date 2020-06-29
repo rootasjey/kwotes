@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/components/error_container.dart';
@@ -8,10 +7,13 @@ import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
@@ -22,14 +24,14 @@ class AdminQuotes extends StatefulWidget {
 }
 
 class AdminQuotesState extends State<AdminQuotes> {
-  bool canManage      = false;
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  String lang         = 'en';
-  int limit           = 30;
-  bool descending     = true;
+  bool canManage = false;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  String lang = 'en';
+  int limit = 30;
+  bool descending = true;
 
   List<Quote> quotes = [];
   ScrollController scrollController = ScrollController();
@@ -40,7 +42,7 @@ class AdminQuotesState extends State<AdminQuotes> {
   initState() {
     super.initState();
     getSavedLangAndOrder();
-    fetch();
+    checkAndFetch();
   }
 
   @override
@@ -52,122 +54,64 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
-            children: <Widget>[
-              FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (quotes.length == 0) { return; }
+    return SliverAppHeader(
+      title: 'All published',
+      rightButton: OrderLangButton(
+        descending: descending,
+        lang: lang,
+        onLangChanged: (String newLang) {
+          appLocalStorage.setPageLang(
+            lang: newLang,
+            pageRoute: QuotesRoute,
+          );
 
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'All published',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+          setState(() {
+            lang = newLang;
+          });
 
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: OrderLangButton(
-                  descending: descending,
-                  lang: lang,
-                  onLangChanged: (String newLang) {
-                    appLocalStorage.setPageLang(
-                      lang: newLang,
-                      pageRoute: QuotesRoute,
-                    );
+          fetch();
+        },
+        onOrderChanged: (bool order) {
+          appLocalStorage.setPageOrder(
+            descending: order,
+            pageRoute: QuotesRoute,
+          );
 
-                    setState(() {
-                      lang = newLang;
-                    });
+          setState(() {
+            descending = order;
+          });
 
-                    fetch();
-                  },
-                  onOrderChanged: (bool order) {
-                    appLocalStorage.setPageOrder(
-                      descending: order,
-                      pageRoute: QuotesRoute,
-                    );
-
-                    setState(() {
-                      descending = order;
-                    });
-
-                    fetch();
-                  },
-                ),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+          fetch();
+        },
+      ),
     );
   }
 
@@ -175,12 +119,11 @@ class AdminQuotesState extends State<AdminQuotes> {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
-            ),
-          ]
-        ),
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: LoadingAnimation(),
+          ),
+        ]),
       );
     }
 
@@ -200,29 +143,48 @@ class AdminQuotesState extends State<AdminQuotes> {
     if (quotes.length == 0) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.sentiment_neutral,
-                    size: 120.0,
-                    color: Color(0xFFFF005C),
-                  ),
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.sentiment_neutral,
+                  size: 120.0,
+                  color: Color(0xFFFF005C),
                 ),
-                title: "You've no quote in validation at this moment",
-                subtitle: 'They will appear after you propose a new quote',
-                onRefresh: () => fetch(),
               ),
+              title: "You've no quote in validation at this moment",
+              subtitle: 'They will appear after you propose a new quote',
+              onRefresh: () => fetch(),
             ),
-          ]
-        ),
+          ),
+        ]),
       );
     }
 
-    return sliverQuotesList();
+    return SliverLayoutBuilder(
+      builder: (context, constrains) {
+        if (constrains.crossAxisExtent < 600.0) {
+          // return sliverQuotesList();
+          return SliverPadding(
+            padding: const EdgeInsets.only(top: 80.0,),
+            sliver: sliverQuotesList(),
+          );
+
+        } else {
+          return SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 80.0,
+              left: 10.0,
+              right: 10.0,
+            ),
+            sliver: sliverGrid(),
+          );
+        }
+      },
+    );
   }
 
   Widget sliverQuotesList() {
@@ -236,13 +198,15 @@ class AdminQuotesState extends State<AdminQuotes> {
             delay: index * 1.0,
             beginY: 50.0,
             child: InkWell(
-              onTap: () => FluroRouter.router.navigateTo(context, QuotePageRoute.replaceFirst(':id', quote.id)),
+              onTap: () => FluroRouter.router.navigateTo(
+                  context, QuotePageRoute.replaceFirst(':id', quote.id)),
               onLongPress: () => showQuoteSheet(quote: quote),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(top: 20.0),),
-
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
@@ -252,20 +216,67 @@ class AdminQuotesState extends State<AdminQuotes> {
                       ),
                     ),
                   ),
-
                   Center(
                     child: IconButton(
                       onPressed: () => showQuoteSheet(quote: quote),
                       icon: Icon(
                         Icons.more_horiz,
-                        color: topicColor != null ?
-                        Color(topicColor.decimal) : stateColors.primary,
+                        color: topicColor != null
+                            ? Color(topicColor.decimal)
+                            : stateColors.primary,
                       ),
                     ),
                   ),
-
-                  Padding(padding: const EdgeInsets.only(top: 10.0),),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                  ),
                   Divider(),
+                ],
+              ),
+            ),
+          );
+        },
+        childCount: quotes.length,
+      ),
+    );
+  }
+
+  Widget sliverGrid() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final quote = quotes.elementAt(index);
+          final topicColor = appTopicsColors.find(quote.topics.first);
+
+          return Container(
+            width: 250.0,
+            height: 250.0,
+            // padding: const EdgeInsets.all(10.0),
+            child: QuoteCardGridItem(
+              quote: quote,
+              popupMenuButton: PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_horiz,
+                  color: Color(topicColor.decimal),
+                ),
+                onSelected: (value) {
+                  if (value == 'quotidian') {
+                    quotidianAction(quote);
+                    return;
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                      value: 'quotidian',
+                      child: ListTile(
+                        leading: Icon(Icons.add),
+                        title: Text('Add to quotidians'),
+                      )),
                 ],
               ),
             ),
@@ -298,6 +309,44 @@ class AdminQuotesState extends State<AdminQuotes> {
     );
   }
 
+  void checkAndFetch() async {
+    final isUserConnected = await isAuthOk();
+
+    if (!isUserConnected) {
+      FluroRouter.router.navigateTo(context, SigninRoute);
+      return;
+    }
+
+    fetch();
+  }
+
+  Future<bool> isAuthOk() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth != null) {
+        return true;
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+
+      return false;
+    } catch (error) {
+      debugPrint(error.toString());
+      setState(() {
+        isLoading = false;
+      });
+
+      return false;
+    }
+  }
+
   void deleteAction(Quote quote) async {
     int index = quotes.indexOf(quote);
 
@@ -326,11 +375,11 @@ class AdminQuotesState extends State<AdminQuotes> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('lang', isEqualTo: lang)
-        .orderBy('createdAt', descending: descending)
-        .limit(30)
-        .getDocuments();
+          .collection('quotes')
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -354,7 +403,6 @@ class AdminQuotesState extends State<AdminQuotes> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -365,17 +413,19 @@ class AdminQuotesState extends State<AdminQuotes> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
     isLoadingMore = true;
 
     try {
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('lang', isEqualTo: lang)
-        .orderBy('createdAt', descending: descending)
-        .startAfterDocument(lastDoc)
-        .limit(30)
-        .getDocuments();
+          .collection('quotes')
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -399,7 +449,6 @@ class AdminQuotesState extends State<AdminQuotes> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -416,65 +465,61 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   void showQuoteSheet({Quote quote}) {
     showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    tooltip: 'Delete',
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      deleteAction(quote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.delete_outline,
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 60.0,
+            ),
+            child: Wrap(
+              spacing: 30.0,
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    IconButton(
+                      iconSize: 40.0,
+                      tooltip: 'Delete',
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                        deleteAction(quote);
+                      },
+                      icon: Opacity(
+                        opacity: .6,
+                        child: Icon(
+                          Icons.delete_outline,
+                        ),
                       ),
                     ),
-                  ),
-
-                  Text(
-                    'Delete',
-                  ),
-                ],
-              ),
-
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      quotidianAction(quote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.star,
+                    Text(
+                      'Delete',
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    IconButton(
+                      iconSize: 40.0,
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                        quotidianAction(quote);
+                      },
+                      icon: Opacity(
+                        opacity: .6,
+                        child: Icon(
+                          Icons.star,
+                        ),
                       ),
                     ),
-                  ),
-
-                  Text(
-                    'Add to quotidians',
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
+                    Text(
+                      'Add to quotidians',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
