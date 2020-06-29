@@ -89,6 +89,25 @@ Future<bool> deleteTempQuote({
   }
 }
 
+Future<bool> deleteTempQuoteAdmin({
+  BuildContext context,
+  TempQuote tempQuote,
+}) async {
+
+  try {
+    await Firestore.instance
+      .collection('tempquotes')
+      .document(tempQuote.id)
+      .delete();
+
+    return true;
+
+  } catch (error) {
+    debugPrint(error.toString());
+    return false;
+  }
+}
+
 
 String getResultMessage({AddQuoteType actionIntent, AddQuoteType actionResult}) {
   if ((actionIntent == actionResult) && actionIntent == AddQuoteType.tempquote) {

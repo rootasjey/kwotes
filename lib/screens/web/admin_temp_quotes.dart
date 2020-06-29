@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/quotes.dart';
+import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -268,25 +269,18 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       tempQuotes.remove(tempQuote);
     });
 
-    try {
-      await Firestore.instance
-          .collection('tempquotes')
-          .document(tempQuote.id)
-          .delete();
-    } catch (error) {
-      debugPrint(error.toString());
+    final isOk = await deleteTempQuoteAdmin();
+    if (isOk) { return; }
 
-      setState(() {
-        tempQuotes.insert(index, tempQuote);
-      });
+    setState(() {
+      tempQuotes.insert(index, tempQuote);
+    });
 
-      showSnack(
-        context: context,
-        message:
-            "Couldn't delete the temporary quote. Details: ${error.toString()}",
-        type: SnackType.error,
-      );
-    }
+    showSnack(
+      context: context,
+      message: "Couldn't delete the temporary quote",
+      type: SnackType.error,
+    );
   }
 
   void editAction(TempQuote tempQuote) async {
