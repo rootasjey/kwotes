@@ -73,9 +73,6 @@ class _EditEmailState extends State<EditEmail> {
   }
 
   Widget idleView() {
-    final width = MediaQuery.of(context).size.width;
-    final inputWidth = width < 500.0 ? 260.0 : width;
-
     return SliverList(
       delegate: SliverChildListDelegate([
         SizedBox(
@@ -91,13 +88,13 @@ class _EditEmailState extends State<EditEmail> {
               FadeInY(
                 delay: delay + (.5 * delayStep),
                 beginY: beginY,
-                child: emailInput(width: inputWidth),
+                child: emailInput(),
               ),
 
               FadeInY(
                 delay: delay + (1 * delayStep),
                 beginY: beginY,
-                child: passwordInput(width: inputWidth),
+                child: passwordInput(),
               ),
 
               FadeInY(
@@ -226,9 +223,9 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget emailInput({double width}) {
+  Widget emailInput() {
     return Container(
-      width: width ?? 400.0,
+      width: 350.0,
       padding: const EdgeInsets.only(top: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,9 +321,9 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget passwordInput({double width}) {
+  Widget passwordInput() {
     return Container(
-      width: width ?? 400.0,
+      width: 350.0,
       padding: EdgeInsets.only(top: 30.0, bottom: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
