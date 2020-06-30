@@ -120,21 +120,12 @@ class _AccountState extends State<Account> {
           );
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            FadeInY(
-              delay: 2.5,
-              beginY: 50.0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15.0,
-                  horizontal: 30.0,
-                ),
-                child: langSelect(),
-              ),
-            ),
-          ],
+        return FadeInY(
+          delay: 2.5,
+          beginY: 50.0,
+          child: Center(
+            child: langSelect(isAlone: true),
+          ),
         );
       },
     );
@@ -256,8 +247,20 @@ class _AccountState extends State<Account> {
       child: Column(
         children: <Widget>[
           themeSwitcher(),
+
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 50.0,
+            )
+          ),
+
           backgroundTasks(),
-          Padding(padding: const EdgeInsets.only(bottom: 100.0)),
+
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 100.0,
+            )
+          ),
         ],
       ),
     );
@@ -377,7 +380,7 @@ class _AccountState extends State<Account> {
         accountSettings(),
         Divider(
           thickness: 1.0,
-          height: 60.0,
+          height: 150.0,
         ),
         appSettings(),
       ]),
@@ -465,13 +468,12 @@ class _AccountState extends State<Account> {
         elevation: 3.0,
         color: stateColors.softBackground,
         shape: avatarUrl.replaceFirst('local:', '') == imageName
-          ? CircleBorder(
-              side: BorderSide(
+            ? CircleBorder(
+                side: BorderSide(
                 width: 2.0,
                 color: stateColors.primary,
-              )
-            )
-          : CircleBorder(),
+              ))
+            : CircleBorder(),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () {
@@ -571,7 +573,6 @@ class _AccountState extends State<Account> {
                     Divider(
                       thickness: 1.0,
                     ),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -580,76 +581,78 @@ class _AccountState extends State<Account> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.person_outline),
-                            labelText: currentUserName.isEmpty
-                              ? 'Display name'
-                              : currentUserName,
-                          ),
-                          keyboardType: TextInputType.text,
-                          onChanged: (value) async {
-                            childSetState(() {
-                              newUserName = value;
-                              isCheckingName = true;
-                            });
-
-                            final isWellFormatted =
-                                checkUsernameFormat(newUserName);
-
-                            if (!isWellFormatted) {
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.person_outline),
+                              labelText: currentUserName.isEmpty
+                                  ? 'Display name'
+                                  : currentUserName,
+                            ),
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) async {
                               childSetState(() {
-                                isCheckingName = false;
-                                nameErrorMessage = newUserName.length < 3
-                                    ? 'Please use at least 3 characters'
-                                    : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
+                                newUserName = value;
+                                isCheckingName = true;
                               });
 
-                              return;
-                            }
+                              final isWellFormatted =
+                                  checkUsernameFormat(newUserName);
 
-                            if (nameTimer != null) {
-                              nameTimer.cancel();
-                              nameTimer = null;
-                            }
-
-                            nameTimer = Timer(1.seconds, () async {
-                              isNameAvailable =
-                                  await checkNameAvailability(newUserName);
-
-                              if (!isNameAvailable) {
+                              if (!isWellFormatted) {
                                 childSetState(() {
                                   isCheckingName = false;
-                                  nameErrorMessage = 'This name is not available';
+                                  nameErrorMessage = newUserName.length < 3
+                                      ? 'Please use at least 3 characters'
+                                      : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
                                 });
 
                                 return;
                               }
 
-                              childSetState(() {
-                                isCheckingName = false;
-                                nameErrorMessage = '';
+                              if (nameTimer != null) {
+                                nameTimer.cancel();
+                                nameTimer = null;
+                              }
+
+                              nameTimer = Timer(1.seconds, () async {
+                                isNameAvailable =
+                                    await checkNameAvailability(newUserName);
+
+                                if (!isNameAvailable) {
+                                  childSetState(() {
+                                    isCheckingName = false;
+                                    nameErrorMessage =
+                                        'This name is not available';
+                                  });
+
+                                  return;
+                                }
+
+                                childSetState(() {
+                                  isCheckingName = false;
+                                  nameErrorMessage = '';
+                                });
                               });
-                            });
-                          },
-                        ),
-                        if (isCheckingName)
-                          Container(
-                            width: 230.0,
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: LinearProgressIndicator(),
+                            },
                           ),
-                        if (nameErrorMessage.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 40.0, top: 5.0),
-                            child: Text(
-                              nameErrorMessage,
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 15.0,
+                          if (isCheckingName)
+                            Container(
+                              width: 230.0,
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: LinearProgressIndicator(),
+                            ),
+                          if (nameErrorMessage.isNotEmpty)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40.0, top: 5.0),
+                              child: Text(
+                                nameErrorMessage,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -682,11 +685,11 @@ class _AccountState extends State<Account> {
                 ),
                 RaisedButton(
                   onPressed: isNameAvailable
-                    ? () {
-                        FluroRouter.router.pop(context);
-                        updateUsername();
-                      }
-                    : null,
+                      ? () {
+                          FluroRouter.router.pop(context);
+                          updateUsername();
+                        }
+                      : null,
                   color: stateColors.primary,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -709,13 +712,14 @@ class _AccountState extends State<Account> {
       });
   }
 
-  Widget langSelect() {
-    return Container(
-      width: 250.0,
+  Widget langSelect({bool isAlone = false}) {
+    final child = Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: 10.0),
@@ -729,9 +733,11 @@ class _AccountState extends State<Account> {
               ),
             ],
           ),
+
           Padding(
             padding: const EdgeInsets.only(left: 35.0),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 DropdownButton<String>(
                   elevation: 3,
@@ -763,6 +769,13 @@ class _AccountState extends State<Account> {
         ],
       ),
     );
+
+    return isAlone ?
+      child :
+      SizedBox(
+        width: 250.0,
+        child: child,
+      );
   }
 
   Widget themeSwitcher() {
