@@ -36,7 +36,7 @@ class SliverAppHeader extends StatelessWidget {
             floating: true,
             snap: true,
             backgroundColor: stateColors.softBackground,
-            expandedHeight: 130.0,
+            expandedHeight: 150.0,
             automaticallyImplyLeading: false,
             flexibleSpace: Stack(
               children: <Widget>[
