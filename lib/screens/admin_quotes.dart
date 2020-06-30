@@ -188,57 +188,40 @@ class AdminQuotesState extends State<AdminQuotes> {
     );
   }
 
-  Widget sliverQuotesList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final quote = quotes.elementAt(index);
-          final topicColor = appTopicsColors.find(quote.topics.first);
-
-          return FadeInY(
-            delay: index * 1.0,
-            beginY: 50.0,
-            child: InkWell(
-              onTap: () => FluroRouter.router.navigateTo(
-                  context, QuotePageRoute.replaceFirst(':id', quote.id)),
-              onLongPress: () => showQuoteSheet(quote: quote),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      quote.name,
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: IconButton(
-                      onPressed: () => showQuoteSheet(quote: quote),
-                      icon: Icon(
-                        Icons.more_horiz,
-                        color: topicColor != null
-                            ? Color(topicColor.decimal)
-                            : stateColors.primary,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
-          );
-        },
-        childCount: quotes.length,
+  Widget quotePopupMenuButton({
+    Quote quote,
+    Color color,
+  }) {
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_horiz,
+        color: color,
       ),
+      onSelected: (value) {
+        if (value == 'quotidian') {
+          addQuotidianAction(quote);
+          return;
+        }
+
+        if (value == 'delete') {
+          showDeleteDialog(quote);
+          return;
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+            value: 'quotidian',
+            child: ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Add to quotidians'),
+            )),
+        PopupMenuItem(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete_sweep),
+              title: Text('Delete'),
+            )),
+      ],
     );
   }
 
@@ -257,98 +240,58 @@ class AdminQuotesState extends State<AdminQuotes> {
           return Container(
             width: 250.0,
             height: 250.0,
-            // padding: const EdgeInsets.all(10.0),
             child: QuoteCardGridItem(
               quote: quote,
-              popupMenuButton: PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_horiz,
-                  color: Color(topicColor.decimal),
-                ),
-                onSelected: (value) {
-                  if (value == 'quotidian') {
-                    quotidianAction(quote);
-                    return;
-                  }
+              popupMenuButton: quotePopupMenuButton(
+                quote: quote,
+                color: Color(topicColor.decimal),
+              ),
+            ),
+          );
+        },
+        childCount: quotes.length,
+      ),
+    );
+  }
 
-                  if (value == 'delete') {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SimpleDialog(
-                          title: Text(
-                            'Confirm deletion?',
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 40.0,
-                          ),
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                RaisedButton(
-                                  onPressed: () {
-                                    FluroRouter.router.pop(context);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7.0),
-                                    ),
-                                  ),
-                                  color: stateColors.softBackground,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30.0,
-                                      vertical: 15.0,
-                                    ),
-                                    child: Text('NO'),
-                                  ),
-                                ),
+  Widget sliverQuotesList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final quote = quotes.elementAt(index);
+          final topicColor = appTopicsColors.find(quote.topics.first);
 
-                                Padding(padding: const EdgeInsets.only(left: 15.0)),
-
-                                RaisedButton(
-                                  onPressed: () {
-                                    FluroRouter.router.pop(context);
-                                    deleteAction(quote);
-                                  },
-                                  color: Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7.0),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30.0,
-                                      vertical: 15.0,
-                                    ),
-                                    child: Text('YES'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      });
-
-                    return;
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem(
-                    value: 'quotidian',
-                    child: ListTile(
-                      leading: Icon(Icons.add),
-                      title: Text('Add to quotidians'),
-                    )),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: ListTile(
-                      leading: Icon(Icons.delete_sweep),
-                      title: Text('Delete'),
-                    )),
+          return FadeInY(
+            delay: index * 1.0,
+            beginY: 50.0,
+            child: InkWell(
+              onTap: () => FluroRouter.router.navigateTo(
+                  context, QuotePageRoute.replaceFirst(':id', quote.id)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      quote.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: quotePopupMenuButton(
+                      quote: quote,
+                      color: Color(topicColor.decimal),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                  ),
+                  Divider(),
                 ],
               ),
             ),
@@ -359,7 +302,7 @@ class AdminQuotesState extends State<AdminQuotes> {
     );
   }
 
-  void quotidianAction(Quote quote) async {
+  void addQuotidianAction(Quote quote) async {
     final success = await addToQuotidians(
       quote: quote,
       lang: lang,
@@ -390,33 +333,6 @@ class AdminQuotesState extends State<AdminQuotes> {
     }
 
     fetch();
-  }
-
-  Future<bool> isAuthOk() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      final userAuth = await userState.userAuth;
-
-      if (userAuth != null) {
-        return true;
-      }
-
-      setState(() {
-        isLoading = false;
-      });
-
-      return false;
-    } catch (error) {
-      debugPrint(error.toString());
-      setState(() {
-        isLoading = false;
-      });
-
-      return false;
-    }
   }
 
   void deleteAction(Quote quote) async {
@@ -535,63 +451,102 @@ class AdminQuotesState extends State<AdminQuotes> {
     descending = appLocalStorage.getPageOrder(pageRoute: QuotesRoute);
   }
 
-  void showQuoteSheet({Quote quote}) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 60.0,
-            ),
-            child: Wrap(
-              spacing: 30.0,
-              alignment: WrapAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    IconButton(
-                      iconSize: 40.0,
-                      tooltip: 'Delete',
-                      onPressed: () {
-                        FluroRouter.router.pop(context);
-                        deleteAction(quote);
-                      },
-                      icon: Opacity(
-                        opacity: .6,
-                        child: Icon(
-                          Icons.delete_outline,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'Delete',
-                    ),
-                  ],
+  Future<bool> isAuthOk() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth != null) {
+        return true;
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+
+      return false;
+    } catch (error) {
+      debugPrint(error.toString());
+      setState(() {
+        isLoading = false;
+      });
+
+      return false;
+    }
+  }
+
+  void showDeleteDialog(Quote quote) {
+    showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        title: Text(
+          'Confirm deletion?',
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 40.0,
+        ),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  FluroRouter.router.pop(context);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(3.0),
+                  ),
                 ),
-                Column(
-                  children: <Widget>[
-                    IconButton(
-                      iconSize: 40.0,
-                      onPressed: () {
-                        FluroRouter.router.pop(context);
-                        quotidianAction(quote);
-                      },
-                      icon: Opacity(
-                        opacity: .6,
-                        child: Icon(
-                          Icons.star,
-                        ),
-                      ),
+                color: stateColors.softBackground,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 15.0,
+                  ),
+                  child: Text(
+                    'NO',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      'Add to quotidians',
-                    ),
-                  ],
+                  ),
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+              Padding(padding: const EdgeInsets.only(left: 15.0)),
+              RaisedButton(
+                onPressed: () {
+                  FluroRouter.router.pop(context);
+                  deleteAction(quote);
+                },
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(3.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 15.0,
+                  ),
+                  child: Text(
+                    'YES',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    });
   }
 }
