@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/discover_card.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/types/author.dart';
 import 'package:memorare/types/reference.dart';
 
 List<Reference> _references = [];
-List<Author> _authors = [];
 
 class Discover extends StatefulWidget {
   @override
@@ -22,11 +20,11 @@ class _DiscoverState extends State<Discover> {
   void initState() {
     super.initState();
 
-    if (_authors.length > 0 || _references.length > 0) {
+    if (_references.length > 0) {
       return;
     }
 
-    fetchAuthorsAndReferences();
+    fetch();
   }
 
   @override
@@ -42,7 +40,7 @@ class _DiscoverState extends State<Discover> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              await fetchAuthorsAndReferences();
+              await fetch();
               return null;
             },
             child: ListView(
@@ -102,39 +100,16 @@ class _DiscoverState extends State<Discover> {
           delay: index,
           beginY: 100.0,
           child: DiscoverCard(
-            elevation: 5.0,
-            height: 240.0,
-            id: reference.id,
-            imageUrl: reference.urls.image,
-            name: reference.name,
-            summary: reference.summary,
-            textHeight: 60.0,
-            titleFontSize: 15.0,
-            type: 'reference',
-            width: 170.0,
-          ),
-        )
-      );
-
-      index += 1.0;
-    }
-
-    for (var author in _authors) {
-      cards.add(
-        FadeInY(
-          delay: index,
-          beginY: 100.0,
-          child: DiscoverCard(
-            elevation: 5.0,
-            height: 220.0,
-            id: author.id,
-            imageUrl: author.urls.image,
-            name: author.name,
-            summary: author.summary,
-            textHeight: 60.0,
-            titleFontSize: 15.0,
-            type: 'author',
-            width: 170.0,
+            elevation     : 5.0,
+            height        : 240.0,
+            id            : reference.id,
+            imageUrl      : reference.urls.image,
+            name          : reference.name,
+            summary       : reference.summary,
+            textHeight    : 60.0,
+            titleFontSize : 15.0,
+            type          : 'reference',
+            width         : 170.0,
           ),
         )
       );
@@ -145,8 +120,7 @@ class _DiscoverState extends State<Discover> {
     return cards;
   }
 
-  Future fetchAuthorsAndReferences() async {
-    _authors.clear();
+  Future fetch() async {
     _references.clear();
 
     setState(() {
@@ -157,7 +131,7 @@ class _DiscoverState extends State<Discover> {
       final refsSnapshot = await Firestore.instance
         .collection('references')
         .orderBy('updatedAt', descending: true)
-        .limit(2)
+        .limit(4)
         .getDocuments();
 
       if (refsSnapshot.documents.isNotEmpty) {
@@ -170,31 +144,6 @@ class _DiscoverState extends State<Discover> {
         });
       }
 
-      final authorsSnapshot = await Firestore.instance
-        .collection('authors')
-        .orderBy('updatedAt', descending: true)
-        .limit(4)
-        .getDocuments();
-
-      final snapDocs = authorsSnapshot.documents.sublist(0);
-
-      if (snapDocs.isNotEmpty) {
-        snapDocs
-          .removeWhere((element) {
-            return _references.any((ref) {
-              return ref.name == element.data['name'];
-            });
-          });
-
-        snapDocs.take(2).forEach((doc) {
-          final data = doc.data;
-          data['id'] = doc.documentID;
-
-          final author = Author.fromJSON(data);
-          _authors.add(author);
-        });
-      }
-
       if (!this.mounted) {
         return;
       }
@@ -203,9 +152,8 @@ class _DiscoverState extends State<Discover> {
         isLoading = false;
       });
 
-    } catch (error, stackTrace) {
-      debugPrint('error => $error');
-      debugPrint(stackTrace.toString());
+    } catch (error) {
+      debugPrint(error.toString());
 
       setState(() {
         isLoading = false;
