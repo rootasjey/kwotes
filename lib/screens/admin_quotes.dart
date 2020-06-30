@@ -172,7 +172,7 @@ class AdminQuotesState extends State<AdminQuotes> {
             padding: const EdgeInsets.only(
               top: 80.0,
             ),
-            sliver: sliverQuotesList(),
+            sliver: sliverList(),
           );
         } else {
           return SliverPadding(
@@ -254,7 +254,7 @@ class AdminQuotesState extends State<AdminQuotes> {
     );
   }
 
-  Widget sliverQuotesList() {
+  Widget sliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
