@@ -169,10 +169,11 @@ class AdminQuotesState extends State<AdminQuotes> {
         if (constrains.crossAxisExtent < 600.0) {
           // return sliverQuotesList();
           return SliverPadding(
-            padding: const EdgeInsets.only(top: 80.0,),
+            padding: const EdgeInsets.only(
+              top: 80.0,
+            ),
             sliver: sliverQuotesList(),
           );
-
         } else {
           return SliverPadding(
             padding: const EdgeInsets.only(
@@ -269,14 +270,85 @@ class AdminQuotesState extends State<AdminQuotes> {
                     quotidianAction(quote);
                     return;
                   }
+
+                  if (value == 'delete') {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          title: Text(
+                            'Confirm deletion?',
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 40.0,
+                          ),
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                RaisedButton(
+                                  onPressed: () {
+                                    FluroRouter.router.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(7.0),
+                                    ),
+                                  ),
+                                  color: stateColors.softBackground,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 30.0,
+                                      vertical: 15.0,
+                                    ),
+                                    child: Text('NO'),
+                                  ),
+                                ),
+
+                                Padding(padding: const EdgeInsets.only(left: 15.0)),
+
+                                RaisedButton(
+                                  onPressed: () {
+                                    FluroRouter.router.pop(context);
+                                    deleteAction(quote);
+                                  },
+                                  color: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(7.0),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 30.0,
+                                      vertical: 15.0,
+                                    ),
+                                    child: Text('YES'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      });
+
+                    return;
+                  }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem(
-                      value: 'quotidian',
-                      child: ListTile(
-                        leading: Icon(Icons.add),
-                        title: Text('Add to quotidians'),
-                      )),
+                    value: 'quotidian',
+                    child: ListTile(
+                      leading: Icon(Icons.add),
+                      title: Text('Add to quotidians'),
+                    )),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: ListTile(
+                      leading: Icon(Icons.delete_sweep),
+                      title: Text('Delete'),
+                    )),
                 ],
               ),
             ),
