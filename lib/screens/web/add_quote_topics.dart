@@ -21,8 +21,8 @@ class AddQuoteTopics extends StatefulWidget {
 }
 
 class _AddQuoteTopicsState extends State<AddQuoteTopics> {
-  final beginY    = 100.0;
-  final delay     = 1.0;
+  final beginY = 100.0;
+  final delay = 1.0;
   final delayStep = 1.2;
 
   List<TopicColor> allTopics = [];
@@ -60,7 +60,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               body(),
             ],
           ),
-
           Positioned(
             right: 120.0,
             top: 85.0,
@@ -76,7 +75,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               ),
             ),
           ),
-
           Positioned(
             right: 50.0,
             top: 80.0,
@@ -98,16 +96,12 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             beginY: beginY,
             child: title(),
           ),
-
-          selectedTopics.length == 0 ?
-            emptyTopics() :
-            selectedTopicsSection(),
-
+          selectedTopics.length == 0 ? emptyTopics() : selectedTopicsSection(),
           allTopicsSection(),
-
           AddQuoteNavButtons(
             onPrevPressed: () => FluroRouter.router.pop(context),
-            onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
+            onNextPressed: () =>
+                FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute),
           ),
         ],
       ),
@@ -136,10 +130,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   Widget helpButton() {
     return IconButton(
-      icon: Opacity(
-        opacity: .6,
-        child: Icon(Icons.help)
-      ),
+      icon: Opacity(opacity: .6, child: Icon(Icons.help)),
       iconSize: 40.0,
       onPressed: () {
         showModalBottomSheet(
@@ -162,7 +153,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       ),
                     ),
                   ),
-
                   SizedBox(
                     width: 500.0,
                     child: Opacity(
@@ -192,11 +182,26 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                      },
+                      color: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text('Close'),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
-          }
-        );
+          });
       },
     );
   }
@@ -213,11 +218,12 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             builder: (_, value) {
               return SizedBox(
                 width: value,
-                child: Divider(height: 120.0,),
+                child: Divider(
+                  height: 120.0,
+                ),
               );
             },
           ),
-
           FadeInY(
             beginY: beginY,
             delay: delay + (2 * delayStep),
@@ -231,7 +237,6 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               ),
             ),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: delay + (3 * delayStep),
@@ -249,49 +254,30 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               ),
             ),
           ),
-
           Observer(builder: (context) {
             if (allTopics.length == 0) {
               allTopics.addAll(appTopicsColors.topicsColors);
-
             }
-
-            int index = 0;
 
             return Container(
               width: 600.0,
               padding: const EdgeInsets.symmetric(vertical: 60.0),
               child: Wrap(
+                spacing: 10.0,
+                runSpacing: 10.0,
                 children: allTopics.map<Widget>((topicColor) {
-                  index++;
                   final name = topicColor.name;
-                  final displayName = name.length < 5 ? name : '${name.substring(0, 4)}...';
-                  final fontSize = name.length > 5 ? 15.0 : 17.0;
 
-                  return FadeInY(
-                    beginY: 100.0,
-                    endY: 0.0,
-                    delay: index * 1.0,
-                    child: TopicCardColor(
-                      onColorTap: () {
-                        setState(() {
-                          selectedTopics.add(topicColor);
-                          allTopics.remove(topicColor);
-                        });
+                  return ActionChip(
+                    label: Text(name),
+                    onPressed: () {
+                      setState(() {
+                        selectedTopics.add(topicColor);
+                        allTopics.remove(topicColor);
+                      });
 
-                        AddQuoteInputs.quote.topics.add(topicColor.name);
-                      },
-                      size: 70.0,
-                      elevation: 6.0,
-                      outline: true,
-                      color: Color(topicColor.decimal),
-                      name: name,
-                      displayName: displayName,
-                      style: TextStyle(
-                        fontSize: fontSize,
-                      ),
-                      tooltip: name,
-                    ),
+                      AddQuoteInputs.quote.topics.add(topicColor.name);
+                    },
                   );
                 }).toList(),
               ),
@@ -315,33 +301,32 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               index++;
               final name = topicColor.name;
 
-                return FadeInY(
-                  beginY: 100.0,
-                  endY: 0.0,
-                  delay: index * 1.0,
-                  child: TopicCardColor(
-                    onColorTap: () {
-                      setState(() {
-                        allTopics.add(topicColor);
-                        selectedTopics.remove(topicColor);
-                      });
+              return FadeInY(
+                beginY: 100.0,
+                endY: 0.0,
+                delay: index * 1.0,
+                child: TopicCardColor(
+                  onColorTap: () {
+                    setState(() {
+                      allTopics.add(topicColor);
+                      selectedTopics.remove(topicColor);
+                    });
 
-                      AddQuoteInputs.quote.topics
+                    AddQuoteInputs.quote.topics
                         .removeWhere((element) => element == topicColor.name);
-                    },
-                    size: 100.0,
-                    elevation: 6.0,
-                    color: Color(topicColor.decimal),
-                    name: name,
-                    displayName: name,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
+                  },
+                  size: 100.0,
+                  elevation: 6.0,
+                  color: Color(topicColor.decimal),
+                  name: name,
+                  displayName: name,
+                  style: TextStyle(
+                    fontSize: 20.0,
                   ),
-                );
+                ),
+              );
             }).toList(),
           ),
-
           FadeInY(
             beginY: 50.0,
             child: Padding(
@@ -395,7 +380,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     );
   }
 
-  void keyHandler (RawKeyEvent keyEvent) {
+  void keyHandler(RawKeyEvent keyEvent) {
     if (keyEvent.runtimeType.toString() == 'RawKeyDownEvent') {
       return;
     }
@@ -408,9 +393,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
 
   void populateSelectedTopics() {
     AddQuoteInputs.quote.topics.forEach((topicName) {
-      selectedTopics.add(
-        appTopicsColors.find(topicName)
-      );
+      selectedTopics.add(appTopicsColors.find(topicName));
     });
 
     setState(() {});
