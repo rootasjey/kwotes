@@ -85,9 +85,9 @@ class _EditPasswordState extends State<EditPassword> {
     );
   }
 
-  Widget currentPasswordInput({double width}) {
+  Widget currentPasswordInput() {
     return Container(
-      width: width,
+      width: 400.0,
       padding: const EdgeInsets.only(top: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,6 +123,7 @@ class _EditPasswordState extends State<EditPassword> {
         left: 25.0,
         right: 25.0,
       ),
+      width: 500.0,
       child: Card(
         child: ListTile(
           contentPadding: const EdgeInsets.all(16.0),
@@ -194,9 +195,6 @@ class _EditPasswordState extends State<EditPassword> {
   }
 
   Widget idleView() {
-    final width = MediaQuery.of(context).size.width;
-    final inputWidth = width < 500.0 ? 260.0 : width;
-
     return SliverList(
       delegate: SliverChildListDelegate([
         Column(
@@ -210,13 +208,13 @@ class _EditPasswordState extends State<EditPassword> {
             FadeInY(
               delay: delay + (1 * delayStep),
               beginY: beginY,
-              child: currentPasswordInput(width: inputWidth),
+              child: currentPasswordInput(),
             ),
 
             FadeInY(
               delay: delay + (2 * delayStep),
               beginY: beginY,
-              child: newPasswordInput(width: inputWidth),
+              child: newPasswordInput(),
             ),
 
             FadeInY(
@@ -232,10 +230,13 @@ class _EditPasswordState extends State<EditPassword> {
     );
   }
 
-  Widget newPasswordInput({double width}) {
+  Widget newPasswordInput() {
     return Container(
-      width: width,
-      padding: const EdgeInsets.only(top: 40.0, bottom: 80.0,),
+      width: 400.0,
+      padding: const EdgeInsets.only(
+        top: 40.0,
+        bottom: 120.0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

@@ -5,6 +5,7 @@ import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/signin.dart';
@@ -20,7 +21,6 @@ import 'package:memorare/screens/web/admin_temp_quotes.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/delete_account.dart';
-import 'package:memorare/screens/web/edit_password.dart';
 import 'package:memorare/screens/web/favourites.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
@@ -103,7 +103,7 @@ class WebRouteHandlers {
 
   static Handler editPassword = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(EditPassword()));
+          EditPassword());
 
   static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
