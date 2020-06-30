@@ -18,14 +18,20 @@ class DeleteAccount extends StatefulWidget {
 }
 
 class DeleteAccountState extends State<DeleteAccount> {
-  bool isDeleting   = false;
-  bool isCompleted  = false;
+  bool isDeleting = false;
+  bool isCompleted = false;
 
-  String password   = '';
+  String password = '';
 
-  double beginY     = 100.0;
-  final delay       = 1.0;
-  final delayStep   = 1.2;
+  double beginY = 100.0;
+  final delay = 1.0;
+  final delayStep = 1.2;
+
+  @override
+  initState() {
+    super.initState();
+    checkAuth();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,67 +62,69 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   Widget completedView() {
     return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          padding: const EdgeInsets.all(40.0),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: Icon(
-                  Icons.check_circle_outline,
-                  color: Colors.green.shade300,
-                  size: 80.0,
+        delegate: SliverChildListDelegate([
+      Container(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: Icon(
+                Icons.check_circle_outline,
+                color: Colors.green.shade300,
+                size: 80.0,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 30.0,
+              ),
+              child: Text(
+                'Your account has been successfuly deleted',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0,),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              child: Opacity(
+                opacity: .6,
                 child: Text(
-                  'Your account has been successfuly deleted',
-                  textAlign: TextAlign.center,
+                  'We hope to see you again',
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 15.0,
                   ),
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0,),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 45.0,
+              ),
+              child: FlatButton(
+                onPressed: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    HomeRoute,
+                    replace: true,
+                  );
+                },
                 child: Opacity(
                   opacity: .6,
                   child: Text(
-                    'We hope to see you again',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
+                    'Back home',
                   ),
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 45.0,),
-                child: FlatButton(
-                  onPressed: () {
-                    FluroRouter.router.navigateTo(
-                      context,
-                      HomeRoute,
-                      replace: true,
-                    );
-                  },
-                  child: Opacity(
-                    opacity: .6,
-                    child: Text(
-                      'Back home',
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ])
-    );
+      ),
+    ]));
   }
 
   Widget deletingView() {
@@ -128,7 +136,6 @@ class DeleteAccountState extends State<DeleteAccount> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               CircularProgressIndicator(),
-
               Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: Text(
@@ -167,10 +174,15 @@ class DeleteAccountState extends State<DeleteAccount> {
               FadeInY(
                 delay: delay + (1 * delayStep),
                 beginY: beginY,
-                child: validationButton(),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 60.0),
+                  child: validationButton(),
+                ),
               ),
 
-              Padding(padding: const EdgeInsets.only(bottom: 200.0),),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 200.0),
+              ),
             ],
           ),
         )
@@ -189,8 +201,11 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget passwordInput() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 80.0,),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 80.0,
+      ),
+      width: 500.0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -199,6 +214,7 @@ class DeleteAccountState extends State<DeleteAccount> {
               icon: Icon(Icons.lock_outline),
               labelText: 'Enter your password',
             ),
+            autofocus: true,
             obscureText: true,
             onChanged: (value) {
               password = value;
@@ -231,7 +247,7 @@ class DeleteAccountState extends State<DeleteAccount> {
   Widget validationButton() {
     return RaisedButton(
       onPressed: () => deleteAccount(),
-      color: stateColors.primary,
+      color: Colors.red,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(7.0),
@@ -260,77 +276,112 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget warningCard() {
-    return Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
-        leading: Icon(Icons.warning),
-        title: Opacity(
-          opacity: .6,
-          child: Text(
-            'Are you sure?',
+    return Container(
+      width: 500.0,
+      padding: const EdgeInsets.only(top: 60.0),
+      child: Card(
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 32.0,
+            vertical: 16.0,
           ),
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(
-            "This action is irreversible",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14.0,
-            ),
-          ),
-        ),
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return SimpleDialog(
-                title: Text(
-                  'What happens after?',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+          title: Row(
+            children: <Widget>[
+              Icon(
+                Icons.warning,
+              ),
+
+              Padding(padding: const EdgeInsets.only(left: 30.0)),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Opacity(
+                      opacity: .8,
+                      child: Text(
+                        'Are you sure?',
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'This action is irreversible',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                // contentPadding: const EdgeInsets.all(25.0),
-                children: <Widget>[
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(25.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Your personal data will be deleted",
-                          style: TextStyle(
-                          ),
-                        ),
-                        Padding(padding: const EdgeInsets.only(top: 15.0)),
-                        Text(
-                          "Your published quotes will stay",
-                          style: TextStyle(
-                          ),
-                        ),
-                        Padding(padding: const EdgeInsets.only(top: 15.0)),
-                        Text(
-                          "Your username will (slowly) be dissaciated with the published quotes",
-                          style: TextStyle(
-                          ),
-                        ),
-                      ],
+              ),
+            ],
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleDialog(
+                  title: Text(
+                    'What happens after?',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              );
-            }
-          );
-        },
+                  // contentPadding: const EdgeInsets.all(25.0),
+                  children: <Widget>[
+                    Divider(thickness: 1.0,),
+                    Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Your personal data will be deleted",
+                            style: TextStyle(),
+                          ),
+                          Padding(padding: const EdgeInsets.only(top: 15.0)),
+                          Text(
+                            "Your published quotes will stay",
+                            style: TextStyle(),
+                          ),
+                          Padding(padding: const EdgeInsets.only(top: 15.0)),
+                          Text(
+                            "Your username will (slowly) be dissaciated with the published quotes",
+                            style: TextStyle(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              });
+          },
+        ),
       ),
     );
   }
 
+  void checkAuth() async {
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute);
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+      FluroRouter.router.navigateTo(context, SigninRoute);
+    }
+  }
+
   void deleteAccount() async {
-    if (!inputValuesOk()) { return; }
+    if (!inputValuesOk()) {
+      return;
+    }
 
     setState(() {
       isDeleting = true;
@@ -357,9 +408,9 @@ class DeleteAccountState extends State<DeleteAccount> {
       await PushNotifications.unsubMobileQuotidians(lang: userState.lang);
 
       await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .updateData({'flag': 'delete'});
+          .collection('users')
+          .document(userAuth.uid)
+          .updateData({'flag': 'delete'});
 
       await userAuth.delete();
 
@@ -371,7 +422,6 @@ class DeleteAccountState extends State<DeleteAccount> {
         isDeleting = false;
         isCompleted = true;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
