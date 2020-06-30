@@ -18,7 +18,10 @@ class AddQuoteNavButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 100.0, bottom: 300.0),
+      padding: const EdgeInsets.only(
+        top: 100.0,
+        bottom: 300.0,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -27,14 +30,13 @@ class AddQuoteNavButtons extends StatelessWidget {
             child: FlatButton(
               onPressed: onPrevPressed,
               shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: stateColors.foreground,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(2.0),
+                borderRadius: BorderRadius.circular(7.0),
               ),
               child: Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 15.0,
+                ),
                 child: Text(
                   prevMessage,
                 ),
@@ -43,18 +45,20 @@ class AddQuoteNavButtons extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: FlatButton(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+            ),
+            child: RaisedButton(
               onPressed: onNextPressed,
+              color: stateColors.primary,
               shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: stateColors.primary,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(2.0),
+                borderRadius: BorderRadius.circular(7.0),
               ),
               child: Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 15.0,
+                ),
                 child: Text(
                   nextMessage,
                 ),
