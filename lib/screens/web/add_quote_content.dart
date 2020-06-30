@@ -250,16 +250,13 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
                   Padding(
                     padding: const EdgeInsets.only(top: 100.0),
-                    child: FlatButton(
+                    child: RaisedButton(
                       onPressed: () {
                         FluroRouter.router.pop(context);
                       },
+                      color: Colors.black12,
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: stateColors.foreground,
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(2.0),
+                        borderRadius: BorderRadius.circular(7.0),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(15.0),
@@ -304,7 +301,11 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   Widget quoteNameInput() {
     return Padding(
-      padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 80.0),
+      padding: EdgeInsets.only(
+        left: 40.0,
+        right: 40.0,
+        top: 100.0,
+      ),
       child: TextField(
         maxLines: null,
         autofocus: true,
@@ -315,8 +316,11 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         onChanged: (newValue) {
           AddQuoteInputs.quote.name = newValue;
         },
+        style: TextStyle(
+          fontSize: 22.0,
+        ),
         decoration: InputDecoration(
-          hintText: 'Type your quote there',
+          hintText: 'Type your quote...',
           border: OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
