@@ -20,7 +20,10 @@ class _TopicsState extends State<Topics> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 90.0, horizontal: 80.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 90.0,
+        horizontal: 80.0,
+      ),
       child: Column(
         children: <Widget>[
           Padding(
@@ -54,10 +57,19 @@ class _TopicsState extends State<Topics> {
             child: topicsColorsCards(),
           ),
 
-          FlatButton(
+          RaisedButton(
             onPressed: () {
-              FluroRouter.router.navigateTo(context, TopicsRoute);
+              FluroRouter.router.navigateTo(
+                context,
+                TopicsRoute,
+              );
             },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(7.0),
+              ),
+            ),
+            color: Colors.black12,
             child: Opacity(
               opacity: .6,
               child: Text(
