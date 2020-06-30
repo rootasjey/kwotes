@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
+import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/drafts.dart';
@@ -11,7 +12,6 @@ import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/web/about.dart';
-import 'package:memorare/screens/web/account.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
 import 'package:memorare/screens/web/add_quote_comment.dart';
 import 'package:memorare/screens/web/add_quote_content.dart';

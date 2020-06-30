@@ -24,22 +24,22 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  bool isLoadingLang      = false;
-  bool isLoadingName      = false;
-  bool isLoadingImageURL  = false;
-  bool isThemeAuto        = true;
+  bool isLoadingLang = false;
+  bool isLoadingName = false;
+  bool isLoadingImageURL = false;
+  bool isThemeAuto = true;
 
   bool isNameAvailable = false;
   bool isCheckingName = false;
   String nameErrorMessage = '';
   Timer nameTimer;
 
-  String avatarUrl      = '';
-  String newUserName    = '';
-  String email          = '';
-  String imageUrl       = '';
+  String avatarUrl = '';
+  String newUserName = '';
+  String email = '';
+  String imageUrl = '';
   String currentUserName = '';
-  String selectedLang   = 'English';
+  String selectedLang = 'English';
 
   Brightness brightness;
   Brightness currentBrightness;
@@ -62,20 +62,19 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {
-          await checkAuth();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: <Widget>[
-              appBar(),
-              body(),
-            ],
-          ),
-        )
-      ),
+          onRefresh: () async {
+            await checkAuth();
+            return null;
+          },
+          child: NotificationListener<ScrollNotification>(
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
     );
   }
 
@@ -97,21 +96,17 @@ class _AccountState extends State<Account> {
                       beginY: 50.0,
                       child: avatar(isUserConnected),
                     ),
-
                     FadeInY(
                       delay: 2.0,
                       beginY: 50.0,
                       child: inputDisplayName(isUserConnected),
                     ),
-
                     Padding(padding: const EdgeInsets.only(top: 20.0)),
-
                     FadeInY(
                       delay: 2.5,
                       beginY: 50.0,
                       child: emailButton(),
                     ),
-
                     FadeInY(
                       delay: 3.0,
                       beginY: 50.0,
@@ -120,7 +115,6 @@ class _AccountState extends State<Account> {
                   ],
                 ),
               ),
-
               accountActions(isUserConnected),
             ],
           );
@@ -147,105 +141,102 @@ class _AccountState extends State<Account> {
   }
 
   Widget accountActions(bool isUserConnected) {
-    return Observer(
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 20.0),
-          child: Wrap(
-            spacing: 15.0,
-            children: <Widget>[
-              FadeInX(
-                delay: 3.0,
-                beginX: 50.0,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(10.0),
-                      width: 90.0,
-                      height: 90.0,
-                      child: Card(
-                        elevation: 4.0,
-                        child: InkWell(
-                          onTap: () {
-                            FluroRouter.router.navigateTo(context, EditPasswordRoute);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Image.asset(
-                              'assets/images/lock-${stateColors.iconExt}.png',
-                              width: 30.0,
-                              height: 30.0,
-                            ),
+    return Observer(builder: (_) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: Wrap(
+          spacing: 15.0,
+          children: <Widget>[
+            FadeInX(
+              delay: 3.0,
+              beginX: 50.0,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    width: 90.0,
+                    height: 90.0,
+                    child: Card(
+                      elevation: 4.0,
+                      child: InkWell(
+                        onTap: () {
+                          FluroRouter.router
+                              .navigateTo(context, EditPasswordRoute);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Image.asset(
+                            'assets/images/lock-${stateColors.iconExt}.png',
+                            width: 30.0,
+                            height: 30.0,
                           ),
                         ),
                       ),
                     ),
-
-                    Opacity(
-                      opacity: .8,
-                      child: Text(
-                        'Update password',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
+                  ),
+                  Opacity(
+                    opacity: .8,
+                    child: Text(
+                      'Update password',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
+            FadeInX(
+              delay: 3.5,
+              beginX: 50.0,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    width: 90.0,
+                    height: 90.0,
+                    child: Card(
+                      elevation: 4.0,
+                      child: InkWell(
+                        onTap: () async {
+                          await FluroRouter.router
+                              .navigateTo(context, DeleteAccountRoute);
 
-              FadeInX(
-                delay: 3.5,
-                beginX: 50.0,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(10.0),
-                      width: 90.0,
-                      height: 90.0,
-                      child: Card(
-                        elevation: 4.0,
-                        child: InkWell(
-                          onTap: () async {
-                            await FluroRouter.router.navigateTo(context, DeleteAccountRoute);
-
-                            if (!userState.isUserConnected) {
-                              FluroRouter.router.navigateTo(
-                                context,
-                                DashboardRoute,
-                                replace: true,
-                              );
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Image.asset(
-                              'assets/images/delete-user-${stateColors.iconExt}.png',
-                              width: 30.0,
-                              height: 30.0,
-                            ),
+                          if (!userState.isUserConnected) {
+                            FluroRouter.router.navigateTo(
+                              context,
+                              DashboardRoute,
+                              replace: true,
+                            );
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Image.asset(
+                            'assets/images/delete-user-${stateColors.iconExt}.png',
+                            width: 30.0,
+                            height: 30.0,
                           ),
                         ),
                       ),
                     ),
-
-                    Opacity(
-                      opacity: .8,
-                      child: Text(
-                        'Delete account',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
+                  ),
+                  Opacity(
+                    opacity: .8,
+                    child: Text(
+                      'Delete account',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      }
-    );
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 
   Widget appBar() {
@@ -253,11 +244,8 @@ class _AccountState extends State<Account> {
       title: 'Settings',
       subTitle: 'View & update your account settings',
       onScrollToTop: () {
-        _scrollController.animateTo(
-          0,
-          duration: Duration(seconds: 2),
-          curve: Curves.easeOutQuint
-        );
+        _scrollController.animateTo(0,
+            duration: Duration(seconds: 2), curve: Curves.easeOutQuint);
       },
     );
   }
@@ -266,7 +254,6 @@ class _AccountState extends State<Account> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           themeSwitcher(),
           backgroundTasks(),
@@ -312,74 +299,75 @@ class _AccountState extends State<Account> {
         child: InkWell(
           child: Padding(
             padding: const EdgeInsets.all(40.0),
-            child: avatarUrl.isEmpty ?
-              Image.asset('assets/images/user-${stateColors.iconExt}.png', width: 80.0) :
-              Image.asset(path, width: 80.0),
+            child: avatarUrl.isEmpty
+                ? Image.asset('assets/images/user-${stateColors.iconExt}.png',
+                    width: 80.0)
+                : Image.asset(path, width: 80.0),
           ),
-          onTap: isUserConnected ?
-            () {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) {
-                  return showAvatarDialog();
-                },
-              );
-            } :
-            null,
+          onTap: isUserConnected
+              ? () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return showAvatarDialog();
+                    },
+                  );
+                }
+              : null,
         ),
       ),
     );
   }
 
   Widget backgroundTasks() {
-    return Column(
-      children: <Widget>[
-        FadeInY(
-          delay: 5.0,
-          beginY: 50.0,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
-                child: Text(
-                  'Notifications',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: 400.0,
+      child: Column(
+        children: <Widget>[
+          FadeInY(
+            delay: 5.0,
+            beginY: 50.0,
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
+                  child: Text(
+                    'Notifications',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Observer(
+            builder: (context) {
+              return FadeInY(
+                delay: 6.0,
+                beginY: 50.0,
+                child: SwitchListTile(
+                  onChanged: (bool value) {
+                    userState.setQuotidianNotifState(value);
 
-        Observer(
-          builder: (context) {
-            return FadeInY(
-              delay: 6.0,
-              beginY: 50.0,
-              child: SwitchListTile(
-                onChanged: (bool value) {
-                  userState.setQuotidianNotifState(value);
-
-                  timer?.cancel();
-                  timer = Timer(
-                    Duration(seconds: 1),
-                    () => toggleBackgroundTask(value)
-                  );
-                },
-                value: userState.isQuotidianNotifActive,
-                title: Text('Daily quote'),
-                secondary: userState.isQuotidianNotifActive ?
-                  Icon(Icons.notifications_active):
-                  Icon(Icons.notifications_off),
-              ),
-            );
-          },
-        ),
-      ],
+                    timer?.cancel();
+                    timer = Timer(Duration(seconds: 1),
+                        () => toggleBackgroundTask(value));
+                  },
+                  value: userState.isQuotidianNotifActive,
+                  title: Text('Daily quote'),
+                  secondary: userState.isQuotidianNotifActive
+                      ? Icon(Icons.notifications_active)
+                      : Icon(Icons.notifications_off),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -387,7 +375,10 @@ class _AccountState extends State<Account> {
     return SliverList(
       delegate: SliverChildListDelegate([
         accountSettings(),
-        Divider(height: 30.0),
+        Divider(
+          thickness: 1.0,
+          height: 60.0,
+        ),
         appSettings(),
       ]),
     );
@@ -400,35 +391,35 @@ class _AccountState extends State<Account> {
       },
       onLongPress: () {
         showDialog(
-          context: context,
-          builder: (context) {
-            return SimpleDialog(
-              title: Text(
-                'Email',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 25.0,
-                    right: 25.0,
+            context: context,
+            builder: (context) {
+              return SimpleDialog(
+                title: Text(
+                  'Email',
+                  style: TextStyle(
+                    fontSize: 15.0,
                   ),
-                  child: Text(
-                    email,
-                    style: TextStyle(
-                      color: stateColors.primary,
+                ),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 25.0,
+                      right: 25.0,
+                    ),
+                    child: Text(
+                      email,
+                      style: TextStyle(
+                        color: stateColors.primary,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }
-        );
+                ],
+              );
+            });
       },
-      child: SizedBox(
+      child: Container(
         width: 250.0,
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -437,7 +428,6 @@ class _AccountState extends State<Account> {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Icon(Icons.alternate_email),
                 ),
-
                 Opacity(
                   opacity: .7,
                   child: Text(
@@ -465,20 +455,23 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget ppCard({String imageName,}) {
+  Widget ppCard({
+    String imageName,
+  }) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       width: 90.0,
       child: Material(
         elevation: 3.0,
         color: stateColors.softBackground,
-        shape: avatarUrl.replaceFirst('local:', '') == imageName ?
-          CircleBorder(
-            side: BorderSide(
-              color: stateColors.primary,
+        shape: avatarUrl.replaceFirst('local:', '') == imageName
+          ? CircleBorder(
+              side: BorderSide(
+                width: 2.0,
+                color: stateColors.primary,
+              )
             )
-          ) :
-          CircleBorder(),
+          : CircleBorder(),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () {
@@ -487,7 +480,8 @@ class _AccountState extends State<Account> {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.asset('assets/images/$imageName-${stateColors.iconExt}.png'),
+            child: Image.asset(
+                'assets/images/$imageName-${stateColors.iconExt}.png'),
           ),
         ),
       ),
@@ -502,12 +496,9 @@ class _AccountState extends State<Account> {
         child: Column(
           children: <Widget>[
             CircularProgressIndicator(),
-
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
-              child: Text(
-                'Updating your display name...'
-              ),
+              child: Text('Updating your display name...'),
             )
           ],
         ),
@@ -518,8 +509,9 @@ class _AccountState extends State<Account> {
       onPressed: () {
         showUpdateNameDialog();
       },
-      child: SizedBox(
+      child: Container(
         width: 250.0,
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -528,7 +520,6 @@ class _AccountState extends State<Account> {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Icon(Icons.person_outline),
                 ),
-
                 Opacity(
                   opacity: .7,
                   child: Text(
@@ -537,7 +528,6 @@ class _AccountState extends State<Account> {
                 ),
               ],
             ),
-
             Row(
               children: <Widget>[
                 Padding(
@@ -571,84 +561,98 @@ class _AccountState extends State<Account> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 20.0,
+              ),
+              actionsPadding: const EdgeInsets.all(10.0),
               content: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    Divider(),
-                    Padding(padding: const EdgeInsets.only(top: 8.0)),
+                    Divider(
+                      thickness: 1.0,
+                    ),
 
-                    TextFormField(
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.person_outline),
-                        labelText: currentUserName.isEmpty ? 'Display name' : currentUserName,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
                       ),
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) async {
-                        childSetState(() {
-                          newUserName = value;
-                          isCheckingName = true;
-                        });
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.person_outline),
+                            labelText: currentUserName.isEmpty
+                              ? 'Display name'
+                              : currentUserName,
+                          ),
+                          keyboardType: TextInputType.text,
+                          onChanged: (value) async {
+                            childSetState(() {
+                              newUserName = value;
+                              isCheckingName = true;
+                            });
 
-                        final isWellFormatted = checkUsernameFormat(newUserName);
+                            final isWellFormatted =
+                                checkUsernameFormat(newUserName);
 
-                        if (!isWellFormatted) {
-                          childSetState(() {
-                            isCheckingName = false;
-                            nameErrorMessage = newUserName.length < 3 ?
-                              'Please use at least 3 characters' :
-                              'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
-                          });
-
-                          return;
-                        }
-
-                        if (nameTimer != null) {
-                          nameTimer.cancel();
-                          nameTimer = null;
-                        }
-
-                        nameTimer = Timer(
-                          1.seconds,
-                          () async {
-                            isNameAvailable = await checkNameAvailability(newUserName);
-
-                            if (!isNameAvailable) {
+                            if (!isWellFormatted) {
                               childSetState(() {
                                 isCheckingName = false;
-                                nameErrorMessage = 'This name is not available';
+                                nameErrorMessage = newUserName.length < 3
+                                    ? 'Please use at least 3 characters'
+                                    : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
                               });
 
                               return;
                             }
 
-                            childSetState(() {
-                              isCheckingName = false;
-                              nameErrorMessage = '';
+                            if (nameTimer != null) {
+                              nameTimer.cancel();
+                              nameTimer = null;
+                            }
+
+                            nameTimer = Timer(1.seconds, () async {
+                              isNameAvailable =
+                                  await checkNameAvailability(newUserName);
+
+                              if (!isNameAvailable) {
+                                childSetState(() {
+                                  isCheckingName = false;
+                                  nameErrorMessage = 'This name is not available';
+                                });
+
+                                return;
+                              }
+
+                              childSetState(() {
+                                isCheckingName = false;
+                                nameErrorMessage = '';
+                              });
                             });
-                          }
-                        );
-                      },
-                    ),
-
-                    if (isCheckingName)
-                      Container(
-                        width: 230.0,
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: LinearProgressIndicator(),
-                      ),
-
-                    if (nameErrorMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0, top: 5.0),
-                        child: Text(
-                          nameErrorMessage,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 15.0,
-                          ),
+                          },
                         ),
+                        if (isCheckingName)
+                          Container(
+                            width: 230.0,
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: LinearProgressIndicator(),
+                          ),
+                        if (nameErrorMessage.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 40.0, top: 5.0),
+                            child: Text(
+                              nameErrorMessage,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -662,24 +666,39 @@ class _AccountState extends State<Account> {
 
                     FluroRouter.router.pop(context);
                   },
-                  child: Text(
-                    'CANCEL',
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(.6),
-                      fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0,
+                    ),
+                    child: Text(
+                      'CANCEL',
+                      style: TextStyle(
+                        color: stateColors.foreground.withOpacity(.6),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-                FlatButton(
-                  onPressed: isNameAvailable ? () {
-                    FluroRouter.router.pop(context);
-                    updateUserName();
-                  } : null,
-                  child: Text(
-                    'UPDATE',
-                    style: TextStyle(
-                      color: stateColors.primary,
-                      fontWeight: FontWeight.bold,
+                RaisedButton(
+                  onPressed: isNameAvailable
+                    ? () {
+                        FluroRouter.router.pop(context);
+                        updateUsername();
+                      }
+                    : null,
+                  color: stateColors.primary,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0,
+                    ),
+                    child: Text(
+                      'UPDATE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -687,8 +706,7 @@ class _AccountState extends State<Account> {
             );
           },
         );
-      }
-    );
+      });
   }
 
   Widget langSelect() {
@@ -703,7 +721,6 @@ class _AccountState extends State<Account> {
                 padding: const EdgeInsets.only(right: 10.0),
                 child: Icon(Icons.person_outline),
               ),
-
               Opacity(
                 opacity: .7,
                 child: Text(
@@ -712,7 +729,6 @@ class _AccountState extends State<Account> {
               ),
             ],
           ),
-
           Padding(
             padding: const EdgeInsets.only(left: 35.0),
             child: Row(
@@ -733,14 +749,13 @@ class _AccountState extends State<Account> {
 
                     updateLang();
                   },
-                  items: ['English', 'Français']
-                    .map((String value) {
-                      return DropdownMenuItem(
+                  items: ['English', 'Français'].map((String value) {
+                    return DropdownMenuItem(
                         value: value,
-                        child: Text(value,)
-                      );
-                    })
-                    .toList(),
+                        child: Text(
+                          value,
+                        ));
+                  }).toList(),
                 ),
               ],
             ),
@@ -751,103 +766,105 @@ class _AccountState extends State<Account> {
   }
 
   Widget themeSwitcher() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        FadeInY(
-          delay: 2.0,
-          beginY: 50.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  'Theme',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: 400.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    'Theme',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-
-        FadeInY(
-          delay: 3.0,
-          beginY: 50.0,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 15.0,
-              right: 15.0,
-              top: 15.0,
-              bottom: 30.0,
-            ),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                themeDescription(),
-                style: TextStyle(
-                  fontSize: 15.0,
+          FadeInY(
+            delay: 3.0,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 15.0,
+                right: 15.0,
+                top: 15.0,
+                bottom: 30.0,
+              ),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  themeDescription(),
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-
-        FadeInY(
-          delay: 4.0,
-          beginY: 50.0,
-          child: SwitchListTile(
-            title: Text('Automatic theme'),
-            secondary: const Icon(Icons.autorenew),
-            value: isThemeAuto,
-            onChanged: (newValue) {
-              if (!newValue) {
-                currentBrightness = appLocalStorage.getBrightness();
-                DynamicTheme.of(context).setBrightness(currentBrightness);
-                stateColors.refreshTheme(currentBrightness);
-              }
-
-              appLocalStorage.setAutoBrightness(newValue);
-
-              if (newValue) {
-                setAutoBrightness();
-              }
-
-              setState(() {
-                isThemeAuto = newValue;
-              });
-            },
-          ),
-        ),
-
-        if (!isThemeAuto)
           FadeInY(
-            delay: 5.0,
+            delay: 4.0,
             beginY: 50.0,
             child: SwitchListTile(
-              title: Text('Lights'),
-              secondary: const Icon(Icons.lightbulb_outline),
-              value: currentBrightness == Brightness.light,
+              title: Text('Automatic theme'),
+              secondary: const Icon(Icons.autorenew),
+              value: isThemeAuto,
               onChanged: (newValue) {
-                currentBrightness = newValue ?
-                    Brightness.light : Brightness.dark;
+                if (!newValue) {
+                  currentBrightness = appLocalStorage.getBrightness();
+                  DynamicTheme.of(context).setBrightness(currentBrightness);
+                  stateColors.refreshTheme(currentBrightness);
+                }
 
-                DynamicTheme.of(context).setBrightness(currentBrightness);
-                stateColors.refreshTheme(currentBrightness);
+                appLocalStorage.setAutoBrightness(newValue);
 
-                appLocalStorage.setBrightness(currentBrightness);
+                if (newValue) {
+                  setAutoBrightness();
+                }
 
-                setState(() {});
+                setState(() {
+                  isThemeAuto = newValue;
+                });
               },
             ),
           ),
-      ],
+          if (!isThemeAuto)
+            FadeInY(
+              delay: 5.0,
+              beginY: 50.0,
+              child: SwitchListTile(
+                title: Text('Lights'),
+                secondary: const Icon(Icons.lightbulb_outline),
+                value: currentBrightness == Brightness.light,
+                onChanged: (newValue) {
+                  currentBrightness =
+                      newValue ? Brightness.light : Brightness.dark;
+
+                  DynamicTheme.of(context).setBrightness(currentBrightness);
+                  stateColors.refreshTheme(currentBrightness);
+
+                  appLocalStorage.setBrightness(currentBrightness);
+
+                  setState(() {});
+                },
+              ),
+            ),
+        ],
+      ),
     );
   }
 
   AlertDialog showAvatarDialog() {
+    final width = MediaQuery.of(context).size.width;
+
     return AlertDialog(
       actions: <Widget>[
         FlatButton(
@@ -858,6 +875,9 @@ class _AccountState extends State<Account> {
             padding: const EdgeInsets.all(15.0),
             child: Text(
               'CANCEL',
+              style: TextStyle(
+                color: Colors.red,
+              ),
             ),
           ),
         ),
@@ -875,19 +895,41 @@ class _AccountState extends State<Account> {
       content: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Divider(thickness: 2.0,),
+            Divider(
+              thickness: 2.0,
+            ),
             SizedBox(
               height: 150.0,
-              width: MediaQuery.of(context).size.width,
+              width: width > 400.0 ? 400.0 : width,
               child: ListView(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 children: <Widget>[
-                  FadeInX(child: ppCard(imageName: 'boy',), delay: 1, beginX: 50.0,),
-                  FadeInX(child: ppCard(imageName: 'employee'), delay: 1.2, beginX: 50.0,),
-                  FadeInX(child: ppCard(imageName: 'lady'), delay: 1.3, beginX: 50.0,),
-                  FadeInX(child: ppCard(imageName: 'user',), delay: 1.4, beginX: 50.0,),
+                  FadeInX(
+                    child: ppCard(
+                      imageName: 'boy',
+                    ),
+                    delay: 1,
+                    beginX: 50.0,
+                  ),
+                  FadeInX(
+                    child: ppCard(imageName: 'employee'),
+                    delay: 1.2,
+                    beginX: 50.0,
+                  ),
+                  FadeInX(
+                    child: ppCard(imageName: 'lady'),
+                    delay: 1.3,
+                    beginX: 50.0,
+                  ),
+                  FadeInX(
+                    child: ppCard(
+                      imageName: 'user',
+                    ),
+                    delay: 1.4,
+                    beginX: 50.0,
+                  ),
                 ],
               ),
             ),
@@ -900,16 +942,17 @@ class _AccountState extends State<Account> {
   void toggleBackgroundTask(bool isActive) async {
     final lang = appLocalStorage.getLang();
 
-    final success = isActive ?
-      await PushNotifications.subMobileQuotidians(lang: lang) :
-      await PushNotifications.unsubMobileQuotidians(lang: lang);
+    final success = isActive
+        ? await PushNotifications.subMobileQuotidians(lang: lang)
+        : await PushNotifications.unsubMobileQuotidians(lang: lang);
 
     if (!success) {
       userState.setQuotidianNotifState(!userState.isQuotidianNotifActive);
 
       showSnack(
         context: context,
-        message: 'Sorry, there was an issue while updating your preferences. Try again in a moment.',
+        message:
+            'Sorry, there was an issue while updating your preferences. Try again in a moment.',
         type: SnackType.error,
       );
     }
@@ -938,9 +981,9 @@ class _AccountState extends State<Account> {
       }
 
       final user = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .get();
+          .collection('users')
+          .document(userAuth.uid)
+          .get();
 
       final data = user.data;
 
@@ -956,7 +999,6 @@ class _AccountState extends State<Account> {
         isLoadingName = false;
         isLoadingLang = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -990,12 +1032,12 @@ class _AccountState extends State<Account> {
   }
 
   String themeDescription() {
-    return isThemeAuto ?
-      'It will be chosen accordingly to the time of the day' :
-      'Choose your theme manually';
+    return isThemeAuto
+        ? 'It will be chosen accordingly to the time of the day'
+        : 'Choose your theme manually';
   }
 
-  void updateUserName() async {
+  void updateUsername() async {
     setState(() {
       isLoadingName = true;
     });
@@ -1018,12 +1060,14 @@ class _AccountState extends State<Account> {
       }
 
       final userAuth = await userState.userAuth;
-      if (userAuth == null) { throw Error(); }
+      if (userAuth == null) {
+        throw Error();
+      }
 
       await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .updateData({'name': newUserName});
+          .collection('users')
+          .document(userAuth.uid)
+          .updateData({'name': newUserName});
 
       setState(() {
         isLoadingName = false;
@@ -1038,7 +1082,6 @@ class _AccountState extends State<Account> {
         message: 'Your display name has been successfully updated.',
         type: SnackType.success,
       );
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -1063,11 +1106,11 @@ class _AccountState extends State<Account> {
       final userAuth = await userState.userAuth;
 
       await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .updateData({
-          'urls.image': 'local:$imageName',
-        });
+          .collection('users')
+          .document(userAuth.uid)
+          .updateData({
+        'urls.image': 'local:$imageName',
+      });
 
       setState(() {
         avatarUrl = 'local:$imageName';
@@ -1079,7 +1122,6 @@ class _AccountState extends State<Account> {
         message: 'Your image has been successfully updated.',
         type: SnackType.success,
       );
-
     } catch (error) {
       debugPrint(error.toString());
 
