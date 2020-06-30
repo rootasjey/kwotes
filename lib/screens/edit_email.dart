@@ -324,7 +324,10 @@ class _EditEmailState extends State<EditEmail> {
   Widget passwordInput() {
     return Container(
       width: 350.0,
-      padding: EdgeInsets.only(top: 30.0, bottom: 80.0),
+      padding: EdgeInsets.only(
+        top: 30.0,
+        bottom: 120.0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
