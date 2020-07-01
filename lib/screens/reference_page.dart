@@ -6,8 +6,7 @@ import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
@@ -162,6 +161,7 @@ class ReferencePageState extends State<ReferencePage> {
   Widget refBody() {
     return Container(
       alignment: AlignmentDirectional.center,
+      padding: const EdgeInsets.only(bottom: 200.0),
       child: Column(
         children: <Widget>[
           hero(),
@@ -363,7 +363,10 @@ class ReferencePageState extends State<ReferencePage> {
 
       return Column(
         children: <Widget>[
-          Divider(height: 50.0,),
+          Divider(
+            thickness: 1.0,
+            height: 150.0,
+          ),
 
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -380,38 +383,14 @@ class ReferencePageState extends State<ReferencePage> {
 
           SizedBox(
             width: 100.0,
-            child: Divider(),
+            child: Divider(thickness: 1.0,),
           ),
 
-          InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                QuotePageRoute.replaceFirst(':id', quote.id),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-                bottom: 100.0,
-              ),
-              child: FlatButton(
-                onPressed: () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    QuotePageRoute.replaceFirst(':id', quote.id)
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    quote.name,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ),
+          SizedBox(
+            width: 250.0,
+            height: 250.0,
+            child: QuoteCardGridItem(
+              quote: quote,
             ),
           ),
         ],
@@ -461,14 +440,15 @@ class ReferencePageState extends State<ReferencePage> {
 
         SizedBox(
           width: 100.0,
-          child: Divider(),
+          child: Divider(thickness: 1.0,),
         ),
 
-        Padding(
+        Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 16.0,
             vertical: 60.0,
           ),
+          width: 550.0,
           child: Text(
             reference.summary,
             style: TextStyle(

@@ -10,6 +10,7 @@ import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/quotes_list.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/web/about.dart';
@@ -28,7 +29,6 @@ import 'package:memorare/screens/web/published_quotes.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/screens/web/quotes_lists.dart';
 import 'package:memorare/screens/web/quotidians.dart';
-import 'package:memorare/screens/web/reference_page.dart';
 import 'package:memorare/screens/web/temp_quotes.dart';
 import 'package:memorare/screens/web/today.dart';
 import 'package:memorare/screens/web/topic_page.dart';
@@ -147,7 +147,7 @@ class WebRouteHandlers {
 
   static Handler reference = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(ReferencePage(id: params['id'][0])));
+          ReferencePage(id: params['id'][0]));
 
   static Handler signin = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
