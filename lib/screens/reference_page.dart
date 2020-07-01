@@ -11,6 +11,8 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:supercharged/supercharged.dart';
 
 class ReferencePage extends StatefulWidget {
   final String id;
@@ -53,140 +55,6 @@ class ReferencePageState extends State<ReferencePage> {
 
         return body();
       }),
-    );
-  }
-
-  Widget body() {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollNotif) {
-        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-          return false;
-        }
-
-        if (!areQuotesLoading && !areQuotesLoaded) {
-          if (quotes.length > 0) { return false; }
-
-          areQuotesLoading = true;
-
-          Firestore.instance
-            .collection('quotes')
-            .where('mainReference.id', isEqualTo: widget.id)
-            .where('lang', isEqualTo: userState.lang)
-            .limit(1)
-            .getDocuments()
-            .then((querySnap) {
-              if (querySnap.documents.length == 0) { return; }
-
-              querySnap.documents.forEach((element) {
-                final data = element.data;
-                data['id'] = element.documentID;
-                quotes.add(Quote.fromJSON(data));
-              });
-
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {
-                  areQuotesLoaded = true;
-                  areQuotesLoading = false;
-                });
-              });
-            })
-            .catchError((error) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {
-                  areQuotesLoaded = true;
-                  areQuotesLoading = false;
-                });
-              });
-            });
-        }
-
-        return false;
-      },
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              reference == null ?
-                Padding(
-                  padding: const EdgeInsets.only(top: 150.0),
-                  child: ErrorContainer(
-                    message: 'Oops! There was an error while loading the reference',
-                    onRefresh: () => fetch(),
-                  ),
-                ) :
-                refBody(),
-
-              backButton(),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget hero() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FadeInY(
-            beginY: beginY,
-            delay: 1.0,
-            child: avatar(),
-          ),
-
-          FadeInY(
-            beginY: beginY,
-            delay: 2.0,
-            child: name(),
-          ),
-
-          SizedBox(
-            width: 100.0,
-            child: Divider(height: 50.0,),
-          ),
-
-          FadeInY(
-            beginY: beginY,
-            delay: 3.0,
-            child: types(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget refBody() {
-    return Container(
-      alignment: AlignmentDirectional.center,
-      padding: const EdgeInsets.only(bottom: 200.0),
-      child: Column(
-        children: <Widget>[
-          hero(),
-
-          FadeInY(
-            beginY: beginY,
-            delay: 4.0,
-            child: summary(),
-          ),
-
-          FadeInY(
-            beginY: beginY,
-            delay: 5.0,
-            child: links(),
-          ),
-
-          if (areQuotesLoading)
-            Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: LinearProgressIndicator(),
-            ),
-
-          mainQuote(),
-        ],
-      ),
     );
   }
 
@@ -238,7 +106,7 @@ class ReferencePageState extends State<ReferencePage> {
 
   Widget backButton() {
     return Positioned(
-      left: 0.0,
+      left: 40.0,
       top: 0.0,
       child: Material(
         color: Colors.transparent,
@@ -254,8 +122,156 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
+  Widget body() {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotif) {
+        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+          return false;
+        }
+
+        if (!areQuotesLoading && !areQuotesLoaded) {
+          if (quotes.length > 0) { return false; }
+
+          areQuotesLoading = true;
+
+          Firestore.instance
+            .collection('quotes')
+            .where('mainReference.id', isEqualTo: widget.id)
+            .where('lang', isEqualTo: userState.lang)
+            .limit(1)
+            .getDocuments()
+            .then((querySnap) {
+              if (querySnap.documents.length == 0) { return; }
+
+              querySnap.documents.forEach((element) {
+                final data = element.data;
+                data['id'] = element.documentID;
+                quotes.add(Quote.fromJSON(data));
+              });
+
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  areQuotesLoaded = true;
+                  areQuotesLoading = false;
+                });
+              });
+            })
+            .catchError((error) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  areQuotesLoaded = true;
+                  areQuotesLoading = false;
+                });
+              });
+            });
+        }
+
+        return false;
+      },
+      child: ListView(
+        padding: EdgeInsets.symmetric(vertical: 40.0),
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              reference == null ?
+                Padding(
+                  padding: const EdgeInsets.only(top: 150.0),
+                  child: ErrorContainer(
+                    message: 'Oops! There was an error while loading the reference',
+                    onRefresh: () => fetch(),
+                  ),
+                ) :
+                refBody(),
+
+              backButton(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget hero() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FadeInY(
+            beginY: beginY,
+            delay: 1.0,
+            child: avatar(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 2.0,
+            child: name(),
+          ),
+
+          ControlledAnimation(
+            delay: 1.seconds,
+            duration: 1.seconds,
+            tween: Tween(begin: 0.0, end: 100.0),
+            builder: (_, value) {
+              return SizedBox(
+                width: value,
+                child: Divider(
+                  thickness: 1.0,
+                  height: 50.0,
+                ),
+              );
+            },
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 3.0,
+            child: types(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget refBody() {
+    return Container(
+      alignment: AlignmentDirectional.center,
+      padding: const EdgeInsets.only(bottom: 200.0),
+      child: Column(
+        children: <Widget>[
+          hero(),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 4.0,
+            child: summary(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 5.0,
+            child: links(),
+          ),
+
+          if (areQuotesLoading)
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: LinearProgressIndicator(),
+            ),
+
+          mainQuote(),
+        ],
+      ),
+    );
+  }
+
   Widget links() {
     final urls = reference.urls;
+
+    if (urls.areLinksEmpty()) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
 
     return Column(
       children: <Widget>[
@@ -451,7 +467,7 @@ class ReferencePageState extends State<ReferencePage> {
             horizontal: 16.0,
             vertical: 60.0,
           ),
-          width: 550.0,
+          width: 600.0,
           child: Text(
             reference.summary,
             style: TextStyle(
