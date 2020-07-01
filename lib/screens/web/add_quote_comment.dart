@@ -3,7 +3,6 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/web/add_quote_layout.dart';
-import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/on_long_press_nav_back.dart';
 import 'package:memorare/router/router.dart';
 
@@ -89,14 +88,11 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
             delay: delay + (3 * delayStep),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
-              child: FlatButton(
+              child: RaisedButton(
+                color: Colors.black12,
                 onPressed: () => FluroRouter.router.pop(context),
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: stateColors.foreground,
-                    width: 2.0,
-                  ),
-                  borderRadius: BorderRadius.circular(2.0),
+                  borderRadius: BorderRadius.circular(7.0),
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(15.0),
@@ -216,6 +212,23 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                      },
+                      color: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text('Close'),
                       ),
                     ),
                   ),
