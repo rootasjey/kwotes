@@ -257,80 +257,88 @@ class ReferencePageState extends State<ReferencePage> {
   Widget links() {
     final urls = reference.urls;
 
-    return SizedBox(
-      height: 200.0,
-      child: ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          if (urls.wikipedia.isNotEmpty)
-            Observer(
-              builder: (_) {
-                return customLinkCard(
-                  name: 'Wikipedia',
-                  url: urls.wikipedia,
-                  imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
-                );
-              },
-            ),
+    return Column(
+      children: <Widget>[
+        Divider(thickness: 1.0, height: 100.0,),
 
-          if (urls.website.isNotEmpty)
-            customLinkCard(
-              name: 'Website',
-              url: urls.website,
-              imageUrl: 'assets/images/world-globe.png',
-            ),
+        SizedBox(
+          height: 200.0,
+          child: ListView(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              if (urls.wikipedia.isNotEmpty)
+                Observer(
+                  builder: (_) {
+                    return customLinkCard(
+                      name: 'Wikipedia',
+                      url: urls.wikipedia,
+                      imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                    );
+                  },
+                ),
 
-          if (urls.amazon.isNotEmpty)
-            customLinkCard(
-              name: 'Amazon',
-              url: urls.amazon,
-              imageUrl: 'assets/images/amazon.png',
-            ),
+              if (urls.website.isNotEmpty)
+                customLinkCard(
+                  name: 'Website',
+                  url: urls.website,
+                  imageUrl: 'assets/images/world-globe.png',
+                ),
 
-          if (urls.facebook.isNotEmpty)
-            customLinkCard(
-              name: 'Facebook',
-              url: urls.facebook,
-              imageUrl: 'assets/images/facebook.png',
-            ),
+              if (urls.amazon.isNotEmpty)
+                customLinkCard(
+                  name: 'Amazon',
+                  url: urls.amazon,
+                  imageUrl: 'assets/images/amazon.png',
+                ),
 
-          if (urls.netflix.isNotEmpty)
-            customLinkCard(
-              name: 'Netflix',
-              url: urls.netflix,
-              imageUrl: 'assets/images/netflix.png',
-            ),
+              if (urls.facebook.isNotEmpty)
+                customLinkCard(
+                  name: 'Facebook',
+                  url: urls.facebook,
+                  imageUrl: 'assets/images/facebook.png',
+                ),
 
-          if (urls.primeVideo.isNotEmpty)
-            customLinkCard(
-              name: 'Prime Video',
-              url: urls.primeVideo,
-              imageUrl: 'assets/images/prime-video.png',
-            ),
+              if (urls.netflix.isNotEmpty)
+                customLinkCard(
+                  name: 'Netflix',
+                  url: urls.netflix,
+                  imageUrl: 'assets/images/netflix.png',
+                ),
 
-          if (urls.twitch.isNotEmpty)
-            customLinkCard(
-              name: 'Twitch',
-              url: urls.twitch,
-              imageUrl: 'assets/images/twitch.png',
-            ),
+              if (urls.primeVideo.isNotEmpty)
+                customLinkCard(
+                  name: 'Prime Video',
+                  url: urls.primeVideo,
+                  imageUrl: 'assets/images/prime-video.png',
+                ),
 
-          if (urls.twitter.isNotEmpty)
-            customLinkCard(
-              name: 'Twitter',
-              url: urls.twitter,
-              imageUrl: 'assets/images/twitter.png',
-            ),
+              if (urls.twitch.isNotEmpty)
+                customLinkCard(
+                  name: 'Twitch',
+                  url: urls.twitch,
+                  imageUrl: 'assets/images/twitch.png',
+                ),
 
-          if (urls.youtube.isNotEmpty)
-            customLinkCard(
-              name: 'Youtube',
-              url: urls.youtube,
-              imageUrl: 'assets/images/youtube.png',
-            ),
-        ],
-      ),
+              if (urls.twitter.isNotEmpty)
+                customLinkCard(
+                  name: 'Twitter',
+                  url: urls.twitter,
+                  imageUrl: 'assets/images/twitter.png',
+                ),
+
+              if (urls.youtube.isNotEmpty)
+                customLinkCard(
+                  name: 'Youtube',
+                  url: urls.youtube,
+                  imageUrl: 'assets/images/youtube.png',
+                ),
+            ],
+          ),
+        ),
+
+        Divider(thickness: 1.0, height: 100.0,),
+      ],
     );
   }
 
@@ -363,11 +371,6 @@ class ReferencePageState extends State<ReferencePage> {
 
       return Column(
         children: <Widget>[
-          Divider(
-            thickness: 1.0,
-            height: 150.0,
-          ),
-
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Opacity(
@@ -423,10 +426,10 @@ class ReferencePageState extends State<ReferencePage> {
   Widget summary() {
     return Column(
       children: <Widget>[
-        Divider(),
+        Divider(thickness: 1.0,),
 
         Padding(
-          padding: const EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
             opacity: .6,
             child: Text(
@@ -458,8 +461,6 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
-
-        Divider(height: 50.0,),
       ],
     );
   }
