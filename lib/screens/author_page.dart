@@ -34,6 +34,8 @@ class _AuthorPageState extends State<AuthorPage> {
 
   TextOverflow nameEllipsis = TextOverflow.ellipsis;
 
+  double avatarSize = 200.0;
+
   @override
   void initState() {
     super.initState();
@@ -57,10 +59,7 @@ class _AuthorPageState extends State<AuthorPage> {
                     size: 40.0,
                   ),
                 ),
-
-                Text(
-                  "Sorry, no data found for the specified author"
-                ),
+                Text("Sorry, no data found for the specified author"),
               ],
             ),
           );
@@ -84,28 +83,46 @@ class _AuthorPageState extends State<AuthorPage> {
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Ink.image(
-          image: NetworkImage(author.urls.image),
-          fit: BoxFit.cover,
-          width: 200.0,
-          height: 200.0,
-          child: InkWell(
-            onTap: () {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Container(
-                      child: Image(
-                        image: NetworkImage(author.urls.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
+        child: AnimatedContainer(
+          duration: 150.milliseconds,
+          width: avatarSize,
+          height: avatarSize,
+          child: Ink.image(
+            image: NetworkImage(author.urls.image),
+            width: avatarSize,
+            height: avatarSize,
+            fit: BoxFit.cover,
+            child: InkWell(
+              onHover: (isHover) {
+                if (isHover) {
+                  setState(() {
+                    avatarSize = 210.0;
+                  });
+
+                  return;
                 }
-              );
-            },
+
+                setState(() {
+                  avatarSize = 200.0;
+                });
+              },
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Container(
+                        child: Image(
+                          image: NetworkImage(author.urls.image),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }
+                );
+              },
+            ),
           ),
         ),
       );
@@ -134,7 +151,9 @@ class _AuthorPageState extends State<AuthorPage> {
                   height: 500.0,
                   width: 500.0,
                   child: Image(
-                    image: AssetImage('assets/images/user-${stateColors.iconExt}.png',),
+                    image: AssetImage(
+                      'assets/images/user-${stateColors.iconExt}.png',
+                    ),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -172,38 +191,42 @@ class _AuthorPageState extends State<AuthorPage> {
         }
 
         if (!areQuotesLoading && !areQuotesLoaded) {
-          if (quotes.length > 0) { return false; }
+          if (quotes.length > 0) {
+            return false;
+          }
 
           areQuotesLoading = true;
 
           Firestore.instance
-            .collection('quotes')
-            .where('author.id', isEqualTo: widget.id)
-            .limit(1)
-            .getDocuments()
-            .then((querySnap) {
-              if (querySnap.documents.length == 0) { return; }
+          .collection('quotes')
+          .where('author.id', isEqualTo: widget.id)
+          .limit(1)
+          .getDocuments()
+          .then((querySnap) {
+            if (querySnap.documents.length == 0) {
+              return;
+            }
 
-              querySnap.documents.forEach((element) {
-                final data = element.data;
-                data['id'] = element.documentID;
-                quotes.add(Quote.fromJSON(data));
-              });
+            querySnap.documents.forEach((element) {
+              final data = element.data;
+              data['id'] = element.documentID;
+              quotes.add(Quote.fromJSON(data));
+            });
 
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {
-                  areQuotesLoaded = true;
-                  areQuotesLoading = false;
-                });
-              });
-            }).catchError((error) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {
-                  areQuotesLoaded = true;
-                  areQuotesLoading = false;
-                });
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                areQuotesLoaded = true;
+                areQuotesLoading = false;
               });
             });
+          }).catchError((error) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                areQuotesLoaded = true;
+                areQuotesLoading = false;
+              });
+            });
+          });
         }
 
         return false;
@@ -324,8 +347,9 @@ class _AuthorPageState extends State<AuthorPage> {
       child: FlatButton(
         onPressed: () {
           setState(() {
-            nameEllipsis = nameEllipsis == TextOverflow.ellipsis ?
-              TextOverflow.visible : TextOverflow.ellipsis;
+            nameEllipsis = nameEllipsis == TextOverflow.ellipsis
+              ? TextOverflow.visible
+              : TextOverflow.ellipsis;
           });
         },
         child: Text(
@@ -408,7 +432,6 @@ class _AuthorPageState extends State<AuthorPage> {
     return Column(
       children: <Widget>[
         Divider(thickness: 1.0,),
-
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -421,14 +444,13 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           ),
         ),
-
         SizedBox(
           width: 100.0,
           child: Divider(thickness: 1.0,),
         ),
 
-        MediaQuery.of(context).size.width > 400.0 ?
-          Padding(
+        MediaQuery.of(context).size.width > 400.0
+        ? Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 120.0,
             ),
@@ -436,8 +458,8 @@ class _AuthorPageState extends State<AuthorPage> {
               width: 600.0,
               child: textWidget,
             ),
-          ) :
-          Padding(
+          )
+        : Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 60.0,
@@ -457,8 +479,10 @@ class _AuthorPageState extends State<AuthorPage> {
 
     return Column(
       children: <Widget>[
-        Divider(thickness: 1.0, height: 100.0,),
-
+        Divider(
+          thickness: 1.0,
+          height: 100.0,
+        ),
         SizedBox(
           height: 200.0,
           child: ListView(
@@ -471,7 +495,8 @@ class _AuthorPageState extends State<AuthorPage> {
                     return customLinkCard(
                       name: 'Wikipedia',
                       url: urls.wikipedia,
-                      imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                      imageUrl:
+                        'assets/images/wikipedia-${stateColors.iconExt}.png',
                     );
                   },
                 ),
@@ -534,8 +559,10 @@ class _AuthorPageState extends State<AuthorPage> {
             ],
           ),
         ),
-
-        Divider(thickness: 1.0, height: 100.0,),
+        Divider(
+          thickness: 1.0,
+          height: 100.0,
+        ),
       ],
     );
   }
@@ -562,8 +589,9 @@ class _AuthorPageState extends State<AuthorPage> {
       setState(() {
         author = Author.fromJSON(data);
 
-        nameEllipsis = author.name.length > 42 ?
-          TextOverflow.ellipsis : TextOverflow.visible;
+        nameEllipsis = author.name.length > 42
+          ? TextOverflow.ellipsis
+          : TextOverflow.visible;
 
         isLoading = false;
       });
