@@ -27,40 +27,38 @@ class _DiscoverState extends State<Discover> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        foregroundDecoration: BoxDecoration(
-          color: Color.fromRGBO(0, 0, 0, 0.05),
-        ),
-        padding: EdgeInsets.symmetric(
-          vertical: 90.0,
-          horizontal: 80.0,
-        ),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: Text(
-                'DISCOVER',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
+      padding: EdgeInsets.symmetric(
+        vertical: 90.0,
+        horizontal: 80.0,
+      ),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: Text(
+              'DISCOVER',
+              style: TextStyle(
+                fontSize: 16.0,
               ),
             ),
-            SizedBox(
-              width: 50.0,
-              child: Divider(
-                thickness: 2.0,
-              ),
+          ),
+          SizedBox(
+            width: 50.0,
+            child: Divider(
+              thickness: 2.0,
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 40.0),
-              child: Opacity(
-                opacity: .6,
-                child: Text('Do you know these references?'),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40.0),
+            child: Opacity(
+              opacity: .6,
+              child: Text('Do you know these references?'),
             ),
-            cardsItems(),
-          ],
-        ));
+          ),
+          cardsItems(),
+        ],
+      )
+    );
   }
 
   Widget cardsItems() {
