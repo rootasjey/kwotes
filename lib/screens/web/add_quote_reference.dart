@@ -46,7 +46,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     setState(() {
       affiliateUrlController.text   = AddQuoteInputs.reference.urls.affiliate;
       amazonUrlController.text      = AddQuoteInputs.reference.urls.amazon;
-      facebookUrlController.text    = AddQuoteInputs.reference.urls.amazon;
+      facebookUrlController.text    = AddQuoteInputs.reference.urls.facebook;
       nameController.text           = AddQuoteInputs.reference.name;
       netflixUrlController.text     = AddQuoteInputs.reference.urls.netflix;
       primeVideoUrlController.text  = AddQuoteInputs.reference.urls.primeVideo;
