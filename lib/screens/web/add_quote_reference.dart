@@ -255,6 +255,23 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       ),
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        FluroRouter.router.pop(context);
+                      },
+                      color: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text('Close'),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
