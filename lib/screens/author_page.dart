@@ -5,8 +5,7 @@ import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
@@ -73,7 +72,7 @@ class _AuthorPageState extends State<AuthorPage> {
           );
         }
 
-        return bodyData();
+        return body();
       }),
     );
   }
@@ -147,7 +146,25 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget bodyData() {
+  Widget backButton() {
+    return Positioned(
+      left: 40.0,
+      top: 0.0,
+      child: Material(
+        color: Colors.transparent,
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back,
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget body() {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotif) {
         if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
@@ -192,12 +209,13 @@ class _AuthorPageState extends State<AuthorPage> {
         return false;
       },
       child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+        padding: EdgeInsets.symmetric(vertical: 40.0),
         children: <Widget>[
           Stack(
             children: <Widget>[
               Container(
                 alignment: AlignmentDirectional.center,
+                padding: const EdgeInsets.only(bottom: 200.0),
                 child: Column(
                   children: <Widget>[
                     hero(),
@@ -276,13 +294,16 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
 
           ControlledAnimation(
-            delay: 2.seconds,
+            delay: 1.seconds,
             duration: 1.seconds,
             tween: Tween(begin: 0.0, end: 100.0),
             builder: (_, value) {
               return SizedBox(
                 width: value,
-                child: Divider(height: 20.0,),
+                child: Divider(
+                  thickness: 1.0,
+                  height: 20.0,
+                ),
               );
             },
           ),
@@ -321,13 +342,16 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget job() {
-    return Opacity(
-      opacity: .7,
-      child: Text(
-        author.job,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: 18.0,
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Opacity(
+        opacity: .7,
+        child: Text(
+          author.job,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
         ),
       ),
     );
@@ -336,15 +360,9 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget mainQuote() {
     if (quotes.length > 0) {
       final quote = quotes.first;
-      final width = MediaQuery.of(context).size.width;
 
       return Column(
         children: <Widget>[
-          Divider(
-            height: 50.0,
-            thickness: 1.0,
-          ),
-
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Opacity(
@@ -360,29 +378,14 @@ class _AuthorPageState extends State<AuthorPage> {
 
           SizedBox(
             width: 100.0,
-            child: Divider(),
+            child: Divider(thickness: 1.0,),
           ),
 
-          Padding(
-            padding: width > 400.0 ?
-              const EdgeInsets.symmetric(vertical: 100.0) :
-              const EdgeInsets.only(bottom: 100.0, top: 10.0,),
-            child: FlatButton(
-              onPressed: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  QuotePageRoute.replaceFirst(':id', quote.id)
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  quote.name,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
+          SizedBox(
+            width: 250.0,
+            height: 250.0,
+            child: QuoteCardGridItem(
+              quote: quote,
             ),
           ),
         ],
@@ -407,7 +410,7 @@ class _AuthorPageState extends State<AuthorPage> {
         Divider(thickness: 1.0,),
 
         Padding(
-          padding: const EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
             opacity: .6,
             child: Text(
@@ -421,7 +424,7 @@ class _AuthorPageState extends State<AuthorPage> {
 
         SizedBox(
           width: 100.0,
-          child: Divider(),
+          child: Divider(thickness: 1.0,),
         ),
 
         MediaQuery.of(context).size.width > 400.0 ?
@@ -452,20 +455,12 @@ class _AuthorPageState extends State<AuthorPage> {
       return Padding(padding: EdgeInsets.zero,);
     }
 
-    final width = MediaQuery.of(context).size.width;
-
     return Column(
       children: <Widget>[
-        Divider(
-          height: 50.0,
-          thickness: 1.0,
-        ),
+        Divider(thickness: 1.0, height: 100.0,),
 
-        Container(
+        SizedBox(
           height: 200.0,
-          padding: width > 400.0 ?
-            const EdgeInsets.symmetric(vertical: 80.0) :
-            EdgeInsets.zero,
           child: ListView(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -539,25 +534,9 @@ class _AuthorPageState extends State<AuthorPage> {
             ],
           ),
         ),
-      ],
-    );
-  }
 
-  Widget backButton() {
-    return Positioned(
-      left: 0.0,
-      top: 0.0,
-      child: Material(
-        color: Colors.transparent,
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-        ),
-      )
+        Divider(thickness: 1.0, height: 100.0,),
+      ],
     );
   }
 
