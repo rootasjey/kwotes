@@ -36,6 +36,9 @@ class ReferencePageState extends State<ReferencePage> {
 
   TextOverflow nameEllipsis = TextOverflow.ellipsis;
 
+  double avatarHeight = 250.0;
+  double avatarWidth = 200.0;
+
   @override
   void initState() {
     super.initState();
@@ -62,64 +65,80 @@ class ReferencePageState extends State<ReferencePage> {
     final imageUrl = reference.urls.image;
     final imageUrlOk = imageUrl != null && imageUrl.length > 0;
 
-    return SizedBox(
-      width: 200,
-      height: 250,
+    return AnimatedContainer(
+      width: avatarWidth,
+      height: avatarHeight,
+      duration: 250.milliseconds,
       child: Card(
         elevation: imageUrlOk ? 5.0 : 0.0,
-        child: imageUrlOk ?
-          Ink.image(
-            image: NetworkImage(
-              reference.urls.image,
-            ),
-            fit: BoxFit.cover,
-            child: InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: Container(
-                        child: Image(
-                          image: NetworkImage(reference.urls.image),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
+        child: imageUrlOk
+          ? Ink.image(
+              image: NetworkImage(
+                reference.urls.image,
+              ),
+              fit: BoxFit.cover,
+              child: InkWell(
+                onHover: (isHover) {
+                  if (isHover) {
+                    setState(() {
+                      avatarHeight = 260.0;
+                      avatarWidth = 210.0;
+                    });
+
+                    return;
                   }
-                );
-              },
-            ),
-          ) :
-          Center(
-            child: Text(
-              reference.name.substring(0, 2).toUpperCase(),
-              style: TextStyle(
-                fontSize: 50.0,
+
+                  setState(() {
+                    avatarHeight = 250.0;
+                    avatarWidth = 200.0;
+                  });
+
+                  return;
+                },
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Container(
+                          child: Image(
+                            image: NetworkImage(reference.urls.image),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    });
+                },
+              ),
+            )
+          : Center(
+              child: Text(
+                reference.name.substring(0, 2).toUpperCase(),
+                style: TextStyle(
+                  fontSize: 50.0,
+                ),
               ),
             ),
-          ),
       ),
     );
   }
 
   Widget backButton() {
     return Positioned(
-      left: 40.0,
-      top: 0.0,
-      child: Material(
-        color: Colors.transparent,
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
+        left: 40.0,
+        top: 0.0,
+        child: Material(
+          color: Colors.transparent,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   Widget body() {
@@ -130,40 +149,44 @@ class ReferencePageState extends State<ReferencePage> {
         }
 
         if (!areQuotesLoading && !areQuotesLoaded) {
-          if (quotes.length > 0) { return false; }
+          if (quotes.length > 0) {
+            return false;
+          }
 
           areQuotesLoading = true;
 
           Firestore.instance
-            .collection('quotes')
-            .where('mainReference.id', isEqualTo: widget.id)
-            .where('lang', isEqualTo: userState.lang)
-            .limit(1)
-            .getDocuments()
-            .then((querySnap) {
-              if (querySnap.documents.length == 0) { return; }
+              .collection('quotes')
+              .where('mainReference.id', isEqualTo: widget.id)
+              .where('lang', isEqualTo: userState.lang)
+              .limit(1)
+              .getDocuments()
+              .then((querySnap) {
 
-              querySnap.documents.forEach((element) {
-                final data = element.data;
-                data['id'] = element.documentID;
-                quotes.add(Quote.fromJSON(data));
-              });
+            if (querySnap.documents.length == 0) {
+              return;
+            }
 
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {
-                  areQuotesLoaded = true;
-                  areQuotesLoading = false;
-                });
-              });
-            })
-            .catchError((error) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {
-                  areQuotesLoaded = true;
-                  areQuotesLoading = false;
-                });
+            querySnap.documents.forEach((element) {
+              final data = element.data;
+              data['id'] = element.documentID;
+              quotes.add(Quote.fromJSON(data));
+            });
+
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                areQuotesLoaded = true;
+                areQuotesLoading = false;
               });
             });
+          }).catchError((error) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                areQuotesLoaded = true;
+                areQuotesLoading = false;
+              });
+            });
+          });
         }
 
         return false;
@@ -173,16 +196,16 @@ class ReferencePageState extends State<ReferencePage> {
         children: <Widget>[
           Stack(
             children: <Widget>[
-              reference == null ?
-                Padding(
-                  padding: const EdgeInsets.only(top: 150.0),
-                  child: ErrorContainer(
-                    message: 'Oops! There was an error while loading the reference',
-                    onRefresh: () => fetch(),
-                  ),
-                ) :
-                refBody(),
-
+              reference == null
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 150.0),
+                    child: ErrorContainer(
+                      message:
+                          'Oops! There was an error while loading the reference',
+                      onRefresh: () => fetch(),
+                    ),
+                  )
+                : refBody(),
               backButton(),
             ],
           ),
@@ -202,13 +225,11 @@ class ReferencePageState extends State<ReferencePage> {
             delay: 1.0,
             child: avatar(),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 2.0,
             child: name(),
           ),
-
           ControlledAnimation(
             delay: 1.seconds,
             duration: 1.seconds,
@@ -223,7 +244,6 @@ class ReferencePageState extends State<ReferencePage> {
               );
             },
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 3.0,
@@ -241,25 +261,21 @@ class ReferencePageState extends State<ReferencePage> {
       child: Column(
         children: <Widget>[
           hero(),
-
           FadeInY(
             beginY: beginY,
             delay: 4.0,
             child: summary(),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 5.0,
             child: links(),
           ),
-
           if (areQuotesLoading)
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: LinearProgressIndicator(),
             ),
-
           mainQuote(),
         ],
       ),
@@ -270,13 +286,17 @@ class ReferencePageState extends State<ReferencePage> {
     final urls = reference.urls;
 
     if (urls.areLinksEmpty()) {
-      return Padding(padding: EdgeInsets.zero,);
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
     }
 
     return Column(
       children: <Widget>[
-        Divider(thickness: 1.0, height: 100.0,),
-
+        Divider(
+          thickness: 1.0,
+          height: 100.0,
+        ),
         SizedBox(
           height: 200.0,
           child: ListView(
@@ -289,60 +309,53 @@ class ReferencePageState extends State<ReferencePage> {
                     return customLinkCard(
                       name: 'Wikipedia',
                       url: urls.wikipedia,
-                      imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                      imageUrl:
+                        'assets/images/wikipedia-${stateColors.iconExt}.png',
                     );
                   },
                 ),
-
               if (urls.website.isNotEmpty)
                 customLinkCard(
                   name: 'Website',
                   url: urls.website,
                   imageUrl: 'assets/images/world-globe.png',
                 ),
-
               if (urls.amazon.isNotEmpty)
                 customLinkCard(
                   name: 'Amazon',
                   url: urls.amazon,
                   imageUrl: 'assets/images/amazon.png',
                 ),
-
               if (urls.facebook.isNotEmpty)
                 customLinkCard(
                   name: 'Facebook',
                   url: urls.facebook,
                   imageUrl: 'assets/images/facebook.png',
                 ),
-
               if (urls.netflix.isNotEmpty)
                 customLinkCard(
                   name: 'Netflix',
                   url: urls.netflix,
                   imageUrl: 'assets/images/netflix.png',
                 ),
-
               if (urls.primeVideo.isNotEmpty)
                 customLinkCard(
                   name: 'Prime Video',
                   url: urls.primeVideo,
                   imageUrl: 'assets/images/prime-video.png',
                 ),
-
               if (urls.twitch.isNotEmpty)
                 customLinkCard(
                   name: 'Twitch',
                   url: urls.twitch,
                   imageUrl: 'assets/images/twitch.png',
                 ),
-
               if (urls.twitter.isNotEmpty)
                 customLinkCard(
                   name: 'Twitter',
                   url: urls.twitter,
                   imageUrl: 'assets/images/twitter.png',
                 ),
-
               if (urls.youtube.isNotEmpty)
                 customLinkCard(
                   name: 'Youtube',
@@ -352,8 +365,10 @@ class ReferencePageState extends State<ReferencePage> {
             ],
           ),
         ),
-
-        Divider(thickness: 1.0, height: 100.0,),
+        Divider(
+          thickness: 1.0,
+          height: 100.0,
+        ),
       ],
     );
   }
@@ -364,8 +379,9 @@ class ReferencePageState extends State<ReferencePage> {
       child: FlatButton(
         onPressed: () {
           setState(() {
-            nameEllipsis = nameEllipsis == TextOverflow.ellipsis ?
-              TextOverflow.visible : TextOverflow.ellipsis;
+            nameEllipsis = nameEllipsis == TextOverflow.ellipsis
+                ? TextOverflow.visible
+                : TextOverflow.ellipsis;
           });
         },
         child: Text(
@@ -399,12 +415,12 @@ class ReferencePageState extends State<ReferencePage> {
               ),
             ),
           ),
-
           SizedBox(
             width: 100.0,
-            child: Divider(thickness: 1.0,),
+            child: Divider(
+              thickness: 1.0,
+            ),
           ),
-
           SizedBox(
             width: 250.0,
             height: 250.0,
@@ -424,7 +440,6 @@ class ReferencePageState extends State<ReferencePage> {
     String url,
     String imageUrl,
   }) {
-
     delay += 1.0;
 
     return FadeInX(
@@ -442,8 +457,9 @@ class ReferencePageState extends State<ReferencePage> {
   Widget summary() {
     return Column(
       children: <Widget>[
-        Divider(thickness: 1.0,),
-
+        Divider(
+          thickness: 1.0,
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -456,12 +472,12 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
-
         SizedBox(
           width: 100.0,
-          child: Divider(thickness: 1.0,),
+          child: Divider(
+            thickness: 1.0,
+          ),
         ),
-
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 16.0,
@@ -496,7 +512,6 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
-
         if (type.secondary != null && type.secondary.length > 0)
           Padding(
             padding: EdgeInsets.only(top: 5.0),
@@ -521,7 +536,7 @@ class ReferencePageState extends State<ReferencePage> {
     });
 
     try {
-      final docSnap  = await Firestore.instance
+      final docSnap = await Firestore.instance
         .collection('references')
         .document(widget.id)
         .get();
@@ -540,12 +555,12 @@ class ReferencePageState extends State<ReferencePage> {
       setState(() {
         reference = Reference.fromJSON(data);
 
-        nameEllipsis = reference.name.length > 42 ?
-          TextOverflow.ellipsis : TextOverflow.visible;
+        nameEllipsis = reference.name.length > 42
+          ? TextOverflow.ellipsis
+          : TextOverflow.visible;
 
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
