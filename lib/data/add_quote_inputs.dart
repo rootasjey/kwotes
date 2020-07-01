@@ -115,6 +115,8 @@ class AddQuoteInputs {
           youtube   : ref.urls.youtube,
         ),
       );
+    } else {
+      clearReference();
     }
 
     if (tempQuote.comments.length > 0) {
