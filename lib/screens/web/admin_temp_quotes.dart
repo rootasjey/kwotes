@@ -269,7 +269,11 @@ class _AdminTempQuotesState extends State<AdminTempQuotes> {
       tempQuotes.remove(tempQuote);
     });
 
-    final isOk = await deleteTempQuoteAdmin();
+    final isOk = await deleteTempQuoteAdmin(
+      context: context,
+      tempQuote: tempQuote,
+    );
+
     if (isOk) { return; }
 
     setState(() {
