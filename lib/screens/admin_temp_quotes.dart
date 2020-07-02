@@ -275,38 +275,41 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           final topicColor = appTopicsColors.find(tempQuote.topics.first);
           final color = Color(topicColor.decimal);
 
-          return InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                QuotePageRoute.replaceFirst(':id', tempQuote.id),
-              );
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(padding: const EdgeInsets.only(top: 20.0),),
-
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    tempQuote.name,
-                    style: TextStyle(
-                      fontSize: 20,
+          return Card(
+            elevation: 0.0,
+            child: InkWell(
+              onTap: () {
+                FluroRouter.router.navigateTo(
+                  context,
+                  QuotePageRoute.replaceFirst(':id', tempQuote.id),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 40.0,
+                    ),
+                    child: Text(
+                      tempQuote.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
-                ),
 
-                Center(
-                  child: popupMenuButton(
-                    color: color,
-                    tempQuote: tempQuote,
+                  Center(
+                    child: popupMenuButton(
+                      color: color,
+                      tempQuote: tempQuote,
+                    ),
                   ),
-                ),
 
-                Padding(padding: const EdgeInsets.only(top: 10.0),),
-                Divider(thickness: 1.0,),
-              ],
+                  Padding(padding: const EdgeInsets.only(bottom: 20.0),),
+                ],
+              ),
             ),
           );
         },
