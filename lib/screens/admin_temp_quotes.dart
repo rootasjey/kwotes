@@ -279,10 +279,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             elevation: 0.0,
             child: InkWell(
               onTap: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  QuotePageRoute.replaceFirst(':id', tempQuote.id),
-                );
+                editAction(tempQuote);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
