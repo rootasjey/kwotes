@@ -145,7 +145,18 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                 navCard(
                   icon: Icon(Icons.dashboard, size: 40.0,),
                   title: 'Dashboard',
-                  onTap: () => FluroRouter.router.navigateTo(context, DashboardRoute),
+                  onTap: () {
+                    Navigator.popUntil(
+                      context,
+                      ModalRoute.withName('/dashboard'),
+                    );
+
+                    FluroRouter.router.navigateTo(
+                      context,
+                      DashboardRoute,
+                      replace: true,
+                    );
+                  },
                 ),
 
                 navCard(
@@ -155,7 +166,16 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                     AddQuoteInputs.clearQuoteData();
                     AddQuoteInputs.clearTopics();
                     AddQuoteInputs.clearComment();
-                    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+
+                    Navigator.popUntil(
+                      context,
+                      ModalRoute.withName('/dashboard'),
+                    );
+
+                    FluroRouter.router.navigateTo(
+                      context,
+                      AddQuoteContentRoute,
+                    );
                   },
                 ),
 
@@ -164,14 +184,30 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                     icon: Icon(Icons.timer, size: 40.0,),
                     title: 'Temporary quotes',
                     onTap: () {
-                      FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+                      Navigator.popUntil(
+                        context,
+                        ModalRoute.withName('/dashboard'),
+                      );
+
+                      FluroRouter.router.navigateTo(
+                        context,
+                        AdminTempQuotesRoute,
+                      );
                     },
                   ) :
                   navCard(
                     icon: Icon(Icons.home, size: 40.0,),
                     title: 'Home',
                     onTap: () {
-                      FluroRouter.router.navigateTo(context, RootRoute);
+                      Navigator.popUntil(
+                        context,
+                        ModalRoute.withName('/dashboard'),
+                      );
+
+                      FluroRouter.router.navigateTo(
+                        context,
+                        RootRoute,
+                      );
                     },
                   ),
               ],
