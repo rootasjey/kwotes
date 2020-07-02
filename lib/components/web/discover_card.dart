@@ -134,8 +134,8 @@ class _DiscoverCardState extends State<DiscoverCard> {
           onHover: (isHover) {
             if (isHover) {
               opacity = 0.0;
-              width = widget.width + 10.0;
-              height = widget.height + 10.0;
+              width = widget.width + 2.5;
+              height = widget.height + 2.5;
               elevation = widget.elevation + 2;
             }
             else {
