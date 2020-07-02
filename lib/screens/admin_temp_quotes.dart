@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
+import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
+import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
-import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
@@ -41,6 +42,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   initState() {
     super.initState();
     getSavedLangAndOrder();
+    checkAuth();
     fetch();
   }
 
@@ -81,94 +83,47 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget appBar() {
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
-            children: <Widget>[
-              FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (tempQuotes.length == 0) { return; }
+    return SliverAppHeader(
+      title: 'All in validation',
+      onScrollToTop: () {
+        if (tempQuotes.length == 0) {
+          return;
+        }
 
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'All in validation',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: OrderLangButton(
-                  descending: descending,
-                  lang: lang,
-                  onLangChanged: (String newLang) {
-                    appLocalStorage.setPageLang(
-                      lang: newLang,
-                      pageRoute: pageRoute,
-                    );
-
-                    setState(() {
-                      lang = newLang;
-                    });
-
-                    fetch();
-                  },
-                  onOrderChanged: (bool order) {
-                    appLocalStorage.setPageOrder(
-                      descending: order,
-                      pageRoute: pageRoute,
-                    );
-
-                    setState(() {
-                      descending = order;
-                    });
-
-                    fetch();
-                  },
-                ),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-            ],
-          ),
+        scrollController.animateTo(
+          0,
+          duration: Duration(seconds: 2),
+          curve: Curves.easeOutQuint
         );
       },
+      rightButton: OrderLangButton(
+        descending: descending,
+        lang: lang,
+        onLangChanged: (String newLang) {
+          appLocalStorage.setPageLang(
+            lang: newLang,
+            pageRoute: pageRoute,
+          );
+
+          setState(() {
+            lang = newLang;
+          });
+
+          fetch();
+        },
+        onOrderChanged: (bool order) {
+          appLocalStorage.setPageOrder(
+            descending: order,
+            pageRoute: pageRoute,
+          );
+
+          setState(() {
+            descending = order;
+          });
+
+          fetch();
+        },
+      ),
     );
   }
 
@@ -223,56 +178,38 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       );
     }
 
-    return sliverQuotesList();
+    return SliverLayoutBuilder(
+      builder: (context, constrains) {
+        if (constrains.crossAxisExtent < 600.0) {
+          return sliverQuotesList();
+        }
+
+        return sliverGrid();
+      },
+    );
   }
 
-  Widget sliverQuotesList() {
-    return SliverList(
+  Widget sliverGrid() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+      ),
       delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final quote = tempQuotes.elementAt(index);
-          final topicColor = appTopicsColors.find(quote.topics.first);
+        (BuildContext context, int index) {
+          final tempQuote = tempQuotes.elementAt(index);
+          final topicColor = appTopicsColors.find(tempQuote.topics.first);
+          final color = Color(topicColor.decimal);
 
-          return FadeInY(
-            delay: index * 1.0,
-            beginY: 50.0,
-            child: InkWell(
-              onTap: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  QuotePageRoute.replaceFirst(':id', quote.id),
-                );
-              },
-              onLongPress: () => showQuoteSheet(tempQuote: quote),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(top: 20.0),),
-
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      quote.name,
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-
-                  Center(
-                    child: IconButton(
-                      onPressed: () => showQuoteSheet(tempQuote: quote),
-                      icon: Icon(
-                        Icons.more_horiz,
-                        color: topicColor != null ?
-                        Color(topicColor.decimal) : stateColors.primary,
-                      ),
-                    ),
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(top: 10.0),),
-                  Divider(),
-                ],
+          return SizedBox(
+            width: 250.0,
+            height: 250.0,
+            child: TempQuoteCardGridItem(
+              onTap: () => editAction(tempQuote),
+              onLongPress: () => validateAction(tempQuote),
+              tempQuote: tempQuote,
+              popupMenuButton: popupMenuButton(
+                color: color,
+                tempQuote: tempQuote,
               ),
             ),
           );
@@ -280,6 +217,116 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         childCount: tempQuotes.length,
       ),
     );
+  }
+
+  Widget popupMenuButton({Color color, TempQuote tempQuote}) {
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_horiz,
+        color: color != null
+            ? color
+            : Colors.primaries,
+      ),
+      onSelected: (value) {
+        if (value == 'delete') {
+          deleteAction(tempQuote);
+          return;
+        }
+
+        if (value == 'edit') {
+          editAction(tempQuote);
+          return;
+        }
+
+        if (value == 'validate') {
+          validateAction(tempQuote);
+          return;
+        }
+      },
+      itemBuilder: (BuildContext context) =>
+          <PopupMenuEntry<String>>[
+        PopupMenuItem(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete_forever),
+              title: Text('Delete'),
+            )),
+        PopupMenuItem(
+            value: 'edit',
+            child: ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Edit'),
+            )),
+        PopupMenuItem(
+            value: 'validate',
+            child: ListTile(
+              leading: Icon(Icons.check),
+              title: Text('Validate'),
+            )),
+      ],
+    );
+  }
+
+  Widget sliverQuotesList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final tempQuote = tempQuotes.elementAt(index);
+          final topicColor = appTopicsColors.find(tempQuote.topics.first);
+          final color = Color(topicColor.decimal);
+
+          return InkWell(
+            onTap: () {
+              FluroRouter.router.navigateTo(
+                context,
+                QuotePageRoute.replaceFirst(':id', tempQuote.id),
+              );
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.only(top: 20.0),),
+
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    tempQuote.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+
+                Center(
+                  child: popupMenuButton(
+                    color: color,
+                    tempQuote: tempQuote,
+                  ),
+                ),
+
+                Padding(padding: const EdgeInsets.only(top: 10.0),),
+                Divider(thickness: 1.0,),
+              ],
+            ),
+          );
+        },
+        childCount: tempQuotes.length,
+      ),
+    );
+  }
+
+  void checkAuth() async {
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        FluroRouter.router.navigateTo(context, SigninRoute, replace: true,);
+        return;
+      }
+
+    } catch (error) {
+      FluroRouter.router.navigateTo(context, SigninRoute, replace: true,);
+    }
   }
 
   Future createComments({
@@ -313,25 +360,22 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       tempQuotes.remove(tempQuote);
     });
 
-    try {
-      await Firestore.instance
-        .collection('tempquotes')
-        .document(tempQuote.id)
-        .delete();
+    final isOk = await deleteTempQuoteAdmin(
+      context: context,
+      tempQuote: tempQuote,
+    );
 
-    } catch (error) {
-      debugPrint(error.toString());
+    if (isOk) { return; }
 
-      setState(() {
-        tempQuotes.insert(index, tempQuote);
-      });
+    setState(() {
+      tempQuotes.insert(index, tempQuote);
+    });
 
-      showSnack(
-        context: context,
-        message: "Couldn't delete the temporary quote. Details: ${error.toString()}",
-        type: SnackType.error,
-      );
-    }
+    showSnack(
+      context: context,
+      message: "Couldn't delete the temporary quote",
+      type: SnackType.error,
+    );
   }
 
   void editAction(TempQuote tempQuote) async {
@@ -460,92 +504,5 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   void getSavedLangAndOrder() {
     lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
     descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-  }
-
-  void showQuoteSheet({TempQuote tempQuote}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    tooltip: 'Delete',
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      deleteAction(tempQuote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.delete_outline,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Delete',
-                  ),
-                ],
-              ),
-
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    tooltip: 'Edit',
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      editAction(tempQuote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.edit,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Edit',
-                  ),
-                ],
-              ),
-
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      validateAction(tempQuote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.check,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Validate',
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
   }
 }
