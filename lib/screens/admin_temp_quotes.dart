@@ -450,6 +450,11 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
+  void getSavedLangAndOrder() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+  }
+
   void validateAction(TempQuote tempQuote) async {
     int index = tempQuotes.indexOf(tempQuote);
 
@@ -475,10 +480,5 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       message: "Couldn't validate your temporary quote.",
       type: SnackType.error,
     );
-  }
-
-  void getSavedLangAndOrder() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
   }
 }
