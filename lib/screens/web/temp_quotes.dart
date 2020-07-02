@@ -5,8 +5,8 @@ import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/components/web/quote_card_grid_item.dart';
 import 'package:memorare/components/web/sliver_app_header.dart';
-import 'package:memorare/components/web/temp_quote_card_grid_item.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -148,9 +148,9 @@ class _TempQuotesState extends State<TempQuotes> {
             child: SizedBox(
               width: 250.0,
               height: 250.0,
-              child: TempQuoteCardGridItem(
+              child: QuoteCardGridItem(
                 onTap: () => editTempQuote(tempQuote),
-                tempQuote: tempQuote,
+                title: tempQuote.name,
                 popupMenuButton: PopupMenuButton<String>(
                   icon: Icon(
                     Icons.more_horiz,
