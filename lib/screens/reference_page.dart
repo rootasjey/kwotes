@@ -6,7 +6,9 @@ import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/quote_card.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
@@ -421,12 +423,10 @@ class ReferencePageState extends State<ReferencePage> {
               thickness: 1.0,
             ),
           ),
-          SizedBox(
-            width: 250.0,
-            height: 250.0,
-            child: QuoteCardGridItem(
-              quote: quote,
-            ),
+          QuoteCard(
+            title: quote.name,
+            onTap: () => FluroRouter.router.navigateTo(
+              context, QuotePageRoute.replaceFirst(':id', quote.id)),
           ),
         ],
       );

@@ -7,7 +7,7 @@ import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -237,15 +237,13 @@ class AdminQuotesState extends State<AdminQuotes> {
           final quote = quotes.elementAt(index);
           final topicColor = appTopicsColors.find(quote.topics.first);
 
-          return Container(
-            width: 250.0,
-            height: 250.0,
-            child: QuoteCardGridItem(
+          return QuoteCard(
+            title: quote.name,
+            onTap: () => FluroRouter.router.navigateTo(
+              context, QuotePageRoute.replaceFirst(':id', quote.id)),
+            popupMenuButton: quotePopupMenuButton(
               quote: quote,
-              popupMenuButton: quotePopupMenuButton(
-                quote: quote,
-                color: Color(topicColor.decimal),
-              ),
+              color: Color(topicColor.decimal),
             ),
           );
         },

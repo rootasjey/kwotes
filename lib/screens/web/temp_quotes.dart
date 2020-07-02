@@ -5,7 +5,7 @@ import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
@@ -142,50 +142,42 @@ class _TempQuotesState extends State<TempQuotes> {
           final tempQuote = tempQuotes.elementAt(index);
           final topicColor = appTopicsColors.find(tempQuote.topics.first);
 
-          return FadeInY(
-            delay: 3.0 + index.toDouble(),
-            beginY: 100.0,
-            child: SizedBox(
-              width: 250.0,
-              height: 250.0,
-              child: QuoteCardGridItem(
-                onTap: () => editTempQuote(tempQuote),
-                title: tempQuote.name,
-                popupMenuButton: PopupMenuButton<String>(
-                  icon: Icon(
-                    Icons.more_horiz,
-                    color: topicColor != null ?
-                      Color(topicColor.decimal) : Colors.primaries,
-                  ),
-                  onSelected: (value) {
-                    if (value == 'delete') {
-                      deleteAction(tempQuote);
-                      return;
-                    }
-
-                    if (value == 'edit') {
-                      editTempQuote(tempQuote);
-                      return;
-                    }
-                  },
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: ListTile(
-                        leading: Icon(Icons.delete_forever),
-                        title: Text('Delete'),
-                      )
-                    ),
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('Edit'),
-                      )
-                    ),
-                  ],
-                ),
+          return QuoteCard(
+            onTap: () => editTempQuote(tempQuote),
+            title: tempQuote.name,
+            popupMenuButton: PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_horiz,
+                color: topicColor != null ?
+                  Color(topicColor.decimal) : Colors.primaries,
               ),
+              onSelected: (value) {
+                if (value == 'delete') {
+                  deleteAction(tempQuote);
+                  return;
+                }
+
+                if (value == 'edit') {
+                  editTempQuote(tempQuote);
+                  return;
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_forever),
+                    title: Text('Delete'),
+                  )
+                ),
+                PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  )
+                ),
+              ],
             ),
           );
         },

@@ -7,7 +7,7 @@ import 'package:memorare/components/order_lang_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
@@ -202,7 +202,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           final topicColor = appTopicsColors.find(tempQuote.topics.first);
           final color = Color(topicColor.decimal);
 
-          return QuoteCardGridItem(
+          return QuoteCard(
             onTap: () => editAction(tempQuote),
             onLongPress: () => validateAction(tempQuote),
             title: tempQuote.name,

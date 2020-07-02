@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/types/font_size.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:supercharged/supercharged.dart';
 
-class QuoteCardGridItem extends StatefulWidget {
-  final Quote quote;
+class QuoteCard extends StatefulWidget {
   final Function onLongPress;
   final Function onTap;
   final PopupMenuButton<String> popupMenuButton;
@@ -14,21 +10,20 @@ class QuoteCardGridItem extends StatefulWidget {
   final String title;
   final double size;
 
-  QuoteCardGridItem({
+  QuoteCard({
     this.elevation = 0,
     this.onLongPress,
     this.onTap,
     this.popupMenuButton,
-    this.quote,
     this.size = 250.0,
     this.title = '',
   });
 
   @override
-  _QuoteCardGridItemState createState() => _QuoteCardGridItemState();
+  _QuoteCardState createState() => _QuoteCardState();
 }
 
-class _QuoteCardGridItemState extends State<QuoteCardGridItem> {
+class _QuoteCardState extends State<QuoteCard> {
   double _elevation = 0;
   double _size;
 
@@ -51,10 +46,7 @@ class _QuoteCardGridItemState extends State<QuoteCardGridItem> {
         elevation: _elevation,
         margin: EdgeInsets.zero,
         child: InkWell(
-          onTap: () {
-            FluroRouter.router.navigateTo(
-                context, QuotePageRoute.replaceFirst(':id', widget.quote.id));
-          },
+          onTap: widget.onTap,
           onHover: (isHover) {
             if (isHover) {
               setState(() {
@@ -76,11 +68,11 @@ class _QuoteCardGridItemState extends State<QuoteCardGridItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      widget.quote.name.length > 115
-                          ? '${widget.quote.name.substring(0, 115)}...'
-                          : widget.quote.name,
+                      widget.title.length > 115
+                          ? '${widget.title.substring(0, 115)}...'
+                          : widget.title,
                       style: TextStyle(
-                        fontSize: FontSize.gridItem(widget.quote.name),
+                        fontSize: FontSize.gridItem(widget.title),
                       ),
                     ),
                   ],

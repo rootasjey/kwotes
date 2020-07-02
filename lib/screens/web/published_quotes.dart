@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/quote_card_grid_item.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -140,16 +140,10 @@ class _PublishedQuotesState extends State<PublishedQuotes> {
         (BuildContext context, int index) {
           final quote = quotes.elementAt(index);
 
-          return FadeInY(
-            delay: 3.0 + index.toDouble(),
-            beginY: 100.0,
-            child: SizedBox(
-              width: 250.0,
-              height: 250.0,
-              child: QuoteCardGridItem(
-                quote: quote,
-              ),
-            ),
+          return QuoteCard(
+            title: quote.name,
+            onTap: () => FluroRouter.router.navigateTo(
+                context, QuotePageRoute.replaceFirst(':id', quote.id)),
           );
         },
         childCount: quotes.length,
