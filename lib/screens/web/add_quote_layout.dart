@@ -10,6 +10,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AddQuoteLayout extends StatefulWidget {
   final Widget child;
@@ -35,6 +36,9 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   AddQuoteType actionIntent;
   AddQuoteType actionResult;
 
+  Map<int, Size> navCardSizes = Map();
+  Map<int, double> navCardElevation = Map();
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +48,14 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
       fabText = 'Save';
       fabIcon = Icon(Icons.save);
     }
+
+    navCardSizes[0] = Size(200.0, 250.0);
+    navCardSizes[1] = Size(200.0, 250.0);
+    navCardSizes[2] = Size(200.0, 250.0);
+
+    navCardElevation[0] = 2.0;
+    navCardElevation[1] = 2.0;
+    navCardElevation[2] = 2.0;
   }
 
   @override
@@ -143,6 +155,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
               spacing: 30.0,
               children: <Widget>[
                 navCard(
+                  index: 0,
                   icon: Icon(Icons.dashboard, size: 40.0,),
                   title: 'Dashboard',
                   onTap: () {
@@ -160,6 +173,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                 ),
 
                 navCard(
+                  index: 1,
                   icon: Icon(Icons.add, size: 40.0,),
                   title: 'Add another quote',
                   onTap: () {
@@ -181,6 +195,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
                 canManage ?
                   navCard(
+                    index: 2,
                     icon: Icon(Icons.timer, size: 40.0,),
                     title: 'Temporary quotes',
                     onTap: () {
@@ -196,6 +211,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                     },
                   ) :
                   navCard(
+                    index: 2,
                     icon: Icon(Icons.home, size: 40.0,),
                     title: 'Home',
                     onTap: () {
@@ -218,13 +234,35 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     );
   }
 
-  Widget navCard({Icon icon, Function onTap, String title,}) {
-    return SizedBox(
-      width: 200.0,
-      height: 250.0,
+  Widget navCard({Icon icon, int index, Function onTap, String title,}) {
+    return AnimatedContainer(
+      width: navCardSizes[index].width,
+      height: navCardSizes[index].height,
+      duration: 200.milliseconds,
       child: Card(
+        elevation: navCardElevation[index],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(7.0),
+          ),
+        ),
         child: InkWell(
           onTap: onTap,
+          onHover: (isHover) {
+            if (isHover) {
+              setState(() {
+                navCardElevation[index] = 4.0;
+                navCardSizes[index] = Size(210.0, 260.0);
+              });
+
+              return;
+            }
+
+            setState(() {
+              navCardElevation[index] = 2.0;
+              navCardSizes[index] = Size(200.0, 250.0);
+            });
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
