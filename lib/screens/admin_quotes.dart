@@ -167,13 +167,13 @@ class AdminQuotesState extends State<AdminQuotes> {
     return SliverLayoutBuilder(
       builder: (context, constrains) {
         if (constrains.crossAxisExtent < 600.0) {
-          // return sliverQuotesList();
           return SliverPadding(
             padding: const EdgeInsets.only(
               top: 80.0,
             ),
             sliver: sliverList(),
           );
+
         } else {
           return SliverPadding(
             padding: const EdgeInsets.only(
