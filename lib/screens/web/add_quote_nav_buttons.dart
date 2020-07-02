@@ -61,6 +61,9 @@ class AddQuoteNavButtons extends StatelessWidget {
                 ),
                 child: Text(
                   nextMessage,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
