@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_button.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -79,76 +80,27 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Widget appBar() {
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
-            children: <Widget>[
-              FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (tempQuotes.length == 0) { return; }
+    return SliverAppHeader(
+      title: 'In validation',
+      onScrollToTop: () {
+        if (tempQuotes.length == 0) { return; }
 
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'In Validation',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: OrderButton(
-                  descending: descending,
-                  onOrderChanged: (order) {
-                    setState(() {
-                      descending = order;
-                    });
-
-                    fetch();
-                  },
-                ),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-            ],
-          ),
+        scrollController.animateTo(
+          0,
+          duration: Duration(seconds: 2),
+          curve: Curves.easeOutQuint
         );
       },
+      rightButton: OrderButton(
+        descending: descending,
+        onOrderChanged: (order) {
+          setState(() {
+            descending = order;
+          });
+
+          fetch();
+        },
+      ),
     );
   }
 
@@ -182,7 +134,28 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       return emptyView();
     }
 
-    return sliverQuotesList();
+    return SliverLayoutBuilder(
+      builder: (context, constrains) {
+        if (constrains.crossAxisExtent < 600.0) {
+          return SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 80.0,
+            ),
+            sliver: sliverList(),
+          );
+        }
+
+        return SliverPadding(
+          padding: const EdgeInsets.only(
+            top: 80.0,
+            left: 10.0,
+            right: 10.0,
+            bottom: 200.0,
+          ),
+          sliver: sliverGrid(),
+        );
+      },
+    );
   }
 
   Widget emptyView() {
@@ -210,7 +183,63 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     );
   }
 
-  Widget sliverQuotesList() {
+  Widget sliverGrid() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final tempQuote = tempQuotes.elementAt(index);
+          final topicColor = appTopicsColors.find(tempQuote.topics.first);
+
+          return QuoteCard(
+            onTap: () => editTempQuote(tempQuote),
+            title: tempQuote.name,
+            popupMenuButton: PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_horiz,
+                color: topicColor != null ?
+                  Color(topicColor.decimal) : Colors.primaries,
+              ),
+              onSelected: (value) {
+                if (value == 'delete') {
+                  deleteAction(tempQuote);
+                  return;
+                }
+
+                if (value == 'edit') {
+                  editTempQuote(tempQuote);
+                  return;
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_forever),
+                    title: Text('Delete'),
+                  )
+                ),
+                PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  )
+                ),
+              ],
+            ),
+          );
+        },
+        childCount: tempQuotes.length,
+      ),
+    );
+  }
+
+  Widget sliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -247,7 +276,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 ),
 
                 Padding(padding: const EdgeInsets.only(top: 10.0),),
-                Divider(),
+                Divider(thickness: 1.0,),
               ],
             ),
           );
