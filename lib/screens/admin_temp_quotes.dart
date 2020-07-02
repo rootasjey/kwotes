@@ -329,30 +329,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  Future createComments({
-    TempQuote tempQuote,
-    String quoteId,
-  }) async {
-
-    final userAuth = await userState.userAuth;
-    final tempComments = tempQuote.comments;
-
-    tempComments.forEach((tempComment) {
-      Firestore.instance
-        .collection('comments')
-        .add({
-          'commentId' : '',
-          'createdAt' : DateTime.now(),
-          'name'      : tempComment,
-          'quoteId'   : quoteId,
-          'updatedAt' : DateTime.now(),
-          'user': {
-            'id': userAuth.uid,
-          },
-        });
-    });
-  }
-
   void deleteAction(TempQuote tempQuote) async {
     int index = tempQuotes.indexOf(tempQuote);
 
