@@ -184,6 +184,7 @@ class _DashboardState extends State<Dashboard> {
 
         Wrap(
           spacing: 20.0,
+          runSpacing: 20.0,
           children: <Widget>[
             FadeInY(
               delay: 2.0,
