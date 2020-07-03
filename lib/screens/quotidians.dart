@@ -1,18 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/order_lang_button.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/converter.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:supercharged/supercharged.dart';
@@ -41,6 +44,7 @@ class QuotidiansState extends State<Quotidians> {
   @override
   initState() {
     super.initState();
+    checkAuth(context: context);
     getSavedLangAndOrder();
     fetch();
   }
@@ -65,110 +69,69 @@ class QuotidiansState extends State<Quotidians> {
 
             return false;
           },
-          child: bodyContent(),
+          child: LayoutBuilder(
+            builder: (context, constrains) {
+              return bodyContent(
+                maxWidth: constrains.maxWidth,
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
   Widget appBar()  {
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
-            children: <Widget>[
-              FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (quotidians.length == 0) { return; }
+    return SliverAppHeader(
+      title: 'Quotidians',
+      onScrollToTop: () {
+        if (quotidians.length == 0) { return; }
 
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'Scheduled quotidians',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: OrderLangButton(
-                  descending: descending,
-                  lang: lang,
-                  onLangChanged: (String newLang) {
-                    appLocalStorage.setPageLang(
-                      lang: newLang,
-                      pageRoute: pageRoute,
-                    );
-
-                    setState(() {
-                      lang = newLang;
-                    });
-
-                    fetch();
-                  },
-                  onOrderChanged: (bool order) {
-                    appLocalStorage.setPageOrder(
-                      descending: order,
-                      pageRoute: pageRoute,
-                    );
-
-                    setState(() {
-                      descending = order;
-                    });
-
-                    fetch();
-                  },
-                ),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-            ],
-          ),
+        scrollController.animateTo(
+          0,
+          duration: Duration(seconds: 2),
+          curve: Curves.easeOutQuint
         );
       },
+      rightButton: OrderLangButton(
+        descending: descending,
+        lang: lang,
+        onLangChanged: (String newLang) {
+          appLocalStorage.setPageLang(
+            lang: newLang,
+            pageRoute: pageRoute,
+          );
+
+          setState(() {
+            lang = newLang;
+          });
+
+          fetch();
+        },
+        onOrderChanged: (bool order) {
+          appLocalStorage.setPageOrder(
+            descending: order,
+            pageRoute: pageRoute,
+          );
+
+          setState(() {
+            descending = order;
+          });
+
+          fetch();
+        },
+      ),
     );
   }
 
-  Widget bodyContent() {
+  Widget bodyContent({double maxWidth}) {
     return CustomScrollView(
       controller: scrollController,
       slivers: <Widget>[
         appBar(),
-        customScrollViewChild(),
+
+        if (maxWidth < 600.0) customScrollViewChild(),
+        if (maxWidth >= 600.0) ...groupsGrid(),
       ],
     );
   }
@@ -227,6 +190,21 @@ class QuotidiansState extends State<Quotidians> {
     );
   }
 
+  List<Widget> groupsGrid() {
+    final Map<String, List<Quotidian>> groups = quotidians.groupBy(
+      (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
+    );
+
+    final List<Widget> groupedGrids = [];
+
+    groups.forEach((yearMonth, groupedQuotidians) {
+      final grid = groupGrid(yearMonth, groupedQuotidians);
+      groupedGrids.addAll(grid);
+    });
+
+    return groupedGrids;
+  }
+
   Widget groupsList() {
     final Map<String, List<Quotidian>> groups = quotidians.groupBy(
       (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
@@ -274,7 +252,6 @@ class QuotidiansState extends State<Quotidians> {
               final renderObject = headerKey.currentContext.findRenderObject();
               renderObject.showOnScreen(duration: 1.seconds);
             },
-            onLongPress: () => deleteMonth(group),
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 35.0,
@@ -297,71 +274,275 @@ class QuotidiansState extends State<Quotidians> {
             ),
           ),
         ),
-        content: sliverQuotesList(group),
+        content: singleGroupList(group),
       ),
     ];
   }
 
-  Widget sliverQuotesList(List<Quotidian> group) {
-    int index = 0;
+  List<Widget> groupGrid(String yearMonth, List<Quotidian> grouped) {
+    final splittedDate = yearMonth.split('-');
 
+    final year = splittedDate[0];
+    final month = getMonthFromNumber(splittedDate[1].toInt());
+
+    final headerKey = GlobalKey();
+
+    return [
+      SliverStickyHeader(
+        header: Container(
+          color: stateColors.softBackground,
+          child: Stack(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  final renderObject = headerKey.currentContext.findRenderObject();
+                  renderObject.showOnScreen(duration: 1.seconds);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 35.0,
+                    bottom: 10.0,
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          '$month $year',
+                        ),
+
+                        SizedBox(
+                          width: 100.0,
+                          child: Divider(thickness: 2,),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                right: 20.0,
+                child: FlatButton(
+                  onPressed: () {
+                    showDeleteMonthDialog(yearMonth, grouped,);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 25.0,
+                    ),
+                    child: Icon(Icons.delete,),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        sliver: SliverPadding(
+          key: headerKey,
+          padding: const EdgeInsets.all(10.0),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 300.0,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final quote = grouped.elementAt(index);
+                return itemGrid(quote);
+              },
+              childCount: grouped.length,
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  void showDeleteMonthDialog(String yearMonth, List<Quotidian> grouped) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Delete $yearMonth group?',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 15.0,
+          ),
+          actionsPadding: const EdgeInsets.all(10.0),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Divider(
+                  thickness: 1.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22.0,
+                    vertical: 8.0,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Opacity(
+                        opacity: .6,
+                        child: Text(
+                          'This action cannot be undone.',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                FluroRouter.router.pop(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
+                child: Text(
+                  'CANCEL',
+                  style: TextStyle(
+                    color: stateColors.foreground.withOpacity(.6),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            RaisedButton(
+              onPressed: () {
+                FluroRouter.router.pop(context);
+                deleteMonth(grouped);
+              },
+              color: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
+                child: Text(
+                  'DELETE',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Widget itemGrid(Quotidian quotidian) {
+    final quote = quotidian.quote;
+    final topicColor = appTopicsColors.find(quote.topics.first);
+
+    return QuoteCard(
+      onTap: () {
+        FluroRouter.router.navigateTo(
+          context,
+          QuotePageRoute.replaceFirst(':id', quotidian.id)
+        );
+      },
+      title: quote.name,
+      popupMenuButton: PopupMenuButton<String>(
+        icon: Icon(
+          Icons.more_horiz,
+          color: Color(topicColor.decimal),
+        ),
+        onSelected: (value) {
+          if (value == 'delete') {
+            deleteAction(quotidian);
+            return;
+          }
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          PopupMenuItem(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Delete'),
+            )
+          ),
+        ],
+      ),
+      stackChildren: <Widget>[
+        Positioned(
+          bottom: 15.0,
+          right: 60.0,
+          child: Text(
+            quotidian.date.day.toString(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget singleGroupList(List<Quotidian> group) {
     return Column(
       children: group.map((quotidian) {
-        index++;
-
         final topicColor = appTopicsColors
           .find(quotidian.quote.topics.first);
 
-        return FadeInY(
-          delay: index * 1.0,
-          beginY: 50.0,
-          child: InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
-              );
-            },
-            onLongPress: () => showQuoteSheet(quotidian: quotidian),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(padding: const EdgeInsets.only(top: 20.0),),
+        return InkWell(
+          onTap: () {
+            FluroRouter.router.navigateTo(
+              context,
+              QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
+            );
+          },
+          onLongPress: () => showQuoteSheet(quotidian: quotidian),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(padding: const EdgeInsets.only(top: 20.0),),
 
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  quotidian.quote.name,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+
+              Center(
+                child: IconButton(
+                  onPressed: () => showQuoteSheet(quotidian: quotidian),
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: topicColor != null ?
+                    Color(topicColor.decimal) : stateColors.primary,
+                  ),
+                ),
+              ),
+
+              Center(
+                child: Opacity(
+                  opacity: .6,
                   child: Text(
-                    quotidian.quote.name,
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                    quotidian.date.day.toString(),
                   ),
                 ),
+              ),
 
-                Center(
-                  child: IconButton(
-                    onPressed: () => showQuoteSheet(quotidian: quotidian),
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: topicColor != null ?
-                      Color(topicColor.decimal) : stateColors.primary,
-                    ),
-                  ),
-                ),
-
-                Center(
-                  child: Opacity(
-                    opacity: .6,
-                    child: Text(
-                      quotidian.date.day.toString(),
-                    ),
-                  ),
-                ),
-
-                Padding(padding: const EdgeInsets.only(top: 10.0),),
-                Divider(),
-              ],
-            ),
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
+              Divider(),
+            ],
           ),
         );
       }).toList()
@@ -409,10 +590,11 @@ class QuotidiansState extends State<Quotidians> {
         .document(quotidian.id)
         .delete();
 
-      quotidians.removeWhere((element) => element.id == quotidian.id);
+      setState(() {
+        quotidians.removeWhere((element) => element.id == quotidian.id);
+      });
     });
 
-    setState(() {});
   }
 
   Future fetch() async {
