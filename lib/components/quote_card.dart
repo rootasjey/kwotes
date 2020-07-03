@@ -9,6 +9,7 @@ class QuoteCard extends StatefulWidget {
   final double elevation;
   final String title;
   final double size;
+  final List<Widget> stackChildren;
 
   QuoteCard({
     this.elevation = 0,
@@ -16,6 +17,7 @@ class QuoteCard extends StatefulWidget {
     this.onTap,
     this.popupMenuButton,
     this.size = 250.0,
+    this.stackChildren = const [],
     this.title = '',
   });
 
@@ -84,6 +86,9 @@ class _QuoteCardState extends State<QuoteCard> {
                   bottom: 0,
                   child: widget.popupMenuButton,
                 ),
+
+              if (widget.stackChildren.length > 0)
+                ...widget.stackChildren,
             ],
           ),
         ),
