@@ -223,11 +223,27 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   List<Widget> groupedGrids() {
+    final List<Widget> widgets = [];
+
+    if (isLoading) {
+      widgets.add(loadingView());
+      return widgets;
+    }
+
+    if (quotidians.length == 0) {
+      widgets.add(emptyView());
+      return widgets;
+    }
+
+    if (!isLoading && hasErrors) {
+      widgets.add(errorView());
+      return widgets;
+    }
+
     final Map<String, List<Quotidian>> groups = quotidians.groupBy(
       (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
     );
 
-    final List<Widget> widgets = [];
 
     groups.forEach((yearMonth, groupedQuotidians) {
       final grid = groupedGrid(yearMonth, groupedQuotidians);
