@@ -4,7 +4,7 @@
 
 <h1 align="middle">Out Of Context</h1>
 
-<p align="middle">One quote delivered to you each day</p>
+<p align="middle">5 seconds of emotion</p>
 
 <p align="middle">
   <img src="./screenshots/ooc-letterhead-envelope.png" title="out of context home web" />
