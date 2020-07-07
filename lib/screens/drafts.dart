@@ -4,6 +4,7 @@ import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/order_button.dart';
+import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/sliver_app_header.dart';
@@ -13,7 +14,6 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/snack.dart';
@@ -147,8 +147,11 @@ class _DraftsState extends State<Drafts> {
       );
     }
 
-    if (MediaQuery.of(context).size.width > 300.0) {
-      return gridQuotes();
+    if (MediaQuery.of(context).size.width > 600.0) {
+      return SliverPadding(
+        padding: const EdgeInsets.all(20.0),
+        sliver: gridQuotes(),
+      );
     }
 
     return listQuotes();
@@ -159,19 +162,15 @@ class _DraftsState extends State<Drafts> {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final draft = drafts.elementAt(index);
-          final topic = draft.topics.length > 0 ? draft.topics.first : null;
 
-          TopicColor topicColor;
+          TopicColor topicColor = appTopicsColors.topicsColors.first;
 
-          if (topic != null) {
+          if (draft.topics.length > 0) {
             topicColor = appTopicsColors.find(draft.topics.first);
-          } else {
-            topicColor = appTopicsColors.topicsColors.first;
           }
 
           return InkWell(
             onTap: () => editDraft(draft),
-            onLongPress: () => showQuoteSheet(draft: draft, index: index),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -196,10 +195,12 @@ class _DraftsState extends State<Drafts> {
                           ),
                         ),
 
-                      Text(
-                        draft.name,
-                        style: TextStyle(
-                          fontSize: 20,
+                      Expanded(
+                        child: Text(
+                          draft.name,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ],
@@ -207,13 +208,10 @@ class _DraftsState extends State<Drafts> {
                 ),
 
                 Center(
-                  child: IconButton(
-                    onPressed: () => showQuoteSheet(draft: draft, index: index),
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: topicColor != null ?
-                      Color(topicColor.decimal) : stateColors.primary,
-                    ),
+                  child: quotePopupMenuButton(
+                    draft: draft,
+                    index: index,
+                    color: Color(topicColor.decimal),
                   ),
                 ),
 
@@ -238,46 +236,20 @@ class _DraftsState extends State<Drafts> {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           final draft = drafts.elementAt(index);
-          final topicColor = appTopicsColors.find(draft.topics.first);
 
-          return FadeInY(
-            delay: 3.0 + index.toDouble(),
-            beginY: 100.0,
-            child: SizedBox(
-              width: 250.0,
-              height: 250.0,
-              child: Card(
-                child: InkWell(
-                  onTap: () => editDraft(draft),
-                  onLongPress: () => showQuoteSheet(draft: draft, index: index),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          draft.name.length > 115 ?
-                            '${draft.name.substring(0, 115)}...' : draft.name,
-                          style: TextStyle(
-                            fontSize: FontSize.gridItem(draft.name),
-                          ),
-                        ),
-                      ),
+          TopicColor topicColor = appTopicsColors.topicsColors.first;
 
-                      Center(
-                        child: IconButton(
-                          onPressed: () => showQuoteSheet(draft: draft, index: index),
-                          icon: Icon(
-                            Icons.more_horiz,
-                            color: topicColor != null ?
-                            Color(topicColor.decimal) : stateColors.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          if (draft.topics.length > 0) {
+            topicColor = appTopicsColors.find(draft.topics.first);
+          }
+
+          return QuoteCard(
+            onTap: () => editDraft(draft),
+            title: draft.name,
+            popupMenuButton: quotePopupMenuButton(
+              draft: draft,
+              index: index,
+              color: Color(topicColor.decimal),
             ),
           );
         },
@@ -470,6 +442,44 @@ class _DraftsState extends State<Drafts> {
     }
   }
 
+  Widget quotePopupMenuButton({
+    TempQuote draft,
+    int index,
+    Color color,
+  }) {
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_horiz,
+        color: color,
+      ),
+      onSelected: (value) {
+        if (value == 'edit') {
+          editDraft(draft);
+          return;
+        }
+
+        if (value == 'delete') {
+          showDeleteDialog(draft: draft, index: index,);
+          return;
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+            value: 'edit',
+            child: ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Edit'),
+            )),
+        PopupMenuItem(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete_sweep),
+              title: Text('Delete'),
+            )),
+      ],
+    );
+  }
+
   void editDraft(TempQuote draft) async {
     AddQuoteInputs.isOfflineDraft = draft.isOffline;
     AddQuoteInputs.draft = draft;
@@ -478,6 +488,78 @@ class _DraftsState extends State<Drafts> {
     await FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
 
     fetch();
+  }
+
+  void showDeleteDialog({TempQuote draft, int index}) {
+    showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        title: Text(
+          'Confirm deletion?',
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 40.0,
+        ),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  FluroRouter.router.pop(context);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(3.0),
+                  ),
+                ),
+                color: stateColors.softBackground,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 15.0,
+                  ),
+                  child: Text(
+                    'NO',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(padding: const EdgeInsets.only(left: 15.0)),
+              RaisedButton(
+                onPressed: () {
+                  FluroRouter.router.pop(context);
+                  deleteAction(draft: draft, index: index);
+                },
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(3.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 15.0,
+                  ),
+                  child: Text(
+                    'YES',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    });
   }
 
   void showOfflineHelper() {
@@ -490,70 +572,6 @@ class _DraftsState extends State<Drafts> {
             child: Text(
               "This quote is saved in your device's offline storage. You can save it in the cloud after an edit. It can prevent data loss."
             ),
-          ),
-        );
-      }
-    );
-  }
-
-  void showQuoteSheet({TempQuote draft, int index}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    tooltip: 'Delete',
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      deleteAction(draft: draft, index: index);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.delete_outline,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Delete',
-                  ),
-                ],
-              ),
-
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      editDraft(draft);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.edit,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Edit',
-                  ),
-                ],
-              ),
-            ],
           ),
         );
       }
