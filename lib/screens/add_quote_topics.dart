@@ -195,25 +195,24 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             ),
           ),
 
-          Observer(builder: (context) {
-            if (allTopics.length == 0) {
-              allTopics.addAll(appTopicsColors.topicsColors);
-            }
+          FadeInY(
+            beginY: beginY,
+            delay: delay + (3.5 * delayStep),
+            child: Observer(builder: (context) {
+              if (allTopics.length == 0) {
+                allTopics.addAll(appTopicsColors.topicsColors);
+              }
 
-            return SizedBox(
-              height: 200.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: allTopics.length,
-                itemBuilder: (context, index) {
-                  final topicColor = allTopics.elementAt(index);
-                  final name = topicColor.name;
+              return SizedBox(
+                height: 200.0,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: allTopics.length,
+                  itemBuilder: (context, index) {
+                    final topicColor = allTopics.elementAt(index);
+                    final name = topicColor.name;
 
-                  return FadeInY(
-                    beginY: 100.0,
-                    endY: 0.0,
-                    delay: index * 1.0,
-                    child: TopicCardColor(
+                    return TopicCardColor(
                       onColorTap: () {
                         setState(() {
                           selectedTopics.add(topicColor);
@@ -230,12 +229,12 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                       style: TextStyle(
                         fontSize: 17.0,
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
-          }),
+                    );
+                  },
+                ),
+              );
+            }),
+          ),
         ],
       ),
     );
