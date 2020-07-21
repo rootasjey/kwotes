@@ -69,62 +69,93 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       40.0 :
       60.0;
 
-    return ListView(
-      children: <Widget>[
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontal,
-              vertical: 20.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return RefreshIndicator(
+      onRefresh: () {
+        navToHome();
+        return Future.value(true);
+      },
+      child: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
               children: <Widget>[
-                quoteName(
-                  screenWidth: MediaQuery.of(context).size.width,
-                  screenHeight: MediaQuery.of(context).size.height,
-                ),
-
-                authorDivider(color: color),
-
-                FadeInY(
-                  beginY: 50.0,
-                  delay: 1.0,
-                  child: authorName(),
-                ),
-
-                if (quotidian.quote.mainReference?.name != null &&
-                  quotidian.quote.mainReference.name.length > 0)
-                  FadeInY(
-                    beginY: 100.0,
-                    delay: 2.0,
-                    child: referenceName(),
+                Positioned(
+                  top: 20.0,
+                  right: 10.0,
+                  child: MaterialButton(
+                    onPressed: () => navToHome(),
+                    elevation: 4.0,
+                    color: stateColors.softBackground,
+                    textColor: Colors.white,
+                    child: Icon(
+                      Icons.close,
+                      size: 26,
+                    ),
+                    padding: EdgeInsets.all(16),
+                    shape: CircleBorder(),
                   ),
+                ),
+
+                Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontal,
+                  vertical: 20.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    quoteName(
+                      screenWidth: MediaQuery.of(context).size.width,
+                      screenHeight: MediaQuery.of(context).size.height,
+                    ),
+
+                    authorDivider(color: color),
+
+                    FadeInY(
+                      beginY: 50.0,
+                      delay: 1.0,
+                      child: authorName(),
+                    ),
+
+                    if (quotidian.quote.mainReference?.name != null &&
+                      quotidian.quote.mainReference.name.length > 0)
+                      FadeInY(
+                        beginY: 100.0,
+                        delay: 2.0,
+                        child: referenceName(),
+                      ),
+                  ],
+                ),
+              ),
               ],
             ),
           ),
-        ),
 
-        userActions(),
+          userActions(),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 200.0),
-          child: MaterialButton(
-            onPressed: () {
-              FluroRouter.router.navigateTo(context, HomeRoute);
-            },
-            color: color,
-            textColor: Colors.white,
-            child: Icon(
-              Icons.close,
-              size: 36,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 200.0,
+              horizontal: 100.0,
             ),
-            padding: EdgeInsets.all(16),
-            shape: CircleBorder(),
+            child: RaisedButton(
+              onPressed: () => navToHome(),
+              elevation: 3.0,
+              color: color,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -413,5 +444,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         quote.starred = true;
       });
     }
+  }
+
+  void navToHome() {
+    if (Navigator.canPop(context)) {
+      return FluroRouter.router.pop(context);
+    }
+
+    FluroRouter.router.navigateTo(context, HomeRoute);
   }
 }
