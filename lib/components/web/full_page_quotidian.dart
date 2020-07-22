@@ -102,7 +102,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 Positioned(
                   top: 0.0,
                   left: 60.0,
-                  child: userActions(),
+                  child: quoteActions(),
                 ),
 
                 Padding(
@@ -308,7 +308,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
-  Widget userActions() {
+  Widget quoteActions() {
     return Observer(
       builder: (context) {
         if (!userState.isUserConnected) {
