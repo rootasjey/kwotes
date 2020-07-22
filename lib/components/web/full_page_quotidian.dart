@@ -216,6 +216,49 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     );
   }
 
+  Widget quoteActions() {
+    return Observer(
+      builder: (context) {
+        if (!userState.isUserConnected) {
+          return Padding(padding: EdgeInsets.zero,);
+        }
+
+        return SizedBox(
+          height: MediaQuery.of(context).size.height - 80.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              IconButton(
+                onPressed: () async {
+                  if (isPrevFav) {
+                    removeQuotidianFromFav();
+                    return;
+                  }
+
+                  addQuotidianToFav();
+                },
+                icon: isPrevFav ?
+                  Icon(Icons.favorite) :
+                  Icon(Icons.favorite_border),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: IconButton(
+                  onPressed: () async {
+                    shareTwitter(quote: quotidian.quote);
+                  },
+                  icon: Icon(Icons.share),
+                ),
+              ),
+
+              AddToListButton(quote: quotidian.quote,),
+            ],
+          ),
+        );
+    });
+  }
+
   Widget quoteName({double screenWidth}) {
     return Padding(
       padding: const EdgeInsets.only(left: 60.0),
@@ -306,49 +349,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         ],
       ),
     );
-  }
-
-  Widget quoteActions() {
-    return Observer(
-      builder: (context) {
-        if (!userState.isUserConnected) {
-          return Padding(padding: EdgeInsets.zero,);
-        }
-
-        return SizedBox(
-          height: MediaQuery.of(context).size.height - 80.0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                onPressed: () async {
-                  if (isPrevFav) {
-                    removeQuotidianFromFav();
-                    return;
-                  }
-
-                  addQuotidianToFav();
-                },
-                icon: isPrevFav ?
-                  Icon(Icons.favorite) :
-                  Icon(Icons.favorite_border),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                child: IconButton(
-                  onPressed: () async {
-                    shareTwitter(quote: quotidian.quote);
-                  },
-                  icon: Icon(Icons.share),
-                ),
-              ),
-
-              AddToListButton(quote: quotidian.quote,),
-            ],
-          ),
-        );
-    });
   }
 
   Widget userSection() {
