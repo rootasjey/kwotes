@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/discover.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_quotidian.dart';
-import 'package:memorare/components/web/top_bar.dart';
 import 'package:memorare/components/web/topics.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -40,7 +39,6 @@ class _HomeState extends State<Home> {
       body: ListView(
         controller: scrollController,
         children: <Widget>[
-          TopBar(),
           FullPageQuotidian(),
           Topics(),
           Discover(),
