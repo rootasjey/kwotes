@@ -1,7 +1,12 @@
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
+import 'package:memorare/state/user_state.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 
 Future<bool> checkEmailAvailability(String email) async {
   try {
@@ -49,4 +54,15 @@ Future<bool> checkNameAvailability(String username) async {
 bool checkUsernameFormat(String username) {
   final str = RegExp("[a-zA-Z0-9_]{3,}").stringMatch(username);
   return username == str;
+}
+
+void userSignOut({BuildContext context, bool autoNavigateAfter = true,}) async {
+  await appLocalStorage.clearUserAuthData();
+  await FirebaseAuth.instance.signOut();
+  userState.setUserDisconnected();
+  userState.signOut();
+
+  if (autoNavigateAfter) {
+    FluroRouter.router.navigateTo(context, RootRoute);
+  }
 }
