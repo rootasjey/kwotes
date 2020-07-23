@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:mobx/mobx.dart';
 
 class ColoredListTile extends StatefulWidget {
   final Color hoverColor;
@@ -21,6 +23,29 @@ class ColoredListTile extends StatefulWidget {
 
 class _ColoredListTileState extends State<ColoredListTile> {
   Color hoverColor = Colors.black45;
+  Color baseColor = Colors.black45;
+
+  ReactionDisposer colorDisposer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    colorDisposer = autorun((reaction) {
+      setState(() {
+        baseColor = stateColors.foreground;
+        hoverColor = baseColor;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (colorDisposer != null) {
+      colorDisposer();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +60,7 @@ class _ColoredListTileState extends State<ColoredListTile> {
         }
 
         setState(() {
-          hoverColor = Colors.black45;
+          hoverColor = baseColor;
         });
       },
       onTap: widget.onTap,
@@ -45,6 +70,7 @@ class _ColoredListTileState extends State<ColoredListTile> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2.0),
             border: Border.all(
+              color: stateColors.foreground,
               width: 1.0,
             ),
           ),
