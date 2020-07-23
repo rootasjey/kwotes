@@ -311,7 +311,5 @@ class FluroRouter {
       UndefinedRoute,
       handler: WebRouteHandlers.undefined,
     );
-
-    print(router.match(WelcomeBackRoute).route.route);
   }
 }
