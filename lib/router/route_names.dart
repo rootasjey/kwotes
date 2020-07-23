@@ -32,4 +32,4 @@ const String TempQuotesRoute        = '/tempquotes';
 const String TopicRoute             = '/topic/:name';
 const String TopicsRoute            = '/topics';
 const String UndefinedRoute         = '/:route';
-const String WelcomeBackRoute       = '/welcomeBack';
+const String WelcomeBackRoute       = '/welcomeback';
