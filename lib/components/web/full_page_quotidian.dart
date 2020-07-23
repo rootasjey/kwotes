@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/ColoredListTile.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -37,6 +39,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   ReactionDisposer disposeFav;
   ReactionDisposer disposeLang;
+
+  TextDecoration dashboardLinkDecoration = TextDecoration.none;
 
   @override
   void initState() {
@@ -358,12 +362,193 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
         hasFetchedFav = true;
 
-        return Padding(padding: EdgeInsets.zero,);
+        return dashboardQuickLinks();
       }
 
       hasFetchedFav = false;
       return signinButton();
     });
+  }
+
+  Widget dashboardQuickLinks() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(
+        vertical: 40.0,
+      ),
+      foregroundDecoration: BoxDecoration(
+        color: Color.fromRGBO(0, 0, 0, 0.025),
+      ),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 30.0),
+            child: Text(
+              'QUICK LINKS',
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+
+          SizedBox(
+            width: 50.0,
+            child: Divider(thickness: 2.0,),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Opacity(
+              opacity: .6,
+              child: InkWell(
+                onTap: () => FluroRouter.router.navigateTo(
+                  context,
+                  DashboardRoute,
+                ),
+                onHover: (isHover) {
+                  print('isHover: $isHover');
+                  setState(() {
+                    dashboardLinkDecoration = isHover
+                      ? TextDecoration.underline
+                      : TextDecoration.none;
+                  });
+                },
+                child: Text(
+                  'Shortcuts to your dashboard',
+                  style: TextStyle(
+                    decoration: dashboardLinkDecoration,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(bottom: 60.0),
+            child: PopupMenuButton<String>(
+              icon: Icon(Icons.more_horiz),
+              tooltip: 'More quick links',
+              onSelected: (value) {
+                if (value == 'signout') {
+                  userSignOut(context: context);
+                  return;
+                }
+
+                FluroRouter.router.navigateTo(
+                  context,
+                  value,
+                );
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem(
+                  value: DraftsRoute,
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text(
+                      'Drafts',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ),
+
+                const PopupMenuItem(
+                  value: PublishedQuotesRoute,
+                  child: ListTile(
+                    leading: Icon(Icons.cloud_done),
+                    title: Text(
+                      'Published',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ),
+
+                const PopupMenuItem(
+                  value: TempQuotesRoute,
+                  child: ListTile(
+                    leading: Icon(Icons.timelapse),
+                    title: Text(
+                      'In Validation',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  )
+                ),
+
+                const PopupMenuItem(
+                  value: AccountRoute,
+                  child: ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text(
+                      'Settings',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ),
+
+                const PopupMenuItem(
+                  value: 'signout',
+                  child: ListTile(
+                    leading: Icon(Icons.exit_to_app),
+                    title: Text(
+                      'Sign out',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ),
+
+                const PopupMenuItem(
+                  value: 'dashboard',
+                  child: ListTile(
+                    leading: Icon(Icons.dashboard),
+                    title: Text(
+                      'Dashboard',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  )
+                ),
+              ],
+            ),
+          ),
+
+          Wrap(
+            spacing: 30.0,
+            runSpacing: 30.0,
+            children: <Widget>[
+              ColoredListTile(
+                icon: Icons.favorite,
+                title: Text('Favourites'),
+                hoverColor: Colors.red,
+                onTap: () => FluroRouter.router.navigateTo(
+                  context,
+                  FavouritesRoute,
+                ),
+              ),
+
+              ColoredListTile(
+                icon: Icons.list,
+                title: Text('Lists'),
+                hoverColor: Colors.blue.shade700,
+                onTap: () => FluroRouter.router.navigateTo(
+                  context,
+                  ListsRoute,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   void addQuotidianToFav() async {
