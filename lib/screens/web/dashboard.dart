@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
@@ -489,13 +489,8 @@ class _DashboardState extends State<Dashboard> {
             shape: CircleBorder(),
             clipBehavior: Clip.hardEdge,
             child: IconButton(
-              onPressed: () async {
-                await appLocalStorage.clearUserAuthData();
-                await FirebaseAuth.instance.signOut();
-                userState.setUserDisconnected();
-                userState.signOut();
-
-                FluroRouter.router.navigateTo(context, RootRoute);
+              onPressed: () {
+                userSignOut(context: context);
               },
               icon: Icon(
                 Icons.exit_to_app,
