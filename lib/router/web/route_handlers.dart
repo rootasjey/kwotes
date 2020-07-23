@@ -176,4 +176,8 @@ class WebRouteHandlers {
   static Handler undefined = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(UndefinedPage(name: params['route'][0],)));
+
+  static Handler welcomeBack = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Home());
 }

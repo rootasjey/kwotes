@@ -131,6 +131,11 @@ class FluroRouter {
       TopicsRoute,
       handler: MobileRouteHandlers.topics,
     );
+
+    router.define(
+      WelcomeBackRoute,
+      handler: MobileRouteHandlers.welcomeBack,
+    );
   }
 
   static void setupWebRouter() {
@@ -297,6 +302,11 @@ class FluroRouter {
     router.define(
       UndefinedRoute,
       handler: WebRouteHandlers.undefined,
+    );
+
+    router.define(
+      WelcomeBackRoute,
+      handler: WebRouteHandlers.welcomeBack,
     );
   }
 }

@@ -439,7 +439,7 @@ class _SigninState extends State<Signin> {
 
       FluroRouter.router.navigateTo(
         context,
-        DashboardRoute,
+        WelcomeBackRoute,
         replace: true,
       );
 

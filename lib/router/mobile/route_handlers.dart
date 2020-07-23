@@ -125,4 +125,8 @@ class MobileRouteHandlers {
   static Handler topics = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AllTopics());
+
+  static Handler welcomeBack = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Home(initialIndex: 2,));
 }
