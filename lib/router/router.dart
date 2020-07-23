@@ -128,14 +128,16 @@ class FluroRouter {
     );
 
     router.define(
+      WelcomeBackRoute,
+      handler: MobileRouteHandlers.welcomeBack,
+    );
+
+    // ?NOTE: Must be the last defined route.
+    router.define(
       TopicsRoute,
       handler: MobileRouteHandlers.topics,
     );
 
-    router.define(
-      WelcomeBackRoute,
-      handler: MobileRouteHandlers.welcomeBack,
-    );
   }
 
   static void setupWebRouter() {
@@ -300,13 +302,16 @@ class FluroRouter {
     );
 
     router.define(
+      WelcomeBackRoute,
+      handler: WebRouteHandlers.welcomeBack,
+    );
+
+    // ?NOTE: Must be the last defined route.
+    router.define(
       UndefinedRoute,
       handler: WebRouteHandlers.undefined,
     );
 
-    router.define(
-      WelcomeBackRoute,
-      handler: WebRouteHandlers.welcomeBack,
-    );
+    print(router.match(WelcomeBackRoute).route.route);
   }
 }
