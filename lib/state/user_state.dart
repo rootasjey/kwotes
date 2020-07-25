@@ -10,6 +10,9 @@ abstract class UserStateBase with Store {
   FirebaseUser _userAuth;
 
   @observable
+  String avatarUrl = '';
+
+  @observable
   String lang = 'en';
 
   @observable
@@ -46,6 +49,11 @@ abstract class UserStateBase with Store {
   /// Use on sign out / user's data has changed.
   void clearAuthCache() {
     _userAuth = null;
+  }
+
+  @action
+  void setAvatarUrl(String url) {
+    avatarUrl = url;
   }
 
   @action

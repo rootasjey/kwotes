@@ -9,6 +9,23 @@ part of 'user_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$UserState on UserStateBase, Store {
+  final _$avatarUrlAtom = Atom(name: 'UserStateBase.avatarUrl');
+
+  @override
+  String get avatarUrl {
+    _$avatarUrlAtom.context.enforceReadPolicy(_$avatarUrlAtom);
+    _$avatarUrlAtom.reportObserved();
+    return super.avatarUrl;
+  }
+
+  @override
+  set avatarUrl(String value) {
+    _$avatarUrlAtom.context.conditionallyRunInAction(() {
+      super.avatarUrl = value;
+      _$avatarUrlAtom.reportChanged();
+    }, _$avatarUrlAtom, name: '${_$avatarUrlAtom.name}_set');
+  }
+
   final _$langAtom = Atom(name: 'UserStateBase.lang');
 
   @override
@@ -101,6 +118,16 @@ mixin _$UserState on UserStateBase, Store {
       ActionController(name: 'UserStateBase');
 
   @override
+  void setAvatarUrl(String url) {
+    final _$actionInfo = _$UserStateBaseActionController.startAction();
+    try {
+      return super.setAvatarUrl(url);
+    } finally {
+      _$UserStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setLang(String newLang) {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
@@ -173,7 +200,7 @@ mixin _$UserState on UserStateBase, Store {
   @override
   String toString() {
     final string =
-        'lang: ${lang.toString()},isQuotidianNotifActive: ${isQuotidianNotifActive.toString()},isUserConnected: ${isUserConnected.toString()},username: ${username.toString()},updatedFavAt: ${updatedFavAt.toString()}';
+        'avatarUrl: ${avatarUrl.toString()},lang: ${lang.toString()},isQuotidianNotifActive: ${isQuotidianNotifActive.toString()},isUserConnected: ${isUserConnected.toString()},username: ${username.toString()},updatedFavAt: ${updatedFavAt.toString()}';
     return '{$string}';
   }
 }
