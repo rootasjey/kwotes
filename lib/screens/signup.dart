@@ -595,7 +595,10 @@ class _SignupState extends State<Signup> {
     try {
       // ?NOTE: Triming because of TAB key on Desktop.
       final result = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
+        .createUserWithEmailAndPassword(
+          email: email.trim(),
+          password: password.trim(),
+        );
 
       final user = result.user;
 
@@ -613,11 +616,12 @@ class _SignupState extends State<Signup> {
         return;
       }
 
-      final name = username.isNotEmpty ?
-        username : email.substring(0, email.indexOf('@'));
+      final name = username.isNotEmpty
+        ? username
+        : email.substring(0, email.indexOf('@'));
 
       final userUpdateInfo = UserUpdateInfo();
-        userUpdateInfo.displayName = name;
+      userUpdateInfo.displayName = name;
 
       await user.updateProfile(userUpdateInfo);
 
@@ -652,7 +656,7 @@ class _SignupState extends State<Signup> {
             'proposed': 0,
           },
           'urls': {
-            'image': '',
+            'image': 'local:user',
           },
           'uid': user.uid,
         });
