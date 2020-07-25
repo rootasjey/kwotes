@@ -2,6 +2,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/main_mobile.dart';
 import 'package:memorare/main_web.dart';
@@ -98,6 +99,8 @@ class AppState extends State<App> {
       }
 
       appLocalStorage.setUserName(authResult.user.displayName);
+      await userGetAndSetAvatarUrl(authResult);
+
       userState.setUserConnected();
     } catch (error) {
       debugPrint(error.toString());

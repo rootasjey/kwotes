@@ -437,6 +437,8 @@ class _SigninState extends State<Signin> {
         isCompleted = true;
       });
 
+      await userGetAndSetAvatarUrl(authResult);
+
       FluroRouter.router.navigateTo(
         context,
         WelcomeBackRoute,

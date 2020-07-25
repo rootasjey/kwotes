@@ -1,10 +1,12 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 
@@ -65,4 +67,19 @@ void userSignOut({BuildContext context, bool autoNavigateAfter = true,}) async {
   if (autoNavigateAfter) {
     FluroRouter.router.navigateTo(context, RootRoute);
   }
+}
+
+Future userGetAndSetAvatarUrl(AuthResult authResult) async {
+  final user = await Firestore.instance
+    .collection('users')
+    .document(authResult.user.uid)
+    .get();
+
+  final data = user.data;
+  final avatarUrl = data['urls']['image'];
+
+  String imageName = avatarUrl.replaceFirst('local:', '');
+  String path = 'assets/images/$imageName-${stateColors.iconExt}.png';
+
+  userState.setAvatarUrl(path);
 }
