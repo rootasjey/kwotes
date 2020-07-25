@@ -5,14 +5,18 @@ import 'package:mobx/mobx.dart';
 class ColoredListTile extends StatefulWidget {
   final Color hoverColor;
   final IconData icon;
+  final Function onTap;
+  final bool outlined;
+  final bool selected;
   final Widget title;
   final double width;
-  final Function onTap;
 
   ColoredListTile({
+    this.selected = false,
     this.hoverColor = Colors.blue,
     this.icon,
     this.onTap,
+    this.outlined = true,
     this.title,
     this.width = 200.0,
   });
@@ -33,7 +37,10 @@ class _ColoredListTileState extends State<ColoredListTile> {
 
     colorDisposer = autorun((reaction) {
       setState(() {
-        baseColor = stateColors.foreground;
+        baseColor = widget.selected
+        ? widget.hoverColor
+        : stateColors.foreground;
+
         hoverColor = baseColor;
       });
     });
@@ -67,13 +74,15 @@ class _ColoredListTileState extends State<ColoredListTile> {
       child: SizedBox(
         width: widget.width,
         child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2.0),
-            border: Border.all(
-              color: stateColors.foreground,
-              width: 1.0,
-            ),
-          ),
+          decoration: widget.outlined
+            ? BoxDecoration(
+              borderRadius: BorderRadius.circular(2.0),
+              border: Border.all(
+                color: stateColors.foreground,
+                width: 1.0,
+              ),
+            )
+            : BoxDecoration(),
           child: ListTile(
             leading: Icon(
               widget.icon,
