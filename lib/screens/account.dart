@@ -308,16 +308,16 @@ class _AccountState extends State<Account> {
                 : Image.asset(path, width: 80.0),
           ),
           onTap: isUserConnected
-              ? () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return showAvatarDialog();
-                    },
-                  );
-                }
-              : null,
+            ? () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return showAvatarDialog();
+                  },
+                );
+              }
+            : null,
         ),
       ),
     );
@@ -458,9 +458,7 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget ppCard({
-    String imageName,
-  }) {
+  Widget ppCard({String imageName}) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       width: 90.0,
