@@ -2,17 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
 class Favourites extends StatefulWidget {
@@ -21,22 +21,25 @@ class Favourites extends StatefulWidget {
 }
 
 class _FavouritesState extends State<Favourites> {
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool hasNext = true;
-  int limit = 30;
+  bool descending     = true;
+  bool hasNext        = true;
+  bool isFabVisible   = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  int limit           = 30;
+
+  final pageRoute     = FavouritesRoute;
+  List<Quote> quotes  = [];
 
   final scrollController = ScrollController();
-  bool isFabVisible = false;
-
-  List<Quote> quotes = [];
 
   var lastDoc;
 
   @override
   initState() {
     super.initState();
-    fatch();
+    getSavedOrder();
+    fetch();
   }
 
   @override
@@ -94,7 +97,50 @@ class _FavouritesState extends State<Favourites> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              SliverAppHeader(title: 'Favourites',),
+              SimpleAppBar(
+                subHeader: Wrap(
+                  spacing: 10.0,
+                  children: <Widget>[
+                    ChoiceChip(
+                      label: Text(
+                        'First added',
+                        style: TextStyle(
+                          color: stateColors.foreground,
+                        ),
+                      ),
+                      selected: descending,
+                      onSelected: (selected) {
+                        descending = !descending;
+                        fetch();
+
+                        appLocalStorage.setPageOrder(
+                          descending: descending,
+                          pageRoute: pageRoute,
+                        );
+                      },
+                    ),
+
+                    ChoiceChip(
+                      label: Text(
+                        'Last added',
+                        style: TextStyle(
+                          color: stateColors.foreground,
+                        ),
+                      ),
+                      selected: !descending,
+                      onSelected: (selected) {
+                        descending = !descending;
+                        fetch();
+
+                        appLocalStorage.setPageOrder(
+                          descending: descending,
+                          pageRoute: pageRoute,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
               listContent(screenWidth: screenWidth),
             ],
           ),
@@ -107,8 +153,11 @@ class _FavouritesState extends State<Favourites> {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            LoadingAnimation(
-              textTitle: 'Loading your favourites...',
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: LoadingAnimation(
+                textTitle: 'Loading your favourites...',
+              ),
             ),
           ]
         ),
@@ -147,13 +196,35 @@ class _FavouritesState extends State<Favourites> {
         (BuildContext context, int index) {
           final quote = quotes.elementAt(index);
 
-          return FadeInY(
-            delay: 2.0 + index.toDouble() * 0.1,
-            beginY: 50.0,
-            child: quoteContainer(
-              quote: quote,
-              screenWidth: screenWidth,
-            )
+          return QuoteRow(
+            quote: quote,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                value: 'remove',
+                child: ListTile(
+                  leading: Icon(Icons.remove_circle),
+                  title: Text('Remove'),
+                )
+              ),
+              PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                )
+              ),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case 'remove':
+                  removeFav(quote);
+                  break;
+                case 'share':
+                  shareTwitter(quote: quote);
+                  break;
+                default:
+              }
+            },
           );
         },
         childCount: quotes.length,
@@ -161,109 +232,7 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
-  Widget quoteContainer({Quote quote, double screenWidth}) {
-    final topicColor = appTopicsColors.find(quote.topics.first);
-
-    return Container(
-      padding: const EdgeInsets.all(80.0),
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                QuotePageRoute.replaceFirst(':id', quote.quoteId),
-              );
-            },
-            child: Text(
-              quote.name,
-              style: TextStyle(
-                fontSize: FontSize.hero(quote.name) / (2000 / screenWidth),
-              ),
-            ),
-          ),
-
-          topicColor != null ?
-            SizedBox(
-              width: 100.0,
-              child: Divider(
-                color: Color(topicColor.decimal),
-                thickness: 2.0,
-                height: 40.0,
-              )
-            ) :
-            SizedBox(
-              width: 100.0,
-              child: Divider(
-                thickness: 2.0,
-                height: 40.0,
-              ),
-            ),
-
-          GestureDetector(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                AuthorRoute.replaceFirst(':id', quote.author.id),
-              );
-            },
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                quote.author.name,
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-          ),
-
-          Padding(padding: const EdgeInsets.only(top: 15.0),),
-
-          userActions(quote),
-        ],
-      ),
-    );
-  }
-
-  Widget userActions(Quote quote) {
-    return PopupMenuButton<String>(
-      icon: Opacity(
-        opacity: .6,
-        child: Icon(Icons.more_horiz)
-      ),
-      onSelected: (value) {
-        switch (value) {
-          case 'remove':
-            removeFav(quote);
-            break;
-          case 'share':
-            shareTwitter(quote: quote);
-            break;
-          default:
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem(
-          value: 'remove',
-          child: ListTile(
-            leading: Icon(Icons.remove_circle),
-            title: Text('Remove'),
-          )
-        ),
-        PopupMenuItem(
-          value: 'share',
-          child: ListTile(
-            leading: Icon(Icons.share),
-            title: Text('Share'),
-          )
-        ),
-      ],
-    );
-  }
-
-  void fatch() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
@@ -286,7 +255,7 @@ class _FavouritesState extends State<Favourites> {
         .collection('users')
         .document(userAuth.uid)
         .collection('favourites')
-        .orderBy('createdAt', descending: true)
+        .orderBy('createdAt', descending: descending)
         .limit(limit)
         .getDocuments();
 
@@ -379,6 +348,10 @@ class _FavouritesState extends State<Favourites> {
         type: SnackType.error,
       );
     }
+  }
+
+  void getSavedOrder() {
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
   }
 
   Future removeFav(Quote quote) async {

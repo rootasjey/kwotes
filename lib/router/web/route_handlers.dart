@@ -24,6 +24,7 @@ import 'package:memorare/screens/web/add_quote_reference.dart';
 import 'package:memorare/screens/web/add_quote_topics.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
+import 'package:memorare/screens/web/dashboard_section_template.dart';
 import 'package:memorare/screens/web/favourites.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
@@ -107,7 +108,10 @@ class WebRouteHandlers {
 
   static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          Favourites());
+          _dashboardSectionTemplate(
+            child: Favourites(),
+            name: 'favourites',
+          ));
 
   static Handler forgotPassword = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -180,4 +184,11 @@ class WebRouteHandlers {
   static Handler welcomeBack = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Home());
+
+  static Widget _dashboardSectionTemplate({Widget child, String name}) {
+    return DashboardSectionTemplate(
+      child: child,
+      childName: name,
+    );
+  }
 }
