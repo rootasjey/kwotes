@@ -64,25 +64,25 @@ class _OrderLangButtonState extends State<OrderLangButton> {
           spacing: 20.0,
           children: <Widget>[
             ChoiceChip(
-                label: Text(
-                  'English',
-                  style: TextStyle(
-                    color: widget.lang == 'en' ?
-                      Colors.white :
-                      stateColors.foreground,
-                  ),
+              label: Text(
+                'English',
+                style: TextStyle(
+                  color: widget.lang == 'en' ?
+                    Colors.white :
+                    stateColors.foreground,
                 ),
-                padding: EdgeInsets.all(5.0),
-                selected: widget.lang == 'en',
-                selectedColor: stateColors.primary,
-                onSelected: (selected) {
-                  if (widget.onLangChanged != null) {
-                    widget.onLangChanged('en');
-                  }
-
-                  Navigator.pop(context);
-                },
               ),
+              padding: EdgeInsets.all(5.0),
+              selected: widget.lang == 'en',
+              selectedColor: stateColors.primary,
+              onSelected: (selected) {
+                if (widget.onLangChanged != null) {
+                  widget.onLangChanged('en');
+                }
+
+                Navigator.pop(context);
+              },
+            ),
 
             ChoiceChip(
               label: Text(
