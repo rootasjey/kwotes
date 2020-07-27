@@ -203,7 +203,7 @@ class FluroRouter {
 
     router.define(
       DraftsRoute,
-      handler: MobileRouteHandlers.drafts,
+      handler: WebRouteHandlers.drafts,
     );
 
     router.define(
