@@ -1,4 +1,7 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/ColoredListTile.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
@@ -9,10 +12,12 @@ import 'package:memorare/state/user_state.dart';
 class DashboardSectionTemplate extends StatefulWidget {
   final Widget child;
   final String childName;
+  final bool isNested;
 
   DashboardSectionTemplate({
     this.child,
     this.childName = '',
+    this.isNested = false,
   });
 
   @override
@@ -34,20 +39,6 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
   }
 
   Widget wideView() {
-    final arrStr = userState.username.split(' ');
-    String initials = '';
-
-
-    if (arrStr.length > 0) {
-      initials = arrStr.length > 1
-      ? arrStr.reduce((value, element) => value + element.substring(1))
-      : arrStr.first;
-
-      if (initials != null && initials.isNotEmpty) {
-        initials = initials.substring(0, 1);
-      }
-    }
-
     return Material(
       child: Row(
         children: <Widget>[
@@ -64,129 +55,64 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                 children: <Widget>[
                   ListView(
                   children: <Widget>[
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: stateColors.primary,
-                        // backgroundImage: AssetImage(
-                        //   userState.avatarUrl,
-                        // ),
-                        radius: 20.0,
-                        child: Text(
-                          initials,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        userState.username,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: PopupMenuButton<String>(
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        tooltip: 'More quick links',
-                        onSelected: (value) {
-                          FluroRouter.router.navigateTo(
-                            context,
-                            value,
-                          );
-                        },
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                          const PopupMenuItem(
-                            value: AccountRoute,
-                            child: ListTile(
-                              leading: Icon(Icons.settings),
-                              title: Text(
-                                'Settings',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const PopupMenuItem(
-                            value: 'signout',
-                            child: ListTile(
-                              leading: Icon(Icons.exit_to_app),
-                              title: Text(
-                                'Sign out',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const PopupMenuItem(
-                            value: 'dashboard',
-                            child: ListTile(
-                              leading: Icon(Icons.dashboard),
-                              title: Text(
-                                'Dashboard',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            )
-                          ),
-                        ],
-                      ),
-                    ),
+                    sideBarHeader(),
 
                     Padding(padding: const EdgeInsets.only(bottom: 100.0)),
+
+                    ColoredListTile(
+                      icon: Icons.favorite,
+                      outlined: false,
+                      selected: widget.childName == FavouritesRoute,
+                      hoverColor: Colors.red,
+                      title: Text(
+                        'Favourites',
+                      ),
+                      onTap: () => navigateToSection(FavouritesRoute),
+                    ),
 
                     ColoredListTile(
                       icon: Icons.list,
                       outlined: false,
                       hoverColor: Colors.blue.shade700,
+                      selected: widget.childName == ListsRoute,
                       title: Text(
                         'Lists',
                       ),
-                      onTap: () {},
-                    ),
-
-                    ColoredListTile(
-                      icon: Icons.favorite,
-                      outlined: false,
-                      selected: widget.childName == 'favourites',
-                      hoverColor: Colors.red,
-                      title: Text(
-                        'Favourites',
-
-                      ),
-                      onTap: () {},
+                      onTap: () => navigateToSection(ListsRoute),
                     ),
 
                     ColoredListTile(
                       icon: Icons.edit,
                       outlined: false,
                       hoverColor: Colors.purple.shade300,
+                      selected: widget.childName == DraftsRoute,
                       title: Text(
                         'Drafts',
                       ),
-                      onTap: () {},
+                      onTap: () => navigateToSection(DraftsRoute),
                     ),
 
                     ColoredListTile(
                       icon: Icons.cloud_done,
                       outlined: false,
                       hoverColor: Colors.green,
+                      selected: widget.childName == PublishedQuotesRoute,
                       title: Text(
                         'Published',
                       ),
-                      onTap: () {},
+                      onTap: () => navigateToSection(PublishedQuotesRoute),
                     ),
 
                     ColoredListTile(
                       icon: Icons.timelapse,
                       outlined: false,
                       hoverColor: Colors.lightBlue.shade900,
+                      selected: widget.childName == TempQuotesRoute,
                       title: Text(
                         'In Validation',
 
                       ),
-                      onTap: () {},
+                      onTap: () => navigateToSection(TempQuotesRoute),
                     ),
 
                     Padding(padding: const EdgeInsets.only(bottom: 100.0),),
@@ -194,7 +120,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                 ),
 
                   Positioned(
-                    left: 20.0,
+                    left: 15.0,
                     bottom: 20.0,
                     child: RaisedButton(
                       onPressed: () {
@@ -202,14 +128,22 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                         AddQuoteInputs.navigatedFromPath = 'dashboard';
                         FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
                       },
+                      color: stateColors.primary,
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12.0,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Icon(Icons.add),
                             Padding(padding: const EdgeInsets.only(left: 10.0),),
-                            Text('Propose new quote'),
+                            Text(
+                              'Propose new quote',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -223,6 +157,125 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
           Expanded(
             flex: 3,
             child: widget.child,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void navigateToSection(String route) {
+    if (widget.childName == route && !widget.isNested) {
+      return;
+    }
+
+    FluroRouter.router.navigateTo(
+      context,
+      route,
+      transition: TransitionType.fadeIn,
+    );
+  }
+
+  sideBarHeader() {
+    return ListTile(
+      leading: Observer(
+        builder: (context) {
+          if (userState.avatarUrl.isEmpty) {
+            final arrStr = userState.username.split(' ');
+              String initials = '';
+
+
+              if (arrStr.length > 0) {
+                initials = arrStr.length > 1
+                ? arrStr.reduce((value, element) => value + element.substring(1))
+                : arrStr.first;
+
+                if (initials != null && initials.isNotEmpty) {
+                  initials = initials.substring(0, 1);
+                }
+              }
+
+              return CircleAvatar(
+                backgroundColor: stateColors.primary,
+                radius: 20.0,
+                child: Text(
+                  initials,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            }
+
+            return CircleAvatar(
+              backgroundColor: stateColors.primary,
+              // backgroundImage: AssetImage(userState.avatarUrl,),
+              radius: 20.0,
+              child: Image.asset(
+                userState.avatarUrl,
+                width: 20.0,
+              ),
+            );
+        },
+      ),
+      title: Tooltip(
+        message: userState.username,
+        child: Text(
+          userState.username,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      trailing: PopupMenuButton<String>(
+        icon: Icon(Icons.keyboard_arrow_down),
+        tooltip: 'Menu',
+        onSelected: (value) {
+          if (value == 'signout') {
+            userSignOut(context: context);
+            return;
+          }
+
+          FluroRouter.router.navigateTo(
+            context,
+            value,
+          );
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          const PopupMenuItem(
+            value: AccountRoute,
+            child: ListTile(
+              leading: Icon(Icons.settings),
+              title: Text(
+                'Settings',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ),
+
+          const PopupMenuItem(
+            value: 'signout',
+            child: ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text(
+                'Sign out',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ),
+
+          const PopupMenuItem(
+            value: RootRoute,
+            child: ListTile(
+              leading: Icon(Icons.home),
+              title: Text(
+                'Home',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            )
           ),
         ],
       ),

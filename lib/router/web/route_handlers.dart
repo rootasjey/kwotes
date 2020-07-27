@@ -5,17 +5,15 @@ import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/dashboard_sections.dart';
 import 'package:memorare/screens/delete_account.dart';
-import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/forgot_password.dart';
-import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
-import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
 import 'package:memorare/screens/web/add_quote_comment.dart';
@@ -24,13 +22,9 @@ import 'package:memorare/screens/web/add_quote_reference.dart';
 import 'package:memorare/screens/web/add_quote_topics.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/dashboard.dart';
-import 'package:memorare/screens/web/dashboard_section_template.dart';
-import 'package:memorare/screens/web/favourites.dart';
 import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
-import 'package:memorare/screens/web/published_quotes.dart';
 import 'package:memorare/screens/web/quote_page.dart';
-import 'package:memorare/screens/web/quotes_lists.dart';
 import 'package:memorare/screens/web/today.dart';
 import 'package:memorare/screens/web/topic_page.dart';
 import 'package:memorare/screens/web/undefined_page.dart';
@@ -96,7 +90,7 @@ class WebRouteHandlers {
 
   static Handler drafts = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          Drafts());
+          DashboardSections(initialIndex: 2,));
 
   static Handler editEmail = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -108,10 +102,7 @@ class WebRouteHandlers {
 
   static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _dashboardSectionTemplate(
-            child: Favourites(),
-            name: 'favourites',
-          ));
+          DashboardSections());
 
   static Handler forgotPassword = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -123,11 +114,12 @@ class WebRouteHandlers {
 
   static Handler list = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          QuotesList(id: params['id'][0],));
+          DashboardSections(initialIndex: 5, quoteListId: params['id'][0],)
+          );
 
   static Handler lists = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          QuotesLists());
+          DashboardSections(initialIndex: 1,));
 
   static Handler privacy = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -135,7 +127,7 @@ class WebRouteHandlers {
 
   static Handler publishedQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          PublishedQuotes());
+          DashboardSections(initialIndex: 3,));
 
   static Handler quotePage = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -175,7 +167,7 @@ class WebRouteHandlers {
 
   static Handler tempQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          MyTempQuotes());
+          DashboardSections(initialIndex: 4,));
 
   static Handler undefined = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -184,11 +176,4 @@ class WebRouteHandlers {
   static Handler welcomeBack = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           Home());
-
-  static Widget _dashboardSectionTemplate({Widget child, String name}) {
-    return DashboardSectionTemplate(
-      child: child,
-      childName: name,
-    );
-  }
 }

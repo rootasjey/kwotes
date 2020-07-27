@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/order_button.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
@@ -11,6 +12,7 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/user_quotes_list.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
 class QuotesLists extends StatefulWidget {
@@ -44,6 +46,7 @@ class _QuotesListsState extends State<QuotesLists> {
   String oldName            = '';
   String oldDescription     = '';
   bool oldIsPublic          = false;
+  final pageRoute           = ListsRoute;
 
   @override
   initState() {
@@ -98,75 +101,72 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget appBar() {
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
+    return SimpleAppBar(
+      textTitle: 'Lists',
+      subHeader: Observer(
+        builder: (context) {
+          return Wrap(
+            spacing: 10.0,
             children: <Widget>[
               FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (userQuotesLists.length == 0) { return; }
-
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        'Lists',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
+                beginY: 10.0,
+                delay: 2.0,
+                child: ChoiceChip(
+                  label: Text(
+                    'First added',
+                    style: TextStyle(
+                      color: !descending ?
+                        Colors.white :
+                        stateColors.foreground,
                     ),
                   ),
-                ),
-              ),
+                  selected: !descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (!descending) { return; }
 
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: OrderButton(
-                  ascendingText: 'First updated',
-                  descending: descending,
-                  descendingText: 'Last updated',
-                  onOrderChanged: (newDescending) {
-                    descending = newDescending;
+                    descending = false;
                     fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
                   },
                 ),
               ),
 
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.5,
+                child: ChoiceChip(
+                  label: Text(
+                    'Last added',
+                    style: TextStyle(
+                      color: descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (descending) { return; }
+
+                    descending = true;
+                    fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
                   },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
                 ),
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -197,72 +197,13 @@ class _QuotesListsState extends State<QuotesLists> {
     }
 
     if (userQuotesLists.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child:
-              Container(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  children: <Widget>[
-                    Opacity(
-                      opacity: .8,
-                      child: Icon(
-                        Icons.format_list_bulleted,
-                        size: 120.0,
-                        color: Color(0xFFFF005C),
-                      ),
-                    ),
-
-                    Opacity(
-                      opacity: .8,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 60.0),
-                        child: Text(
-                          "You've created no list yet",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 25.0,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
-                      child: Opacity(
-                        opacity: .6,
-                        child: Text(
-                          "You can create one by taping on the '+' button" ,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    IconButton(
-                      onPressed: () {
-                        showCreateListDialog();
-                      },
-                      icon: Icon(Icons.add,),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ]
-        ),
-      );
+      return emptyView();
     }
 
     return sliverQuotesList();
   }
 
-  Widget cardItem({Widget iconImg, UserQuotesList quoteList}) {
+  Widget cardItem({UserQuotesList quoteList}) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -276,6 +217,7 @@ class _QuotesListsState extends State<QuotesLists> {
                   final mustRefresh = await FluroRouter.router.navigateTo(
                     context,
                     ListRoute.replaceFirst(':id', quoteList.id),
+                    transition: TransitionType.fadeIn,
                   );
 
                   if (mustRefresh == null) { return; }
@@ -291,69 +233,71 @@ class _QuotesListsState extends State<QuotesLists> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          iconImg,
+                          CircleAvatar(
+                            radius: 20.0,
+                            backgroundColor: stateColors.primary,
+                            child: Icon(Icons.list, color: Colors.white),
+                          ),
 
-                          Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  quoteList.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  ),
-                                ),
-                                Opacity(
-                                  opacity: .6,
-                                  child: Text(
-                                    quoteList.description,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    quoteList.name,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 15.0,
+                                      fontSize: 20.0,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Opacity(
+                                    opacity: .6,
+                                    child: Text(
+                                      quoteList.description,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+
+                          PopupMenuButton<String>(
+                            onSelected: (value) {
+                              if (value == 'delete') {
+                                showDeleteListDialog(quoteList);
+                                return;
+                              }
+
+                              if (value == 'edit') {
+                                showEditListDialog(quoteList);
+                                return;
+                              }
+                            },
+                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                              PopupMenuItem(
+                                value: 'edit',
+                                child: ListTile(
+                                  leading: Icon(Icons.edit),
+                                  title: Text('Edit'),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'delete',
+                                child: ListTile(
+                                  leading: Icon(Icons.delete_outline),
+                                  title: Text('Delete'),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
-                      ),
-
-                      Positioned(
-                        right: 0.0,
-                        top: 15.0,
-                        child: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'delete') {
-                              showDeleteListDialog(quoteList);
-                              return;
-                            }
-
-                            if (value == 'edit') {
-                              showEditListDialog(quoteList);
-                              return;
-                            }
-                          },
-                          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                            PopupMenuItem(
-                              value: 'edit',
-                              child: ListTile(
-                                leading: Icon(Icons.edit),
-                                title: Text('Edit'),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: 'delete',
-                              child: ListTile(
-                                leading: Icon(Icons.delete_outline),
-                                title: Text('Delete'),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),
@@ -366,24 +310,76 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child:
+            Container(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: <Widget>[
+                  Opacity(
+                    opacity: .8,
+                    child: Icon(
+                      Icons.format_list_bulleted,
+                      size: 120.0,
+                      color: Color(0xFFFF005C),
+                    ),
+                  ),
+
+                  Opacity(
+                    opacity: .8,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 60.0),
+                      child: Text(
+                        "You've created no list yet",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                    child: Opacity(
+                      opacity: .6,
+                      child: Text(
+                        "You can create one by taping on the '+' button" ,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  IconButton(
+                    onPressed: () {
+                      showCreateListDialog();
+                    },
+                    icon: Icon(Icons.add,),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
   Widget sliverQuotesList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final quoteList = userQuotesLists.elementAt(index);
 
-          final iconImg = quoteList.iconUrl.isNotEmpty ?
-            Image.network(quoteList.iconUrl, width: 40.0, height: 40.0,) :
-            Image.asset('assets/images/layers-${stateColors.iconExt}.png', width: 40.0, height: 40.0,);
-
-          return FadeInY(
-            delay: 2.0 + index.toDouble() * 0.1,
-            beginY: 50.0,
-            child: cardItem(
-              iconImg: iconImg,
-              quoteList: quoteList,
-            ),
-          );
+          return cardItem(quoteList: quoteList);
         },
         childCount: userQuotesLists.length,
       ),

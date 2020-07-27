@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/quote_card.dart';
+import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -15,6 +16,7 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
 class MyTempQuotes extends StatefulWidget {
@@ -27,10 +29,12 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   bool hasErrors      = false;
   bool isLoading      = false;
   bool isLoadingMore  = false;
-  String lang         = 'en';
+  String lang         = 'all';
   int limit           = 30;
   int order           = -1;
   bool descending     = false;
+  final pageRoute     = TempQuotesRoute;
+  bool isFabVisible   = false;
 
   List<TempQuote> tempQuotes = [];
   ScrollController scrollController = ScrollController();
@@ -46,6 +50,19 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          onPressed: () {
+            scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+          backgroundColor: stateColors.primary,
+          foregroundColor: Colors.white,
+          child: Icon(Icons.arrow_upward),
+        ) : null,
       body: body(),
     );
   }
@@ -58,6 +75,18 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       },
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
+
+          // Load more scenario
           if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
             return false;
           }
@@ -80,25 +109,121 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Widget appBar() {
-    return SliverAppHeader(
-      title: 'In validation',
-      onScrollToTop: () {
-        if (tempQuotes.length == 0) { return; }
+    return SimpleAppBar(
+      textTitle: 'In Validation',
+      subHeader: Observer(
+        builder: (context) {
+          return Wrap(
+            spacing: 10.0,
+            children: <Widget>[
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.0,
+                child: ChoiceChip(
+                  label: Text(
+                    'First added',
+                    style: TextStyle(
+                      color: !descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: !descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (!descending) { return; }
 
-        scrollController.animateTo(
-          0,
-          duration: Duration(seconds: 2),
-          curve: Curves.easeOutQuint
-        );
-      },
-      rightButton: OrderButton(
-        descending: descending,
-        onOrderChanged: (order) {
-          setState(() {
-            descending = order;
-          });
+                    descending = false;
+                    fetch();
 
-          fetch();
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
+                  },
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.5,
+                child: ChoiceChip(
+                  label: Text(
+                    'Last added',
+                    style: TextStyle(
+                      color: descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (descending) { return; }
+
+                    descending = true;
+                    fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
+                  },
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Container(
+                    height: 25,
+                    width: 2.0,
+                    color: stateColors.foreground,
+                  ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: DropdownButton<String>(
+                    elevation: 2,
+                    value: lang,
+                    isDense: true,
+                    underline: Container(
+                      height: 0,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    style: TextStyle(
+                      color: stateColors.foreground.withOpacity(0.6),
+                      fontFamily: 'Comfortaa',
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (String newLang) {
+                      lang = newLang;
+                      fetch();
+                    },
+                    items: ['all', 'en', 'fr'].map((String value) {
+                      return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value.toUpperCase(),
+                          ));
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          );
         },
       ),
     );
@@ -106,54 +231,43 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   Widget bodyListContent() {
     if (isLoading) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
-            ),
-          ]
-        ),
-      );
+      return loadingView();
     }
 
     if (!isLoading && hasErrors) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 150.0),
-            child: ErrorContainer(
-              onRefresh: () => fetch(),
-            ),
-          ),
-        ]),
-      );
+      return errorView();
     }
 
     if (tempQuotes.length == 0) {
       return emptyView();
     }
 
+    return contentView();
+  }
+
+  Widget contentView() {
     return SliverLayoutBuilder(
       builder: (context, constrains) {
-        if (constrains.crossAxisExtent < 600.0) {
-          return SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-            ),
-            sliver: sliverList(),
-          );
-        }
+        return sliverList();
 
-        return SliverPadding(
-          padding: const EdgeInsets.only(
-            top: 80.0,
-            left: 10.0,
-            right: 10.0,
-            bottom: 200.0,
-          ),
-          sliver: sliverGrid(),
-        );
+        // if (constrains.crossAxisExtent < 600.0) {
+        //   return SliverPadding(
+        //     padding: const EdgeInsets.only(
+        //       top: 80.0,
+        //     ),
+        //     sliver: sliverList(),
+        //   );
+        // }
+
+        // return SliverPadding(
+        //   padding: const EdgeInsets.only(
+        //     top: 80.0,
+        //     left: 10.0,
+        //     right: 10.0,
+        //     bottom: 200.0,
+        //   ),
+        //   sliver: sliverGrid(),
+        // );
       },
     );
   }
@@ -177,6 +291,31 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               subtitle: 'They will appear after you propose a new quote',
               onRefresh: () => fetch(),
             ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget errorView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: ErrorContainer(
+            onRefresh: () => fetch(),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: LoadingAnimation(),
           ),
         ]
       ),
@@ -244,41 +383,36 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final tempQuote = tempQuotes.elementAt(index);
-          final topicColor = appTopicsColors.find(tempQuote.topics.first);
 
-          return InkWell(
+          return TempQuoteRow(
+            quote: tempQuote,
+            isDraft: false,
             onTap: () => editTempQuote(tempQuote),
-            onLongPress: () => showQuoteSheet(tempQuote: tempQuote),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(padding: const EdgeInsets.only(top: 20.0),),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  )),
+              PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_sweep),
+                    title: Text('Delete'),
+                  )),
+            ],
+            onSelected: (value) {
+              if (value == 'edit') {
+                editTempQuote(tempQuote);
+                return;
+              }
 
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    tempQuote.name,
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-
-                Center(
-                  child: IconButton(
-                    onPressed: () => showQuoteSheet(tempQuote: tempQuote),
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: topicColor != null ?
-                      Color(topicColor.decimal) : stateColors.primary,
-                    ),
-                  ),
-                ),
-
-                Padding(padding: const EdgeInsets.only(top: 10.0),),
-                Divider(thickness: 1.0,),
-              ],
-            ),
+              if (value == 'delete') {
+                deleteAction(tempQuote);
+                return;
+              }
+            },
           );
         },
         childCount: tempQuotes.length,
@@ -328,12 +462,25 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         throw Error();
       }
 
-      final snapshot = await Firestore.instance
-        .collection('tempquotes')
-        .where('user.id', isEqualTo: userAuth.uid)
-        .orderBy('createdAt', descending: descending)
-        .limit(limit)
-        .getDocuments();
+      QuerySnapshot snapshot;
+
+      if (lang == 'all') {
+        snapshot = await Firestore.instance
+          .collection('tempquotes')
+          .where('user.id', isEqualTo: userAuth.uid)
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+
+      } else {
+        snapshot = await Firestore.instance
+          .collection('tempquotes')
+          .where('user.id', isEqualTo: userAuth.uid)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+      }
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -389,13 +536,27 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         throw Error();
       }
 
-      final snapshot = await Firestore.instance
-        .collection('tempquotes')
-        .startAfterDocument(lastDoc)
-        .where('user.id', isEqualTo: userAuth.uid)
-        .orderBy('createdAt', descending: descending)
-        .limit(limit)
-        .getDocuments();
+      QuerySnapshot snapshot;
+
+      if (lang == 'all') {
+        snapshot = await Firestore.instance
+          .collection('tempquotes')
+          .startAfterDocument(lastDoc)
+          .where('user.id', isEqualTo: userAuth.uid)
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+
+      } else {
+        snapshot = await Firestore.instance
+          .collection('tempquotes')
+          .startAfterDocument(lastDoc)
+          .where('user.id', isEqualTo: userAuth.uid)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+      }
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -426,68 +587,5 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void showQuoteSheet({TempQuote tempQuote}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    tooltip: 'Delete',
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      deleteAction(tempQuote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.delete_outline,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Delete',
-                  ),
-                ],
-              ),
-
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    onPressed: () {
-                      editTempQuote(tempQuote);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.edit,
-                      ),
-                    ),
-                  ),
-
-                  Text(
-                    'Edit'
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
   }
 }

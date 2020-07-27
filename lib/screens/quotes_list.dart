@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/snack.dart';
 
@@ -91,103 +90,68 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget appBar() {
-    if (MediaQuery.of(context).size.width > 400.0) {
-      return SliverAppHeader(
-        title: quotesList != null ?
-          quotesList.name : 'List',
-        rightButton: popupMenuButton(),
-      );
-    }
-
-    return Observer(
-      builder: (_) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          expandedHeight: 120.0,
-          backgroundColor: stateColors.softBackground,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
+    return SimpleAppBar(
+      textTitle: quotesList == null
+        ? 'List'
+        : quotesList.name,
+      subHeader: Observer(
+        builder: (context) {
+          return Wrap(
+            spacing: 20.0,
             children: <Widget>[
               FadeInY(
-                delay: 1.0,
-                beginY: 50.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: FlatButton(
-                    onPressed: () {
-                      if (quotes.length == 0) { return; }
-
-                      scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 60.0,
-                      child: Text(
-                        quotesList != null ?
-                          quotesList.name : 'List',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
+                beginY: 10.0,
+                delay: 2.0,
+                child: FlatButton(
+                  onPressed: () => showEditListDialog(),
+                  color: stateColors.background.withAlpha(100),
+                  hoverColor: stateColors.primary,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.edit),
                       ),
-                    ),
+                      Text('Edit'),
+                    ],
                   ),
                 ),
               ),
 
-              Positioned(
-                right: 20.0,
-                top: 50.0,
-                child: popupMenuButton(),
-              ),
-
-              Positioned(
-                left: 20.0,
-                top: 50.0,
-                child: IconButton(
-                  onPressed: () {
-                    FluroRouter.router.pop(context);
-                  },
-                  tooltip: 'Back',
-                  icon: Icon(Icons.arrow_back),
-                ),
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.5,
+                child: FlatButton(
+                  onPressed: () => showDeleteListDialog(),
+                  color: stateColors.background.withAlpha(100),
+                  hoverColor: Colors.red,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.delete),
+                      ),
+                      Text('Delete'),
+                    ],
+                  ),
+                )
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
   Widget bodyListContent() {
     if (isLoading) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
-            ),
-          ]
-        ),
-      );
+      return loadingView();
     }
 
     if (!isLoading && hasErrors) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 150.0),
-            child: ErrorContainer(
-              onRefresh: () => fetch(),
-            ),
-          ),
-        ]),
-      );
+      return errorView();
     }
 
     if (quotes.length == 0) {
@@ -256,96 +220,27 @@ class _QuotesListState extends State<QuotesList> {
     );
   }
 
-  Widget largeItem({Quote quote, double screenWidth, TopicColor topicColor}) {
-    return Container(
-      padding: const EdgeInsets.all(80.0),
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                QuotePageRoute.replaceFirst(':id', quote.quoteId),
-              );
-            },
-            child: Text(
-              quote.name,
-              style: TextStyle(
-                fontSize: FontSize.hero(quote.name) / (2000 / screenWidth),
-              ),
-            ),
+  Widget errorView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: ErrorContainer(
+            onRefresh: () => fetch(),
           ),
+        ),
+      ]),
+    );
+  }
 
-          topicColor != null ?
-            SizedBox(
-              width: 100.0,
-              child: Divider(
-                color: Color(topicColor.decimal),
-                thickness: 2.0,
-                height: 40.0,
-              )
-            ) :
-            SizedBox(
-              width: 100.0,
-              child: Divider(
-                thickness: 2.0,
-                height: 40.0,
-              ),
-            ),
-
-          GestureDetector(
-            onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                AuthorRoute.replaceFirst(':id', quote.author.id),
-              );
-            },
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                quote.author.name,
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: LoadingAnimation(),
           ),
-
-          Padding(padding: const EdgeInsets.only(top: 15.0),),
-
-          PopupMenuButton<String>(
-            icon: Icon(Icons.more_horiz),
-            onSelected: (value) {
-              if (value == 'remove') {
-                removeQuote(quote);
-                return;
-              }
-
-              if (value == 'share') {
-                shareTwitter(quote: quote);
-                return;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                value: 'remove',
-                child: ListTile(
-                  leading: Icon(Icons.remove_circle),
-                  title: Text('Remove'),
-                )
-              ),
-              PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )
-              ),
-            ],
-          ),
-        ],
+        ]
       ),
     );
   }
@@ -383,66 +278,48 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget sliverQuotesList() {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final quote = quotes.elementAt(index);
-          final topicColor = appTopicsColors.find(quote.topics.first);
 
-          return FadeInY(
-            beginY: 100.0,
-            delay: index * 1.0,
-            child: screenWidth > 400.0 ?
-              largeItem(quote: quote, topicColor: topicColor, screenWidth: screenWidth) :
-              smallItem(quote: quote, topicColor: topicColor),
+          return QuoteRow(
+            quote: quote,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                value: 'remove',
+                child: ListTile(
+                  leading: Icon(Icons.remove_circle),
+                  title: Text('Remove'),
+                )
+              ),
+              PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                )
+              ),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case 'remove':
+                  removeQuote(quote);
+                  break;
+                case 'share':
+                  kIsWeb
+                    ? shareTwitter(quote: quote)
+                    : shareFromMobile(
+                        context: context,
+                        quote: quote
+                      );
+                  break;
+                default:
+              }
+            },
           );
         },
         childCount: quotes.length,
-      ),
-    );
-  }
-
-  Widget smallItem({Quote quote, TopicColor topicColor}) {
-    return InkWell(
-      onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          QuotePageRoute.replaceFirst(':id', quote.quoteId),
-        );
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(padding: const EdgeInsets.only(top: 20.0),),
-
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              quote.name,
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
-
-          Center(
-            child: IconButton(
-              onPressed: () {
-                showQuoteSheet(quote);
-              },
-              icon: Icon(
-                Icons.more_horiz,
-                color: topicColor != null ?
-                Color(topicColor.decimal) : stateColors.primary,
-              ),
-            ),
-          ),
-
-          Padding(padding: const EdgeInsets.only(top: 10.0),),
-          Divider(),
-        ],
       ),
     );
   }
@@ -454,6 +331,7 @@ class _QuotesListState extends State<QuotesList> {
 
     try {
       quotes.clear();
+
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
@@ -602,6 +480,7 @@ class _QuotesListState extends State<QuotesList> {
                 overflow: TextOverflow.ellipsis,
               ),
               children: <Widget>[
+                Divider(thickness: 1.0,),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -731,15 +610,26 @@ class _QuotesListState extends State<QuotesList> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete $name?'),
+          contentPadding: EdgeInsets.zero,
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Opacity(
+                Padding(padding: const EdgeInsets.only(top: 10.0)),
+                Divider(thickness: 1.0,),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 16.0,
+                    right: 16.0,
+                    bottom: 16.0,
+                  ),
+                  child: Opacity(
                   opacity: 0.6,
                   child: Text(
-                    'This action is irreversible.',
+                      'This action is irreversible.',
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),

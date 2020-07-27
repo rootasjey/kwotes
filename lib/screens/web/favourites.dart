@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
@@ -58,10 +59,7 @@ class _FavouritesState extends State<Favourites> {
           foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: body(),
-      ),
+      body: body(),
     );
   }
 
@@ -97,50 +95,7 @@ class _FavouritesState extends State<Favourites> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              SimpleAppBar(
-                subHeader: Wrap(
-                  spacing: 10.0,
-                  children: <Widget>[
-                    ChoiceChip(
-                      label: Text(
-                        'First added',
-                        style: TextStyle(
-                          color: stateColors.foreground,
-                        ),
-                      ),
-                      selected: descending,
-                      onSelected: (selected) {
-                        descending = !descending;
-                        fetch();
-
-                        appLocalStorage.setPageOrder(
-                          descending: descending,
-                          pageRoute: pageRoute,
-                        );
-                      },
-                    ),
-
-                    ChoiceChip(
-                      label: Text(
-                        'Last added',
-                        style: TextStyle(
-                          color: stateColors.foreground,
-                        ),
-                      ),
-                      selected: !descending,
-                      onSelected: (selected) {
-                        descending = !descending;
-                        fetch();
-
-                        appLocalStorage.setPageOrder(
-                          descending: descending,
-                          pageRoute: pageRoute,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              appBar(),
               listContent(screenWidth: screenWidth),
             ],
           ),
@@ -149,48 +104,130 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
+  Widget appBar() {
+    return SimpleAppBar(
+      textTitle: 'Favourites',
+      subHeader: Observer(
+        builder: (context) {
+          return Wrap(
+            spacing: 10.0,
+            children: <Widget>[
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.0,
+                child: ChoiceChip(
+                  label: Text(
+                    'First added',
+                    style: TextStyle(
+                      color: !descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: !descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (!descending) { return; }
+
+                    descending = false;
+                    fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
+                  },
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.5,
+                child: ChoiceChip(
+                  label: Text(
+                    'Last added',
+                    style: TextStyle(
+                      color: descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (descending) { return; }
+
+                    descending = true;
+                    fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   Widget listContent({double screenWidth}) {
     if (isLoading) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: LoadingAnimation(
-                textTitle: 'Loading your favourites...',
-              ),
-            ),
-          ]
-        ),
-      );
+      return loadingView();
     }
 
     if (quotes.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: EmptyContent(
-                  icon: Opacity(
-                    opacity: .8,
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 60.0,
-                      color: Color(0xFFFF005C),
-                    ),
-                  ),
-                  title: "You've no favourites quotes at this moment",
-                  subtitle: 'You can add them with the ❤️ button',
-                ),
-              ),
-            ),
-          ]
-        ),
-      );
+      return emptyView();
     }
 
+    return sliverQuotesList();
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.favorite_border,
+                    size: 60.0,
+                    color: Color(0xFFFF005C),
+                  ),
+                ),
+                title: "You've no favourites quotes at this moment",
+                subtitle: 'You can add them with the ❤️ button',
+              ),
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: LoadingAnimation(
+              textTitle: 'Loading your favourites...',
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget sliverQuotesList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
