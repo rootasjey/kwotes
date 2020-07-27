@@ -6,9 +6,11 @@ import 'package:memorare/state/colors.dart';
 
 class SimpleAppBar extends StatefulWidget {
   final Widget subHeader;
+  final String textTitle;
 
   SimpleAppBar({
     this.subHeader,
+    this.textTitle,
   });
 
   @override
@@ -26,13 +28,17 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
           backgroundColor: stateColors.appBackground,
           expandedHeight: 200.0,
           automaticallyImplyLeading: false,
-          flexibleSpace: Stack(
+          flexibleSpace: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               FadeInY(
                 delay: 1.0,
                 beginY: 50.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(60.0),
+                  padding: const EdgeInsets.only(
+                    left: 80.0,
+                    top: 60.0,
+                  ),
                   child: Row(
                     children: <Widget>[
                       IconButton(
@@ -46,7 +52,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
                       Padding(padding: const EdgeInsets.only(right: 40.0)),
 
                       Text(
-                        'Favourites',
+                        widget.textTitle,
                         style: TextStyle(
                           fontSize: 40.0,
                         ),
@@ -57,9 +63,10 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
               ),
 
               if (widget.subHeader != null)
-                Positioned(
-                  top: 110.0,
-                  left: 150.0,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 165.0,
+                  ),
                   child: widget.subHeader,
                 ),
             ],
