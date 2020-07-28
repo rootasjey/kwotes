@@ -78,7 +78,7 @@ class _ColoredListTileState extends State<ColoredListTile> {
             ? BoxDecoration(
               borderRadius: BorderRadius.circular(2.0),
               border: Border.all(
-                color: stateColors.foreground,
+                color: stateColors.foreground.withOpacity(0.2),
                 width: 1.0,
               ),
             )
