@@ -136,7 +136,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Icon(Icons.add),
+                            Icon(Icons.add, color: Colors.white),
                             Padding(padding: const EdgeInsets.only(left: 10.0),),
                             Text(
                               'Propose new quote',
