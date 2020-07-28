@@ -4,8 +4,10 @@ import 'package:memorare/components/web/discover.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_quotidian.dart';
 import 'package:memorare/components/web/topics.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 
 class Home extends StatefulWidget {
@@ -24,12 +26,14 @@ class _HomeState extends State<Home> {
           if (userState.isUserConnected) {
             return FloatingActionButton.extended(
               onPressed: () {
-                FluroRouter.router.navigateTo(context, DashboardRoute);
+                AddQuoteInputs.clearAll();
+                AddQuoteInputs.navigatedFromPath = 'dashboard';
+                FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
               },
-              backgroundColor: Colors.pink,
+              backgroundColor: stateColors.primary,
               foregroundColor: Colors.white,
-              icon: Icon(Icons.dashboard),
-              label: Text('Dashboard'),
+              icon: Icon(Icons.add),
+              label: Text('Propose new quote'),
             );
           }
 
