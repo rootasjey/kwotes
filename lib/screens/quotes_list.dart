@@ -102,10 +102,9 @@ class _QuotesListState extends State<QuotesList> {
               FadeInY(
                 beginY: 10.0,
                 delay: 2.0,
-                child: FlatButton(
+                child: OutlineButton(
                   onPressed: () => showEditListDialog(),
                   color: stateColors.background.withAlpha(100),
-                  hoverColor: stateColors.primary,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -122,10 +121,9 @@ class _QuotesListState extends State<QuotesList> {
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
-                child: FlatButton(
+                child: OutlineButton(
                   onPressed: () => showDeleteListDialog(),
                   color: stateColors.background.withAlpha(100),
-                  hoverColor: Colors.red,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
