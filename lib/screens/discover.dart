@@ -105,8 +105,6 @@ class _DiscoverState extends State<Discover> {
             id            : reference.id,
             imageUrl      : reference.urls.image,
             name          : reference.name,
-            summary       : reference.summary,
-            textHeight    : 60.0,
             titleFontSize : 15.0,
             type          : 'reference',
             width         : 170.0,

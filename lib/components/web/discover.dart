@@ -77,15 +77,14 @@ class _DiscoverState extends State<Discover> {
             id: reference.id,
             imageUrl: reference.urls.image,
             name: reference.name,
-            summary: reference.summary,
           ),
         ),
       );
     }
 
     return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
+      spacing: 30.0,
+      runSpacing: 30.0,
       children: cards,
     );
   }
