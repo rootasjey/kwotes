@@ -84,10 +84,12 @@ class _ColoredListTileState extends State<ColoredListTile> {
             )
             : BoxDecoration(),
           child: ListTile(
-            leading: Icon(
-              widget.icon,
-              color: hoverColor,
-            ),
+            leading: widget.icon != null
+              ? Icon(
+                  widget.icon,
+                  color: hoverColor,
+                )
+              : null,
             title: widget.title,
           ),
         ),
