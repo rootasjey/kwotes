@@ -16,6 +16,8 @@ class AppLocalStorage {
     await _localStorage.remove('user_uid');
   }
 
+  bool containsKey(String key) => _localStorage.containsKey(key);
+
   bool getAutoBrightness() {
     return _localStorage.getBool('autoBrightness') ?? true;
   }
