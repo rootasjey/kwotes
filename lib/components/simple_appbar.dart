@@ -5,12 +5,19 @@ import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 
 class SimpleAppBar extends StatefulWidget {
+  /// If set, will be shown at the bottom of the title.
   final Widget subHeader;
+
+  /// App bar title.
   final String textTitle;
+
+  /// Will override [textTitle] if set.
+  final Widget title;
 
   SimpleAppBar({
     this.subHeader,
     this.textTitle,
+    this.title,
   });
 
   @override
@@ -51,12 +58,14 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
 
                       Padding(padding: const EdgeInsets.only(right: 40.0)),
 
-                      Text(
-                        widget.textTitle,
-                        style: TextStyle(
-                          fontSize: 40.0,
-                        ),
-                      ),
+                      widget.title != null
+                        ? widget.title
+                        : Text(
+                            widget.textTitle,
+                            style: TextStyle(
+                              fontSize: 40.0,
+                            ),
+                          ),
                     ],
                   ),
                 ),
