@@ -1,19 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/footer.dart';
-import'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
-import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/web/side_bar_header.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/types/topic_color.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:mobx/mobx.dart';
 
 class TopicPage extends StatefulWidget {
@@ -28,36 +34,52 @@ class TopicPage extends StatefulWidget {
 }
 
 class _TopicPageState extends State<TopicPage> {
-  final beginY    = 50.0;
-  final delay     = 1.0;
-  final delayStep = 1.2;
+  final beginY        = 50.0;
+  final delay         = 1.0;
+  final delayStep     = 1.2;
 
-  int decimal = 4283980123;
+  bool descending     = true;
+  bool hasNext        = true;
+  bool isFabVisible   = false;
+  bool isFav          = false;
+  bool isFavLoaded    = false;
+  bool isFavLoading   = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+
+  String selectedLang = 'en';
+  String pageRoute;
   String topicName;
-  ReactionDisposer topicDisposer;
 
   var lastDoc;
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool hasNext = true;
-
+  ScrollController scrollController;
   List<Quote> quotes = [];
-
-  final scrollController = ScrollController();
-
-  bool isFav = false;
-  bool isFavLoaded = false;
-  bool isFavLoading = false;
-  bool isFabVisible = false;
-
+  ReactionDisposer topicDisposer;
   FirebaseUser userAuth;
 
   @override
   void initState() {
     super.initState();
 
-    setupTopic();
-    fetchQuotes();
+    topicName = widget.name.toLowerCase();
+
+    initProps();
+    fetch();
+  }
+
+  void initProps() {
+    if (scrollController != null) {
+      scrollController.dispose();
+    }
+
+    scrollController = ScrollController();
+    pageRoute = TopicRoute.replaceFirst(':name', topicName);
+
+    final storageKey = '$pageRoute?lang';
+
+    selectedLang = appLocalStorage.containsKey(storageKey)
+      ? appLocalStorage.getPageLang(pageRoute: pageRoute)
+      : userState.lang;
   }
 
   @override
@@ -71,6 +93,35 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
+    return wideView();
+  }
+
+  Widget wideView() {
+    return Material(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              foregroundDecoration: BoxDecoration(
+                color: Color.fromRGBO(0, 0, 0, 0.05),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: topicsItemsList(),
+            ),
+          ),
+
+          Expanded(
+            flex: 3,
+            child: body(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget body() {
     return Scaffold(
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
@@ -83,149 +134,237 @@ class _TopicPageState extends State<TopicPage> {
           },
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: body(),
-          ),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
 
-          Column(
-            children: <Widget>[
-              loadMoreButton(),
-              NavBackFooter(),
-            ],
-          ),
+          // Load more scenario
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+            return false;
+          }
 
-          Footer(),
-        ],
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            appBar(),
+            bodyListContent(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget body() {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollNotif) {
-        // FAB visibility
-        if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-          setState(() {
-            isFabVisible = false;
-          });
-        } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-          setState(() {
-            isFabVisible = true;
-          });
-        }
+  Widget appBar() {
+    return SimpleAppBar(
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(topicName, style: TextStyle(fontSize: 40.0,),),
+          Padding(padding: const EdgeInsets.only(left: 20.0),),
 
-        // Load more scenario
-        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
-          return false;
-        }
+          if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
+            CircleAvatar(
+              radius: 10.0,
+              backgroundColor: Color(appTopicsColors.find(topicName).decimal),
+            ),
+        ],
+      ),
+      subHeader: Observer(
+        builder: (context) {
+          return Wrap(
+            spacing: 10.0,
+            children: <Widget>[
+              FadeInY(
+                beginY: 10.0,
+                delay: 1.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: DropdownButton<String>(
+                    elevation: 2,
+                    value: selectedLang,
+                    isDense: true,
+                    underline: Container(
+                      height: 0,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    style: TextStyle(
+                      color: stateColors.foreground.withOpacity(0.6),
+                      fontFamily: 'Comfortaa',
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (String newLang) {
+                      selectedLang = newLang;
+                      appLocalStorage.setPageLang(
+                        lang: selectedLang,
+                        pageRoute: pageRoute,
+                      );
 
-        if (hasNext && !isLoadingMore) {
-          fetchMoreQuotes();
-        }
+                      fetch();
+                    },
+                    items: ['en', 'fr'].map((String value) {
+                      return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value.toUpperCase(),
+                          ));
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
 
-        return false;
-      },
-      child: CustomScrollView(
-        controller: scrollController,
-        slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            expandedHeight: 250.0,
-            backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Stack(
-              children: <Widget>[
-                FadeInY(
-                  beginY: 50.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        TopicCardColor(
-                          color: Color(decimal),
-                          name: widget.name,
-                        ),
-                      ],
+  Widget bodyListContent() {
+    if (isLoading || appTopicsColors.topicsColors.length == 0) {
+      return loadingView();
+    }
+
+    // if (!isLoading && hasErrors) {
+    //   return errorView();
+    // }
+
+    if (quotes.length == 0) {
+      return emptyView();
+    }
+
+    return sliverQuotesList();
+  }
+
+  Widget sliverQuotesList() {
+    return Observer(
+      builder: (context) {
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final quote = quotes.elementAt(index);
+
+              final popupMenuItems = <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                  value: 'share',
+                  child: ListTile(
+                    leading: Icon(Icons.share),
+                    title: Text('Share'),
+                  )
+                ),
+              ];
+
+              if (userState.isUserConnected) {
+                popupMenuItems.addAll([
+                  PopupMenuItem(
+                    value: 'favourites',
+                    child: ListTile(
+                      leading: Icon(Icons.favorite_border),
+                      title: Text('Add to favourites'),
                     ),
                   ),
-                ),
 
-                Positioned(
-                  left: 80.0,
-                  top: 50.0,
-                  child: IconButton(
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                    },
-                    icon: Icon(Icons.arrow_back),
+                  PopupMenuItem(
+                    value: 'list',
+                    child: AddToListButton(
+                      type: ButtonType.tile,
+                      quote: quote,
+                    ),
+                  ),
+                ]);
+              }
+
+              return QuoteRow(
+                quote: quote,
+                itemBuilder: (context) => popupMenuItems,
+                onSelected: (value) {
+                  switch (value) {
+                    case 'favourites':
+                      addToFavourites(
+                        context: context,
+                        quote: quote,
+                      );
+                      break;
+                    case 'share':
+                      shareTwitter(quote: quote);
+                      break;
+                    default:
+                  }
+                },
+              );
+            },
+            childCount: quotes.length,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          LoadingAnimation(
+            textTitle: 'Loading $topicName quotes...',
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.chat_bubble_outline,
+                    size: 60.0,
+                    color: Color(0xFFFF005C),
                   ),
                 ),
-              ],
+                title: "There's no quotes for $topicName at this moment",
+                subtitle: 'You can help us and propose some',
+              ),
             ),
           ),
-
-          gridQuotesContent(),
-        ],
+        ]
       ),
     );
   }
 
   Widget gridQuotesContent() {
-    if (isLoading) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            LoadingAnimation(
-              textTitle: 'Loading ${widget.name} quotes...',
-            ),
-          ]
-        ),
-      );
-    }
-
-    if (quotes.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: EmptyContent(
-                  icon: Opacity(
-                    opacity: .8,
-                    child: Icon(
-                      Icons.chat_bubble_outline,
-                      size: 60.0,
-                      color: Color(0xFFFF005C),
-                    ),
-                  ),
-                  title: "There's no quotes for ${widget.name} at this moment",
-                  subtitle: 'You can help us and propose some',
-                ),
-              ),
-            ),
-          ]
-        ),
-      );
-    }
-
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 300.0,
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          final quote = quotes.elementAt(index);
+          // final quote = quotes.elementAt(index);
 
           return SizedBox(
             width: 250.0,
             height: 250.0,
-            child: gridItem(quote: quote, index: index),
+            child: null,
           );
         },
         childCount: quotes.length,
@@ -233,49 +372,70 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget gridItem({Quote quote, int index}) {
-    return FadeInY(
-      delay: delay + (index * delayStep),
-      beginY: beginY,
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        child: InkWell(
-          onTap: () {
-            FluroRouter.router.navigateTo(
-              context,
-              QuotePageRoute.replaceFirst(':id', quote.id)
-            );
-          },
-          onLongPress: () {
-            showActionsSheet(quote);
-          },
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      quote.name,
-                      style: TextStyle(
-                        fontSize: adaptativeFont(quote.name),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  Widget topicsItemsList() {
+    return Observer(
+      builder: (context) {
+        final items = [];
 
-              Positioned(
-                bottom: 0.0,
-                right: 0.0,
-                child: userActions(quote),
+        if (appTopicsColors.topicsColors.length == 0) {
+          items.add(
+            Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        appTopicsColors.topicsColors.forEach((topicColor) {
+          items.add(
+            topicTileItem(topicColor: topicColor)
+          );
+        });
+
+        return ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 60.0,
+                bottom: 100.0,
               ),
-            ],
-          ),
-        ),
+              child: SideBarHeader(),
+            ),
+
+            ...items,
+
+            Padding(padding: const EdgeInsets.only(bottom: 100.0),),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget topicTileItem({TopicColor topicColor}) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 8.0,
       ),
+      leading: CircleAvatar(
+        radius: 10.0,
+        backgroundColor: Color(topicColor.decimal),
+      ),
+      title: Text(topicColor.name),
+      trailing: topicColor.name == topicName
+        ? Icon(Icons.keyboard_arrow_right)
+        : null,
+      // onTap: () => navigateToSection(topicColor.name),
+      onTap: () {
+        topicName = topicColor.name;
+        initProps();
+        fetch();
+      },
+    );
+  }
+
+  void navigateToSection(String route) {
+    FluroRouter.router.navigateTo(
+      context,
+      TopicRoute.replaceFirst(':name', route),
+      transition: TransitionType.fadeIn,
     );
   }
 
@@ -284,7 +444,7 @@ class _TopicPageState extends State<TopicPage> {
       padding: const EdgeInsets.only(top: 20.0),
         child: FlatButton(
         onPressed: () {
-          fetchMoreQuotes();
+          fetchMore();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(),
@@ -297,34 +457,6 @@ class _TopicPageState extends State<TopicPage> {
         ),
       ),
     );
-  }
-
-  Widget userActions(Quote quote) {
-    return IconButton(
-      onPressed: () {
-        showActionsSheet(quote);
-      },
-      tooltip: 'Quotes actions',
-      icon: Opacity(
-        opacity: .5,
-        child: Icon(
-          Icons.more_horiz,
-          color: Color(decimal),
-        ),
-      ),
-    );
-  }
-
-  double adaptativeFont(String text) {
-    if (text.length > 90) {
-      return 16.0;
-    }
-
-    if (text.length > 60) {
-      return 18.0;
-    }
-
-    return 20.0;
   }
 
   Future<bool> fetchIsFav(String quoteId) async {
@@ -359,16 +491,21 @@ class _TopicPageState extends State<TopicPage> {
     }
   }
 
-  void fetchQuotes() async {
+  void fetch() async {
     setState(() {
       isLoading = true;
     });
+
+    quotes.clear();
+    lastDoc = null;
+    hasNext = true;
 
     try {
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('topics.$topicName', isEqualTo: true)
-        .where('lang', isEqualTo: userState.lang)
+        .where('lang', isEqualTo: selectedLang)
+        .orderBy('createdAt', descending: descending)
         .limit(10)
         .getDocuments();
 
@@ -404,14 +541,15 @@ class _TopicPageState extends State<TopicPage> {
     }
   }
 
-  void fetchMoreQuotes() async {
+  void fetchMore() async {
     isLoadingMore = true;
 
     try {
       final snapshot = await Firestore.instance
         .collection('quotes')
         .where('topics.$topicName', isEqualTo: true)
-        .where('lang', isEqualTo: userState.lang)
+        .where('lang', isEqualTo: selectedLang)
+        .orderBy('createdAt', descending: descending)
         .startAfterDocument(lastDoc)
         .limit(10)
         .getDocuments();
@@ -441,17 +579,6 @@ class _TopicPageState extends State<TopicPage> {
     } catch (error) {
       debugPrint(error.toString());
     }
-  }
-
-  void setupTopic() async {
-    topicName = widget.name.toLowerCase();
-
-    topicDisposer = autorun((_) {
-      final topicColor = appTopicsColors.find(topicName);
-      if (topicColor == null) { return; }
-
-      decimal = topicColor.decimal;
-    });
   }
 
   void showActionsSheet(Quote quote) {

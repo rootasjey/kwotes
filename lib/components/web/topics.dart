@@ -64,7 +64,10 @@ class _TopicsState extends State<Topics> {
             onPressed: () {
               FluroRouter.router.navigateTo(
                 context,
-                TopicsRoute,
+                TopicRoute.replaceFirst(
+                  ':name',
+                  appTopicsColors.shuffle(max: 1).first.name,
+                ),
               );
             },
             shape: RoundedRectangleBorder(
