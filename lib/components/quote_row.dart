@@ -7,12 +7,18 @@ import 'package:memorare/types/quote.dart';
 
 class QuoteRow extends StatefulWidget {
   final Quote quote;
+
+  /// Specify explicitly the quote'is
+  /// because quote's id in favourites reflect
+  /// the favourite's id and no the quote.
+  final String quoteId;
   final PopupMenuButton popupMenuButton;
   final Function itemBuilder;
   final Function onSelected;
 
   QuoteRow({
     this.quote,
+    this.quoteId,
     this.popupMenuButton,
     this.itemBuilder,
     this.onSelected,
@@ -49,9 +55,10 @@ class _QuoteRowState extends State<QuoteRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
+            // print(widget.quote.quoteId);
             FluroRouter.router.navigateTo(
               context,
-              QuotePageRoute.replaceFirst(':id', widget.quote.quoteId),
+              QuotePageRoute.replaceFirst(':id', widget.quoteId),
             );
           },
           onHover: (isHover) {

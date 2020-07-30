@@ -283,6 +283,7 @@ class _QuotesListState extends State<QuotesList> {
 
           return QuoteRow(
             quote: quote,
+            quoteId: quote.quoteId,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
                 value: 'remove',

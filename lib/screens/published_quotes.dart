@@ -301,6 +301,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
           return QuoteRow(
             quote: quote,
+            quoteId: quote.id,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
                 value: 'favourites',

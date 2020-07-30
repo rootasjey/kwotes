@@ -258,7 +258,10 @@ class _TopicPageState extends State<TopicPage> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final quote = quotes.elementAt(index);
-                return QuoteRowWithActions(quote: quote);
+                return QuoteRowWithActions(
+                  quote: quote,
+                  quoteId: quote.id,
+                );
               },
               childCount: quotes.length,
             ),
@@ -272,6 +275,7 @@ class _TopicPageState extends State<TopicPage> {
 
               return QuoteRow(
                 quote: quote,
+                quoteId: quote.id,
                 itemBuilder: (context) => <PopupMenuEntry<String>>[
                 PopupMenuItem(
                   value: 'share',

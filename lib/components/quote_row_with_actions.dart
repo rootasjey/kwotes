@@ -11,8 +11,14 @@ import 'package:memorare/utils/snack.dart';
 class QuoteRowWithActions extends StatefulWidget {
   final Quote quote;
 
+  /// Specify explicitly the quote'is
+  /// because quote's id in favourites reflect
+  /// the favourite's id and no the quote.
+  final String quoteId;
+
   QuoteRowWithActions({
     this.quote,
+    this.quoteId,
   });
 
   @override
@@ -45,6 +51,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     return QuoteRow(
       quote: quote,
+      quoteId: widget.quoteId,
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
           value: 'share',
