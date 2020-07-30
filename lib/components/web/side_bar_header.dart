@@ -53,12 +53,18 @@ class _SideBarHeaderState extends State<SideBarHeader> {
             );
           }
 
-          return CircleAvatar(
-            radius: 20.0,
-            backgroundColor: stateColors.softBackground,
-            child: Image.asset(
-              userState.avatarUrl,
-              width: 20.0,
+          return Material(
+            elevation: 4.0,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Image.asset(
+                  userState.avatarUrl,
+                  width: 50.0,
+                ),
+              ),
             ),
           );
         },
