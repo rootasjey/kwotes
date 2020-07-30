@@ -102,6 +102,7 @@ class AppState extends State<App> {
       await userGetAndSetAvatarUrl(authResult);
 
       userState.setUserConnected();
+      userState.setUserName(authResult.user.displayName);
 
     } catch (error) {
       debugPrint(error.toString());
