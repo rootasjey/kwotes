@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/ColoredListTile.dart';
+import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/web/side_bar_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/ColoredListTile.dart';
+import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
