@@ -6,8 +6,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
-import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -253,52 +253,36 @@ class _TopicPageState extends State<TopicPage> {
   Widget sliverQuotesList() {
     return Observer(
       builder: (context) {
+        if (userState.isUserConnected) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final quote = quotes.elementAt(index);
+                return QuoteRowWithActions(quote: quote);
+              },
+              childCount: quotes.length,
+            ),
+          );
+        }
+
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               final quote = quotes.elementAt(index);
 
-              final popupMenuItems = <PopupMenuEntry<String>>[
+              return QuoteRow(
+                quote: quote,
+                itemBuilder: (context) => <PopupMenuEntry<String>>[
                 PopupMenuItem(
                   value: 'share',
                   child: ListTile(
                     leading: Icon(Icons.share),
                     title: Text('Share'),
-                  )
+                  ),
                 ),
-              ];
-
-              if (userState.isUserConnected) {
-                popupMenuItems.addAll([
-                  PopupMenuItem(
-                    value: 'favourites',
-                    child: ListTile(
-                      leading: Icon(Icons.favorite_border),
-                      title: Text('Add to favourites'),
-                    ),
-                  ),
-
-                  PopupMenuItem(
-                    value: 'list',
-                    child: AddToListButton(
-                      type: ButtonType.tile,
-                      quote: quote,
-                    ),
-                  ),
-                ]);
-              }
-
-              return QuoteRow(
-                quote: quote,
-                itemBuilder: (context) => popupMenuItems,
+              ],
                 onSelected: (value) {
                   switch (value) {
-                    case 'favourites':
-                      addToFavourites(
-                        context: context,
-                        quote: quote,
-                      );
-                      break;
                     case 'share':
                       shareTwitter(quote: quote);
                       break;
@@ -317,8 +301,11 @@ class _TopicPageState extends State<TopicPage> {
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          LoadingAnimation(
-            textTitle: 'Loading $topicName quotes...',
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: LoadingAnimation(
+              textTitle: 'Loading $topicName quotes...',
+            ),
           ),
         ]
       ),
