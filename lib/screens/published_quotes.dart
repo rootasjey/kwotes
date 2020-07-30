@@ -40,6 +40,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   @override
   initState() {
     super.initState();
+
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
     fetch();
   }
 
