@@ -53,20 +53,20 @@ class _AddToListButtonState extends State<AddToListButton> {
   Widget build(BuildContext context) {
     if (widget.type == ButtonType.icon) {
       return IconButton(
-          iconSize: widget.size,
-          icon: Icon(
-            Icons.playlist_add,
-          ),
-          onPressed: widget.isDisabled
-            ? null
-            : () {
-              if (widget.onBeforeShowSheet != null) {
-                widget.onBeforeShowSheet();
-              }
+        iconSize: widget.size,
+        icon: Icon(
+          Icons.playlist_add,
+        ),
+        onPressed: widget.isDisabled
+          ? null
+          : () {
+            if (widget.onBeforeShowSheet != null) {
+              widget.onBeforeShowSheet();
+            }
 
-              showBottomSheetList();
-            },
-        );
+            showBottomSheetList();
+          },
+      );
     }
 
     return ListTile(
