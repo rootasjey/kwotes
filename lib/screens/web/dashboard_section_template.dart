@@ -1,13 +1,11 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/ColoredListTile.dart';
+import 'package:memorare/components/web/side_bar_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
 
 class DashboardSectionTemplate extends StatefulWidget {
   final Widget child;
@@ -55,7 +53,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                 children: <Widget>[
                   ListView(
                   children: <Widget>[
-                    sideBarHeader(),
+                    SideBarHeader(),
 
                     Padding(padding: const EdgeInsets.only(bottom: 100.0)),
 
@@ -172,113 +170,6 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       context,
       route,
       transition: TransitionType.fadeIn,
-    );
-  }
-
-  sideBarHeader() {
-    return ListTile(
-      leading: Observer(
-        builder: (context) {
-          if (userState.avatarUrl.isEmpty) {
-            final arrStr = userState.username.split(' ');
-              String initials = '';
-
-
-              if (arrStr.length > 0) {
-                initials = arrStr.length > 1
-                ? arrStr.reduce((value, element) => value + element.substring(1))
-                : arrStr.first;
-
-                if (initials != null && initials.isNotEmpty) {
-                  initials = initials.substring(0, 1);
-                }
-              }
-
-              return CircleAvatar(
-                backgroundColor: stateColors.primary,
-                radius: 20.0,
-                child: Text(
-                  initials,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            }
-
-            return CircleAvatar(
-              backgroundColor: stateColors.primary,
-              // backgroundImage: AssetImage(userState.avatarUrl,),
-              radius: 20.0,
-              child: Image.asset(
-                userState.avatarUrl,
-                width: 20.0,
-              ),
-            );
-        },
-      ),
-      title: Tooltip(
-        message: userState.username,
-        child: Text(
-          userState.username,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-      trailing: PopupMenuButton<String>(
-        icon: Icon(Icons.keyboard_arrow_down),
-        tooltip: 'Menu',
-        onSelected: (value) {
-          if (value == 'signout') {
-            userSignOut(context: context);
-            return;
-          }
-
-          FluroRouter.router.navigateTo(
-            context,
-            value,
-          );
-        },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          const PopupMenuItem(
-            value: AccountRoute,
-            child: ListTile(
-              leading: Icon(Icons.settings),
-              title: Text(
-                'Settings',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          ),
-
-          const PopupMenuItem(
-            value: 'signout',
-            child: ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text(
-                'Sign out',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          ),
-
-          const PopupMenuItem(
-            value: RootRoute,
-            child: ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                'Home',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            )
-          ),
-        ],
-      ),
     );
   }
 
