@@ -51,38 +51,42 @@ class _AddToListButtonState extends State<AddToListButton> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.type == ButtonType.icon ?
-      IconButton(
-        iconSize: widget.size,
-        icon: Icon(
-          Icons.playlist_add,
-        ),
-        onPressed: widget.isDisabled ?
-          null : () {
-            if (widget.onBeforeShowSheet != null) {
-              widget.onBeforeShowSheet();
-            }
-
-            showBottomSheetList();
-        },
-      ):
-      ListTile(
-        onTap: widget.isDisabled ?
-          null : () {
-            if (widget.onBeforeShowSheet != null) {
-              widget.onBeforeShowSheet();
-            }
-
-            showBottomSheetList();
-        },
-        leading: Icon(Icons.playlist_add),
-        title: Text(
-          'Add to...',
-          style: TextStyle(
-            fontWeight: FontWeight.bold
+    if (widget.type == ButtonType.icon) {
+      return IconButton(
+          iconSize: widget.size,
+          icon: Icon(
+            Icons.playlist_add,
           ),
+          onPressed: widget.isDisabled
+            ? null
+            : () {
+              if (widget.onBeforeShowSheet != null) {
+                widget.onBeforeShowSheet();
+              }
+
+              showBottomSheetList();
+            },
+        );
+    }
+
+    return ListTile(
+      onTap: widget.isDisabled
+        ? null
+        : () {
+          if (widget.onBeforeShowSheet != null) {
+            widget.onBeforeShowSheet();
+          }
+
+          showBottomSheetList();
+        },
+      leading: Icon(Icons.playlist_add),
+      title: Text(
+        'Add to...',
+        style: TextStyle(
+          fontWeight: FontWeight.bold
         ),
-      );
+      ),
+    );
   }
 
   void showBottomSheetList() {
