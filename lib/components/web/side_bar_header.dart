@@ -86,6 +86,19 @@ class _SideBarHeaderState extends State<SideBarHeader> {
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           const PopupMenuItem(
+            value: RootRoute,
+            child: ListTile(
+              leading: Icon(Icons.home),
+              title: Text(
+                'Home',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            )
+          ),
+
+          const PopupMenuItem(
             value: AccountRoute,
             child: ListTile(
               leading: Icon(Icons.settings),
@@ -111,18 +124,6 @@ class _SideBarHeaderState extends State<SideBarHeader> {
             ),
           ),
 
-          const PopupMenuItem(
-            value: RootRoute,
-            child: ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                'Home',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            )
-          ),
         ],
       ),
     );
