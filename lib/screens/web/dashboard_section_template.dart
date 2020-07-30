@@ -82,7 +82,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                     ColoredListTile(
                       icon: Icons.edit,
                       outlined: false,
-                      hoverColor: Colors.purple.shade300,
+                      hoverColor: Colors.pink.shade200,
                       selected: widget.childName == DraftsRoute,
                       title: Text(
                         'Drafts',
@@ -104,7 +104,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                     ColoredListTile(
                       icon: Icons.timelapse,
                       outlined: false,
-                      hoverColor: Colors.lightBlue.shade900,
+                      hoverColor: Colors.yellow.shade800,
                       selected: widget.childName == TempQuotesRoute,
                       title: Text(
                         'In Validation',
