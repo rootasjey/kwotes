@@ -5,7 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -281,41 +281,11 @@ class _QuotesListState extends State<QuotesList> {
         (context, index) {
           final quote = quotes.elementAt(index);
 
-          return QuoteRow(
+          return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.quoteId,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                value: 'remove',
-                child: ListTile(
-                  leading: Icon(Icons.remove_circle),
-                  title: Text('Remove'),
-                )
-              ),
-              PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )
-              ),
-            ],
-            onSelected: (value) {
-              switch (value) {
-                case 'remove':
-                  removeQuote(quote);
-                  break;
-                case 'share':
-                  kIsWeb
-                    ? shareTwitter(quote: quote)
-                    : shareFromMobile(
-                        context: context,
-                        quote: quote
-                      );
-                  break;
-                default:
-              }
-            },
+            type: QuoteRowActionType.list,
+            onRemoveFromList: () => removeQuote(quote),
           );
         },
         childCount: quotes.length,

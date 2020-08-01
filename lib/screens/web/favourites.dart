@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
-import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -233,35 +232,23 @@ class _FavouritesState extends State<Favourites> {
         (BuildContext context, int index) {
           final quote = quotes.elementAt(index);
 
-          return QuoteRow(
+          return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.quoteId,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                value: 'remove',
-                child: ListTile(
-                  leading: Icon(Icons.remove_circle),
-                  title: Text('Remove'),
-                )
-              ),
-              PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )
-              ),
-            ],
-            onSelected: (value) {
-              switch (value) {
-                case 'remove':
-                  removeFav(quote);
-                  break;
-                case 'share':
-                  shareTwitter(quote: quote);
-                  break;
-                default:
+            type: QuoteRowActionType.favourites,
+            onBeforeRemoveFromFavourites: () {
+              setState(() { // optimistic
+                quotes.removeAt(index);
+              });
+            },
+            onAfterRemoveFromFavourites: (bool success) {
+              if (!success) {
+                setState(() {
+                  quotes.insert(index, quote);
+                });
               }
+
+              userState.updateFavDate();
             },
           );
         },
