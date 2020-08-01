@@ -44,6 +44,14 @@ Future<bool> addToFavourites({
       return true;
     }
 
+    final mainReferenceId = quote.mainReference != null
+      ? quote.mainReference.id
+      : '';
+
+    final mainReferenceName = quote.mainReference != null
+      ? quote.mainReference.name
+      : '';
+
     await Firestore.instance
       .collection('users')
       .document(userAuth.uid)
@@ -57,8 +65,8 @@ Future<bool> addToFavourites({
         'createdAt'     : DateTime.now(),
         'lang'          : lang,
         'mainReference' : {
-          'id'          : quote.mainReference.id,
-          'name'        : quote.mainReference.name,
+          'id'          : mainReferenceId,
+          'name'        : mainReferenceName,
         },
         'name'          : quote.name,
         'quoteId'       : quote.id,
