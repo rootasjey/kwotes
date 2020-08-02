@@ -394,28 +394,33 @@ class AdminQuotesState extends State<AdminQuotes> {
   }
 
   Widget sliverGrid() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300.0,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
       ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final quote = quotes.elementAt(index);
-          final topicColor = appTopicsColors.find(quote.topics.first);
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          mainAxisSpacing: 20.0,
+          crossAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final quote = quotes.elementAt(index);
+            final topicColor = appTopicsColors.find(quote.topics.first);
 
-          return QuoteCard(
-            title: quote.name,
-            onTap: () => FluroRouter.router.navigateTo(
-              context, QuotePageRoute.replaceFirst(':id', quote.id)),
-            popupMenuButton: quotePopupMenuButton(
-              quote: quote,
-              color: Color(topicColor.decimal),
-            ),
-          );
-        },
-        childCount: quotes.length,
+            return QuoteCard(
+              title: quote.name,
+              onTap: () => FluroRouter.router.navigateTo(
+                context, QuotePageRoute.replaceFirst(':id', quote.id)),
+              popupMenuButton: quotePopupMenuButton(
+                quote: quote,
+                color: Color(topicColor.decimal),
+              ),
+            );
+          },
+          childCount: quotes.length,
+        ),
       ),
     );
   }
