@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/colored_list_tile.dart';
@@ -6,6 +7,7 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 
 class DashboardSectionTemplate extends StatefulWidget {
   final Widget child;
@@ -25,6 +27,13 @@ class DashboardSectionTemplate extends StatefulWidget {
 class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
   //  Current State of InnerDrawerState
   // final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
+  bool isAdmin = false;
+
+  @override
+  initState() {
+    super.initState();
+    checkAdmin();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +122,9 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                       onTap: () => navigateToSection(TempQuotesRoute),
                     ),
 
+                    if (isAdmin)
+                      ...adminTiles(),
+
                     Padding(padding: const EdgeInsets.only(bottom: 100.0),),
                   ],
                 ),
@@ -159,6 +171,43 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
         ],
       ),
     );
+  }
+
+  List<Widget> adminTiles() {
+    return [
+      Divider(thickness: 1.0, height: 20.0,),
+
+      ColoredListTile(
+        icon: Icons.cloud,
+        outlined: false,
+        hoverColor: Colors.green.shade200,
+        selected: widget.childName == QuotesRoute,
+        title: Text(
+          'All Published quotes',
+        ),
+        onTap: () => navigateToSection(QuotesRoute),
+      ),
+    ];
+  }
+
+  void checkAdmin() async {
+    try {
+      final userAuth = await userState.userAuth;
+
+      final user = await Firestore.instance
+        .collection('users')
+        .document(userAuth.uid)
+        .get();
+
+      if (!user.exists) { return; }
+
+      setState(() {
+        isAdmin = user.data['rights']['user:managequote'] == true;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
   void navigateToSection(String route) {
