@@ -56,15 +56,18 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
               ),
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
-                vertical: 40.0,
               ),
               child: Stack(
                 children: <Widget>[
                   ListView(
                   children: <Widget>[
-                    SideBarHeader(),
-
-                    Padding(padding: const EdgeInsets.only(bottom: 100.0)),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20.0,
+                        bottom: 50.0,
+                      ),
+                      child: SideBarHeader(),
+                    ),
 
                     ColoredListTile(
                       icon: Icons.favorite,
