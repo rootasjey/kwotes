@@ -6,9 +6,9 @@ import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -58,31 +58,31 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   Widget body() {
     return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels <
+              scrollNotif.metrics.maxScrollExtent) {
             return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
+          }
+
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            appBar(),
+            bodyListContent(),
+          ],
+        ),
+      ));
   }
 
   Widget appBar() {
@@ -277,51 +277,15 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   Widget bodyListContent() {
     if (isLoading) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: LoadingAnimation(),
-          ),
-        ]),
-      );
+      return SliverLoadingView();
     }
 
     if (!isLoading && hasErrors) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 150.0),
-            child: ErrorContainer(
-              onRefresh: () => fetch(),
-            ),
-          ),
-        ]),
-      );
+      return errorView();
     }
 
     if (quotes.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.sentiment_neutral,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
-              ),
-              title: "You've no quote in validation at this moment",
-              subtitle: 'They will appear after you propose a new quote',
-              onRefresh: () => fetch(),
-            ),
-          ),
-        ]),
-      );
+      return emptyView();
     }
 
     if (itemsStyle == ItemsStyle.grid) {
@@ -353,6 +317,43 @@ class AdminQuotesState extends State<AdminQuotes> {
     //     }
     //   },
     // );
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.sentiment_neutral,
+                size: 120.0,
+                color: Color(0xFFFF005C),
+              ),
+            ),
+            title: "You've no quote in validation at this moment",
+            subtitle: 'They will appear after you propose a new quote',
+            onRefresh: () => fetch(),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget errorView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: ErrorContainer(
+            onRefresh: () => fetch(),
+          ),
+        ),
+      ]),
+    );
   }
 
   Widget quotePopupMenuButton({
