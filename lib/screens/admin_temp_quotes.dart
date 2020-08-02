@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/order_lang_button.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_card.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
@@ -83,45 +84,121 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget appBar() {
-    return SliverAppHeader(
-      title: 'All in validation',
-      onScrollToTop: () {
-        if (tempQuotes.length == 0) {
-          return;
-        }
+    return SimpleAppBar(
+      textTitle: 'All In Validation',
+      subHeader: Observer(
+        builder: (context) {
+          return Wrap(
+            spacing: 10.0,
+            children: <Widget>[
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.0,
+                child: ChoiceChip(
+                  label: Text(
+                    'First added',
+                    style: TextStyle(
+                      color: !descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: !descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (!descending) { return; }
 
-        scrollController.animateTo(
-          0,
-          duration: Duration(seconds: 2),
-          curve: Curves.easeOutQuint
-        );
-      },
-      rightButton: OrderLangButton(
-        descending: descending,
-        lang: lang,
-        onLangChanged: (String newLang) {
-          appLocalStorage.setPageLang(
-            lang: newLang,
-            pageRoute: pageRoute,
+                    descending = false;
+                    fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
+                  },
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 2.5,
+                child: ChoiceChip(
+                  label: Text(
+                    'Last added',
+                    style: TextStyle(
+                      color: descending ?
+                        Colors.white :
+                        stateColors.foreground,
+                    ),
+                  ),
+                  selected: descending,
+                  selectedColor: stateColors.primary,
+                  onSelected: (selected) {
+                    if (descending) { return; }
+
+                    descending = true;
+                    fetch();
+
+                    appLocalStorage.setPageOrder(
+                      descending: descending,
+                      pageRoute: pageRoute,
+                    );
+                  },
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Container(
+                    height: 25,
+                    width: 2.0,
+                    color: stateColors.foreground,
+                  ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: DropdownButton<String>(
+                    elevation: 2,
+                    value: lang,
+                    isDense: true,
+                    underline: Container(
+                      height: 0,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    style: TextStyle(
+                      color: stateColors.foreground.withOpacity(0.6),
+                      fontFamily: 'Comfortaa',
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (String newLang) {
+                      lang = newLang;
+                      fetch();
+                    },
+                    items: ['en', 'fr'].map((String value) {
+                      return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value.toUpperCase(),
+                          ));
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
           );
-
-          setState(() {
-            lang = newLang;
-          });
-
-          fetch();
-        },
-        onOrderChanged: (bool order) {
-          appLocalStorage.setPageOrder(
-            descending: order,
-            pageRoute: pageRoute,
-          );
-
-          setState(() {
-            descending = order;
-          });
-
-          fetch();
         },
       ),
     );

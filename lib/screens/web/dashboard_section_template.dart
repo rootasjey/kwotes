@@ -187,6 +187,17 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
         ),
         onTap: () => navigateToSection(QuotesRoute),
       ),
+
+      ColoredListTile(
+        icon: Icons.timelapse,
+        outlined: false,
+        hoverColor: Colors.orange.shade200,
+        selected: widget.childName == AdminTempQuotesRoute,
+        title: Text(
+          'All In Validation',
+        ),
+        onTap: () => navigateToSection(AdminTempQuotesRoute),
+      ),
     ];
   }
 

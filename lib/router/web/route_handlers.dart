@@ -2,7 +2,6 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
 import 'package:memorare/screens/account.dart';
-import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/dashboard_sections.dart';
 import 'package:memorare/screens/delete_account.dart';
@@ -69,7 +68,7 @@ class WebRouteHandlers {
 
   static Handler adminTempQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          AdminTempQuotes());
+          DashboardSections(initialIndex: 7,));
 
   static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

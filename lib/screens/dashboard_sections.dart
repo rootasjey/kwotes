@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_list.dart';
@@ -34,6 +35,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     MyTempQuotes(),
     QuotesList(id: quoteListId), // doesn't get dynamic params
     AdminQuotes(),
+    AdminTempQuotes(),
   ];
 
   @override
@@ -75,6 +77,8 @@ class _DashboardSectionsState extends State<DashboardSections> {
         return ListsRoute;
       case 6:
         return QuotesRoute;
+      case 7:
+        return AdminTempQuotesRoute;
       default:
         return FavouritesRoute;
     }
