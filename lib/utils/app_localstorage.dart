@@ -1,6 +1,11 @@
 import 'package:cross_local_storage/cross_local_storage.dart';
 import 'package:flutter/material.dart';
 
+enum ItemsStyle {
+  list,
+  grid,
+}
+
 class AppLocalStorage {
   static LocalStorageInterface _localStorage;
 
@@ -41,6 +46,19 @@ class AppLocalStorage {
   List<String> getDrafts() {
     List<String> drafts = _localStorage.getStringList('drafts') ?? [];
     return drafts;
+  }
+
+  ItemsStyle getItemsStyle(String pageRoute) {
+    final itemsStyle = _localStorage.getString('items_style_$pageRoute');
+
+    switch (itemsStyle) {
+      case 'ItemsStyle.grid':
+        return ItemsStyle.grid;
+      case 'ItemsStyle.list':
+        return ItemsStyle.list;
+      default:
+        return ItemsStyle.list;
+    }
   }
 
   String getLang() => _localStorage.getString('lang') ?? 'en';
@@ -100,6 +118,10 @@ class AppLocalStorage {
 
   void setDrafts(List<String> drafts) {
     _localStorage.setStringList('drafts', drafts);
+  }
+
+  void saveItemsStyle({String pageRoute, ItemsStyle style}) {
+    _localStorage.setString('items_style_$pageRoute', style.toString());
   }
 
   void setLang(String lang) => _localStorage.setString('lang', lang);

@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -34,6 +35,7 @@ class AdminQuotesState extends State<AdminQuotes> {
   String lang = 'en';
   int limit = 30;
   bool descending = true;
+  ItemsStyle itemsStyle = ItemsStyle.list;
 
   List<Quote> quotes = [];
   ScrollController scrollController = ScrollController();
@@ -43,7 +45,7 @@ class AdminQuotesState extends State<AdminQuotes> {
   @override
   initState() {
     super.initState();
-    getSavedLangAndOrder();
+    getSavedProps();
     checkAndFetch();
   }
 
@@ -96,13 +98,14 @@ class AdminQuotesState extends State<AdminQuotes> {
                 delay: 2.0,
                 child: ChoiceChip(
                   label: Text(
-                    'First added',
+                    'First',
                     style: TextStyle(
                       color: !descending ?
                         Colors.white :
                         stateColors.foreground,
                     ),
                   ),
+                  tooltip: 'Order by first added',
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
@@ -124,13 +127,14 @@ class AdminQuotesState extends State<AdminQuotes> {
                 delay: 2.5,
                 child: ChoiceChip(
                   label: Text(
-                    'Last added',
+                    'Last',
                     style: TextStyle(
                       color: descending ?
                         Colors.white :
                         stateColors.foreground,
                     ),
                   ),
+                  tooltip: 'Order by most recently added',
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
@@ -159,7 +163,7 @@ class AdminQuotesState extends State<AdminQuotes> {
                   child: Container(
                     height: 25,
                     width: 2.0,
-                    color: stateColors.foreground,
+                    color: stateColors.foreground.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -195,6 +199,73 @@ class AdminQuotesState extends State<AdminQuotes> {
                           ));
                     }).toList(),
                   ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.2,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  child: Container(
+                    height: 25,
+                    width: 2.0,
+                    color: stateColors.foreground.withOpacity(0.5),
+                  ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    if (itemsStyle == ItemsStyle.list) {
+                      return;
+                    }
+
+                    setState(() {
+                      itemsStyle = ItemsStyle.list;
+                    });
+
+                    appLocalStorage.saveItemsStyle(
+                      pageRoute: pageRoute,
+                      style: ItemsStyle.list,
+                    );
+                  },
+                  icon: Icon(Icons.list),
+                  color: itemsStyle == ItemsStyle.list
+                    ? stateColors.primary
+                    : stateColors.foreground.withOpacity(0.5),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    if (itemsStyle == ItemsStyle.grid) {
+                      return;
+                    }
+
+                    setState(() {
+                      itemsStyle = ItemsStyle.grid;
+                    });
+
+                    appLocalStorage.saveItemsStyle(
+                      pageRoute: pageRoute,
+                      style: ItemsStyle.grid,
+                    );
+                  },
+                  icon: Icon(Icons.grid_on),
+                  color: itemsStyle == ItemsStyle.grid
+                    ? stateColors.primary
+                    : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
             ],
@@ -253,28 +324,35 @@ class AdminQuotesState extends State<AdminQuotes> {
       );
     }
 
-    return SliverLayoutBuilder(
-      builder: (context, constrains) {
-        if (constrains.crossAxisExtent < 600.0) {
-          return SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-            ),
-            sliver: sliverList(),
-          );
+    if (itemsStyle == ItemsStyle.grid) {
+      return sliverGrid();
+    }
 
-        } else {
-          return SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-              left: 10.0,
-              right: 10.0,
-            ),
-            sliver: sliverGrid(),
-          );
-        }
-      },
-    );
+    return sliverList();
+
+    // TODO: Adapt size on mobile.
+    // return SliverLayoutBuilder(
+    //   builder: (context, constrains) {
+    //     if (constrains.crossAxisExtent < 600.0) {
+    //       return SliverPadding(
+    //         padding: const EdgeInsets.only(
+    //           top: 80.0,
+    //         ),
+    //         sliver: sliverList(),
+    //       );
+
+    //     } else {
+    //       return SliverPadding(
+    //         padding: const EdgeInsets.only(
+    //           top: 80.0,
+    //           left: 10.0,
+    //           right: 10.0,
+    //         ),
+    //         sliver: sliverGrid(),
+    //       );
+    //     }
+    //   },
+    // );
   }
 
   Widget quotePopupMenuButton({
@@ -346,42 +424,34 @@ class AdminQuotesState extends State<AdminQuotes> {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final quote = quotes.elementAt(index);
-          final topicColor = appTopicsColors.find(quote.topics.first);
 
-          return FadeInY(
-            delay: index * 1.0,
-            beginY: 50.0,
-            child: InkWell(
-              onTap: () => FluroRouter.router.navigateTo(
-                  context, QuotePageRoute.replaceFirst(':id', quote.id)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      quote.name,
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: quotePopupMenuButton(
-                      quote: quote,
-                      color: Color(topicColor.decimal),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
+          return QuoteRow(
+            quote: quote,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                value: 'quotidian',
+                child: ListTile(
+                  leading: Icon(Icons.add),
+                  title: Text('Add to quotidians'),
+                )),
+              PopupMenuItem(
+                value: 'delete',
+                child: ListTile(
+                  leading: Icon(Icons.delete_sweep),
+                  title: Text('Delete'),
+                )),
+            ],
+            onSelected: (value) {
+              if (value == 'quotidian') {
+                addQuotidianAction(quote);
+                return;
+              }
+
+              if (value == 'delete') {
+                showDeleteDialog(quote);
+                return;
+              }
+            },
           );
         },
         childCount: quotes.length,
@@ -533,9 +603,10 @@ class AdminQuotesState extends State<AdminQuotes> {
     }
   }
 
-  void getSavedLangAndOrder() {
+  void getSavedProps() {
     lang = appLocalStorage.getPageLang(pageRoute: QuotesRoute);
     descending = appLocalStorage.getPageOrder(pageRoute: QuotesRoute);
+    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   Future<bool> isAuthOk() async {
