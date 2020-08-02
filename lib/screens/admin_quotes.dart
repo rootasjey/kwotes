@@ -25,22 +25,19 @@ class AdminQuotes extends StatefulWidget {
 }
 
 class AdminQuotesState extends State<AdminQuotes> {
-  final pageRoute  = QuotesRoute;
-
-  bool canManage = false;
-  bool hasNext = true;
-  bool hasErrors = false;
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  String lang = 'en';
-  int limit = 30;
-  bool descending = true;
-  ItemsStyle itemsStyle = ItemsStyle.list;
-
-  List<Quote> quotes = [];
-  ScrollController scrollController = ScrollController();
-
+  bool canManage        = false;
+  bool descending       = true;
+  bool hasNext          = true;
+  bool hasErrors        = false;
+  bool isLoading        = false;
+  bool isLoadingMore    = false;
+  var itemsStyle        = ItemsStyle.list;
+  String lang           = 'en';
   var lastDoc;
+  int limit             = 30;
+  final pageRoute       = QuotesRoute;
+  List<Quote> quotes    = [];
+  var scrollController  = ScrollController();
 
   @override
   initState() {
@@ -610,9 +607,9 @@ class AdminQuotesState extends State<AdminQuotes> {
   }
 
   void getSavedProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: QuotesRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: QuotesRoute);
-    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
+    lang        = appLocalStorage.getPageLang(pageRoute: QuotesRoute);
+    descending  = appLocalStorage.getPageOrder(pageRoute: QuotesRoute);
+    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   Future<bool> isAuthOk() async {
