@@ -5,9 +5,10 @@ import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/sliver_loading_view.dart';
+import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
@@ -25,24 +26,24 @@ class AdminTempQuotes extends StatefulWidget {
 }
 
 class AdminTempQuotesState extends State<AdminTempQuotes> {
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  String lang         = 'en';
-  int limit           = 30;
-  bool descending     = true;
-  final pageRoute     = AdminTempQuotesRoute;
-
-  List<TempQuote> tempQuotes = [];
-  ScrollController scrollController = ScrollController();
-
+  bool hasNext          = true;
+  bool hasErrors        = false;
+  bool isLoading        = false;
+  bool isLoadingMore    = false;
+  String lang           = 'en';
   var lastDoc;
+  int limit             = 30;
+  bool descending       = true;
+  var itemsStyle        = ItemsStyle.list;
+  final pageRoute       = AdminTempQuotesRoute;
+
+  var scrollController  = ScrollController();
+  var tempQuotes        = List<TempQuote>();
 
   @override
   initState() {
     super.initState();
-    getSavedLangAndOrder();
+    getSavedProps();
     checkAuth();
     fetch();
   }
@@ -197,6 +198,73 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   ),
                 ),
               ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.2,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  child: Container(
+                    height: 25,
+                    width: 2.0,
+                    color: stateColors.foreground.withOpacity(0.5),
+                  ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    if (itemsStyle == ItemsStyle.list) {
+                      return;
+                    }
+
+                    setState(() {
+                      itemsStyle = ItemsStyle.list;
+                    });
+
+                    appLocalStorage.saveItemsStyle(
+                      pageRoute: pageRoute,
+                      style: ItemsStyle.list,
+                    );
+                  },
+                  icon: Icon(Icons.list),
+                  color: itemsStyle == ItemsStyle.list
+                    ? stateColors.primary
+                    : stateColors.foreground.withOpacity(0.5),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    if (itemsStyle == ItemsStyle.grid) {
+                      return;
+                    }
+
+                    setState(() {
+                      itemsStyle = ItemsStyle.grid;
+                    });
+
+                    appLocalStorage.saveItemsStyle(
+                      pageRoute: pageRoute,
+                      style: ItemsStyle.grid,
+                    );
+                  },
+                  icon: Icon(Icons.grid_on),
+                  color: itemsStyle == ItemsStyle.grid
+                    ? stateColors.primary
+                    : stateColors.foreground.withOpacity(0.5),
+                ),
+              ),
             ],
           );
         },
@@ -206,90 +274,102 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   Widget bodyListContent() {
     if (isLoading) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
-            ),
-          ]
-        ),
-      );
+      return SliverLoadingView();
     }
 
     if (!isLoading && hasErrors) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 150.0),
-            child: ErrorContainer(
-              onRefresh: () => fetch(),
-            ),
-          ),
-        ]),
-      );
+      return errorView();
     }
 
     if (tempQuotes.length == 0) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.sentiment_neutral,
-                    size: 120.0,
-                    color: Color(0xFFFF005C),
-                  ),
-                ),
-                title: "You've no quote in validation at this moment",
-                subtitle: 'They will appear after you propose a new quote',
-                onRefresh: () => fetch(),
-              ),
-            ),
-          ]
-        ),
-      );
+      return emptyView();
     }
 
-    return SliverLayoutBuilder(
-      builder: (context, constrains) {
-        if (constrains.crossAxisExtent < 600.0) {
-          return sliverQuotesList();
-        }
+    if (itemsStyle == ItemsStyle.grid) {
+      return sliverGrid();
+    }
 
-        return sliverGrid();
-      },
+    return sliverList();
+
+    // TODO: Adapt size on mobile.
+    // return SliverLayoutBuilder(
+    //   builder: (context, constrains) {
+    //     if (constrains.crossAxisExtent < 600.0) {
+    //       return sliverQuotesList();
+    //     }
+
+    //     return sliverGrid();
+    //   },
+    // );
+  }
+
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.sentiment_neutral,
+                  size: 120.0,
+                  color: Color(0xFFFF005C),
+                ),
+              ),
+              title: "You've no quote in validation at this moment",
+              subtitle: 'They will appear after you propose a new quote',
+              onRefresh: () => fetch(),
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget errorView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: ErrorContainer(
+            onRefresh: () => fetch(),
+          ),
+        ),
+      ]),
     );
   }
 
   Widget sliverGrid() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300.0,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
       ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final tempQuote = tempQuotes.elementAt(index);
-          final topicColor = appTopicsColors.find(tempQuote.topics.first);
-          final color = Color(topicColor.decimal);
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          mainAxisSpacing: 20.0,
+          crossAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final tempQuote = tempQuotes.elementAt(index);
+            final topicColor = appTopicsColors.find(tempQuote.topics.first);
+            final color = Color(topicColor.decimal);
 
-          return QuoteCard(
-            onTap: () => editAction(tempQuote),
-            onLongPress: () => validateAction(tempQuote),
-            title: tempQuote.name,
-            popupMenuButton: popupMenuButton(
-              color: color,
-              tempQuote: tempQuote,
-            ),
-          );
-        },
-        childCount: tempQuotes.length,
+            return QuoteCard(
+              onTap: () => editAction(tempQuote),
+              onLongPress: () => validateAction(tempQuote),
+              title: tempQuote.name,
+              popupMenuButton: popupMenuButton(
+                color: color,
+                tempQuote: tempQuote,
+              ),
+            );
+          },
+          childCount: tempQuotes.length,
+        ),
       ),
     );
   }
@@ -319,70 +399,77 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         }
       },
       itemBuilder: (BuildContext context) =>
-          <PopupMenuEntry<String>>[
+        <PopupMenuEntry<String>>[
         PopupMenuItem(
-            value: 'delete',
-            child: ListTile(
-              leading: Icon(Icons.delete_forever),
-              title: Text('Delete'),
-            )),
+          value: 'delete',
+          child: ListTile(
+            leading: Icon(Icons.delete_forever),
+            title: Text('Delete'),
+          )),
         PopupMenuItem(
-            value: 'edit',
-            child: ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Edit'),
-            )),
+          value: 'edit',
+          child: ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Edit'),
+          )),
         PopupMenuItem(
-            value: 'validate',
-            child: ListTile(
-              leading: Icon(Icons.check),
-              title: Text('Validate'),
-            )),
+          value: 'validate',
+          child: ListTile(
+            leading: Icon(Icons.check),
+            title: Text('Validate'),
+          )
+        ),
       ],
     );
   }
 
-  Widget sliverQuotesList() {
+  Widget sliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final tempQuote = tempQuotes.elementAt(index);
-          final topicColor = appTopicsColors.find(tempQuote.topics.first);
-          final color = Color(topicColor.decimal);
 
-          return Card(
-            elevation: 0.0,
-            child: InkWell(
-              onTap: () {
+          return TempQuoteRow(
+            quote: tempQuote,
+            onTap: () => editAction(tempQuote),
+            itemBuilder: (BuildContext context) =>
+              <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_forever),
+                    title: Text('Delete'),
+                  )),
+                PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  )),
+                PopupMenuItem(
+                  value: 'validate',
+                  child: ListTile(
+                    leading: Icon(Icons.check),
+                    title: Text('Validate'),
+                  )
+                ),
+              ],
+            onSelected: (value) {
+              if (value == 'delete') {
+                deleteAction(tempQuote);
+                return;
+              }
+
+              if (value == 'edit') {
                 editAction(tempQuote);
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 40.0,
-                    ),
-                    child: Text(
-                      tempQuote.name,
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
+                return;
+              }
 
-                  Center(
-                    child: popupMenuButton(
-                      color: color,
-                      tempQuote: tempQuote,
-                    ),
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(bottom: 20.0),),
-                ],
-              ),
-            ),
+              if (value == 'validate') {
+                validateAction(tempQuote);
+                return;
+              }
+            },
           );
         },
         childCount: tempQuotes.length,
@@ -525,9 +612,10 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  void getSavedLangAndOrder() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+  void getSavedProps() {
+    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void validateAction(TempQuote tempQuote) async {
