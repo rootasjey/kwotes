@@ -6,6 +6,7 @@ import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
+import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/web/dashboard_section_template.dart';
 import 'package:memorare/screens/web/favourites.dart';
@@ -36,6 +37,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     QuotesList(id: quoteListId), // doesn't get dynamic params
     AdminQuotes(),
     AdminTempQuotes(),
+    Quotidians(),
   ];
 
   @override
@@ -79,6 +81,8 @@ class _DashboardSectionsState extends State<DashboardSections> {
         return QuotesRoute;
       case 7:
         return AdminTempQuotesRoute;
+      case 8:
+        return QuotidiansRoute;
       default:
         return FavouritesRoute;
     }

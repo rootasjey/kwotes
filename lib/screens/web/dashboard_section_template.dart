@@ -198,6 +198,17 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
         ),
         onTap: () => navigateToSection(AdminTempQuotesRoute),
       ),
+
+      ColoredListTile(
+        icon: Icons.wb_sunny,
+        outlined: false,
+        hoverColor: Colors.yellow.shade600,
+        selected: widget.childName == QuotidiansRoute,
+        title: Text(
+          'Quotidians',
+        ),
+        onTap: () => navigateToSection(QuotidiansRoute),
+      ),
     ];
   }
 

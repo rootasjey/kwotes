@@ -8,7 +8,6 @@ import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/forgot_password.dart';
-import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
@@ -137,7 +136,7 @@ class WebRouteHandlers {
 
   static Handler quotidians = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          Quotidians());
+          DashboardSections(initialIndex: 8,));
 
   static Handler reference = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
