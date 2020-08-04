@@ -6,7 +6,6 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -91,18 +90,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       return Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.height + 50.0,
+            height: MediaQuery.of(context).size.height - 100.0,
             child: Stack(
               children: <Widget>[
-                Positioned(
-                  top: 60.0,
-                  left: 60.0,
-                  child: AppIconHeader(
-                    padding: EdgeInsets.zero,
-                    size: 50.0,
-                  ),
-                ),
-
                 Positioned(
                   top: 0.0,
                   left: 60.0,
@@ -110,7 +100,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 ),
 
                 Padding(
-                  padding: EdgeInsets.all(70.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 70.0,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -228,7 +220,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         }
 
         return SizedBox(
-          height: MediaQuery.of(context).size.height - 80.0,
+          height: MediaQuery.of(context).size.height - 200.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -406,7 +398,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   DashboardRoute,
                 ),
                 onHover: (isHover) {
-                  print('isHover: $isHover');
                   setState(() {
                     dashboardLinkDecoration = isHover
                       ? TextDecoration.underline
