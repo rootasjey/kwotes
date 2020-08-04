@@ -12,14 +12,12 @@ class QuoteRow extends StatefulWidget {
   /// because quote's id in favourites reflect
   /// the favourite's id and no the quote.
   final String quoteId;
-  final PopupMenuButton popupMenuButton;
   final Function itemBuilder;
   final Function onSelected;
 
   QuoteRow({
     this.quote,
     this.quoteId,
-    this.popupMenuButton,
     this.itemBuilder,
     this.onSelected,
   });

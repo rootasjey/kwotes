@@ -8,13 +8,11 @@ import 'package:memorare/types/quotidian.dart';
 class QuotidianRow extends StatefulWidget {
   final Function itemBuilder;
   final Function onSelected;
-  final PopupMenuButton popupMenuButton;
   final Quotidian quotidian;
 
   QuotidianRow({
     this.itemBuilder,
     this.onSelected,
-    this.popupMenuButton,
     this.quotidian,
   });
 

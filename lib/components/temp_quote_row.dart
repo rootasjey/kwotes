@@ -7,7 +7,6 @@ import 'package:memorare/types/temp_quote.dart';
 
 class TempQuoteRow extends StatefulWidget {
   final TempQuote quote;
-  final PopupMenuButton popupMenuButton;
   final Function itemBuilder;
   final Function onSelected;
   final Function onTap;
@@ -15,7 +14,6 @@ class TempQuoteRow extends StatefulWidget {
 
   TempQuoteRow({
     this.quote,
-    this.popupMenuButton,
     this.itemBuilder,
     this.onSelected,
     this.onTap,
