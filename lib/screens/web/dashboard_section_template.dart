@@ -27,7 +27,9 @@ class DashboardSectionTemplate extends StatefulWidget {
 class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
   //  Current State of InnerDrawerState
   // final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
-  bool isAdmin = false;
+
+  /// The authenticated user can manage quotes if true.
+  static bool isAdmin = false;
 
   @override
   initState() {
