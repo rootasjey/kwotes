@@ -25,7 +25,7 @@ class _TopicsState extends State<Topics> {
         horizontal: 80.0,
       ),
       foregroundDecoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.025),
+        color: Color.fromRGBO(0, 0, 0, 0.05),
       ),
       child: Column(
         children: <Widget>[
