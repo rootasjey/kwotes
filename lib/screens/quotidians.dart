@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_card.dart';
+import 'package:memorare/components/quotidian_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -31,6 +32,7 @@ class QuotidiansState extends State<Quotidians> {
   bool hasErrors      = false;
   bool isLoading      = false;
   bool isLoadingMore  = false;
+  var itemsStyle      = ItemsStyle.list;
   String lang         = 'en';
   int limit           = 30;
   bool descending     = false;
@@ -45,7 +47,7 @@ class QuotidiansState extends State<Quotidians> {
   initState() {
     super.initState();
     checkAuth(context: context);
-    getSavedLangAndOrder();
+    getSavedPros();
     fetch();
   }
 
@@ -157,7 +159,7 @@ class QuotidiansState extends State<Quotidians> {
                   child: Container(
                     height: 25,
                     width: 2.0,
-                    color: stateColors.foreground,
+                    color: stateColors.foreground.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -195,6 +197,73 @@ class QuotidiansState extends State<Quotidians> {
                   ),
                 ),
               ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.2,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  child: Container(
+                    height: 25,
+                    width: 2.0,
+                    color: stateColors.foreground.withOpacity(0.5),
+                  ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    if (itemsStyle == ItemsStyle.list) {
+                      return;
+                    }
+
+                    setState(() {
+                      itemsStyle = ItemsStyle.list;
+                    });
+
+                    appLocalStorage.saveItemsStyle(
+                      pageRoute: pageRoute,
+                      style: ItemsStyle.list,
+                    );
+                  },
+                  icon: Icon(Icons.list),
+                  color: itemsStyle == ItemsStyle.list
+                    ? stateColors.primary
+                    : stateColors.foreground.withOpacity(0.5),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    if (itemsStyle == ItemsStyle.grid) {
+                      return;
+                    }
+
+                    setState(() {
+                      itemsStyle = ItemsStyle.grid;
+                    });
+
+                    appLocalStorage.saveItemsStyle(
+                      pageRoute: pageRoute,
+                      style: ItemsStyle.grid,
+                    );
+                  },
+                  icon: Icon(Icons.grid_on),
+                  color: itemsStyle == ItemsStyle.grid
+                    ? stateColors.primary
+                    : stateColors.foreground.withOpacity(0.5),
+                ),
+              ),
             ],
           );
         },
@@ -208,8 +277,8 @@ class QuotidiansState extends State<Quotidians> {
       slivers: <Widget>[
         appBar(),
 
-        if (maxWidth < 600.0) customScrollViewChild(),
-        if (maxWidth >= 600.0) ...groupedGrids(),
+        if (itemsStyle == ItemsStyle.list) customScrollViewChild(),
+        if (itemsStyle == ItemsStyle.grid) ...groupedGrids(),
       ],
     );
   }
@@ -375,8 +444,9 @@ class QuotidiansState extends State<Quotidians> {
     final year = splittedDate[0];
     final month = getMonthFromNumber(splittedDate[1].toInt());
 
-    return Container(
-      color: stateColors.softBackground,
+    return Material(
+      elevation: 2.0,
+      color: stateColors.appBackground,
       child: Stack(
         children: <Widget>[
           FlatButton(
@@ -474,56 +544,25 @@ class QuotidiansState extends State<Quotidians> {
   Widget itemList(List<Quotidian> group) {
     return Column(
       children: group.map((quotidian) {
-        final topicColor = appTopicsColors
-          .find(quotidian.quote.topics.first);
-
-        return InkWell(
-          onTap: () {
-            FluroRouter.router.navigateTo(
-              context,
-              QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
-            );
+        return QuotidianRow(
+          quotidian: quotidian,
+          itemBuilder: (context) => <PopupMenuEntry<String>>[
+            PopupMenuItem(
+              value: 'delete',
+              child: ListTile(
+                leading: Icon(Icons.delete),
+                title: Text('Delete'),
+              ),
+            ),
+          ],
+          onSelected: (value) {
+            switch (value) {
+              case 'delete':
+                deleteAction(quotidian);
+                break;
+              default:
+            }
           },
-          onLongPress: () => showQuoteSheet(quotidian: quotidian),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(padding: const EdgeInsets.only(top: 20.0),),
-
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  quotidian.quote.name,
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-
-              Center(
-                child: IconButton(
-                  onPressed: () => showQuoteSheet(quotidian: quotidian),
-                  icon: Icon(
-                    Icons.more_horiz,
-                    color: topicColor != null ?
-                    Color(topicColor.decimal) : stateColors.primary,
-                  ),
-                ),
-              ),
-
-              Center(
-                child: Opacity(
-                  opacity: .6,
-                  child: Text(
-                    quotidian.date.day.toString(),
-                  ),
-                ),
-              ),
-
-              Padding(padding: const EdgeInsets.only(top: 10.0),),
-              Divider(),
-            ],
-          ),
         );
       }).toList()
     );
@@ -773,9 +812,10 @@ class QuotidiansState extends State<Quotidians> {
     }
   }
 
-  void getSavedLangAndOrder() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+  void getSavedPros() {
+    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void showQuoteSheet({Quotidian quotidian}) {
