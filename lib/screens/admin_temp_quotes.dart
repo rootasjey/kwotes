@@ -160,7 +160,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   child: Container(
                     height: 25,
                     width: 2.0,
-                    color: stateColors.foreground,
+                    color: stateColors.foreground.withOpacity(0.5),
                   ),
                 ),
               ),
