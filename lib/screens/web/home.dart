@@ -3,12 +3,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/discover.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_quotidian.dart';
+import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/components/web/topics.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -40,13 +42,27 @@ class _HomeState extends State<Home> {
           return Padding(padding: EdgeInsets.zero,);
         }
       ),
-      body: ListView(
+      body: CustomScrollView(
         controller: scrollController,
-        children: <Widget>[
-          FullPageQuotidian(),
-          Topics(),
-          Discover(),
-          Footer(pageScrollController: scrollController,),
+        slivers: <Widget>[
+          HomeAppBar(
+            onTapIconHeader: () {
+              scrollController.animateTo(
+                0,
+                duration: 250.milliseconds,
+                curve: Curves.decelerate,
+              );
+            },
+          ),
+
+          SliverList(
+            delegate: SliverChildListDelegate([
+              FullPageQuotidian(),
+              Topics(),
+              Discover(),
+              Footer(pageScrollController: scrollController,),
+            ]),
+          ),
         ],
       ),
     );
