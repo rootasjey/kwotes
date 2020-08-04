@@ -4,10 +4,12 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 
 class AppIconHeader extends StatefulWidget {
+  final Function onTap;
   final EdgeInsetsGeometry padding;
   final double size;
 
   AppIconHeader({
+    this.onTap,
     this.padding = const EdgeInsets.symmetric(vertical: 80.0),
     this.size = 60.0,
   });
@@ -31,7 +33,8 @@ class _AppIconHeaderState extends State<AppIconHeader> {
           width: widget.size,
           height: widget.size,
           child: InkWell(
-            onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
+            onTap: widget.onTap
+              ?? () => FluroRouter.router.navigateTo(context, RootRoute),
             onLongPress: () => showFooter(),
           ),
         ),
