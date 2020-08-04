@@ -123,9 +123,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               ],
             ),
           ),
-
-          if (!widget.noAuth)
-            userSection(),
           ],
         );
       },
@@ -304,62 +301,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         );
       },
     );
-  }
-
-  Widget signinButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RaisedButton(
-            onPressed: () {
-              FluroRouter.router.navigateTo(
-                context,
-                SigninRoute,
-              );
-            },
-            color: Colors.black12,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(7.0),
-              ),
-            ),
-            child: Container(
-              width: 200.0,
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'SIGN IN',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget userSection() {
-    return Observer(builder: (context) {
-      if (userState.isUserConnected) {
-        if (!hasFetchedFav) { fetchIsFav(); }
-
-        hasFetchedFav = true;
-
-        return dashboardQuickLinks();
-      }
-
-      hasFetchedFav = false;
-      return signinButton();
-    });
   }
 
   Widget dashboardQuickLinks() {
