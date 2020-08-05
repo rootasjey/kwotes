@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -28,47 +29,104 @@ class _HomeAppBarState extends State<HomeAppBar> {
           pinned: true,
           backgroundColor: stateColors.appBackground.withOpacity(1.0),
           automaticallyImplyLeading: false,
-          title: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 60.0,
-                ),
-                child: AppIconHeader(
-                  size: 40.0,
-                  padding: EdgeInsets.zero,
-                  onTap: widget.onTapIconHeader,
-                ),
-              ),
-
-              Padding(padding: const EdgeInsets.only(right: 40.0)),
-            ],
+          title: Padding(
+            padding: const EdgeInsets.only(
+              left: 60.0,
+            ),
+            child: AppIconHeader(
+              size: 40.0,
+              padding: EdgeInsets.zero,
+              onTap: widget.onTapIconHeader,
+            ),
           ),
-          actions: <Widget>[
-            userSection(),
-          ],
+          flexibleSpace: userSection(),
         );
       },
     );
   }
 
+  Widget addNewQuoteButton() {
+    return RaisedButton(
+      onPressed: () {
+        AddQuoteInputs.clearAll();
+        AddQuoteInputs.navigatedFromPath = 'dashboard';
+        FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(30.0),
+        ),
+      ),
+      color: stateColors.primary,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.add, color: Colors.white),
+          ),
+
+          Text(
+            'Propose new quote',
+            style: TextStyle(
+              color: Colors.white,
+              // fontSize: 12.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget signupButton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: FlatButton(
+        onPressed: () {
+          FluroRouter.router.navigateTo(
+            context,
+            SignupRoute,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+          ),
+          child: Text(
+            'SIGN UP',
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget signinButton() {
-    return FlatButton(
+    return RaisedButton(
       onPressed: () {
         FluroRouter.router.navigateTo(
           context,
           SigninRoute,
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
+      color: stateColors.primary,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
         ),
-        child: Text(
-          'SIGN IN',
-          style: TextStyle(
-            fontSize: 16.0,
-          ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'SIGN IN',
+              style: TextStyle(
+                color: Colors.white,
+                // fontSize: 13.0,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -90,6 +148,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
     return Padding(
       padding: const EdgeInsets.only(
+        left: 20.0,
         right: 20.0,
       ),
       child: PopupMenuButton<String>(
@@ -116,7 +175,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
           );
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-
           const PopupMenuItem(
             value: FavouritesRoute,
             child: ListTile(
@@ -209,26 +267,36 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
         ],
       ),
-      // child: CircleAvatar(
-      //   backgroundColor: stateColors.primary,
-      //   radius: 20.0,
-      //   child: Text(
-      //     initials,
-      //     style: TextStyle(
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      // ),
     );
   }
 
   Widget userSection() {
     return Observer(builder: (context) {
+      final children = List<Widget>();
+
       if (userState.isUserConnected) {
-        return userAvatar();
+        children.addAll([
+          userAvatar(),
+          addNewQuoteButton(),
+        ]);
+
+      } else {
+        children.addAll([
+          signinButton(),
+          signupButton()
+        ]);
       }
 
-      return signinButton();
+      return Container(
+        padding: const EdgeInsets.only(
+          top: 5.0,
+          right: 10.0,
+        ),
+        child: Row(
+          textDirection: TextDirection.rtl,
+          children: children,
+        ),
+      );
     });
   }
 }
