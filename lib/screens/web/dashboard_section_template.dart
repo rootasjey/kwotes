@@ -118,75 +118,75 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       child: Stack(
         children: <Widget>[
           ListView(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 20.0,
-                bottom: 50.0,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  bottom: 50.0,
+                ),
+                child: SideBarHeader(),
               ),
-              child: SideBarHeader(),
-            ),
 
-            ColoredListTile(
-              icon: Icons.favorite,
-              outlined: false,
-              selected: widget.childName == FavouritesRoute,
-              hoverColor: Colors.red,
-              title: Text(
-                'Favourites',
+              ColoredListTile(
+                icon: Icons.favorite,
+                outlined: false,
+                selected: widget.childName == FavouritesRoute,
+                hoverColor: Colors.red,
+                title: Text(
+                  'Favourites',
+                ),
+                onTap: () => navigateToSection(FavouritesRoute),
               ),
-              onTap: () => navigateToSection(FavouritesRoute),
-            ),
 
-            ColoredListTile(
-              icon: Icons.list,
-              outlined: false,
-              hoverColor: Colors.blue.shade700,
-              selected: widget.childName == ListsRoute,
-              title: Text(
-                'Lists',
+              ColoredListTile(
+                icon: Icons.list,
+                outlined: false,
+                hoverColor: Colors.blue.shade700,
+                selected: widget.childName == ListsRoute,
+                title: Text(
+                  'Lists',
+                ),
+                onTap: () => navigateToSection(ListsRoute),
               ),
-              onTap: () => navigateToSection(ListsRoute),
-            ),
 
-            ColoredListTile(
-              icon: Icons.edit,
-              outlined: false,
-              hoverColor: Colors.pink.shade200,
-              selected: widget.childName == DraftsRoute,
-              title: Text(
-                'Drafts',
+              ColoredListTile(
+                icon: Icons.edit,
+                outlined: false,
+                hoverColor: Colors.pink.shade200,
+                selected: widget.childName == DraftsRoute,
+                title: Text(
+                  'Drafts',
+                ),
+                onTap: () => navigateToSection(DraftsRoute),
               ),
-              onTap: () => navigateToSection(DraftsRoute),
-            ),
 
-            ColoredListTile(
-              icon: Icons.cloud_done,
-              outlined: false,
-              hoverColor: Colors.green,
-              selected: widget.childName == PublishedQuotesRoute,
-              title: Text(
-                'Published',
+              ColoredListTile(
+                icon: Icons.cloud_done,
+                outlined: false,
+                hoverColor: Colors.green,
+                selected: widget.childName == PublishedQuotesRoute,
+                title: Text(
+                  'Published',
+                ),
+                onTap: () => navigateToSection(PublishedQuotesRoute),
               ),
-              onTap: () => navigateToSection(PublishedQuotesRoute),
-            ),
 
-            ColoredListTile(
-              icon: Icons.timelapse,
-              outlined: false,
-              hoverColor: Colors.yellow.shade800,
-              selected: widget.childName == TempQuotesRoute,
-              title: Text(
-                'In Validation',
+              ColoredListTile(
+                icon: Icons.timelapse,
+                outlined: false,
+                hoverColor: Colors.yellow.shade800,
+                selected: widget.childName == TempQuotesRoute,
+                title: Text(
+                  'In Validation',
 
+                ),
+                onTap: () => navigateToSection(TempQuotesRoute),
               ),
-              onTap: () => navigateToSection(TempQuotesRoute),
-            ),
 
-            if (isAdmin)
-              ...adminTiles(),
+              if (isAdmin)
+                ...adminTiles(),
 
-            Padding(padding: const EdgeInsets.only(bottom: 100.0),),
+              Padding(padding: const EdgeInsets.only(bottom: 100.0),),
           ],
         ),
 
