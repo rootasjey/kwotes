@@ -72,11 +72,15 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
               ),
 
               if (widget.subHeader != null)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 165.0,
+                FadeInY(
+                  delay: 1.5,
+                  beginY: 50.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 165.0,
+                    ),
+                    child: widget.subHeader,
                   ),
-                  child: widget.subHeader,
                 ),
             ],
           ),
