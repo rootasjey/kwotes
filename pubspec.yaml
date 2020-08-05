@@ -39,6 +39,7 @@ dependencies:
   flushbar: 1.10.0
   flutter:
     sdk: flutter
+  flutter_inner_drawer: 0.5.7+2
   flutter_mobx: 1.0.1
   flutter_sticky_header: 0.4.2
   mobx: 1.0.2
