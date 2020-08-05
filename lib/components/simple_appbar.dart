@@ -32,7 +32,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
         return SliverAppBar(
           floating: true,
           snap: true,
-          backgroundColor: stateColors.appBackground,
+          backgroundColor: stateColors.appBackground.withOpacity(1.0),
           expandedHeight: 200.0,
           automaticallyImplyLeading: false,
           flexibleSpace: Column(
