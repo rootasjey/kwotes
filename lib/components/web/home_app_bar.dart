@@ -26,8 +26,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           floating: true,
           snap: true,
           pinned: true,
-          backgroundColor: stateColors.appBackground,
-          expandedHeight: 100.0,
+          backgroundColor: stateColors.appBackground.withOpacity(1.0),
           automaticallyImplyLeading: false,
           title: Row(
             children: <Widget>[
@@ -48,18 +47,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
           actions: <Widget>[
             userSection(),
           ],
-          // flexibleSpace: Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: <Widget>[
-          //     Padding(
-          //       padding: const EdgeInsets.only(
-          //         left: 60.0,
-          //         top: 20.0,
-          //       ),
-          //       child:
-          //     ),
-          //   ],
-          // ),
         );
       },
     );
