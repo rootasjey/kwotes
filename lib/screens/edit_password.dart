@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -31,10 +31,19 @@ class _EditPasswordState extends State<EditPassword> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppHeader(
-            title: 'Update password',
-            subTitle: 'If your password is compromised or old',
+          SimpleAppBar(
+            textTitle: 'Update password',
+            subHeader: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'If your password is old or compromised',
+                ),
+              ),
+            ),
           ),
+
           body(),
         ],
       ),

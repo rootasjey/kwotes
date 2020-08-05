@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
@@ -50,10 +50,19 @@ class _EditEmailState extends State<EditEmail> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppHeader(
-            title: 'Update email',
-            subTitle: 'If your email is outdated',
+          SimpleAppBar(
+            textTitle: 'Update email',
+            subHeader: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'If your email is outdated',
+                ),
+              ),
+            ),
           ),
+
           body(),
         ],
       ),

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/dashboard_sections.dart';
-import 'package:memorare/screens/delete_account.dart';
-import 'package:memorare/screens/edit_email.dart';
-import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/signin.dart';
@@ -82,7 +79,7 @@ class WebRouteHandlers {
 
   static Handler deleteAccount = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(DeleteAccount()));
+          DashboardSections(initialIndex: 12));
 
   static Handler drafts = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
@@ -90,11 +87,11 @@ class WebRouteHandlers {
 
   static Handler editEmail = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          EditEmail());
+          DashboardSections(initialIndex: 10));
 
   static Handler editPassword = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          EditPassword());
+          DashboardSections(initialIndex: 11));
 
   static Handler favourites = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

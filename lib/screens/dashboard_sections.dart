@@ -3,7 +3,10 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
+import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/edit_password.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
@@ -40,6 +43,9 @@ class _DashboardSectionsState extends State<DashboardSections> {
     AdminTempQuotes(),
     Quotidians(),
     Account(),
+    EditEmail(),
+    EditPassword(),
+    DeleteAccount(),
   ];
 
   @override
@@ -87,6 +93,12 @@ class _DashboardSectionsState extends State<DashboardSections> {
         return QuotidiansRoute;
       case 9:
         return AccountRoute;
+      case 10:
+        return EditEmailRoute;
+      case 11:
+        return EditPasswordRoute;
+      case 12:
+        return DeleteAccountRoute;
       default:
         return FavouritesRoute;
     }

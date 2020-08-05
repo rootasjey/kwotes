@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -38,10 +38,19 @@ class DeleteAccountState extends State<DeleteAccount> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppHeader(
-            title: 'Account deletion',
-            subTitle: 'Well, this marks the end of the adventure',
+          SimpleAppBar(
+            textTitle: 'Delete account',
+            subHeader: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Well, this marks the end of the adventure',
+                ),
+              ),
+            ),
           ),
+
           body(),
         ],
       ),
@@ -276,9 +285,8 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget warningCard() {
-    return Container(
+    return SizedBox(
       width: 500.0,
-      padding: const EdgeInsets.only(top: 60.0),
       child: Card(
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
