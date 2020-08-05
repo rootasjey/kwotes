@@ -44,7 +44,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       builder: (context, orientation) {
         final screenWidth = MediaQuery.of(context).size.width;
 
-        return screenWidth < 900.0
+        return screenWidth < 1000.0
           ? smallView()
           : wideView();
       },
