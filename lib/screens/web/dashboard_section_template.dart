@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/web/side_bar_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
@@ -25,8 +26,8 @@ class DashboardSectionTemplate extends StatefulWidget {
 }
 
 class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
-  //  Current State of InnerDrawerState
-  // final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
+  ///  Current State of InnerDrawerState
+  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
 
   /// The authenticated user can manage quotes if true.
   static bool isAdmin = false;
@@ -41,8 +42,11 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
-        // final screenWidth = MediaQuery.of(context).size.width;
-        return wideView();
+        final screenWidth = MediaQuery.of(context).size.width;
+
+        return screenWidth < 900.0
+          ? smallView()
+          : wideView();
       },
     );
   }
@@ -52,121 +56,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Container(
-              foregroundDecoration: BoxDecoration(
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-              ),
-              child: Stack(
-                children: <Widget>[
-                  ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 50.0,
-                      ),
-                      child: SideBarHeader(),
-                    ),
-
-                    ColoredListTile(
-                      icon: Icons.favorite,
-                      outlined: false,
-                      selected: widget.childName == FavouritesRoute,
-                      hoverColor: Colors.red,
-                      title: Text(
-                        'Favourites',
-                      ),
-                      onTap: () => navigateToSection(FavouritesRoute),
-                    ),
-
-                    ColoredListTile(
-                      icon: Icons.list,
-                      outlined: false,
-                      hoverColor: Colors.blue.shade700,
-                      selected: widget.childName == ListsRoute,
-                      title: Text(
-                        'Lists',
-                      ),
-                      onTap: () => navigateToSection(ListsRoute),
-                    ),
-
-                    ColoredListTile(
-                      icon: Icons.edit,
-                      outlined: false,
-                      hoverColor: Colors.pink.shade200,
-                      selected: widget.childName == DraftsRoute,
-                      title: Text(
-                        'Drafts',
-                      ),
-                      onTap: () => navigateToSection(DraftsRoute),
-                    ),
-
-                    ColoredListTile(
-                      icon: Icons.cloud_done,
-                      outlined: false,
-                      hoverColor: Colors.green,
-                      selected: widget.childName == PublishedQuotesRoute,
-                      title: Text(
-                        'Published',
-                      ),
-                      onTap: () => navigateToSection(PublishedQuotesRoute),
-                    ),
-
-                    ColoredListTile(
-                      icon: Icons.timelapse,
-                      outlined: false,
-                      hoverColor: Colors.yellow.shade800,
-                      selected: widget.childName == TempQuotesRoute,
-                      title: Text(
-                        'In Validation',
-
-                      ),
-                      onTap: () => navigateToSection(TempQuotesRoute),
-                    ),
-
-                    if (isAdmin)
-                      ...adminTiles(),
-
-                    Padding(padding: const EdgeInsets.only(bottom: 100.0),),
-                  ],
-                ),
-
-                  Positioned(
-                    left: 15.0,
-                    bottom: 20.0,
-                    child: RaisedButton(
-                      onPressed: () {
-                        AddQuoteInputs.clearAll();
-                        AddQuoteInputs.navigatedFromPath = 'dashboard';
-                        FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
-                      },
-                      color: stateColors.primary,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Icon(Icons.add, color: Colors.white),
-                            Padding(padding: const EdgeInsets.only(left: 10.0),),
-                            Text(
-                              'Propose new quote',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: sideBarContent(),
           ),
 
           Expanded(
@@ -217,6 +107,150 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
     ];
   }
 
+  Widget sideBarContent() {
+    return Container(
+      foregroundDecoration: BoxDecoration(
+        color: Color.fromRGBO(0, 0, 0, 0.05),
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      child: Stack(
+        children: <Widget>[
+          ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20.0,
+                bottom: 50.0,
+              ),
+              child: SideBarHeader(),
+            ),
+
+            ColoredListTile(
+              icon: Icons.favorite,
+              outlined: false,
+              selected: widget.childName == FavouritesRoute,
+              hoverColor: Colors.red,
+              title: Text(
+                'Favourites',
+              ),
+              onTap: () => navigateToSection(FavouritesRoute),
+            ),
+
+            ColoredListTile(
+              icon: Icons.list,
+              outlined: false,
+              hoverColor: Colors.blue.shade700,
+              selected: widget.childName == ListsRoute,
+              title: Text(
+                'Lists',
+              ),
+              onTap: () => navigateToSection(ListsRoute),
+            ),
+
+            ColoredListTile(
+              icon: Icons.edit,
+              outlined: false,
+              hoverColor: Colors.pink.shade200,
+              selected: widget.childName == DraftsRoute,
+              title: Text(
+                'Drafts',
+              ),
+              onTap: () => navigateToSection(DraftsRoute),
+            ),
+
+            ColoredListTile(
+              icon: Icons.cloud_done,
+              outlined: false,
+              hoverColor: Colors.green,
+              selected: widget.childName == PublishedQuotesRoute,
+              title: Text(
+                'Published',
+              ),
+              onTap: () => navigateToSection(PublishedQuotesRoute),
+            ),
+
+            ColoredListTile(
+              icon: Icons.timelapse,
+              outlined: false,
+              hoverColor: Colors.yellow.shade800,
+              selected: widget.childName == TempQuotesRoute,
+              title: Text(
+                'In Validation',
+
+              ),
+              onTap: () => navigateToSection(TempQuotesRoute),
+            ),
+
+            if (isAdmin)
+              ...adminTiles(),
+
+            Padding(padding: const EdgeInsets.only(bottom: 100.0),),
+          ],
+        ),
+
+          Positioned(
+            left: 15.0,
+            bottom: 20.0,
+            child: RaisedButton(
+              onPressed: () {
+                AddQuoteInputs.clearAll();
+                AddQuoteInputs.navigatedFromPath = 'dashboard';
+                FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+              },
+              color: stateColors.primary,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.add, color: Colors.white),
+                    Padding(padding: const EdgeInsets.only(left: 10.0),),
+                    Text(
+                      'Propose new quote',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void navigateToSection(String route) {
+    if (widget.childName == route && !widget.isNested) {
+      return;
+    }
+
+    FluroRouter.router.navigateTo(
+      context,
+      route,
+      transition: TransitionType.fadeIn,
+    );
+  }
+
+  Widget smallView() {
+    return InnerDrawer(
+      key: _innerDrawerKey,
+      tapScaffoldEnabled: true,
+      offset: IDOffset.only(
+        left: 0.0,
+      ),
+      leftChild: Material(
+        child: sideBarContent(),
+      ),
+      scaffold: widget.child,
+    );
+  }
+
   void checkAdmin() async {
     try {
       final userAuth = await userState.userAuth;
@@ -236,42 +270,4 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       debugPrint(error.toString());
     }
   }
-
-  void navigateToSection(String route) {
-    if (widget.childName == route && !widget.isNested) {
-      return;
-    }
-
-    FluroRouter.router.navigateTo(
-      context,
-      route,
-      transition: TransitionType.fadeIn,
-    );
-  }
-
-  // Widget innerDrawerView() {
-  //   return InnerDrawer(
-  //     key: _innerDrawerKey,
-  //     tapScaffoldEnabled: true,
-  //     offset: IDOffset.only(
-  //       left: 0.0,
-  //     ),
-  //     leftChild: Container(
-  //       width: 250.0,
-  //       child: Material(
-  //         child: ListView(
-  //           children: <Widget>[
-  //             ListTile(
-  //               title: Text('Item 1'),
-  //             ),
-  //             ListTile(
-  //               title: Text('Item 2'),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //     scaffold: widget.child,
-  //   );
-  // }
 }
