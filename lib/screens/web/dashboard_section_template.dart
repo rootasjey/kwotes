@@ -199,23 +199,34 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
                 AddQuoteInputs.navigatedFromPath = 'dashboard';
                 FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
               },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
               color: stateColors.primary,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 12.0,
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.add, color: Colors.white),
-                    Padding(padding: const EdgeInsets.only(left: 10.0),),
-                    Text(
-                      'Propose new quote',
-                      style: TextStyle(
-                        color: Colors.white,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 160.0,
+                  ),
+                  child: Row(
+                    // mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.add, color: Colors.white),
+                      Padding(padding: const EdgeInsets.only(left: 10.0),),
+                      Text(
+                        'New quote',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
