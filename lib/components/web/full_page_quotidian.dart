@@ -93,12 +93,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             height: MediaQuery.of(context).size.height - 100.0,
             child: Stack(
               children: <Widget>[
-                Positioned(
-                  top: 0.0,
-                  left: 60.0,
-                  child: quoteActions(),
-                ),
-
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 70.0,
@@ -106,8 +100,16 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      quoteName(
-                        screenWidth: MediaQuery.of(context).size.width,
+                      Row(
+                        children: <Widget>[
+                          quoteActions(),
+
+                          Expanded(
+                            child: quoteName(
+                              screenWidth: MediaQuery.of(context).size.width,
+                            ),
+                          ),
+                        ],
                       ),
 
                       animatedDivider(),
@@ -144,12 +146,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           thickness: 2.0,
       ),
       builderWithChild: (context, child, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: SizedBox(
-            width: value,
-            child: child,
-          ),
+        return SizedBox(
+          width: value,
+          child: child,
         );
       },
     );
@@ -216,38 +215,34 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
           return Padding(padding: EdgeInsets.zero,);
         }
 
-        return SizedBox(
-          height: MediaQuery.of(context).size.height - 200.0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
+        return Column(
+          children: <Widget>[
+            IconButton(
+              onPressed: () async {
+                if (isPrevFav) {
+                  removeQuotidianFromFav();
+                  return;
+                }
+
+                addQuotidianToFav();
+              },
+              icon: isPrevFav ?
+                Icon(Icons.favorite) :
+                Icon(Icons.favorite_border),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: IconButton(
                 onPressed: () async {
-                  if (isPrevFav) {
-                    removeQuotidianFromFav();
-                    return;
-                  }
-
-                  addQuotidianToFav();
+                  shareTwitter(quote: quotidian.quote);
                 },
-                icon: isPrevFav ?
-                  Icon(Icons.favorite) :
-                  Icon(Icons.favorite_border),
+                icon: Icon(Icons.share),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                child: IconButton(
-                  onPressed: () async {
-                    shareTwitter(quote: quotidian.quote);
-                  },
-                  icon: Icon(Icons.share),
-                ),
-              ),
-
-              AddToListButton(quote: quotidian.quote,),
-            ],
-          ),
+            AddToListButton(quote: quotidian.quote,),
+          ],
         );
     });
   }
