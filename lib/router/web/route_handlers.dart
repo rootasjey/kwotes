@@ -1,7 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
-import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/dashboard_sections.dart';
 import 'package:memorare/screens/delete_account.dart';
@@ -43,7 +42,7 @@ class WebRouteHandlers {
 
   static Handler account = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          Account());
+          DashboardSections(initialIndex: 9,));
 
   static Handler addQuote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

@@ -5,9 +5,9 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/sliver_app_header.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
@@ -84,38 +84,45 @@ class _AccountState extends State<Account> {
         final isUserConnected = userState.isUserConnected;
 
         if (isUserConnected) {
-          return Column(
+          return Wrap(
+            alignment: WrapAlignment.center,
             children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    FadeInY(
-                      delay: 1.5,
-                      beginY: 50.0,
-                      child: avatar(isUserConnected),
-                    ),
-                    FadeInY(
-                      delay: 2.0,
-                      beginY: 50.0,
-                      child: inputDisplayName(isUserConnected),
-                    ),
-                    Padding(padding: const EdgeInsets.only(top: 20.0)),
-                    FadeInY(
-                      delay: 2.5,
-                      beginY: 50.0,
-                      child: emailButton(),
-                    ),
-                    FadeInY(
-                      delay: 3.0,
-                      beginY: 50.0,
-                      child: langSelect(),
-                    ),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  FadeInY(
+                    delay: 1.5,
+                    beginY: 50.0,
+                    child: avatar(isUserConnected),
+                  ),
+                  accountActions(isUserConnected),
+                ],
               ),
-              accountActions(isUserConnected),
+
+              Column(
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      FadeInY(
+                        delay: 2.0,
+                        beginY: 50.0,
+                        child: inputDisplayName(isUserConnected),
+                      ),
+                      Padding(padding: const EdgeInsets.only(top: 20.0)),
+                      FadeInY(
+                        delay: 2.5,
+                        beginY: 50.0,
+                        child: emailButton(),
+                      ),
+                      FadeInY(
+                        delay: 3.0,
+                        beginY: 50.0,
+                        child: langSelect(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           );
         }
@@ -134,7 +141,7 @@ class _AccountState extends State<Account> {
   Widget accountActions(bool isUserConnected) {
     return Observer(builder: (_) {
       return Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
+        padding: const EdgeInsets.only(bottom: 40.0),
         child: Wrap(
           spacing: 15.0,
           children: <Widget>[
@@ -231,13 +238,8 @@ class _AccountState extends State<Account> {
   }
 
   Widget appBar() {
-    return SliverAppHeader(
-      title: 'Settings',
-      subTitle: 'View & update your account settings',
-      onScrollToTop: () {
-        _scrollController.animateTo(0,
-            duration: Duration(seconds: 2), curve: Curves.easeOutQuint);
-      },
+    return SimpleAppBar(
+      textTitle: 'Settings',
     );
   }
 
@@ -270,8 +272,7 @@ class _AccountState extends State<Account> {
     if (isLoadingImageURL) {
       return Padding(
         padding: const EdgeInsets.only(
-          top: 80.0,
-          bottom: 60.0,
+          bottom: 30.0,
         ),
         child: Material(
           elevation: 4.0,
@@ -292,8 +293,7 @@ class _AccountState extends State<Account> {
 
     return Padding(
       padding: const EdgeInsets.only(
-        top: 80.0,
-        bottom: 60.0,
+        bottom: 30.0,
       ),
       child: Material(
         elevation: 4.0,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
+import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
@@ -38,6 +39,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     AdminQuotes(),
     AdminTempQuotes(),
     Quotidians(),
+    Account(),
   ];
 
   @override
@@ -83,6 +85,8 @@ class _DashboardSectionsState extends State<DashboardSections> {
         return AdminTempQuotesRoute;
       case 8:
         return QuotidiansRoute;
+      case 9:
+        return AccountRoute;
       default:
         return FavouritesRoute;
     }
