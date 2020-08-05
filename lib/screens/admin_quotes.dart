@@ -95,7 +95,7 @@ class AdminQuotesState extends State<AdminQuotes> {
                 delay: 2.0,
                 child: ChoiceChip(
                   label: Text(
-                    'First',
+                    'First added',
                     style: TextStyle(
                       color: !descending ?
                         Colors.white :
@@ -124,7 +124,7 @@ class AdminQuotesState extends State<AdminQuotes> {
                 delay: 2.5,
                 child: ChoiceChip(
                   label: Text(
-                    'Last',
+                    'Last added',
                     style: TextStyle(
                       color: descending ?
                         Colors.white :
@@ -290,30 +290,6 @@ class AdminQuotesState extends State<AdminQuotes> {
     }
 
     return sliverList();
-
-    // TODO: Adapt size on mobile.
-    // return SliverLayoutBuilder(
-    //   builder: (context, constrains) {
-    //     if (constrains.crossAxisExtent < 600.0) {
-    //       return SliverPadding(
-    //         padding: const EdgeInsets.only(
-    //           top: 80.0,
-    //         ),
-    //         sliver: sliverList(),
-    //       );
-
-    //     } else {
-    //       return SliverPadding(
-    //         padding: const EdgeInsets.only(
-    //           top: 80.0,
-    //           left: 10.0,
-    //           right: 10.0,
-    //         ),
-    //         sliver: sliverGrid(),
-    //       );
-    //     }
-    //   },
-    // );
   }
 
   Widget emptyView() {
