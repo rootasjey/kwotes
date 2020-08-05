@@ -67,7 +67,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
 
           Text(
-            'Propose new quote',
+            'New quote',
             style: TextStyle(
               color: Colors.white,
               // fontSize: 12.0,
