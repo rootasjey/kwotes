@@ -39,7 +39,7 @@ class _ColoredListTileState extends State<ColoredListTile> {
       setState(() {
         baseColor = widget.selected
         ? widget.hoverColor
-        : stateColors.foreground;
+        : stateColors.foreground.withOpacity(.5);
 
         hoverColor = baseColor;
       });
