@@ -48,33 +48,21 @@ class _AuthorPageState extends State<AuthorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (BuildContext context) {
-        if (!isLoading && author == null) {
-          return Container(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Icon(
-                    Icons.sentiment_neutral,
-                    size: 40.0,
-                  ),
-                ),
-                Text("Sorry, no data found for the specified author"),
-              ],
-            ),
-          );
-        }
+      body: Builder(
+        builder: (BuildContext context) {
+          if (!isLoading && author == null) {
+            return emptyView();
+          }
 
-        if (isLoading) {
-          return LoadingAnimation(
-            textTitle: 'Loading author...',
-          );
-        }
+          if (isLoading) {
+            return LoadingAnimation(
+              textTitle: 'Loading author...',
+            );
+          }
 
-        return body();
-      }),
+          return body();
+        }
+      ),
     );
   }
 
@@ -296,6 +284,24 @@ class _AuthorPageState extends State<AuthorPage> {
         url: url,
         imageUrl: imageUrl,
         padding: const EdgeInsets.only(right: 17.0),
+      ),
+    );
+  }
+
+  Widget emptyView() {
+    return Container(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Icon(
+              Icons.sentiment_neutral,
+              size: 40.0,
+            ),
+          ),
+          Text("Sorry, no data found for the specified author"),
+        ],
       ),
     );
   }
