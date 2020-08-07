@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
@@ -413,41 +412,5 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void showQuoteSheet({Quote quote}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              IconButton(
-                iconSize: 40.0,
-                tooltip: 'Add to favourites',
-                onPressed: () {
-                  addToFavourites(
-                    context: context,
-                    quote: quote,
-                  );
-                },
-                icon: Opacity(
-                  opacity: .6,
-                  child: Icon(
-                    Icons.favorite_border,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
   }
 }
