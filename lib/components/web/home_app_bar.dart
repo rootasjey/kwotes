@@ -70,13 +70,16 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           : MediaQuery.of(context).size.width - 300.0,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 40.0),
-                          child: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              widget.title,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: stateColors.foreground,
+                          child: Tooltip(
+                            message: widget.title,
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                widget.title,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: stateColors.foreground,
+                                ),
                               ),
                             ),
                           ),
