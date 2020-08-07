@@ -9,9 +9,14 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 
 class HomeAppBar extends StatefulWidget {
+  final bool automaticallyImplyLeading;
   final Function onTapIconHeader;
+  final String title;
+
   HomeAppBar({
+    this.automaticallyImplyLeading = false,
     this.onTapIconHeader,
+    this.title = '',
   });
 
   @override
@@ -23,23 +28,66 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          pinned: true,
-          backgroundColor: stateColors.appBackground.withOpacity(1.0),
-          automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(
-              left: 60.0,
-            ),
-            child: AppIconHeader(
-              size: 40.0,
-              padding: EdgeInsets.zero,
-              onTap: widget.onTapIconHeader,
-            ),
-          ),
-          flexibleSpace: userSection(),
+        return SliverLayoutBuilder(
+          builder: (context, constrains) {
+            final isNarrow = constrains.crossAxisExtent < 700.0;
+            final leftPadding = isNarrow
+              ? 0.0
+              : 60.0;
+
+            return SliverAppBar(
+              floating: true,
+              snap: true,
+              pinned: true,
+              backgroundColor: stateColors.appBackground.withOpacity(1.0),
+              automaticallyImplyLeading: false,
+              title: Padding(
+                padding: EdgeInsets.only(
+                  left: leftPadding,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    if (widget.automaticallyImplyLeading)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: IconButton(
+                          color: stateColors.foreground,
+                          onPressed: () => FluroRouter.router.pop(context),
+                          icon: Icon(Icons.arrow_back),
+                        ),
+                      ),
+
+                    AppIconHeader(
+                      size: 40.0,
+                      padding: EdgeInsets.zero,
+                      onTap: widget.onTapIconHeader,
+                    ),
+
+                    if (widget.title.isNotEmpty)
+                      SizedBox(
+                        width: isNarrow
+                          ? 200.0
+                          : MediaQuery.of(context).size.width - 300.0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              widget.title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: stateColors.foreground,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              flexibleSpace: userSection(isNarrow),
+            );
+          },
         );
       },
     );
@@ -132,7 +180,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
     );
   }
 
-  Widget userAvatar() {
+  Widget userAvatar({bool isNarrow = true}) {
     final arrStr = userState.username.split(' ');
     String initials = '';
 
@@ -175,6 +223,20 @@ class _HomeAppBarState extends State<HomeAppBar> {
           );
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          if (isNarrow)
+            const PopupMenuItem(
+              value: AddQuoteContentRoute,
+              child: ListTile(
+                leading: Icon(Icons.add),
+                title: Text(
+                  'Add quote',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+            ),
+
           const PopupMenuItem(
             value: FavouritesRoute,
             child: ListTile(
@@ -270,21 +332,25 @@ class _HomeAppBarState extends State<HomeAppBar> {
     );
   }
 
-  Widget userSection() {
+  Widget userSection(bool isNarrow) {
     return Observer(builder: (context) {
       final children = List<Widget>();
 
       if (userState.isUserConnected) {
-        children.addAll([
-          userAvatar(),
-          addNewQuoteButton(),
-        ]);
+        isNarrow
+          ? children.add(userAvatar(isNarrow: isNarrow))
+          : children.addAll([
+              userAvatar(),
+              addNewQuoteButton(),
+            ]);
 
       } else {
-        children.addAll([
-          signinButton(),
-          signupButton()
-        ]);
+        isNarrow
+          ? children.add(userSigninMenu())
+          : children.addAll([
+              signinButton(),
+              signupButton()
+            ]);
       }
 
       return Container(
@@ -298,5 +364,26 @@ class _HomeAppBarState extends State<HomeAppBar> {
         ),
       );
     });
+  }
+
+  Widget userSigninMenu() {
+    return PopupMenuButton(
+      itemBuilder: (context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          value: SigninRoute,
+          child: Text('SIGN IN'),
+        ),
+        PopupMenuItem(
+          value: SignupRoute,
+          child: Text('SIGN UP'),
+        ),
+      ],
+      onSelected: (value) {
+        FluroRouter.router.navigateTo(
+          context,
+          value,
+        );
+      },
+    );
   }
 }
