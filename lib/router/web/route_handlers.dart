@@ -70,6 +70,10 @@ class WebRouteHandlers {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AuthorPage(id: params['id'][0],));
 
+  static Handler authorQuotes = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          QuotesByAuthorRef(id: params['id'][0], type: SubjectType.author,));
+
   static Handler contact = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           _layout(Contact()));

@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/link_card.dart';
+import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/quote_card.dart';
+import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
-import 'package:memorare/types/quote.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthorPage extends StatefulWidget {
   final String id;
@@ -25,14 +25,9 @@ class AuthorPage extends StatefulWidget {
 
 class _AuthorPageState extends State<AuthorPage> {
   Author author;
-  List<Quote> quotes = [];
-
-  bool areQuotesLoading = false;
-  bool areQuotesLoaded = false;
   bool isLoading = false;
 
   double beginY = 100.0;
-  double delay = 0.0;
 
   TextOverflow nameEllipsis = TextOverflow.ellipsis;
 
@@ -41,27 +36,32 @@ class _AuthorPageState extends State<AuthorPage> {
   @override
   void initState() {
     super.initState();
-    delay = 0.0;
     fetch();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (BuildContext context) {
-          if (!isLoading && author == null) {
-            return emptyView();
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+            return false;
           }
 
-          if (isLoading) {
-            return LoadingAnimation(
-              textTitle: 'Loading author...',
-            );
-          }
+          return false;
+        },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            HomeAppBar(
+              title: author != null
+                ? author.name
+                : '',
+              automaticallyImplyLeading: true,
+            ),
 
-          return body();
-        }
+            bodyContent(),
+          ],
+        )
       ),
     );
   }
@@ -173,117 +173,74 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget body() {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollNotif) {
-        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-          return false;
-        }
 
-        if (!areQuotesLoading && !areQuotesLoaded) {
-          if (quotes.length > 0) {
-            return false;
-          }
-
-          areQuotesLoading = true;
-
-          Firestore.instance
-          .collection('quotes')
-          .where('author.id', isEqualTo: widget.id)
-          .limit(1)
-          .getDocuments()
-          .then((querySnap) {
-            if (querySnap.documents.length == 0) {
-              return;
-            }
-
-            querySnap.documents.forEach((element) {
-              final data = element.data;
-              data['id'] = element.documentID;
-              quotes.add(Quote.fromJSON(data));
-            });
-
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
-                areQuotesLoaded = true;
-                areQuotesLoading = false;
-              });
-            });
-          }).catchError((error) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
-                areQuotesLoaded = true;
-                areQuotesLoading = false;
-              });
-            });
-          });
-        }
-
-        return false;
-      },
-      child: ListView(
-        padding: EdgeInsets.symmetric(vertical: 40.0),
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Container(
-                alignment: AlignmentDirectional.center,
-                padding: const EdgeInsets.only(bottom: 200.0),
-                child: Column(
-                  children: <Widget>[
-                    hero(),
-
-                    FadeInY(
-                      beginY: beginY,
-                      delay: 4.0,
-                      child: summary(),
-                    ),
-
-                    FadeInY(
-                      beginY: beginY,
-                      delay: 5.0,
-                      child: links(),
-                    ),
-
-                    if (areQuotesLoading)
-                      Padding(
-                        padding: EdgeInsets.only(top: 40),
-                        child: LinearProgressIndicator(),
-                      ),
-
-                    FadeInY(
-                      beginY: beginY,
-                      delay: 6.0,
-                      child: mainQuote(),
-                    ),
-                  ],
-                ),
-              ),
-
-              backButton(),
-            ],
+  Widget bodyContent() {
+    if (isLoading) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 100.0),
+            child: LoadingAnimation(
+              textTitle: 'Loading author...',
+            ),
           ),
-        ],
-      ),
+        ]),
+      );
+    }
+
+    if (author == null) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          ErrorContainer(
+            message: 'Oops! There was an error while loading the reference',
+            onRefresh: () => fetch(),
+          ),
+        ]),
+      );
+    }
+
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        LayoutBuilder(
+          builder: (context, constrains) {
+            return constrains.maxWidth < 700
+              ? smallView()
+              : largeView();
+          },
+        ),
+      ]),
     );
   }
 
-  Widget customLinkCard({
+  Widget linkCircleButton({
+    double delay = 0.0,
     String name,
     String url,
     String imageUrl,
   }) {
 
-    delay += 1.0;
+    // delay += 1.0;
 
     return FadeInX(
       beginX: 50.0,
       delay: delay,
-      child: LinkCard(
-        name: name,
-        url: url,
-        imageUrl: imageUrl,
-        padding: const EdgeInsets.only(right: 17.0),
+      child: Tooltip(
+        message: name,
+        child: Material(
+          elevation: 4.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: () => launch(url),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Image.network(
+                imageUrl,
+                width: 30.0,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -306,7 +263,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget hero() {
+  Widget heroSmall() {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -343,6 +300,108 @@ class _AuthorPageState extends State<AuthorPage> {
             beginY: beginY,
             delay: 3.0,
             child: job(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 3.4,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: RaisedButton.icon(
+                onPressed: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    AuthorQuotesRoute.replaceFirst(':id', widget.id)
+                  );
+                },
+                color: stateColors.primary,
+                textColor: Colors.white,
+                icon: Icon(Icons.chat_bubble_outline),
+                label: Text('Related quotes'),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 45.0,
+            ),
+            child: links(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget largeView() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 120.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FadeInY(
+                  beginY: beginY,
+                  delay: 1.0,
+                  child: avatar(),
+                ),
+
+                ControlledAnimation(
+                  delay: 1.seconds,
+                  duration: 1.seconds,
+                  tween: Tween(begin: 0.0, end: 100.0),
+                  builder: (_, value) {
+                    return SizedBox(
+                      width: value,
+                      child: Divider(
+                        thickness: 1.0,
+                        height: 50.0,
+                      ),
+                    );
+                  },
+                ),
+
+                FadeInY(
+                  beginY: beginY,
+                  delay: 3.0,
+                  child: job(),
+                ),
+
+                FadeInY(
+                  beginY: beginY,
+                  delay: 3.2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: RaisedButton.icon(
+                      onPressed: () {
+                        FluroRouter.router.navigateTo(
+                          context,
+                          AuthorQuotesRoute.replaceFirst(':id', widget.id)
+                        );
+                      },
+                      color: stateColors.primary,
+                      textColor: Colors.white,
+                      icon: Icon(Icons.chat_bubble_outline),
+                      label: Text('Related quotes'),
+                    ),
+                  ),
+                ),
+
+                Padding(padding: const EdgeInsets.only(top: 40.0)),
+
+                links(),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: summaryLarge(),
           ),
         ],
       ),
@@ -389,52 +448,25 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget mainQuote() {
-    if (quotes.length > 0) {
-      final quote = quotes.first;
-
-      return Column(
+  Widget smallView() {
+    return Container(
+      alignment: AlignmentDirectional.center,
+      padding: const EdgeInsets.only(bottom: 200.0),
+      child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                'QUOTE',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-          ),
+          heroSmall(),
 
-          SizedBox(
-            width: 100.0,
-            child: Divider(thickness: 1.0,),
-          ),
-
-          QuoteCard(
-            title: quote.name,
-            onTap: () => FluroRouter.router.navigateTo(
-              context, QuotePageRoute.replaceFirst(':id', quote.id)),
+          FadeInY(
+            beginY: beginY,
+            delay: 4.0,
+            child: summarySmall(),
           ),
         ],
-      );
-    }
-
-    return Padding(padding: EdgeInsets.zero);
-  }
-
-  Widget summary() {
-    final textWidget = Text(
-      author.summary,
-      style: TextStyle(
-        fontSize: 22.0,
-        fontWeight: FontWeight.w100,
-        height: 1.5,
       ),
     );
+  }
 
+  Widget summarySmall() {
     return Column(
       children: <Widget>[
         Divider(thickness: 1.0,),
@@ -450,125 +482,177 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           ),
         ),
+
         SizedBox(
           width: 100.0,
           child: Divider(thickness: 1.0,),
         ),
 
-        MediaQuery.of(context).size.width > 400.0
-        ? Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 120.0,
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 40.0,
+            vertical: 70.0,
+          ),
+          width: 600.0,
+          child: Text(
+            author.summary,
+            style: TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.w100,
+              height: 1.5,
             ),
-            child: SizedBox(
-              width: 600.0,
-              child: textWidget,
+          ),
+        ),
+
+        if (author.urls.wikipedia?.isNotEmpty)
+          OutlineButton(
+            onPressed: () => launch(author.urls.wikipedia),
+            child: Text('More on Wikipedia'),
+          ),
+      ],
+    );
+  }
+
+  Widget summaryLarge() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: <Widget>[
+          Opacity(
+            opacity: 0.5,
+            child: Text(
+              'SUMMARY',
+              style: TextStyle(
+                fontSize: 15.0,
+              ),
             ),
-          )
-        : Padding(
+          ),
+
+          SizedBox(
+            width: 100.0,
+            child: Divider(
+              thickness: 1.0,
+            ),
+          ),
+
+          Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 60.0,
             ),
-            child: textWidget
+            width: 600.0,
+            child: Opacity(
+              opacity: 0.7,
+              child: Text(
+                author.summary,
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.w100,
+                  height: 1.5,
+                ),
+              ),
+            ),
           ),
-      ],
+
+          if (author.urls.wikipedia?.isNotEmpty)
+            OutlineButton(
+              onPressed: () => launch(author.urls.wikipedia),
+              child: Text('More on Wikipedia'),
+            )
+        ],
+      ),
     );
   }
 
   Widget links() {
     final urls = author.urls;
 
+    // print('urls.areLinksEmpty(): ${urls.areLinksEmpty()}');
+
     if (urls.areLinksEmpty()) {
       return Padding(padding: EdgeInsets.zero,);
     }
 
-    return Column(
+    return Wrap(
+      spacing: 20.0,
+      runSpacing: 20.0,
       children: <Widget>[
-        Divider(
-          thickness: 1.0,
-          height: 100.0,
-        ),
-        SizedBox(
-          height: 200.0,
-          child: ListView(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              if (urls.wikipedia.isNotEmpty)
-                Observer(
-                  builder: (_) {
-                    return customLinkCard(
-                      name: 'Wikipedia',
-                      url: urls.wikipedia,
-                      imageUrl:
-                        'assets/images/wikipedia-${stateColors.iconExt}.png',
-                    );
-                  },
-                ),
-
-              if (urls.website.isNotEmpty)
-                customLinkCard(
-                  name: 'Website',
-                  url: urls.website,
-                  imageUrl: 'assets/images/world-globe.png',
-                ),
-
-              if (urls.amazon.isNotEmpty)
-                customLinkCard(
-                  name: 'Amazon',
-                  url: urls.amazon,
-                  imageUrl: 'assets/images/amazon.png',
-                ),
-
-              if (urls.facebook.isNotEmpty)
-                customLinkCard(
-                  name: 'Facebook',
-                  url: urls.facebook,
-                  imageUrl: 'assets/images/facebook.png',
-                ),
-
-              if (urls.netflix.isNotEmpty)
-                customLinkCard(
-                  name: 'Netflix',
-                  url: urls.netflix,
-                  imageUrl: 'assets/images/netflix.png',
-                ),
-
-              if (urls.primeVideo.isNotEmpty)
-                customLinkCard(
-                  name: 'Prime Video',
-                  url: urls.primeVideo,
-                  imageUrl: 'assets/images/prime-video.png',
-                ),
-
-              if (urls.twitch.isNotEmpty)
-                customLinkCard(
-                  name: 'Twitch',
-                  url: urls.twitch,
-                  imageUrl: 'assets/images/twitch.png',
-                ),
-
-              if (urls.twitter.isNotEmpty)
-                customLinkCard(
-                  name: 'Twitter',
-                  url: urls.twitter,
-                  imageUrl: 'assets/images/twitter.png',
-                ),
-
-              if (urls.youtube.isNotEmpty)
-                customLinkCard(
-                  name: 'Youtube',
-                  url: urls.youtube,
-                  imageUrl: 'assets/images/youtube.png',
-                ),
-            ],
+        if (urls.website.isNotEmpty)
+          linkCircleButton(
+            delay: 1.0,
+            name: 'Website',
+            url: urls.website,
+            imageUrl: 'assets/images/world-globe.png',
           ),
-        ),
-        Divider(
-          thickness: 1.0,
-          height: 100.0,
-        ),
+
+        if (urls.wikipedia.isNotEmpty)
+          Observer(
+            builder: (_) {
+              return linkCircleButton(
+                delay: 1.2,
+                name: 'Wikipedia',
+                url: urls.wikipedia,
+                imageUrl:
+                  'assets/images/wikipedia-${stateColors.iconExt}.png',
+              );
+            },
+          ),
+
+        if (urls.amazon.isNotEmpty)
+          linkCircleButton(
+            delay: 1.4,
+            name: 'Amazon',
+            url: urls.amazon,
+            imageUrl: 'assets/images/amazon.png',
+          ),
+
+        if (urls.facebook.isNotEmpty)
+          linkCircleButton(
+            delay: 1.6,
+            name: 'Facebook',
+            url: urls.facebook,
+            imageUrl: 'assets/images/facebook.png',
+          ),
+
+        if (urls.netflix.isNotEmpty)
+          linkCircleButton(
+            delay: 1.8,
+            name: 'Netflix',
+            url: urls.netflix,
+            imageUrl: 'assets/images/netflix.png',
+          ),
+
+        if (urls.primeVideo.isNotEmpty)
+          linkCircleButton(
+            delay: 2.0,
+            name: 'Prime Video',
+            url: urls.primeVideo,
+            imageUrl: 'assets/images/prime-video.png',
+          ),
+
+        if (urls.twitch.isNotEmpty)
+          linkCircleButton(
+            delay: 2.2,
+            name: 'Twitch',
+            url: urls.twitch,
+            imageUrl: 'assets/images/twitch.png',
+          ),
+
+        if (urls.twitter.isNotEmpty)
+          linkCircleButton(
+            delay: 2.4,
+            name: 'Twitter',
+            url: urls.twitter,
+            imageUrl: 'assets/images/twitter.png',
+          ),
+
+        if (urls.youtube.isNotEmpty)
+          linkCircleButton(
+            delay: 2.6,
+            name: 'Youtube',
+            url: urls.youtube,
+            imageUrl: 'assets/images/youtube.png',
+          ),
       ],
     );
   }
