@@ -39,6 +39,7 @@ class _TopicPageState extends State<TopicPage> {
   final delayStep     = 1.2;
 
   bool descending     = true;
+  Color fabColor      = Colors.amber;
   bool hasNext        = true;
   bool isFabVisible   = false;
   bool isFav          = false;
@@ -64,6 +65,7 @@ class _TopicPageState extends State<TopicPage> {
     topicName = widget.name.toLowerCase();
 
     initProps();
+    fetchColor();
     fetch();
   }
 
@@ -125,6 +127,8 @@ class _TopicPageState extends State<TopicPage> {
     return Scaffold(
       floatingActionButton: isFabVisible ?
         FloatingActionButton(
+          backgroundColor: fabColor,
+          child: Icon(Icons.arrow_upward),
           onPressed: () {
             scrollController.animateTo(
               0.0,
@@ -132,7 +136,6 @@ class _TopicPageState extends State<TopicPage> {
               curve: Curves.easeOut,
             );
           },
-          child: Icon(Icons.arrow_upward),
         ) : null,
       body: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollNotif) {
@@ -417,6 +420,7 @@ class _TopicPageState extends State<TopicPage> {
       onTap: () {
         topicName = topicColor.name;
         initProps();
+        fetchColor();
         fetch();
       },
     );
@@ -529,6 +533,25 @@ class _TopicPageState extends State<TopicPage> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void fetchColor() async {
+    try {
+      final snapshot = await Firestore.instance
+        .collection('topics')
+        .document(topicName)
+        .get();
+
+      if (snapshot == null || !snapshot.exists) {
+        return;
+      }
+
+      setState(() {
+        fabColor = Color(snapshot.data['color']);
+      });
+
+    } catch (error) {
     }
   }
 
