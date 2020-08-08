@@ -34,7 +34,11 @@ class _QuoteRowState extends State<QuoteRow> {
   @override
   initState() {
     super.initState();
-    final topicColor = appTopicsColors.find(widget.quote.topics.first);
+    var topicColor = appTopicsColors.find(widget.quote.topics.first);
+
+    if (topicColor == null) {
+      topicColor = appTopicsColors.topicsColors.first;
+    }
 
     setState(() {
       iconHoverColor = Color(topicColor.decimal);
