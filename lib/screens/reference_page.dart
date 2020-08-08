@@ -31,8 +31,6 @@ class ReferencePageState extends State<ReferencePage> {
   bool areQuotesLoaded = false;
 
   bool isLoading = false;
-
-  double delay = 0.0;
   final double beginY = 100.0;
 
   TextOverflow nameEllipsis = TextOverflow.ellipsis;
@@ -46,7 +44,6 @@ class ReferencePageState extends State<ReferencePage> {
   @override
   void initState() {
     super.initState();
-    delay = 0.0;
     fetch();
   }
 
@@ -270,7 +267,7 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget hero() {
+  Widget heroSmall() {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -328,27 +325,11 @@ class ReferencePageState extends State<ReferencePage> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
 
-  Widget smallView() {
-    return Container(
-      alignment: AlignmentDirectional.center,
-      padding: const EdgeInsets.only(bottom: 200.0),
-      child: Column(
-        children: <Widget>[
-          hero(),
-
-          FadeInY(
-            beginY: beginY,
-            delay: 4.0,
-            child: summarySmall(),
-          ),
-          FadeInY(
-            beginY: beginY,
-            delay: 5.0,
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 45.0,
+            ),
             child: links(),
           ),
         ],
@@ -369,10 +350,19 @@ class ReferencePageState extends State<ReferencePage> {
       spacing: 20.0,
       runSpacing: 20.0,
       children: <Widget>[
+        if (urls.website.isNotEmpty)
+          linkCircleButton(
+            delay: 1.0,
+            name: 'Website',
+            url: urls.website,
+            imageUrl: 'assets/images/world-globe.png',
+          ),
+
         if (urls.wikipedia.isNotEmpty)
           Observer(
             builder: (_) {
               return linkCircleButton(
+                delay: 1.2,
                 name: 'Wikipedia',
                 url: urls.wikipedia,
                 imageUrl:
@@ -380,50 +370,58 @@ class ReferencePageState extends State<ReferencePage> {
               );
             },
           ),
-        if (urls.website.isNotEmpty)
-          linkCircleButton(
-            name: 'Website',
-            url: urls.website,
-            imageUrl: 'assets/images/world-globe.png',
-          ),
+
         if (urls.amazon.isNotEmpty)
           linkCircleButton(
+            delay: 1.2,
             name: 'Amazon',
             url: urls.amazon,
             imageUrl: 'assets/images/amazon.png',
           ),
+
         if (urls.facebook.isNotEmpty)
           linkCircleButton(
+            delay: 1.4,
             name: 'Facebook',
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
+
         if (urls.netflix.isNotEmpty)
           linkCircleButton(
+            delay: 1.6,
             name: 'Netflix',
             url: urls.netflix,
             imageUrl: 'assets/images/netflix.png',
           ),
+
         if (urls.primeVideo.isNotEmpty)
           linkCircleButton(
+            delay: 1.8,
             name: 'Prime Video',
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
           ),
+
         if (urls.twitch.isNotEmpty)
           linkCircleButton(
+            delay: 2.0,
             name: 'Twitch',
             url: urls.twitch,
             imageUrl: 'assets/images/twitch.png',
           ),
+
         if (urls.twitter.isNotEmpty)
           linkCircleButton(
+            delay: 2.2,
             name: 'Twitter',
             url: urls.twitter,
             imageUrl: 'assets/images/twitter.png',
           ),
+
         if (urls.youtube.isNotEmpty)
           linkCircleButton(
+            delay: 2.4,
             name: 'Youtube',
             url: urls.youtube,
             imageUrl: 'assets/images/youtube.png',
@@ -457,11 +455,11 @@ class ReferencePageState extends State<ReferencePage> {
   }
 
   Widget linkCircleButton({
+    double delay = 0.0,
     String name,
     String url,
     String imageUrl,
   }) {
-    delay += 1.0;
 
     return FadeInX(
       beginX: 50.0,
@@ -483,6 +481,24 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget smallView() {
+    return Container(
+      alignment: AlignmentDirectional.center,
+      padding: const EdgeInsets.only(bottom: 200.0),
+      child: Column(
+        children: <Widget>[
+          heroSmall(),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 4.0,
+            child: summarySmall(),
+          ),
+        ],
       ),
     );
   }
@@ -529,6 +545,12 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
+
+        if (reference.urls.wikipedia?.isNotEmpty)
+          OutlineButton(
+            onPressed: () => launch(reference.urls.wikipedia),
+            child: Text('More on Wikipedia'),
+          ),
       ],
     );
   }
