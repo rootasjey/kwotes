@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
@@ -593,76 +592,5 @@ class _TopicPageState extends State<TopicPage> {
     } catch (error) {
       debugPrint(error.toString());
     }
-  }
-
-  void showActionsSheet(Quote quote) {
-    isFav = false;
-    isFavLoaded = false;
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter stateSetter) {
-            if (!isFavLoading && !isFavLoaded) {
-              fetchIsFav(quote.id)
-                .then((isOk) {
-                  stateSetter(() {
-                    isFavLoaded = isOk;
-                  });
-                });
-            }
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15.0),
-                    child: IconButton(
-                      onPressed: () {
-                        shareTwitter(quote: quote);
-                      },
-                      tooltip: 'Share',
-                      icon: Icon(Icons.share),
-                    ),
-                  ),
-
-                  isFav ?
-                  IconButton(
-                    onPressed: isFavLoaded ?
-                      () {
-                        removeFromFavourites(context: context, quote: quote);
-                        Navigator.pop(context);
-                      } : null,
-                    tooltip: 'Remove from favourites',
-                    icon: Icon(Icons.favorite),
-                  ) :
-                  IconButton(
-                    onPressed: isFavLoaded ?
-                      () {
-                        addToFavourites(context: context, quote: quote);
-                        Navigator.pop(context);
-                      } : null,
-                    tooltip: 'Add to favourites',
-                    icon: Icon(Icons.favorite_border,)
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: IconButton(
-                      onPressed: null,
-                      tooltip: 'Add to...',
-                      icon: Icon(Icons.playlist_add),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 }
