@@ -156,17 +156,12 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
               children: <Widget>[
                 navCard(
                   index: 0,
-                  icon: Icon(Icons.dashboard, size: 40.0,),
-                  title: 'Dashboard',
+                  icon: Icon(Icons.home, size: 40.0,),
+                  title: 'Home',
                   onTap: () {
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName('/dashboard'),
-                    );
-
                     FluroRouter.router.navigateTo(
                       context,
-                      DashboardRoute,
+                      RootRoute,
                       replace: true,
                     );
                   },
@@ -181,14 +176,10 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                     AddQuoteInputs.clearTopics();
                     AddQuoteInputs.clearComment();
 
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName('/dashboard'),
-                    );
-
                     FluroRouter.router.navigateTo(
                       context,
                       AddQuoteContentRoute,
+                      replace: true,
                     );
                   },
                 ),
@@ -197,35 +188,27 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
                   navCard(
                     index: 2,
                     icon: Icon(Icons.timer, size: 40.0,),
-                    title: 'Temporary quotes',
+                    title: 'Admin Temporary quotes',
                     onTap: () {
-                      Navigator.popUntil(
-                        context,
-                        ModalRoute.withName('/dashboard'),
-                      );
-
                       FluroRouter.router.navigateTo(
                         context,
                         AdminTempQuotesRoute,
+                        replace: true,
                       );
                     },
                   ) :
                   navCard(
                     index: 2,
-                    icon: Icon(Icons.home, size: 40.0,),
-                    title: 'Home',
+                    icon: Icon(Icons.timer, size: 40.0,),
+                    title: 'Temporary quotes',
                     onTap: () {
-                      Navigator.popUntil(
-                        context,
-                        ModalRoute.withName('/dashboard'),
-                      );
-
                       FluroRouter.router.navigateTo(
                         context,
-                        RootRoute,
+                        TempQuotesRoute,
+                        replace: true,
                       );
                     },
-                  ),
+                  )
               ],
             ),
           ),
