@@ -290,17 +290,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     }
 
     return sliverList();
-
-    // TODO: Adapt size on mobile.
-    // return SliverLayoutBuilder(
-    //   builder: (context, constrains) {
-    //     if (constrains.crossAxisExtent < 600.0) {
-    //       return sliverQuotesList();
-    //     }
-
-    //     return sliverGrid();
-    //   },
-    // );
   }
 
   Widget emptyView() {
