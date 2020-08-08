@@ -477,6 +477,16 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   }
 
   void showBottomSheetList() {
+    if (!userState.isUserConnected) {
+      showSnack(
+        context: context,
+        message: "You must sign in to add this quote to a list.",
+        type: SnackType.error,
+      );
+
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
