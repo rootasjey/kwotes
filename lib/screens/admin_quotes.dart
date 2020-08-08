@@ -583,8 +583,8 @@ class AdminQuotesState extends State<AdminQuotes> {
   }
 
   void getSavedProps() {
-    lang        = appLocalStorage.getPageLang(pageRoute: QuotesRoute);
-    descending  = appLocalStorage.getPageOrder(pageRoute: QuotesRoute);
+    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
     itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
   }
 
