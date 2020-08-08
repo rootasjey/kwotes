@@ -2,19 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/link_card.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/quote_card.dart';
+import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReferencePage extends StatefulWidget {
   final String id;
@@ -38,6 +37,9 @@ class ReferencePageState extends State<ReferencePage> {
 
   TextOverflow nameEllipsis = TextOverflow.ellipsis;
 
+  double avatarInitHeight = 250.0;
+  double avatarInitWidth = 200.0;
+
   double avatarHeight = 250.0;
   double avatarWidth = 200.0;
 
@@ -51,25 +53,37 @@ class ReferencePageState extends State<ReferencePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (BuildContext context) {
-        if (isLoading) {
-          return LoadingAnimation(
-            textTitle: 'Loading reference...',
-          );
-        }
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+            return false;
+          }
 
-        return body();
-      }),
+          return false;
+        },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            HomeAppBar(
+              title: reference != null
+                ? reference.name
+                : '',
+              automaticallyImplyLeading: true,
+            ),
+
+            bodyContent(),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget avatar() {
+  Widget avatar({double scale = 1.0}) {
     final imageUrl = reference.urls.image;
     final imageUrlOk = imageUrl != null && imageUrl.length > 0;
 
     return AnimatedContainer(
-      width: avatarWidth,
-      height: avatarHeight,
+      width: avatarWidth * scale,
+      height: avatarHeight * scale,
       duration: 250.milliseconds,
       child: Card(
         elevation: imageUrlOk ? 5.0 : 0.0,
@@ -83,16 +97,16 @@ class ReferencePageState extends State<ReferencePage> {
                 onHover: (isHover) {
                   if (isHover) {
                     setState(() {
-                      avatarHeight = 260.0;
-                      avatarWidth = 210.0;
+                      avatarHeight = (avatarInitHeight) + 10.0;
+                      avatarWidth = (avatarInitWidth) + 10.0;
                     });
 
                     return;
                   }
 
                   setState(() {
-                    avatarHeight = 250.0;
-                    avatarWidth = 200.0;
+                    avatarHeight = avatarInitHeight;
+                    avatarWidth = avatarInitWidth;
                   });
 
                   return;
@@ -143,73 +157,113 @@ class ReferencePageState extends State<ReferencePage> {
         ));
   }
 
-  Widget body() {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollNotif) {
-        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-          return false;
-        }
+  Widget bodyContent() {
+    if (isLoading) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 100.0),
+            child: LoadingAnimation(
+              textTitle: 'Loading reference...',
+            ),
+          ),
+        ]),
+      );
+    }
 
-        if (!areQuotesLoading && !areQuotesLoaded) {
-          if (quotes.length > 0) {
-            return false;
-          }
+    if (reference == null) {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          ErrorContainer(
+            message: 'Oops! There was an error while loading the reference',
+            onRefresh: () => fetch(),
+          ),
+        ]),
+      );
+    }
 
-          areQuotesLoading = true;
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        LayoutBuilder(
+          builder: (context, constrains) {
+            return constrains.maxWidth < 700
+              ? smallView()
+              : largeView();
+          },
+        ),
+      ]),
+    );
+  }
 
-          Firestore.instance
-              .collection('quotes')
-              .where('mainReference.id', isEqualTo: widget.id)
-              .where('lang', isEqualTo: userState.lang)
-              .limit(1)
-              .getDocuments()
-              .then((querySnap) {
-
-            if (querySnap.documents.length == 0) {
-              return;
-            }
-
-            querySnap.documents.forEach((element) {
-              final data = element.data;
-              data['id'] = element.documentID;
-              quotes.add(Quote.fromJSON(data));
-            });
-
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
-                areQuotesLoaded = true;
-                areQuotesLoading = false;
-              });
-            });
-          }).catchError((error) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
-                areQuotesLoaded = true;
-                areQuotesLoading = false;
-              });
-            });
-          });
-        }
-
-        return false;
-      },
-      child: ListView(
-        padding: EdgeInsets.symmetric(vertical: 40.0),
+  Widget largeView() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 120.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              reference == null
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 150.0),
-                    child: ErrorContainer(
-                      message:
-                          'Oops! There was an error while loading the reference',
-                      onRefresh: () => fetch(),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FadeInY(
+                  beginY: beginY,
+                  delay: 1.0,
+                  child: avatar(scale: 1.5),
+                ),
+
+                ControlledAnimation(
+                  delay: 1.seconds,
+                  duration: 1.seconds,
+                  tween: Tween(begin: 0.0, end: 100.0),
+                  builder: (_, value) {
+                    return SizedBox(
+                      width: value,
+                      child: Divider(
+                        thickness: 1.0,
+                        height: 50.0,
+                      ),
+                    );
+                  },
+                ),
+
+                FadeInY(
+                  beginY: beginY,
+                  delay: 3.0,
+                  child: types(),
+                ),
+
+                FadeInY(
+                  beginY: beginY,
+                  delay: 3.2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: RaisedButton.icon(
+                      onPressed: () {
+                        FluroRouter.router.navigateTo(
+                          context,
+                          ReferenceQuotesRoute.replaceFirst(':id', widget.id)
+                        );
+                      },
+                      color: stateColors.primary,
+                      textColor: Colors.white,
+                      icon: Icon(Icons.chat_bubble_outline),
+                      label: Text('Related quotes'),
                     ),
-                  )
-                : refBody(),
-              backButton(),
-            ],
+                  ),
+                ),
+
+                Padding(padding: const EdgeInsets.only(top: 40.0)),
+
+                links(),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: summaryLarge(),
           ),
         ],
       ),
@@ -227,11 +281,13 @@ class ReferencePageState extends State<ReferencePage> {
             delay: 1.0,
             child: avatar(),
           ),
+
           FadeInY(
             beginY: beginY,
             delay: 2.0,
             child: name(),
           ),
+
           ControlledAnimation(
             delay: 1.seconds,
             duration: 1.seconds,
@@ -246,39 +302,55 @@ class ReferencePageState extends State<ReferencePage> {
               );
             },
           ),
+
           FadeInY(
             beginY: beginY,
             delay: 3.0,
             child: types(),
+          ),
+
+          FadeInY(
+            beginY: beginY,
+            delay: 3.4,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: RaisedButton.icon(
+                onPressed: () {
+                  FluroRouter.router.navigateTo(
+                    context,
+                    ReferenceQuotesRoute.replaceFirst(':id', widget.id)
+                  );
+                },
+                color: stateColors.primary,
+                textColor: Colors.white,
+                icon: Icon(Icons.chat_bubble_outline),
+                label: Text('Related quotes'),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget refBody() {
+  Widget smallView() {
     return Container(
       alignment: AlignmentDirectional.center,
       padding: const EdgeInsets.only(bottom: 200.0),
       child: Column(
         children: <Widget>[
           hero(),
+
           FadeInY(
             beginY: beginY,
             delay: 4.0,
-            child: summary(),
+            child: summarySmall(),
           ),
           FadeInY(
             beginY: beginY,
             delay: 5.0,
             child: links(),
           ),
-          if (areQuotesLoading)
-            Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: LinearProgressIndicator(),
-            ),
-          mainQuote(),
         ],
       ),
     );
@@ -293,84 +365,69 @@ class ReferencePageState extends State<ReferencePage> {
       );
     }
 
-    return Column(
+    return Wrap(
+      spacing: 20.0,
+      runSpacing: 20.0,
       children: <Widget>[
-        Divider(
-          thickness: 1.0,
-          height: 100.0,
-        ),
-        SizedBox(
-          height: 200.0,
-          child: ListView(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              if (urls.wikipedia.isNotEmpty)
-                Observer(
-                  builder: (_) {
-                    return customLinkCard(
-                      name: 'Wikipedia',
-                      url: urls.wikipedia,
-                      imageUrl:
-                        'assets/images/wikipedia-${stateColors.iconExt}.png',
-                    );
-                  },
-                ),
-              if (urls.website.isNotEmpty)
-                customLinkCard(
-                  name: 'Website',
-                  url: urls.website,
-                  imageUrl: 'assets/images/world-globe.png',
-                ),
-              if (urls.amazon.isNotEmpty)
-                customLinkCard(
-                  name: 'Amazon',
-                  url: urls.amazon,
-                  imageUrl: 'assets/images/amazon.png',
-                ),
-              if (urls.facebook.isNotEmpty)
-                customLinkCard(
-                  name: 'Facebook',
-                  url: urls.facebook,
-                  imageUrl: 'assets/images/facebook.png',
-                ),
-              if (urls.netflix.isNotEmpty)
-                customLinkCard(
-                  name: 'Netflix',
-                  url: urls.netflix,
-                  imageUrl: 'assets/images/netflix.png',
-                ),
-              if (urls.primeVideo.isNotEmpty)
-                customLinkCard(
-                  name: 'Prime Video',
-                  url: urls.primeVideo,
-                  imageUrl: 'assets/images/prime-video.png',
-                ),
-              if (urls.twitch.isNotEmpty)
-                customLinkCard(
-                  name: 'Twitch',
-                  url: urls.twitch,
-                  imageUrl: 'assets/images/twitch.png',
-                ),
-              if (urls.twitter.isNotEmpty)
-                customLinkCard(
-                  name: 'Twitter',
-                  url: urls.twitter,
-                  imageUrl: 'assets/images/twitter.png',
-                ),
-              if (urls.youtube.isNotEmpty)
-                customLinkCard(
-                  name: 'Youtube',
-                  url: urls.youtube,
-                  imageUrl: 'assets/images/youtube.png',
-                ),
-            ],
+        if (urls.wikipedia.isNotEmpty)
+          Observer(
+            builder: (_) {
+              return linkCircleButton(
+                name: 'Wikipedia',
+                url: urls.wikipedia,
+                imageUrl:
+                  'assets/images/wikipedia-${stateColors.iconExt}.png',
+              );
+            },
           ),
-        ),
-        Divider(
-          thickness: 1.0,
-          height: 100.0,
-        ),
+        if (urls.website.isNotEmpty)
+          linkCircleButton(
+            name: 'Website',
+            url: urls.website,
+            imageUrl: 'assets/images/world-globe.png',
+          ),
+        if (urls.amazon.isNotEmpty)
+          linkCircleButton(
+            name: 'Amazon',
+            url: urls.amazon,
+            imageUrl: 'assets/images/amazon.png',
+          ),
+        if (urls.facebook.isNotEmpty)
+          linkCircleButton(
+            name: 'Facebook',
+            url: urls.facebook,
+            imageUrl: 'assets/images/facebook.png',
+          ),
+        if (urls.netflix.isNotEmpty)
+          linkCircleButton(
+            name: 'Netflix',
+            url: urls.netflix,
+            imageUrl: 'assets/images/netflix.png',
+          ),
+        if (urls.primeVideo.isNotEmpty)
+          linkCircleButton(
+            name: 'Prime Video',
+            url: urls.primeVideo,
+            imageUrl: 'assets/images/prime-video.png',
+          ),
+        if (urls.twitch.isNotEmpty)
+          linkCircleButton(
+            name: 'Twitch',
+            url: urls.twitch,
+            imageUrl: 'assets/images/twitch.png',
+          ),
+        if (urls.twitter.isNotEmpty)
+          linkCircleButton(
+            name: 'Twitter',
+            url: urls.twitter,
+            imageUrl: 'assets/images/twitter.png',
+          ),
+        if (urls.youtube.isNotEmpty)
+          linkCircleButton(
+            name: 'Youtube',
+            url: urls.youtube,
+            imageUrl: 'assets/images/youtube.png',
+          ),
       ],
     );
   }
@@ -399,43 +456,7 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget mainQuote() {
-    if (quotes.length > 0) {
-      final quote = quotes.first;
-
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                'Quote',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100.0,
-            child: Divider(
-              thickness: 1.0,
-            ),
-          ),
-          QuoteCard(
-            title: quote.name,
-            onTap: () => FluroRouter.router.navigateTo(
-              context, QuotePageRoute.replaceFirst(':id', quote.id)),
-          ),
-        ],
-      );
-    }
-
-    return Padding(padding: EdgeInsets.zero);
-  }
-
-  Widget customLinkCard({
+  Widget linkCircleButton({
     String name,
     String url,
     String imageUrl,
@@ -445,21 +466,34 @@ class ReferencePageState extends State<ReferencePage> {
     return FadeInX(
       beginX: 50.0,
       delay: delay,
-      child: LinkCard(
-        name: name,
-        url: url,
-        imageUrl: imageUrl,
-        padding: const EdgeInsets.only(right: 17.0),
+      child: Tooltip(
+        message: name,
+        child: Material(
+          elevation: 4.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: () => launch(url),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Image.network(
+                imageUrl,
+                width: 30.0,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget summary() {
+  Widget summarySmall() {
     return Column(
       children: <Widget>[
         Divider(
           thickness: 1.0,
         ),
+
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -472,16 +506,18 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
+
         SizedBox(
           width: 100.0,
           child: Divider(
             thickness: 1.0,
           ),
         ),
+
         Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 60.0,
+            horizontal: 40.0,
+            vertical: 70.0,
           ),
           width: 600.0,
           child: Text(
@@ -494,6 +530,57 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget summaryLarge() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: <Widget>[
+          Opacity(
+            opacity: 0.5,
+            child: Text(
+              'SUMMARY',
+              style: TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
+          ),
+
+          SizedBox(
+            width: 100.0,
+            child: Divider(
+              thickness: 1.0,
+            ),
+          ),
+
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 60.0,
+            ),
+            width: 600.0,
+            child: Opacity(
+              opacity: 0.7,
+              child: Text(
+                reference.summary,
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.w100,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ),
+
+          if (reference.urls.wikipedia?.isNotEmpty)
+            OutlineButton(
+              onPressed: () => launch(reference.urls.wikipedia),
+              child: Text('More on Wikipedia'),
+            )
+        ],
+      ),
     );
   }
 
