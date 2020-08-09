@@ -14,7 +14,11 @@ class SimpleAppBar extends StatefulWidget {
   /// Will override [textTitle] if set.
   final Widget title;
 
+  /// Typically open a drawer. Menu icon will be hidden if null.
+  final Function onPressedMenu;
+
   SimpleAppBar({
+    this.onPressedMenu,
     this.subHeader,
     this.textTitle,
     this.title,
@@ -44,66 +48,105 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
   Widget customFlexibleSpace() {
     return LayoutBuilder(
       builder: (context, constrains) {
-        double titleFontSize = 40.0;
-        double leftTitlePadding = 80.0;
+        double titleFontSize        = 40.0;
+        double leftTitlePadding     = 80.0;
         double leftSubHeaderPadding = 165.0;
+        double menuIconLeftPadding  = 80.0;
 
         if (constrains.maxWidth < 600.0) {
-          titleFontSize = 25.0;
-          leftTitlePadding = 20.0;
-          leftSubHeaderPadding = 105.0;
+          titleFontSize         = 25.0;
+          leftTitlePadding      = 20.0;
+          leftSubHeaderPadding  = 105.0;
+          menuIconLeftPadding   = 20.0;
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            FadeInY(
-              delay: 1.0,
-              beginY: 50.0,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: leftTitlePadding,
-                  top: 60.0,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () {
-                        FluroRouter.router.pop(context);
-                      },
-                      tooltip: 'Back',
-                      icon: Icon(Icons.arrow_back),
-                    ),
-
-                    Padding(padding: const EdgeInsets.only(right: 40.0)),
-
-                    widget.title != null
-                      ? widget.title
-                      : Text(
-                          widget.textTitle,
-                          style: TextStyle(
-                            fontSize: titleFontSize,
-                          ),
-                        ),
-                  ],
-                ),
-              ),
+        return Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                headerSection(leftTitlePadding, titleFontSize),
+                subHeaderSection(leftSubHeaderPadding),
+              ],
             ),
 
-            if (widget.subHeader != null)
-              FadeInY(
-                delay: 1.5,
-                beginY: 50.0,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: leftSubHeaderPadding,
-                  ),
-                  child: widget.subHeader,
-                ),
-              ),
-          ],
+            menuButton(menuIconLeftPadding),
+          ]
         );
       },
+    );
+  }
+
+  Widget headerSection(double leftTitlePadding, double titleFontSize) {
+    return FadeInY(
+      delay: 1.0,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: leftTitlePadding,
+          top: 60.0,
+        ),
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              onPressed: () {
+                FluroRouter.router.pop(context);
+              },
+              tooltip: 'Back',
+              icon: Icon(Icons.arrow_back),
+            ),
+
+            Padding(padding: const EdgeInsets.only(right: 40.0)),
+
+            widget.title != null
+              ? widget.title
+              : Text(
+                  widget.textTitle,
+                  style: TextStyle(
+                    fontSize: titleFontSize,
+                  ),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget menuButton(double menuIconLeftPadding) {
+    if (widget.onPressedMenu == null) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
+    return Positioned(
+      top: 107.0,
+      left: menuIconLeftPadding,
+      child: FadeInY(
+        delay: 1.4,
+        beginY: 50.0,
+        child: IconButton(
+          onPressed: widget.onPressedMenu,
+          tooltip: 'menu',
+          color: stateColors.foreground.withOpacity(0.5),
+          icon: Icon(Icons.menu),
+        ),
+      ),
+    );
+  }
+
+  Widget subHeaderSection(double leftSubHeaderPadding) {
+    if (widget.subHeader == null) {
+      return Padding(padding: EdgeInsets.zero,);
+    }
+
+    return FadeInY(
+      delay: 1.2,
+      beginY: 50.0,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: leftSubHeaderPadding,
+        ),
+        child: widget.subHeader,
+      ),
     );
   }
 }
