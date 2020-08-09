@@ -187,6 +187,11 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                     onChanged: (String newLang) {
                       lang = newLang;
                       fetch();
+
+                      appLocalStorage.setPageLang(
+                        lang: lang,
+                        pageRoute: pageRoute,
+                      );
                     },
                     items: ['en', 'fr'].map((String value) {
                       return DropdownMenuItem(
