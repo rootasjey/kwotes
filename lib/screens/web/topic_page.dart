@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
@@ -33,6 +34,9 @@ class TopicPage extends StatefulWidget {
 }
 
 class _TopicPageState extends State<TopicPage> {
+  ///  Current State of InnerDrawerState
+  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
+
   final beginY        = 50.0;
   final delay         = 1.0;
   final delayStep     = 1.2;
@@ -47,8 +51,9 @@ class _TopicPageState extends State<TopicPage> {
   bool isLoading      = false;
   bool isLoadingMore  = false;
 
-  String selectedLang = 'en';
   String pageRoute;
+  String selectedLang = 'en';
+  bool smallViewVisible = false;
   String topicName;
 
   var lastDoc;
@@ -94,85 +99,23 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
-    return wideView();
-  }
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        smallViewVisible = screenWidth < 1000.0;
 
-  Widget wideView() {
-    return Material(
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              foregroundDecoration: BoxDecoration(
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-              ),
-              child: topicsItemsList(),
-            ),
-          ),
-
-          Expanded(
-            flex: 3,
-            child: body(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget body() {
-    return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          backgroundColor: fabColor,
-          child: Icon(Icons.arrow_upward),
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-        ) : null,
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          // FAB visibility
-          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-            setState(() {
-              isFabVisible = false;
-            });
-          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-            setState(() {
-              isFabVisible = true;
-            });
-          }
-
-          // Load more scenario
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
-        },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      ),
+        return smallViewVisible
+          ? smallView()
+          : wideView();
+      },
     );
   }
 
   Widget appBar() {
     return SimpleAppBar(
+      onPressedMenu: smallViewVisible
+        ? () { _innerDrawerKey.currentState.toggle(); }
+        : null,
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -252,6 +195,136 @@ class _TopicPageState extends State<TopicPage> {
     return sliverQuotesList();
   }
 
+  Widget emptyView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.chat_bubble_outline,
+                    size: 60.0,
+                    color: Color(0xFFFF005C),
+                  ),
+                ),
+                title: "There's no quotes for $topicName at this moment",
+                subtitle: 'You can help us and propose some',
+              ),
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget gridQuotesContent() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          // final quote = quotes.elementAt(index);
+
+          return SizedBox(
+            width: 250.0,
+            height: 250.0,
+            child: null,
+          );
+        },
+        childCount: quotes.length,
+      ),
+    );
+  }
+
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: LoadingAnimation(
+              textTitle: 'Loading $topicName quotes...',
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget loadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+        child: FlatButton(
+        onPressed: () {
+          fetchMore();
+        },
+        shape: RoundedRectangleBorder(
+          side: BorderSide(),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Load more...'
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget mainContent() {
+    return Scaffold(
+      floatingActionButton: isFabVisible ?
+        FloatingActionButton(
+          backgroundColor: fabColor,
+          child: Icon(Icons.arrow_upward),
+          onPressed: () {
+            scrollController.animateTo(
+              0.0,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeOut,
+            );
+          },
+        ) : null,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
+
+          // Load more scenario
+          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+            return false;
+          }
+
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            appBar(),
+            bodyListContent(),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget sliverQuotesList() {
     return Observer(
       builder: (context) {
@@ -304,64 +377,22 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget loadingView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: LoadingAnimation(
-              textTitle: 'Loading $topicName quotes...',
-            ),
+  Widget smallView() {
+    return InnerDrawer(
+      key: _innerDrawerKey,
+      tapScaffoldEnabled: true,
+      offset: IDOffset.only(
+        left: 0.0,
+      ),
+      leftChild: Material(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
           ),
-        ]
+          child: topicsItemsList(),
+        ),
       ),
-    );
-  }
-
-  Widget emptyView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.chat_bubble_outline,
-                    size: 60.0,
-                    color: Color(0xFFFF005C),
-                  ),
-                ),
-                title: "There's no quotes for $topicName at this moment",
-                subtitle: 'You can help us and propose some',
-              ),
-            ),
-          ),
-        ]
-      ),
-    );
-  }
-
-  Widget gridQuotesContent() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300.0,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          // final quote = quotes.elementAt(index);
-
-          return SizedBox(
-            width: 250.0,
-            height: 250.0,
-            child: null,
-          );
-        },
-        childCount: quotes.length,
-      ),
+      scaffold: mainContent(),
     );
   }
 
@@ -425,30 +456,27 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  void navigateToSection(String route) {
-    FluroRouter.router.navigateTo(
-      context,
-      TopicRoute.replaceFirst(':name', route),
-      transition: TransitionType.fadeIn,
-    );
-  }
-
-  Widget loadMoreButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-        child: FlatButton(
-        onPressed: () {
-          fetchMore();
-        },
-        shape: RoundedRectangleBorder(
-          side: BorderSide(),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            'Load more...'
+  Widget wideView() {
+    return Material(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              foregroundDecoration: BoxDecoration(
+                color: Color.fromRGBO(0, 0, 0, 0.05),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: topicsItemsList(),
+            ),
           ),
-        ),
+
+          Expanded(
+            flex: 3,
+            child: mainContent(),
+          ),
+        ],
       ),
     );
   }
@@ -592,5 +620,13 @@ class _TopicPageState extends State<TopicPage> {
     } catch (error) {
       debugPrint(error.toString());
     }
+  }
+
+  void navigateToSection(String route) {
+    FluroRouter.router.navigateTo(
+      context,
+      TopicRoute.replaceFirst(':name', route),
+      transition: TransitionType.fadeIn,
+    );
   }
 }
