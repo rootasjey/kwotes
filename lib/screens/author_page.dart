@@ -219,8 +219,6 @@ class _AuthorPageState extends State<AuthorPage> {
     String imageUrl,
   }) {
 
-    // delay += 1.0;
-
     return FadeInX(
       beginX: 50.0,
       delay: delay,
@@ -566,9 +564,6 @@ class _AuthorPageState extends State<AuthorPage> {
 
   Widget links() {
     final urls = author.urls;
-
-    // print('urls.areLinksEmpty(): ${urls.areLinksEmpty()}');
-
     if (urls.areLinksEmpty()) {
       return Padding(padding: EdgeInsets.zero,);
     }
