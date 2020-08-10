@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import'package:memorare/components/loading_animation.dart';
 import 'package:memorare/state/colors.dart';
@@ -64,21 +65,6 @@ class _SignupState extends State<Signup> {
         children: [
           Column(
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: IconButton(
-                      onPressed: () {
-                        FluroRouter.router.pop(context);
-                      },
-                      icon: Icon(Icons.arrow_back),
-                    ),
-                  ),
-                ],
-              ),
-
               Padding(
                 padding: const EdgeInsets.only(
                   top: 60.0,
@@ -241,36 +227,52 @@ class _SignupState extends State<Signup> {
   }
 
   Widget header() {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          FadeInY(
-            beginY: 50.0,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                'Sign Up',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
+    return Row(
+      children: <Widget>[
+        FadeInX(
+          beginX: 10.0,
+          delay: 2.0,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20.0,),
+            child: IconButton(
+              onPressed: () {
+                FluroRouter.router.pop(context);
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
+          ),
+        ),
+
+        Column(
+          children: <Widget>[
+            FadeInY(
+              beginY: 50.0,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  'Sign Up',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          FadeInY(
-            delay: .3,
-            beginY: 50.0,
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Create a new account'
+            FadeInY(
+              delay: .3,
+              beginY: 50.0,
+              child: Opacity(
+                opacity: .6,
+                child: Text(
+                  'Create a new account'
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
