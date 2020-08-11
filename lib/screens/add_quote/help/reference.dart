@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/add_quote/help/utils.dart';
 
 class HelpReference extends StatelessWidget {
   @override
@@ -28,24 +29,12 @@ class HelpReference extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Reference information are optional',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+                  TextBlock(
+                    text: 'Reference information are optional',
                   ),
 
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• If you select the reference\'s name in the dropdown list, other fields can stay empty',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+                  TextBlock(
+                    text: "If you select the reference's name in the dropdown list, other fields can stay empty",
                   ),
                 ],
               ),

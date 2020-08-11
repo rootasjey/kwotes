@@ -97,8 +97,19 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
 
                 OutlineButton.icon(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close),
-                  label: Text('Close'),
+                  icon: Icon(
+                    Icons.close,
+                    color: stateColors.primary,
+                  ),
+                  borderSide: BorderSide(
+                    color: stateColors.primary,
+                  ),
+                  label: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: stateColors.primary,
+                    ),
+                  ),
                 ),
               ],
             );

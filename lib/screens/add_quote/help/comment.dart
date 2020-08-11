@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/add_quote/help/utils.dart';
 
 class HelpComment extends StatelessWidget {
   @override
@@ -28,23 +29,12 @@ class HelpComment extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Comment is optional',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+                  TextBlock(
+                    text: 'Comment is optional',
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Use it if you want to specify the context, the hidden meaning of the quote or something related',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+
+                  TextBlock(
+                    text: 'Useful if you want to specify the context, the hidden meaning of the quote or something related',
                   ),
                 ],
               ),

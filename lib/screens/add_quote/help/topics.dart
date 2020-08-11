@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/add_quote/help/utils.dart';
 
 class HelpTopics extends StatelessWidget {
   @override
@@ -6,6 +7,7 @@ class HelpTopics extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(40.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
             width: 500.0,
@@ -20,6 +22,7 @@ class HelpTopics extends StatelessWidget {
               ),
             ),
           ),
+
           SizedBox(
             width: 500.0,
             child: Opacity(
@@ -27,23 +30,12 @@ class HelpTopics extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Topics are used to categorize the quote',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+                  TextBlock(
+                    text: 'Topics are used to categorize the quote',
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• You can select one or more topics',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+
+                  TextBlock(
+                    text: 'You can select one or more topics',
                   ),
                 ],
               ),

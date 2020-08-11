@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/add_quote/help/utils.dart';
 
 class HelpAuthor extends StatelessWidget {
   @override
@@ -28,23 +29,12 @@ class HelpAuthor extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• Author information are optional',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+                  TextBlock(
+                    text: 'Author information are optional',
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text(
-                      '• If you select the author\'s name in the dropdown list, other fields can stay empty',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                      ),
-                    ),
+
+                  TextBlock(
+                    text: "If you select the author's name in the dropdown list, other fields can stay empty",
                   ),
                 ],
               ),
