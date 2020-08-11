@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/router/route_names.dart';
@@ -29,7 +29,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   bool canManage = false;
 
-  String fabText = 'Propose';
+  String fabText = 'Submit quote';
   Icon fabIcon = Icon(Icons.send);
   bool isFabVisible = true;
 
@@ -45,7 +45,7 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
     checkAuth();
 
     if (AddQuoteInputs.quote.id.isNotEmpty) {
-      fabText = 'Save';
+      fabText = 'Save quote';
       fabIcon = Icon(Icons.save);
     }
 
@@ -72,10 +72,17 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
           ) :
           Padding(padding: EdgeInsets.zero),
 
-      body: ListView(
-        children: <Widget>[
+      // body: ListView(
+      //   children: <Widget>[
+      //     body(),
+      //     Footer(),
+      //   ],
+      // ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          HomeAppBar(),
           body(),
-          Footer(),
+          // Footer(),
         ],
       ),
     );
@@ -83,19 +90,32 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
 
   Widget body() {
     if (errorMessage.isNotEmpty) {
-      return FullPageError(
-        message: errorMessage,
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          FullPageError(
+            message: errorMessage,
+          ),
+        ]),
       );
     }
 
     if (isCheckingAuth) {
-      return FullPageLoading();
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          FullPageLoading(),
+        ]),
+      );
     }
 
     if (isProposing) {
-      return FullPageLoading(
-        title: AddQuoteInputs.quote.id.isEmpty ?
-          'Proposing quote...' : 'Saving quote...',
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          FullPageLoading(
+            title: AddQuoteInputs.quote.id.isEmpty
+            ? 'Proposing quote...'
+            : 'Saving quote...',
+          ),
+        ]),
       );
     }
 
@@ -107,113 +127,117 @@ class _AddQuoteLayoutState extends State<AddQuoteLayout> {
   }
 
   Widget completedView() {
-    return Container(
-      padding: const EdgeInsets.all(60.0),
-      child: Column(
-        children: <Widget>[
-          AppIconHeader(),
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.all(60.0),
+          child: Column(
+            children: <Widget>[
+              AppIconHeader(),
 
-          Container(
-            width: 500.0,
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Opacity(
-              opacity: .8,
-              child: Text(
-                getResultMessage(
-                  actionIntent: actionIntent,
-                  actionResult: actionResult,
-                ),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-          ),
-
-          Container(
-            width: 500.0,
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                getResultSubMessage(
-                  actionIntent: actionIntent,
-                  actionResult: actionResult,
-                ),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 17.0,
+              Container(
+                width: 500.0,
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Opacity(
+                  opacity: .8,
+                  child: Text(
+                    getResultMessage(
+                      actionIntent: actionIntent,
+                      actionResult: actionResult,
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 100.0, bottom: 200.0),
-            child: Wrap(
-              spacing: 30.0,
-              children: <Widget>[
-                navCard(
-                  index: 0,
-                  icon: Icon(Icons.home, size: 40.0,),
-                  title: 'Home',
-                  onTap: () {
-                    FluroRouter.router.navigateTo(
-                      context,
-                      RootRoute,
-                      replace: true,
-                    );
-                  },
+              Container(
+                width: 500.0,
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Opacity(
+                  opacity: .5,
+                  child: Text(
+                    getResultSubMessage(
+                      actionIntent: actionIntent,
+                      actionResult: actionResult,
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
                 ),
+              ),
 
-                navCard(
-                  index: 1,
-                  icon: Icon(Icons.add, size: 40.0,),
-                  title: 'Add another quote',
-                  onTap: () {
-                    AddQuoteInputs.clearQuoteData();
-                    AddQuoteInputs.clearTopics();
-                    AddQuoteInputs.clearComment();
+              Padding(
+                padding: const EdgeInsets.only(top: 100.0, bottom: 200.0),
+                child: Wrap(
+                  spacing: 30.0,
+                  children: <Widget>[
+                    navCard(
+                      index: 0,
+                      icon: Icon(Icons.home, size: 40.0,),
+                      title: 'Home',
+                      onTap: () {
+                        FluroRouter.router.navigateTo(
+                          context,
+                          RootRoute,
+                          replace: true,
+                        );
+                      },
+                    ),
 
-                    FluroRouter.router.navigateTo(
-                      context,
-                      AddQuoteContentRoute,
-                      replace: true,
-                    );
-                  },
+                    navCard(
+                      index: 1,
+                      icon: Icon(Icons.add, size: 40.0,),
+                      title: 'Add another quote',
+                      onTap: () {
+                        AddQuoteInputs.clearQuoteData();
+                        AddQuoteInputs.clearTopics();
+                        AddQuoteInputs.clearComment();
+
+                        FluroRouter.router.navigateTo(
+                          context,
+                          AddQuoteContentRoute,
+                          replace: true,
+                        );
+                      },
+                    ),
+
+                    canManage ?
+                      navCard(
+                        index: 2,
+                        icon: Icon(Icons.timer, size: 40.0,),
+                        title: 'Admin Temporary quotes',
+                        onTap: () {
+                          FluroRouter.router.navigateTo(
+                            context,
+                            AdminTempQuotesRoute,
+                            replace: true,
+                          );
+                        },
+                      ) :
+                      navCard(
+                        index: 2,
+                        icon: Icon(Icons.timer, size: 40.0,),
+                        title: 'Temporary quotes',
+                        onTap: () {
+                          FluroRouter.router.navigateTo(
+                            context,
+                            TempQuotesRoute,
+                            replace: true,
+                          );
+                        },
+                      )
+                  ],
                 ),
-
-                canManage ?
-                  navCard(
-                    index: 2,
-                    icon: Icon(Icons.timer, size: 40.0,),
-                    title: 'Admin Temporary quotes',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(
-                        context,
-                        AdminTempQuotesRoute,
-                        replace: true,
-                      );
-                    },
-                  ) :
-                  navCard(
-                    index: 2,
-                    icon: Icon(Icons.timer, size: 40.0,),
-                    title: 'Temporary quotes',
-                    onTap: () {
-                      FluroRouter.router.navigateTo(
-                        context,
-                        TempQuotesRoute,
-                        replace: true,
-                      );
-                    },
-                  )
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 

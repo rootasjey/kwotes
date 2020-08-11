@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
+import 'package:memorare/screens/add_quote_steps.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/dashboard_sections.dart';
 import 'package:memorare/screens/forgot_password.dart';
@@ -11,7 +12,6 @@ import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/web/about.dart';
 import 'package:memorare/screens/web/add_quote_author.dart';
 import 'package:memorare/screens/web/add_quote_comment.dart';
-import 'package:memorare/screens/web/add_quote_content.dart';
 import 'package:memorare/screens/web/add_quote_reference.dart';
 import 'package:memorare/screens/web/add_quote_topics.dart';
 import 'package:memorare/screens/web/contact.dart';
@@ -44,7 +44,7 @@ class WebRouteHandlers {
 
   static Handler addQuote = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          AddQuoteContent());
+          AddQuoteSteps());
 
   static Handler addQuoteAuthor = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

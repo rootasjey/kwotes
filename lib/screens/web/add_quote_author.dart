@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/common/icons_more_icons.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/screens/web/add_quote_layout.dart';
-import 'package:memorare/screens/web/add_quote_nav_buttons.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/utils/on_long_press_nav_back.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 
 class AddQuoteAuthor extends StatefulWidget {
   @override
@@ -16,11 +11,8 @@ class AddQuoteAuthor extends StatefulWidget {
 }
 
 class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
-  final beginY        = 100.0;
-  final delay         = 1.0;
-  final delayStep     = 1.2;
-
   String tempImgUrl = '';
+  final beginY      = 10.0;
 
   final affiliateUrlController  = TextEditingController();
   final amazonUrlController     = TextEditingController();
@@ -34,7 +26,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final wikiUrlController       = TextEditingController();
   final youtubeUrlController    = TextEditingController();
 
-  final nameFocusNode = FocusNode();
+  final linkInputController     = TextEditingController();
+
+  final nameFocusNode           = FocusNode();
 
   @override
   void initState() {
@@ -57,138 +51,73 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   Widget build(BuildContext context) {
-    return AddQuoteLayout(
-      child: Stack(
+    return Container(
+      width: 600.0,
+      child: Column(
         children: <Widget>[
-          Column(
+          Wrap(
+            spacing: 40.0,
+            runSpacing: 40.0,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
-              NavBackHeader(
-                onLongPress: () => onLongPressNavBack(context),
-              ),
-              body(),
+              avatar(),
+              nameAndJob(),
             ],
           ),
 
-          Positioned(
-            right: 120.0,
-            top: 85.0,
-            child: IconButton(
-              onPressed: () {
-                FluroRouter.router.navigateTo(
-                  context,
-                  AddQuoteReferenceRoute,
-                );
-              },
-              icon: Icon(
-                Icons.arrow_forward,
-              ),
-            ),
+          FadeInY(
+            delay: 0.6,
+            beginY: beginY,
+            child: summaryField(),
           ),
 
-          Positioned(
-            right: 50.0,
-            top: 70.0,
-            child: helpButton(),
-          )
+          FadeInY(
+            delay: 0.8,
+            beginY: beginY,
+            child: links(),
+          ),
         ],
       ),
     );
   }
 
   Widget avatar() {
-    return Padding(
-      padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
-      child: Material(
-        elevation: 1.0,
-        shape: CircleBorder(),
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: AddQuoteInputs.author.urls.image.length > 0 ?
-          Ink.image(
-            image: NetworkImage(AddQuoteInputs.author.urls.image),
-            fit: BoxFit.cover,
-            width: 200.0,
-            height: 200.0,
-            child: InkWell(
-              onTap: () => showAvatarDialog(),
-            ),
-          ) :
-          Ink(
-            width: 200.0,
-            height: 200.0,
-            child: InkWell(
-              onTap: () => showAvatarDialog(),
-              child: CircleAvatar(
-                child: Icon(
-                  Icons.add,
-                  size: 50.0,
-                  color: stateColors.primary,
-                ),
-                backgroundColor: Colors.black12,
-                radius: 80.0,
+    return Material(
+      elevation: 1.0,
+      shape: CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: AddQuoteInputs.author.urls.image.length > 0 ?
+        Ink.image(
+          image: NetworkImage(AddQuoteInputs.author.urls.image),
+          fit: BoxFit.cover,
+          width: 200.0,
+          height: 200.0,
+          child: InkWell(
+            onTap: () => showAvatarDialog(),
+          ),
+        ) :
+        Ink(
+          width: 200.0,
+          height: 200.0,
+          child: InkWell(
+            onTap: () => showAvatarDialog(),
+            child: CircleAvatar(
+              child: Icon(
+                Icons.add,
+                size: 50.0,
+                color: stateColors.primary,
               ),
-            )
-          ),
-      ),
-    );
-  }
-
-  Widget body() {
-    return SizedBox(
-      width: 500.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          FadeInY(
-            beginY: beginY,
-            child: title(),
-          ),
-
-          FadeInY(
-            delay: delay + (1 * delayStep),
-            beginY: beginY,
-            child: avatar(),
-          ),
-
-          FadeInY(
-            delay: delay + (2 * delayStep),
-            beginY: beginY,
-            child: nameAndJob(),
-          ),
-
-          FadeInY(
-            delay: delay + (3 * delayStep),
-            beginY: beginY,
-            child: summaryField(),
-          ),
-
-          FadeInY(
-            delay: delay + (4 * delayStep),
-            beginY: beginY,
-            child: links(),
-          ),
-
-          FadeInY(
-            delay: delay + (5 * delayStep),
-            beginY: beginY,
-            child: clearButton(),
-          ),
-
-          FadeInY(
-            delay: delay + (6 * delayStep),
-            beginY: beginY,
-            child: AddQuoteNavButtons(
-              onPrevPressed: () => FluroRouter.router.pop(context),
-              onNextPressed: () => FluroRouter.router.navigateTo(context, AddQuoteReferenceRoute),
+              backgroundColor: Colors.black12,
+              radius: 80.0,
             ),
-          ),
-        ],
-      ),
+          )
+        ),
     );
   }
 
   Widget clearButton() {
-    return FlatButton(
+    return FlatButton.icon(
       onPressed: () {
         AddQuoteInputs.clearAuthor();
 
@@ -207,300 +136,224 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
         nameFocusNode.requestFocus();
       },
-      child: Opacity(
+      icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+      label: Opacity(
         opacity: 0.6,
         child: Text(
-          'Clear author information',
+          'Clear all data',
         ),
       ),
-    );
-  }
-
-  Widget helpButton() {
-    return IconButton(
-      iconSize: 40.0,
-      icon: Opacity(
-        opacity: .6,
-        child: Icon(Icons.help),
-      ),
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    width: 500.0,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 40.0),
-                      child: Text(
-                        'Help',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    width: 500.0,
-                    child: Opacity(
-                      opacity: .6,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20.0),
-                            child: Text(
-                              '• Author information are optional',
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20.0),
-                            child: Text(
-                              '• If you select the author\'s name in the dropdown list, other fields can stay empty',
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 100.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        FluroRouter.router.pop(context);
-                      },
-                      color: Colors.black12,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text('Close'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        );
-      },
     );
   }
 
   Widget links() {
-    return Column(
-      children: <Widget>[
-        FadeInY(
-          delay: delay + (7 * delayStep),
-          beginY: beginY,
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: wikiUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(IconsMore.wikipedia_w),
-                labelText: 'Wikipedia'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.author.urls.wikipedia = newValue;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 80.0),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: <Widget>[
+          linkCircleButton(
+            delay: 1.0,
+            name: 'Website',
+            active: AddQuoteInputs.author.urls.website.isNotEmpty,
+            imageUrl: 'assets/images/world-globe.png',
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Website',
+                initialValue: AddQuoteInputs.author.urls.website,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.website = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          Observer(
+            builder: (_) {
+              return linkCircleButton(
+                delay: 1.2,
+                name: 'Wikipedia',
+                active: AddQuoteInputs.author.urls.wikipedia.isNotEmpty,
+                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                onTap: () {
+                    showLinkInputSheet(
+                      labelText: 'Wikipedia',
+                      initialValue: AddQuoteInputs.author.urls.wikipedia,
+                      onSave: (String inputUrl) {
+                        setState(() {
+                          AddQuoteInputs.author.urls.wikipedia = inputUrl;
+                        });
+                      }
+                    );
+                  },
+                );
               },
             ),
-          ),
-        ),
 
-        FadeInY(
-          delay: delay + (8 * delayStep),
-          beginY: beginY,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                controller: websiteUrlController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconsMore.earth),
-                  labelText: 'Website'
-                ),
-                onChanged: (newValue) {
-                  AddQuoteInputs.author.urls.website = newValue;
-                },
+          linkCircleButton(
+            delay: 1.4,
+            name: 'Amazon',
+            imageUrl: 'assets/images/amazon.png',
+            active: AddQuoteInputs.author.urls.amazon.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Amazon',
+                initialValue: AddQuoteInputs.author.urls.amazon,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.amazon = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          linkCircleButton(
+            delay: 1.6,
+            name: 'Facebook',
+            imageUrl: 'assets/images/facebook.png',
+            active: AddQuoteInputs.author.urls.facebook.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Facebook',
+                initialValue: AddQuoteInputs.author.urls.facebook,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.facebook = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          linkCircleButton(
+            delay: 1.8,
+            name: 'Netflix',
+            imageUrl: 'assets/images/netflix.png',
+            active: AddQuoteInputs.author.urls.netflix.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Netflix',
+                initialValue: AddQuoteInputs.author.urls.netflix,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.netflix = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          linkCircleButton(
+            delay: 2.0,
+            name: 'Prime Video',
+            imageUrl: 'assets/images/prime-video.png',
+            active: AddQuoteInputs.author.urls.primeVideo.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Prime Video',
+                initialValue: AddQuoteInputs.author.urls.primeVideo,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.primeVideo = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          linkCircleButton(
+            delay: 2.2,
+            name: 'Twitch',
+            imageUrl: 'assets/images/twitch.png',
+            active: AddQuoteInputs.author.urls.twitch.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Twitch',
+                initialValue: AddQuoteInputs.author.urls.twitch,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.twitch = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          linkCircleButton(
+            delay: 2.4,
+            name: 'Twitter',
+            imageUrl: 'assets/images/twitter.png',
+            active: AddQuoteInputs.author.urls.twitter.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Twitter',
+                initialValue: AddQuoteInputs.author.urls.twitter,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.twitter = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+
+          linkCircleButton(
+            delay: 2.6,
+            name: 'YouTube',
+            imageUrl: 'assets/images/youtube.png',
+            active: AddQuoteInputs.author.urls.youtube.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'YouTube',
+                initialValue: AddQuoteInputs.author.urls.youtube,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    AddQuoteInputs.author.urls.youtube = inputUrl;
+                  });
+                }
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget linkCircleButton({
+    bool active = false,
+    double delay = 0.0,
+    String imageUrl,
+    String name,
+    Function onTap,
+  }) {
+
+    return FadeInX(
+      beginX: 50.0,
+      delay: delay,
+      child: Tooltip(
+        message: name,
+        child: Material(
+          elevation: active
+            ? 4.0
+            : 0.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Image.network(
+                imageUrl,
+                width: 30.0,
               ),
             ),
           ),
         ),
-
-        FadeInY(
-          delay: delay + (9 * delayStep),
-          beginY: beginY,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 25.0),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                controller: twitchUrlController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(
-                      start: 6.0,
-                      end: 3.0,
-                    ),
-                    child: Image.asset(
-                      'assets/images/twitch.png',
-                    ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(
-                    maxWidth: 36.0,
-                  ),
-                  labelText: 'Twitch'
-                ),
-                onChanged: (newValue) {
-                  AddQuoteInputs.author.urls.twitch = newValue;
-                },
-              ),
-            ),
-          ),
-        ),
-
-        FadeInY(
-          delay: delay + (10 * delayStep),
-          beginY: beginY,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                controller: twitterUrlController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(
-                      start: 6.0,
-                      end: 3.0,
-                    ),
-                    child: Image.asset(
-                      'assets/images/twitter.png',
-                    ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(
-                    maxWidth: 36.0,
-                  ),
-                  labelText: 'Twitter'
-                ),
-                onChanged: (newValue) {
-                  AddQuoteInputs.author.urls.twitter = newValue;
-                },
-              ),
-            ),
-          ),
-        ),
-
-        FadeInY(
-          delay: delay + (11 * delayStep),
-          beginY: beginY,
-          child: SizedBox(
-            width: 300,
-            child: TextField(
-              controller: youtubeUrlController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 6.0,
-                    end: 3.0,
-                  ),
-                  child: Image.asset(
-                    'assets/images/youtube.png',
-                  ),
-                ),
-                prefixIconConstraints: BoxConstraints(
-                  maxWidth: 36.0,
-                ),
-                labelText: 'YouTube'
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.author.urls.youtube = newValue;
-              },
-            ),
-          ),
-        ),
-
-        FadeInY(
-          delay: delay + (12 * delayStep),
-          beginY: beginY,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                controller: facebookUrlController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 6.0,),
-                    child: Image.asset(
-                      'assets/images/facebook.png',
-                    ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(
-                    maxWidth: 36.0,
-                  ),
-                  labelText: 'Facebook'
-                ),
-                onChanged: (newValue) {
-                  AddQuoteInputs.author.urls.facebook = newValue;
-                },
-              ),
-            ),
-          ),
-        ),
-
-        FadeInY(
-          delay: delay + (13 * delayStep),
-          beginY: beginY,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25.0),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                controller: amazonUrlController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 6.0,),
-                    child: Image.asset(
-                      'assets/images/amazon.png',
-                    ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(
-                    maxWidth: 36.0,
-                  ),
-                  labelText: 'Amazon'
-                ),
-                onChanged: (newValue) {
-                  AddQuoteInputs.author.urls.amazon = newValue;
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -516,6 +369,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Name',
+              icon: Icon(Icons.person_outline),
             ),
             onChanged: (newValue) {
               AddQuoteInputs.author.name = newValue;
@@ -530,11 +384,17 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: 'Job',
+              icon: Icon(Icons.work),
             ),
             onChanged: (newValue) {
               AddQuoteInputs.author.job = newValue;
             },
           ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: clearButton(),
         ),
       ],
     );
@@ -547,12 +407,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         controller: summaryController,
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Summary',
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          icon: Icon(Icons.edit),
+          labelText: "Type author's summary there...",
           alignLabelWithHint: true,
         ),
-        minLines: 10,
+        minLines: 1,
         maxLines: null,
+        style: TextStyle(
+          fontSize: 20.0,
+        ),
         onChanged: (newValue) {
           AddQuoteInputs.author.summary = newValue;
         },
@@ -657,6 +523,71 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ],
         );
       }
+    );
+  }
+
+  void showLinkInputSheet({
+    String labelText = '',
+    String initialValue = '',
+    Function onSave,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        String inputUrl;
+        linkInputController.text = initialValue;
+
+        return Container(
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 300.0,
+                child: TextField(
+                  autofocus: true,
+                  controller: linkInputController,
+                  keyboardType: TextInputType.url,
+                  decoration: InputDecoration(
+                    labelText: labelText,
+                    icon: Icon(Icons.link),
+                  ),
+                  onChanged: (newValue) {
+                    inputUrl = newValue;
+                  },
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 40.0,
+                  right: 10.0,
+                ),
+                child: RaisedButton(
+                  onPressed: onSave != null
+                    ? () {
+                      Navigator.pop(context);
+                      onSave(inputUrl);
+                    }
+                    : null,
+                  color: stateColors.primary,
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
