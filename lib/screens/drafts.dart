@@ -168,13 +168,6 @@ class _DraftsState extends State<Drafts> {
       return emptyView();
     }
 
-    // if (MediaQuery.of(context).size.width > 600.0) {
-    //   return SliverPadding(
-    //     padding: const EdgeInsets.all(20.0),
-    //     sliver: gridQuotes(),
-    //   );
-    // }
-
     return listQuotes();
   }
 
