@@ -81,7 +81,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                     padding: const EdgeInsets.only(right: 15.0),
                     child: Tooltip(
                       message: quote.isOffline
-                        ? 'Saved locally only'
+                        ? 'Saved only locally'
                         : 'Saved online',
                       child: ClipOval(
                         child: Material(
@@ -92,7 +92,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                             child: SizedBox(width: 15, height: 15,),
                             onTap: () {
                               final text = quote.isOffline
-                                ? "This quote is saved in your device's offline storage. You can save it in the cloud after an edit. It can prevent data loss."
+                                ? "This quote is saved in your device's offline storage. You can save it in the cloud after an edit to prevent data loss."
                                 : "This quote is saved in the cloud so you can edit it on any other device.";
 
                               showDialog(
