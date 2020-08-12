@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/discover_card.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
+import 'package:memorare/router/route_names.dart';
+import 'package:memorare/router/router.dart';
 import 'package:memorare/types/reference.dart';
 
 List<Reference> _references = [];
@@ -42,12 +44,14 @@ class _DiscoverState extends State<Discover> {
               ),
             ),
           ),
+
           SizedBox(
             width: 50.0,
             child: Divider(
               thickness: 2.0,
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.only(bottom: 40.0),
             child: Opacity(
@@ -55,9 +59,35 @@ class _DiscoverState extends State<Discover> {
               child: Text('Do you know these references?'),
             ),
           ),
+
           cardsItems(),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: allTopicsButton(),
+          ),
         ],
       )
+    );
+  }
+
+  Widget allTopicsButton() {
+    return RaisedButton.icon(
+      onPressed: () =>
+        FluroRouter.router.navigateTo(context, ReferencesRoute),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
+        ),
+      ),
+      color: Colors.black12,
+      icon: Opacity(opacity: 0.6, child: Icon(Icons.list)),
+      label: Opacity(
+        opacity: .6,
+        child: Text(
+          'All references'
+        ),
+      ),
     );
   }
 

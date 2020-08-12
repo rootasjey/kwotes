@@ -7,6 +7,7 @@ import 'package:memorare/screens/dashboard_sections.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/quotes_by_author_ref.dart';
 import 'package:memorare/screens/reference_page.dart';
+import 'package:memorare/screens/references.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/web/about.dart';
@@ -142,6 +143,10 @@ class WebRouteHandlers {
   static Handler reference = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           ReferencePage(id: params['id'][0]));
+
+  static Handler references = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          References());
 
   static Handler referenceQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

@@ -26,6 +26,7 @@ const String PublishedQuotesRoute   = '/publishedquotes';
 const String QuotidiansRoute        = '/quotidians';
 const String ReferenceRoute         = '/reference/:id';
 const String ReferenceQuotesRoute   = '/reference/:id/quotes';
+const String ReferencesRoute        = '/references';
 const String RootRoute              = '/';
 const String SigninRoute            = '/signin';
 const String SignupRoute            = '/signup';

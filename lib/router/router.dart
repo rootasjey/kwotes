@@ -277,6 +277,11 @@ class FluroRouter {
     );
 
     router.define(
+      ReferencesRoute,
+      handler: WebRouteHandlers.references,
+    );
+
+    router.define(
       ReferenceQuotesRoute,
       handler: WebRouteHandlers.referenceQuotes,
     );
