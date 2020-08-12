@@ -64,14 +64,14 @@ class _DiscoverState extends State<Discover> {
 
           Padding(
             padding: const EdgeInsets.only(top: 60.0),
-            child: allTopicsButton(),
+            child: allReferencesButton(),
           ),
         ],
       )
     );
   }
 
-  Widget allTopicsButton() {
+  Widget allReferencesButton() {
     return RaisedButton.icon(
       onPressed: () =>
         FluroRouter.router.navigateTo(context, ReferencesRoute),
