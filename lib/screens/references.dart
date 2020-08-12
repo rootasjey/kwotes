@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,12 @@ import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:supercharged/supercharged.dart';
+
+enum HeaderViewType {
+  options,
+  search,
+}
 
 class References extends StatefulWidget {
   @override
@@ -23,19 +31,31 @@ class References extends StatefulWidget {
 }
 
 class _ReferencesState extends State<References> {
-  bool descending       = true;
-  bool hasNext          = true;
-  bool hasErrors        = false;
-  bool isFabVisible     = false;
-  bool isLoading        = false;
-  bool isLoadingMore    = false;
+  bool descending     = true;
+  bool hasNext        = true;
+  bool hasErrors      = false;
+  bool isFabVisible   = false;
+  bool isLoading      = false;
+  bool isLoadingMore  = false;
+  bool isSearching    = false;
+
+  HeaderViewType headerViewType = HeaderViewType.search;
+
+  TextEditingController searchInputController;
+
+  Timer _searchTimer;
 
   final referencesList = List<Reference>();
+  final searchResults = List<Reference>();
 
-  final pageRoute         = ReferencesRoute;
-  final scrollController  = ScrollController();
+  final pageRoute = ReferencesRoute;
+  FocusNode searchFocusNode;
+  ScrollController scrollController;
 
   int limit = 30;
+
+  String searchInputValue = '';
+  String lastSearchValue = '';
 
   var itemsStyle = ItemsStyle.grid;
   var lastDoc;
@@ -43,8 +63,20 @@ class _ReferencesState extends State<References> {
   @override
   initState() {
     super.initState();
+    searchFocusNode = FocusNode();
+    searchInputController = TextEditingController();
+    scrollController = ScrollController();
+
     initProps();
     fetch();
+  }
+
+  @override
+  dispose() {
+    searchFocusNode.dispose();
+    scrollController.dispose();
+    searchInputController.dispose();
+    super.dispose();
   }
 
   void initProps() {
@@ -68,52 +100,7 @@ class _ReferencesState extends State<References> {
           foregroundColor: Colors.white,
           child: Icon(Icons.arrow_upward),
         ) : null,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
-
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              HomeAppBar(
-                title: 'All references',
-                automaticallyImplyLeading: true,
-              ),
-
-              appBar(),
-
-              SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
-              bodyListContent(),
-            ],
-          ),
-        )
-      ),
+      body: body(),
     );
   }
 
@@ -250,10 +237,101 @@ class _ReferencesState extends State<References> {
                     : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Container(
+                    height: 25,
+                    width: 2.0,
+                    color: stateColors.foreground.withOpacity(0.5),
+                  ),
+                ),
+              ),
+
+              FadeInY(
+                beginY: 10.0,
+                delay: 3.5,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      searchInputValue = lastSearchValue;
+                      headerViewType = HeaderViewType.search;
+                    });
+                  },
+                  icon: Icon(Icons.search),
+                  color: stateColors.foreground.withOpacity(0.5),
+                ),
+              ),
             ],
           );
         },
       ),
+    );
+  }
+
+  Widget body() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
+
+          // Load more scenario
+          if (scrollNotif.metrics.pixels <
+              scrollNotif.metrics.maxScrollExtent) {
+            return false;
+          }
+
+          // Don't load more search results.
+          if (searchInputValue.isNotEmpty) {
+            return false;
+          }
+
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            HomeAppBar(
+              title: 'All references',
+              automaticallyImplyLeading: true,
+            ),
+
+            headerViewType == HeaderViewType.options
+              ? appBar()
+              : searchHeader(),
+
+            SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
+
+            bodyListContent(),
+
+            SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
+          ],
+        ),
+      )
     );
   }
 
@@ -270,11 +348,15 @@ class _ReferencesState extends State<References> {
       return emptyView();
     }
 
+    final references = searchInputValue.isEmpty
+      ? referencesList
+      : searchResults;
+
     if (itemsStyle == ItemsStyle.grid) {
-      return sliverGrid();
+      return sliverGrid(references);
     }
 
-    return sliverList();
+    return sliverList(references);
   }
 
   Widget emptyView() {
@@ -314,7 +396,128 @@ class _ReferencesState extends State<References> {
     );
   }
 
-  Widget sliverGrid() {
+  Widget searchActions() {
+    return Wrap(
+      spacing: 20.0,
+      runSpacing: 20.0,
+      children: [
+        RaisedButton.icon(
+          onPressed: () {
+            searchInputValue = '';
+            lastSearchValue = '';
+            searchInputController.clear();
+            searchFocusNode.requestFocus();
+
+            setState(() {});
+          },
+          icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+          label: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Clear content',
+            ),
+          )
+        ),
+
+        RaisedButton.icon(
+          onPressed: () {
+            setState(() {
+              lastSearchValue = searchInputValue;
+              searchInputValue = '';
+              headerViewType = HeaderViewType.options;
+            });
+          },
+          icon: Opacity(opacity: 0.6, child: Icon(Icons.swap_horiz)),
+          label: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Switch to options',
+            ),
+          )
+        ),
+      ]
+    );
+  }
+
+  Widget searchHeader() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 100.0,
+        vertical: 100.0
+      ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          searchInput(),
+          searchActions(),
+          searchResultsData(),
+        ])
+      ),
+    );
+  }
+
+  Widget searchInput() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: TextField(
+        maxLines: null,
+        autofocus: true,
+        focusNode: searchFocusNode,
+        controller: searchInputController,
+        keyboardType: TextInputType.multiline,
+        textCapitalization: TextCapitalization.sentences,
+        onChanged: (newValue) {
+          final refresh = searchInputValue != newValue && newValue.isEmpty;
+
+          searchInputValue = newValue;
+
+          if (isSearching || newValue.isEmpty) {
+            if (refresh) { setState(() {}); }
+            return;
+          }
+
+          if (_searchTimer != null) {
+            _searchTimer.cancel();
+          }
+
+          _searchTimer = Timer(
+            500.milliseconds,
+            () => search(),
+          );
+        },
+        style: TextStyle(
+          fontSize: 32.0,
+        ),
+        decoration: InputDecoration(
+          icon: Icon(Icons.edit),
+          hintText: 'Search a reference...',
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget searchResultsData() {
+    if (searchInputValue.isEmpty || isSearching) {
+      return Padding(padding: EdgeInsets.zero);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 60.0),
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          '${searchResults.length} results',
+          style: TextStyle(
+            fontSize: 25.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget sliverGrid(List<Reference> references) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -328,7 +531,7 @@ class _ReferencesState extends State<References> {
         ),
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            final reference = referencesList.elementAt(index);
+            final reference = references.elementAt(index);
 
             return DiscoverCard(
               height: 260.0,
@@ -353,17 +556,17 @@ class _ReferencesState extends State<References> {
               },
             );
           },
-          childCount: referencesList.length,
+          childCount: references.length,
         ),
       ),
     );
   }
 
-  Widget sliverList() {
+  Widget sliverList(List<Reference> references) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final reference = referencesList.elementAt(index);
+          final reference = references.elementAt(index);
 
           return ReferenceRow(
             reference: reference,
@@ -383,7 +586,7 @@ class _ReferencesState extends State<References> {
             },
           );
         },
-        childCount: referencesList.length,
+        childCount: references.length,
       ),
     );
   }
@@ -439,7 +642,6 @@ class _ReferencesState extends State<References> {
     }
 
     isLoadingMore = true;
-    print('load more');
 
     try {
       final snapshot = await Firestore.instance
@@ -521,5 +723,36 @@ class _ReferencesState extends State<References> {
       subject: 'Out Of Context',
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
     );
+  }
+
+  void search() async {
+    isSearching = true;
+    searchResults.clear();
+
+    try {
+      final snapshot = await Firestore.instance
+        .collection('references')
+        .where('name', isGreaterThanOrEqualTo: searchInputValue)
+        .limit(20)
+        .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        return;
+      }
+
+      snapshot.documents.forEach((element) {
+        final data = element.data;
+        data['id'] = element.documentID;
+        final reference = Reference.fromJSON(data);
+        searchResults.add(reference);
+      });
+
+      setState(() {
+        isSearching = false;
+      });
+
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 }
