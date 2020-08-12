@@ -17,7 +17,11 @@ class SimpleAppBar extends StatefulWidget {
   /// Typically open a drawer. Menu icon will be hidden if null.
   final Function onPressedMenu;
 
+  /// If true, the back icon will be hidden.
+  final bool hideNavBackIcon;
+
   SimpleAppBar({
+    this.hideNavBackIcon = false,
     this.onPressedMenu,
     this.subHeader,
     this.textTitle,
@@ -60,6 +64,10 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
           menuIconLeftPadding   = 20.0;
         }
 
+        if (widget.hideNavBackIcon) {
+          leftSubHeaderPadding -= 40.0;
+        }
+
         return Stack(
           children: [
             Column(
@@ -88,13 +96,14 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
         ),
         child: Row(
           children: <Widget>[
-            IconButton(
-              onPressed: () {
-                FluroRouter.router.pop(context);
-              },
-              tooltip: 'Back',
-              icon: Icon(Icons.arrow_back),
-            ),
+            if (!widget.hideNavBackIcon)
+              IconButton(
+                onPressed: () {
+                  FluroRouter.router.pop(context);
+                },
+                tooltip: 'Back',
+                icon: Icon(Icons.arrow_back),
+              ),
 
             Padding(padding: const EdgeInsets.only(right: 40.0)),
 

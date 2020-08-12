@@ -103,7 +103,9 @@ class _ReferencesState extends State<References> {
             slivers: <Widget>[
               HomeAppBar(
                 title: 'All references',
+                automaticallyImplyLeading: true,
               ),
+
               appBar(),
 
               SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
@@ -117,7 +119,8 @@ class _ReferencesState extends State<References> {
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: 'Discover more',
+      textTitle: 'Options',
+      hideNavBackIcon: true,
       subHeader: Observer(
         builder: (context) {
           return Wrap(
