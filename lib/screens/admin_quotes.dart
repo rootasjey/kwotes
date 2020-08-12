@@ -31,12 +31,15 @@ class AdminQuotesState extends State<AdminQuotes> {
   bool hasErrors        = false;
   bool isLoading        = false;
   bool isLoadingMore    = false;
-  var itemsStyle        = ItemsStyle.list;
-  String lang           = 'en';
-  var lastDoc;
-  int limit             = 30;
+
   final pageRoute       = QuotesRoute;
+
+  int limit             = 30;
   List<Quote> quotes    = [];
+  String lang           = 'en';
+
+  var itemsStyle        = ItemsStyle.list;
+  var lastDoc;
   var scrollController  = ScrollController();
 
   @override
@@ -49,37 +52,34 @@ class AdminQuotesState extends State<AdminQuotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
-    );
-  }
-
-  Widget body() {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels <
-              scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      ));
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        )
+      ),
+    );
   }
 
   Widget appBar() {
@@ -527,6 +527,7 @@ class AdminQuotesState extends State<AdminQuotes> {
       setState(() {
         isLoading = false;
       });
+
     } catch (error) {
       debugPrint(error.toString());
 
@@ -565,7 +566,7 @@ class AdminQuotesState extends State<AdminQuotes> {
         data['id'] = doc.documentID;
 
         final quote = Quote.fromJSON(data);
-        quotes.insert(quotes.length - 1, quote);
+        quotes.add(quote);
       });
 
       lastDoc = snapshot.documents.last;
@@ -573,6 +574,7 @@ class AdminQuotesState extends State<AdminQuotes> {
       setState(() {
         isLoadingMore = false;
       });
+
     } catch (error) {
       debugPrint(error.toString());
 
