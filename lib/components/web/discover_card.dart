@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/state/colors.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:supercharged/supercharged.dart';
@@ -116,8 +114,7 @@ class _DiscoverCardState extends State<DiscoverCard> {
   }
 
   Widget background() {
-    final isImageOk = widget.imageUrl != null &&
-      widget.imageUrl.length > 0;
+    final isImageOk = widget.imageUrl?.isNotEmpty;
 
     return Stack(
       children: <Widget>[
@@ -129,16 +126,13 @@ class _DiscoverCardState extends State<DiscoverCard> {
           ) :
           Padding(
             padding: assetImgPadding,
-            child: Observer(
-              builder: (context) {
-                return Image.asset(
-                  widget.type == 'reference' ?
-                  'assets/images/textbook-${stateColors.iconExt}.png' :
-                  'assets/images/profile-${stateColors.iconExt}.png',
-                  alignment: Alignment.center,
-                );
-              }
-            )
+            child: Opacity(
+              opacity: 0.6,
+              child: Icon(
+                Icons.library_books,
+                size: 60.0,
+              ),
+            ),
           ),
         ),
 
