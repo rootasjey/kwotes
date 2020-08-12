@@ -69,45 +69,9 @@ class _DiscoverCardState extends State<DiscoverCard> {
       padding: widget.padding,
       child: Column(
         children: <Widget>[
-          AnimatedContainer(
-            height: height,
-            width: width,
-            duration: 250.milliseconds,
-            curve: Curves.bounceInOut,
-            child: Card(
-              elevation: elevation,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: background(),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: SizedBox(
-              width: widget.width - 30.0,
-              child: Text(
-                widget.name,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: widget.titleFontSize,
-                ),
-              ),
-            ),
-          ),
-
-          if (widget.itemBuilder != null && widget.onSelected != null)
-            PopupMenuButton<String>(
-              icon: Opacity(
-                opacity: .6,
-                child: Icon(Icons.more_horiz),
-              ),
-              onSelected: widget.onSelected,
-              itemBuilder: widget.itemBuilder,
-            ),
+          backgroundContainer(),
+          name(),
+          popupMenuButton(),
         ],
       ),
     );
@@ -170,6 +134,58 @@ class _DiscoverCardState extends State<DiscoverCard> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget backgroundContainer() {
+    return AnimatedContainer(
+      height: height,
+      width: width,
+      duration: 250.milliseconds,
+      curve: Curves.bounceInOut,
+      child: Card(
+        elevation: elevation,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: background(),
+      ),
+    );
+  }
+
+  Widget name() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: SizedBox(
+        width: widget.width - 30.0,
+        child: Opacity(
+          opacity: 0.6,
+          child: Text(
+            widget.name,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: widget.titleFontSize,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget popupMenuButton() {
+    if (widget.itemBuilder == null || widget.onSelected == null) {
+      return Padding(padding: EdgeInsets.zero);
+    }
+
+    return PopupMenuButton<String>(
+      icon: Opacity(
+        opacity: .6,
+        child: Icon(Icons.more_horiz),
+      ),
+      onSelected: widget.onSelected,
+      itemBuilder: widget.itemBuilder,
     );
   }
 }
