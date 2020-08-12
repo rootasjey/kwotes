@@ -60,30 +60,35 @@ class _TopicsState extends State<Topics> {
             child: topicsColorsCards(),
           ),
 
-          RaisedButton(
-            onPressed: () {
-              FluroRouter.router.navigateTo(
-                context,
-                TopicRoute.replaceFirst(
-                  ':name',
-                  appTopicsColors.shuffle(max: 1).first.name,
-                ),
-              );
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(7.0),
-              ),
-            ),
-            color: Colors.black12,
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Discover more topics'
-              ),
-            ),
-          ),
+          allTopicsButton(),
         ],
+      ),
+    );
+  }
+
+  Widget allTopicsButton() {
+    return RaisedButton.icon(
+      onPressed: () {
+        FluroRouter.router.navigateTo(
+          context,
+          TopicRoute.replaceFirst(
+            ':name',
+            appTopicsColors.shuffle(max: 1).first.name,
+          ),
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
+        ),
+      ),
+      color: Colors.black12,
+      icon: Opacity(opacity: 0.6, child: Icon(Icons.filter_none)),
+      label: Opacity(
+        opacity: .6,
+        child: Text(
+          'Discover more topics'
+        ),
       ),
     );
   }
