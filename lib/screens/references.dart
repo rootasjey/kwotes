@@ -14,16 +14,12 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supercharged/supercharged.dart';
-
-enum HeaderViewType {
-  options,
-  search,
-}
 
 class References extends StatefulWidget {
   @override
@@ -316,7 +312,7 @@ class _ReferencesState extends State<References> {
           controller: scrollController,
           slivers: <Widget>[
             HomeAppBar(
-              title: 'All references',
+              title: 'References',
               automaticallyImplyLeading: true,
             ),
 
@@ -743,6 +739,7 @@ class _ReferencesState extends State<References> {
       snapshot.documents.forEach((element) {
         final data = element.data;
         data['id'] = element.documentID;
+
         final reference = Reference.fromJSON(data);
         searchResults.add(reference);
       });
