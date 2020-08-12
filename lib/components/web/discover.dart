@@ -96,7 +96,7 @@ class _DiscoverState extends State<Discover> {
     double count = 0;
 
     for (var reference in _references) {
-      count += 1.0;
+      count += 0.5;
 
       cards.add(
         FadeInX(
@@ -107,14 +107,16 @@ class _DiscoverState extends State<Discover> {
             id: reference.id,
             imageUrl: reference.urls.image,
             name: reference.name,
+            height: 290.0,
+            width: 210.0,
           ),
         ),
       );
     }
 
     return Wrap(
-      spacing: 30.0,
-      runSpacing: 30.0,
+      spacing: 80.0,
+      runSpacing: 80.0,
       children: cards,
     );
   }
