@@ -121,7 +121,7 @@ class _DiscoverCardState extends State<DiscoverCard> {
                   widget.type == 'reference' ?
                   'assets/images/textbook-${stateColors.iconExt}.png' :
                   'assets/images/profile-${stateColors.iconExt}.png',
-                  alignment: Alignment.topCenter,
+                  alignment: Alignment.center,
                 );
               }
             )
