@@ -32,6 +32,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   bool isCheckingAuth = false;
   bool isCompleted    = false;
   bool isSubmitting   = false;
+  bool stepChanged    = false;
   String errorMessage = '';
 
   bool canManage = false;
@@ -43,32 +44,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   AddQuoteType actionIntent;
   AddQuoteType actionResult;
-
-  var steps = [
-    // The first step is defined
-    // in the stepperSections() function
-    // to allow the use of a member function.
-
-    Step(
-      title: const Text('Topics'),
-      content: AddQuoteTopics(),
-    ),
-
-    Step(
-      title: const Text('Author'),
-      content: AddQuoteAuthor(),
-    ),
-
-    Step(
-      title: const Text('Reference'),
-      content: AddQuoteReference(),
-    ),
-
-    Step(
-      title: const Text('Comments'),
-      content: AddQuoteComment(),
-    ),
-  ];
 
   var helpSteps = [
     HelpContent(),
@@ -117,6 +92,91 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget actionButtonLabel({
+    String labelText = '',
+    Function onTap,
+    Widget icon,
+    Color backgroundIconColor,
+  }) {
+    return SizedBox(
+      width: 120.0,
+      child: Column(
+        children: <Widget>[
+          Material(
+            elevation: 3.0,
+            color: backgroundIconColor,
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: icon,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Opacity(
+              opacity: 0.6,
+              child: Text(
+                labelText,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget actionTile({
+    String labelText = '',
+    Function onTap,
+    Color iconBackgroundColor,
+    Widget icon,
+  }) {
+    return Container(
+      width: 400.0,
+      padding: const EdgeInsets.all(10.0),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 30.0,
+                backgroundColor: iconBackgroundColor,
+                foregroundColor: Colors.white,
+                child: icon,
+              ),
+
+              Padding(padding: const EdgeInsets.only(left: 30.0)),
+
+              Expanded(
+                flex: 2,
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    labelText,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -215,53 +275,27 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   Widget completedViewActions() {
     return isSmallView
-      ? smallNavActions()
-      : largeNavActions();
+      ? verticalActions()
+      : horizontalActions();
   }
 
-  Widget largeAction({
-    String labelText = '',
-    Function onTap,
-    Widget icon,
-    Color backgroundIconColor,
+  StepState computeStepState({
+    int stepIndex,
+    Function compute,
   }) {
-    return SizedBox(
-      width: 120.0,
-      child: Column(
-        children: <Widget>[
-          Material(
-            elevation: 3.0,
-            color: backgroundIconColor,
-            shape: CircleBorder(),
-            clipBehavior: Clip.hardEdge,
-            child: InkWell(
-              onTap: onTap,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: icon,
-              ),
-            ),
-          ),
+    if (currentStep == stepIndex) {
+      return StepState.editing;
+    }
 
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Opacity(
-              opacity: 0.6,
-              child: Text(
-                labelText,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    if (compute != null) {
+      StepState computed = compute();
+      return computed;
+    }
+
+    return StepState.indexed;
   }
 
-  Widget largeNavActions() {
+  Widget horizontalActions() {
     return Padding(
       padding: const EdgeInsets.only(
         top: 100.0,
@@ -271,14 +305,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         spacing: 40.0,
         runSpacing: 20.0,
         children: <Widget>[
-          largeAction(
+          actionButtonLabel(
             labelText: 'Home',
             icon: Icon(Icons.home, color: Colors.white),
             backgroundIconColor: Colors.green.shade400,
             onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
           ),
 
-          largeAction(
+          actionButtonLabel(
             labelText: 'Add another quote',
             icon: Icon(Icons.add, color: Colors.white),
             backgroundIconColor: stateColors.primary,
@@ -295,110 +329,12 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
             },
           ),
 
-          largeAction(
+          actionButtonLabel(
             labelText: canManage
               ? 'Admin temporary quotes'
               : 'Temporary quotes',
             icon: Icon(Icons.timelapse, color: Colors.white),
             backgroundIconColor: Colors.orange,
-            onTap: () {
-              final route = canManage
-                ? AdminTempQuotesRoute
-                : TempQuotesRoute;
-
-              FluroRouter.router.navigateTo(
-                context,
-                route,
-                replace: true,
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget smallActionCard({
-    String labelText = '',
-    Function onTap,
-    Color iconBackgroundColor,
-    Widget icon,
-  }) {
-    return Container(
-      width: 400.0,
-      padding: const EdgeInsets.all(10.0),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 30.0,
-                backgroundColor: iconBackgroundColor,
-                foregroundColor: Colors.white,
-                child: icon,
-              ),
-
-              Padding(padding: const EdgeInsets.only(left: 30.0)),
-
-              Expanded(
-                flex: 2,
-                child: Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    labelText,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget smallNavActions() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 100.0,
-        bottom: 200.0,
-      ),
-      child: Column(
-        children: <Widget>[
-          smallActionCard(
-            labelText: 'Home',
-            icon: Icon(Icons.home,),
-            iconBackgroundColor: Colors.green.shade400,
-            onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
-          ),
-
-          smallActionCard(
-            labelText: 'Add another quote',
-            icon: Icon(Icons.add,),
-            iconBackgroundColor: stateColors.primary,
-            onTap: () {
-              AddQuoteInputs.clearQuoteData();
-              AddQuoteInputs.clearTopics();
-              AddQuoteInputs.clearComment();
-
-              FluroRouter.router.navigateTo(
-                context,
-                AddQuoteContentRoute,
-                replace: true,
-              );
-            },
-          ),
-
-          smallActionCard(
-            labelText: canManage
-              ? 'Admin temporary quotes'
-              : 'Temporary quotes',
-            icon: Icon(Icons.timelapse,),
-            iconBackgroundColor: Colors.orange,
             onTap: () {
               final route = canManage
                 ? AdminTempQuotesRoute
@@ -433,13 +369,85 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
             onStepTapped: (step) => goTo(step),
             steps: [
               Step(
+                isActive: currentStep == 0,
                 title: Text('Content'),
+                subtitle: Text('Required'),
                 content: AddQuoteContent(
                   onSaveDraft: () => saveQuoteDraft(),
                 ),
+                state: computeStepState(
+                  stepIndex: 0,
+                  compute: () {
+                    return AddQuoteInputs.quote.name.isEmpty
+                      ? StepState.error
+                      : StepState.complete;
+                  }
+                ),
               ),
 
-              ...steps,
+              Step(
+                isActive: currentStep == 1,
+                title: const Text('Topics'),
+                subtitle: Text('Required'),
+                content: AddQuoteTopics(),
+                state: computeStepState(
+                  stepIndex: 1,
+                  compute: () {
+                    if (!stepChanged) { return StepState.indexed; }
+
+                    if (AddQuoteInputs.quote.topics.length == 0) {
+                      return StepState.error;
+                    }
+
+                    return StepState.complete;
+                  }
+                ),
+              ),
+
+              Step(
+                isActive: currentStep == 2,
+                subtitle: Text('Optional'),
+                title: const Text('Author'),
+                content: AddQuoteAuthor(),
+                state: computeStepState(
+                  stepIndex: 2,
+                  compute: () {
+                    return AddQuoteInputs.author.name.isEmpty
+                      ? StepState.indexed
+                      : StepState.complete;
+                  }
+                ),
+              ),
+
+              Step(
+                isActive: currentStep == 3,
+                subtitle: Text('Optional'),
+                title: const Text('Reference'),
+                content: AddQuoteReference(),
+                state: computeStepState(
+                  stepIndex: 3,
+                  compute: () {
+                    return AddQuoteInputs.reference.name.isEmpty
+                      ? StepState.indexed
+                      : StepState.complete;
+                  }
+                ),
+              ),
+
+              Step(
+                isActive: currentStep == 4,
+                subtitle: Text('Optional'),
+                title: const Text('Comments'),
+                content: AddQuoteComment(),
+                state: computeStepState(
+                  stepIndex: 2,
+                  compute: () {
+                    return AddQuoteInputs.comment.isEmpty
+                      ? StepState.indexed
+                      : StepState.complete;
+                  }
+                ),
+              ),
             ] //steps,
           ),
         ])
@@ -447,10 +455,83 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     );
   }
 
-  void next() {
-    currentStep + 1 != (steps.length + 1) // + 1 dynamic step
-        ? goTo(currentStep + 1)
-        : propose();
+  Widget verticalActions() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 100.0,
+        bottom: 200.0,
+      ),
+      child: Column(
+        children: <Widget>[
+          actionTile(
+            labelText: 'Home',
+            icon: Icon(Icons.home,),
+            iconBackgroundColor: Colors.green.shade400,
+            onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
+          ),
+
+          actionTile(
+            labelText: 'Add another quote',
+            icon: Icon(Icons.add,),
+            iconBackgroundColor: stateColors.primary,
+            onTap: () {
+              AddQuoteInputs.clearQuoteData();
+              AddQuoteInputs.clearTopics();
+              AddQuoteInputs.clearComment();
+
+              FluroRouter.router.navigateTo(
+                context,
+                AddQuoteContentRoute,
+                replace: true,
+              );
+            },
+          ),
+
+          actionTile(
+            labelText: canManage
+              ? 'Admin temporary quotes'
+              : 'Temporary quotes',
+            icon: Icon(Icons.timelapse,),
+            iconBackgroundColor: Colors.orange,
+            onTap: () {
+              final route = canManage
+                ? AdminTempQuotesRoute
+                : TempQuotesRoute;
+
+              FluroRouter.router.navigateTo(
+                context,
+                route,
+                replace: true,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool badQuoteFormat() {
+    if (AddQuoteInputs.quote.name.isEmpty) {
+      showSnack(
+        context: context,
+        message: "The quote's content cannot be empty.",
+        type: SnackType.error,
+      );
+
+      return true;
+    }
+
+    if (AddQuoteInputs.quote.topics.length == 0) {
+      showSnack(
+        context: context,
+        message: 'You must select at least 1 topics for the quote.',
+        type: SnackType.error,
+      );
+
+      return true;
+    }
+
+    return false;
   }
 
   void cancel() {
@@ -460,10 +541,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     }
 
     Navigator.pop(context);
-  }
-
-  void goTo(int step) {
-    setState(() => currentStep = step);
   }
 
   void checkAuth() async {
@@ -503,28 +580,15 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     }
   }
 
-  bool badQuoteFormat() {
-    if (AddQuoteInputs.quote.name.isEmpty) {
-      showSnack(
-        context: context,
-        message: "The quote's content cannot be empty.",
-        type: SnackType.error,
-      );
+  void goTo(int step) {
+    stepChanged = true;
+    setState(() => currentStep = step);
+  }
 
-      return true;
-    }
-
-    if (AddQuoteInputs.quote.topics.length == 0) {
-      showSnack(
-        context: context,
-        message: 'You must select at least 1 topics for the quote.',
-        type: SnackType.error,
-      );
-
-      return true;
-    }
-
-    return false;
+  void next() {
+    currentStep + 1 < 5 // (steps.length + 1) // + 1 dynamic step
+      ? goTo(currentStep + 1)
+      : propose();
   }
 
   void propose() async {
