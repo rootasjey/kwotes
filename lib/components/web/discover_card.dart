@@ -10,22 +10,26 @@ class DiscoverCard extends StatefulWidget {
   final double height;
   final String id;
   final String imageUrl;
+  final Function itemBuilder;
   final String name;
+  final Function onSelected;
   final EdgeInsetsGeometry padding;
   final double titleFontSize;
   final String type;
   final double width;
 
   DiscoverCard({
+    this.elevation      = 3.0,
+    this.height         = 330.0,
     this.id,
     this.imageUrl       = '',
+    this.itemBuilder,
     this.name           = '',
-    this.type           = 'reference',
-    this.height         = 330.0,
-    this.width          = 250.0,
+    this.onSelected,
     this.padding        = EdgeInsets.zero,
     this.titleFontSize  = 18.0,
-    this.elevation      = 3.0,
+    this.type           = 'reference',
+    this.width          = 250.0,
   });
 
   @override
@@ -96,6 +100,16 @@ class _DiscoverCardState extends State<DiscoverCard> {
               ),
             ),
           ),
+
+          if (widget.itemBuilder != null && widget.onSelected != null)
+            PopupMenuButton<String>(
+              icon: Opacity(
+                opacity: .6,
+                child: Icon(Icons.more_horiz),
+              ),
+              onSelected: widget.onSelected,
+              itemBuilder: widget.itemBuilder,
+            ),
         ],
       ),
     );
