@@ -397,15 +397,24 @@ class _HomeAppBarState extends State<HomeAppBar> {
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
           value: SigninRoute,
-          child: Text('SIGN IN'),
+          child: ListTile(
+            leading: Icon(Icons.perm_identity),
+            title: Text('Sign in'),
+          ),
         ),
         PopupMenuItem(
           value: SignupRoute,
-          child: Text('SIGN UP'),
+          child: ListTile(
+            leading: Icon(Icons.open_in_browser),
+            title: Text('Sign up'),
+          ),
         ),
         PopupMenuItem(
           value: SearchRoute,
-          child: Text('SEARCH'),
+          child: ListTile(
+            leading: Icon(Icons.search),
+            title: Text('Search'),
+          ),
         ),
       ],
       onSelected: (value) {
