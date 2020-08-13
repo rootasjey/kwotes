@@ -484,7 +484,7 @@ class _ReferencesState extends State<References> {
           fontSize: 32.0,
         ),
         decoration: InputDecoration(
-          icon: Icon(Icons.edit),
+          icon: Icon(Icons.search),
           hintText: 'Search a reference...',
           border: OutlineInputBorder(
             borderSide: BorderSide.none
