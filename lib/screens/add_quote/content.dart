@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/utils/language.dart';
 
 class AddQuoteContent extends StatefulWidget {
   final Function onSaveDraft;
@@ -17,8 +18,6 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   FocusNode nameFocusNode;
   FocusNode clearFocusNode;
-
-  List<String> langs = ['en', 'fr'];
 
   final nameController = TextEditingController();
 
@@ -67,12 +66,13 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           AddQuoteInputs.quote.lang = newValue;
         });
       },
-      items: langs.map<DropdownMenuItem<String>>((value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value.toUpperCase()),
-        );
-      }).toList(),
+      items: Language.available()
+        .map<DropdownMenuItem<String>>((value) {
+          return DropdownMenuItem(
+            value: value,
+            child: Text(value.toUpperCase()),
+          );
+        }).toList(),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/utils/language.dart';
 
 class AddQuoteReference extends StatefulWidget {
   @override
@@ -16,8 +17,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   final delayStep = 1.2;
 
   String tempImgUrl = '';
-
-  List<String> langs = ['en', 'fr'];
 
   final nameFocusNode = FocusNode();
 
@@ -216,12 +215,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     AddQuoteInputs.reference.lang = newValue;
                   });
                 },
-                items: langs.map<DropdownMenuItem<String>>((value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(value.toUpperCase()),
-                  );
-                }).toList(),
+                items: Language.available()
+                  .map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(value.toUpperCase()),
+                    );
+                  }).toList(),
               ),
             ],
           ),

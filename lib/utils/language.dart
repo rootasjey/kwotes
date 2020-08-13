@@ -13,6 +13,10 @@ class Language {
   static const String english = 'English';
   static const String french = 'Français';
 
+  static List<String> available() {
+    return [en, fr];
+  }
+
   static String backend(String lang) {
     switch (lang) {
       case english:
