@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/all_topics.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/authors.dart';
 import 'package:memorare/screens/dashboard_sections.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/quotes_by_author_ref.dart';
@@ -70,6 +71,10 @@ class WebRouteHandlers {
   static Handler author = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           AuthorPage(id: params['id'][0],));
+
+  static Handler authors = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
+          Authors());
 
   static Handler authorQuotes = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>

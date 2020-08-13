@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/discover.dart';
+import 'package:memorare/components/web/discover_authors.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_quotidian.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> {
               FullPageQuotidian(),
               Topics(),
               Discover(),
+              DiscoverAuthors(),
               Footer(pageScrollController: scrollController,),
             ]),
           ),

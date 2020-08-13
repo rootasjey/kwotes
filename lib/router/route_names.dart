@@ -6,6 +6,7 @@ const String AddQuoteReferenceRoute = '/quote/add/reference';
 const String AddQuoteTopicsRoute    = '/quote/add/topics';
 const String AdminTempQuotesRoute   = '/admin/tempquotes';
 const String AuthorRoute            = '/author/:id';
+const String AuthorsRoute           = '/authors';
 const String AuthorQuotesRoute      = '/author/:id/quotes';
 const String AccountRoute           = '/account';
 const String ContactRoute           = '/contact';

@@ -187,6 +187,11 @@ class FluroRouter {
     );
 
     router.define(
+      AuthorsRoute,
+      handler: WebRouteHandlers.authors,
+    );
+
+    router.define(
       AuthorQuotesRoute,
       handler: WebRouteHandlers.authorQuotes,
     );
