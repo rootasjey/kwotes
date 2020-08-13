@@ -8,7 +8,7 @@ import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/reference_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/web/discover_card.dart';
+import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
@@ -529,7 +529,7 @@ class _ReferencesState extends State<References> {
           (BuildContext context, int index) {
             final reference = references.elementAt(index);
 
-            return DiscoverCard(
+            return ReferenceCard(
               height: 260.0,
               width: 200.0,
               id: reference.id,

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/discover_card.dart';
+import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
@@ -103,7 +103,7 @@ class _DiscoverReferencesState extends State<DiscoverReferences> {
           beginX: 130.0,
           endX: 0.0,
           delay: count,
-          child: DiscoverCard(
+          child: ReferenceCard(
             id: reference.id,
             imageUrl: reference.urls.image,
             name: reference.name,

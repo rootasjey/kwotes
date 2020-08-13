@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/discover_card.dart';
+import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/types/reference.dart';
 
@@ -99,7 +99,7 @@ class _DiscoverState extends State<Discover> {
         FadeInY(
           delay: index,
           beginY: 100.0,
-          child: DiscoverCard(
+          child: ReferenceCard(
             elevation     : 5.0,
             height        : 240.0,
             id            : reference.id,

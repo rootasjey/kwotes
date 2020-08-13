@@ -3,7 +3,7 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/router/router.dart';
 import 'package:supercharged/supercharged.dart';
 
-class DiscoverCard extends StatefulWidget {
+class ReferenceCard extends StatefulWidget {
   final double elevation;
   final double height;
   final String id;
@@ -16,7 +16,7 @@ class DiscoverCard extends StatefulWidget {
   final String type;
   final double width;
 
-  DiscoverCard({
+  ReferenceCard({
     this.elevation      = 3.0,
     this.height         = 330.0,
     this.id,
@@ -31,10 +31,10 @@ class DiscoverCard extends StatefulWidget {
   });
 
   @override
-  _DiscoverCardState createState() => _DiscoverCardState();
+  _ReferenceCardState createState() => _ReferenceCardState();
 }
 
-class _DiscoverCardState extends State<DiscoverCard> {
+class _ReferenceCardState extends State<ReferenceCard> {
   double opacity;
   double width;
   double height;

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/web/circle_author.dart';
-import 'package:memorare/components/web/discover_card.dart';
+import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
@@ -450,7 +450,7 @@ class _SearchState extends State<Search> {
       spacing: 40.0,
       runSpacing: 40.0,
       children: referencesResults.map((reference) {
-        return DiscoverCard(
+        return ReferenceCard(
           height: 230.0,
           width: 170.0,
           id: reference.id,
