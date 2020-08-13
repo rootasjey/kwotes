@@ -14,12 +14,17 @@ class QuoteRow extends StatefulWidget {
   final String quoteId;
   final Function itemBuilder;
   final Function onSelected;
+  final EdgeInsets padding;
 
   QuoteRow({
     this.quote,
     this.quoteId,
     this.itemBuilder,
     this.onSelected,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 70.0,
+      vertical: 30.0,
+    ),
   });
 
   @override
@@ -48,10 +53,7 @@ class _QuoteRowState extends State<QuoteRow> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 70.0,
-        vertical: 30.0,
-      ),
+      padding: widget.padding,
       child: Card(
         elevation: elevation,
         color: stateColors.appBackground,
