@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/discover.dart';
+import 'package:memorare/components/web/discover_references.dart';
 import 'package:memorare/components/web/discover_authors.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/full_page_quotidian.dart';
@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
             delegate: SliverChildListDelegate([
               FullPageQuotidian(),
               Topics(),
-              Discover(),
+              DiscoverReferences(),
               DiscoverAuthors(),
               Footer(pageScrollController: scrollController,),
             ]),

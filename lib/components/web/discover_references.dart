@@ -8,12 +8,12 @@ import 'package:memorare/types/reference.dart';
 
 List<Reference> _references = [];
 
-class Discover extends StatefulWidget {
+class DiscoverReferences extends StatefulWidget {
   @override
-  _DiscoverState createState() => _DiscoverState();
+  _DiscoverReferencesState createState() => _DiscoverReferencesState();
 }
 
-class _DiscoverState extends State<Discover> {
+class _DiscoverReferencesState extends State<DiscoverReferences> {
   bool isLoading = false;
 
   @override
