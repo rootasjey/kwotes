@@ -64,22 +64,17 @@ class _HomeAppBarState extends State<HomeAppBar> {
                     ),
 
                     if (widget.title.isNotEmpty)
-                      SizedBox(
-                        width: isNarrow
-                          ? 200.0
-                          : MediaQuery.of(context).size.width - 300.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Tooltip(
-                            message: widget.title,
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                widget.title,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: stateColors.foreground,
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Tooltip(
+                          message: widget.title,
+                          child: Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              widget.title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: stateColors.foreground,
                               ),
                             ),
                           ),
@@ -88,6 +83,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   ],
                 ),
               ),
+
               flexibleSpace: userSection(isNarrow),
             );
           },
@@ -126,6 +122,18 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget searchButton() {
+    return IconButton(
+      onPressed: () {
+        FluroRouter.router.navigateTo(
+          context,
+          SearchRoute,
+        );
+      },
+      icon: Icon(Icons.search),
     );
   }
 
@@ -189,8 +197,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
     if (arrStr.length > 0) {
       initials = arrStr.length > 1
-      ? arrStr.reduce((value, element) => value + element.substring(1))
-      : arrStr.first;
+        ? arrStr.reduce((value, element) => value + element.substring(1))
+        : arrStr.first;
 
       if (initials != null && initials.isNotEmpty) {
         initials = initials.substring(0, 1);
@@ -239,6 +247,19 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 ),
               )
             ),
+
+          const PopupMenuItem(
+            value: SearchRoute,
+            child: ListTile(
+              leading: Icon(Icons.search),
+              title: Text(
+                'Search',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            )
+          ),
 
           const PopupMenuItem(
             value: FavouritesRoute,
@@ -345,6 +366,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           : children.addAll([
               userAvatar(),
               addNewQuoteButton(),
+              searchButton(),
             ]);
 
       } else {
@@ -352,7 +374,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ? children.add(userSigninMenu())
           : children.addAll([
               signinButton(),
-              signupButton()
+              signupButton(),
+              searchButton(),
             ]);
       }
 
@@ -379,6 +402,10 @@ class _HomeAppBarState extends State<HomeAppBar> {
         PopupMenuItem(
           value: SignupRoute,
           child: Text('SIGN UP'),
+        ),
+        PopupMenuItem(
+          value: SearchRoute,
+          child: Text('SEARCH'),
         ),
       ],
       onSelected: (value) {

@@ -292,6 +292,11 @@ class FluroRouter {
     );
 
     router.define(
+      SearchRoute,
+      handler: WebRouteHandlers.search,
+    );
+
+    router.define(
       SigninRoute,
       handler: WebRouteHandlers.signin,
     );
