@@ -35,11 +35,11 @@ class DiscoverCard extends StatefulWidget {
 }
 
 class _DiscoverCardState extends State<DiscoverCard> {
-  double opacity = 0.5;
+  double opacity;
   double width;
   double height;
   double elevation;
-  double textOpacity = 0.0;
+  double textOpacity;
   EdgeInsetsGeometry assetImgPadding;
 
   @override
@@ -47,6 +47,8 @@ class _DiscoverCardState extends State<DiscoverCard> {
     super.initState();
 
     setState(() {
+      opacity = 0.5;
+      textOpacity = 0.0;
       width = widget.width;
       height = widget.height;
       elevation = widget.elevation;
