@@ -157,22 +157,31 @@ class _ReferenceCardState extends State<ReferenceCard> {
   }
 
   Widget name() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: SizedBox(
-        width: widget.width - 30.0,
-        child: Opacity(
-          opacity: 0.6,
-          child: Text(
-            widget.name,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: widget.titleFontSize,
-            ),
+    Widget sizedBox = SizedBox(
+      width: widget.width - 30.0,
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          widget.name,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: widget.titleFontSize,
           ),
         ),
       ),
+    );
+
+    if (widget.name.length > 12) {
+      sizedBox = Tooltip(
+        message: widget.name,
+        child: sizedBox,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: sizedBox,
     );
   }
 
