@@ -90,7 +90,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       return Column(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.height - 100.0,
+            height: MediaQuery.of(context).size.height,
             child: Stack(
               children: <Widget>[
                 Padding(
