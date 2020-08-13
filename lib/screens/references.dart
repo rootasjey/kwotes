@@ -485,7 +485,7 @@ class _ReferencesState extends State<References> {
         ),
         decoration: InputDecoration(
           icon: Icon(Icons.search),
-          hintText: 'Search a reference...',
+          hintText: 'Search reference...',
           border: OutlineInputBorder(
             borderSide: BorderSide.none
           ),
