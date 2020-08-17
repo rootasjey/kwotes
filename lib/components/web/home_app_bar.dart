@@ -46,6 +46,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   left: leftPadding,
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     if (widget.automaticallyImplyLeading)
                       Padding(
@@ -64,27 +66,29 @@ class _HomeAppBarState extends State<HomeAppBar> {
                     ),
 
                     if (widget.title.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Tooltip(
-                          message: widget.title,
-                          child: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              widget.title,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: stateColors.foreground,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Tooltip(
+                            message: widget.title,
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                widget.title,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: stateColors.foreground,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
+
+                    userSection(isNarrow),
                   ],
                 ),
               ),
-
-              flexibleSpace: userSection(isNarrow),
             );
           },
         );
