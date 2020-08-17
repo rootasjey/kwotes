@@ -82,10 +82,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
     return IconButton(
       iconSize: 35.0,
       color: Colors.yellow.shade700,
-      icon: Opacity(
-        opacity: .6,
-        child: Icon(Icons.help)
-      ),
+      icon: Icon(Icons.help),
       onPressed: () {
         showModalBottomSheet(
           context: context,
