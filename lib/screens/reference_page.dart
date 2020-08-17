@@ -351,7 +351,7 @@ class ReferencePageState extends State<ReferencePage> {
       runSpacing: 20.0,
       children: <Widget>[
         if (urls.website.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.0,
             name: 'Website',
             url: urls.website,
@@ -361,7 +361,7 @@ class ReferencePageState extends State<ReferencePage> {
         if (urls.wikipedia.isNotEmpty)
           Observer(
             builder: (_) {
-              return linkCircleButton(
+              return linkSquareButton(
                 delay: 1.2,
                 name: 'Wikipedia',
                 url: urls.wikipedia,
@@ -372,7 +372,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.amazon.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.2,
             name: 'Amazon',
             url: urls.amazon,
@@ -380,7 +380,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.facebook.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.4,
             name: 'Facebook',
             url: urls.facebook,
@@ -388,7 +388,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.netflix.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.6,
             name: 'Netflix',
             url: urls.netflix,
@@ -396,7 +396,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.primeVideo.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.8,
             name: 'Prime Video',
             url: urls.primeVideo,
@@ -404,7 +404,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.twitch.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.0,
             name: 'Twitch',
             url: urls.twitch,
@@ -412,7 +412,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.twitter.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.2,
             name: 'Twitter',
             url: urls.twitter,
@@ -420,7 +420,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
 
         if (urls.youtube.isNotEmpty)
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.4,
             name: 'Youtube',
             url: urls.youtube,
@@ -454,7 +454,7 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget linkCircleButton({
+  Widget linkSquareButton({
     double delay = 0.0,
     String name,
     String url,
@@ -466,17 +466,20 @@ class ReferencePageState extends State<ReferencePage> {
       delay: delay,
       child: Tooltip(
         message: name,
-        child: Material(
-          elevation: 4.0,
-          shape: CircleBorder(),
-          clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            onTap: () => launch(url),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Image.network(
-                imageUrl,
-                width: 30.0,
+        child: SizedBox(
+          height: 80.0,
+          width: 80.0,
+          child: Card(
+            elevation: 4.0,
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: () => launch(url),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Image.asset(
+                  imageUrl,
+                  width: 30.0,
+                ),
               ),
             ),
           ),

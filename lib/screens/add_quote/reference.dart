@@ -237,7 +237,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         spacing: 20.0,
         runSpacing: 20.0,
         children: <Widget>[
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.0,
             name: 'Website',
             active: AddQuoteInputs.reference.urls.website.isNotEmpty,
@@ -257,7 +257,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
           Observer(
             builder: (_) {
-              return linkCircleButton(
+              return linkSquareButton(
                 delay: 1.2,
                 name: 'Wikipedia',
                 active: AddQuoteInputs.reference.urls.wikipedia.isNotEmpty,
@@ -277,7 +277,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               },
             ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.4,
             name: 'Amazon',
             imageUrl: 'assets/images/amazon.png',
@@ -295,7 +295,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.6,
             name: 'Facebook',
             imageUrl: 'assets/images/facebook.png',
@@ -313,7 +313,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 1.8,
             name: 'Netflix',
             imageUrl: 'assets/images/netflix.png',
@@ -331,7 +331,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.0,
             name: 'Prime Video',
             imageUrl: 'assets/images/prime-video.png',
@@ -349,7 +349,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.2,
             name: 'Twitch',
             imageUrl: 'assets/images/twitch.png',
@@ -367,7 +367,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.4,
             name: 'Twitter',
             imageUrl: 'assets/images/twitter.png',
@@ -385,7 +385,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
 
-          linkCircleButton(
+          linkSquareButton(
             delay: 2.6,
             name: 'YouTube',
             imageUrl: 'assets/images/youtube.png',
@@ -407,7 +407,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget linkCircleButton({
+  Widget linkSquareButton({
     bool active = false,
     double delay = 0.0,
     String imageUrl,
@@ -420,19 +420,22 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       delay: delay,
       child: Tooltip(
         message: name,
-        child: Material(
-          elevation: active
+        child: SizedBox(
+          height: 80.0,
+          width: 80.0,
+          child: Card(
+            elevation: active
             ? 4.0
             : 0.0,
-          shape: CircleBorder(),
-          clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Image.network(
-                imageUrl,
-                width: 30.0,
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Image.asset(
+                  imageUrl,
+                  width: 30.0,
+                ),
               ),
             ),
           ),
