@@ -39,7 +39,7 @@ class WebRouteHandlers {
 
   static Handler about = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          _layout(About()));
+          About());
 
   static Handler account = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
