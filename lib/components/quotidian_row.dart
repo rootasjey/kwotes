@@ -30,8 +30,15 @@ class _QuotidianRowState extends State<QuotidianRow> {
     super.initState();
     final topicColor = appTopicsColors.find(widget.quotidian.quote.topics.first);
 
+    if (topicColor == null) {
+      debugPrint("""Invalid topic for quote ${widget.quotidian.quote.id},
+        topic: ${widget.quotidian.quote.topics.first}""");
+    }
+
     setState(() {
-      iconHoverColor = Color(topicColor.decimal);
+      iconHoverColor = topicColor?.decimal != null
+        ? Color(topicColor.decimal)
+        : stateColors.primary;
     });
   }
 
