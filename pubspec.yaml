@@ -83,6 +83,7 @@ flutter:
     - assets/images/app-icon-32.png
     - assets/images/app-icon-512.png
     - assets/images/app-icon-64.png
+    - assets/images/app-icon-text.png
     - assets/images/boy-dark.png
     - assets/images/boy-light.png
     - assets/images/delete-user-dark.png
