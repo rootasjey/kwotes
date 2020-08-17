@@ -11,8 +11,10 @@ import 'package:url_launcher/url_launcher.dart';
 class Footer extends StatefulWidget {
   final ScrollController pageScrollController;
   final bool closeModalOnNav;
+  final bool autoNavToHome;
 
   Footer({
+    this.autoNavToHome = true,
     this.pageScrollController,
     this.closeModalOnNav = false,
   });
@@ -259,6 +261,8 @@ class _FooterState extends State<Footer> {
         duration: Duration(seconds: 1),
         curve: Curves.easeOut,
       );
+    } else if (widget.autoNavToHome) {
+      FluroRouter.router.navigateTo(context, RootRoute);
     }
 
     showSnack(
