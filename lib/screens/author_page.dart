@@ -232,7 +232,7 @@ class _AuthorPageState extends State<AuthorPage> {
             onTap: () => launch(url),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Image.network(
+              child: Image.asset(
                 imageUrl,
                 width: 30.0,
               ),
