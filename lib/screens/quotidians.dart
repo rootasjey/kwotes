@@ -48,8 +48,14 @@ class QuotidiansState extends State<Quotidians> {
   initState() {
     super.initState();
     checkAuth(context: context);
-    getSavedPros();
+    initProps();
     fetch();
+  }
+
+  void initProps() {
+    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -187,6 +193,10 @@ class QuotidiansState extends State<Quotidians> {
                     onChanged: (String newLang) {
                       lang = newLang;
                       fetch();
+                      appLocalStorage.setPageLang(
+                        lang: lang,
+                        pageRoute: pageRoute,
+                      );
                     },
                     items: ['en', 'fr'].map((String value) {
                       return DropdownMenuItem(
@@ -811,12 +821,6 @@ class QuotidiansState extends State<Quotidians> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void getSavedPros() {
-    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void showQuoteSheet({Quotidian quotidian}) {
