@@ -37,8 +37,44 @@
     <img src="./screenshots/web_badge.png" title="Web" width="200"/>
   </a>
 </span>
+<br>
+<br>
+<br>
 
-# Quickstart
+# Table of Contents
+
+* [Presentation](#presentation)
+* [Add a quote](#add-a-quote)
+* [Roadmap](#roadmap)
+* [Contribute](#contribute)
+* [License](#license)
+* [Privacy Policy](#privacy-policy)
+* [Help Center](#help-center)
+* [Screenshots](#screenshots)
+
+# Presentation
+
+Out Of Context is a quotes app and service delivering one quote each day. It's available on multiplatform and has multilanguage. It only support English & French for now.
+
+# Add a quote
+
+You can freely add a quote to the app after creating an account. You can only add one quote per day but you can save the excedent as drafts.
+
+Quotes are manually validated and can be rejected for various reasons:
+
+* Hard to understand due to missing or partial information
+* Strong language or offensive words
+* Too ordinary (the sentence don't have any particularity - e.g.: The sun is red)
+
+Adding an author or a reference is highly appreciated. It helps to better understand the quote and it's funnier.
+
+# Roadmap
+
+You can check the roadmap there: [Roadmap](https://roadmap.outofcontext.app)
+
+# Contribute
+
+## Quickstart
 
 > ⚠️ This project is in early development stage so you may find bugs. The developer part hasn't been built yet, so you won't be able to contribute to it at the moment without explicit authorization.
 
@@ -77,10 +113,6 @@ git clone https://github.com/memorare/mobile.git
 flutter run lib/main.dart
 ```
 
-# Contribute
-
-You won't be able to contribute to this project at the moment without explicit authorization due to the early development stage and the missing developers section.
-
 ## Code styles
 
 Repository code styles for better structure and reading.
@@ -106,7 +138,7 @@ class _DashboardState extends State<Dashboard> {
   * Custom methods which return a widget
   * Other functions (e.g. auth functions, fetch data, ...)
 
-# Licence
+# License
 
 Mozilla Public License 2.0.
 
