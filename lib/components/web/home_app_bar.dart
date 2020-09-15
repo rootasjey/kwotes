@@ -137,6 +137,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
           SearchRoute,
         );
       },
+      color: stateColors.foreground,
       icon: Icon(Icons.search),
     );
   }
