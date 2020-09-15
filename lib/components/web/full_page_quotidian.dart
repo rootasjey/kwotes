@@ -496,6 +496,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void fetchIsFav({DateTime updatedAt}) async {
+    if (quotidian == null) {
+      return;
+    }
+
     final isCurrentFav = await isFavourite(
       quoteId: quotidian.quote.id,
     );

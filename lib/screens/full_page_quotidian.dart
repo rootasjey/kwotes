@@ -370,7 +370,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void fetchIsFav() async {
-    quotidian.quote.starred = await isFavourite(quoteId: quotidian.quote.id);
+    if (quotidian == null) {
+      return;
+    }
+
+    quotidian.quote.starred = await isFavourite(
+      quoteId: quotidian.quote.id,
+    );
   }
 
   void fetchQuotidian() async {
