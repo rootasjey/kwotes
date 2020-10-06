@@ -78,7 +78,6 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-    - assets/api.json
     - assets/images/amazon.png
     - assets/images/app-icon-32.png
     - assets/images/app-icon-512.png
