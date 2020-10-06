@@ -8,7 +8,9 @@ import 'package:memorare/state/colors.dart';
 class Home extends StatefulWidget {
   final int initialIndex;
 
-  Home({this.initialIndex = 0,});
+  Home({
+    this.initialIndex = 0,
+  });
 
   @override
   _HomeState createState() => _HomeState();
@@ -47,16 +49,22 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb_outline,),
-            title: Text('Discover',),
+            icon: Icon(
+              Icons.lightbulb_outline,
+            ),
+            label: 'Discover',
           ),
           BottomNavigationBarItem(
-            icon: Icon(IconsMore.tags,),
-            title: Text('Topics',),
+            icon: Icon(
+              IconsMore.tags,
+            ),
+            label: 'Topics',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.perm_identity,),
-            title: Text('Account',),
+            icon: Icon(
+              Icons.perm_identity,
+            ),
+            label: 'Account',
           ),
         ],
         currentIndex: _selectedIndex,
