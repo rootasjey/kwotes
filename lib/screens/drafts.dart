@@ -11,7 +11,6 @@ import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -20,22 +19,24 @@ import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
+import 'add_quote/steps.dart';
+
 class Drafts extends StatefulWidget {
   @override
   _DraftsState createState() => _DraftsState();
 }
 
 class _DraftsState extends State<Drafts> {
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  String lang         = 'en';
-  int limit           = 30;
-  int order           = -1;
-  bool descending     = true;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  String lang = 'en';
+  int limit = 30;
+  int order = -1;
+  bool descending = true;
 
-  final pageRoute     = DraftsRoute;
+  final pageRoute = DraftsRoute;
 
   List<TempQuote> drafts = [];
   List<TempQuote> offlineDrafts = [];
@@ -51,9 +52,7 @@ class _DraftsState extends State<Drafts> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: body()
-    );
+    return Scaffold(body: body());
   }
 
   Widget appBar() {
@@ -71,15 +70,16 @@ class _DraftsState extends State<Drafts> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -91,7 +91,6 @@ class _DraftsState extends State<Drafts> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -99,15 +98,15 @@ class _DraftsState extends State<Drafts> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -128,31 +127,31 @@ class _DraftsState extends State<Drafts> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget bodyListContent() {
@@ -174,28 +173,28 @@ class _DraftsState extends State<Drafts> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.edit,
-                    size: 60.0,
-                    color: Color(0xFFFF005C),
-                  ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.edit,
+                  size: 60.0,
+                  color: Color(0xFFFF005C),
                 ),
-                title: 'No drafts',
-                subtitle: 'You can save them when you are not ready to propose your quotes.',
-                onRefresh: () => fetch(),
               ),
+              title: 'No drafts',
+              subtitle:
+                  'You can save them when you are not ready to propose your quotes.',
+              onRefresh: () => fetch(),
             ),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -243,7 +242,10 @@ class _DraftsState extends State<Drafts> {
               }
 
               if (value == 'delete') {
-                showDeleteDialog(draft: draft, index: index,);
+                showDeleteDialog(
+                  draft: draft,
+                  index: index,
+                );
                 return;
               }
             },
@@ -257,12 +259,11 @@ class _DraftsState extends State<Drafts> {
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 150.0),
-            child:  LoadingAnimation(),
-          ),
-        ]
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
@@ -319,9 +320,7 @@ class _DraftsState extends State<Drafts> {
             leading: Icon(Icons.delete),
             title: Text(
               'Delete',
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -331,9 +330,7 @@ class _DraftsState extends State<Drafts> {
             leading: Icon(Icons.edit),
             title: Text(
               'Edit',
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -357,12 +354,12 @@ class _DraftsState extends State<Drafts> {
       }
 
       final snapColl = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('drafts')
-        .orderBy('createdAt', descending: descending)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('drafts')
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
 
       if (snapColl.documents.isEmpty) {
         setState(() {
@@ -388,7 +385,6 @@ class _DraftsState extends State<Drafts> {
         hasErrors = false;
         hasNext = snapColl.documents.length == limit;
       });
-
     } catch (error) {
       debugPrint(error.toString());
       hasErrors = true;
@@ -396,7 +392,9 @@ class _DraftsState extends State<Drafts> {
   }
 
   Future fetchMore() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
 
     setState(() {
       isLoadingMore = true;
@@ -410,13 +408,13 @@ class _DraftsState extends State<Drafts> {
       }
 
       final snapColl = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('drafts')
-        .startAfterDocument(lastDoc)
-        .orderBy('createdAt', descending: descending)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('drafts')
+          .startAfterDocument(lastDoc)
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
 
       if (snapColl.documents.isEmpty) {
         setState(() {
@@ -442,7 +440,6 @@ class _DraftsState extends State<Drafts> {
         hasErrors = false;
         hasNext = snapColl.documents.length == limit;
       });
-
     } catch (error) {
       debugPrint(error.toString());
       hasErrors = true;
@@ -463,8 +460,7 @@ class _DraftsState extends State<Drafts> {
 
     if (draft.isOffline) {
       success = deleteOfflineDraft(createdAt: draft.createdAt.toString());
-    }
-    else {
+    } else {
       success = await deleteDraft(
         context: context,
         draft: draft,
@@ -499,7 +495,10 @@ class _DraftsState extends State<Drafts> {
         }
 
         if (value == 'delete') {
-          showDeleteDialog(draft: draft, index: index,);
+          showDeleteDialog(
+            draft: draft,
+            index: index,
+          );
           return;
         }
       },
@@ -525,80 +524,81 @@ class _DraftsState extends State<Drafts> {
     AddQuoteInputs.draft = draft;
     AddQuoteInputs.populateWithTempQuote(draft);
 
-    await FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
 
     fetch();
   }
 
   void showDeleteDialog({TempQuote draft, int index}) {
     showDialog(
-    context: context,
-    builder: (context) {
-      return SimpleDialog(
-        title: Text(
-          'Confirm deletion?',
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 40.0,
-        ),
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text(
+              'Confirm deletion?',
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 40.0,
+            ),
             children: <Widget>[
-              RaisedButton(
-                onPressed: () {
-                  FluroRouter.router.pop(context);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(3.0),
-                  ),
-                ),
-                color: stateColors.softBackground,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 15.0,
-                  ),
-                  child: Text(
-                    'NO',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3.0),
+                      ),
+                    ),
+                    color: stateColors.softBackground,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'NO',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(padding: const EdgeInsets.only(left: 15.0)),
-              RaisedButton(
-                onPressed: () {
-                  FluroRouter.router.pop(context);
-                  deleteAction(draft: draft, index: index);
-                },
-                color: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(3.0),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 15.0,
-                  ),
-                  child: Text(
-                    'YES',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  Padding(padding: const EdgeInsets.only(left: 15.0)),
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      deleteAction(draft: draft, index: index);
+                    },
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'YES',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
-          ),
-        ],
-      );
-    });
+          );
+        });
   }
 }

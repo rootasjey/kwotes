@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/temp_quote.dart';
+
+import '../screens/author_page.dart';
 
 class TempQuoteRow extends StatefulWidget {
   final TempQuote quote;
@@ -61,13 +61,9 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
         child: InkWell(
           onTap: widget.onTap,
           onHover: (isHover) {
-            elevation = isHover
-              ? 2.0
-              : 0.0;
+            elevation = isHover ? 2.0 : 0.0;
 
-            iconColor = isHover
-              ? iconHoverColor
-              : null;
+            iconColor = isHover ? iconHoverColor : null;
 
             setState(() {});
           },
@@ -81,55 +77,65 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                     padding: const EdgeInsets.only(right: 15.0),
                     child: Tooltip(
                       message: quote.isOffline
-                        ? 'Saved only locally'
-                        : 'Saved online',
+                          ? 'Saved only locally'
+                          : 'Saved online',
                       child: ClipOval(
                         child: Material(
-                          color: quote.isOffline
-                            ? Colors.red
-                            : Colors.green,
+                          color: quote.isOffline ? Colors.red : Colors.green,
                           child: InkWell(
-                            child: SizedBox(width: 15, height: 15,),
+                            child: SizedBox(
+                              width: 15,
+                              height: 15,
+                            ),
                             onTap: () {
                               final text = quote.isOffline
-                                ? "This quote is saved in your device's offline storage. You can save it in the cloud after an edit to prevent data loss."
-                                : "This quote is saved in the cloud so you can edit it on any other device.";
+                                  ? "This quote is saved in your device's offline storage. You can save it in the cloud after an edit to prevent data loss."
+                                  : "This quote is saved in the cloud so you can edit it on any other device.";
 
                               showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Row(
-                                      children: <Widget>[
-                                        Icon(Icons.info, color: Colors.blue,),
-                                        Padding(padding: const EdgeInsets.only(right: 15.0,)),
-                                        Text('Information'),
-                                      ],
-                                    ),
-                                    content: Container(
-                                      width: 300.0,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Row(
                                         children: <Widget>[
-                                          Divider(thickness: 1.0,),
-                                          Padding(padding: const EdgeInsets.only(top: 15.0,)),
-                                          Text(
-                                            text,
+                                          Icon(
+                                            Icons.info,
+                                            color: Colors.blue,
                                           ),
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                            right: 15.0,
+                                          )),
+                                          Text('Information'),
                                         ],
                                       ),
-                                    ),
-                                  );
-                                }
-                              );
+                                      content: Container(
+                                        width: 300.0,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Divider(
+                                              thickness: 1.0,
+                                            ),
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                              top: 15.0,
+                                            )),
+                                            Text(
+                                              text,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
                             },
                           ),
                         ),
                       ),
                     ),
                   ),
-
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -141,33 +147,32 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                           fontSize: 20.0,
                         ),
                       ),
-
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
-
                       GestureDetector(
                         onTap: () {
-                          if (author == null || author.id == null || author.id.isEmpty) {
+                          if (author == null ||
+                              author.id == null ||
+                              author.id.isEmpty) {
                             return;
                           }
 
-                          FluroRouter.router.navigateTo(
-                            context,
-                            AuthorRoute.replaceFirst(':id', author.id),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => AuthorPage(id: author.id)),
                           );
                         },
                         child: Opacity(
                           opacity: .5,
                           child: Text(
                             author == null || author.name.isEmpty
-                            ? ''
-                            : author.name,
+                                ? ''
+                                : author.name,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 SizedBox(
                   width: 50.0,
                   child: Column(
@@ -178,8 +183,11 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                         icon: Opacity(
                           opacity: .6,
                           child: iconColor != null
-                            ? Icon(Icons.more_vert, color: iconColor,)
-                            : Icon(Icons.more_vert),
+                              ? Icon(
+                                  Icons.more_vert,
+                                  color: iconColor,
+                                )
+                              : Icon(Icons.more_vert),
                         ),
                         onSelected: widget.onSelected,
                         itemBuilder: widget.itemBuilder,

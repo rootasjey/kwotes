@@ -6,12 +6,22 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/admin_temp_quotes.dart';
+import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/quotes_lists.dart';
+import 'package:memorare/screens/quotidians.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/temp_quotes.dart';
+import 'package:memorare/screens/favourites.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
+
+import '../add_quote/steps.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -39,9 +49,7 @@ class _DashboardState extends State<Dashboard> {
       child: Column(
         children: <Widget>[
           NavBackHeader(),
-
           greetings(),
-
           Padding(
             padding: const EdgeInsets.only(top: 40.0),
             child: SizedBox(
@@ -55,7 +63,6 @@ class _DashboardState extends State<Dashboard> {
                     beginX: 50.0,
                     child: signOutButton(),
                   ),
-
                   FadeInX(
                     delay: 1.0,
                     beginX: 50.0,
@@ -65,11 +72,8 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           cardsList(),
-
-          if (canManage)
-            adminCardLists(),
+          if (canManage) adminCardLists(),
         ],
       ),
     );
@@ -82,36 +86,35 @@ class _DashboardState extends State<Dashboard> {
         width: 700.0,
         height: 200.0,
         child: Card(
-          color: Color(0xFF414042),
-          child: InkWell(
-            onTap: () {
-              FluroRouter.router.navigateTo(context, AccountRoute);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(60.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      'Account settings',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
+            color: Color(0xFF414042),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Account()));
+              },
+              child: Container(
+                padding: const EdgeInsets.all(60.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                      size: 40.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        'Account settings',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-        ),
+            )),
       ),
     );
   }
@@ -130,7 +133,8 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 AddQuoteInputs.clearAll();
                 AddQuoteInputs.navigatedFromPath = 'dashboard';
-                FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
               },
               icon: Icon(
                 Icons.add,
@@ -138,7 +142,6 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Opacity(
@@ -165,12 +168,10 @@ class _DashboardState extends State<Dashboard> {
                 thickness: 1.0,
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Text('ADMIN'),
             ),
-
             SizedBox(
               width: 100.0,
               child: Divider(
@@ -179,9 +180,9 @@ class _DashboardState extends State<Dashboard> {
             ),
           ],
         ),
-
-        Padding(padding: const EdgeInsets.only(top: 20.0),),
-
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+        ),
         Wrap(
           spacing: 20.0,
           runSpacing: 20.0,
@@ -191,7 +192,8 @@ class _DashboardState extends State<Dashboard> {
               beginY: 50.0,
               child: itemCard(
                 color: Color(0xFF00CF91),
-                onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => AdminQuotes())),
                 icon: Icon(
                   Icons.cloud_done,
                   color: Colors.white,
@@ -207,13 +209,13 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-
             FadeInY(
               delay: 2.0,
               beginY: 50.0,
               child: itemCard(
                 color: Color(0xFFFFAF50),
-                onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Quotidians())),
                 icon: Icon(
                   Icons.wb_sunny,
                   color: Colors.white,
@@ -229,13 +231,13 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-
             FadeInY(
               delay: 2.0,
               beginY: 50.0,
               child: itemCard(
                 color: Color(0xFF2E3F7F),
-                onTap: () => FluroRouter.router.navigateTo(context, AdminTempQuotesRoute),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
                 icon: Icon(
                   Icons.timelapse,
                   color: Colors.white,
@@ -272,7 +274,8 @@ class _DashboardState extends State<Dashboard> {
             beginY: 50.0,
             child: itemCard(
               color: Color(0xFFFF005C),
-              onTap: () => FluroRouter.router.navigateTo(context, FavouritesRoute),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Favourites())),
               icon: Icon(
                 Icons.favorite,
                 color: Colors.white,
@@ -288,13 +291,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           FadeInY(
             delay: 2.10,
             beginY: 50.0,
             child: itemCard(
               color: Color(0xFF0260E8),
-              onTap: () => FluroRouter.router.navigateTo(context, ListsRoute),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => QuotesLists())),
               icon: Icon(
                 Icons.list,
                 color: Colors.white,
@@ -310,13 +313,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           FadeInY(
             delay: 2.25,
             beginY: 50.0,
             child: itemCard(
               color: Color(0xFF2E3F7F),
-              onTap: () => FluroRouter.router.navigateTo(context, TempQuotesRoute),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => MyTempQuotes())),
               icon: Icon(
                 Icons.timelapse,
                 color: Colors.white,
@@ -332,13 +335,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           FadeInY(
             delay: 2.5,
             beginY: 50.0,
             child: itemCard(
               color: Color(0xFF00CF91),
-              onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => MyPublishedQuotes())),
               icon: Icon(
                 Icons.cloud_done,
                 color: Colors.white,
@@ -354,13 +357,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           FadeInY(
             delay: 2.75,
             beginY: 50.0,
             child: itemCard(
               color: Color(0xFF414042),
-              onTap: () => FluroRouter.router.navigateTo(context, DraftsRoute),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Drafts())),
               icon: Icon(
                 Icons.edit,
                 color: Colors.white,
@@ -376,13 +379,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           FadeInY(
             delay: 2.95,
             beginY: 50.0,
             child: itemCard(
               color: Color(0xFF414042),
-              onTap: () => FluroRouter.router.navigateTo(context, AccountRoute),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Account())),
               icon: Icon(
                 Icons.settings,
                 color: Colors.white,
@@ -428,7 +431,6 @@ class _DashboardState extends State<Dashboard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 icon,
-
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: text,
@@ -452,7 +454,9 @@ class _DashboardState extends State<Dashboard> {
     }
 
     if (!userState.isUserConnected) {
-      return Padding(padding: EdgeInsets.zero,);
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
     }
 
     final name = displayName != null ? displayName : email;
@@ -498,7 +502,6 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Opacity(
@@ -526,25 +529,26 @@ class _DashboardState extends State<Dashboard> {
           isCheckingAuth = false;
         });
 
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final user = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .get();
+          .collection('users')
+          .document(userAuth.uid)
+          .get();
 
-      if (!user.exists) { return; }
+      if (!user.exists) {
+        return;
+      }
 
       setState(() {
         isCheckingAuth = false;
         canManage = user.data['rights']['user:managequote'] == true;
       });
-
     } catch (error) {
       isCheckingAuth = false;
-      FluroRouter.router.navigateTo(context, SigninRoute);
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
     }
   }
 }

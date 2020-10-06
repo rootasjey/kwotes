@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/types/author.dart';
 import 'package:supercharged/supercharged.dart';
+
+import '../../screens/author_page.dart';
 
 /// A widget which displays an author's image url
 /// in an circle shape. Delivered with hover animation.
@@ -64,41 +64,39 @@ class _CircleAuthorState extends State<CircleAuthor> {
     return Stack(
       children: <Widget>[
         Positioned.fill(
-          child: isImageOk ?
-          Ink.image(
-            image: NetworkImage(author.urls.image),
-            fit: BoxFit.cover,
-          ) :
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 80.0,
-              vertical: 40.0,
-            ),
-            child: Opacity(
-              opacity: 0.6,
-              child: Icon(
-                Icons.library_books,
-                size: 60.0,
-              ),
-            ),
-          ),
+          child: isImageOk
+              ? Ink.image(
+                  image: NetworkImage(author.urls.image),
+                  fit: BoxFit.cover,
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 80.0,
+                    vertical: 40.0,
+                  ),
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Icon(
+                      Icons.library_books,
+                      size: 60.0,
+                    ),
+                  ),
+                ),
         ),
-
         Positioned.fill(
           child: InkWell(
             onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                AuthorRoute.replaceFirst(':id', author.id),
-              );
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => AuthorPage(
+                        id: author.id,
+                      )));
             },
             onHover: (isHover) {
               if (isHover) {
                 opacity = 0.0;
                 size = widget.size + 2.5;
                 elevation = widget.elevation + 2;
-              }
-              else {
+              } else {
                 opacity = 0.5;
                 size = widget.size;
                 elevation = widget.elevation;

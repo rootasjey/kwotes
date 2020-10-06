@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+
+import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/reference_page.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 
 class HorizontalCard extends StatefulWidget {
   final String authorId;
@@ -34,14 +36,16 @@ class _HorizontalCardState extends State<HorizontalCard> {
           children: <Widget>[
             Card(
               child: InkWell(
-                onTap: (widget.quoteId == null || widget.quoteId.length == 0) ?
-                null :
-                () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    QuotePageRoute.replaceFirst(':id', widget.quoteId)
-                  );
-                },
+                onTap: (widget.quoteId == null || widget.quoteId.length == 0)
+                    ? null
+                    : () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QuotePage(
+                                      quoteId: widget.quoteId,
+                                    )));
+                      },
                 child: Padding(
                   padding: EdgeInsets.all(60.0),
                   child: Text(
@@ -53,40 +57,38 @@ class _HorizontalCardState extends State<HorizontalCard> {
                 ),
               ),
             ),
-
             if (widget.authorName != null && widget.authorName.length > 0)
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: FlatButton(
                   onPressed: () {
-                    if (widget.authorId == null || widget.authorId.length == 0) {
+                    if (widget.authorId == null ||
+                        widget.authorId.length == 0) {
                       return;
                     }
 
-                    FluroRouter.router.navigateTo(
-                      context,
-                      AuthorRoute.replaceFirst(':id', widget.authorId)
-                    );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => AuthorPage(id: widget.authorId)));
                   },
                   child: Text(
                     widget.authorName,
                   ),
                 ),
               ),
-
             if (widget.referenceName != null && widget.referenceName.length > 0)
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: FlatButton(
                   onPressed: () {
-                    if (widget.referenceId == null || widget.referenceId.length == 0) {
+                    if (widget.referenceId == null ||
+                        widget.referenceId.length == 0) {
                       return;
                     }
 
-                    FluroRouter.router.navigateTo(
-                      context,
-                      ReferenceRoute.replaceFirst(':id', widget.referenceId)
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => ReferencePage(id: widget.referenceId)));
                   },
                   child: Text(
                     widget.referenceName,

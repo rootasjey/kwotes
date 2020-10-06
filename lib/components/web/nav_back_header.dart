@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/router/router.dart';
 
 class NavBackHeader extends StatelessWidget {
   final Function onLongPress;
@@ -20,17 +19,16 @@ class NavBackHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            width < 500.0 ?
-            AppIconHeader(
-              padding: const EdgeInsets.only(
-                top: 20.0,
-                bottom: 80.0,
-              ),
-            ) :
-            AppIconHeader(),
+            width < 500.0
+                ? AppIconHeader(
+                    padding: const EdgeInsets.only(
+                      top: 20.0,
+                      bottom: 80.0,
+                    ),
+                  )
+                : AppIconHeader(),
           ],
         ),
-
         Positioned(
           left: left,
           top: top,
@@ -38,7 +36,7 @@ class NavBackHeader extends StatelessWidget {
             onLongPress: onLongPress,
             child: IconButton(
               onPressed: () {
-                FluroRouter.router.pop(context);
+                Navigator.of(context).pop();
               },
               icon: Icon(Icons.arrow_back),
             ),

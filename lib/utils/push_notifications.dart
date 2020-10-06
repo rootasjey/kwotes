@@ -5,13 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:supercharged/supercharged.dart';
 
 class PushNotifications {
   static FirebaseMessaging fcm;
   static StreamSubscription _streamSubscription;
+
   /// For navigation purposes.
   static BuildContext _context;
 
@@ -23,7 +24,9 @@ class PushNotifications {
     String userUid,
     BuildContext context,
   }) async {
-    if (fcm != null) { return; }
+    if (fcm != null) {
+      return;
+    }
 
     _context = context;
     fcm = FirebaseMessaging();
@@ -33,14 +36,12 @@ class PushNotifications {
         _streamSubscription.cancel();
       }
 
-      final isOk = await fcm.requestNotificationPermissions(
-        IosNotificationSettings()
-      );
+      final isOk =
+          await fcm.requestNotificationPermissions(IosNotificationSettings());
 
       if (isOk) {
         postProcessInit(userUid: userUid);
       }
-
     } else {
       postProcessInit(userUid: userUid);
     }
@@ -49,25 +50,27 @@ class PushNotifications {
   static void postProcessInit({String userUid}) {
     fcm.configure(
       onLaunch: (Map<String, dynamic> payload) async {
-        String path = payload['data'] == null ?
-          payload['path'] : payload['data']['path'];
+        String path =
+            payload['data'] == null ? payload['path'] : payload['data']['path'];
 
         if (path != null) {
-          FluroRouter.router.navigateTo(_context, path);
+          Rerouter.push(context: _context, value: path);
         }
       },
       onMessage: (Map<String, dynamic> payload) async {
-        final payloadBody = payload['notification'] ??
-          payload['aps']['alert'];
+        final payloadBody = payload['notification'] ?? payload['aps']['alert'];
 
-        if (payloadBody == null) { return; }
+        if (payloadBody == null) {
+          return;
+        }
 
         final String title = payloadBody['title'];
         final String body = payloadBody['body'];
 
         String path = payload['path'];
 
-        if ((payload['data'] == null || payload['data'].length == 0) && path == null) {
+        if ((payload['data'] == null || payload['data'].length == 0) &&
+            path == null) {
           await Flushbar(
             duration: 10.seconds,
             icon: Icon(
@@ -84,9 +87,21 @@ class PushNotifications {
               ),
             ),
             boxShadows: <BoxShadow>[
-              BoxShadow(offset: Offset(0.0, 3.0), blurRadius: 5.0, spreadRadius: -1.0, color: _kKeyUmbraOpacity),
-              BoxShadow(offset: Offset(0.0, 6.0), blurRadius: 10.0, spreadRadius: 0.0, color: _kKeyPenumbraOpacity),
-              BoxShadow(offset: Offset(0.0, 1.0), blurRadius: 18.0, spreadRadius: 0.0, color: _kAmbientShadowOpacity),
+              BoxShadow(
+                  offset: Offset(0.0, 3.0),
+                  blurRadius: 5.0,
+                  spreadRadius: -1.0,
+                  color: _kKeyUmbraOpacity),
+              BoxShadow(
+                  offset: Offset(0.0, 6.0),
+                  blurRadius: 10.0,
+                  spreadRadius: 0.0,
+                  color: _kKeyPenumbraOpacity),
+              BoxShadow(
+                  offset: Offset(0.0, 1.0),
+                  blurRadius: 18.0,
+                  spreadRadius: 0.0,
+                  color: _kAmbientShadowOpacity),
             ],
           ).show(_context);
 
@@ -95,9 +110,9 @@ class PushNotifications {
 
         path = path ?? payload['data']['path'];
 
-        final String message = payload['data'] == null ?
-          payload['message'] :
-          payload['data']['message'];
+        final String message = payload['data'] == null
+            ? payload['message']
+            : payload['data']['message'];
 
         await Flushbar(
           duration: 10.seconds,
@@ -115,22 +130,33 @@ class PushNotifications {
             ),
           ),
           boxShadows: <BoxShadow>[
-            BoxShadow(offset: Offset(0.0, 3.0), blurRadius: 5.0, spreadRadius: -1.0, color: _kKeyUmbraOpacity),
-            BoxShadow(offset: Offset(0.0, 6.0), blurRadius: 10.0, spreadRadius: 0.0, color: _kKeyPenumbraOpacity),
-            BoxShadow(offset: Offset(0.0, 1.0), blurRadius: 18.0, spreadRadius: 0.0, color: _kAmbientShadowOpacity),
+            BoxShadow(
+                offset: Offset(0.0, 3.0),
+                blurRadius: 5.0,
+                spreadRadius: -1.0,
+                color: _kKeyUmbraOpacity),
+            BoxShadow(
+                offset: Offset(0.0, 6.0),
+                blurRadius: 10.0,
+                spreadRadius: 0.0,
+                color: _kKeyPenumbraOpacity),
+            BoxShadow(
+                offset: Offset(0.0, 1.0),
+                blurRadius: 18.0,
+                spreadRadius: 0.0,
+                color: _kAmbientShadowOpacity),
           ],
-          onTap: path != null ?
-            (_) => FluroRouter.router.navigateTo(_context, path) :
-            null,
+          onTap: path != null
+              ? (_) => Rerouter.push(context: _context, value: path)
+              : null,
         ).show(_context);
       },
       onResume: (Map<String, dynamic> payload) async {
-        String path = payload['data'] == null ?
-          payload['path'] :
-          payload['data']['path'];
+        String path =
+            payload['data'] == null ? payload['path'] : payload['data']['path'];
 
         if (path != null) {
-          FluroRouter.router.navigateTo(_context, path);
+          Rerouter.push(context: _context, value: path);
         }
       },
     );
@@ -148,20 +174,26 @@ class PushNotifications {
   }
 
   static Future saveDeviceToken(String userUid) async {
-    if (userUid == null || userUid.isEmpty) { return; }
+    if (userUid == null || userUid.isEmpty) {
+      return;
+    }
 
     final fcmToken = await fcm.getToken();
-    if (fcmToken == null) { return; }
+    if (fcmToken == null) {
+      return;
+    }
 
     try {
       final tokenRef = await Firestore.instance
-        .collection('users')
-        .document(userUid)
-        .collection('tokens')
-        .document(fcmToken)
-        .get();
+          .collection('users')
+          .document(userUid)
+          .collection('tokens')
+          .document(fcmToken)
+          .get();
 
-      if (tokenRef.exists) { return; }
+      if (tokenRef.exists) {
+        return;
+      }
 
       await tokenRef.reference.setData({
         'token': fcmToken,
@@ -169,7 +201,6 @@ class PushNotifications {
         'platform': Platform.operatingSystem,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-
     } catch (error) {
       appLocalStorage.clearUserAuthData();
     }
@@ -180,7 +211,6 @@ class PushNotifications {
       await fcm.subscribeToTopic('quotidians-mobile-$lang');
       appLocalStorage.setDeviceSubNotif(true);
       return true;
-
     } catch (error) {
       debugPrint(error.toString());
       return false;
@@ -192,7 +222,6 @@ class PushNotifications {
       await fcm.unsubscribeFromTopic('quotidians-mobile-$lang');
       appLocalStorage.setDeviceSubNotif(false);
       return true;
-
     } catch (error) {
       debugPrint(error.toString());
       return false;
@@ -202,14 +231,12 @@ class PushNotifications {
   static Future<bool> updateQuotidiansSubLang({String lang}) async {
     try {
       // Unsub from all
-      ['en', 'fr']
-        .forEach((currLang) async {
-          await fcm.unsubscribeFromTopic('quotidians-mobile-$currLang');
-        });
+      ['en', 'fr'].forEach((currLang) async {
+        await fcm.unsubscribeFromTopic('quotidians-mobile-$currLang');
+      });
 
       await fcm.subscribeToTopic('quotidians-mobile-$lang');
       return true;
-
     } catch (error) {
       debugPrint(error.toString());
       return false;

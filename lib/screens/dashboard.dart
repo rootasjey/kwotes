@@ -5,8 +5,18 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/add_quote/steps.dart';
+import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/admin_temp_quotes.dart';
+import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/quotes_lists.dart';
+import 'package:memorare/screens/quotidians.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/temp_quotes.dart';
+import 'package:memorare/screens/web/favourites.dart';
+import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -49,8 +59,11 @@ class _DashboardState extends State<Dashboard> {
             if (prevIsAuthenticated != userState.isUserConnected) {
               prevIsAuthenticated = userState.isUserConnected;
 
-              if (userState.isUserConnected) { fetchUserPP(); }
-              else { avatarUrl = ''; }
+              if (userState.isUserConnected) {
+                fetchUserPP();
+              } else {
+                avatarUrl = '';
+              }
             }
 
             return Column(
@@ -60,7 +73,6 @@ class _DashboardState extends State<Dashboard> {
                   beginY: beginY,
                   child: avatar(),
                 ),
-
                 FadeInY(
                   delay: 2,
                   beginY: beginY,
@@ -75,13 +87,12 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                 ),
-
-                userState.isUserConnected ?
-                  Column(children: authWidgets(context),) :
-                  Column(children: guestWidgets(context)),
-
-                if (canManage)
-                  ...adminWidgets(context),
+                userState.isUserConnected
+                    ? Column(
+                        children: authWidgets(context),
+                      )
+                    : Column(children: guestWidgets(context)),
+                if (canManage) ...adminWidgets(context),
               ],
             );
           }),
@@ -103,26 +114,26 @@ class _DashboardState extends State<Dashboard> {
         child: InkWell(
           child: Padding(
             padding: const EdgeInsets.all(40.0),
-            child: avatarUrl.isEmpty ?
-              Image.asset('assets/images/user-${stateColors.iconExt}.png', width: 100.0) :
-              Image.asset(path, width: 100.0),
+            child: avatarUrl.isEmpty
+                ? Image.asset('assets/images/user-${stateColors.iconExt}.png',
+                    width: 100.0)
+                : Image.asset(path, width: 100.0),
           ),
           onTap: () {
             showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return AlertDialog(
-                  content: avatarUrl.isEmpty ?
-                    Image.asset(
-                      'assets/images/user-${stateColors.iconExt}.png',
-                      width: 100.0,
-                      scale: .8,
-                    ) :
-                    Image.asset(path, width: 100.0),
-                );
-              }
-            );
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog(
+                    content: avatarUrl.isEmpty
+                        ? Image.asset(
+                            'assets/images/user-${stateColors.iconExt}.png',
+                            width: 100.0,
+                            scale: .8,
+                          )
+                        : Image.asset(path, width: 100.0),
+                  );
+                });
           },
         ),
       ),
@@ -141,13 +152,11 @@ class _DashboardState extends State<Dashboard> {
             beginX: 50.0,
             child: signoutButton(),
           ),
-
           FadeInX(
             delay: 1.5,
             beginX: 50.0,
             child: newQuoteButton(),
           ),
-
           FadeInX(
             delay: 2.0,
             beginX: 50.0,
@@ -161,7 +170,6 @@ class _DashboardState extends State<Dashboard> {
   List<Widget> authWidgets(BuildContext context) {
     return [
       actionsButtons(),
-
       Padding(
         padding: EdgeInsets.only(top: 20.0),
         child: Column(
@@ -176,37 +184,31 @@ class _DashboardState extends State<Dashboard> {
                 );
               },
             ),
-
             FadeInY(
               delay: 5.0,
               beginY: beginY,
               child: draftsButton(),
             ),
-
             FadeInY(
               delay: 6.0,
               beginY: beginY,
               child: listsButton(),
             ),
-
             FadeInY(
               delay: 7.0,
               beginY: beginY,
               child: tempQuotesButton(),
             ),
-
             FadeInY(
               delay: 8.0,
               beginY: beginY,
               child: favButton(),
             ),
-
             FadeInY(
               delay: 9.0,
               beginY: beginY,
               child: pubQuotesButton(),
             ),
-
             FadeInY(
               delay: 10.0,
               beginY: beginY,
@@ -230,40 +232,63 @@ class _DashboardState extends State<Dashboard> {
           );
         },
       ),
-
       ListTile(
         leading: Icon(Icons.question_answer, size: 30.0),
-        title: Text('All published', style: TextStyle(fontSize: 20.0),),
-        onTap: () => FluroRouter.router.navigateTo(context, QuotesRoute),
+        title: Text(
+          'All published',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AdminQuotes())),
       ),
-
       ListTile(
         leading: Icon(Icons.timelapse, size: 30.0),
-        title: Text('All in validation', style: TextStyle(fontSize: 20.0),),
-        onTap: () => FluroRouter.router.navigateTo(context, AdminTempQuotesRoute),
+        title: Text(
+          'All in validation',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
       ),
-
       ListTile(
         leading: Icon(Icons.wb_sunny, size: 30.0),
-        title: Text('Quotidians', style: TextStyle(fontSize: 20.0),),
-        onTap: () => FluroRouter.router.navigateTo(context, QuotidiansRoute),
+        title: Text(
+          'Quotidians',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => Quotidians())),
       ),
     ];
   }
 
   Widget draftsButton() {
     return ListTile(
-      leading: Icon(Icons.edit, size: 30.0,),
-      title: Text('Drafts', style: TextStyle(fontSize: 20.0),),
-      onTap: () => FluroRouter.router.navigateTo(context, DraftsRoute),
+      leading: Icon(
+        Icons.edit,
+        size: 30.0,
+      ),
+      title: Text(
+        'Drafts',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => Drafts())),
     );
   }
 
   Widget favButton() {
     return ListTile(
-      leading: Icon(Icons.favorite, size: 30.0,),
-      title: Text('Favourites', style: TextStyle(fontSize: 20.0),),
-      onTap: ()=> FluroRouter.router.navigateTo(context, FavouritesRoute,),
+      leading: Icon(
+        Icons.favorite,
+        size: 30.0,
+      ),
+      title: Text(
+        'Favourites',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => Favourites())),
     );
   }
 
@@ -274,25 +299,14 @@ class _DashboardState extends State<Dashboard> {
         beginY: beginY,
         child: signinButton(),
       ),
-
-      Divider(height: 100.0,),
-
-      FadeInY(
-        delay: 3.5,
-        beginY: beginY,
-        child: ListTile(
-          leading: Icon(Icons.wb_sunny, size: 30.0,),
-          title: Text('Quotidian', style: TextStyle(fontSize: 20.0),),
-          onTap: () => FluroRouter.router.navigateTo(context, RootRoute),
-        ),
+      Divider(
+        height: 100.0,
       ),
-
       FadeInY(
         delay: 4.0,
         beginY: beginY,
         child: settingsButton(),
       ),
-
       FadeInY(
         delay: 4.5,
         beginY: beginY,
@@ -303,17 +317,30 @@ class _DashboardState extends State<Dashboard> {
 
   Widget helpCenterButton() {
     return ListTile(
-      leading: Icon(Icons.help_outline, size: 30.0,),
-      title: Text('Help Center', style: TextStyle(fontSize: 20.0),),
+      leading: Icon(
+        Icons.help_outline,
+        size: 30.0,
+      ),
+      title: Text(
+        'Help Center',
+        style: TextStyle(fontSize: 20.0),
+      ),
       onTap: () => launch('https://help.outofcontext.app'),
     );
   }
 
   Widget listsButton() {
     return ListTile(
-      leading: Icon(Icons.list, size: 30.0,),
-      title: Text('Lists', style: TextStyle(fontSize: 20.0),),
-      onTap: () => FluroRouter.router.navigateTo(context, ListsRoute,),
+      leading: Icon(
+        Icons.list,
+        size: 30.0,
+      ),
+      title: Text(
+        'Lists',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => QuotesLists())),
     );
   }
 
@@ -331,14 +358,14 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 AddQuoteInputs.clearAll();
                 AddQuoteInputs.navigatedFromPath = 'dashboard';
-                FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
               },
               icon: Icon(
                 Icons.add,
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Opacity(
@@ -355,9 +382,16 @@ class _DashboardState extends State<Dashboard> {
 
   Widget pubQuotesButton() {
     return ListTile(
-      leading: Icon(Icons.check, size: 30.0,),
-      title: Text('Published', style: TextStyle(fontSize: 20.0),),
-      onTap: () => FluroRouter.router.navigateTo(context, PublishedQuotesRoute),
+      leading: Icon(
+        Icons.check,
+        size: 30.0,
+      ),
+      title: Text(
+        'Published',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => MyPublishedQuotes())),
     );
   }
 
@@ -373,14 +407,14 @@ class _DashboardState extends State<Dashboard> {
             clipBehavior: Clip.hardEdge,
             child: IconButton(
               onPressed: () {
-                FluroRouter.router.navigateTo(context, RootRoute);
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Home()));
               },
               icon: Icon(
                 Icons.wb_sunny,
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Opacity(
@@ -397,9 +431,16 @@ class _DashboardState extends State<Dashboard> {
 
   Widget settingsButton() {
     return ListTile(
-      leading: Icon(Icons.settings, size: 30.0,),
-      title: Text('Settings', style: TextStyle(fontSize: 20.0),),
-      onTap: () => FluroRouter.router.navigateTo(context, AccountRoute),
+      leading: Icon(
+        Icons.settings,
+        size: 30.0,
+      ),
+      title: Text(
+        'Settings',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => Account())),
     );
   }
 
@@ -410,7 +451,8 @@ class _DashboardState extends State<Dashboard> {
         builder: (context) {
           return RaisedButton(
             onPressed: () {
-              FluroRouter.router.navigateTo(context, SigninRoute);
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Signin()));
             },
             color: stateColors.softBackground,
             shape: RoundedRectangleBorder(
@@ -469,7 +511,6 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Opacity(
@@ -486,9 +527,16 @@ class _DashboardState extends State<Dashboard> {
 
   Widget tempQuotesButton() {
     return ListTile(
-      leading: Icon(Icons.timelapse, size: 30.0,),
-      title: Text('In validation', style: TextStyle(fontSize: 20.0),),
-      onTap: () => FluroRouter.router.navigateTo(context, TempQuotesRoute),
+      leading: Icon(
+        Icons.timelapse,
+        size: 30.0,
+      ),
+      title: Text(
+        'In validation',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => MyTempQuotes())),
     );
   }
 
@@ -496,16 +544,18 @@ class _DashboardState extends State<Dashboard> {
     final userAuth = await userState.userAuth;
 
     final user = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .get();
+        .collection('users')
+        .document(userAuth.uid)
+        .get();
 
     final data = user.data;
     final String imageUrl = data['urls']['image'];
 
     canManage = data['rights']['user:managequote'] ?? false;
 
-    if (avatarUrl == imageUrl) { return; }
+    if (avatarUrl == imageUrl) {
+      return;
+    }
 
     setState(() {
       avatarUrl = imageUrl;

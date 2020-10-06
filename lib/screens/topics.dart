@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
@@ -29,14 +27,11 @@ class _TopicsState extends State<Topics> {
           _topicsList.clear();
         });
 
-        Future.delayed(
-          50.milliseconds,
-          () {
-            setState(() {
-              ignoreCount = false;
-            });
-          }
-        );
+        Future.delayed(50.milliseconds, () {
+          setState(() {
+            ignoreCount = false;
+          });
+        });
 
         return null;
       },
@@ -57,7 +52,6 @@ class _TopicsState extends State<Topics> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Opacity(
@@ -71,11 +65,10 @@ class _TopicsState extends State<Topics> {
               ),
             ),
           ),
-
-          Divider(height: 60.0,),
-
+          Divider(
+            height: 60.0,
+          ),
           topicsColorsCards(),
-
           FadeInY(
             delay: 5.0,
             beginY: 100.0,
@@ -84,7 +77,8 @@ class _TopicsState extends State<Topics> {
                 padding: const EdgeInsets.only(top: 50.0),
                 child: FlatButton(
                   onPressed: () {
-                    FluroRouter.router.navigateTo(context, TopicsRoute);
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => Topics()));
                   },
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: stateColors.primary),
@@ -92,9 +86,7 @@ class _TopicsState extends State<Topics> {
                   ),
                   child: Opacity(
                     opacity: .6,
-                    child: Text(
-                      'Discover more topics'
-                    ),
+                    child: Text('Discover more topics'),
                   ),
                 ),
               ),
@@ -120,7 +112,8 @@ class _TopicsState extends State<Topics> {
             count++;
 
             String name = topicColor.name;
-            String displayName = '${name.substring(0, 1).toUpperCase()}${name.substring(1)}';
+            String displayName =
+                '${name.substring(0, 1).toUpperCase()}${name.substring(1)}';
 
             if (displayName.length > 9) {
               displayName = '${displayName.substring(0, 8)}...';
@@ -146,4 +139,4 @@ class _TopicsState extends State<Topics> {
       },
     );
   }
- }
+}

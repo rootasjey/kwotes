@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+
+import '../../screens/signin.dart';
 
 class SideBarHeader extends StatefulWidget {
   @override
@@ -14,13 +16,9 @@ class SideBarHeader extends StatefulWidget {
 class _SideBarHeaderState extends State<SideBarHeader> {
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return userState.isUserConnected
-          ? authenticatedView()
-          : guestView();
-      }
-    );
+    return Observer(builder: (context) {
+      return userState.isUserConnected ? authenticatedView() : guestView();
+    });
   }
 
   Widget authenticatedView() {
@@ -33,8 +31,9 @@ class _SideBarHeaderState extends State<SideBarHeader> {
 
             if (arrStr.length > 0) {
               initials = arrStr.length > 1
-              ? arrStr.reduce((value, element) => value + element.substring(1))
-              : arrStr.first;
+                  ? arrStr
+                      .reduce((value, element) => value + element.substring(1))
+                  : arrStr.first;
 
               if (initials != null && initials.isNotEmpty) {
                 initials = initials.substring(0, 1);
@@ -85,51 +84,41 @@ class _SideBarHeaderState extends State<SideBarHeader> {
             return;
           }
 
-          FluroRouter.router.navigateTo(
-            context,
-            value,
+          Rerouter.push(
+            context: context,
+            value: value,
           );
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           const PopupMenuItem(
-            value: RootRoute,
-            child: ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                'Home',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
+              value: RootRoute,
+              child: ListTile(
+                leading: Icon(Icons.home),
+                title: Text(
+                  'Home',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            )
-          ),
-
+              )),
           const PopupMenuItem(
             value: AccountRoute,
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
                 'Settings',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
-
           const PopupMenuItem(
             value: 'signout',
             child: ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text(
                 'Sign out',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -140,10 +129,8 @@ class _SideBarHeaderState extends State<SideBarHeader> {
       children: <Widget>[
         RaisedButton(
           onPressed: () {
-            FluroRouter.router.navigateTo(
-              context,
-              SigninRoute,
-            );
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => Signin()));
           },
           color: Colors.black12,
           shape: RoundedRectangleBorder(
@@ -168,41 +155,33 @@ class _SideBarHeaderState extends State<SideBarHeader> {
             ),
           ),
         ),
-
         Spacer(),
-
         PopupMenuButton<String>(
           icon: Icon(Icons.keyboard_arrow_down),
           tooltip: 'Menu',
           onSelected: (value) {
-            FluroRouter.router.navigateTo(
-              context,
-              value,
+            Rerouter.push(
+              context: context,
+              value: value,
             );
           },
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             const PopupMenuItem(
-              value: RootRoute,
-              child: ListTile(
-                leading: Icon(Icons.home),
-                title: Text(
-                  'Home',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
+                value: RootRoute,
+                child: ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text(
+                    'Home',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
-              )
-            ),
-
+                )),
             const PopupMenuItem(
               value: AccountRoute,
               child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text(
                   'Settings',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),

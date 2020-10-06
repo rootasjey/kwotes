@@ -8,8 +8,10 @@ import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/delete_account.dart';
+import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/edit_password.dart';
+import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -97,7 +99,6 @@ class _AccountState extends State<Account> {
                   accountActions(isUserConnected),
                 ],
               ),
-
               Column(
                 children: <Widget>[
                   Column(
@@ -158,8 +159,10 @@ class _AccountState extends State<Account> {
                       elevation: 4.0,
                       child: InkWell(
                         onTap: () {
-                          FluroRouter.router
-                              .navigateTo(context, EditPasswordRoute);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => EditPassword()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
@@ -197,15 +200,12 @@ class _AccountState extends State<Account> {
                       elevation: 4.0,
                       child: InkWell(
                         onTap: () async {
-                          await FluroRouter.router
-                              .navigateTo(context, DeleteAccountRoute);
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => DeleteAccount()));
 
                           if (!userState.isUserConnected) {
-                            FluroRouter.router.navigateTo(
-                              context,
-                              DashboardRoute,
-                              replace: true,
-                            );
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (_) => Dashboard()));
                           }
                         },
                         child: Padding(
@@ -249,20 +249,15 @@ class _AccountState extends State<Account> {
       child: Column(
         children: <Widget>[
           themeSwitcher(),
-
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 50.0,
-            )
-          ),
-
+              padding: const EdgeInsets.only(
+            bottom: 50.0,
+          )),
           backgroundTasks(),
-
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 100.0,
-            )
-          ),
+              padding: const EdgeInsets.only(
+            bottom: 100.0,
+          )),
         ],
       ),
     );
@@ -308,16 +303,16 @@ class _AccountState extends State<Account> {
                 : Image.asset(path, width: 80.0),
           ),
           onTap: isUserConnected
-            ? () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return showAvatarDialog();
-                  },
-                );
-              }
-            : null,
+              ? () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return showAvatarDialog();
+                    },
+                  );
+                }
+              : null,
         ),
       ),
     );
@@ -390,7 +385,8 @@ class _AccountState extends State<Account> {
   Widget emailButton() {
     return FlatButton(
       onPressed: () {
-        FluroRouter.router.navigateTo(context, EditEmailRoute);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => EditEmail()));
       },
       onLongPress: () {
         showDialog(
@@ -549,165 +545,165 @@ class _AccountState extends State<Account> {
 
   Future showUpdateNameDialog() {
     return showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, childSetState) {
-            return AlertDialog(
-              title: Text(
-                'Update username',
-                style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, childSetState) {
+              return AlertDialog(
+                title: Text(
+                  'Update username',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 20.0,
-              ),
-              actionsPadding: const EdgeInsets.all(10.0),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Divider(
-                      thickness: 1.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 20.0,
+                ),
+                actionsPadding: const EdgeInsets.all(10.0),
+                content: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Divider(
+                        thickness: 1.0,
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.person_outline),
-                              labelText: currentUserName.isEmpty
-                                  ? 'Display name'
-                                  : currentUserName,
-                            ),
-                            keyboardType: TextInputType.text,
-                            onChanged: (value) async {
-                              childSetState(() {
-                                newUserName = value;
-                                isCheckingName = true;
-                              });
-
-                              final isWellFormatted =
-                                  checkUsernameFormat(newUserName);
-
-                              if (!isWellFormatted) {
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.person_outline),
+                                labelText: currentUserName.isEmpty
+                                    ? 'Display name'
+                                    : currentUserName,
+                              ),
+                              keyboardType: TextInputType.text,
+                              onChanged: (value) async {
                                 childSetState(() {
-                                  isCheckingName = false;
-                                  nameErrorMessage = newUserName.length < 3
-                                      ? 'Please use at least 3 characters'
-                                      : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
+                                  newUserName = value;
+                                  isCheckingName = true;
                                 });
 
-                                return;
-                              }
+                                final isWellFormatted =
+                                    checkUsernameFormat(newUserName);
 
-                              if (nameTimer != null) {
-                                nameTimer.cancel();
-                                nameTimer = null;
-                              }
-
-                              nameTimer = Timer(1.seconds, () async {
-                                isNameAvailable =
-                                    await checkNameAvailability(newUserName);
-
-                                if (!isNameAvailable) {
+                                if (!isWellFormatted) {
                                   childSetState(() {
                                     isCheckingName = false;
-                                    nameErrorMessage =
-                                        'This name is not available';
+                                    nameErrorMessage = newUserName.length < 3
+                                        ? 'Please use at least 3 characters'
+                                        : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
                                   });
 
                                   return;
                                 }
 
-                                childSetState(() {
-                                  isCheckingName = false;
-                                  nameErrorMessage = '';
+                                if (nameTimer != null) {
+                                  nameTimer.cancel();
+                                  nameTimer = null;
+                                }
+
+                                nameTimer = Timer(1.seconds, () async {
+                                  isNameAvailable =
+                                      await checkNameAvailability(newUserName);
+
+                                  if (!isNameAvailable) {
+                                    childSetState(() {
+                                      isCheckingName = false;
+                                      nameErrorMessage =
+                                          'This name is not available';
+                                    });
+
+                                    return;
+                                  }
+
+                                  childSetState(() {
+                                    isCheckingName = false;
+                                    nameErrorMessage = '';
+                                  });
                                 });
-                              });
-                            },
-                          ),
-                          if (isCheckingName)
-                            Container(
-                              width: 230.0,
-                              padding: const EdgeInsets.only(left: 40.0),
-                              child: LinearProgressIndicator(),
+                              },
                             ),
-                          if (nameErrorMessage.isNotEmpty)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40.0, top: 5.0),
-                              child: Text(
-                                nameErrorMessage,
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 15.0,
+                            if (isCheckingName)
+                              Container(
+                                width: 230.0,
+                                padding: const EdgeInsets.only(left: 40.0),
+                                child: LinearProgressIndicator(),
+                              ),
+                            if (nameErrorMessage.isNotEmpty)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40.0, top: 5.0),
+                                child: Text(
+                                  nameErrorMessage,
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 15.0,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    childSetState(() {
-                      isCheckingName = false;
-                      nameErrorMessage = '';
-                    });
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      childSetState(() {
+                        isCheckingName = false;
+                        nameErrorMessage = '';
+                      });
 
-                    FluroRouter.router.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
-                    ),
-                    child: Text(
-                      'CANCEL',
-                      style: TextStyle(
-                        color: stateColors.foreground.withOpacity(.6),
-                        fontWeight: FontWeight.bold,
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
+                      child: Text(
+                        'CANCEL',
+                        style: TextStyle(
+                          color: stateColors.foreground.withOpacity(.6),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                RaisedButton(
-                  onPressed: isNameAvailable
-                      ? () {
-                          FluroRouter.router.pop(context);
-                          updateUsername();
-                        }
-                      : null,
-                  color: stateColors.primary,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
-                    ),
-                    child: Text(
-                      'UPDATE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                  RaisedButton(
+                    onPressed: isNameAvailable
+                        ? () {
+                            Navigator.of(context).pop();
+                            updateUsername();
+                          }
+                        : null,
+                    color: stateColors.primary,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
+                      child: Text(
+                        'UPDATE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
-        );
-      });
+                ],
+              );
+            },
+          );
+        });
   }
 
   Widget langSelect({bool isAlone = false}) {
@@ -731,7 +727,6 @@ class _AccountState extends State<Account> {
               ),
             ],
           ),
-
           Padding(
             padding: const EdgeInsets.only(left: 35.0),
             child: Row(
@@ -768,12 +763,12 @@ class _AccountState extends State<Account> {
       ),
     );
 
-    return isAlone ?
-      child :
-      SizedBox(
-        width: 250.0,
-        child: child,
-      );
+    return isAlone
+        ? child
+        : SizedBox(
+            width: 250.0,
+            child: child,
+          );
   }
 
   Widget themeSwitcher() {

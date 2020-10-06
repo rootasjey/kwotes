@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+
+import '../screens/admin_quotes.dart';
+import '../screens/web/dashboard.dart';
+import '../screens/web/home.dart';
 
 void onLongPressNavBack(BuildContext context) {
   if (AddQuoteInputs.navigatedFromPath == 'dashboard') {
-    FluroRouter.router.navigateTo(context, DashboardRoute);
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => Dashboard()));
     return;
-
   } else if (AddQuoteInputs.navigatedFromPath == 'admintempquotes') {
-    FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => AdminQuotes()));
     return;
   }
 
-  FluroRouter.router.navigateTo(context, RootRoute);
+  Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
 }

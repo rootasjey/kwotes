@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/reference.dart';
+
+import '../screens/reference_page.dart';
 
 class ReferenceRow extends StatefulWidget {
   final Reference reference;
@@ -48,20 +48,15 @@ class _ReferenceRowState extends State<ReferenceRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            // print(widget.quote.quoteId);
-            FluroRouter.router.navigateTo(
-              context,
-              ReferenceRoute.replaceFirst(':id', reference.id),
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (_) => ReferencePage(id: reference.id)),
             );
           },
           onHover: (isHover) {
-            elevation = isHover
-              ? 2.0
-              : 0.0;
+            elevation = isHover ? 2.0 : 0.0;
 
-            iconColor = isHover
-              ? iconHoverColor
-              : null;
+            iconColor = isHover ? iconHoverColor : null;
 
             setState(() {});
           },
@@ -71,9 +66,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 avatar(reference),
-
                 title(reference),
-
                 actions(),
               ],
             ),
@@ -94,8 +87,11 @@ class _ReferenceRowState extends State<ReferenceRow> {
             icon: Opacity(
               opacity: .6,
               child: iconColor != null
-                ? Icon(Icons.more_vert, color: iconColor,)
-                : Icon(Icons.more_vert),
+                  ? Icon(
+                      Icons.more_vert,
+                      color: iconColor,
+                    )
+                  : Icon(Icons.more_vert),
             ),
             onSelected: widget.onSelected,
             itemBuilder: widget.itemBuilder,
@@ -113,22 +109,19 @@ class _ReferenceRowState extends State<ReferenceRow> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(right: 40.0),
-      child: Card(
-        elevation: 4.0,
-        child: Opacity(
-          opacity: elevation > 0.0
-            ? 1.0
-            : 0.5,
-          child: Image.network(
-            reference.urls.image,
-            width: 80.0,
-            height: 100.0,
-            fit: BoxFit.cover,
+        padding: const EdgeInsets.only(right: 40.0),
+        child: Card(
+          elevation: 4.0,
+          child: Opacity(
+            opacity: elevation > 0.0 ? 1.0 : 0.5,
+            child: Image.network(
+              reference.urls.image,
+              width: 80.0,
+              height: 100.0,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   Widget title(Reference reference) {
@@ -143,9 +136,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
               fontSize: 20.0,
             ),
           ),
-
           Padding(padding: const EdgeInsets.only(top: 10.0)),
-
           if (reference.type?.primary?.isNotEmpty)
             FlatButton.icon(
               onPressed: () {},

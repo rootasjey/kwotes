@@ -7,12 +7,18 @@ import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/quotes_lists.dart';
+import 'package:memorare/screens/reference_page.dart';
+import 'package:memorare/screens/web/dashboard.dart';
+import 'package:memorare/screens/web/favourites.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
@@ -22,7 +28,9 @@ String _prevLang;
 class FullPageQuotidian extends StatefulWidget {
   final bool noAuth;
 
-  FullPageQuotidian({this.noAuth = false,});
+  FullPageQuotidian({
+    this.noAuth = false,
+  });
 
   @override
   _FullPageQuotidianState createState() => _FullPageQuotidianState();
@@ -87,44 +95,40 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     return OrientationBuilder(
       builder: (context, orientation) {
-      return Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 70.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          quoteActions(),
-
-                          Expanded(
-                            child: quoteName(
-                              screenWidth: MediaQuery.of(context).size.width,
+        return Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 70.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            quoteActions(),
+                            Expanded(
+                              child: quoteName(
+                                screenWidth: MediaQuery.of(context).size.width,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-
-                      animatedDivider(),
-
-                      authorName(),
-
-                      if (quotidian.quote.mainReference?.name != null &&
-                        quotidian.quote.mainReference.name.length > 0)
-                        referenceName(),
-                    ],
+                          ],
+                        ),
+                        animatedDivider(),
+                        authorName(),
+                        if (quotidian.quote.mainReference?.name != null &&
+                            quotidian.quote.mainReference.name.length > 0)
+                          referenceName(),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           ],
         );
       },
@@ -133,17 +137,15 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   Widget animatedDivider() {
     final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
-    final color = topicColor != null ?
-      Color(topicColor.decimal) :
-      Colors.white;
+    final color = topicColor != null ? Color(topicColor.decimal) : Colors.white;
 
     return ControlledAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
       child: Divider(
-          color: color,
-          thickness: 2.0,
+        color: color,
+        thickness: 2.0,
       ),
       builderWithChild: (context, child, value) {
         return SizedBox(
@@ -161,27 +163,25 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       tween: Tween(begin: 0.0, end: 0.8),
       builder: (context, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Opacity(
-            opacity: value,
-            child: GestureDetector(
-              onTap: () {
-                final id = quotidian.quote.author.id;
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Opacity(
+                opacity: value,
+                child: GestureDetector(
+                  onTap: () {
+                    final id = quotidian.quote.author.id;
 
-                FluroRouter.router.navigateTo(
-                  context,
-                  AuthorRoute.replaceFirst(':id', id)
-                );
-              },
-              child: Text(
-                quotidian.quote.author.name,
-                style: TextStyle(
-                  fontSize: 25.0,
-                ),
-              ),
-            )
-          )
-        );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => AuthorPage(
+                              id: id,
+                            )));
+                  },
+                  child: Text(
+                    quotidian.quote.author.name,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                    ),
+                  ),
+                )));
       },
     );
   }
@@ -192,8 +192,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(Icons.warning, size: 40.0,),
-
+          Icon(
+            Icons.warning,
+            size: 40.0,
+          ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
@@ -209,41 +211,41 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   Widget quoteActions() {
-    return Observer(
-      builder: (context) {
-        if (!userState.isUserConnected) {
-          return Padding(padding: EdgeInsets.zero,);
-        }
-
-        return Column(
-          children: <Widget>[
-            IconButton(
-              onPressed: () async {
-                if (isPrevFav) {
-                  removeQuotidianFromFav();
-                  return;
-                }
-
-                addQuotidianToFav();
-              },
-              icon: isPrevFav ?
-                Icon(Icons.favorite) :
-                Icon(Icons.favorite_border),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: IconButton(
-                onPressed: () async {
-                  shareTwitter(quote: quotidian.quote);
-                },
-                icon: Icon(Icons.share),
-              ),
-            ),
-
-            AddToListButton(quote: quotidian.quote,),
-          ],
+    return Observer(builder: (context) {
+      if (!userState.isUserConnected) {
+        return Padding(
+          padding: EdgeInsets.zero,
         );
+      }
+
+      return Column(
+        children: <Widget>[
+          IconButton(
+            onPressed: () async {
+              if (isPrevFav) {
+                removeQuotidianFromFav();
+                return;
+              }
+
+              addQuotidianToFav();
+            },
+            icon:
+                isPrevFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: IconButton(
+              onPressed: () async {
+                shareTwitter(quote: quotidian.quote);
+              },
+              icon: Icon(Icons.share),
+            ),
+          ),
+          AddToListButton(
+            quote: quotidian.quote,
+          ),
+        ],
+      );
     });
   }
 
@@ -252,10 +254,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       padding: const EdgeInsets.only(left: 60.0),
       child: GestureDetector(
         onTap: () {
-          FluroRouter.router.navigateTo(
-            context,
-            QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
-          );
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => QuotePage(quoteId: quotidian.quote.id)));
         },
         child: createHeroQuoteAnimation(
           quote: quotidian.quote,
@@ -274,10 +274,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         onTap: () {
           final id = quotidian.quote.mainReference.id;
 
-          FluroRouter.router.navigateTo(
-            context,
-            ReferenceRoute.replaceFirst(':id', id)
-          );
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => ReferencePage(id: id)));
         },
         child: Text(
           quotidian.quote.mainReference.name,
@@ -288,12 +286,11 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       ),
       builderWithChild: (context, child, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          )
-        );
+            padding: const EdgeInsets.only(top: 15.0),
+            child: Opacity(
+              opacity: value,
+              child: child,
+            ));
       },
     );
   }
@@ -318,26 +315,24 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               ),
             ),
           ),
-
           SizedBox(
             width: 50.0,
-            child: Divider(thickness: 2.0,),
+            child: Divider(
+              thickness: 2.0,
+            ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: Opacity(
               opacity: .6,
               child: InkWell(
-                onTap: () => FluroRouter.router.navigateTo(
-                  context,
-                  DashboardRoute,
-                ),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Dashboard())),
                 onHover: (isHover) {
                   setState(() {
                     dashboardLinkDecoration = isHover
-                      ? TextDecoration.underline
-                      : TextDecoration.none;
+                        ? TextDecoration.underline
+                        : TextDecoration.none;
                   });
                 },
                 child: Text(
@@ -349,7 +344,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(bottom: 60.0),
             child: PopupMenuButton<String>(
@@ -361,10 +355,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                   return;
                 }
 
-                FluroRouter.router.navigateTo(
-                  context,
-                  value,
-                );
+                Rerouter.push(context: context, value: value);
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 const PopupMenuItem(
@@ -373,81 +364,61 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                     leading: Icon(Icons.edit),
                     title: Text(
                       'Drafts',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-
                 const PopupMenuItem(
                   value: PublishedQuotesRoute,
                   child: ListTile(
                     leading: Icon(Icons.cloud_done),
                     title: Text(
                       'Published',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-
                 const PopupMenuItem(
-                  value: TempQuotesRoute,
-                  child: ListTile(
-                    leading: Icon(Icons.timelapse),
-                    title: Text(
-                      'In Validation',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
+                    value: TempQuotesRoute,
+                    child: ListTile(
+                      leading: Icon(Icons.timelapse),
+                      title: Text(
+                        'In Validation',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  )
-                ),
-
+                    )),
                 const PopupMenuItem(
                   value: AccountRoute,
                   child: ListTile(
                     leading: Icon(Icons.settings),
                     title: Text(
                       'Settings',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-
                 const PopupMenuItem(
                   value: 'signout',
                   child: ListTile(
                     leading: Icon(Icons.exit_to_app),
                     title: Text(
                       'Sign out',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-
                 const PopupMenuItem(
-                  value: 'dashboard',
-                  child: ListTile(
-                    leading: Icon(Icons.dashboard),
-                    title: Text(
-                      'Dashboard',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
+                    value: 'dashboard',
+                    child: ListTile(
+                      leading: Icon(Icons.dashboard),
+                      title: Text(
+                        'Dashboard',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  )
-                ),
+                    )),
               ],
             ),
           ),
-
           Wrap(
             spacing: 30.0,
             runSpacing: 30.0,
@@ -456,20 +427,15 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                 icon: Icons.favorite,
                 title: Text('Favourites'),
                 hoverColor: Colors.red,
-                onTap: () => FluroRouter.router.navigateTo(
-                  context,
-                  FavouritesRoute,
-                ),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Favourites())),
               ),
-
               ColoredListTile(
                 icon: Icons.list,
                 title: Text('Lists'),
                 hoverColor: Colors.blue.shade700,
-                onTap: () => FluroRouter.router.navigateTo(
-                  context,
-                  ListsRoute,
-                ),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => QuotesLists())),
               ),
             ],
           ),
@@ -479,7 +445,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void addQuotidianToFav() async {
-    setState(() { // Optimistic result
+    setState(() {
+      // Optimistic result
       isPrevFav = true;
     });
 
@@ -525,9 +492,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     try {
       final doc = await Firestore.instance
-        .collection('quotidians')
-        .document('${now.year}:$month:$day:$_prevLang')
-        .get();
+          .collection('quotidians')
+          .document('${now.year}:$month:$day:$_prevLang')
+          .get();
 
       if (!doc.exists) {
         setState(() {
@@ -541,7 +508,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         quotidian = Quotidian.fromJSON(doc.data);
         isLoading = false;
       });
-
     } catch (error, stackTrace) {
       debugPrint('error => $error');
       debugPrint(stackTrace.toString());
@@ -553,7 +519,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   }
 
   void removeQuotidianFromFav() async {
-    setState(() { // Optimistic result
+    setState(() {
+      // Optimistic result
       isPrevFav = false;
     });
 

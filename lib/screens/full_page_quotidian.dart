@@ -7,8 +7,6 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -18,6 +16,11 @@ import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/push_notifications.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
+
+import 'author_page.dart';
+import 'reference_page.dart';
+import 'web/home.dart';
+import 'web/quote_page.dart';
 
 class FullPageQuotidian extends StatefulWidget {
   @override
@@ -43,7 +46,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: OrientationBuilder(
+      body: OrientationBuilder(
         builder: (context, orientation) {
           return body();
         },
@@ -61,13 +64,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     }
 
     final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
-    final color = topicColor != null ?
-      Color(topicColor.decimal) :
-      Colors.white;
+    final color = topicColor != null ? Color(topicColor.decimal) : Colors.white;
 
-    final horizontal = MediaQuery.of(context).size.width < 600.0 ?
-      40.0 :
-      60.0;
+    final horizontal = MediaQuery.of(context).size.width < 600.0 ? 40.0 : 60.0;
 
     return RefreshIndicator(
       onRefresh: () {
@@ -96,44 +95,38 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
                     shape: CircleBorder(),
                   ),
                 ),
-
                 Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontal,
-                  vertical: 20.0,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    quoteName(
-                      screenWidth: MediaQuery.of(context).size.width,
-                      screenHeight: MediaQuery.of(context).size.height,
-                    ),
-
-                    authorDivider(color: color),
-
-                    FadeInY(
-                      beginY: 50.0,
-                      delay: 1.0,
-                      child: authorName(),
-                    ),
-
-                    if (quotidian.quote.mainReference?.name != null &&
-                      quotidian.quote.mainReference.name.length > 0)
-                      FadeInY(
-                        beginY: 100.0,
-                        delay: 2.0,
-                        child: referenceName(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontal,
+                    vertical: 20.0,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      quoteName(
+                        screenWidth: MediaQuery.of(context).size.width,
+                        screenHeight: MediaQuery.of(context).size.height,
                       ),
-                  ],
+                      authorDivider(color: color),
+                      FadeInY(
+                        beginY: 50.0,
+                        delay: 1.0,
+                        child: authorName(),
+                      ),
+                      if (quotidian.quote.mainReference?.name != null &&
+                          quotidian.quote.mainReference.name.length > 0)
+                        FadeInY(
+                          beginY: 100.0,
+                          delay: 2.0,
+                          child: referenceName(),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
               ],
             ),
           ),
-
           userActions(),
-
           Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 200.0,
@@ -165,8 +158,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
       child: Divider(
-          color: color,
-          thickness: 2.0,
+        color: color,
+        thickness: 2.0,
       ),
       builderWithChild: (context, child, value) {
         return Padding(
@@ -185,24 +178,23 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       onPressed: () {
         final id = quotidian.quote.author.id;
 
-        FluroRouter.router.navigateTo(
-          context,
-          AuthorRoute.replaceFirst(':id', id)
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => AuthorPage(
+                  id: id,
+                )));
       },
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Opacity(
-          opacity: .8,
-          child: Text(
-            quotidian.quote.author.name,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 25.0,
+          padding: const EdgeInsets.all(10.0),
+          child: Opacity(
+            opacity: .8,
+            child: Text(
+              quotidian.quote.author.name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.0,
+              ),
             ),
-          ),
-        )
-      ),
+          )),
     );
   }
 
@@ -212,8 +204,10 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(Icons.warning, size: 80.0,),
-
+          Icon(
+            Icons.warning,
+            size: 80.0,
+          ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Opacity(
@@ -227,7 +221,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 35.0),
             child: FlatButton(
@@ -256,10 +249,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   Widget quoteName({double screenWidth, double screenHeight}) {
     return GestureDetector(
       onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          QuotePageRoute.replaceFirst(':id', quotidian.quote.id),
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => QuotePage(quoteId: quotidian.quote.id)));
       },
       child: createHeroQuoteAnimation(
         isMobile: true,
@@ -277,17 +268,13 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       onPressed: () {
         final id = quotidian.quote.mainReference.id;
 
-        FluroRouter.router.navigateTo(
-          context,
-          ReferenceRoute.replaceFirst(':id', id)
-        );
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => ReferencePage(id: id)));
       },
       child: Opacity(
         opacity: .5,
         child: Text(
-          refName.length > 65 ?
-          '${refName.substring(0, 64)}...' :
-          refName,
+          refName.length > 65 ? '${refName.substring(0, 64)}...' : refName,
           style: TextStyle(
             fontSize: 16.0,
           ),
@@ -299,61 +286,59 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   Widget userActions() {
     final quote = quotidian.quote;
 
-    return Observer(
-      builder: (_) {
-        if (!hasFetchFav) {
-          hasFetchFav = true;
-          fetchIsFav();
-        }
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                onPressed: userState.isUserConnected ?
-                  () async {
-                    if (quote.starred) {
-                      removeQuoteFromFav();
-                      return;
-                    }
-
-                    addQuoteToFav();
-                } : null,
-                icon: quote.starred ?
-                  Icon(Icons.favorite) :
-                  Icon(Icons.favorite_border),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: IconButton(
-                  onPressed: () async {
-                    shareFromMobile(
-                      context: context,
-                      quote: quote,
-                    );
-                  },
-                  icon: Icon(Icons.share),
-                ),
-              ),
-
-              AddToListButton(
-                quote: quote,
-                isDisabled: !userState.isUserConnected,
-              ),
-            ],
-          ),
-        );
+    return Observer(builder: (_) {
+      if (!hasFetchFav) {
+        hasFetchFav = true;
+        fetchIsFav();
       }
-    );
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              onPressed: userState.isUserConnected
+                  ? () async {
+                      if (quote.starred) {
+                        removeQuoteFromFav();
+                        return;
+                      }
+
+                      addQuoteToFav();
+                    }
+                  : null,
+              icon: quote.starred
+                  ? Icon(Icons.favorite)
+                  : Icon(Icons.favorite_border),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: IconButton(
+                onPressed: () async {
+                  shareFromMobile(
+                    context: context,
+                    quote: quote,
+                  );
+                },
+                icon: Icon(Icons.share),
+              ),
+            ),
+            AddToListButton(
+              quote: quote,
+              isDisabled: !userState.isUserConnected,
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   void addQuoteToFav() async {
     final quote = quotidian.quote;
 
-    setState(() { // Optimistic result
+    setState(() {
+      // Optimistic result
       quote.starred = true;
     });
 
@@ -394,9 +379,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
     try {
       final doc = await Firestore.instance
-        .collection('quotidians')
-        .document('${now.year}:$month:$day:en')
-        .get();
+          .collection('quotidians')
+          .document('${now.year}:$month:$day:en')
+          .get();
 
       if (!doc.exists) {
         setState(() {
@@ -410,7 +395,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         quotidian = Quotidian.fromJSON(doc.data);
         isLoading = false;
       });
-
     } catch (error, stackTrace) {
       debugPrint('error => $error');
       debugPrint(stackTrace.toString());
@@ -436,7 +420,8 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   void removeQuoteFromFav() async {
     final quote = quotidian.quote;
 
-    setState(() { // Optimistic result
+    setState(() {
+      // Optimistic result
       quote.starred = false;
     });
 
@@ -454,9 +439,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
 
   void navToHome() {
     if (Navigator.canPop(context)) {
-      return FluroRouter.router.pop(context);
+      return Navigator.of(context).pop();
     }
 
-    FluroRouter.router.navigateTo(context, HomeRoute);
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
   }
 }

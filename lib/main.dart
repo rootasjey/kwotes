@@ -9,7 +9,6 @@ import 'package:memorare/main_web.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 
 void main() {
@@ -23,10 +22,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   bool isReady = false;
 
-  AppState() {
-    if (kIsWeb) { FluroRouter.setupWebRouter(); }
-    else { FluroRouter.setupMobileRouter(); }
-  }
+  AppState();
 
   @override
   void initState() {
@@ -103,7 +99,6 @@ class AppState extends State<App> {
 
       userState.setUserConnected();
       userState.setUserName(authResult.user.displayName);
-
     } catch (error) {
       debugPrint(error.toString());
     }

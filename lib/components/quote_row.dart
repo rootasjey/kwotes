@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
+
+import '../screens/author_page.dart';
+import '../screens/web/quote_page.dart';
 
 class QuoteRow extends StatefulWidget {
   final Quote quote;
@@ -59,20 +60,15 @@ class _QuoteRowState extends State<QuoteRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            // print(widget.quote.quoteId);
-            FluroRouter.router.navigateTo(
-              context,
-              QuotePageRoute.replaceFirst(':id', widget.quoteId),
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (_) => QuotePage(quoteId: widget.quoteId)),
             );
           },
           onHover: (isHover) {
-            elevation = isHover
-              ? 2.0
-              : 0.0;
+            elevation = isHover ? 2.0 : 0.0;
 
-            iconColor = isHover
-              ? iconHoverColor
-              : null;
+            iconColor = isHover ? iconHoverColor : null;
 
             setState(() {});
           },
@@ -92,14 +88,13 @@ class _QuoteRowState extends State<QuoteRow> {
                           fontSize: 20.0,
                         ),
                       ),
-
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
-
                       GestureDetector(
                         onTap: () {
-                          FluroRouter.router.navigateTo(
-                            context,
-                            AuthorRoute.replaceFirst(':id', widget.quote.author.id),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    AuthorPage(id: widget.quote.author.id)),
                           );
                         },
                         child: Opacity(
@@ -112,7 +107,6 @@ class _QuoteRowState extends State<QuoteRow> {
                     ],
                   ),
                 ),
-
                 SizedBox(
                   width: 50.0,
                   child: Column(
@@ -123,8 +117,11 @@ class _QuoteRowState extends State<QuoteRow> {
                         icon: Opacity(
                           opacity: .6,
                           child: iconColor != null
-                            ? Icon(Icons.more_vert, color: iconColor,)
-                            : Icon(Icons.more_vert),
+                              ? Icon(
+                                  Icons.more_vert,
+                                  color: iconColor,
+                                )
+                              : Icon(Icons.more_vert),
                         ),
                         onSelected: widget.onSelected,
                         itemBuilder: widget.itemBuilder,

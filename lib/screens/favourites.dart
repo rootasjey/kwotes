@@ -7,13 +7,14 @@ import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/snack.dart';
+
+import 'web/quote_page.dart';
 
 class Favourites extends StatefulWidget {
   @override
@@ -21,12 +22,12 @@ class Favourites extends StatefulWidget {
 }
 
 class _FavouritesState extends State<Favourites> {
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  int limit           = 30;
-  bool descending     = true;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  int limit = 30;
+  bool descending = true;
 
   ScrollController _scrollController = ScrollController();
   List<Quote> quotes = [];
@@ -48,31 +49,31 @@ class _FavouritesState extends State<Favourites> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
@@ -93,13 +94,13 @@ class _FavouritesState extends State<Favourites> {
                   padding: const EdgeInsets.only(top: 50.0),
                   child: FlatButton(
                     onPressed: () {
-                      if (quotes.length == 0) { return; }
+                      if (quotes.length == 0) {
+                        return;
+                      }
 
-                      _scrollController.animateTo(
-                        0,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutQuint
-                      );
+                      _scrollController.animateTo(0,
+                          duration: Duration(seconds: 2),
+                          curve: Curves.easeOutQuint);
                     },
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width - 60.0,
@@ -115,7 +116,6 @@ class _FavouritesState extends State<Favourites> {
                   ),
                 ),
               ),
-
               Positioned(
                 right: 20.0,
                 top: 50.0,
@@ -130,13 +130,12 @@ class _FavouritesState extends State<Favourites> {
                   },
                 ),
               ),
-
               Positioned(
                 left: 20.0,
                 top: 50.0,
                 child: IconButton(
                   onPressed: () {
-                    FluroRouter.router.pop(context);
+                    Navigator.of(context).pop();
                   },
                   tooltip: 'Back',
                   icon: Icon(Icons.arrow_back),
@@ -153,12 +152,11 @@ class _FavouritesState extends State<Favourites> {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
-            ),
-          ]
-        ),
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: LoadingAnimation(),
+          ),
+        ]),
       );
     }
 
@@ -185,25 +183,24 @@ class _FavouritesState extends State<Favourites> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.favorite_border,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.favorite_border,
+                size: 120.0,
+                color: Color(0xFFFF005C),
               ),
-              title: "You've no quote in favourites at this moment",
-              subtitle: 'They will appear when you like quotes',
-              onRefresh: () => fetch(),
             ),
+            title: "You've no quote in favourites at this moment",
+            subtitle: 'They will appear when you like quotes',
+            onRefresh: () => fetch(),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -216,16 +213,17 @@ class _FavouritesState extends State<Favourites> {
 
           return InkWell(
             onTap: () {
-              FluroRouter.router.navigateTo(
-                context,
-                QuotePageRoute.replaceFirst(':id', quote.id),
-              );
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => QuotePage(
+                        quoteId: quote.id,
+                      )));
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(padding: const EdgeInsets.only(top: 20.0),),
-
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
@@ -235,50 +233,50 @@ class _FavouritesState extends State<Favourites> {
                     ),
                   ),
                 ),
-
                 Center(
                   child: IconButton(
                     onPressed: () {
                       showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                              vertical: 60.0,
-                            ),
-                            child: Wrap(
-                              spacing: 30.0,
-                              alignment: WrapAlignment.center,
-                              children: <Widget>[
-                                IconButton(
-                                  iconSize: 40.0,
-                                  tooltip: 'Delete',
-                                  onPressed: () {
-                                    removeFav(quote);
-                                  },
-                                  icon: Opacity(
-                                    opacity: .6,
-                                    child: Icon(
-                                      Icons.delete_outline,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0,
+                                vertical: 60.0,
+                              ),
+                              child: Wrap(
+                                spacing: 30.0,
+                                alignment: WrapAlignment.center,
+                                children: <Widget>[
+                                  IconButton(
+                                    iconSize: 40.0,
+                                    tooltip: 'Delete',
+                                    onPressed: () {
+                                      removeFav(quote);
+                                    },
+                                    icon: Opacity(
+                                      opacity: .6,
+                                      child: Icon(
+                                        Icons.delete_outline,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      );
+                                ],
+                              ),
+                            );
+                          });
                     },
                     icon: Icon(
                       Icons.more_horiz,
-                      color: topicColor != null ?
-                      Color(topicColor.decimal) : stateColors.primary,
+                      color: topicColor != null
+                          ? Color(topicColor.decimal)
+                          : stateColors.primary,
                     ),
                   ),
                 ),
-
-                Padding(padding: const EdgeInsets.only(top: 10.0),),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                ),
                 Divider(),
               ],
             ),
@@ -300,16 +298,16 @@ class _FavouritesState extends State<Favourites> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('favourites')
-        .orderBy('createdAt', descending: descending)
-        .limit(30)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('favourites')
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -332,7 +330,6 @@ class _FavouritesState extends State<Favourites> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -353,17 +350,17 @@ class _FavouritesState extends State<Favourites> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('favourites')
-        .orderBy('createdAt', descending: descending)
-        .limit(30)
-        .startAfterDocument(lastDoc)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('favourites')
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .startAfterDocument(lastDoc)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -387,7 +384,6 @@ class _FavouritesState extends State<Favourites> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -402,7 +398,8 @@ class _FavouritesState extends State<Favourites> {
   Future removeFav(Quote quote) async {
     final index = quotes.indexOf(quote);
 
-    setState(() { // optimistic
+    setState(() {
+      // optimistic
       quotes.removeAt(index);
     });
 
@@ -416,7 +413,6 @@ class _FavouritesState extends State<Favourites> {
       }
 
       userState.updateFavDate();
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -426,7 +422,8 @@ class _FavouritesState extends State<Favourites> {
 
       showSnack(
         context: context,
-        message: "There was an issue while removing the quote from your favourites.",
+        message:
+            "There was an issue while removing the quote from your favourites.",
         type: SnackType.error,
       );
     }

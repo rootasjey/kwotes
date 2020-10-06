@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/quotes_list.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/user_quotes_list.dart';
@@ -21,12 +21,12 @@ class QuotesLists extends StatefulWidget {
 }
 
 class _QuotesListsState extends State<QuotesLists> {
-  bool descending     = true;
-  bool hasErrors      = false;
-  bool hasNext        = true;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  int limit           = 10;
+  bool descending = true;
+  bool hasErrors = false;
+  bool hasNext = true;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  int limit = 10;
 
   final scrollController = ScrollController();
 
@@ -34,19 +34,19 @@ class _QuotesListsState extends State<QuotesLists> {
 
   var lastDoc;
 
-  String newName            = '';
-  String newDescription     = '';
-  String newIconUrl         = '';
-  bool newIsPublic          = false;
+  String newName = '';
+  String newDescription = '';
+  String newIconUrl = '';
+  bool newIsPublic = false;
 
-  String updateName         = '';
-  String updateDescription  = '';
-  bool updateIsPublic       = false;
+  String updateName = '';
+  String updateDescription = '';
+  bool updateIsPublic = false;
 
-  String oldName            = '';
-  String oldDescription     = '';
-  bool oldIsPublic          = false;
-  final pageRoute           = ListsRoute;
+  String oldName = '';
+  String oldDescription = '';
+  bool oldIsPublic = false;
+  final pageRoute = ListsRoute;
 
   @override
   initState() {
@@ -73,31 +73,31 @@ class _QuotesListsState extends State<QuotesLists> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
@@ -115,15 +115,16 @@ class _QuotesListsState extends State<QuotesLists> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -135,7 +136,6 @@ class _QuotesListsState extends State<QuotesLists> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -143,15 +143,15 @@ class _QuotesListsState extends State<QuotesLists> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -174,12 +174,11 @@ class _QuotesListsState extends State<QuotesLists> {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 200.0),
-              child: LoadingAnimation(),
-            ),
-          ]
-        ),
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: LoadingAnimation(),
+          ),
+        ]),
       );
     }
 
@@ -214,13 +213,15 @@ class _QuotesListsState extends State<QuotesLists> {
             child: Card(
               child: InkWell(
                 onTap: () async {
-                  final mustRefresh = await FluroRouter.router.navigateTo(
-                    context,
-                    ListRoute.replaceFirst(':id', quoteList.id),
-                    transition: TransitionType.fadeIn,
-                  );
+                  final mustRefresh =
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => QuotesList(
+                                id: quoteList.id,
+                              )));
 
-                  if (mustRefresh == null) { return; }
+                  if (mustRefresh == null) {
+                    return;
+                  }
 
                   if (mustRefresh) {
                     fetch();
@@ -238,7 +239,6 @@ class _QuotesListsState extends State<QuotesLists> {
                             backgroundColor: stateColors.primary,
                             child: Icon(Icons.list, color: Colors.white),
                           ),
-
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 40.0),
@@ -267,7 +267,6 @@ class _QuotesListsState extends State<QuotesLists> {
                               ),
                             ),
                           ),
-
                           PopupMenuButton<String>(
                             onSelected: (value) {
                               if (value == 'delete') {
@@ -280,7 +279,8 @@ class _QuotesListsState extends State<QuotesLists> {
                                 return;
                               }
                             },
-                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<String>>[
                               PopupMenuItem(
                                 value: 'edit',
                                 child: ListTile(
@@ -313,63 +313,60 @@ class _QuotesListsState extends State<QuotesLists> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child:
-            Container(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: <Widget>[
-                  Opacity(
-                    opacity: .8,
-                    child: Icon(
-                      Icons.format_list_bulleted,
-                      size: 120.0,
-                      color: Color(0xFFFF005C),
-                    ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: Container(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              children: <Widget>[
+                Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.format_list_bulleted,
+                    size: 120.0,
+                    color: Color(0xFFFF005C),
                   ),
-
-                  Opacity(
-                    opacity: .8,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 60.0),
-                      child: Text(
-                        "You've created no list yet",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
+                ),
+                Opacity(
+                  opacity: .8,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 60.0),
+                    child: Text(
+                      "You've created no list yet",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25.0,
                       ),
                     ),
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
-                    child: Opacity(
-                      opacity: .6,
-                      child: Text(
-                        "You can create one by taping on the '+' button" ,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      "You can create one by taping on the '+' button",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18.0,
                       ),
                     ),
                   ),
-
-                  IconButton(
-                    onPressed: () {
-                      showCreateListDialog();
-                    },
-                    icon: Icon(Icons.add,),
-                  )
-                ],
-              ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    showCreateListDialog();
+                  },
+                  icon: Icon(
+                    Icons.add,
+                  ),
+                )
+              ],
             ),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -388,15 +385,12 @@ class _QuotesListsState extends State<QuotesLists> {
 
   void showCreateListDialog() {
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, childSetState) {
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, childSetState) {
             return SimpleDialog(
-              title: Text(
-                'Create a new list'
-              ),
+              title: Text('Create a new list'),
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -409,10 +403,8 @@ class _QuotesListsState extends State<QuotesLists> {
                       labelText: 'Name',
                       labelStyle: TextStyle(color: stateColors.primary),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: stateColors.primary,
-                          width: 2.0
-                        ),
+                        borderSide:
+                            BorderSide(color: stateColors.primary, width: 2.0),
                       ),
                     ),
                     onChanged: (newValue) {
@@ -420,7 +412,6 @@ class _QuotesListsState extends State<QuotesLists> {
                     },
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -431,10 +422,8 @@ class _QuotesListsState extends State<QuotesLists> {
                       labelText: 'Description',
                       labelStyle: TextStyle(color: stateColors.primary),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: stateColors.primary,
-                          width: 2.0
-                        ),
+                        borderSide:
+                            BorderSide(color: stateColors.primary, width: 2.0),
                       ),
                     ),
                     onChanged: (newValue) {
@@ -446,7 +435,6 @@ class _QuotesListsState extends State<QuotesLists> {
                     },
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
@@ -459,22 +447,19 @@ class _QuotesListsState extends State<QuotesLists> {
                           });
                         },
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Opacity(
                           opacity: .6,
-                          child: Text(
-                            'Is public?'
-                          ),
+                          child: Text('Is public?'),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                Divider(height: 15.0,),
-
+                Divider(
+                  height: 15.0,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -491,11 +476,9 @@ class _QuotesListsState extends State<QuotesLists> {
                           'Cancel',
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 15.0),
                       ),
-
                       RaisedButton(
                         color: stateColors.primary,
                         onPressed: () {
@@ -512,63 +495,60 @@ class _QuotesListsState extends State<QuotesLists> {
                 ),
               ],
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 
   void showDeleteListDialog(UserQuotesList quotesList) {
     final name = quotesList.name;
 
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Delete $name list?'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Opacity(
-                  opacity: 0.6,
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Delete $name list?'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      'This action is irreversible.',
+                    ),
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
                   child: Text(
-                    'This action is irreversible.',
+                    'Cancel',
                   ),
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'Cancel',
                 ),
               ),
-            ),
-            RaisedButton(
-              color: Colors.red,
-              onPressed: () {
-                deleteList(quotesList);
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.white),
+              RaisedButton(
+                color: Colors.red,
+                onPressed: () {
+                  deleteList(quotesList);
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
-      }
-    );
+            ],
+          );
+        });
   }
 
   void showEditListDialog(UserQuotesList quotesList) {
@@ -577,11 +557,10 @@ class _QuotesListsState extends State<QuotesLists> {
     updateIsPublic = quotesList.isPublic;
 
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, childSetState) {
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, childSetState) {
             return SimpleDialog(
               title: Text(
                 'Edit $updateName',
@@ -601,10 +580,8 @@ class _QuotesListsState extends State<QuotesLists> {
                       labelStyle: TextStyle(color: stateColors.primary),
                       hintText: updateName,
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: stateColors.primary,
-                          width: 2.0
-                        ),
+                        borderSide:
+                            BorderSide(color: stateColors.primary, width: 2.0),
                       ),
                     ),
                     onChanged: (newValue) {
@@ -612,7 +589,6 @@ class _QuotesListsState extends State<QuotesLists> {
                     },
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -624,10 +600,8 @@ class _QuotesListsState extends State<QuotesLists> {
                       labelStyle: TextStyle(color: stateColors.primary),
                       hintText: updateDescription,
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: stateColors.primary,
-                          width: 2.0
-                        ),
+                        borderSide:
+                            BorderSide(color: stateColors.primary, width: 2.0),
                       ),
                     ),
                     onChanged: (newValue) {
@@ -635,7 +609,6 @@ class _QuotesListsState extends State<QuotesLists> {
                     },
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
@@ -648,22 +621,19 @@ class _QuotesListsState extends State<QuotesLists> {
                           });
                         },
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Opacity(
                           opacity: .6,
-                          child: Text(
-                            'Is public?'
-                          ),
+                          child: Text('Is public?'),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                Divider(height: 15.0,),
-
+                Divider(
+                  height: 15.0,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
@@ -682,11 +652,9 @@ class _QuotesListsState extends State<QuotesLists> {
                           'Cancel',
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 15.0),
                       ),
-
                       RaisedButton(
                         color: stateColors.primary,
                         onPressed: () {
@@ -703,10 +671,8 @@ class _QuotesListsState extends State<QuotesLists> {
                 ),
               ],
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 
   // --------------------------
@@ -749,30 +715,27 @@ class _QuotesListsState extends State<QuotesLists> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       // Add a new document containing information
       // to delete the subcollection (in order to delete its documents).
-      await Firestore.instance
-        .collection('todelete')
-        .add({
-          'objectId': quoteList.id,
-          'path': 'users/<userId>/lists/<listId>/quotes',
-          'userId': userAuth.uid,
-          'target': 'list',
-          'type': 'subcollection',
-        });
+      await Firestore.instance.collection('todelete').add({
+        'objectId': quoteList.id,
+        'path': 'users/<userId>/lists/<listId>/quotes',
+        'userId': userAuth.uid,
+        'target': 'list',
+        'type': 'subcollection',
+      });
 
       // Delete the quote collection doc.
       await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(quoteList.id)
-        .delete();
-
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(quoteList.id)
+          .delete();
     } catch (error) {
       setState(() {
         userQuotesLists.insert(index, quoteList);
@@ -799,17 +762,17 @@ class _QuotesListsState extends State<QuotesLists> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .orderBy('updatedAt', descending: descending)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .orderBy('updatedAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -834,7 +797,6 @@ class _QuotesListsState extends State<QuotesLists> {
         hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -853,18 +815,18 @@ class _QuotesListsState extends State<QuotesLists> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .orderBy('updatedAt', descending: descending)
-        .startAfterDocument(lastDoc)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .orderBy('updatedAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -889,7 +851,6 @@ class _QuotesListsState extends State<QuotesLists> {
         hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -904,7 +865,8 @@ class _QuotesListsState extends State<QuotesLists> {
     oldName = quotesList.name;
     oldIsPublic = quotesList.isPublic;
 
-    setState(() { // optimistic
+    setState(() {
+      // optimistic
       quotesList.description = updateDescription;
       quotesList.name = updateName;
       quotesList.isPublic = updateIsPublic;
@@ -914,28 +876,28 @@ class _QuotesListsState extends State<QuotesLists> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(quotesList.id)
-        .updateData({
-          'description' : updateDescription,
-          'name'        : updateName,
-          'isPublic'    : updateIsPublic,
-          'updatedAt'   : DateTime.now(),
-        });
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(quotesList.id)
+          .updateData({
+        'description': updateDescription,
+        'name': updateName,
+        'isPublic': updateIsPublic,
+        'updatedAt': DateTime.now(),
+      });
 
       setState(() {});
-
     } catch (error) {
       debugPrint(error.toString());
 
-      setState(() { // rollback
+      setState(() {
+        // rollback
         quotesList.description = oldDescription;
         quotesList.name = oldName;
         quotesList.isPublic = oldIsPublic;

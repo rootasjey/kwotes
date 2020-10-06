@@ -11,7 +11,8 @@ import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -26,22 +27,22 @@ class AdminQuotes extends StatefulWidget {
 }
 
 class AdminQuotesState extends State<AdminQuotes> {
-  bool canManage        = false;
-  bool descending       = true;
-  bool hasNext          = true;
-  bool hasErrors        = false;
-  bool isLoading        = false;
-  bool isLoadingMore    = false;
+  bool canManage = false;
+  bool descending = true;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
 
-  final pageRoute       = QuotesRoute;
+  final pageRoute = QuotesRoute;
 
-  int limit             = 30;
-  List<Quote> quotes    = [];
-  String lang           = 'en';
+  int limit = 30;
+  List<Quote> quotes = [];
+  String lang = 'en';
 
-  var itemsStyle        = ItemsStyle.list;
+  var itemsStyle = ItemsStyle.list;
   var lastDoc;
-  var scrollController  = ScrollController();
+  var scrollController = ScrollController();
 
   @override
   initState() {
@@ -54,32 +55,31 @@ class AdminQuotesState extends State<AdminQuotes> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
+          onRefresh: () async {
+            await fetch();
+            return null;
           },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        )
-      ),
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                bodyListContent(),
+              ],
+            ),
+          )),
     );
   }
 
@@ -98,16 +98,17 @@ class AdminQuotesState extends State<AdminQuotes> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   tooltip: 'Order by first added',
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -119,7 +120,6 @@ class AdminQuotesState extends State<AdminQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -127,16 +127,16 @@ class AdminQuotesState extends State<AdminQuotes> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   tooltip: 'Order by most recently added',
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -148,7 +148,6 @@ class AdminQuotesState extends State<AdminQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -165,7 +164,6 @@ class AdminQuotesState extends State<AdminQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -199,7 +197,6 @@ class AdminQuotesState extends State<AdminQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.2,
@@ -216,7 +213,6 @@ class AdminQuotesState extends State<AdminQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -237,11 +233,10 @@ class AdminQuotesState extends State<AdminQuotes> {
                   },
                   icon: Icon(Icons.list),
                   color: itemsStyle == ItemsStyle.list
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -262,8 +257,8 @@ class AdminQuotesState extends State<AdminQuotes> {
                   },
                   icon: Icon(Icons.grid_on),
                   color: itemsStyle == ItemsStyle.grid
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
             ],
@@ -385,8 +380,10 @@ class AdminQuotesState extends State<AdminQuotes> {
 
             return QuoteCard(
               title: quote.name,
-              onTap: () => FluroRouter.router.navigateTo(
-                context, QuotePageRoute.replaceFirst(':id', quote.id)),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => QuotePage(
+                        quoteId: quote.id,
+                      ))),
               popupMenuButton: quotePopupMenuButton(
                 quote: quote,
                 color: Color(topicColor.decimal),
@@ -409,17 +406,17 @@ class AdminQuotesState extends State<AdminQuotes> {
             quote: quote,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
-                value: 'quotidian',
-                child: ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text('Add to quotidians'),
-                )),
+                  value: 'quotidian',
+                  child: ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text('Add to quotidians'),
+                  )),
               PopupMenuItem(
-                value: 'delete',
-                child: ListTile(
-                  leading: Icon(Icons.delete_sweep),
-                  title: Text('Delete'),
-                )),
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_sweep),
+                    title: Text('Delete'),
+                  )),
             ],
             onSelected: (value) {
               if (value == 'quotidian') {
@@ -465,7 +462,7 @@ class AdminQuotesState extends State<AdminQuotes> {
     final isUserConnected = await isAuthOk();
 
     if (!isUserConnected) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       return;
     }
 
@@ -528,7 +525,6 @@ class AdminQuotesState extends State<AdminQuotes> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -575,7 +571,6 @@ class AdminQuotesState extends State<AdminQuotes> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -586,9 +581,9 @@ class AdminQuotesState extends State<AdminQuotes> {
   }
 
   void getSavedProps() {
-    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   Future<bool> isAuthOk() async {
@@ -620,73 +615,73 @@ class AdminQuotesState extends State<AdminQuotes> {
 
   void showDeleteDialog(Quote quote) {
     showDialog(
-    context: context,
-    builder: (context) {
-      return SimpleDialog(
-        title: Text(
-          'Confirm deletion?',
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 40.0,
-        ),
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text(
+              'Confirm deletion?',
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 40.0,
+            ),
             children: <Widget>[
-              RaisedButton(
-                onPressed: () {
-                  FluroRouter.router.pop(context);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(3.0),
-                  ),
-                ),
-                color: stateColors.softBackground,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 15.0,
-                  ),
-                  child: Text(
-                    'NO',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3.0),
+                      ),
+                    ),
+                    color: stateColors.softBackground,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'NO',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(padding: const EdgeInsets.only(left: 15.0)),
-              RaisedButton(
-                onPressed: () {
-                  FluroRouter.router.pop(context);
-                  deleteAction(quote);
-                },
-                color: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(3.0),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 15.0,
-                  ),
-                  child: Text(
-                    'YES',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  Padding(padding: const EdgeInsets.only(left: 15.0)),
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      deleteAction(quote);
+                    },
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'YES',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
-          ),
-        ],
-      );
-    });
+          );
+        });
   }
 }

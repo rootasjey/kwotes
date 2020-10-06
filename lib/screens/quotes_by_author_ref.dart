@@ -26,7 +26,7 @@ class QuotesByAuthorRef extends StatefulWidget {
   final SubjectType type;
 
   QuotesByAuthorRef({
-    this.id = '',
+    @required this.id,
     this.type = SubjectType.reference,
   });
 
@@ -35,16 +35,16 @@ class QuotesByAuthorRef extends StatefulWidget {
 }
 
 class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isFabVisible   = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  String lang         = 'en';
-  int limit           = 30;
-  bool descending     = true;
-  String pageRoute    = '';
-  String subjectName  = '';
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isFabVisible = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  String lang = 'en';
+  int limit = 30;
+  bool descending = true;
+  String pageRoute = '';
+  String subjectName = '';
 
   ScrollController scrollController = ScrollController();
   List<Quote> quotes = [];
@@ -56,8 +56,8 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
     super.initState();
 
     pageRoute = widget.type == SubjectType.author
-      ? AuthorQuotesRoute
-      : ReferenceQuotesRoute;
+        ? AuthorQuotesRoute
+        : ReferenceQuotesRoute;
 
     getSavedProps();
     fetch();
@@ -66,63 +66,64 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          // FAB visibility
-          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-            setState(() {
-              isFabVisible = false;
-            });
-          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-            setState(() {
-              isFabVisible = true;
-            });
-          }
-
-          // Load more scenario
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            HomeAppBar(),
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
+
+            // Load more scenario
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              HomeAppBar(),
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
@@ -197,25 +198,24 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.speaker_notes_off,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.speaker_notes_off,
+                size: 120.0,
+                color: Color(0xFFFF005C),
               ),
-              title: "There's no quote in this language",
-              subtitle: 'You can try another language',
-              onRefresh: () => fetch(),
             ),
+            title: "There's no quote in this language",
+            subtitle: 'You can try another language',
+            onRefresh: () => fetch(),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -235,12 +235,11 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: LoadingAnimation(),
-          ),
-        ]
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
@@ -271,14 +270,14 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
                 quote: quote,
                 quoteId: quote.id,
                 itemBuilder: (context) => <PopupMenuEntry<String>>[
-                PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share'),
+                  PopupMenuItem(
+                    value: 'share',
+                    child: ListTile(
+                      leading: Icon(Icons.share),
+                      title: Text('Share'),
+                    ),
                   ),
-                ),
-              ],
+                ],
                 onSelected: (value) {
                   switch (value) {
                     case 'share':
@@ -330,7 +329,6 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -341,7 +339,9 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
 
     setState(() {
       isLoadingMore = true;
@@ -369,7 +369,6 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -384,15 +383,14 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
 
     if (widget.type == SubjectType.author) {
       snapshot = await Firestore.instance
-        .collection('authors')
-        .document(widget.id)
-        .get();
-
+          .collection('authors')
+          .document(widget.id)
+          .get();
     } else {
       snapshot = await Firestore.instance
-        .collection('references')
-        .document(widget.id)
-        .get();
+          .collection('references')
+          .document(widget.id)
+          .get();
     }
 
     if (snapshot == null) {
@@ -408,48 +406,48 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   Future<QuerySnapshot> fetchSnapshot() async {
     if (widget.type == SubjectType.author) {
       return await Firestore.instance
+          .collection('quotes')
+          .where('author.id', isEqualTo: widget.id)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .getDocuments();
+    }
+
+    return await Firestore.instance
         .collection('quotes')
-        .where('author.id', isEqualTo: widget.id)
+        .where('mainReference.id', isEqualTo: widget.id)
         .where('lang', isEqualTo: lang)
         .orderBy('createdAt', descending: descending)
         .limit(30)
         .getDocuments();
-    }
-
-    return await Firestore.instance
-      .collection('quotes')
-      .where('mainReference.id', isEqualTo: widget.id)
-      .where('lang', isEqualTo: lang)
-      .orderBy('createdAt', descending: descending)
-      .limit(30)
-      .getDocuments();
   }
 
   /// Handle subject type.
   Future<QuerySnapshot> fetchNextSnapshot() async {
     if (widget.type == SubjectType.author) {
       return await Firestore.instance
+          .collection('quotes')
+          .where('author.id', isEqualTo: widget.id)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(30)
+          .getDocuments();
+    }
+
+    return await Firestore.instance
         .collection('quotes')
-        .where('author.id', isEqualTo: widget.id)
+        .where('mainReference.id', isEqualTo: widget.id)
         .where('lang', isEqualTo: lang)
         .orderBy('createdAt', descending: descending)
         .startAfterDocument(lastDoc)
         .limit(30)
         .getDocuments();
-    }
-
-    return await Firestore.instance
-      .collection('quotes')
-      .where('mainReference.id', isEqualTo: widget.id)
-      .where('lang', isEqualTo: lang)
-      .orderBy('createdAt', descending: descending)
-      .startAfterDocument(lastDoc)
-      .limit(30)
-      .getDocuments();
   }
 
   void getSavedProps() {
-    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
   }
 }

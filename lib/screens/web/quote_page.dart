@@ -9,19 +9,19 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/animation.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotePage extends StatefulWidget {
   final String quoteId;
 
-  QuotePage({this.quoteId});
+  QuotePage({@required this.quoteId});
 
   @override
   _QuotePageState createState() => _QuotePageState();
@@ -64,26 +64,18 @@ class _QuotePageState extends State<QuotePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     backIcon(),
-
                     quoteName(
                       screenWidth: MediaQuery.of(context).size.width,
                     ),
-
                     animatedDivider(),
-
                     authorName(),
-
-                    if (quote.mainReference.name.length > 0)
-                      referenceName(),
+                    if (quote.mainReference.name.length > 0) referenceName(),
                   ],
                 ),
               ),
             ),
-
             userActions(),
-
             topicsList(),
-
             NavBackFooter(),
           ],
         );
@@ -93,17 +85,15 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget animatedDivider() {
     final topicColor = appTopicsColors.find(quote.topics.first);
-    final color = topicColor != null ?
-      Color(topicColor.decimal) :
-      Colors.white;
+    final color = topicColor != null ? Color(topicColor.decimal) : Colors.white;
 
     return ControlledAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
       child: Divider(
-          color: color,
-          thickness: 2.0,
+        color: color,
+        thickness: 2.0,
       ),
       builderWithChild: (context, child, value) {
         return Padding(
@@ -126,10 +116,10 @@ class _QuotePageState extends State<QuotePage> {
         onPressed: () {
           final id = quote.author.id;
 
-          FluroRouter.router.navigateTo(
-            context,
-            AuthorRoute.replaceFirst(':id', id)
-          );
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => AuthorPage(
+                    id: id,
+                  )));
         },
         child: Text(
           quote.author.name,
@@ -140,12 +130,11 @@ class _QuotePageState extends State<QuotePage> {
       ),
       builderWithChild: (context, child, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          )
-        );
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Opacity(
+              opacity: value,
+              child: child,
+            ));
       },
     );
   }
@@ -157,7 +146,7 @@ class _QuotePageState extends State<QuotePage> {
         children: <Widget>[
           IconButton(
             onPressed: () {
-              FluroRouter.router.pop(context);
+              Navigator.of(context).pop();
             },
             icon: Icon(Icons.arrow_back),
           )
@@ -182,10 +171,8 @@ class _QuotePageState extends State<QuotePage> {
         onPressed: () {
           final id = quote.mainReference.id;
 
-          FluroRouter.router.navigateTo(
-            context,
-            ReferenceRoute.replaceFirst(':id', id)
-          );
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => ReferencePage(id: id)));
         },
         child: Text(
           quote.mainReference.name,
@@ -196,12 +183,11 @@ class _QuotePageState extends State<QuotePage> {
       ),
       builderWithChild: (context, child, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          )
-        );
+            padding: const EdgeInsets.only(top: 15.0),
+            child: Opacity(
+              opacity: value,
+              child: child,
+            ));
       },
     );
   }
@@ -224,7 +210,9 @@ class _QuotePageState extends State<QuotePage> {
             height: 300,
             child: ListView(
               shrinkWrap: true,
-              padding: EdgeInsets.only(top: 80.0,),
+              padding: EdgeInsets.only(
+                top: 80.0,
+              ),
               scrollDirection: Axis.horizontal,
               children: topicColors.map((topic) {
                 count += 1.0;
@@ -252,20 +240,20 @@ class _QuotePageState extends State<QuotePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           IconButton(
-            onPressed: userState.isUserConnected ?
-              () async {
-                if (quote.starred) {
-                  removeQuoteFromFav();
-                  return;
-                }
+            onPressed: userState.isUserConnected
+                ? () async {
+                    if (quote.starred) {
+                      removeQuoteFromFav();
+                      return;
+                    }
 
-                addQuoteToFav();
-            } : null,
-            icon: quote.starred ?
-              Icon(Icons.favorite) :
-              Icon(Icons.favorite_border),
+                    addQuoteToFav();
+                  }
+                : null,
+            icon: quote.starred
+                ? Icon(Icons.favorite)
+                : Icon(Icons.favorite_border),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
@@ -275,7 +263,6 @@ class _QuotePageState extends State<QuotePage> {
               icon: Icon(Icons.share),
             ),
           ),
-
           AddToListButton(
             quote: quote,
             isDisabled: !userState.isUserConnected,
@@ -286,7 +273,8 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   void addQuoteToFav() async {
-    setState(() { // Optimistic result
+    setState(() {
+      // Optimistic result
       quote.starred = true;
     });
 
@@ -307,9 +295,9 @@ class _QuotePageState extends State<QuotePage> {
 
     for (String topicName in quote.topics) {
       final doc = await Firestore.instance
-        .collection('topics')
-        .document(topicName)
-        .get();
+          .collection('topics')
+          .document(topicName)
+          .get();
 
       if (doc.exists) {
         final topic = TopicColor.fromJSON(doc.data);
@@ -329,9 +317,9 @@ class _QuotePageState extends State<QuotePage> {
 
     try {
       final doc = await Firestore.instance
-        .collection('quotes')
-        .document(widget.quoteId)
-        .get();
+          .collection('quotes')
+          .document(widget.quoteId)
+          .get();
 
       if (!doc.exists) {
         setState(() {
@@ -352,7 +340,6 @@ class _QuotePageState extends State<QuotePage> {
       });
 
       fetchTopics();
-
     } catch (error) {
       setState(() {
         isLoading = false;
@@ -373,7 +360,8 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   void removeQuoteFromFav() async {
-    setState(() { // Optimistic result
+    setState(() {
+      // Optimistic result
       quote.starred = false;
     });
 

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/screens/forgot_password.dart';
+import 'package:memorare/screens/signup.dart';
+import 'package:memorare/screens/web/dashboard.dart';
+import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 
 class Signin extends StatefulWidget {
@@ -21,8 +23,8 @@ class _SigninState extends State<Signin> {
   String password = '';
 
   bool isCheckingAuth = false;
-  bool isCompleted    = false;
-  bool isSigningIn    = false;
+  bool isCompleted = false;
+  bool isSigningIn = false;
 
   final passwordNode = FocusNode();
 
@@ -90,7 +92,6 @@ class _SigninState extends State<Signin> {
             color: Colors.green,
           ),
         ),
-
         Padding(
           padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
           child: Text(
@@ -100,15 +101,14 @@ class _SigninState extends State<Signin> {
             ),
           ),
         ),
-
         Padding(
-          padding: const EdgeInsets.only(top: 15.0,),
+          padding: const EdgeInsets.only(
+            top: 15.0,
+          ),
           child: FlatButton(
             onPressed: () {
-              FluroRouter.router.navigateTo(
-                context,
-                DashboardRoute,
-              );
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Dashboard()));
             },
             child: Opacity(
               opacity: .6,
@@ -176,24 +176,24 @@ class _SigninState extends State<Signin> {
       delay: 1.5,
       beginY: 50.0,
       child: FlatButton(
-        onPressed: () {
-          FluroRouter.router.navigateTo(context, ForgotPasswordRoute);
-        },
-        child: Opacity(
-          opacity: .6,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                "I forgot my password",
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => ForgotPassword()));
+          },
+          child: Opacity(
+            opacity: .6,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  "I forgot my password",
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        )
-      ),
+              ],
+            ),
+          )),
     );
   }
 
@@ -204,16 +204,17 @@ class _SigninState extends State<Signin> {
           beginX: 10.0,
           delay: 2.0,
           child: Padding(
-            padding: const EdgeInsets.only(right: 20.0,),
+            padding: const EdgeInsets.only(
+              right: 20.0,
+            ),
             child: IconButton(
               onPressed: () {
-                FluroRouter.router.pop(context);
+                Navigator.of(context).pop();
               },
               icon: Icon(Icons.arrow_back),
             ),
           ),
         ),
-
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -231,15 +232,12 @@ class _SigninState extends State<Signin> {
                 ),
               ),
             ),
-
             FadeInY(
               delay: .3,
               beginY: 50.0,
               child: Opacity(
                 opacity: .6,
-                child: Text(
-                  'Connect to your existing account'
-                ),
+                child: Text('Connect to your existing account'),
               ),
             )
           ],
@@ -253,30 +251,24 @@ class _SigninState extends State<Signin> {
       delay: 2.5,
       beginY: 50.0,
       child: FlatButton(
-        onPressed: () async {
-          await FluroRouter.router.navigateTo(
-            context,
-            SignupRoute,
-          );
+          onPressed: () async {
+            await Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => Signup()));
 
-          if (userState.isUserConnected) {
-            await FluroRouter.router.navigateTo(
-              context,
-              DashboardRoute,
-              replace: true,
-            );
-          }
-        },
-        child: Opacity(
-          opacity: .6,
-          child: Text(
-            "I don't have an account",
-            style: TextStyle(
-              decoration: TextDecoration.underline,
+            if (userState.isUserConnected) {
+              await Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Home()));
+            }
+          },
+          child: Opacity(
+            opacity: .6,
+            child: Text(
+              "I don't have an account",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
             ),
-          ),
-        )
-      ),
+          )),
     );
   }
 
@@ -346,7 +338,10 @@ class _SigninState extends State<Signin> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
-                  child: Icon(Icons.arrow_forward, color: Colors.white,),
+                  child: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                  ),
                 )
               ],
             ),
@@ -370,9 +365,9 @@ class _SigninState extends State<Signin> {
 
       if (userAuth != null) {
         userState.setUserConnected();
-        FluroRouter.router.navigateTo(context, DashboardRoute);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => Dashboard()));
       }
-
     } catch (error) {
       setState(() {
         isCheckingAuth = false;
@@ -405,7 +400,9 @@ class _SigninState extends State<Signin> {
   }
 
   void signIn() async {
-    if (!inputValuesOk()) { return; }
+    if (!inputValuesOk()) {
+      return;
+    }
 
     setState(() {
       isSigningIn = true;
@@ -413,7 +410,7 @@ class _SigninState extends State<Signin> {
 
     try {
       final authResult = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(email: email, password: password);
 
       if (authResult.user == null) {
         showSnack(
@@ -439,12 +436,7 @@ class _SigninState extends State<Signin> {
 
       await userGetAndSetAvatarUrl(authResult);
 
-      FluroRouter.router.navigateTo(
-        context,
-        WelcomeBackRoute,
-        replace: true,
-      );
-
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
     } catch (error) {
       debugPrint(error.toString());
 

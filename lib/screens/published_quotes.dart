@@ -8,11 +8,12 @@ import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+
+import 'signin.dart';
 
 class MyPublishedQuotes extends StatefulWidget {
   @override
@@ -20,15 +21,15 @@ class MyPublishedQuotes extends StatefulWidget {
 }
 
 class MyPublishedQuotesState extends State<MyPublishedQuotes> {
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  String lang         = 'en';
-  int limit           = 30;
-  bool descending     = true;
-  final pageRoute     = PublishedQuotesRoute;
-  bool isFabVisible   = false;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  String lang = 'en';
+  int limit = 30;
+  bool descending = true;
+  final pageRoute = PublishedQuotesRoute;
+  bool isFabVisible = false;
 
   ScrollController scrollController = ScrollController();
   List<Quote> quotes = [];
@@ -46,62 +47,63 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          // FAB visibility
-          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-            setState(() {
-              isFabVisible = false;
-            });
-          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-            setState(() {
-              isFabVisible = true;
-            });
-          }
-
-          // Load more scenario
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
+
+            // Load more scenario
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
@@ -119,15 +121,16 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -139,7 +142,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -147,15 +149,15 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -167,7 +169,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -184,7 +185,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -244,25 +244,24 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.speaker_notes_off,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.speaker_notes_off,
+                size: 120.0,
+                color: Color(0xFFFF005C),
               ),
-              title: "You've published no quote yet",
-              subtitle: 'They will appear when you add a new quote',
-              onRefresh: () => fetch(),
             ),
+            title: "You've published no quote yet",
+            subtitle: 'They will appear when you add a new quote',
+            onRefresh: () => fetch(),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -282,12 +281,11 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: LoadingAnimation(),
-          ),
-        ]
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
@@ -318,17 +316,17 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('user.id', isEqualTo: userAuth.uid)
-        .where('lang', isEqualTo: lang)
-        .orderBy('createdAt', descending: descending)
-        .limit(30)
-        .getDocuments();
+          .collection('quotes')
+          .where('user.id', isEqualTo: userAuth.uid)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -351,7 +349,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -362,7 +359,9 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
 
     setState(() {
       isLoadingMore = true;
@@ -372,18 +371,18 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('user.id', isEqualTo: userAuth.uid)
-        .where('lang', isEqualTo: lang)
-        .orderBy('createdAt', descending: descending)
-        .startAfterDocument(lastDoc)
-        .limit(30)
-        .getDocuments();
+          .collection('quotes')
+          .where('user.id', isEqualTo: userAuth.uid)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -404,7 +403,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 

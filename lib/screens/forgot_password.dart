@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
+
+import 'web/home.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -28,7 +28,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           Column(
             children: <Widget>[
               NavBackHeader(),
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 300.0),
                 child: SizedBox(
@@ -73,7 +72,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             color: Colors.green,
           ),
         ),
-
         Container(
           width: width > 400.0 ? 320.0 : 280.0,
           // padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -89,25 +87,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .6,
-                child: Text(
-                  'Please check your spam folder too'
-                ),
+                child: Text('Please check your spam folder too'),
               ),
             ],
           ),
         ),
-
         Padding(
-          padding: const EdgeInsets.only(top: 55.0,),
+          padding: const EdgeInsets.only(
+            top: 55.0,
+          ),
           child: FlatButton(
             onPressed: () {
-              FluroRouter.router.navigateTo(
-                context,
-                RootRoute,
-              );
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Home()));
             },
             child: Opacity(
               opacity: .6,
@@ -184,7 +178,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
           ),
         ),
-
         FadeInY(
           beginY: 50.0,
           child: Opacity(
@@ -241,14 +234,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         isCompleted = false;
       });
 
-      await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
       setState(() {
         isLoading = false;
         isCompleted = true;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -257,10 +248,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       });
 
       showSnack(
-        context: context,
-        type: SnackType.error,
-        message: "Sorry, this email doesn't exist."
-      );
+          context: context,
+          type: SnackType.error,
+          message: "Sorry, this email doesn't exist.");
     }
   }
 }

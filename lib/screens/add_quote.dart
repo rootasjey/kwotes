@@ -5,14 +5,16 @@ import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/screens/add_quote_author.dart';
 import 'package:memorare/screens/add_quote_comment.dart';
 import 'package:memorare/screens/add_quote_content.dart';
 import 'package:memorare/screens/add_quote_last_step.dart';
 import 'package:memorare/screens/add_quote_reference.dart';
 import 'package:memorare/screens/add_quote_topics.dart';
+import 'package:memorare/screens/admin_temp_quotes.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/temp_quotes.dart';
+import 'package:memorare/screens/web/home.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
@@ -24,12 +26,12 @@ class AddQuote extends StatefulWidget {
 }
 
 class _AddQuoteState extends State<AddQuote> {
-  final int maxSteps  = 6;
-  bool isFabVisible   = true;
+  final int maxSteps = 6;
+  bool isFabVisible = true;
 
-  bool canManage      = false;
-  bool isProposing    = false;
-  bool isCompleted    = false;
+  bool canManage = false;
+  bool isProposing = false;
+  bool isCompleted = false;
 
   AddQuoteType actionIntent;
   AddQuoteType actionResult;
@@ -65,21 +67,24 @@ class _AddQuoteState extends State<AddQuote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        InkWell(
-          onLongPress: () => saveQuoteAsDraft(),
-          child: FloatingActionButton(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
-            onPressed: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-              propose();
-            },
-            child: Icon(Icons.send,),
-          ),
-        ) :
-        Padding(padding: EdgeInsets.zero,),
-
+      floatingActionButton: isFabVisible
+          ? InkWell(
+              onLongPress: () => saveQuoteAsDraft(),
+              child: FloatingActionButton(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                onPressed: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  propose();
+                },
+                child: Icon(
+                  Icons.send,
+                ),
+              ),
+            )
+          : Padding(
+              padding: EdgeInsets.zero,
+            ),
       body: body(),
     );
   }
@@ -87,8 +92,9 @@ class _AddQuoteState extends State<AddQuote> {
   Widget body() {
     if (isProposing) {
       return LoadingAnimation(
-        textTitle: AddQuoteInputs.quote.id.isEmpty ?
-          'Proposing quote...' : 'Saving quote...',
+        textTitle: AddQuoteInputs.quote.id.isEmpty
+            ? 'Proposing quote...'
+            : 'Saving quote...',
       );
     }
 
@@ -125,7 +131,6 @@ class _AddQuoteState extends State<AddQuote> {
                     ),
                   ),
                 ),
-
                 FadeInY(
                   delay: 1.5,
                   beginY: 50.0,
@@ -140,7 +145,6 @@ class _AddQuoteState extends State<AddQuote> {
                     ),
                   ),
                 ),
-
                 ControlledAnimation(
                   duration: 1.seconds,
                   tween: Tween(begin: 0.0, end: 100.0),
@@ -148,12 +152,13 @@ class _AddQuoteState extends State<AddQuote> {
                     return Center(
                       child: SizedBox(
                         width: value,
-                        child: Divider(height: 100.0,),
+                        child: Divider(
+                          height: 100.0,
+                        ),
                       ),
                     );
                   },
                 ),
-
                 FadeInY(
                   delay: 2.0,
                   beginY: 50.0,
@@ -174,7 +179,6 @@ class _AddQuoteState extends State<AddQuote> {
               ],
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(
               top: 100.0,
@@ -188,17 +192,22 @@ class _AddQuoteState extends State<AddQuote> {
                   delay: 3.0,
                   beginY: 50.0,
                   child: navCard(
-                    icon: Icon(Icons.dashboard, size: 40.0,),
-                    title: 'Home',
-                    onTap: () => FluroRouter.router.navigateTo(context, HomeRoute),
-                  ),
+                      icon: Icon(
+                        Icons.dashboard,
+                        size: 40.0,
+                      ),
+                      title: 'Home',
+                      onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => Home()))),
                 ),
-
                 FadeInY(
                   delay: 3.5,
                   beginY: 50.0,
                   child: navCard(
-                    icon: Icon(Icons.add, size: 40.0,),
+                    icon: Icon(
+                      Icons.add,
+                      size: 40.0,
+                    ),
                     title: 'New quote',
                     onTap: () {
                       AddQuoteInputs.clearQuoteData();
@@ -212,20 +221,24 @@ class _AddQuoteState extends State<AddQuote> {
                     },
                   ),
                 ),
-
                 FadeInY(
                   delay: 4.0,
                   beginY: 50.0,
                   child: navCard(
-                    icon: Icon(Icons.timer, size: 40.0,),
+                    icon: Icon(
+                      Icons.timer,
+                      size: 40.0,
+                    ),
                     title: 'In validation',
                     onTap: () {
                       if (canManage) {
-                        FluroRouter.router.navigateTo(context, AdminTempQuotesRoute);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => AdminTempQuotes()));
                         return;
                       }
 
-                      FluroRouter.router.navigateTo(context, TempQuotesRoute);
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => MyTempQuotes()));
                     },
                   ),
                 ),
@@ -250,10 +263,9 @@ class _AddQuoteState extends State<AddQuote> {
         child: Card(
           elevation: 4.0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(5.0),
-            )
-          ),
+              borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          )),
           child: InkWell(
             onTap: onTap,
             child: Row(
@@ -262,7 +274,6 @@ class _AddQuoteState extends State<AddQuote> {
                   padding: const EdgeInsets.all(20.0),
                   child: Opacity(opacity: .5, child: icon),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Opacity(
@@ -307,35 +318,30 @@ class _AddQuoteState extends State<AddQuote> {
           onNextStep: () => onNextPage(),
           onSaveDraft: () => saveQuoteAsDraft(),
         ),
-
         AddQuoteTopics(
           step: 2,
           maxSteps: maxSteps,
           onNextStep: () => onNextPage(),
           onPreviousStep: () => onPreviousPage(),
         ),
-
         AddQuoteAuthor(
           step: 3,
           maxSteps: maxSteps,
           onNextStep: () => onNextPage(),
           onPreviousStep: () => onPreviousPage(),
         ),
-
         AddQuoteReference(
           step: 4,
           maxSteps: maxSteps,
           onNextStep: () => onNextPage(),
           onPreviousStep: () => onPreviousPage(),
         ),
-
         AddQuoteComment(
           step: 5,
           maxSteps: maxSteps,
           onNextStep: () => onNextPage(),
           onPreviousStep: () => onPreviousPage(),
         ),
-
         AddQuoteLastStep(
           step: 6,
           maxSteps: maxSteps,
@@ -352,24 +358,25 @@ class _AddQuoteState extends State<AddQuote> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final user = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .get();
+          .collection('users')
+          .document(userAuth.uid)
+          .get();
 
-      if (!user.exists) { return; }
+      if (!user.exists) {
+        return;
+      }
 
       setState(() {
         canManage = user.data['rights']['user:managequote'] == true;
       });
-
     } catch (error) {
       debugPrint(error.toString());
-      FluroRouter.router.navigateTo(context, SigninRoute);
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
     }
   }
 
@@ -391,7 +398,8 @@ class _AddQuoteState extends State<AddQuote> {
       });
 
       if (AddQuoteInputs.isOfflineDraft) {
-        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+        deleteOfflineDraft(
+            createdAt: AddQuoteInputs.draft.createdAt.toString());
       }
 
       if (AddQuoteInputs.draft != null) {
@@ -460,7 +468,8 @@ class _AddQuoteState extends State<AddQuote> {
       });
 
       if (AddQuoteInputs.isOfflineDraft) {
-        deleteOfflineDraft(createdAt: AddQuoteInputs.draft.createdAt.toString());
+        deleteOfflineDraft(
+            createdAt: AddQuoteInputs.draft.createdAt.toString());
       }
 
       return;
@@ -480,7 +489,8 @@ class _AddQuoteState extends State<AddQuote> {
 
     showSnack(
       context: context,
-      message: "Sorry, we couldn't save your quote as a draft. Try again in some minutes..",
+      message:
+          "Sorry, we couldn't save your quote as a draft. Try again in some minutes..",
       type: SnackType.error,
     );
   }

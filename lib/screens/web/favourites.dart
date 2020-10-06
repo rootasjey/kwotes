@@ -6,12 +6,12 @@ import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
@@ -21,15 +21,15 @@ class Favourites extends StatefulWidget {
 }
 
 class _FavouritesState extends State<Favourites> {
-  bool descending     = true;
-  bool hasNext        = true;
-  bool isFabVisible   = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  int limit           = 30;
+  bool descending = true;
+  bool hasNext = true;
+  bool isFabVisible = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  int limit = 30;
 
-  final pageRoute     = FavouritesRoute;
-  List<Quote> quotes  = [];
+  final pageRoute = FavouritesRoute;
+  List<Quote> quotes = [];
 
   final scrollController = ScrollController();
 
@@ -45,19 +45,20 @@ class _FavouritesState extends State<Favourites> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
@@ -81,7 +82,8 @@ class _FavouritesState extends State<Favourites> {
             }
 
             // Load more scenario
-            if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent - 100.0) {
               return false;
             }
 
@@ -118,15 +120,16 @@ class _FavouritesState extends State<Favourites> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -138,7 +141,6 @@ class _FavouritesState extends State<Favourites> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -146,15 +148,15 @@ class _FavouritesState extends State<Favourites> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -188,41 +190,39 @@ class _FavouritesState extends State<Favourites> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: EmptyContent(
-                icon: Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 60.0,
-                    color: Color(0xFFFF005C),
-                  ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: EmptyContent(
+              icon: Opacity(
+                opacity: .8,
+                child: Icon(
+                  Icons.favorite_border,
+                  size: 60.0,
+                  color: Color(0xFFFF005C),
                 ),
-                title: "You've no favourites quotes at this moment",
-                subtitle: 'You can add them with the ❤️ button',
               ),
+              title: "You've no favourites quotes at this moment",
+              subtitle: 'You can add them with the ❤️ button',
             ),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: LoadingAnimation(
-              textTitle: 'Loading your favourites...',
-            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 60.0),
+          child: LoadingAnimation(
+            textTitle: 'Loading your favourites...',
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -237,7 +237,8 @@ class _FavouritesState extends State<Favourites> {
             quoteId: quote.quoteId,
             type: QuoteRowActionType.favourites,
             onBeforeRemoveFromFavourites: () {
-              setState(() { // optimistic
+              setState(() {
+                // optimistic
                 quotes.removeAt(index);
               });
             },
@@ -272,17 +273,17 @@ class _FavouritesState extends State<Favourites> {
           isLoading = false;
         });
 
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('favourites')
-        .orderBy('createdAt', descending: descending)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('favourites')
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -307,7 +308,6 @@ class _FavouritesState extends State<Favourites> {
         isLoading = false;
         hasNext = limit == snapshot.documents.length;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -328,17 +328,17 @@ class _FavouritesState extends State<Favourites> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('favourites')
-        .orderBy('createdAt', descending: true)
-        .startAfterDocument(lastDoc)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('favourites')
+          .orderBy('createdAt', descending: true)
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -363,7 +363,6 @@ class _FavouritesState extends State<Favourites> {
         isLoadingMore = false;
         hasNext = limit == snapshot.documents.length;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -382,7 +381,8 @@ class _FavouritesState extends State<Favourites> {
   Future removeFav(Quote quote) async {
     final index = quotes.indexOf(quote);
 
-    setState(() { // optimistic
+    setState(() {
+      // optimistic
       quotes.removeAt(index);
     });
 
@@ -396,7 +396,6 @@ class _FavouritesState extends State<Favourites> {
       }
 
       userState.updateFavDate();
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -406,7 +405,8 @@ class _FavouritesState extends State<Favourites> {
 
       showSnack(
         context: context,
-        message: "There was an issue while removing the quote from your favourites.",
+        message:
+            "There was an issue while removing the quote from your favourites.",
         type: SnackType.error,
       );
     }

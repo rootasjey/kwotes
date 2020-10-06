@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/screens/web/topic_page.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/topic_color.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 
 List<TopicColor> _topics = [];
 
@@ -38,28 +37,24 @@ class _TopicsState extends State<Topics> {
               ),
             ),
           ),
-
           SizedBox(
             width: 50.0,
-            child: Divider(thickness: 2.0,),
+            child: Divider(
+              thickness: 2.0,
+            ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(bottom: 70.0),
             child: Opacity(
               opacity: .6,
-              child: Text(
-                '3 Topics you might like'
-              ),
+              child: Text('3 Topics you might like'),
             ),
           ),
-
           SizedBox(
             width: 400.0,
             height: 200.0,
             child: topicsColorsCards(),
           ),
-
           allTopicsButton(),
         ],
       ),
@@ -69,13 +64,9 @@ class _TopicsState extends State<Topics> {
   Widget allTopicsButton() {
     return RaisedButton.icon(
       onPressed: () {
-        FluroRouter.router.navigateTo(
-          context,
-          TopicRoute.replaceFirst(
-            ':name',
-            appTopicsColors.shuffle(max: 1).first.name,
-          ),
-        );
+        final topicName = appTopicsColors.shuffle(max: 1).first.name;
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => TopicPage(name: topicName)));
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -86,9 +77,7 @@ class _TopicsState extends State<Topics> {
       icon: Opacity(opacity: 0.6, child: Icon(Icons.filter_none)),
       label: Opacity(
         opacity: .6,
-        child: Text(
-          'Discover more topics'
-        ),
+        child: Text('Discover more topics'),
       ),
     );
   }
@@ -114,10 +103,10 @@ class _TopicsState extends State<Topics> {
               delay: count.toDouble(),
               child: TopicCardColor(
                 color: Color(topicColor.decimal),
-                name: '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
+                name:
+                    '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
               ),
             );
-
           }).toList(),
         );
       },

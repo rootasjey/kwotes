@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/router.dart';
 
 class FullPageError extends StatelessWidget {
   final String message;
@@ -21,12 +20,8 @@ class FullPageError extends StatelessWidget {
             Icons.warning,
             size: 70.0,
           ),
-
           Padding(
-            padding: const EdgeInsets.only(
-              top: 40.0,
-              bottom: 40.0
-            ),
+            padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
             child: Opacity(
               opacity: .6,
               child: Text(
@@ -38,10 +33,9 @@ class FullPageError extends StatelessWidget {
               ),
             ),
           ),
-
           FlatButton(
             onPressed: () {
-              FluroRouter.router.pop(context);
+              Navigator.of(context).pop();
             },
             child: Text(
               'Back',

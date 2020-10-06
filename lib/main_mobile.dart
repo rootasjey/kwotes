@@ -1,10 +1,11 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
+
+import 'screens/home.dart';
 
 class MainMobile extends StatefulWidget {
   @override
@@ -25,8 +26,7 @@ class MainMobileState extends State<MainMobile> {
       title: 'Out Of Context',
       theme: stateColors.themeData,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      onGenerateRoute: FluroRouter.router.generator,
+      home: Home(),
     );
   }
 
@@ -51,17 +51,13 @@ class MainMobileState extends State<MainMobile> {
       brightness = Brightness.dark;
     }
 
-    Future.delayed(
-      2.seconds,
-      () {
-        try {
-          DynamicTheme.of(context).setBrightness(brightness);
-          stateColors.refreshTheme(brightness);
-
-        } catch (error) {
-          debugPrint(error.toString());
-        }
+    Future.delayed(2.seconds, () {
+      try {
+        DynamicTheme.of(context).setBrightness(brightness);
+        stateColors.refreshTheme(brightness);
+      } catch (error) {
+        debugPrint(error.toString());
       }
-    );
+    });
   }
 }

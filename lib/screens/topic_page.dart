@@ -6,18 +6,19 @@ import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/animation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
+
+import 'author_page.dart';
+import 'web/quote_page.dart';
 
 class TopicPage extends StatefulWidget {
   final String name;
@@ -31,8 +32,8 @@ class TopicPage extends StatefulWidget {
 }
 
 class _TopicPageState extends State<TopicPage> {
-  final beginY    = 50.0;
-  final delay     = 1.0;
+  final beginY = 50.0;
+  final delay = 1.0;
   final delayStep = 1.2;
 
   int decimal = 4283980123;
@@ -75,18 +76,19 @@ class _TopicPageState extends State<TopicPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: ListView(
         children: <Widget>[
           SizedBox(
@@ -104,8 +106,8 @@ class _TopicPageState extends State<TopicPage> {
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
       child: Divider(
-          color: Color(decimal),
-          thickness: 2.0,
+        color: Color(decimal),
+        thickness: 2.0,
       ),
       builderWithChild: (context, child, value) {
         return SizedBox(
@@ -123,21 +125,20 @@ class _TopicPageState extends State<TopicPage> {
       tween: Tween(begin: 0.0, end: 0.8),
       builderWithChild: (context, child, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          )
-        );
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Opacity(
+              opacity: value,
+              child: child,
+            ));
       },
       child: GestureDetector(
         onTap: () {
           final id = quote.author.id;
 
-          FluroRouter.router.navigateTo(
-            context,
-            AuthorRoute.replaceFirst(':id', id)
-          );
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => AuthorPage(
+                    id: id,
+                  )));
         },
         child: Text(
           quote.author.name,
@@ -164,7 +165,8 @@ class _TopicPageState extends State<TopicPage> {
         }
 
         // Load more scenario
-        if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+        if (scrollNotif.metrics.pixels <
+            scrollNotif.metrics.maxScrollExtent - 100.0) {
           return false;
         }
 
@@ -206,13 +208,12 @@ class _TopicPageState extends State<TopicPage> {
                         ),
                       ),
                     ),
-
                     Positioned(
                       left: 20.0,
                       top: 60.0,
                       child: IconButton(
                         onPressed: () {
-                          FluroRouter.router.pop(context);
+                          Navigator.of(context).pop();
                         },
                         icon: Icon(Icons.arrow_back),
                       ),
@@ -222,7 +223,6 @@ class _TopicPageState extends State<TopicPage> {
               );
             },
           ),
-
           listQuotesContent(),
         ],
       ),
@@ -233,48 +233,46 @@ class _TopicPageState extends State<TopicPage> {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                top: 150.0,
-              ),
-              child: LoadingAnimation(
-                textTitle: 'Loading ${widget.name} quotes...',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20.0,
+              right: 20.0,
+              top: 150.0,
+            ),
+            child: LoadingAnimation(
+              textTitle: 'Loading ${widget.name} quotes...',
+              style: TextStyle(
+                fontSize: 20.0,
               ),
             ),
-          ]
-        ),
+          ),
+        ]),
       );
     }
 
     if (quotes.length == 0) {
       return SliverList(
         delegate: SliverChildListDelegate([
-            FadeInY(
-              delay: 2.0,
-              beginY: 50.0,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: EmptyContent(
-                  icon: Opacity(
-                    opacity: .8,
-                    child: Icon(
-                      Icons.chat_bubble_outline,
-                      size: 60.0,
-                      color: Color(0xFFFF005C),
-                    ),
+          FadeInY(
+            delay: 2.0,
+            beginY: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: EmptyContent(
+                icon: Opacity(
+                  opacity: .8,
+                  child: Icon(
+                    Icons.chat_bubble_outline,
+                    size: 60.0,
+                    color: Color(0xFFFF005C),
                   ),
-                  title: "There's no quotes for ${widget.name} at this moment",
-                  subtitle: 'You can help us and propose some',
                 ),
+                title: "There's no quotes for ${widget.name} at this moment",
+                subtitle: 'You can help us and propose some',
               ),
             ),
-          ]
-        ),
+          ),
+        ]),
       );
     }
 
@@ -309,10 +307,8 @@ class _TopicPageState extends State<TopicPage> {
   }) {
     return InkWell(
       onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          QuotePageRoute.replaceFirst(':id', quote.id)
-        );
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => QuotePage(quoteId: quote.id)));
       },
       onLongPress: () {
         showActionsSheet(quote);
@@ -333,11 +329,8 @@ class _TopicPageState extends State<TopicPage> {
               ],
             ),
           ),
-
           animatedDivider(),
-
           authorName(quote),
-
           userActions(quote),
         ],
       ),
@@ -385,11 +378,11 @@ class _TopicPageState extends State<TopicPage> {
 
     try {
       final doc = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('favourites')
-        .document(quoteId)
-        .get();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('favourites')
+          .document(quoteId)
+          .get();
 
       setState(() {
         isFav = doc.exists;
@@ -397,7 +390,6 @@ class _TopicPageState extends State<TopicPage> {
       });
 
       return true;
-
     } catch (error) {
       debugPrint(error.toString());
       return false;
@@ -411,11 +403,11 @@ class _TopicPageState extends State<TopicPage> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('topics.$topicName', isEqualTo: true)
-        .where('lang', isEqualTo: userState.lang)
-        .limit(10)
-        .getDocuments();
+          .collection('quotes')
+          .where('topics.$topicName', isEqualTo: true)
+          .where('lang', isEqualTo: userState.lang)
+          .limit(10)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -439,7 +431,6 @@ class _TopicPageState extends State<TopicPage> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -454,12 +445,12 @@ class _TopicPageState extends State<TopicPage> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('topics.$topicName', isEqualTo: true)
-        .where('lang', isEqualTo: userState.lang)
-        .startAfterDocument(lastDoc)
-        .limit(10)
-        .getDocuments();
+          .collection('quotes')
+          .where('topics.$topicName', isEqualTo: true)
+          .where('lang', isEqualTo: userState.lang)
+          .startAfterDocument(lastDoc)
+          .limit(10)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -482,7 +473,6 @@ class _TopicPageState extends State<TopicPage> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -493,7 +483,9 @@ class _TopicPageState extends State<TopicPage> {
 
     topicDisposer = autorun((_) {
       final topicColor = appTopicsColors.find(topicName);
-      if (topicColor == null) { return; }
+      if (topicColor == null) {
+        return;
+      }
 
       decimal = topicColor.decimal;
     });
@@ -509,12 +501,11 @@ class _TopicPageState extends State<TopicPage> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter stateSetter) {
             if (!isFavLoading && !isFavLoaded) {
-              fetchIsFav(quote.id)
-                .then((isOk) {
-                  stateSetter(() {
-                    isFavLoaded = isOk;
-                  });
+              fetchIsFav(quote.id).then((isOk) {
+                stateSetter(() {
+                  isFavLoaded = isOk;
                 });
+              });
             }
 
             return Padding(
@@ -533,27 +524,30 @@ class _TopicPageState extends State<TopicPage> {
                       icon: Icon(Icons.share),
                     ),
                   ),
-
-                  isFav ?
-                  IconButton(
-                    onPressed: isFavLoaded ?
-                      () {
-                        removeFromFavourites(context: context, quote: quote);
-                        Navigator.pop(context);
-                      } : null,
-                    tooltip: 'Remove from favourites',
-                    icon: Icon(Icons.favorite),
-                  ) :
-                  IconButton(
-                    onPressed: isFavLoaded ?
-                      () {
-                        addToFavourites(context: context, quote: quote);
-                        Navigator.pop(context);
-                      } : null,
-                    tooltip: 'Add to favourites',
-                    icon: Icon(Icons.favorite_border,)
-                  ),
-
+                  isFav
+                      ? IconButton(
+                          onPressed: isFavLoaded
+                              ? () {
+                                  removeFromFavourites(
+                                      context: context, quote: quote);
+                                  Navigator.pop(context);
+                                }
+                              : null,
+                          tooltip: 'Remove from favourites',
+                          icon: Icon(Icons.favorite),
+                        )
+                      : IconButton(
+                          onPressed: isFavLoaded
+                              ? () {
+                                  addToFavourites(
+                                      context: context, quote: quote);
+                                  Navigator.pop(context);
+                                }
+                              : null,
+                          tooltip: 'Add to favourites',
+                          icon: Icon(
+                            Icons.favorite_border,
+                          )),
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: IconButton(

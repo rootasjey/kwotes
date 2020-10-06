@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/language.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../screens/web/about.dart';
+import '../../screens/web/contact.dart';
+import '../../screens/web/home.dart';
+import '../../screens/web/privacy_terms.dart';
 
 class Footer extends StatefulWidget {
   final ScrollController pageScrollController;
@@ -39,9 +42,7 @@ class _FooterState extends State<Footer> {
         alignment: WrapAlignment.spaceAround,
         children: <Widget>[
           languages(),
-
           developers(),
-
           resourcesLinks(),
         ],
       ),
@@ -53,10 +54,7 @@ class _FooterState extends State<Footer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            bottom: 30.0,
-            left: 15.0
-          ),
+          padding: const EdgeInsets.only(bottom: 30.0, left: 15.0),
           child: Opacity(
             opacity: .5,
             child: Text(
@@ -67,61 +65,53 @@ class _FooterState extends State<Footer> {
             ),
           ),
         ),
-
         FlatButton(
-          onPressed: null,
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'Documentation',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: null,
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'Documentation',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
-
+            )),
         FlatButton(
-          onPressed: null,
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'API References',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: null,
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'API References',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
-
+            )),
         FlatButton(
-          onPressed: null,
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'API Status',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: null,
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'API Status',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
-
+            )),
         FlatButton(
-          onPressed: () async {
-            onBeforeNav();
-            await launch('https://github.com/outofcontextapp/app');
-          },
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'GitHub',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: () async {
+              onBeforeNav();
+              await launch('https://github.com/outofcontextapp/app');
+            },
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'GitHub',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
+            )),
       ],
     );
   }
@@ -131,10 +121,7 @@ class _FooterState extends State<Footer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            bottom: 30.0,
-            left: 15.0
-          ),
+          padding: const EdgeInsets.only(bottom: 30.0, left: 15.0),
           child: Opacity(
             opacity: .5,
             child: Text(
@@ -145,40 +132,36 @@ class _FooterState extends State<Footer> {
             ),
           ),
         ),
-
         FlatButton(
-          onPressed: () async {
-            onBeforeNav();
-            Language.setLang(Language.en);
-            updateUserAccountLang();
-          },
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'English',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: () async {
+              onBeforeNav();
+              Language.setLang(Language.en);
+              updateUserAccountLang();
+            },
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'English',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
-
+            )),
         FlatButton(
-          onPressed: () {
-            onBeforeNav();
-            Language.setLang(Language.fr);
-            updateUserAccountLang();
-          },
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'Français',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: () {
+              onBeforeNav();
+              Language.setLang(Language.fr);
+              updateUserAccountLang();
+            },
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'Français',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
+            )),
       ],
     );
   }
@@ -188,10 +171,7 @@ class _FooterState extends State<Footer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            bottom: 30.0,
-            left: 15.0
-          ),
+          padding: const EdgeInsets.only(bottom: 30.0, left: 15.0),
           child: Opacity(
             opacity: .5,
             child: Text(
@@ -202,54 +182,54 @@ class _FooterState extends State<Footer> {
             ),
           ),
         ),
-
         FlatButton(
-          onPressed: () {
-            onBeforeNav();
-            FluroRouter.router.navigateTo(context, AboutRoute);
-          },
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'About',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: () {
+              onBeforeNav();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => About()),
+              );
+            },
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'About',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
-
+            )),
         FlatButton(
-          onPressed: () {
-            onBeforeNav();
-            FluroRouter.router.navigateTo(context, ContactRoute);
-          },
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'Contact',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: () {
+              onBeforeNav();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => Contact()),
+              );
+            },
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'Contact',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
-
+            )),
         FlatButton(
-          onPressed: () {
-            onBeforeNav();
-            FluroRouter.router.navigateTo(context, PrivacyRoute);
-          },
-          child: Opacity(
-            opacity: .5,
-            child: Text(
-              'Privacy & Terms',
-              style: TextStyle(
-                fontSize: 15.0,
+            onPressed: () {
+              onBeforeNav();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => PrivacyTerms()),
+              );
+            },
+            child: Opacity(
+              opacity: .5,
+              child: Text(
+                'Privacy & Terms',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-          )
-        ),
+            )),
       ],
     );
   }
@@ -262,7 +242,9 @@ class _FooterState extends State<Footer> {
         curve: Curves.easeOut,
       );
     } else if (widget.autoNavToHome) {
-      FluroRouter.router.navigateTo(context, RootRoute);
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => Home()),
+      );
     }
 
     showSnack(
@@ -287,16 +269,14 @@ class _FooterState extends State<Footer> {
     }
 
     try {
-     await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .updateData({
-          'lang': userState.lang,
-        }
-      );
+      await Firestore.instance
+          .collection('users')
+          .document(userAuth.uid)
+          .updateData({
+        'lang': userState.lang,
+      });
 
       notifyLangSuccess();
-
     } catch (error) {
       debugPrint(error.toString());
 

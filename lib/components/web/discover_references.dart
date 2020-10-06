@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/types/reference.dart';
+
+import '../../screens/references.dart';
 
 List<Reference> _references = [];
 
@@ -29,52 +29,47 @@ class _DiscoverReferencesState extends State<DiscoverReferences> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 90.0,
-        horizontal: 80.0,
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: Text(
-              'DISCOVER',
-              style: TextStyle(
-                fontSize: 16.0,
+        padding: EdgeInsets.symmetric(
+          vertical: 90.0,
+          horizontal: 80.0,
+        ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: Text(
+                'DISCOVER',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
               ),
             ),
-          ),
-
-          SizedBox(
-            width: 50.0,
-            child: Divider(
-              thickness: 2.0,
+            SizedBox(
+              width: 50.0,
+              child: Divider(
+                thickness: 2.0,
+              ),
             ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 40.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text('Do you know these references?'),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text('Do you know these references?'),
+              ),
             ),
-          ),
-
-          cardsItems(),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: allReferencesButton(),
-          ),
-        ],
-      )
-    );
+            cardsItems(),
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: allReferencesButton(),
+            ),
+          ],
+        ));
   }
 
   Widget allReferencesButton() {
     return RaisedButton.icon(
-      onPressed: () =>
-        FluroRouter.router.navigateTo(context, ReferencesRoute),
+      onPressed: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => References())),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(7.0),
@@ -84,9 +79,7 @@ class _DiscoverReferencesState extends State<DiscoverReferences> {
       icon: Opacity(opacity: 0.6, child: Icon(Icons.list)),
       label: Opacity(
         opacity: .6,
-        child: Text(
-          'All references'
-        ),
+        child: Text('All references'),
       ),
     );
   }

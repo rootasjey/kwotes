@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+
+import '../../screens/web/home.dart';
 
 class AppIconHeader extends StatefulWidget {
   final Function onTap;
@@ -33,8 +33,9 @@ class _AppIconHeaderState extends State<AppIconHeader> {
           width: widget.size,
           height: widget.size,
           child: InkWell(
-            onTap: widget.onTap
-              ?? () => FluroRouter.router.navigateTo(context, RootRoute),
+            onTap: widget.onTap ??
+                () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Home())),
             onLongPress: () => showFooter(),
           ),
         ),
@@ -47,7 +48,9 @@ class _AppIconHeaderState extends State<AppIconHeader> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Footer(closeModalOnNav: true,);
+        return Footer(
+          closeModalOnNav: true,
+        );
       },
     );
   }

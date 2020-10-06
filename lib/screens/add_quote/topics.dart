@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/screens/add_quote/author.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 
 class AddQuoteTopics extends StatefulWidget {
   @override
@@ -45,20 +44,19 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: FlatButton.icon(
-        onPressed: () {
-          setState(() => AddQuoteInputs.clearTopics());
-        },
-        icon: Opacity(
-          opacity: 0.6,
-          child: Icon(Icons.clear),
-        ),
-        label: Opacity(
-          opacity: 0.6,
-          child: Text(
-            'Clear all selected',
+          onPressed: () {
+            setState(() => AddQuoteInputs.clearTopics());
+          },
+          icon: Opacity(
+            opacity: 0.6,
+            child: Icon(Icons.clear),
           ),
-        )
-      ),
+          label: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Clear all selected',
+            ),
+          )),
     );
   }
 
@@ -79,13 +77,11 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
             ),
           ),
         ),
-
         FadeInY(
           beginY: 10.0,
           delay: 0.5,
           child: clearButton(),
         ),
-
         Observer(builder: (context) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 60.0),
@@ -94,15 +90,14 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               runSpacing: 10.0,
               children: appTopicsColors.topicsColors.map<Widget>((topicColor) {
                 final name = topicColor.name;
-                final selected = AddQuoteInputs.quote.topics.contains(topicColor.name);
+                final selected =
+                    AddQuoteInputs.quote.topics.contains(topicColor.name);
 
                 return ChoiceChip(
                   label: Text(
                     name,
                     style: TextStyle(
-                      color: selected
-                        ? Colors.white
-                        : stateColors.foreground,
+                      color: selected ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selectedColor: Color(topicColor.decimal),
@@ -110,8 +105,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                   onSelected: (bool selected) {
                     setState(() {
                       selected
-                        ? AddQuoteInputs.quote.topics.add(topicColor.name)
-                        : AddQuoteInputs.quote.topics.remove(topicColor.name);
+                          ? AddQuoteInputs.quote.topics.add(topicColor.name)
+                          : AddQuoteInputs.quote.topics.remove(topicColor.name);
                     });
                   },
                 );
@@ -129,7 +124,8 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
     }
 
     if (keyEvent.logicalKey.keyId == LogicalKeyboardKey.enter.keyId) {
-      FluroRouter.router.navigateTo(context, AddQuoteAuthorRoute);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => AddQuoteAuthor()));
       return;
     }
   }

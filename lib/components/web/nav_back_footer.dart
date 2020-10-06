@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/router/router.dart';
 
 class NavBackFooter extends StatelessWidget {
   @override
@@ -9,7 +8,7 @@ class NavBackFooter extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 200.0),
       child: FlatButton(
         onPressed: () {
-          FluroRouter.router.pop(context);
+          Navigator.of(context).pop();
         },
         shape: RoundedRectangleBorder(
           side: BorderSide(color: stateColors.primary),

@@ -7,7 +7,6 @@ import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/router/router.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -23,18 +22,19 @@ class _AllTopicsState extends State<AllTopics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            _scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                _scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
@@ -45,11 +45,9 @@ class _AllTopicsState extends State<AllTopics> {
         Column(
           children: <Widget>[
             bodyContent(),
-
             NavBackFooter(),
           ],
         ),
-
         Footer(),
       ],
     );
@@ -65,7 +63,6 @@ class _AllTopicsState extends State<AllTopics> {
             setState(() {
               isFabVisible = false;
             });
-
           } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
             setState(() {
               isFabVisible = true;
@@ -104,7 +101,6 @@ class _AllTopicsState extends State<AllTopics> {
                                   ),
                                 ),
                               ),
-
                               ControlledAnimation(
                                 delay: 1.seconds,
                                 duration: 1.seconds,
@@ -112,7 +108,9 @@ class _AllTopicsState extends State<AllTopics> {
                                 builder: (context, value) {
                                   return SizedBox(
                                     width: value,
-                                    child: Divider(thickness: 2.0,),
+                                    child: Divider(
+                                      thickness: 2.0,
+                                    ),
                                   );
                                 },
                               ),
@@ -120,13 +118,12 @@ class _AllTopicsState extends State<AllTopics> {
                           ),
                         ],
                       ),
-
                       Positioned(
                         left: 20.0,
                         top: 20.0,
                         child: IconButton(
                           onPressed: () {
-                            FluroRouter.router.pop(context);
+                            Navigator.of(context).pop();
                           },
                           tooltip: 'Back',
                           icon: Icon(Icons.arrow_back),
@@ -137,7 +134,6 @@ class _AllTopicsState extends State<AllTopics> {
                 );
               },
             ),
-
             topicsColorsCards(),
           ],
         ),
@@ -150,13 +146,11 @@ class _AllTopicsState extends State<AllTopics> {
       builder: (context) {
         if (appTopicsColors.topicsColors.length == 0) {
           return SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                LoadingAnimation(
-                  textTitle: 'Loading topics...',
-                ),
-              ]
-            ),
+            delegate: SliverChildListDelegate([
+              LoadingAnimation(
+                textTitle: 'Loading topics...',
+              ),
+            ]),
           );
         }
 

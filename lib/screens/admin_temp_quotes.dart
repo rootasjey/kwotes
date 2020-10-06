@@ -12,7 +12,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -21,25 +21,27 @@ import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
+import 'add_quote/steps.dart';
+
 class AdminTempQuotes extends StatefulWidget {
   @override
   AdminTempQuotesState createState() => AdminTempQuotesState();
 }
 
 class AdminTempQuotesState extends State<AdminTempQuotes> {
-  bool hasNext          = true;
-  bool hasErrors        = false;
-  bool isLoading        = false;
-  bool isLoadingMore    = false;
-  String lang           = 'en';
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  String lang = 'en';
   var lastDoc;
-  int limit             = 30;
-  bool descending       = true;
-  var itemsStyle        = ItemsStyle.list;
-  final pageRoute       = AdminTempQuotesRoute;
+  int limit = 30;
+  bool descending = true;
+  var itemsStyle = ItemsStyle.list;
+  final pageRoute = AdminTempQuotesRoute;
 
-  var scrollController  = ScrollController();
-  var tempQuotes        = List<TempQuote>();
+  var scrollController = ScrollController();
+  var tempQuotes = List<TempQuote>();
 
   @override
   initState() {
@@ -58,31 +60,31 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
@@ -100,15 +102,16 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -120,7 +123,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -128,15 +130,15 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -148,7 +150,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -165,7 +166,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -204,7 +204,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.2,
@@ -221,7 +220,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -242,11 +240,10 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   },
                   icon: Icon(Icons.list),
                   color: itemsStyle == ItemsStyle.list
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -267,8 +264,8 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   },
                   icon: Icon(Icons.grid_on),
                   color: itemsStyle == ItemsStyle.grid
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
             ],
@@ -301,25 +298,24 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.sentiment_neutral,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.sentiment_neutral,
+                size: 120.0,
+                color: Color(0xFFFF005C),
               ),
-              title: "You've no quote in validation at this moment",
-              subtitle: 'They will appear after you propose a new quote',
-              onRefresh: () => fetch(),
             ),
+            title: "You've no quote in validation at this moment",
+            subtitle: 'They will appear after you propose a new quote',
+            onRefresh: () => fetch(),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -373,9 +369,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     return PopupMenuButton<String>(
       icon: Icon(
         Icons.more_horiz,
-        color: color != null
-            ? color
-            : Colors.primaries,
+        color: color != null ? color : Colors.primaries,
       ),
       onSelected: (value) {
         if (value == 'delete') {
@@ -393,27 +387,25 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           return;
         }
       },
-      itemBuilder: (BuildContext context) =>
-        <PopupMenuEntry<String>>[
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
-          value: 'delete',
-          child: ListTile(
-            leading: Icon(Icons.delete_forever),
-            title: Text('Delete'),
-          )),
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete_forever),
+              title: Text('Delete'),
+            )),
         PopupMenuItem(
-          value: 'edit',
-          child: ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Edit'),
-          )),
+            value: 'edit',
+            child: ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Edit'),
+            )),
         PopupMenuItem(
-          value: 'validate',
-          child: ListTile(
-            leading: Icon(Icons.check),
-            title: Text('Validate'),
-          )
-        ),
+            value: 'validate',
+            child: ListTile(
+              leading: Icon(Icons.check),
+              title: Text('Validate'),
+            )),
       ],
     );
   }
@@ -427,28 +419,26 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           return TempQuoteRow(
             quote: tempQuote,
             onTap: () => editAction(tempQuote),
-            itemBuilder: (BuildContext context) =>
-              <PopupMenuEntry<String>>[
-                PopupMenuItem(
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
                   value: 'delete',
                   child: ListTile(
                     leading: Icon(Icons.delete_forever),
                     title: Text('Delete'),
                   )),
-                PopupMenuItem(
+              PopupMenuItem(
                   value: 'edit',
                   child: ListTile(
                     leading: Icon(Icons.edit),
                     title: Text('Edit'),
                   )),
-                PopupMenuItem(
+              PopupMenuItem(
                   value: 'validate',
                   child: ListTile(
                     leading: Icon(Icons.check),
                     title: Text('Validate'),
-                  )
-                ),
-              ],
+                  )),
+            ],
             onSelected: (value) {
               if (value == 'delete') {
                 deleteAction(tempQuote);
@@ -477,12 +467,12 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute, replace: true,);
-        return;
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
       }
-
     } catch (error) {
-      FluroRouter.router.navigateTo(context, SigninRoute, replace: true,);
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
     }
   }
 
@@ -498,7 +488,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       tempQuote: tempQuote,
     );
 
-    if (isOk) { return; }
+    if (isOk) {
+      return;
+    }
 
     setState(() {
       tempQuotes.insert(index, tempQuote);
@@ -514,7 +506,8 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   void editAction(TempQuote tempQuote) async {
     AddQuoteInputs.navigatedFromPath = 'admintempquotes';
     AddQuoteInputs.populateWithTempQuote(tempQuote);
-    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }
 
   Future fetch() async {
@@ -525,11 +518,11 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('tempquotes')
-        .where('lang', isEqualTo: lang)
-        .orderBy('createdAt', descending: descending)
-        .limit(30)
-        .getDocuments();
+          .collection('tempquotes')
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -553,7 +546,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -564,7 +556,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
 
     setState(() {
       isLoadingMore = true;
@@ -572,12 +566,12 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('tempquotes')
-        .where('lang', isEqualTo: lang)
-        .orderBy('createdAt', descending: descending)
-        .startAfterDocument(lastDoc)
-        .limit(30)
-        .getDocuments();
+          .collection('tempquotes')
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -599,7 +593,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       setState(() {
         isLoadingMore = false;
@@ -608,9 +601,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   void getSavedProps() {
-    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void validateAction(TempQuote tempQuote) async {
@@ -627,7 +620,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       uid: userAuth.uid,
     );
 
-    if (isOk) { return; }
+    if (isOk) {
+      return;
+    }
 
     setState(() {
       tempQuotes.insert(index, tempQuote);

@@ -8,8 +8,6 @@ import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -17,6 +15,9 @@ import 'package:memorare/utils/animation.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
+
+import 'author_page.dart';
+import 'reference_page.dart';
 
 class QuotePage extends StatefulWidget {
   final String id;
@@ -70,15 +71,12 @@ class _QuotePageState extends State<QuotePage> {
     return Column(
       children: <Widget>[
         quoteName(),
-
-        Padding(padding: EdgeInsets.only(top: 40.0),),
-
+        Padding(
+          padding: EdgeInsets.only(top: 40.0),
+        ),
         authorName(),
-
         referenceName(),
-
         topics(),
-
         actionButtons(),
       ],
     );
@@ -95,7 +93,9 @@ class _QuotePageState extends State<QuotePage> {
               IconButton(
                 padding: EdgeInsets.symmetric(horizontal: 50.0),
                 iconSize: 30.0,
-                icon: Icon(Icons.share,),
+                icon: Icon(
+                  Icons.share,
+                ),
                 onPressed: () {
                   shareFromMobile(
                     context: context,
@@ -107,9 +107,7 @@ class _QuotePageState extends State<QuotePage> {
                 AddToListButton(
                   quote: quote,
                 ),
-
-              if (userState.isUserConnected)
-                favButton(),
+              if (userState.isUserConnected) favButton(),
             ],
           ),
         );
@@ -128,10 +126,10 @@ class _QuotePageState extends State<QuotePage> {
         onPressed: () {
           final id = author.id;
 
-          FluroRouter.router.navigateTo(
-            context,
-            AuthorRoute.replaceFirst(':id', id)
-          );
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => AuthorPage(
+                    id: id,
+                  )));
         },
         child: Text(
           author.name,
@@ -143,33 +141,31 @@ class _QuotePageState extends State<QuotePage> {
       ),
       builderWithChild: (context, child, value) {
         return Padding(
-          padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          )
-        );
+            padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
+            child: Opacity(
+              opacity: value,
+              child: child,
+            ));
       },
     );
   }
 
   Widget backButton() {
     return Positioned(
-      left: 30.0,
-      top: 20.0,
-      child: Material(
-        color: Colors.transparent,
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: getFontColor(quoteColor),
+        left: 30.0,
+        top: 20.0,
+        child: Material(
+          color: Colors.transparent,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: getFontColor(quoteColor),
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   Widget errorView() {
@@ -192,9 +188,12 @@ class _QuotePageState extends State<QuotePage> {
       return IconButton(
         padding: EdgeInsets.all(30.0),
         iconSize: 40.0,
-        icon: Icon(Icons.favorite,),
+        icon: Icon(
+          Icons.favorite,
+        ),
         onPressed: () async {
-          setState(() { // optimistic
+          setState(() {
+            // optimistic
             quote.starred = false;
           });
 
@@ -215,9 +214,12 @@ class _QuotePageState extends State<QuotePage> {
     return IconButton(
       padding: EdgeInsets.symmetric(horizontal: 50.0),
       iconSize: 30.0,
-      icon: Icon(Icons.favorite_border,),
+      icon: Icon(
+        Icons.favorite_border,
+      ),
       onPressed: () async {
-        setState(() { // optimistic
+        setState(() {
+          // optimistic
           quote.starred = true;
         });
 
@@ -247,12 +249,10 @@ class _QuotePageState extends State<QuotePage> {
               child: LoadingAnimation(
                 title: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
-                  child: Text(
-                    'Loading quote...',
-                    style: TextStyle(
-                      fontSize: 25.0,
-                    )
-                  ),
+                  child: Text('Loading quote...',
+                      style: TextStyle(
+                        fontSize: 25.0,
+                      )),
                 ),
               ),
             ),
@@ -281,14 +281,13 @@ class _QuotePageState extends State<QuotePage> {
               horizontal: 30.0,
             ),
             child: createHeroQuoteAnimation(
-              isMobile: true,
-              quote: quote,
-              screenWidth: size.width,
-              screenHeight: size.height,
-              style: TextStyle(
-                color: getFontColor(quoteColor),
-              )
-            ),
+                isMobile: true,
+                quote: quote,
+                screenWidth: size.width,
+                screenHeight: size.height,
+                style: TextStyle(
+                  color: getFontColor(quoteColor),
+                )),
           ),
         ],
       ),
@@ -297,17 +296,17 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget referenceName() {
     if (quote.references == null || quote.references.length == 0) {
-      return Padding(padding: EdgeInsets.zero,);
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
     }
 
     final reference = quote.references.first;
 
     return InkWell(
       onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          ReferenceRoute.replaceFirst(':id', reference.id),
-        );
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => ReferencePage(id: reference.id)));
       },
       child: Padding(
         padding: EdgeInsets.only(bottom: 20.0),
@@ -326,47 +325,47 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget topics() {
     final topics = quote.topics;
-   final topicsDefined = topics != null && topics.length > 0;
+    final topicsDefined = topics != null && topics.length > 0;
 
-    return topicsDefined ?
-      Column(
-        children: <Widget>[
-          Divider(),
-          Padding(padding: const EdgeInsets.only(top: 50.0)),
+    return topicsDefined
+        ? Column(
+            children: <Widget>[
+              Divider(),
+              Padding(padding: const EdgeInsets.only(top: 50.0)),
+              SizedBox(
+                height: 220.0,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: topics.length,
+                  itemBuilder: (context, index) {
+                    final topic = topics.elementAt(index);
+                    final topicColor = appTopicsColors.find(topic);
 
-          SizedBox(
-            height: 220.0,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: topics.length,
-              itemBuilder: (context, index) {
-                final topic = topics.elementAt(index);
-                final topicColor = appTopicsColors.find(topic);
-
-                return FadeInX(
-                  beginX: 100.0,
-                  endX: 0.0,
-                  delay: index.toDouble(),
-                  child: TopicCardColor(
-                    size: 80.0,
-                    elevation: 6.0,
-                    color: Color(topicColor.decimal),
-                    name: topic,
-                    displayName: topic,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          Divider(),
-        ],
-      ) :
-      Padding(padding: EdgeInsets.zero,);
+                    return FadeInX(
+                      beginX: 100.0,
+                      endX: 0.0,
+                      delay: index.toDouble(),
+                      child: TopicCardColor(
+                        size: 80.0,
+                        elevation: 6.0,
+                        color: Color(topicColor.decimal),
+                        name: topic,
+                        displayName: topic,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Divider(),
+            ],
+          )
+        : Padding(
+            padding: EdgeInsets.zero,
+          );
   }
 
   Future fetch() async {
@@ -376,9 +375,9 @@ class _QuotePageState extends State<QuotePage> {
 
     try {
       final docSnap = await Firestore.instance
-        .collection('quotes')
-        .document(widget.id)
-        .get();
+          .collection('quotes')
+          .document(widget.id)
+          .get();
 
       if (!docSnap.exists) {
         setState(() {
@@ -403,7 +402,6 @@ class _QuotePageState extends State<QuotePage> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -420,11 +418,19 @@ class _QuotePageState extends State<QuotePage> {
 
     int above200 = 0;
 
-    if (color.blue > 200)   { above200++; }
-    if (color.green > 200)  { above200++; }
-    if (color.red > 200)    { above200++; }
+    if (color.blue > 200) {
+      above200++;
+    }
+    if (color.green > 200) {
+      above200++;
+    }
+    if (color.red > 200) {
+      above200++;
+    }
 
-    if (above200 > 1) { return Color(0xFF303030); }
+    if (above200 > 1) {
+      return Color(0xFF303030);
+    }
     return Colors.white;
   }
 }

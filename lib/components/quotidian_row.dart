@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quotidian.dart';
+
+import '../screens/author_page.dart';
+import '../screens/web/quote_page.dart';
 
 class QuotidianRow extends StatefulWidget {
   final Function itemBuilder;
@@ -28,7 +29,8 @@ class _QuotidianRowState extends State<QuotidianRow> {
   @override
   initState() {
     super.initState();
-    final topicColor = appTopicsColors.find(widget.quotidian.quote.topics.first);
+    final topicColor =
+        appTopicsColors.find(widget.quotidian.quote.topics.first);
 
     if (topicColor == null) {
       debugPrint("""Invalid topic for quote ${widget.quotidian.quote.id},
@@ -37,8 +39,8 @@ class _QuotidianRowState extends State<QuotidianRow> {
 
     setState(() {
       iconHoverColor = topicColor?.decimal != null
-        ? Color(topicColor.decimal)
-        : stateColors.primary;
+          ? Color(topicColor.decimal)
+          : stateColors.primary;
     });
   }
 
@@ -56,20 +58,14 @@ class _QuotidianRowState extends State<QuotidianRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            // print(widget.quote.quoteId);
-            FluroRouter.router.navigateTo(
-              context,
-              QuotePageRoute.replaceFirst(':id', quote.id),
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => QuotePage(quoteId: quote.id)),
             );
           },
           onHover: (isHover) {
-            elevation = isHover
-              ? 2.0
-              : 0.0;
+            elevation = isHover ? 2.0 : 0.0;
 
-            iconColor = isHover
-              ? iconHoverColor
-              : null;
+            iconColor = isHover ? iconHoverColor : null;
 
             setState(() {});
           },
@@ -81,7 +77,8 @@ class _QuotidianRowState extends State<QuotidianRow> {
                 Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: Tooltip(
-                    message: 'This quote will be shown on the ${widget.quotidian.date}',
+                    message:
+                        'This quote will be shown on the ${widget.quotidian.date}',
                     child: CircleAvatar(
                       radius: 20.0,
                       backgroundColor: stateColors.primary,
@@ -92,7 +89,6 @@ class _QuotidianRowState extends State<QuotidianRow> {
                     ),
                   ),
                 ),
-
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -104,14 +100,13 @@ class _QuotidianRowState extends State<QuotidianRow> {
                           fontSize: 20.0,
                         ),
                       ),
-
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
-
                       GestureDetector(
                         onTap: () {
-                          FluroRouter.router.navigateTo(
-                            context,
-                            AuthorRoute.replaceFirst(':id', quote.author.id),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    AuthorPage(id: quote.author.id)),
                           );
                         },
                         child: Opacity(
@@ -124,7 +119,6 @@ class _QuotidianRowState extends State<QuotidianRow> {
                     ],
                   ),
                 ),
-
                 SizedBox(
                   width: 50.0,
                   child: Column(
@@ -135,8 +129,11 @@ class _QuotidianRowState extends State<QuotidianRow> {
                         icon: Opacity(
                           opacity: .6,
                           child: iconColor != null
-                            ? Icon(Icons.more_vert, color: iconColor,)
-                            : Icon(Icons.more_vert),
+                              ? Icon(
+                                  Icons.more_vert,
+                                  color: iconColor,
+                                )
+                              : Icon(Icons.more_vert),
                         ),
                         onSelected: widget.onSelected,
                         itemBuilder: widget.itemBuilder,

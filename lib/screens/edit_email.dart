@@ -7,10 +7,9 @@ import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -32,11 +31,11 @@ class _EditEmailState extends State<EditEmail> {
   String emailErrorMessage = '';
 
   bool isCheckingAuth = false;
-  bool isUpdating     = false;
-  bool isCompleted    = false;
+  bool isUpdating = false;
+  bool isCompleted = false;
 
-  final beginY   = 100.0;
-  final delay     = 1.0;
+  final beginY = 100.0;
+  final delay = 1.0;
   final delayStep = 1.2;
 
   @override
@@ -62,7 +61,6 @@ class _EditEmailState extends State<EditEmail> {
               ),
             ),
           ),
-
           body(),
         ],
       ),
@@ -93,26 +91,24 @@ class _EditEmailState extends State<EditEmail> {
                 beginY: beginY,
                 child: emailButton(),
               ),
-
               FadeInY(
                 delay: delay + (.5 * delayStep),
                 beginY: beginY,
                 child: emailInput(),
               ),
-
               FadeInY(
                 delay: delay + (1 * delayStep),
                 beginY: beginY,
                 child: passwordInput(),
               ),
-
               FadeInY(
                 delay: delay + (2 * delayStep),
                 beginY: beginY,
                 child: validationButton(),
               ),
-
-              Padding(padding: const EdgeInsets.only(bottom: 200.0),),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 200.0),
+              ),
             ],
           ),
         ),
@@ -135,7 +131,6 @@ class _EditEmailState extends State<EditEmail> {
                   color: Colors.green,
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
                 child: Text(
@@ -145,7 +140,6 @@ class _EditEmailState extends State<EditEmail> {
                   ),
                 ),
               ),
-
               NavBackFooter(),
             ],
           ),
@@ -161,35 +155,34 @@ class _EditEmailState extends State<EditEmail> {
         child: FlatButton(
           onPressed: () {
             showDialog(
-              context: context,
-              builder: (context) {
-                return SimpleDialog(
-                  title: Text(
-                    'This is your current email',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                  children: <Widget>[
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 25.0,
-                        right: 25.0,
-                        top: 10.0,
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: Text(
+                      'This is your current email',
+                      style: TextStyle(
+                        fontSize: 15.0,
                       ),
-                      child: Text(
-                        currentEmail,
-                        style: TextStyle(
-                          color: stateColors.primary,
-                          fontWeight: FontWeight.bold,
+                    ),
+                    children: <Widget>[
+                      Divider(),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25.0,
+                          right: 25.0,
+                          top: 10.0,
+                        ),
+                        child: Text(
+                          currentEmail,
+                          style: TextStyle(
+                            color: stateColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              }
-            );
+                    ],
+                  );
+                });
           },
           child: Container(
             width: 250.0,
@@ -202,7 +195,6 @@ class _EditEmailState extends State<EditEmail> {
                       padding: const EdgeInsets.only(right: 10.0),
                       child: Icon(Icons.alternate_email),
                     ),
-
                     Opacity(
                       opacity: .7,
                       child: Text(
@@ -270,24 +262,22 @@ class _EditEmailState extends State<EditEmail> {
                 emailTimer = null;
               }
 
-              emailTimer = Timer(
-                1.seconds,
-                () async {
-                  final isAvailable = await checkEmailAvailability(email);
-                  if (!isAvailable) {
-                    setState(() {
-                      isCheckingEmail = false;
-                      emailErrorMessage = 'This email address is not available';
-                    });
-
-                    return;
-                  }
-
+              emailTimer = Timer(1.seconds, () async {
+                final isAvailable = await checkEmailAvailability(email);
+                if (!isAvailable) {
                   setState(() {
                     isCheckingEmail = false;
-                    emailErrorMessage = '';
+                    emailErrorMessage = 'This email address is not available';
                   });
+
+                  return;
+                }
+
+                setState(() {
+                  isCheckingEmail = false;
+                  emailErrorMessage = '';
                 });
+              });
             },
             validator: (value) {
               if (value.isEmpty) {
@@ -297,12 +287,8 @@ class _EditEmailState extends State<EditEmail> {
               return null;
             },
           ),
-
-          if (isCheckingEmail)
-            emailProgress(),
-
-          if (emailErrorMessage.isNotEmpty)
-            emailInputError(),
+          if (isCheckingEmail) emailProgress(),
+          if (emailErrorMessage.isNotEmpty) emailInputError(),
         ],
       ),
     );
@@ -314,18 +300,18 @@ class _EditEmailState extends State<EditEmail> {
         top: 8.0,
         left: 40.0,
       ),
-      child: Text(
-        emailErrorMessage,
-        style: TextStyle(
-          color: Colors.red.shade300,
-        )
-      ),
+      child: Text(emailErrorMessage,
+          style: TextStyle(
+            color: Colors.red.shade300,
+          )),
     );
   }
 
   Widget emailProgress() {
     return Container(
-      padding: const EdgeInsets.only(left: 40.0,),
+      padding: const EdgeInsets.only(
+        left: 40.0,
+      ),
       child: LinearProgressIndicator(),
     );
   }
@@ -371,7 +357,6 @@ class _EditEmailState extends State<EditEmail> {
           child: Column(
             children: <Widget>[
               CircularProgressIndicator(),
-
               Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: Text(
@@ -432,20 +417,21 @@ class _EditEmailState extends State<EditEmail> {
       });
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
 
       setState(() {
         currentEmail = userAuth.email;
       });
-
     } catch (error) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
     }
   }
 
   void updateEmail() async {
-    if (!inputValuesOk()) { return; }
+    if (!inputValuesOk()) {
+      return;
+    }
 
     setState(() {
       isUpdating = true;
@@ -473,7 +459,7 @@ class _EditEmailState extends State<EditEmail> {
           isUpdating = false;
         });
 
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
@@ -482,17 +468,17 @@ class _EditEmailState extends State<EditEmail> {
         password: password,
       );
 
-      final authResult = await userAuth.reauthenticateWithCredential(credentials);
+      final authResult =
+          await userAuth.reauthenticateWithCredential(credentials);
 
       await authResult.user.updateEmail(email);
 
       await Firestore.instance
-        .collection('users')
-        .document(authResult.user.uid)
-        .updateData({
-            'email': email,
-          }
-        );
+          .collection('users')
+          .document(authResult.user.uid)
+          .updateData({
+        'email': email,
+      });
 
       userState.clearAuthCache();
 
@@ -500,7 +486,6 @@ class _EditEmailState extends State<EditEmail> {
         isUpdating = false;
         isCompleted = true;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -508,12 +493,11 @@ class _EditEmailState extends State<EditEmail> {
         isUpdating = false;
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Error while updating your email. Please try again or contact us.'),
-        )
-      );
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+            'Error while updating your email. Please try again or contact us.'),
+      ));
     }
   }
 

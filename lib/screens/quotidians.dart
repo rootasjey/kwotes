@@ -9,9 +9,9 @@ import 'package:memorare/components/quotidian_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/enums.dart';
@@ -28,16 +28,16 @@ class Quotidians extends StatefulWidget {
 }
 
 class QuotidiansState extends State<Quotidians> {
-  bool canManage      = false;
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  var itemsStyle      = ItemsStyle.list;
-  String lang         = 'en';
-  int limit           = 30;
-  bool descending     = false;
-  final pageRoute     = QuotidiansRoute;
+  bool canManage = false;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  var itemsStyle = ItemsStyle.list;
+  String lang = 'en';
+  int limit = 30;
+  bool descending = false;
+  final pageRoute = QuotidiansRoute;
 
   List<Quotidian> quotidians = [];
   ScrollController scrollController = ScrollController();
@@ -53,9 +53,9 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   void initProps() {
-    lang        = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -68,7 +68,8 @@ class QuotidiansState extends State<Quotidians> {
         },
         child: NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent - 100.0) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent - 100.0) {
               return false;
             }
 
@@ -105,15 +106,16 @@ class QuotidiansState extends State<Quotidians> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -125,7 +127,6 @@ class QuotidiansState extends State<Quotidians> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -133,15 +134,15 @@ class QuotidiansState extends State<Quotidians> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -153,7 +154,6 @@ class QuotidiansState extends State<Quotidians> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -170,7 +170,6 @@ class QuotidiansState extends State<Quotidians> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -208,7 +207,6 @@ class QuotidiansState extends State<Quotidians> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.2,
@@ -225,7 +223,6 @@ class QuotidiansState extends State<Quotidians> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -246,11 +243,10 @@ class QuotidiansState extends State<Quotidians> {
                   },
                   icon: Icon(Icons.list),
                   color: itemsStyle == ItemsStyle.list
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -271,8 +267,8 @@ class QuotidiansState extends State<Quotidians> {
                   },
                   icon: Icon(Icons.grid_on),
                   color: itemsStyle == ItemsStyle.grid
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
             ],
@@ -287,7 +283,6 @@ class QuotidiansState extends State<Quotidians> {
       controller: scrollController,
       slivers: <Widget>[
         appBar(),
-
         if (itemsStyle == ItemsStyle.list) customScrollViewChild(),
         if (itemsStyle == ItemsStyle.grid) ...groupedGrids(),
       ],
@@ -313,25 +308,24 @@ class QuotidiansState extends State<Quotidians> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.sentiment_neutral,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.sentiment_neutral,
+                size: 120.0,
+                color: Color(0xFFFF005C),
               ),
-              title: "You've no quote in validation at this moment",
-              subtitle: 'They will appear after you propose a new quote',
-              onRefresh: () => fetch(),
             ),
+            title: "You've no quote in validation at this moment",
+            subtitle: 'They will appear after you propose a new quote',
+            onRefresh: () => fetch(),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -402,7 +396,6 @@ class QuotidiansState extends State<Quotidians> {
       (quotidian) => '${quotidian.date.year}-${quotidian.date.month}',
     );
 
-
     groups.forEach((yearMonth, groupedQuotidians) {
       final grid = groupedGrid(yearMonth, groupedQuotidians);
       widgets.addAll(grid);
@@ -449,7 +442,6 @@ class QuotidiansState extends State<Quotidians> {
     String yearMonth,
     List<Quotidian> group,
   }) {
-
     final splittedDate = yearMonth.split('-');
 
     final year = splittedDate[0];
@@ -476,28 +468,33 @@ class QuotidiansState extends State<Quotidians> {
                     Text(
                       '$month $year',
                     ),
-
                     SizedBox(
                       width: 100.0,
-                      child: Divider(thickness: 2,),
+                      child: Divider(
+                        thickness: 2,
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-
           Positioned(
             right: 0.0,
             child: FlatButton(
               onPressed: () {
-                deleteMonthDialog(yearMonth, group,);
+                deleteMonthDialog(
+                  yearMonth,
+                  group,
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 25.0,
                 ),
-                child: Icon(Icons.delete,),
+                child: Icon(
+                  Icons.delete,
+                ),
               ),
             ),
           ),
@@ -512,10 +509,10 @@ class QuotidiansState extends State<Quotidians> {
 
     return QuoteCard(
       onTap: () {
-        FluroRouter.router.navigateTo(
-          context,
-          QuotePageRoute.replaceFirst(':id', quotidian.id)
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => QuotePage(
+                  quoteId: quotidian.quote.id,
+                )));
       },
       title: quote.name,
       popupMenuButton: PopupMenuButton<String>(
@@ -531,12 +528,11 @@ class QuotidiansState extends State<Quotidians> {
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem(
-            value: 'delete',
-            child: ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Delete'),
-            )
-          ),
+              value: 'delete',
+              child: ListTile(
+                leading: Icon(Icons.delete),
+                title: Text('Delete'),
+              )),
         ],
       ),
       stackChildren: <Widget>[
@@ -554,73 +550,62 @@ class QuotidiansState extends State<Quotidians> {
   /// Contains multiple children in a Column.
   Widget itemList(List<Quotidian> group) {
     return Column(
-      children: group.map((quotidian) {
-        return QuotidianRow(
-          quotidian: quotidian,
-          itemBuilder: (context) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-              value: 'delete',
-              child: ListTile(
-                leading: Icon(Icons.delete),
-                title: Text('Delete'),
-              ),
+        children: group.map((quotidian) {
+      return QuotidianRow(
+        quotidian: quotidian,
+        itemBuilder: (context) => <PopupMenuEntry<String>>[
+          PopupMenuItem(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Delete'),
             ),
-          ],
-          onSelected: (value) {
-            switch (value) {
-              case 'delete':
-                deleteAction(quotidian);
-                break;
-              default:
-            }
-          },
-        );
-      }).toList()
-    );
+          ),
+        ],
+        onSelected: (value) {
+          switch (value) {
+            case 'delete':
+              deleteAction(quotidian);
+              break;
+            default:
+          }
+        },
+      );
+    }).toList());
   }
 
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: LoadingAnimation(),
-          ),
-        ]
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
   void deleteAction(Quotidian quotidian) async {
     try {
       await Firestore.instance
-        .collection('quotidians')
-        .document(quotidian.id)
-        .delete();
+          .collection('quotidians')
+          .document(quotidian.id)
+          .delete();
 
       setState(() {
         quotidians.removeWhere((element) => element.id == quotidian.id);
       });
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            'The quotidian has been successfully deleted.'
-          ),
-        )
-      );
-
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.green,
+        content: Text('The quotidian has been successfully deleted.'),
+      ));
     } catch (error) {
       debugPrint(error.toString());
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Sorry, an error occurred while deleting the quotidian.'
-          ),
-        )
-      );
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Sorry, an error occurred while deleting the quotidian.'),
+      ));
     }
   }
 
@@ -628,102 +613,100 @@ class QuotidiansState extends State<Quotidians> {
     // NOTE: maybe do this job in a cloud function
     group.forEach((quotidian) async {
       await Firestore.instance
-        .collection('quotidians')
-        .document(quotidian.id)
-        .delete();
+          .collection('quotidians')
+          .document(quotidian.id)
+          .delete();
 
       setState(() {
         quotidians.removeWhere((element) => element.id == quotidian.id);
       });
     });
-
   }
 
   void deleteMonthDialog(String yearMonth, List<Quotidian> grouped) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Delete $yearMonth group?',
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Delete $yearMonth group?',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 15.0,
-          ),
-          actionsPadding: const EdgeInsets.all(10.0),
-          content: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Divider(
-                  thickness: 1.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 22.0,
-                    vertical: 8.0,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 15.0,
+            ),
+            actionsPadding: const EdgeInsets.all(10.0),
+            content: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Divider(
+                    thickness: 1.0,
                   ),
-                  child: Column(
-                    children: <Widget>[
-                      Opacity(
-                        opacity: .6,
-                        child: Text(
-                          'This action cannot be undone.',
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0,
+                      vertical: 8.0,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Opacity(
+                          opacity: .6,
+                          child: Text(
+                            'This action cannot be undone.',
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () {
-                FluroRouter.router.pop(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
-                ),
-                child: Text(
-                  'CANCEL',
-                  style: TextStyle(
-                    color: stateColors.foreground.withOpacity(.6),
-                    fontWeight: FontWeight.bold,
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
+                  child: Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      color: stateColors.foreground.withOpacity(.6),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            RaisedButton(
-              onPressed: () {
-                FluroRouter.router.pop(context);
-                deleteMonth(grouped);
-              },
-              color: Colors.red,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
-                ),
-                child: Text(
-                  'DELETE',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  deleteMonth(grouped);
+                },
+                color: Colors.red,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
+                  child: Text(
+                    'DELETE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        );
-      }
-    );
+            ],
+          );
+        });
   }
 
   Future fetch() async {
@@ -732,14 +715,13 @@ class QuotidiansState extends State<Quotidians> {
       quotidians.clear();
     });
 
-
     try {
       final snapshot = await Firestore.instance
-        .collection('quotidians')
-        .where('lang', isEqualTo: lang)
-        .orderBy('date', descending: descending)
-        .limit(limit)
-        .getDocuments();
+          .collection('quotidians')
+          .where('lang', isEqualTo: lang)
+          .orderBy('date', descending: descending)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -764,7 +746,6 @@ class QuotidiansState extends State<Quotidians> {
         hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -784,12 +765,12 @@ class QuotidiansState extends State<Quotidians> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('quotidians')
-        .where('lang', isEqualTo: lang)
-        .orderBy('date', descending: descending)
-        .startAfterDocument(lastDoc)
-        .limit(limit)
-        .getDocuments();
+          .collection('quotidians')
+          .where('lang', isEqualTo: lang)
+          .orderBy('date', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -813,7 +794,6 @@ class QuotidiansState extends State<Quotidians> {
         lastDoc = snapshot.documents.last;
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -825,43 +805,41 @@ class QuotidiansState extends State<Quotidians> {
 
   void showQuoteSheet({Quotidian quotidian}) {
     showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 40.0,
-                    tooltip: 'Delete',
-                    onPressed: () {
-                      FluroRouter.router.pop(context);
-                      deleteAction(quotidian);
-                    },
-                    icon: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.delete_outline,
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 60.0,
+            ),
+            child: Wrap(
+              spacing: 30.0,
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    IconButton(
+                      iconSize: 40.0,
+                      tooltip: 'Delete',
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        deleteAction(quotidian);
+                      },
+                      icon: Opacity(
+                        opacity: .6,
+                        child: Icon(
+                          Icons.delete_outline,
+                        ),
                       ),
                     ),
-                  ),
-
-                  Text(
-                    'Delete',
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
+                    Text(
+                      'Delete',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

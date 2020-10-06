@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:supercharged/supercharged.dart';
 
 class ReferenceCard extends StatefulWidget {
@@ -17,17 +16,17 @@ class ReferenceCard extends StatefulWidget {
   final double width;
 
   ReferenceCard({
-    this.elevation      = 3.0,
-    this.height         = 330.0,
+    this.elevation = 3.0,
+    this.height = 330.0,
     this.id,
-    this.imageUrl       = '',
+    this.imageUrl = '',
     this.itemBuilder,
-    this.name           = '',
+    this.name = '',
     this.onSelected,
-    this.padding        = EdgeInsets.zero,
-    this.titleFontSize  = 18.0,
-    this.type           = 'reference',
-    this.width          = 250.0,
+    this.padding = EdgeInsets.zero,
+    this.titleFontSize = 18.0,
+    this.type = 'reference',
+    this.width = 250.0,
   });
 
   @override
@@ -53,15 +52,15 @@ class _ReferenceCardState extends State<ReferenceCard> {
       height = widget.height;
       elevation = widget.elevation;
 
-      assetImgPadding = width > 300.0 ?
-        const EdgeInsets.symmetric(
-          horizontal: 80.0,
-          vertical: 40.0,
-        ) :
-        const EdgeInsets.symmetric(
-          horizontal: 40.0,
-          vertical: 35.0,
-        );
+      assetImgPadding = width > 300.0
+          ? const EdgeInsets.symmetric(
+              horizontal: 80.0,
+              vertical: 40.0,
+            )
+          : const EdgeInsets.symmetric(
+              horizontal: 40.0,
+              vertical: 35.0,
+            );
     });
   }
 
@@ -85,34 +84,27 @@ class _ReferenceCardState extends State<ReferenceCard> {
     return Stack(
       children: <Widget>[
         Positioned.fill(
-          child: isImageOk ?
-          Ink.image(
-            image: NetworkImage(widget.imageUrl),
-            fit: BoxFit.cover,
-          ) :
-          Padding(
-            padding: assetImgPadding,
-            child: Opacity(
-              opacity: 0.6,
-              child: Icon(
-                Icons.library_books,
-                size: 60.0,
-              ),
-            ),
-          ),
+          child: isImageOk
+              ? Ink.image(
+                  image: NetworkImage(widget.imageUrl),
+                  fit: BoxFit.cover,
+                )
+              : Padding(
+                  padding: assetImgPadding,
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Icon(
+                      Icons.library_books,
+                      size: 60.0,
+                    ),
+                  ),
+                ),
         ),
-
         Positioned.fill(
           child: InkWell(
             onTap: () {
-              final route = widget.type == 'reference' ?
-                ReferenceRoute.replaceFirst(':id', widget.id) :
-                AuthorRoute.replaceFirst(':id', widget.id);
-
-              FluroRouter.router.navigateTo(
-                context,
-                route,
-              );
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ReferencePage(id: widget.id)));
             },
             onHover: (isHover) {
               if (isHover) {
@@ -120,8 +112,7 @@ class _ReferenceCardState extends State<ReferenceCard> {
                 width = widget.width + 2.5;
                 height = widget.height + 2.5;
                 elevation = widget.elevation + 2;
-              }
-              else {
+              } else {
                 opacity = 0.5;
                 width = widget.width;
                 height = widget.height;

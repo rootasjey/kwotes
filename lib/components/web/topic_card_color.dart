@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/web/topic_page.dart';
 import 'package:supercharged/supercharged.dart';
 
 class TopicCardColor extends StatefulWidget {
@@ -78,14 +77,15 @@ class _TopicCardColorState extends State<TopicCardColor> {
               return;
             }
 
-            FluroRouter.router.navigateTo(
-              context,
-              TopicRoute.replaceFirst(':name', widget.name)
-            );
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => TopicPage(name: widget.name)));
           },
           onHover: (isHover) {
-            if (isHover) { size = growSize; }
-            else { size = widget.size; }
+            if (isHover) {
+              size = growSize;
+            } else {
+              size = widget.size;
+            }
 
             setState(() {});
           },
@@ -108,8 +108,9 @@ class _TopicCardColorState extends State<TopicCardColor> {
         child: InkWell(
           onTap: widget.onTextTap,
           child: Text(
-            widget.displayName != null && widget.displayName.length > 0 ?
-              widget.displayName : widget.name,
+            widget.displayName != null && widget.displayName.length > 0
+                ? widget.displayName
+                : widget.name,
             overflow: TextOverflow.ellipsis,
             style: widget.style,
           ),

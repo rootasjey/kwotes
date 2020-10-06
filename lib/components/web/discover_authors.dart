@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/circle_author.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/types/author.dart';
+
+import '../../screens/authors.dart';
 
 List<Author> _authorsList = [];
 
@@ -30,55 +30,50 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 90.0,
-        horizontal: 80.0,
-      ),
-      foregroundDecoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.05),
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: Text(
-              'DISCOVER',
-              style: TextStyle(
-                fontSize: 16.0,
+        padding: EdgeInsets.symmetric(
+          vertical: 90.0,
+          horizontal: 80.0,
+        ),
+        foregroundDecoration: BoxDecoration(
+          color: Color.fromRGBO(0, 0, 0, 0.05),
+        ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: Text(
+                'DISCOVER',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
               ),
             ),
-          ),
-
-          SizedBox(
-            width: 50.0,
-            child: Divider(
-              thickness: 2.0,
+            SizedBox(
+              width: 50.0,
+              child: Divider(
+                thickness: 2.0,
+              ),
             ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 80.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text('Do you know these authors?'),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 80.0),
+              child: Opacity(
+                opacity: .6,
+                child: Text('Do you know these authors?'),
+              ),
             ),
-          ),
-
-          cardsItems(),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: allReferencesButton(),
-          ),
-        ],
-      )
-    );
+            cardsItems(),
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: allAuthorsButton(),
+            ),
+          ],
+        ));
   }
 
-  Widget allReferencesButton() {
+  Widget allAuthorsButton() {
     return RaisedButton.icon(
-      onPressed: () =>
-        FluroRouter.router.navigateTo(context, AuthorsRoute),
+      onPressed: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => Authors())),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(7.0),
@@ -88,9 +83,7 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
       icon: Opacity(opacity: 0.6, child: Icon(Icons.list)),
       label: Opacity(
         opacity: .6,
-        child: Text(
-          'All authors'
-        ),
+        child: Text('All authors'),
       ),
     );
   }
@@ -132,10 +125,10 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('authors')
-        .orderBy('updatedAt', descending: true)
-        .limit(3)
-        .getDocuments();
+          .collection('authors')
+          .orderBy('updatedAt', descending: true)
+          .limit(3)
+          .getDocuments();
 
       if (snapshot.documents.isNotEmpty) {
         snapshot.documents.forEach((doc) {
@@ -154,7 +147,6 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 

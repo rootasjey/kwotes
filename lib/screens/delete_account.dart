@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/web/home.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -50,7 +50,6 @@ class DeleteAccountState extends State<DeleteAccount> {
               ),
             ),
           ),
-
           body(),
         ],
       ),
@@ -116,11 +115,8 @@ class DeleteAccountState extends State<DeleteAccount> {
               ),
               child: FlatButton(
                 onPressed: () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    HomeRoute,
-                    replace: true,
-                  );
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => Home()));
                 },
                 child: Opacity(
                   opacity: .6,
@@ -173,13 +169,11 @@ class DeleteAccountState extends State<DeleteAccount> {
                 beginY: beginY,
                 child: warningCard(),
               ),
-
               FadeInY(
                 delay: delay + (.5 * delayStep),
                 beginY: beginY,
                 child: passwordInput(),
               ),
-
               FadeInY(
                 delay: delay + (1 * delayStep),
                 beginY: beginY,
@@ -188,7 +182,6 @@ class DeleteAccountState extends State<DeleteAccount> {
                   child: validationButton(),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 200.0),
               ),
@@ -298,9 +291,7 @@ class DeleteAccountState extends State<DeleteAccount> {
               Icon(
                 Icons.warning,
               ),
-
               Padding(padding: const EdgeInsets.only(left: 30.0)),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,7 +302,6 @@ class DeleteAccountState extends State<DeleteAccount> {
                         'Are you sure?',
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
@@ -329,44 +319,46 @@ class DeleteAccountState extends State<DeleteAccount> {
           ),
           onTap: () {
             showDialog(
-              context: context,
-              builder: (context) {
-                return SimpleDialog(
-                  title: Text(
-                    'What happens after?',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // contentPadding: const EdgeInsets.all(25.0),
-                  children: <Widget>[
-                    Divider(thickness: 1.0,),
-                    Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Your personal data will be deleted",
-                            style: TextStyle(),
-                          ),
-                          Padding(padding: const EdgeInsets.only(top: 15.0)),
-                          Text(
-                            "Your published quotes will stay",
-                            style: TextStyle(),
-                          ),
-                          Padding(padding: const EdgeInsets.only(top: 15.0)),
-                          Text(
-                            "Your username will (slowly) be dissaciated with the published quotes",
-                            style: TextStyle(),
-                          ),
-                        ],
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: Text(
+                      'What happens after?',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                );
-              });
+                    // contentPadding: const EdgeInsets.all(25.0),
+                    children: <Widget>[
+                      Divider(
+                        thickness: 1.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Your personal data will be deleted",
+                              style: TextStyle(),
+                            ),
+                            Padding(padding: const EdgeInsets.only(top: 15.0)),
+                            Text(
+                              "Your published quotes will stay",
+                              style: TextStyle(),
+                            ),
+                            Padding(padding: const EdgeInsets.only(top: 15.0)),
+                            Text(
+                              "Your username will (slowly) be dissaciated with the published quotes",
+                              style: TextStyle(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                });
           },
         ),
       ),
@@ -378,11 +370,11 @@ class DeleteAccountState extends State<DeleteAccount> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
     } catch (error) {
       debugPrint(error.toString());
-      FluroRouter.router.navigateTo(context, SigninRoute);
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
     }
   }
 
@@ -403,7 +395,7 @@ class DeleteAccountState extends State<DeleteAccount> {
           isDeleting = false;
         });
 
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 

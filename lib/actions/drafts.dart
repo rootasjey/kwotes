@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -19,11 +18,12 @@ Future<bool> deleteDraft({
   BuildContext context,
   TempQuote draft,
 }) async {
-
   final userAuth = await userState.userAuth;
 
   if (userAuth == null) {
-    FluroRouter.router.navigateTo(context, SigninRoute);
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => Signin()),
+    );
     return false;
   }
 
@@ -31,20 +31,18 @@ Future<bool> deleteDraft({
 
   try {
     await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('drafts')
-      .document(id)
-      .delete();
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('drafts')
+        .document(id)
+        .delete();
 
     return true;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
   }
 }
-
 
 bool deleteOfflineDraft({String createdAt}) {
   final drafts = appLocalStorage.getDrafts();
@@ -62,7 +60,6 @@ bool deleteOfflineDraft({String createdAt}) {
 Future<bool> saveDraft({
   BuildContext context,
 }) async {
-
   if (AddQuoteInputs.quote.name.isEmpty) {
     showSnack(
       context: context,
@@ -91,64 +88,62 @@ Future<bool> saveDraft({
     final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
-      FluroRouter.router.navigateTo(context, SigninRoute);
       return false;
     }
 
     await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('drafts')
-      .add({
-      'author'        : {
-        'id'          : AddQuoteInputs.author.id,
-        'job'         : AddQuoteInputs.author.job,
-        'jobLang'     : {},
-        'name'        : AddQuoteInputs.author.name,
-        'summary'     : AddQuoteInputs.author.summary,
-        'summaryLang' : {},
-        'updatedAt'   : DateTime.now(),
+        .collection('users')
+        .document(userAuth.uid)
+        .collection('drafts')
+        .add({
+      'author': {
+        'id': AddQuoteInputs.author.id,
+        'job': AddQuoteInputs.author.job,
+        'jobLang': {},
+        'name': AddQuoteInputs.author.name,
+        'summary': AddQuoteInputs.author.summary,
+        'summaryLang': {},
+        'updatedAt': DateTime.now(),
         'urls': {
-          'affiliate' : AddQuoteInputs.author.urls.affiliate,
-          'amazon'    : AddQuoteInputs.author.urls.amazon,
-          'facebook'  : AddQuoteInputs.author.urls.facebook,
-          'image'     : AddQuoteInputs.author.urls.image,
-          'netflix'   : AddQuoteInputs.author.urls.netflix,
+          'affiliate': AddQuoteInputs.author.urls.affiliate,
+          'amazon': AddQuoteInputs.author.urls.amazon,
+          'facebook': AddQuoteInputs.author.urls.facebook,
+          'image': AddQuoteInputs.author.urls.image,
+          'netflix': AddQuoteInputs.author.urls.netflix,
           'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-          'twitch'    : AddQuoteInputs.author.urls.twitch,
-          'twitter'   : AddQuoteInputs.author.urls.twitter,
-          'website'   : AddQuoteInputs.author.urls.website,
-          'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          'youtube'   : AddQuoteInputs.author.urls.youtube,
+          'twitch': AddQuoteInputs.author.urls.twitch,
+          'twitter': AddQuoteInputs.author.urls.twitter,
+          'website': AddQuoteInputs.author.urls.website,
+          'wikipedia': AddQuoteInputs.author.urls.wikipedia,
+          'youtube': AddQuoteInputs.author.urls.youtube,
         }
       },
-      'comments'      : comments,
-      'createdAt'     : DateTime.now(),
-      'lang'          : AddQuoteInputs.quote.lang,
-      'name'          : AddQuoteInputs.quote.name,
-      'mainReference' : {
-        'id'  : AddQuoteInputs.reference.id,
+      'comments': comments,
+      'createdAt': DateTime.now(),
+      'lang': AddQuoteInputs.quote.lang,
+      'name': AddQuoteInputs.quote.name,
+      'mainReference': {
+        'id': AddQuoteInputs.reference.id,
         'name': AddQuoteInputs.reference.name,
       },
-      'references'    : references,
-      'region'        : AddQuoteInputs.region,
-      'topics'        : topics,
+      'references': references,
+      'region': AddQuoteInputs.region,
+      'topics': topics,
       'user': {
         'id': userAuth.uid,
       },
-      'updatedAt'     : DateTime.now(),
-      'validation'    : {
-        'comment'     : {
-          'name'      : '',
-          'updatedAt' : DateTime.now(),
+      'updatedAt': DateTime.now(),
+      'validation': {
+        'comment': {
+          'name': '',
+          'updatedAt': DateTime.now(),
         },
-        'status'      : 'proposed',
-        'updatedAt'   : DateTime.now(),
+        'status': 'proposed',
+        'updatedAt': DateTime.now(),
       }
     });
 
     return true;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -158,7 +153,6 @@ Future<bool> saveDraft({
 Future<bool> saveOfflineDraft({
   BuildContext context,
 }) async {
-
   final comments = List<String>();
 
   if (AddQuoteInputs.comment.isNotEmpty) {
@@ -177,51 +171,51 @@ Future<bool> saveOfflineDraft({
     final userAuth = await userState.userAuth;
 
     Map<String, dynamic> draft = {
-      'author'        : {
-        'id'          : AddQuoteInputs.author.id,
-        'job'         : AddQuoteInputs.author.job,
-        'jobLang'     : {},
-        'name'        : AddQuoteInputs.author.name,
-        'summary'     : AddQuoteInputs.author.summary,
-        'summaryLang' : {},
-        'updatedAt'   : DateTime.now().toString(),
+      'author': {
+        'id': AddQuoteInputs.author.id,
+        'job': AddQuoteInputs.author.job,
+        'jobLang': {},
+        'name': AddQuoteInputs.author.name,
+        'summary': AddQuoteInputs.author.summary,
+        'summaryLang': {},
+        'updatedAt': DateTime.now().toString(),
         'urls': {
-          'affiliate' : AddQuoteInputs.author.urls.affiliate,
-          'amazon'    : AddQuoteInputs.author.urls.amazon,
-          'facebook'  : AddQuoteInputs.author.urls.facebook,
-          'image'     : AddQuoteInputs.author.urls.image,
-          'netflix'   : AddQuoteInputs.author.urls.netflix,
+          'affiliate': AddQuoteInputs.author.urls.affiliate,
+          'amazon': AddQuoteInputs.author.urls.amazon,
+          'facebook': AddQuoteInputs.author.urls.facebook,
+          'image': AddQuoteInputs.author.urls.image,
+          'netflix': AddQuoteInputs.author.urls.netflix,
           'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-          'twitch'    : AddQuoteInputs.author.urls.twitch,
-          'twitter'   : AddQuoteInputs.author.urls.twitter,
-          'website'   : AddQuoteInputs.author.urls.website,
-          'wikipedia' : AddQuoteInputs.author.urls.wikipedia,
-          'youtube'   : AddQuoteInputs.author.urls.youtube,
+          'twitch': AddQuoteInputs.author.urls.twitch,
+          'twitter': AddQuoteInputs.author.urls.twitter,
+          'website': AddQuoteInputs.author.urls.website,
+          'wikipedia': AddQuoteInputs.author.urls.wikipedia,
+          'youtube': AddQuoteInputs.author.urls.youtube,
         }
       },
-      'comments'      : comments,
-      'createdAt'     : DateTime.now().toString(),
-      'isOffline'     : true,
-      'lang'          : AddQuoteInputs.quote.lang,
-      'name'          : AddQuoteInputs.quote.name,
-      'mainReference' : {
-        'id'  : AddQuoteInputs.reference.id,
+      'comments': comments,
+      'createdAt': DateTime.now().toString(),
+      'isOffline': true,
+      'lang': AddQuoteInputs.quote.lang,
+      'name': AddQuoteInputs.quote.name,
+      'mainReference': {
+        'id': AddQuoteInputs.reference.id,
         'name': AddQuoteInputs.reference.name,
       },
-      'references'    : references,
-      'region'        : AddQuoteInputs.region,
-      'topics'        : topics,
+      'references': references,
+      'region': AddQuoteInputs.region,
+      'topics': topics,
       'user': {
         'id': userAuth.uid,
       },
-      'updatedAt'     : DateTime.now().toString(),
-      'validation'    : {
-        'comment'     : {
-          'name'      : '',
-          'updatedAt' : DateTime.now().toString(),
+      'updatedAt': DateTime.now().toString(),
+      'validation': {
+        'comment': {
+          'name': '',
+          'updatedAt': DateTime.now().toString(),
         },
-        'status'      : 'proposed',
-        'updatedAt'   : DateTime.now().toString(),
+        'status': 'proposed',
+        'updatedAt': DateTime.now().toString(),
       }
     };
 
@@ -229,7 +223,6 @@ Future<bool> saveOfflineDraft({
     appLocalStorage.saveDraft(draftString: draftString);
 
     return true;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -240,7 +233,9 @@ List<TempQuote> getOfflineDrafts() {
   final drafts = List<TempQuote>();
   final savedStringDrafts = appLocalStorage.getDrafts();
 
-  if (savedStringDrafts == null) { return drafts; }
+  if (savedStringDrafts == null) {
+    return drafts;
+  }
 
   savedStringDrafts.forEach((savedStringDraft) {
     final data = jsonDecode(savedStringDraft);

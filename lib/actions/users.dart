@@ -1,14 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+
+import '../screens/web/home.dart' as WebHome;
+import '../screens/home.dart' as MobileHome;
 
 Future<bool> checkEmailAvailability(String email) async {
   try {
@@ -22,7 +23,6 @@ Future<bool> checkEmailAvailability(String email) async {
     final resp = await callable.call({'email': email});
     final isOk = resp.data['isAvailable'] as bool;
     return isOk;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -30,8 +30,9 @@ Future<bool> checkEmailAvailability(String email) async {
 }
 
 bool checkEmailFormat(String email) {
-  return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}")
-    .hasMatch(email);
+  return RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}")
+      .hasMatch(email);
 }
 
 Future<bool> checkNameAvailability(String username) async {
@@ -46,7 +47,6 @@ Future<bool> checkNameAvailability(String username) async {
     final resp = await callable.call({'name': username});
     final isOk = resp.data['isAvailable'] as bool;
     return isOk;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -58,22 +58,29 @@ bool checkUsernameFormat(String username) {
   return username == str;
 }
 
-void userSignOut({BuildContext context, bool autoNavigateAfter = true,}) async {
+void userSignOut({
+  BuildContext context,
+  bool autoNavigateAfter = true,
+}) async {
   await appLocalStorage.clearUserAuthData();
   await FirebaseAuth.instance.signOut();
   userState.setUserDisconnected();
   userState.signOut();
 
   if (autoNavigateAfter) {
-    FluroRouter.router.navigateTo(context, RootRoute);
+    final child = kIsWeb ? WebHome.Home() : MobileHome.Home();
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => child),
+    );
   }
 }
 
 Future userGetAndSetAvatarUrl(AuthResult authResult) async {
   final user = await Firestore.instance
-    .collection('users')
-    .document(authResult.user.uid)
-    .get();
+      .collection('users')
+      .document(authResult.user.uid)
+      .get();
 
   final data = user.data;
   final avatarUrl = data['urls']['image'];

@@ -3,8 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/add_quote/steps.dart';
+import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/signup.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 
@@ -31,9 +34,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         return SliverLayoutBuilder(
           builder: (context, constrains) {
             final isNarrow = constrains.crossAxisExtent < 700.0;
-            final leftPadding = isNarrow
-              ? 0.0
-              : 60.0;
+            final leftPadding = isNarrow ? 0.0 : 60.0;
 
             return SliverAppBar(
               floating: true,
@@ -54,17 +55,15 @@ class _HomeAppBarState extends State<HomeAppBar> {
                         padding: const EdgeInsets.only(right: 16.0),
                         child: IconButton(
                           color: stateColors.foreground,
-                          onPressed: () => FluroRouter.router.pop(context),
+                          onPressed: () => Navigator.of(context).pop(),
                           icon: Icon(Icons.arrow_back),
                         ),
                       ),
-
                     AppIconHeader(
                       size: 40.0,
                       padding: EdgeInsets.zero,
                       onTap: widget.onTapIconHeader,
                     ),
-
                     if (widget.title.isNotEmpty)
                       Expanded(
                         child: Padding(
@@ -84,7 +83,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           ),
                         ),
                       ),
-
                     userSection(isNarrow),
                   ],
                 ),
@@ -101,7 +99,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
       onPressed: () {
         AddQuoteInputs.clearAll();
         AddQuoteInputs.navigatedFromPath = 'dashboard';
-        FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -116,7 +115,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
             padding: const EdgeInsets.only(right: 8.0),
             child: Icon(Icons.add, color: Colors.white),
           ),
-
           Text(
             'New quote',
             style: TextStyle(
@@ -132,10 +130,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget searchButton() {
     return IconButton(
       onPressed: () {
-        FluroRouter.router.navigateTo(
-          context,
-          SearchRoute,
-        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => AddQuoteSteps()));
       },
       color: stateColors.foreground,
       icon: Icon(Icons.search),
@@ -147,10 +143,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
       padding: const EdgeInsets.only(right: 8.0),
       child: FlatButton(
         onPressed: () {
-          FluroRouter.router.navigateTo(
-            context,
-            SignupRoute,
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (_) => Signup()));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -167,10 +160,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget signinButton() {
     return RaisedButton(
       onPressed: () {
-        FluroRouter.router.navigateTo(
-          context,
-          SigninRoute,
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => Signin()));
       },
       color: stateColors.primary,
       shape: RoundedRectangleBorder(
@@ -202,8 +192,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
     if (arrStr.length > 0) {
       initials = arrStr.length > 1
-        ? arrStr.reduce((value, element) => value + element.substring(1))
-        : arrStr.first;
+          ? arrStr.reduce((value, element) => value + element.substring(1))
+          : arrStr.first;
 
       if (initials != null && initials.isNotEmpty) {
         initials = initials.substring(0, 1);
@@ -233,126 +223,95 @@ class _HomeAppBarState extends State<HomeAppBar> {
             return;
           }
 
-          FluroRouter.router.navigateTo(
-            context,
-            value,
+          Rerouter.push(
+            context: context,
+            value: value,
           );
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           if (isNarrow)
             const PopupMenuItem(
-              value: AddQuoteContentRoute,
-              child: ListTile(
-                leading: Icon(Icons.add),
-                title: Text(
-                  'Add quote',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
+                value: AddQuoteContentRoute,
+                child: ListTile(
+                  leading: Icon(Icons.add),
+                  title: Text(
+                    'Add quote',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
-              )
-            ),
-
+                )),
           const PopupMenuItem(
-            value: SearchRoute,
-            child: ListTile(
-              leading: Icon(Icons.search),
-              title: Text(
-                'Search',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
+              value: SearchRoute,
+              child: ListTile(
+                leading: Icon(Icons.search),
+                title: Text(
+                  'Search',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            )
-          ),
-
+              )),
           const PopupMenuItem(
-            value: FavouritesRoute,
-            child: ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text(
-                'Favourites',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
+              value: FavouritesRoute,
+              child: ListTile(
+                leading: Icon(Icons.favorite),
+                title: Text(
+                  'Favourites',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            )
-          ),
-
+              )),
           const PopupMenuItem(
-            value: ListsRoute,
-            child: ListTile(
-              leading: Icon(Icons.list),
-              title: Text(
-                'Lists',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
+              value: ListsRoute,
+              child: ListTile(
+                leading: Icon(Icons.list),
+                title: Text(
+                  'Lists',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            )
-          ),
-
+              )),
           const PopupMenuItem(
             value: DraftsRoute,
             child: ListTile(
               leading: Icon(Icons.edit),
               title: Text(
                 'Drafts',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
-
           const PopupMenuItem(
             value: PublishedQuotesRoute,
             child: ListTile(
               leading: Icon(Icons.cloud_done),
               title: Text(
                 'Published',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
-
           const PopupMenuItem(
-            value: TempQuotesRoute,
-            child: ListTile(
-              leading: Icon(Icons.timelapse),
-              title: Text(
-                'In Validation',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
+              value: TempQuotesRoute,
+              child: ListTile(
+                leading: Icon(Icons.timelapse),
+                title: Text(
+                  'In Validation',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            )
-          ),
-
+              )),
           const PopupMenuItem(
             value: AccountRoute,
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
                 'Settings',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
-
           const PopupMenuItem(
             value: 'signout',
             child: ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text(
                 'Sign out',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -367,21 +326,20 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
       if (userState.isUserConnected) {
         isNarrow
-          ? children.add(userAvatar(isNarrow: isNarrow))
-          : children.addAll([
-              userAvatar(),
-              addNewQuoteButton(),
-              searchButton(),
-            ]);
-
+            ? children.add(userAvatar(isNarrow: isNarrow))
+            : children.addAll([
+                userAvatar(),
+                addNewQuoteButton(),
+                searchButton(),
+              ]);
       } else {
         isNarrow
-          ? children.add(userSigninMenu())
-          : children.addAll([
-              signinButton(),
-              signupButton(),
-              searchButton(),
-            ]);
+            ? children.add(userSigninMenu())
+            : children.addAll([
+                signinButton(),
+                signupButton(),
+                searchButton(),
+              ]);
       }
 
       return Container(
@@ -423,9 +381,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
         ),
       ],
       onSelected: (value) {
-        FluroRouter.router.navigateTo(
-          context,
-          value,
+        Rerouter.push(
+          context: context,
+          value: value,
         );
       },
     );

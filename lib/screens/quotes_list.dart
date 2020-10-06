@@ -9,8 +9,7 @@ import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
@@ -20,20 +19,22 @@ import 'package:memorare/utils/snack.dart';
 class QuotesList extends StatefulWidget {
   final String id;
 
-  QuotesList({this.id,});
+  QuotesList({
+    @required this.id,
+  });
 
   @override
   _QuotesListState createState() => _QuotesListState();
 }
 
 class _QuotesListState extends State<QuotesList> {
-  bool descending     = true;
-  bool hasErrors      = false;
-  bool hasNext        = true;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
+  bool descending = true;
+  bool hasErrors = false;
+  bool hasNext = true;
+  bool isLoading = false;
+  bool isLoadingMore = false;
   bool isDeletingList = false;
-  int limit           = 10;
+  int limit = 10;
 
   var lastDoc;
   final scrollController = ScrollController();
@@ -45,7 +46,7 @@ class _QuotesListState extends State<QuotesList> {
 
   String updateListName = '';
   String updateListDesc = '';
-  bool updateListIsPublic   = false;
+  bool updateListIsPublic = false;
 
   @override
   initState() {
@@ -62,38 +63,36 @@ class _QuotesListState extends State<QuotesList> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: quotesList == null
-        ? 'List'
-        : quotesList.name,
+      textTitle: quotesList == null ? 'List' : quotesList.name,
       subHeader: Observer(
         builder: (context) {
           return Wrap(
@@ -117,25 +116,23 @@ class _QuotesListState extends State<QuotesList> {
                   ),
                 ),
               ),
-
               FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: OutlineButton(
-                  onPressed: () => showDeleteListDialog(),
-                  color: stateColors.background.withAlpha(100),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.delete),
-                      ),
-                      Text('Delete'),
-                    ],
-                  ),
-                )
-              ),
+                  beginY: 10.0,
+                  delay: 2.5,
+                  child: OutlineButton(
+                    onPressed: () => showDeleteListDialog(),
+                    color: stateColors.background.withAlpha(100),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.delete),
+                        ),
+                        Text('Delete'),
+                      ],
+                    ),
+                  )),
             ],
           );
         },
@@ -162,59 +159,55 @@ class _QuotesListState extends State<QuotesList> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child:
-            Container(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 80.0),
-                    child: Opacity(
-                      opacity: .8,
-                      child: Icon(
-                        Icons.chat_bubble_outline,
-                        size: 100.0,
-                        color: Color(0xFFFF005C),
-                      ),
-                    ),
-                  ),
-
-                  Opacity(
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: Container(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 80.0),
+                  child: Opacity(
                     opacity: .8,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 60.0),
-                      child: Text(
-                        'No quote yet',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
+                    child: Icon(
+                      Icons.chat_bubble_outline,
+                      size: 100.0,
+                      color: Color(0xFFFF005C),
+                    ),
+                  ),
+                ),
+                Opacity(
+                  opacity: .8,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 60.0),
+                    child: Text(
+                      'No quote yet',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25.0,
                       ),
                     ),
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
-                    child: Opacity(
-                      opacity: .6,
-                      child: Text(
-                        "You can add some from other pages" ,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                  child: Opacity(
+                    opacity: .6,
+                    child: Text(
+                      "You can add some from other pages",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18.0,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -234,12 +227,11 @@ class _QuotesListState extends State<QuotesList> {
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: LoadingAnimation(),
-          ),
-        ]
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
@@ -308,16 +300,16 @@ class _QuotesListState extends State<QuotesList> {
           isLoading = false;
         });
 
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final docList = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(widget.id)
-        .get();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(widget.id)
+          .get();
 
       if (!docList.exists) {
         showSnack(
@@ -326,7 +318,7 @@ class _QuotesListState extends State<QuotesList> {
           type: SnackType.error,
         );
 
-        FluroRouter.router.pop(context);
+        Navigator.of(context).pop();
         return;
       }
 
@@ -337,13 +329,13 @@ class _QuotesListState extends State<QuotesList> {
       updateListIsPublic = quotesList.isPublic;
 
       final collSnap = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(quotesList.id)
-        .collection('quotes')
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(quotesList.id)
+          .collection('quotes')
+          .limit(limit)
+          .getDocuments();
 
       if (collSnap.documents.isEmpty) {
         setState(() {
@@ -365,7 +357,6 @@ class _QuotesListState extends State<QuotesList> {
         hasNext = collSnap.documents.length == limit;
         isLoading = false;
       });
-
     } catch (err) {
       debugPrint(err.toString());
 
@@ -388,19 +379,19 @@ class _QuotesListState extends State<QuotesList> {
           isLoadingMore = false;
         });
 
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(quotesList.id)
-        .collection('quotes')
-        .startAfterDocument(lastDoc)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(quotesList.id)
+          .collection('quotes')
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -422,7 +413,6 @@ class _QuotesListState extends State<QuotesList> {
         hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
-
     } catch (err) {
       debugPrint(err.toString());
 
@@ -438,18 +428,19 @@ class _QuotesListState extends State<QuotesList> {
     updateListIsPublic = quotesList.isPublic;
 
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, childSetState) {
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, childSetState) {
             return SimpleDialog(
               title: Text(
                 'Edit ${quotesList.name}',
                 overflow: TextOverflow.ellipsis,
               ),
               children: <Widget>[
-                Divider(thickness: 1.0,),
+                Divider(
+                  thickness: 1.0,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -462,10 +453,8 @@ class _QuotesListState extends State<QuotesList> {
                       labelStyle: TextStyle(color: stateColors.primary),
                       hintText: quotesList.name,
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: stateColors.primary,
-                          width: 2.0
-                        ),
+                        borderSide:
+                            BorderSide(color: stateColors.primary, width: 2.0),
                       ),
                     ),
                     onChanged: (newValue) {
@@ -473,7 +462,6 @@ class _QuotesListState extends State<QuotesList> {
                     },
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -485,10 +473,8 @@ class _QuotesListState extends State<QuotesList> {
                       labelStyle: TextStyle(color: stateColors.primary),
                       hintText: quotesList.description,
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: stateColors.primary,
-                          width: 2.0
-                        ),
+                        borderSide:
+                            BorderSide(color: stateColors.primary, width: 2.0),
                       ),
                     ),
                     onChanged: (newValue) {
@@ -496,7 +482,6 @@ class _QuotesListState extends State<QuotesList> {
                     },
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
@@ -509,22 +494,19 @@ class _QuotesListState extends State<QuotesList> {
                           });
                         },
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Opacity(
                           opacity: .6,
-                          child: Text(
-                            'Is public?'
-                          ),
+                          child: Text('Is public?'),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                Divider(height: 15.0,),
-
+                Divider(
+                  height: 15.0,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
@@ -543,11 +525,9 @@ class _QuotesListState extends State<QuotesList> {
                           'Cancel',
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 15.0),
                       ),
-
                       RaisedButton(
                         color: stateColors.primary,
                         onPressed: () {
@@ -564,126 +544,123 @@ class _QuotesListState extends State<QuotesList> {
                 ),
               ],
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 
   void showDeleteListDialog() {
     final name = quotesList.name;
 
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Delete $name?'),
-          contentPadding: EdgeInsets.zero,
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Padding(padding: const EdgeInsets.only(top: 10.0)),
-                Divider(thickness: 1.0,),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 16.0,
-                    right: 16.0,
-                    bottom: 16.0,
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Delete $name?'),
+            contentPadding: EdgeInsets.zero,
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(top: 10.0)),
+                  Divider(
+                    thickness: 1.0,
                   ),
-                  child: Opacity(
-                  opacity: 0.6,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20.0,
+                      left: 16.0,
+                      right: 16.0,
+                      bottom: 16.0,
+                    ),
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'This action is irreversible.',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
                   child: Text(
-                      'This action is irreversible.',
+                    'Cancel',
+                  ),
+                ),
+              ),
+              RaisedButton(
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  delete();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  void showQuoteSheet(Quote quote) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 60.0,
+            ),
+            child: Wrap(
+              spacing: 30.0,
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  iconSize: 40.0,
+                  tooltip: 'Delete',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    removeQuote(quote);
+                  },
+                  icon: Opacity(
+                    opacity: .6,
+                    child: Icon(
+                      Icons.delete_outline,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  iconSize: 40.0,
+                  tooltip: 'Delete',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    shareFromMobile(
+                      context: context,
+                      quote: quote,
+                    );
+                  },
+                  icon: Opacity(
+                    opacity: .6,
+                    child: Icon(
+                      Icons.share,
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'Cancel',
-                ),
-              ),
-            ),
-            RaisedButton(
-              color: Colors.red,
-              onPressed: () {
-                Navigator.of(context).pop();
-                delete();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        );
-      }
-    );
-  }
-
-  void showQuoteSheet(Quote quote) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 60.0,
-          ),
-          child: Wrap(
-            spacing: 30.0,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              IconButton(
-                iconSize: 40.0,
-                tooltip: 'Delete',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  removeQuote(quote);
-                },
-                icon: Opacity(
-                  opacity: .6,
-                  child: Icon(
-                    Icons.delete_outline,
-                  ),
-                ),
-              ),
-
-              IconButton(
-                iconSize: 40.0,
-                tooltip: 'Delete',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  shareFromMobile(
-                    context: context,
-                    quote: quote,
-                  );
-                },
-                icon: Opacity(
-                  opacity: .6,
-                  child: Icon(
-                    Icons.share,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+          );
+        });
   }
 
   void delete() async {
@@ -733,7 +710,8 @@ class _QuotesListState extends State<QuotesList> {
 
       showSnack(
         context: context,
-        message: "Sorry, could not remove the quote from your list. Please try again later.",
+        message:
+            "Sorry, could not remove the quote from your list. Please try again later.",
         type: SnackType.error,
       );
     }
@@ -741,15 +719,15 @@ class _QuotesListState extends State<QuotesList> {
 
   void update() async {
     final success = await updateList(
-      context     : context,
-      id          : widget.id,
-      name        : updateListName,
-      description : updateListDesc,
-      isPublic    : updateListIsPublic,
-      iconUrl     : quotesList.iconUrl,
+      context: context,
+      id: widget.id,
+      name: updateListName,
+      description: updateListDesc,
+      isPublic: updateListIsPublic,
+      iconUrl: quotesList.iconUrl,
     );
 
-    if (!success){
+    if (!success) {
       showSnack(
         context: context,
         message: "Sorry, could not update your list. Please try again later.",

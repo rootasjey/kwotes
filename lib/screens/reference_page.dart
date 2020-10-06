@@ -6,8 +6,7 @@ import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/quotes_by_author_ref.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
@@ -52,7 +51,8 @@ class ReferencePageState extends State<ReferencePage> {
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+          if (scrollNotif.metrics.pixels <
+              scrollNotif.metrics.maxScrollExtent) {
             return false;
           }
 
@@ -61,12 +61,9 @@ class ReferencePageState extends State<ReferencePage> {
         child: CustomScrollView(
           slivers: <Widget>[
             HomeAppBar(
-              title: reference != null
-                ? reference.name
-                : '',
+              title: reference != null ? reference.name : '',
               automaticallyImplyLeading: true,
             ),
-
             bodyContent(),
           ],
         ),
@@ -85,54 +82,54 @@ class ReferencePageState extends State<ReferencePage> {
       child: Card(
         elevation: imageUrlOk ? 5.0 : 0.0,
         child: imageUrlOk
-          ? Ink.image(
-              image: NetworkImage(
-                reference.urls.image,
-              ),
-              fit: BoxFit.cover,
-              child: InkWell(
-                onHover: (isHover) {
-                  if (isHover) {
+            ? Ink.image(
+                image: NetworkImage(
+                  reference.urls.image,
+                ),
+                fit: BoxFit.cover,
+                child: InkWell(
+                  onHover: (isHover) {
+                    if (isHover) {
+                      setState(() {
+                        avatarHeight = (avatarInitHeight) + 10.0;
+                        avatarWidth = (avatarInitWidth) + 10.0;
+                      });
+
+                      return;
+                    }
+
                     setState(() {
-                      avatarHeight = (avatarInitHeight) + 10.0;
-                      avatarWidth = (avatarInitWidth) + 10.0;
+                      avatarHeight = avatarInitHeight;
+                      avatarWidth = avatarInitWidth;
                     });
 
                     return;
-                  }
-
-                  setState(() {
-                    avatarHeight = avatarInitHeight;
-                    avatarWidth = avatarInitWidth;
-                  });
-
-                  return;
-                },
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Container(
-                          child: Image(
-                            image: NetworkImage(reference.urls.image),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    });
-                },
-              ),
-            )
-          : Center(
-              child: Text(
-                reference.name.substring(0, 2).toUpperCase(),
-                style: TextStyle(
-                  fontSize: 50.0,
+                  },
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Container(
+                              child: Image(
+                                image: NetworkImage(reference.urls.image),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                ),
+              )
+            : Center(
+                child: Text(
+                  reference.name.substring(0, 2).toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 50.0,
+                  ),
                 ),
               ),
-            ),
       ),
     );
   }
@@ -183,9 +180,7 @@ class ReferencePageState extends State<ReferencePage> {
       delegate: SliverChildListDelegate([
         LayoutBuilder(
           builder: (context, constrains) {
-            return constrains.maxWidth < 700
-              ? smallView()
-              : largeView();
+            return constrains.maxWidth < 700 ? smallView() : largeView();
           },
         ),
       ]),
@@ -210,7 +205,6 @@ class ReferencePageState extends State<ReferencePage> {
                   delay: 1.0,
                   child: avatar(scale: 1.5),
                 ),
-
                 ControlledAnimation(
                   delay: 1.seconds,
                   duration: 1.seconds,
@@ -225,13 +219,11 @@ class ReferencePageState extends State<ReferencePage> {
                     );
                   },
                 ),
-
                 FadeInY(
                   beginY: beginY,
                   delay: 3.0,
                   child: types(),
                 ),
-
                 FadeInY(
                   beginY: beginY,
                   delay: 3.2,
@@ -239,10 +231,11 @@ class ReferencePageState extends State<ReferencePage> {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: RaisedButton.icon(
                       onPressed: () {
-                        FluroRouter.router.navigateTo(
-                          context,
-                          ReferenceQuotesRoute.replaceFirst(':id', widget.id)
-                        );
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => QuotesByAuthorRef(
+                                  id: widget.id,
+                                  type: SubjectType.reference,
+                                )));
                       },
                       color: stateColors.primary,
                       textColor: Colors.white,
@@ -251,14 +244,11 @@ class ReferencePageState extends State<ReferencePage> {
                     ),
                   ),
                 ),
-
                 Padding(padding: const EdgeInsets.only(top: 40.0)),
-
                 links(),
               ],
             ),
           ),
-
           Expanded(
             child: summaryLarge(),
           ),
@@ -278,13 +268,11 @@ class ReferencePageState extends State<ReferencePage> {
             delay: 1.0,
             child: avatar(),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 2.0,
             child: name(),
           ),
-
           ControlledAnimation(
             delay: 1.seconds,
             duration: 1.seconds,
@@ -299,13 +287,11 @@ class ReferencePageState extends State<ReferencePage> {
               );
             },
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 3.0,
             child: types(),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 3.4,
@@ -313,10 +299,11 @@ class ReferencePageState extends State<ReferencePage> {
               padding: const EdgeInsets.only(top: 16.0),
               child: RaisedButton.icon(
                 onPressed: () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    ReferenceQuotesRoute.replaceFirst(':id', widget.id)
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => QuotesByAuthorRef(
+                            id: widget.id,
+                            type: SubjectType.reference,
+                          )));
                 },
                 color: stateColors.primary,
                 textColor: Colors.white,
@@ -325,7 +312,6 @@ class ReferencePageState extends State<ReferencePage> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(
               top: 45.0,
@@ -357,7 +343,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.website,
             imageUrl: 'assets/images/world-globe.png',
           ),
-
         if (urls.wikipedia.isNotEmpty)
           Observer(
             builder: (_) {
@@ -365,12 +350,10 @@ class ReferencePageState extends State<ReferencePage> {
                 delay: 1.2,
                 name: 'Wikipedia',
                 url: urls.wikipedia,
-                imageUrl:
-                  'assets/images/wikipedia-${stateColors.iconExt}.png',
+                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
               );
             },
           ),
-
         if (urls.amazon.isNotEmpty)
           linkSquareButton(
             delay: 1.2,
@@ -378,7 +361,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.amazon,
             imageUrl: 'assets/images/amazon.png',
           ),
-
         if (urls.facebook.isNotEmpty)
           linkSquareButton(
             delay: 1.4,
@@ -386,7 +368,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
-
         if (urls.netflix.isNotEmpty)
           linkSquareButton(
             delay: 1.6,
@@ -394,7 +375,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.netflix,
             imageUrl: 'assets/images/netflix.png',
           ),
-
         if (urls.primeVideo.isNotEmpty)
           linkSquareButton(
             delay: 1.8,
@@ -402,7 +382,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
           ),
-
         if (urls.twitch.isNotEmpty)
           linkSquareButton(
             delay: 2.0,
@@ -410,7 +389,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.twitch,
             imageUrl: 'assets/images/twitch.png',
           ),
-
         if (urls.twitter.isNotEmpty)
           linkSquareButton(
             delay: 2.2,
@@ -418,7 +396,6 @@ class ReferencePageState extends State<ReferencePage> {
             url: urls.twitter,
             imageUrl: 'assets/images/twitter.png',
           ),
-
         if (urls.youtube.isNotEmpty)
           linkSquareButton(
             delay: 2.4,
@@ -460,7 +437,6 @@ class ReferencePageState extends State<ReferencePage> {
     String url,
     String imageUrl,
   }) {
-
     return FadeInX(
       beginX: 50.0,
       delay: delay,
@@ -495,7 +471,6 @@ class ReferencePageState extends State<ReferencePage> {
       child: Column(
         children: <Widget>[
           heroSmall(),
-
           FadeInY(
             beginY: beginY,
             delay: 4.0,
@@ -512,7 +487,6 @@ class ReferencePageState extends State<ReferencePage> {
         Divider(
           thickness: 1.0,
         ),
-
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -525,14 +499,12 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
-
         SizedBox(
           width: 100.0,
           child: Divider(
             thickness: 1.0,
           ),
         ),
-
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 40.0,
@@ -548,7 +520,6 @@ class ReferencePageState extends State<ReferencePage> {
             ),
           ),
         ),
-
         if (reference.urls.wikipedia?.isNotEmpty)
           OutlineButton(
             onPressed: () => launch(reference.urls.wikipedia),
@@ -572,14 +543,12 @@ class ReferencePageState extends State<ReferencePage> {
               ),
             ),
           ),
-
           SizedBox(
             width: 100.0,
             child: Divider(
               thickness: 1.0,
             ),
           ),
-
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -598,7 +567,6 @@ class ReferencePageState extends State<ReferencePage> {
               ),
             ),
           ),
-
           if (reference.urls.wikipedia?.isNotEmpty)
             OutlineButton(
               onPressed: () => launch(reference.urls.wikipedia),
@@ -649,9 +617,9 @@ class ReferencePageState extends State<ReferencePage> {
 
     try {
       final docSnap = await Firestore.instance
-        .collection('references')
-        .document(widget.id)
-        .get();
+          .collection('references')
+          .document(widget.id)
+          .get();
 
       if (!docSnap.exists) {
         setState(() {
@@ -668,8 +636,8 @@ class ReferencePageState extends State<ReferencePage> {
         reference = Reference.fromJSON(data);
 
         nameEllipsis = reference.name.length > 42
-          ? TextOverflow.ellipsis
-          : TextOverflow.visible;
+            ? TextOverflow.ellipsis
+            : TextOverflow.visible;
 
         isLoading = false;
       });

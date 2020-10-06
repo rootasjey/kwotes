@@ -6,8 +6,7 @@ import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
+import 'package:memorare/screens/quotes_by_author_ref.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
@@ -43,26 +42,23 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
+          onNotification: (ScrollNotification scrollNotif) {
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
             return false;
-          }
-
-          return false;
-        },
-        child: CustomScrollView(
-          slivers: <Widget>[
-            HomeAppBar(
-              title: author != null
-                ? author.name
-                : '',
-              automaticallyImplyLeading: true,
-            ),
-
-            bodyContent(),
-          ],
-        )
-      ),
+          },
+          child: CustomScrollView(
+            slivers: <Widget>[
+              HomeAppBar(
+                title: author != null ? author.name : '',
+                automaticallyImplyLeading: true,
+              ),
+              bodyContent(),
+            ],
+          )),
     );
   }
 
@@ -98,19 +94,18 @@ class _AuthorPageState extends State<AuthorPage> {
               },
               onTap: () {
                 showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: Container(
-                        child: Image(
-                          image: NetworkImage(author.urls.image),
-                          fit: BoxFit.cover,
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Container(
+                          child: Image(
+                            image: NetworkImage(author.urls.image),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                );
+                      );
+                    });
               },
             ),
           ),
@@ -133,23 +128,22 @@ class _AuthorPageState extends State<AuthorPage> {
         ),
         onTap: () {
           showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Container(
-                  height: 500.0,
-                  width: 500.0,
-                  child: Image(
-                    image: AssetImage(
-                      'assets/images/user-${stateColors.iconExt}.png',
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Container(
+                    height: 500.0,
+                    width: 500.0,
+                    child: Image(
+                      image: AssetImage(
+                        'assets/images/user-${stateColors.iconExt}.png',
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
-                ),
-              );
-            }
-          );
+                );
+              });
         },
       ),
     );
@@ -157,22 +151,20 @@ class _AuthorPageState extends State<AuthorPage> {
 
   Widget backButton() {
     return Positioned(
-      left: 40.0,
-      top: 0.0,
-      child: Material(
-        color: Colors.transparent,
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
+        left: 40.0,
+        top: 0.0,
+        child: Material(
+          color: Colors.transparent,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
-
 
   Widget bodyContent() {
     if (isLoading) {
@@ -203,9 +195,7 @@ class _AuthorPageState extends State<AuthorPage> {
       delegate: SliverChildListDelegate([
         LayoutBuilder(
           builder: (context, constrains) {
-            return constrains.maxWidth < 700
-              ? smallView()
-              : largeView();
+            return constrains.maxWidth < 700 ? smallView() : largeView();
           },
         ),
       ]),
@@ -218,7 +208,6 @@ class _AuthorPageState extends State<AuthorPage> {
     String url,
     String imageUrl,
   }) {
-
     return FadeInX(
       beginX: 50.0,
       delay: delay,
@@ -272,13 +261,11 @@ class _AuthorPageState extends State<AuthorPage> {
             delay: 1.0,
             child: avatar(),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 2.0,
             child: name(),
           ),
-
           ControlledAnimation(
             delay: 1.seconds,
             duration: 1.seconds,
@@ -293,13 +280,11 @@ class _AuthorPageState extends State<AuthorPage> {
               );
             },
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 3.0,
             child: job(),
           ),
-
           FadeInY(
             beginY: beginY,
             delay: 3.4,
@@ -307,10 +292,11 @@ class _AuthorPageState extends State<AuthorPage> {
               padding: const EdgeInsets.only(top: 25.0),
               child: RaisedButton.icon(
                 onPressed: () {
-                  FluroRouter.router.navigateTo(
-                    context,
-                    AuthorQuotesRoute.replaceFirst(':id', widget.id)
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => QuotesByAuthorRef(
+                            id: widget.id,
+                            type: SubjectType.author,
+                          )));
                 },
                 color: stateColors.primary,
                 textColor: Colors.white,
@@ -319,7 +305,6 @@ class _AuthorPageState extends State<AuthorPage> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(
               top: 45.0,
@@ -349,7 +334,6 @@ class _AuthorPageState extends State<AuthorPage> {
                   delay: 1.0,
                   child: avatar(),
                 ),
-
                 ControlledAnimation(
                   delay: 1.seconds,
                   duration: 1.seconds,
@@ -364,13 +348,11 @@ class _AuthorPageState extends State<AuthorPage> {
                     );
                   },
                 ),
-
                 FadeInY(
                   beginY: beginY,
                   delay: 3.0,
                   child: job(),
                 ),
-
                 FadeInY(
                   beginY: beginY,
                   delay: 3.2,
@@ -378,10 +360,11 @@ class _AuthorPageState extends State<AuthorPage> {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: RaisedButton.icon(
                       onPressed: () {
-                        FluroRouter.router.navigateTo(
-                          context,
-                          AuthorQuotesRoute.replaceFirst(':id', widget.id)
-                        );
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => QuotesByAuthorRef(
+                                  id: widget.id,
+                                  type: SubjectType.author,
+                                )));
                       },
                       color: stateColors.primary,
                       textColor: Colors.white,
@@ -390,14 +373,11 @@ class _AuthorPageState extends State<AuthorPage> {
                     ),
                   ),
                 ),
-
                 Padding(padding: const EdgeInsets.only(top: 40.0)),
-
                 links(),
               ],
             ),
           ),
-
           Expanded(
             child: summaryLarge(),
           ),
@@ -413,8 +393,8 @@ class _AuthorPageState extends State<AuthorPage> {
         onPressed: () {
           setState(() {
             nameEllipsis = nameEllipsis == TextOverflow.ellipsis
-              ? TextOverflow.visible
-              : TextOverflow.ellipsis;
+                ? TextOverflow.visible
+                : TextOverflow.ellipsis;
           });
         },
         child: Text(
@@ -453,7 +433,6 @@ class _AuthorPageState extends State<AuthorPage> {
       child: Column(
         children: <Widget>[
           heroSmall(),
-
           FadeInY(
             beginY: beginY,
             delay: 4.0,
@@ -467,7 +446,9 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget summarySmall() {
     return Column(
       children: <Widget>[
-        Divider(thickness: 1.0,),
+        Divider(
+          thickness: 1.0,
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -480,12 +461,12 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           ),
         ),
-
         SizedBox(
           width: 100.0,
-          child: Divider(thickness: 1.0,),
+          child: Divider(
+            thickness: 1.0,
+          ),
         ),
-
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 40.0,
@@ -501,7 +482,6 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           ),
         ),
-
         if (author.urls.wikipedia?.isNotEmpty)
           OutlineButton(
             onPressed: () => launch(author.urls.wikipedia),
@@ -525,14 +505,12 @@ class _AuthorPageState extends State<AuthorPage> {
               ),
             ),
           ),
-
           SizedBox(
             width: 100.0,
             child: Divider(
               thickness: 1.0,
             ),
           ),
-
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -551,7 +529,6 @@ class _AuthorPageState extends State<AuthorPage> {
               ),
             ),
           ),
-
           if (author.urls.wikipedia?.isNotEmpty)
             OutlineButton(
               onPressed: () => launch(author.urls.wikipedia),
@@ -565,7 +542,9 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget links() {
     final urls = author.urls;
     if (urls.areLinksEmpty()) {
-      return Padding(padding: EdgeInsets.zero,);
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
     }
 
     return Wrap(
@@ -579,7 +558,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.website,
             imageUrl: 'assets/images/world-globe.png',
           ),
-
         if (urls.wikipedia.isNotEmpty)
           Observer(
             builder: (_) {
@@ -587,12 +565,10 @@ class _AuthorPageState extends State<AuthorPage> {
                 delay: 1.2,
                 name: 'Wikipedia',
                 url: urls.wikipedia,
-                imageUrl:
-                  'assets/images/wikipedia-${stateColors.iconExt}.png',
+                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
               );
             },
           ),
-
         if (urls.amazon.isNotEmpty)
           linkCircleButton(
             delay: 1.4,
@@ -600,7 +576,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.amazon,
             imageUrl: 'assets/images/amazon.png',
           ),
-
         if (urls.facebook.isNotEmpty)
           linkCircleButton(
             delay: 1.6,
@@ -608,7 +583,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
-
         if (urls.netflix.isNotEmpty)
           linkCircleButton(
             delay: 1.8,
@@ -616,7 +590,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.netflix,
             imageUrl: 'assets/images/netflix.png',
           ),
-
         if (urls.primeVideo.isNotEmpty)
           linkCircleButton(
             delay: 2.0,
@@ -624,7 +597,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
           ),
-
         if (urls.twitch.isNotEmpty)
           linkCircleButton(
             delay: 2.2,
@@ -632,7 +604,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.twitch,
             imageUrl: 'assets/images/twitch.png',
           ),
-
         if (urls.twitter.isNotEmpty)
           linkCircleButton(
             delay: 2.4,
@@ -640,7 +611,6 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.twitter,
             imageUrl: 'assets/images/twitter.png',
           ),
-
         if (urls.youtube.isNotEmpty)
           linkCircleButton(
             delay: 2.6,
@@ -659,9 +629,9 @@ class _AuthorPageState extends State<AuthorPage> {
 
     try {
       final docSnap = await Firestore.instance
-        .collection('authors')
-        .document(widget.id)
-        .get();
+          .collection('authors')
+          .document(widget.id)
+          .get();
 
       if (!docSnap.exists) {
         isLoading = false;
@@ -675,12 +645,11 @@ class _AuthorPageState extends State<AuthorPage> {
         author = Author.fromJSON(data);
 
         nameEllipsis = author.name.length > 42
-          ? TextOverflow.ellipsis
-          : TextOverflow.visible;
+            ? TextOverflow.ellipsis
+            : TextOverflow.visible;
 
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 

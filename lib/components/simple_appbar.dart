@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 
 class SimpleAppBar extends StatefulWidget {
@@ -52,35 +51,32 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
   Widget customFlexibleSpace() {
     return LayoutBuilder(
       builder: (context, constrains) {
-        double titleFontSize        = 40.0;
-        double leftTitlePadding     = 80.0;
+        double titleFontSize = 40.0;
+        double leftTitlePadding = 80.0;
         double leftSubHeaderPadding = 165.0;
-        double menuIconLeftPadding  = 80.0;
+        double menuIconLeftPadding = 80.0;
 
         if (constrains.maxWidth < 600.0) {
-          titleFontSize         = 25.0;
-          leftTitlePadding      = 20.0;
-          leftSubHeaderPadding  = 105.0;
-          menuIconLeftPadding   = 20.0;
+          titleFontSize = 25.0;
+          leftTitlePadding = 20.0;
+          leftSubHeaderPadding = 105.0;
+          menuIconLeftPadding = 20.0;
         }
 
         if (widget.hideNavBackIcon) {
           leftSubHeaderPadding -= 40.0;
         }
 
-        return Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                headerSection(leftTitlePadding, titleFontSize),
-                subHeaderSection(leftSubHeaderPadding),
-              ],
-            ),
-
-            menuButton(menuIconLeftPadding),
-          ]
-        );
+        return Stack(children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              headerSection(leftTitlePadding, titleFontSize),
+              subHeaderSection(leftSubHeaderPadding),
+            ],
+          ),
+          menuButton(menuIconLeftPadding),
+        ]);
       },
     );
   }
@@ -99,22 +95,20 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
             if (!widget.hideNavBackIcon)
               IconButton(
                 onPressed: () {
-                  FluroRouter.router.pop(context);
+                  Navigator.of(context).pop();
                 },
                 tooltip: 'Back',
                 icon: Icon(Icons.arrow_back),
               ),
-
             Padding(padding: const EdgeInsets.only(right: 40.0)),
-
             widget.title != null
-              ? widget.title
-              : Text(
-                  widget.textTitle,
-                  style: TextStyle(
-                    fontSize: titleFontSize,
+                ? widget.title
+                : Text(
+                    widget.textTitle,
+                    style: TextStyle(
+                      fontSize: titleFontSize,
+                    ),
                   ),
-                ),
           ],
         ),
       ),
@@ -123,7 +117,9 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
 
   Widget menuButton(double menuIconLeftPadding) {
     if (widget.onPressedMenu == null) {
-      return Padding(padding: EdgeInsets.zero,);
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
     }
 
     return Positioned(
@@ -144,7 +140,9 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
 
   Widget subHeaderSection(double leftSubHeaderPadding) {
     if (widget.subHeader == null) {
-      return Padding(padding: EdgeInsets.zero,);
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
     }
 
     return FadeInY(

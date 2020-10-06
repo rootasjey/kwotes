@@ -8,10 +8,9 @@ import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/router/router.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -19,22 +18,25 @@ import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
+import 'add_quote/steps.dart';
+import 'signin.dart';
+
 class MyTempQuotes extends StatefulWidget {
   @override
   MyTempQuotesState createState() => MyTempQuotesState();
 }
 
 class MyTempQuotesState extends State<MyTempQuotes> {
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  String lang         = 'all';
-  int limit           = 30;
-  int order           = -1;
-  bool descending     = false;
-  final pageRoute     = TempQuotesRoute;
-  bool isFabVisible   = false;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  String lang = 'all';
+  int limit = 30;
+  int order = -1;
+  bool descending = false;
+  final pageRoute = TempQuotesRoute;
+  bool isFabVisible = false;
 
   List<TempQuote> tempQuotes = [];
   ScrollController scrollController = ScrollController();
@@ -50,62 +52,63 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          // FAB visibility
-          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-            setState(() {
-              isFabVisible = false;
-            });
-          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-            setState(() {
-              isFabVisible = true;
-            });
-          }
-
-          // Load more scenario
-          if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            appBar(),
-            bodyListContent(),
-          ],
-        ),
-      )
-    );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
+
+            // Load more scenario
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              bodyListContent(),
+            ],
+          ),
+        ));
   }
 
   Widget appBar() {
@@ -123,15 +126,16 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -143,7 +147,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -151,15 +154,15 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -171,7 +174,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -188,7 +190,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -275,25 +276,24 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget emptyView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          FadeInY(
-            delay: 2.0,
-            beginY: 50.0,
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.timelapse,
-                  size: 120.0,
-                  color: Color(0xFFFF005C),
-                ),
+        FadeInY(
+          delay: 2.0,
+          beginY: 50.0,
+          child: EmptyContent(
+            icon: Opacity(
+              opacity: .8,
+              child: Icon(
+                Icons.timelapse,
+                size: 120.0,
+                color: Color(0xFFFF005C),
               ),
-              title: "You've no quote in validation at this moment",
-              subtitle: 'They will appear after you propose a new quote',
-              onRefresh: () => fetch(),
             ),
+            title: "You've no quote in validation at this moment",
+            subtitle: 'They will appear after you propose a new quote',
+            onRefresh: () => fetch(),
           ),
-        ]
-      ),
+        ),
+      ]),
     );
   }
 
@@ -313,12 +313,11 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: LoadingAnimation(),
-          ),
-        ]
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
@@ -340,8 +339,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             popupMenuButton: PopupMenuButton<String>(
               icon: Icon(
                 Icons.more_horiz,
-                color: topicColor != null ?
-                  Color(topicColor.decimal) : Colors.primaries,
+                color: topicColor != null
+                    ? Color(topicColor.decimal)
+                    : Colors.primaries,
               ),
               onSelected: (value) {
                 if (value == 'delete') {
@@ -356,19 +356,17 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete_forever),
-                    title: Text('Delete'),
-                  )
-                ),
+                    value: 'delete',
+                    child: ListTile(
+                      leading: Icon(Icons.delete_forever),
+                      title: Text('Delete'),
+                    )),
                 PopupMenuItem(
-                  value: 'edit',
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text('Edit'),
-                  )
-                ),
+                    value: 'edit',
+                    child: ListTile(
+                      leading: Icon(Icons.edit),
+                      title: Text('Edit'),
+                    )),
               ],
             ),
           );
@@ -445,7 +443,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   void editTempQuote(TempQuote tempQuote) async {
     AddQuoteInputs.populateWithTempQuote(tempQuote);
-    FluroRouter.router.navigateTo(context, AddQuoteContentRoute);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }
 
   Future fetch() async {
@@ -466,20 +465,19 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
       if (lang == 'all') {
         snapshot = await Firestore.instance
-          .collection('tempquotes')
-          .where('user.id', isEqualTo: userAuth.uid)
-          .orderBy('createdAt', descending: descending)
-          .limit(limit)
-          .getDocuments();
-
+            .collection('tempquotes')
+            .where('user.id', isEqualTo: userAuth.uid)
+            .orderBy('createdAt', descending: descending)
+            .limit(limit)
+            .getDocuments();
       } else {
         snapshot = await Firestore.instance
-          .collection('tempquotes')
-          .where('user.id', isEqualTo: userAuth.uid)
-          .where('lang', isEqualTo: lang)
-          .orderBy('createdAt', descending: descending)
-          .limit(limit)
-          .getDocuments();
+            .collection('tempquotes')
+            .where('user.id', isEqualTo: userAuth.uid)
+            .where('lang', isEqualTo: lang)
+            .orderBy('createdAt', descending: descending)
+            .limit(limit)
+            .getDocuments();
       }
 
       if (snapshot.documents.isEmpty) {
@@ -507,7 +505,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         hasErrors = false;
         hasNext = snapshot.documents.length == limit;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -517,13 +514,15 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       });
 
       if (!userState.isUserConnected) {
-        FluroRouter.router.navigateTo(context, SigninRoute);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
     }
   }
 
   void fetchMore() async {
-    if (lastDoc == null) { return; }
+    if (lastDoc == null) {
+      return;
+    }
 
     setState(() {
       isLoadingMore = true;
@@ -540,22 +539,21 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
       if (lang == 'all') {
         snapshot = await Firestore.instance
-          .collection('tempquotes')
-          .startAfterDocument(lastDoc)
-          .where('user.id', isEqualTo: userAuth.uid)
-          .orderBy('createdAt', descending: descending)
-          .limit(limit)
-          .getDocuments();
-
+            .collection('tempquotes')
+            .startAfterDocument(lastDoc)
+            .where('user.id', isEqualTo: userAuth.uid)
+            .orderBy('createdAt', descending: descending)
+            .limit(limit)
+            .getDocuments();
       } else {
         snapshot = await Firestore.instance
-          .collection('tempquotes')
-          .startAfterDocument(lastDoc)
-          .where('user.id', isEqualTo: userAuth.uid)
-          .where('lang', isEqualTo: lang)
-          .orderBy('createdAt', descending: descending)
-          .limit(limit)
-          .getDocuments();
+            .collection('tempquotes')
+            .startAfterDocument(lastDoc)
+            .where('user.id', isEqualTo: userAuth.uid)
+            .where('lang', isEqualTo: lang)
+            .orderBy('createdAt', descending: descending)
+            .limit(limit)
+            .getDocuments();
       }
 
       if (snapshot.documents.isEmpty) {
@@ -579,7 +577,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
