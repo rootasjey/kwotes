@@ -7,12 +7,12 @@ import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/components/web/topics.dart';
 import 'package:supercharged/supercharged.dart';
 
-class Home extends StatefulWidget {
+class HomeDesktop extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _HomeDesktopState createState() => _HomeDesktopState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeDesktopState extends State<HomeDesktop> {
   final scrollController = ScrollController();
 
   @override
@@ -30,14 +30,15 @@ class _HomeState extends State<Home> {
               );
             },
           ),
-
           SliverList(
             delegate: SliverChildListDelegate([
               FullPageQuotidian(),
               Topics(),
               DiscoverReferences(),
               DiscoverAuthors(),
-              Footer(pageScrollController: scrollController,),
+              Footer(
+                pageScrollController: scrollController,
+              ),
             ]),
           ),
         ],

@@ -4,8 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/main_mobile.dart';
-import 'package:memorare/main_web.dart';
+import 'package:memorare/main_app.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -53,12 +52,7 @@ class AppState extends State<App> {
         ),
         themedWidgetBuilder: (context, theme) {
           stateColors.themeData = theme;
-
-          if (kIsWeb) {
-            return MainWeb();
-          }
-
-          return MainMobile();
+          return MainApp();
         },
       );
     }

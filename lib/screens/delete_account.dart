@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/screens/web/home.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';

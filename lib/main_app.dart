@@ -1,20 +1,22 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
-import 'screens/web/home.dart';
-
-class MainWeb extends StatefulWidget {
+/// Executed from main.dart
+class MainApp extends StatefulWidget {
   @override
-  _MainWebState createState() => _MainWebState();
+  MainAppState createState() => MainAppState();
 }
 
-class _MainWebState extends State<MainWeb> {
+class MainAppState extends State<MainApp> {
   @override
-  initState() {
+  void initState() {
     super.initState();
+    // checkConnection();
     loadBrightness();
   }
 
@@ -28,16 +30,19 @@ class _MainWebState extends State<MainWeb> {
     );
   }
 
-  void loadBrightness() {
-    final autoBrightness = appLocalStorage.getAutoBrightness();
+  void checkConnection() async {
+    final hasConnection = await DataConnectionChecker().hasConnection;
 
-    if (!autoBrightness) {
-      final currentBrightness = appLocalStorage.getBrightness();
-      stateColors.refreshTheme(currentBrightness);
-
-      return;
+    if (!hasConnection) {
+      showSnack(
+        context: context,
+        message: "It seems that you're offline",
+        type: SnackType.error,
+      );
     }
+  }
 
+  void loadBrightness() {
     final now = DateTime.now();
 
     Brightness brightness = Brightness.light;

@@ -4,12 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-
-import '../screens/web/home.dart' as WebHome;
-import '../screens/home.dart' as MobileHome;
 
 Future<bool> checkEmailAvailability(String email) async {
   try {
@@ -68,10 +66,8 @@ void userSignOut({
   userState.signOut();
 
   if (autoNavigateAfter) {
-    final child = kIsWeb ? WebHome.Home() : MobileHome.Home();
-
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => child),
+      MaterialPageRoute(builder: (_) => Home()),
     );
   }
 }

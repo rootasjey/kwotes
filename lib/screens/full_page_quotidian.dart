@@ -7,6 +7,10 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/home/home.dart';
+import 'package:memorare/screens/reference_page.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -16,11 +20,6 @@ import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/push_notifications.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
-
-import 'author_page.dart';
-import 'reference_page.dart';
-import 'web/home.dart';
-import 'web/quote_page.dart';
 
 class FullPageQuotidian extends StatefulWidget {
   @override

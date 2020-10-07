@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/home/home.dart';
+import 'package:memorare/screens/web/about.dart';
+import 'package:memorare/screens/web/contact.dart';
+import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/language.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../screens/web/about.dart';
-import '../../screens/web/contact.dart';
-import '../../screens/web/home.dart';
-import '../../screens/web/privacy_terms.dart';
 
 class Footer extends StatefulWidget {
   final ScrollController pageScrollController;

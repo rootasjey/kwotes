@@ -4,7 +4,7 @@ import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/web/home.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 

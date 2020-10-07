@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/utils/snack.dart';
-
-import 'web/home.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override

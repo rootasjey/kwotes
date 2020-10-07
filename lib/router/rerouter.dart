@@ -6,6 +6,7 @@ import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/admin_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/search.dart';
@@ -13,7 +14,6 @@ import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/web/favourites.dart';
-import 'package:memorare/screens/web/home.dart';
 
 class Rerouter {
   static void push({

@@ -5,18 +5,18 @@ import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/state/colors.dart';
 
-class Home extends StatefulWidget {
+class HomeMobile extends StatefulWidget {
   final int initialIndex;
 
-  Home({
+  HomeMobile({
     this.initialIndex = 0,
   });
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeMobileState createState() => _HomeMobileState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeMobileState extends State<HomeMobile> {
   int _selectedIndex = 0;
 
   static List<Widget> _listScreens = <Widget>[

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-
-import 'package:memorare/screens/web/home.dart';
+import 'package:memorare/screens/home/home.dart';
 
 class UndefinedPage extends StatefulWidget {
   final String name;
