@@ -15,7 +15,7 @@ class TempQuoteRow extends StatefulWidget {
   final Function onSelected;
   final Function onTap;
 
-  final ItemComponentType layout;
+  final ItemComponentType componentType;
   final List<Widget> stackChildren;
 
   final TempQuote tempQuote;
@@ -26,7 +26,7 @@ class TempQuoteRow extends StatefulWidget {
     @required this.tempQuote,
     this.itemBuilder,
     this.isDraft = false,
-    this.layout,
+    this.componentType,
     this.onSelected,
     this.onTap,
     this.stackChildren = const [],
@@ -59,7 +59,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.layout == ItemComponentType.row) {
+    if (widget.componentType == ItemComponentType.row) {
       return rowLayout();
     }
 

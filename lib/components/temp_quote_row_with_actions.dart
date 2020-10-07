@@ -24,7 +24,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final Function onAfterValidate;
   final Function onAfterDelete;
 
-  final ItemComponentType layout;
+  final ItemComponentType componentType;
   final List<Widget> stackChildren;
 
   final TempQuote tempQuote;
@@ -36,7 +36,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.elevation = 0.0,
     this.isDraft = false,
     this.itemBuilder,
-    this.layout = ItemComponentType.row,
+    this.componentType = ItemComponentType.row,
     this.onSelected,
     this.onTap,
     this.onBeforeDelete,
@@ -63,7 +63,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       tempQuote: quote,
       itemBuilder: (context) => popupItems,
       onSelected: onSelected,
-      layout: widget.layout,
+      componentType: widget.componentType,
     );
   }
 
