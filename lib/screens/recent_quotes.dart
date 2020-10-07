@@ -39,7 +39,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   List<Quote> quotes = [];
   String lang = 'en';
 
-  var itemsStyle = ItemsStyle.list;
+  var itemsStyle = ItemsLayout.list;
   var lastDoc;
   var scrollController = ScrollController();
 
@@ -218,21 +218,21 @@ class RecentQuotesState extends State<RecentQuotes> {
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsStyle.list) {
+                    if (itemsStyle == ItemsLayout.list) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsStyle.list;
+                      itemsStyle = ItemsLayout.list;
                     });
 
                     appLocalStorage.saveItemsStyle(
                       pageRoute: pageRoute,
-                      style: ItemsStyle.list,
+                      style: ItemsLayout.list,
                     );
                   },
                   icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsStyle.list
+                  color: itemsStyle == ItemsLayout.list
                       ? stateColors.primary
                       : stateColors.foreground.withOpacity(0.5),
                 ),
@@ -242,21 +242,21 @@ class RecentQuotesState extends State<RecentQuotes> {
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsStyle.grid) {
+                    if (itemsStyle == ItemsLayout.grid) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsStyle.grid;
+                      itemsStyle = ItemsLayout.grid;
                     });
 
                     appLocalStorage.saveItemsStyle(
                       pageRoute: pageRoute,
-                      style: ItemsStyle.grid,
+                      style: ItemsLayout.grid,
                     );
                   },
                   icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsStyle.grid
+                  color: itemsStyle == ItemsLayout.grid
                       ? stateColors.primary
                       : stateColors.foreground.withOpacity(0.5),
                 ),
@@ -281,7 +281,7 @@ class RecentQuotesState extends State<RecentQuotes> {
       return emptyView();
     }
 
-    if (itemsStyle == ItemsStyle.grid) {
+    if (itemsStyle == ItemsLayout.grid) {
       return sliverGrid();
     }
 

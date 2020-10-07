@@ -24,8 +24,9 @@ class AppLocalStorage {
   }
 
   Brightness getBrightness() {
-    final brightness = _localStorage.getString('brightness') == 'dark' ?
-      Brightness.dark : Brightness.light;
+    final brightness = _localStorage.getString('brightness') == 'dark'
+        ? Brightness.dark
+        : Brightness.light;
 
     return brightness;
   }
@@ -44,16 +45,16 @@ class AppLocalStorage {
     return drafts;
   }
 
-  ItemsStyle getItemsStyle(String pageRoute) {
+  ItemsLayout getItemsStyle(String pageRoute) {
     final itemsStyle = _localStorage.getString('items_style_$pageRoute');
 
     switch (itemsStyle) {
-      case 'ItemsStyle.grid':
-        return ItemsStyle.grid;
-      case 'ItemsStyle.list':
-        return ItemsStyle.list;
+      case 'ItemsLayout.grid':
+        return ItemsLayout.grid;
+      case 'ItemsLayout.list':
+        return ItemsLayout.list;
       default:
-        return ItemsStyle.list;
+        return ItemsLayout.list;
     }
   }
 
@@ -79,7 +80,9 @@ class AppLocalStorage {
   String getUserUid() => _localStorage.getString('user_uid') ?? '';
 
   Future initialize() async {
-    if (_localStorage != null) { return; }
+    if (_localStorage != null) {
+      return;
+    }
     _localStorage = await LocalStorage.getInstance();
   }
 
@@ -116,7 +119,7 @@ class AppLocalStorage {
     _localStorage.setStringList('drafts', drafts);
   }
 
-  void saveItemsStyle({String pageRoute, ItemsStyle style}) {
+  void saveItemsStyle({String pageRoute, ItemsLayout style}) {
     _localStorage.setString('items_style_$pageRoute', style.toString());
   }
 
@@ -136,9 +139,11 @@ class AppLocalStorage {
     _localStorage.setBool('is_quotidian_notif_active', active);
   }
 
-  void setUserName(String userName) => _localStorage.setString('username', userName);
+  void setUserName(String userName) =>
+      _localStorage.setString('username', userName);
 
-  void setUserUid(String userName) => _localStorage.setString('user_uid', userName);
+  void setUserUid(String userName) =>
+      _localStorage.setString('user_uid', userName);
 }
 
 final appLocalStorage = AppLocalStorage();

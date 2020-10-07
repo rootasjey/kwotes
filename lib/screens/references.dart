@@ -27,13 +27,13 @@ class References extends StatefulWidget {
 }
 
 class _ReferencesState extends State<References> {
-  bool descending     = true;
-  bool hasNext        = true;
-  bool hasErrors      = false;
-  bool isFabVisible   = false;
-  bool isLoading      = false;
-  bool isLoadingMore  = false;
-  bool isSearching    = false;
+  bool descending = true;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isFabVisible = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  bool isSearching = false;
 
   HeaderViewType headerViewType = HeaderViewType.search;
 
@@ -53,7 +53,7 @@ class _ReferencesState extends State<References> {
   String searchInputValue = '';
   String lastSearchValue = '';
 
-  var itemsStyle = ItemsStyle.grid;
+  var itemsStyle = ItemsLayout.grid;
   var lastDoc;
 
   @override
@@ -76,26 +76,27 @@ class _ReferencesState extends State<References> {
   }
 
   void initProps() {
-    descending  = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle  = appLocalStorage.getItemsStyle(pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
@@ -116,16 +117,17 @@ class _ReferencesState extends State<References> {
                   label: Text(
                     'First added',
                     style: TextStyle(
-                      color: !descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color:
+                          !descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   tooltip: 'Order by first added',
                   selected: !descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (!descending) { return; }
+                    if (!descending) {
+                      return;
+                    }
 
                     descending = false;
                     fetch();
@@ -137,7 +139,6 @@ class _ReferencesState extends State<References> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 2.5,
@@ -145,16 +146,16 @@ class _ReferencesState extends State<References> {
                   label: Text(
                     'Last added',
                     style: TextStyle(
-                      color: descending ?
-                        Colors.white :
-                        stateColors.foreground,
+                      color: descending ? Colors.white : stateColors.foreground,
                     ),
                   ),
                   tooltip: 'Order by most recently added',
                   selected: descending,
                   selectedColor: stateColors.primary,
                   onSelected: (selected) {
-                    if (descending) { return; }
+                    if (descending) {
+                      return;
+                    }
 
                     descending = true;
                     fetch();
@@ -166,7 +167,6 @@ class _ReferencesState extends State<References> {
                   },
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -183,57 +183,54 @@ class _ReferencesState extends State<References> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsStyle.list) {
+                    if (itemsStyle == ItemsLayout.list) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsStyle.list;
+                      itemsStyle = ItemsLayout.list;
                     });
 
                     appLocalStorage.saveItemsStyle(
                       pageRoute: pageRoute,
-                      style: ItemsStyle.list,
+                      style: ItemsLayout.list,
                     );
                   },
                   icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsStyle.list
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                  color: itemsStyle == ItemsLayout.list
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsStyle.grid) {
+                    if (itemsStyle == ItemsLayout.grid) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsStyle.grid;
+                      itemsStyle = ItemsLayout.grid;
                     });
 
                     appLocalStorage.saveItemsStyle(
                       pageRoute: pageRoute,
-                      style: ItemsStyle.grid,
+                      style: ItemsLayout.grid,
                     );
                   },
                   icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsStyle.grid
-                    ? stateColors.primary
-                    : stateColors.foreground.withOpacity(0.5),
+                  color: itemsStyle == ItemsLayout.grid
+                      ? stateColors.primary
+                      : stateColors.foreground.withOpacity(0.5),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.0,
@@ -250,7 +247,6 @@ class _ReferencesState extends State<References> {
                   ),
                 ),
               ),
-
               FadeInY(
                 beginY: 10.0,
                 delay: 3.5,
@@ -274,61 +270,56 @@ class _ReferencesState extends State<References> {
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await fetch();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          // FAB visibility
-          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-            setState(() {
-              isFabVisible = false;
-            });
-          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-            setState(() {
-              isFabVisible = true;
-            });
-          }
-
-          // Load more scenario
-          if (scrollNotif.metrics.pixels <
-              scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          // Don't load more search results.
-          if (searchInputValue.isNotEmpty) {
-            return false;
-          }
-
-          if (hasNext && !isLoadingMore) {
-            fetchMore();
-          }
-
-          return false;
+        onRefresh: () async {
+          await fetch();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            HomeAppBar(
-              title: 'References',
-              automaticallyImplyLeading: true,
-            ),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
 
-            headerViewType == HeaderViewType.options
-              ? appBar()
-              : searchHeader(),
+            // Load more scenario
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
 
-            SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
+            // Don't load more search results.
+            if (searchInputValue.isNotEmpty) {
+              return false;
+            }
 
-            bodyListContent(),
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
 
-            SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
-          ],
-        ),
-      )
-    );
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              HomeAppBar(
+                title: 'References',
+                automaticallyImplyLeading: true,
+              ),
+              headerViewType == HeaderViewType.options
+                  ? appBar()
+                  : searchHeader(),
+              SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
+              bodyListContent(),
+              SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
+            ],
+          ),
+        ));
   }
 
   Widget bodyListContent() {
@@ -344,11 +335,10 @@ class _ReferencesState extends State<References> {
       return emptyView();
     }
 
-    final references = searchInputValue.isEmpty
-      ? referencesList
-      : searchResults;
+    final references =
+        searchInputValue.isEmpty ? referencesList : searchResults;
 
-    if (itemsStyle == ItemsStyle.grid) {
+    if (itemsStyle == ItemsLayout.grid) {
       return sliverGrid(references);
     }
 
@@ -393,11 +383,8 @@ class _ReferencesState extends State<References> {
   }
 
   Widget searchActions() {
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
-      children: [
-        RaisedButton.icon(
+    return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
+      RaisedButton.icon(
           onPressed: () {
             searchInputValue = '';
             lastSearchValue = '';
@@ -412,10 +399,8 @@ class _ReferencesState extends State<References> {
             child: Text(
               'Clear content',
             ),
-          )
-        ),
-
-        RaisedButton.icon(
+          )),
+      RaisedButton.icon(
           onPressed: () {
             setState(() {
               lastSearchValue = searchInputValue;
@@ -429,25 +414,19 @@ class _ReferencesState extends State<References> {
             child: Text(
               'Switch to options',
             ),
-          )
-        ),
-      ]
-    );
+          )),
+    ]);
   }
 
   Widget searchHeader() {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 100.0,
-        vertical: 100.0
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 100.0, vertical: 100.0),
       sliver: SliverList(
-        delegate: SliverChildListDelegate([
-          searchInput(),
-          searchActions(),
-          searchResultsData(),
-        ])
-      ),
+          delegate: SliverChildListDelegate([
+        searchInput(),
+        searchActions(),
+        searchResultsData(),
+      ])),
     );
   }
 
@@ -467,7 +446,9 @@ class _ReferencesState extends State<References> {
           searchInputValue = newValue;
 
           if (isSearching || newValue.isEmpty) {
-            if (refresh) { setState(() {}); }
+            if (refresh) {
+              setState(() {});
+            }
             return;
           }
 
@@ -486,9 +467,7 @@ class _ReferencesState extends State<References> {
         decoration: InputDecoration(
           icon: Icon(Icons.search),
           hintText: 'Search reference...',
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none
-          ),
+          border: OutlineInputBorder(borderSide: BorderSide.none),
         ),
       ),
     );
@@ -537,12 +516,11 @@ class _ReferencesState extends State<References> {
               name: reference.name,
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share'),
-                  )
-                ),
+                    value: 'share',
+                    child: ListTile(
+                      leading: Icon(Icons.share),
+                      title: Text('Share'),
+                    )),
               ],
               onSelected: (value) {
                 if (value == 'share') {
@@ -568,11 +546,11 @@ class _ReferencesState extends State<References> {
             reference: reference,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )),
+                  value: 'share',
+                  child: ListTile(
+                    leading: Icon(Icons.share),
+                    title: Text('Share'),
+                  )),
             ],
             onSelected: (value) {
               if (value == 'share') {
@@ -595,10 +573,10 @@ class _ReferencesState extends State<References> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('references')
-        .orderBy('createdAt', descending: descending)
-        .limit(30)
-        .getDocuments();
+          .collection('references')
+          .orderBy('createdAt', descending: descending)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -622,7 +600,6 @@ class _ReferencesState extends State<References> {
       setState(() {
         isLoading = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -641,11 +618,11 @@ class _ReferencesState extends State<References> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('references')
-        .orderBy('createdAt', descending: descending)
-        .startAfterDocument(lastDoc)
-        .limit(30)
-        .getDocuments();
+          .collection('references')
+          .orderBy('createdAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(30)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -669,7 +646,6 @@ class _ReferencesState extends State<References> {
       setState(() {
         isLoadingMore = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -727,10 +703,10 @@ class _ReferencesState extends State<References> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('references')
-        .where('name', isGreaterThanOrEqualTo: searchInputValue)
-        .limit(20)
-        .getDocuments();
+          .collection('references')
+          .where('name', isGreaterThanOrEqualTo: searchInputValue)
+          .limit(20)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         return;
@@ -747,7 +723,6 @@ class _ReferencesState extends State<References> {
       setState(() {
         isSearching = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
     }

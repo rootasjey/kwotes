@@ -31,7 +31,7 @@ class QuotidiansState extends State<Quotidians> {
   bool hasErrors = false;
   bool isLoading = false;
   bool isLoadingMore = false;
-  var itemsStyle = ItemsStyle.list;
+  var itemsStyle = ItemsLayout.list;
   String lang = 'en';
   int limit = 30;
   bool descending = false;
@@ -226,21 +226,21 @@ class QuotidiansState extends State<Quotidians> {
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsStyle.list) {
+                    if (itemsStyle == ItemsLayout.list) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsStyle.list;
+                      itemsStyle = ItemsLayout.list;
                     });
 
                     appLocalStorage.saveItemsStyle(
                       pageRoute: pageRoute,
-                      style: ItemsStyle.list,
+                      style: ItemsLayout.list,
                     );
                   },
                   icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsStyle.list
+                  color: itemsStyle == ItemsLayout.list
                       ? stateColors.primary
                       : stateColors.foreground.withOpacity(0.5),
                 ),
@@ -250,21 +250,21 @@ class QuotidiansState extends State<Quotidians> {
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsStyle.grid) {
+                    if (itemsStyle == ItemsLayout.grid) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsStyle.grid;
+                      itemsStyle = ItemsLayout.grid;
                     });
 
                     appLocalStorage.saveItemsStyle(
                       pageRoute: pageRoute,
-                      style: ItemsStyle.grid,
+                      style: ItemsLayout.grid,
                     );
                   },
                   icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsStyle.grid
+                  color: itemsStyle == ItemsLayout.grid
                       ? stateColors.primary
                       : stateColors.foreground.withOpacity(0.5),
                 ),
@@ -281,8 +281,8 @@ class QuotidiansState extends State<Quotidians> {
       controller: scrollController,
       slivers: <Widget>[
         appBar(),
-        if (itemsStyle == ItemsStyle.list) customScrollViewChild(),
-        if (itemsStyle == ItemsStyle.grid) ...groupedGrids(),
+        if (itemsStyle == ItemsLayout.list) customScrollViewChild(),
+        if (itemsStyle == ItemsLayout.grid) ...groupedGrids(),
       ],
     );
   }

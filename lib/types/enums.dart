@@ -3,7 +3,7 @@ enum HeaderViewType {
   search,
 }
 
-enum ItemsStyle {
+enum ItemsLayout {
   list,
   grid,
 }
