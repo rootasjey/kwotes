@@ -413,7 +413,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     try {
       final userAuth = await userState.userAuth;
 
-      if (userAuth != null) {
+      if (userAuth == null) {
         return;
       }
 
