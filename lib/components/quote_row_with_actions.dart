@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
+import 'package:memorare/actions/quotes.dart';
+import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
+import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
 enum QuoteRowActionType {
@@ -16,6 +20,10 @@ enum QuoteRowActionType {
 }
 
 class QuoteRowWithActions extends StatefulWidget {
+  final bool canManage;
+  final bool isConnected;
+
+  final Function onAfterDeletePubQuote;
   final Function onAfterAddToFavourites;
   final Function onAfterRemoveFromFavourites;
   final Function onAfterRemoveFromList;
@@ -30,11 +38,14 @@ class QuoteRowWithActions extends StatefulWidget {
   /// because quote's id in favourites reflect
   /// the favourite's id and no the quote.
   final String quoteId;
+  final String pageRoute;
+
   final QuoteRowActionType type;
 
   QuoteRowWithActions({
-    this.quote,
-    this.quoteId,
+    this.canManage = false,
+    this.isConnected = false,
+    this.onAfterDeletePubQuote,
     this.onAfterAddToFavourites,
     this.onAfterRemoveFromFavourites,
     this.onAfterRemoveFromList,
@@ -42,6 +53,9 @@ class QuoteRowWithActions extends StatefulWidget {
     this.onBeforeRemoveFromFavourites,
     this.onBeforeRemoveFromList,
     this.onRemoveFromList,
+    this.pageRoute = '',
+    @required this.quote,
+    this.quoteId,
     this.type = QuoteRowActionType.published,
   });
 
@@ -100,7 +114,6 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           ),
         ),
       ]);
-
     } else if (widget.type == QuoteRowActionType.favourites) {
       popupItems.addAll([
         PopupMenuItem(
@@ -134,6 +147,23 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             title: Text('Add to...'),
           ),
         ),
+      ]);
+    }
+
+    if (widget.canManage) {
+      popupItems.addAll([
+        PopupMenuItem(
+            value: 'addquotidian',
+            child: ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Add to quotidians'),
+            )),
+        PopupMenuItem(
+            value: 'deletequote',
+            child: ListTile(
+              leading: Icon(Icons.delete_forever),
+              title: Text('Delete published'),
+            )),
       ]);
     }
 
@@ -188,12 +218,22 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             widget.onRemoveFromList(quote);
             break;
           case 'share':
-            kIsWeb
-              ? shareTwitter(quote: quote)
-              : shareFromMobile(
-                  context: context,
-                  quote: quote
-                );
+            shareQuote(context: context, quote: quote);
+            break;
+          case 'addquotidian':
+            final pageRoute = widget.pageRoute;
+            final lang = pageRoute.isEmpty
+                ? 'en'
+                : appLocalStorage.getPageLang(pageRoute: pageRoute);
+
+            await addToQuotidians(
+              quote: quote,
+              lang: lang,
+            );
+
+            break;
+          case 'deletequote':
+            deletePubQuote();
             break;
           default:
         }
@@ -205,7 +245,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return ListTile(
       onTap: () async {
         final res = await showCreateListDialog(context);
-        if (res != null && res) { Navigator.pop(context); }
+        if (res != null && res) {
+          Navigator.pop(context);
+        }
       },
       // leading: Icon(Icons.add),
       title: Row(
@@ -218,7 +260,6 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
               child: Icon(Icons.add),
             ),
           ),
-
           Text(
             'New list',
             textAlign: TextAlign.start,
@@ -236,9 +277,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       padding: EdgeInsets.all(5.0),
       child: Column(
         children: <Widget>[
-          Text(
-            'There was an issue while loading your lists.'
-          ),
+          Text('There was an issue while loading your lists.'),
           FlatButton(
             onPressed: () {
               if (onPressed != null) {
@@ -283,22 +322,21 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       }
 
       await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(listId)
-        .collection('quotes')
-        .add({
-          'author': {
-            'id': quote.author.id,
-            'name': quote.author.name,
-          },
-          'createdAt': DateTime.now(),
-          'name': quote.name,
-          'quoteId': quote.id,
-          'topics': quote.topics,
-        });
-
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(listId)
+          .collection('quotes')
+          .add({
+        'author': {
+          'id': quote.author.id,
+          'name': quote.author.name,
+        },
+        'createdAt': DateTime.now(),
+        'name': quote.name,
+        'quoteId': quote.id,
+        'topics': quote.topics,
+      });
     } catch (err) {
       debugPrint(err.toString());
 
@@ -329,22 +367,21 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       }
 
       final docRef = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .add({
-          'createdAt'   : DateTime.now(),
-          'description' : newListDescription,
-          'name'        : newListName,
-          'iconUrl'     : '',
-          'isPublic'    : false,
-          'updatedAt'   : DateTime.now(),
-        });
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .add({
+        'createdAt': DateTime.now(),
+        'description': newListDescription,
+        'name': newListName,
+        'iconUrl': '',
+        'isPublic': false,
+        'updatedAt': DateTime.now(),
+      });
 
       final doc = await docRef.get();
 
       return doc.documentID;
-
     } catch (error) {
       debugPrint(error.toString());
 
@@ -370,11 +407,11 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -399,7 +436,6 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
-
     } catch (err) {
       debugPrint(err.toString());
 
@@ -428,12 +464,12 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .startAfterDocument(lastDoc)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -458,7 +494,6 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
-
     } catch (err) {
       debugPrint(err.toString());
 
@@ -488,147 +523,218 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     }
 
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setSheetState) {
-            List<Widget> tiles = [];
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setSheetState) {
+              List<Widget> tiles = [];
 
-            if (hasErrors) {
-              tiles.add(
-                errorTileList(onPressed: () async {
+              if (hasErrors) {
+                tiles.add(errorTileList(onPressed: () async {
                   await fetchLists();
-                  setSheetState(() { isLoaded = true; });
-                })
-              );
-            }
-
-            if (userQuotesLists.length == 0 && !isLoading && !isLoaded) {
-              tiles.add(LinearProgressIndicator());
-
-              fetchLists().then((_) {
-                setSheetState(() {
-                  isLoaded = true;
-                });
-              });
-            }
-
-            if (userQuotesLists.length > 0) {
-              for (var list in userQuotesLists) {
-                tiles.add(tileList(list));
+                  setSheetState(() {
+                    isLoaded = true;
+                  });
+                }));
               }
-            }
 
-            return NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollNotif) {
-                if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-                  return false;
+              if (userQuotesLists.length == 0 && !isLoading && !isLoaded) {
+                tiles.add(LinearProgressIndicator());
+
+                fetchLists().then((_) {
+                  setSheetState(() {
+                    isLoaded = true;
+                  });
+                });
+              }
+
+              if (userQuotesLists.length > 0) {
+                for (var list in userQuotesLists) {
+                  tiles.add(tileList(list));
                 }
+              }
 
-                if (hasNext && !isLoadingMore) {
-                  fetchListsMore()
-                    .then((_) {
+              return NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollNotif) {
+                  if (scrollNotif.metrics.pixels <
+                      scrollNotif.metrics.maxScrollExtent) {
+                    return false;
+                  }
+
+                  if (hasNext && !isLoadingMore) {
+                    fetchListsMore().then((_) {
                       setSheetState(() {
                         isLoadingMore = false;
                       });
                     });
-                }
+                  }
 
-                return false;
-              },
-              child: ListView(
-                children: <Widget>[
-                  newListButton(),
-
-                  Divider(thickness: 2.0,),
-
-                  ...tiles
-                ],
-              ),
-            );
-          },
-        );
-      }
-    );
+                  return false;
+                },
+                child: ListView(
+                  children: <Widget>[
+                    newListButton(),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    ...tiles
+                  ],
+                ),
+              );
+            },
+          );
+        });
   }
 
   Future<bool> showCreateListDialog(BuildContext context) {
     return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text(
-            'Create a new list'
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2.0
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Create a new list'),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+            children: <Widget>[
+              TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(width: 2.0),
                   ),
                 ),
+                onChanged: (newValue) {
+                  newListName = newValue;
+                },
+                onSubmitted: (_) {
+                  createListAndAddQuote(context);
+                  return Navigator.of(context).pop(true);
+                },
               ),
-              onChanged: (newValue) {
-                newListName = newValue;
-              },
-              onSubmitted: (_) {
-                createListAndAddQuote(context);
-                return Navigator.of(context).pop(true);
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 10.0),),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Description',
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2.0
-                  ),
-                ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
               ),
-              onChanged: (newValue) {
-                newListDescription = newValue;
-              },
-              onSubmitted: (_) {
-                createListAndAddQuote(context);
-                return Navigator.of(context).pop(true);
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 20.0),),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    return Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'Cancel',
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(width: 2.0),
                   ),
                 ),
-
-                RaisedButton(
-                  color: Colors.green,
-                  onPressed: () {
-                    createListAndAddQuote(context);
-                    return Navigator.of(context).pop(true);
-                  },
-                  child: Text(
-                    'Create',
-                    style: TextStyle(color: Colors.white),
+                onChanged: (newValue) {
+                  newListDescription = newValue;
+                },
+                onSubmitted: (_) {
+                  createListAndAddQuote(context);
+                  return Navigator.of(context).pop(true);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      return Navigator.of(context).pop(false);
+                    },
+                    child: Text(
+                      'Cancel',
+                    ),
                   ),
-                )
-              ],
+                  RaisedButton(
+                    color: Colors.green,
+                    onPressed: () {
+                      createListAndAddQuote(context);
+                      return Navigator.of(context).pop(true);
+                    },
+                    child: Text(
+                      'Create',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
+  void deletePubQuote() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text(
+              'Confirm deletion?',
             ),
-          ],
-        );
-      }
-    );
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 40.0,
+            ),
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3.0),
+                      ),
+                    ),
+                    color: stateColors.softBackground,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'NO',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: const EdgeInsets.only(left: 15.0)),
+                  RaisedButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      final success = await deleteQuote(quote: widget.quote);
+
+                      if (widget.onAfterDeletePubQuote != null) {
+                        widget.onAfterDeletePubQuote(success);
+                      }
+                    },
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'YES',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
   }
 }
