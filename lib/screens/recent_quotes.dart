@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
-import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
@@ -325,64 +323,6 @@ class RecentQuotesState extends State<RecentQuotes> {
     );
   }
 
-  Widget quotePopupMenuButton({
-    Quote quote,
-    Color color,
-  }) {
-    return PopupMenuButton<String>(
-      icon: Icon(
-        Icons.more_horiz,
-        color: color,
-      ),
-      onSelected: (value) {
-        if (value == 'quotidian') {
-          addQuotidianAction(quote);
-          return;
-        }
-
-        if (value == 'delete') {
-          showDeleteDialog(quote);
-          return;
-        }
-
-        if (value == 'share') {
-          shareQuote(context: context, quote: quote);
-          return;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem(
-            value: 'share',
-            child: ListTile(
-              leading: Icon(Icons.delete_sweep),
-              title: Text('Share'),
-            )),
-        if (isConnected) ...[
-          PopupMenuItem(
-              value: 'fav',
-              child: ListTile(
-                leading: Icon(Icons.add),
-                title: Text('Like'),
-              )),
-        ],
-        if (canManage) ...[
-          PopupMenuItem(
-              value: 'quotidian',
-              child: ListTile(
-                leading: Icon(Icons.add),
-                title: Text('Add to quotidians'),
-              )),
-          PopupMenuItem(
-              value: 'delete',
-              child: ListTile(
-                leading: Icon(Icons.delete_sweep),
-                title: Text('Delete'),
-              )),
-        ]
-      ],
-    );
-  }
-
   Widget sliverGrid() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
@@ -426,38 +366,20 @@ class RecentQuotesState extends State<RecentQuotes> {
   }
 
   Widget sliverList() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final quote = quotes.elementAt(index);
 
-          return QuoteRow(
+          return QuoteRowWithActions(
             quote: quote,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'quotidian',
-                  child: ListTile(
-                    leading: Icon(Icons.add),
-                    title: Text('Add to quotidians'),
-                  )),
-              PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete_sweep),
-                    title: Text('Delete'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'quotidian') {
-                addQuotidianAction(quote);
-                return;
-              }
-
-              if (value == 'delete') {
-                showDeleteDialog(quote);
-                return;
-              }
-            },
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+              vertical: 30.0,
+            ),
+            quotePageType: QuotePageType.published,
           );
         },
         childCount: quotes.length,
