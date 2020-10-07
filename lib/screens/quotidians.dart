@@ -4,16 +4,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/quotidian_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -505,36 +503,10 @@ class QuotidiansState extends State<Quotidians> {
 
   Widget itemGrid(Quotidian quotidian) {
     final quote = quotidian.quote;
-    final topicColor = appTopicsColors.find(quote.topics.first);
 
-    return QuoteCard(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => QuotePage(
-                  quoteId: quotidian.quote.id,
-                )));
-      },
-      title: quote.name,
-      popupMenuButton: PopupMenuButton<String>(
-        icon: Icon(
-          Icons.more_horiz,
-          color: Color(topicColor.decimal),
-        ),
-        onSelected: (value) {
-          if (value == 'delete') {
-            deleteAction(quotidian);
-            return;
-          }
-        },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          PopupMenuItem(
-              value: 'delete',
-              child: ListTile(
-                leading: Icon(Icons.delete),
-                title: Text('Delete'),
-              )),
-        ],
-      ),
+    return QuoteRowWithActions(
+      quoteId: quotidian.quote.id,
+      quote: quote,
       stackChildren: <Widget>[
         Positioned(
           bottom: 15.0,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/home/home.dart';
@@ -38,7 +38,7 @@ class Rerouter {
         break;
       case QuotesRoute:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AdminQuotes()),
+          MaterialPageRoute(builder: (_) => RecentQuotes()),
         );
         break;
       case DraftsRoute:

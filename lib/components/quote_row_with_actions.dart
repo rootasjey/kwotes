@@ -8,31 +8,29 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
-enum QuoteRowActionType {
-  favourites,
-  list,
-  published,
-}
-
 class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;
   final bool isConnected;
 
-  final Function onAfterDeletePubQuote;
   final Function onAfterAddToFavourites;
+  final Function onAfterDeletePubQuote;
   final Function onAfterRemoveFromFavourites;
   final Function onAfterRemoveFromList;
   final Function onBeforeAddToFavourites;
+  final Function onBeforeDeletePubQuote;
   final Function onBeforeRemoveFromFavourites;
   final Function onBeforeRemoveFromList;
   final Function onRemoveFromList;
 
+  final ItemLayoutType layout;
   final Quote quote;
+  final QuoteRowActionType type;
 
   /// Specify explicitly the quote'is
   /// because quote's id in favourites reflect
@@ -40,16 +38,18 @@ class QuoteRowWithActions extends StatefulWidget {
   final String quoteId;
   final String pageRoute;
 
-  final QuoteRowActionType type;
+  final List<Widget> stackChildren;
 
   QuoteRowWithActions({
     this.canManage = false,
     this.isConnected = false,
-    this.onAfterDeletePubQuote,
+    this.layout = ItemLayoutType.row,
     this.onAfterAddToFavourites,
+    this.onAfterDeletePubQuote,
     this.onAfterRemoveFromFavourites,
     this.onAfterRemoveFromList,
     this.onBeforeAddToFavourites,
+    this.onBeforeDeletePubQuote,
     this.onBeforeRemoveFromFavourites,
     this.onBeforeRemoveFromList,
     this.onRemoveFromList,
@@ -57,6 +57,7 @@ class QuoteRowWithActions extends StatefulWidget {
     @required this.quote,
     this.quoteId,
     this.type = QuoteRowActionType.published,
+    this.stackChildren = const [],
   });
 
   @override
@@ -86,159 +87,86 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   @override
   Widget build(BuildContext context) {
     final quote = widget.quote;
-
-    final popupItems = <PopupMenuEntry<String>>[
-      PopupMenuItem(
-        value: 'share',
-        child: ListTile(
-          leading: Icon(Icons.share),
-          title: Text('Share'),
-        ),
-      ),
-    ];
-
-    if (widget.type == QuoteRowActionType.published) {
-      popupItems.addAll([
-        PopupMenuItem(
-          value: 'addtofavourites',
-          child: ListTile(
-            leading: Icon(Icons.favorite_border),
-            title: Text('Add to favourites'),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'addtolist',
-          child: ListTile(
-            leading: Icon(Icons.playlist_add),
-            title: Text('Add to...'),
-          ),
-        ),
-      ]);
-    } else if (widget.type == QuoteRowActionType.favourites) {
-      popupItems.addAll([
-        PopupMenuItem(
-          value: 'removefromfavourites',
-          child: ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text('Remove from favourites'),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'addtolist',
-          child: ListTile(
-            leading: Icon(Icons.playlist_add),
-            title: Text('Add to...'),
-          ),
-        ),
-      ]);
-    } else if (widget.type == QuoteRowActionType.list) {
-      popupItems.addAll([
-        PopupMenuItem(
-          value: 'addtofavourites',
-          child: ListTile(
-            leading: Icon(Icons.favorite_border),
-            title: Text('Add to favourites'),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'addtolist',
-          child: ListTile(
-            leading: Icon(Icons.playlist_add),
-            title: Text('Add to...'),
-          ),
-        ),
-      ]);
-    }
-
-    if (widget.canManage) {
-      popupItems.addAll([
-        PopupMenuItem(
-            value: 'addquotidian',
-            child: ListTile(
-              leading: Icon(Icons.add),
-              title: Text('Add to quotidians'),
-            )),
-        PopupMenuItem(
-            value: 'deletequote',
-            child: ListTile(
-              leading: Icon(Icons.delete_forever),
-              title: Text('Delete published'),
-            )),
-      ]);
-    }
+    final popupItems = getPopupItems();
 
     return QuoteRow(
       quote: quote,
       quoteId: widget.quoteId,
       itemBuilder: (context) => popupItems,
-      onSelected: (value) async {
-        switch (value) {
-          case 'addtofavourites':
-            if (widget.onBeforeAddToFavourites != null) {
-              widget.onBeforeAddToFavourites();
-            }
-
-            final success = await addToFavourites(
-              context: context,
-              quote: quote,
-            );
-
-            if (widget.onAfterAddToFavourites != null) {
-              widget.onAfterAddToFavourites(success);
-            }
-
-            if (success) {
-              showSnack(
-                context: context,
-                message: 'The quote has been successfully added to favourites.',
-                type: SnackType.success,
-              );
-            }
-
-            break;
-          case 'addtolist':
-            showBottomSheetList();
-            break;
-          case 'removefromfavourites':
-            if (widget.onBeforeRemoveFromFavourites != null) {
-              widget.onBeforeRemoveFromFavourites();
-            }
-
-            final success = await removeFromFavourites(
-              context: context,
-              quote: quote,
-            );
-
-            if (widget.onAfterRemoveFromFavourites != null) {
-              widget.onAfterRemoveFromFavourites(success);
-            }
-
-            break;
-          case 'removefromlist':
-            widget.onRemoveFromList(quote);
-            break;
-          case 'share':
-            shareQuote(context: context, quote: quote);
-            break;
-          case 'addquotidian':
-            final pageRoute = widget.pageRoute;
-            final lang = pageRoute.isEmpty
-                ? 'en'
-                : appLocalStorage.getPageLang(pageRoute: pageRoute);
-
-            await addToQuotidians(
-              quote: quote,
-              lang: lang,
-            );
-
-            break;
-          case 'deletequote':
-            deletePubQuote();
-            break;
-          default:
-        }
-      },
+      onSelected: onSelected,
+      layout: widget.layout,
+      stackChildren: widget.stackChildren,
     );
+  }
+
+  void onSelected(value) async {
+    final quote = widget.quote;
+
+    switch (value) {
+      case 'addtofavourites':
+        if (widget.onBeforeAddToFavourites != null) {
+          widget.onBeforeAddToFavourites();
+        }
+
+        final success = await addToFavourites(
+          context: context,
+          quote: quote,
+        );
+
+        if (widget.onAfterAddToFavourites != null) {
+          widget.onAfterAddToFavourites(success);
+        }
+
+        if (success) {
+          showSnack(
+            context: context,
+            message: 'The quote has been successfully added to favourites.',
+            type: SnackType.success,
+          );
+        }
+
+        break;
+      case 'addtolist':
+        showBottomSheetList();
+        break;
+      case 'removefromfavourites':
+        if (widget.onBeforeRemoveFromFavourites != null) {
+          widget.onBeforeRemoveFromFavourites();
+        }
+
+        final success = await removeFromFavourites(
+          context: context,
+          quote: quote,
+        );
+
+        if (widget.onAfterRemoveFromFavourites != null) {
+          widget.onAfterRemoveFromFavourites(success);
+        }
+
+        break;
+      case 'removefromlist':
+        widget.onRemoveFromList(quote);
+        break;
+      case 'share':
+        shareQuote(context: context, quote: quote);
+        break;
+      case 'addquotidian':
+        final pageRoute = widget.pageRoute;
+        final lang = pageRoute.isEmpty
+            ? 'en'
+            : appLocalStorage.getPageLang(pageRoute: pageRoute);
+
+        await addToQuotidians(
+          quote: quote,
+          lang: lang,
+        );
+
+        break;
+      case 'deletequote':
+        deletePubQuote();
+        break;
+      default:
+    }
   }
 
   Widget newListButton() {
@@ -705,6 +633,11 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                   RaisedButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
+
+                      if (widget.onBeforeDeletePubQuote != null) {
+                        widget.onBeforeDeletePubQuote();
+                      }
+
                       final success = await deleteQuote(quote: widget.quote);
 
                       if (widget.onAfterDeletePubQuote != null) {
@@ -736,5 +669,89 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             ],
           );
         });
+  }
+
+  List<PopupMenuEntry<String>> getPopupItems() {
+    final popupItems = <PopupMenuEntry<String>>[
+      PopupMenuItem(
+        value: 'share',
+        child: ListTile(
+          leading: Icon(Icons.share),
+          title: Text('Share'),
+        ),
+      ),
+    ];
+
+    if (widget.type == QuoteRowActionType.published) {
+      popupItems.addAll([
+        PopupMenuItem(
+          value: 'addtofavourites',
+          child: ListTile(
+            leading: Icon(Icons.favorite_border),
+            title: Text('Add to favourites'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'addtolist',
+          child: ListTile(
+            leading: Icon(Icons.playlist_add),
+            title: Text('Add to...'),
+          ),
+        ),
+      ]);
+    } else if (widget.type == QuoteRowActionType.favourites) {
+      popupItems.addAll([
+        PopupMenuItem(
+          value: 'removefromfavourites',
+          child: ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Remove from favourites'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'addtolist',
+          child: ListTile(
+            leading: Icon(Icons.playlist_add),
+            title: Text('Add to...'),
+          ),
+        ),
+      ]);
+    } else if (widget.type == QuoteRowActionType.list) {
+      popupItems.addAll([
+        PopupMenuItem(
+          value: 'addtofavourites',
+          child: ListTile(
+            leading: Icon(Icons.favorite_border),
+            title: Text('Add to favourites'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'addtolist',
+          child: ListTile(
+            leading: Icon(Icons.playlist_add),
+            title: Text('Add to...'),
+          ),
+        ),
+      ]);
+    }
+
+    if (widget.canManage) {
+      popupItems.addAll([
+        PopupMenuItem(
+            value: 'addquotidian',
+            child: ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Add to quotidians'),
+            )),
+        PopupMenuItem(
+            value: 'deletequote',
+            child: ListTile(
+              leading: Icon(Icons.delete_forever),
+              title: Text('Delete published'),
+            )),
+      ]);
+    }
+
+    return popupItems;
   }
 }

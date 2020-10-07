@@ -7,7 +7,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/account.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/home/home.dart';
@@ -239,7 +239,7 @@ class _DashboardState extends State<Dashboard> {
           style: TextStyle(fontSize: 20.0),
         ),
         onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AdminQuotes())),
+            .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
       ),
       ListTile(
         leading: Icon(Icons.timelapse, size: 30.0),

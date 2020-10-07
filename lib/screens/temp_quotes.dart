@@ -3,23 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
+import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
+import 'package:memorare/screens/add_quote/steps.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
-
-import 'add_quote/steps.dart';
-import 'signin.dart';
 
 class MyTempQuotes extends StatefulWidget {
   @override
@@ -27,16 +25,19 @@ class MyTempQuotes extends StatefulWidget {
 }
 
 class MyTempQuotesState extends State<MyTempQuotes> {
+  bool descending = false;
   bool hasNext = true;
   bool hasErrors = false;
+  bool isFabVisible = false;
   bool isLoading = false;
   bool isLoadingMore = false;
+
   String lang = 'all';
+
   int limit = 30;
   int order = -1;
-  bool descending = false;
+
   final pageRoute = TempQuotesRoute;
-  bool isFabVisible = false;
 
   List<TempQuote> tempQuotes = [];
   ScrollController scrollController = ScrollController();
@@ -331,44 +332,10 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           final tempQuote = tempQuotes.elementAt(index);
-          final topicColor = appTopicsColors.find(tempQuote.topics.first);
 
-          return QuoteCard(
+          return TempQuoteRowWithActions(
             onTap: () => editTempQuote(tempQuote),
-            title: tempQuote.name,
-            popupMenuButton: PopupMenuButton<String>(
-              icon: Icon(
-                Icons.more_horiz,
-                color: topicColor != null
-                    ? Color(topicColor.decimal)
-                    : Colors.primaries,
-              ),
-              onSelected: (value) {
-                if (value == 'delete') {
-                  deleteAction(tempQuote);
-                  return;
-                }
-
-                if (value == 'edit') {
-                  editTempQuote(tempQuote);
-                  return;
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem(
-                    value: 'delete',
-                    child: ListTile(
-                      leading: Icon(Icons.delete_forever),
-                      title: Text('Delete'),
-                    )),
-                PopupMenuItem(
-                    value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Edit'),
-                    )),
-              ],
-            ),
+            tempQuote: tempQuote,
           );
         },
         childCount: tempQuotes.length,
@@ -383,7 +350,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           final tempQuote = tempQuotes.elementAt(index);
 
           return TempQuoteRow(
-            quote: tempQuote,
+            tempQuote: tempQuote,
             isDraft: false,
             onTap: () => editTempQuote(tempQuote),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

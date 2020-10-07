@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/screens/dashboard.dart';
 import 'package:memorare/screens/discover.dart';
+import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/state/colors.dart';
 
@@ -20,6 +21,7 @@ class _HomeMobileState extends State<HomeMobile> {
   int _selectedIndex = 0;
 
   static List<Widget> _listScreens = <Widget>[
+    RecentQuotes(),
     Discover(),
     Topics(),
     Dashboard(),
@@ -48,6 +50,12 @@ class _HomeMobileState extends State<HomeMobile> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.timelapse,
+            ),
+            label: 'Recent',
+          ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.lightbulb_outline,

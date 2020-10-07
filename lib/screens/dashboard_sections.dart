@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/account.dart';
-import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
@@ -39,7 +39,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     MyPublishedQuotes(),
     MyTempQuotes(),
     QuotesList(id: quoteListId), // doesn't get dynamic params
-    AdminQuotes(),
+    RecentQuotes(),
     AdminTempQuotes(),
     Quotidians(),
     Account(),
@@ -64,8 +64,8 @@ class _DashboardSectionsState extends State<DashboardSections> {
   Widget build(BuildContext context) {
     return DashboardSectionTemplate(
       child: _selectedIndex == 5
-        ? QuotesList(id: widget.quoteListId)
-        : _sections[_selectedIndex],
+          ? QuotesList(id: widget.quoteListId)
+          : _sections[_selectedIndex],
       childName: getSectionName(_selectedIndex),
       isNested: _selectedIndex == 5,
     );

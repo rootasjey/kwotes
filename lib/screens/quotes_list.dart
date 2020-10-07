@@ -12,6 +12,7 @@ import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/snack.dart';

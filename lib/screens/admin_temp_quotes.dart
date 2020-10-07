@@ -7,14 +7,13 @@ import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/temp_quote_row.dart';
+import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
@@ -346,17 +345,10 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
             final tempQuote = tempQuotes.elementAt(index);
-            final topicColor = appTopicsColors.find(tempQuote.topics.first);
-            final color = Color(topicColor.decimal);
 
-            return QuoteCard(
+            return TempQuoteRowWithActions(
               onTap: () => editAction(tempQuote),
-              onLongPress: () => validateAction(tempQuote),
-              title: tempQuote.name,
-              popupMenuButton: popupMenuButton(
-                color: color,
-                tempQuote: tempQuote,
-              ),
+              tempQuote: tempQuote,
             );
           },
           childCount: tempQuotes.length,
@@ -417,7 +409,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           final tempQuote = tempQuotes.elementAt(index);
 
           return TempQuoteRow(
-            quote: tempQuote,
+            tempQuote: tempQuote,
             onTap: () => editAction(tempQuote),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(

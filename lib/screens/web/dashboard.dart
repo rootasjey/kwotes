@@ -7,7 +7,7 @@ import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/account.dart';
-import 'package:memorare/screens/admin_quotes.dart';
+import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/published_quotes.dart';
@@ -193,7 +193,7 @@ class _DashboardState extends State<Dashboard> {
               child: itemCard(
                 color: Color(0xFF00CF91),
                 onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => AdminQuotes())),
+                    .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
                 icon: Icon(
                   Icons.cloud_done,
                   color: Colors.white,

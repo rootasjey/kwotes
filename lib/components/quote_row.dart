@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';
 
-import '../screens/author_page.dart';
-import '../screens/web/quote_page.dart';
+import 'package:memorare/types/enums.dart';
 
 class QuoteRow extends StatefulWidget {
   final Quote quote;
@@ -16,16 +17,24 @@ class QuoteRow extends StatefulWidget {
   final Function itemBuilder;
   final Function onSelected;
   final EdgeInsets padding;
+  final ItemLayoutType layout;
+  final double cardSize;
+  final double elevation;
+  final List<Widget> stackChildren;
 
   QuoteRow({
+    this.cardSize = 250.0,
+    this.elevation = 0.0,
     this.quote,
     this.quoteId,
     this.itemBuilder,
+    this.layout = ItemLayoutType.row,
     this.onSelected,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
       vertical: 30.0,
     ),
+    this.stackChildren = const [],
   });
 
   @override
@@ -47,12 +56,86 @@ class _QuoteRowState extends State<QuoteRow> {
     }
 
     setState(() {
+      elevation = widget.elevation;
       iconHoverColor = Color(topicColor.decimal);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.layout == ItemLayoutType.row) {
+      return rowLayout();
+    }
+
+    return cardLayout();
+  }
+
+  Widget cardLayout() {
+    return Container(
+      width: widget.cardSize,
+      height: widget.cardSize,
+      child: Card(
+        elevation: elevation,
+        margin: EdgeInsets.zero,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (_) => AuthorPage(id: widget.quote.author.id)),
+            );
+          },
+          onHover: (isHover) {
+            setState(() {
+              elevation = isHover ? widget.elevation * 2.0 : widget.elevation;
+              iconColor = isHover ? iconHoverColor : null;
+            });
+          },
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      widget.quote.name.length > 115
+                          ? '${widget.quote.name.substring(0, 115)}...'
+                          : widget.quote.name,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        // fontSize: FontSize.gridItem(widget.title),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (widget.itemBuilder != null)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: PopupMenuButton<String>(
+                    icon: Opacity(
+                      opacity: .6,
+                      child: iconColor != null
+                          ? Icon(
+                              Icons.more_vert,
+                              color: iconColor,
+                            )
+                          : Icon(Icons.more_vert),
+                    ),
+                    onSelected: widget.onSelected,
+                    itemBuilder: widget.itemBuilder,
+                  ),
+                ),
+              if (widget.stackChildren.length > 0) ...widget.stackChildren,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget rowLayout() {
     return Container(
       padding: widget.padding,
       child: Card(
@@ -66,11 +149,10 @@ class _QuoteRowState extends State<QuoteRow> {
             );
           },
           onHover: (isHover) {
-            elevation = isHover ? 2.0 : 0.0;
-
-            iconColor = isHover ? iconHoverColor : null;
-
-            setState(() {});
+            setState(() {
+              elevation = isHover ? widget.elevation * 2.0 : widget.elevation;
+              iconColor = isHover ? iconHoverColor : null;
+            });
           },
           child: Padding(
             padding: const EdgeInsets.all(20.0),

@@ -4,22 +4,20 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
+import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/screens/add_quote/steps.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
-
-import 'add_quote/steps.dart';
 
 class Drafts extends StatefulWidget {
   @override
@@ -218,7 +216,7 @@ class _DraftsState extends State<Drafts> {
           final draft = drafts.elementAt(index);
 
           return TempQuoteRow(
-            quote: draft,
+            tempQuote: draft,
             isDraft: true,
             onTap: () => editDraft(draft),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -278,20 +276,10 @@ class _DraftsState extends State<Drafts> {
         (BuildContext context, int index) {
           final draft = drafts.elementAt(index);
 
-          TopicColor topicColor = appTopicsColors.topicsColors.first;
-
-          if (draft.topics.length > 0) {
-            topicColor = appTopicsColors.find(draft.topics.first);
-          }
-
-          return QuoteCard(
+          return TempQuoteRowWithActions(
             onTap: () => editDraft(draft),
-            title: draft.name,
-            popupMenuButton: quotePopupMenuButton(
-              draft: draft,
-              index: index,
-              color: Color(topicColor.decimal),
-            ),
+            tempQuote: draft,
+            layout: ItemLayoutType.card,
           );
         },
         childCount: drafts.length,

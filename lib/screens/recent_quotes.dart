@@ -3,34 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
+import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/quote_card.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 
-class AdminQuotes extends StatefulWidget {
+class RecentQuotes extends StatefulWidget {
   @override
-  AdminQuotesState createState() => AdminQuotesState();
+  RecentQuotesState createState() => RecentQuotesState();
 }
 
-class AdminQuotesState extends State<AdminQuotes> {
+class RecentQuotesState extends State<RecentQuotes> {
   bool canManage = false;
   bool descending = true;
   bool hasNext = true;
   bool hasErrors = false;
+  bool isConnected = false;
   bool isLoading = false;
   bool isLoadingMore = false;
 
@@ -48,7 +47,8 @@ class AdminQuotesState extends State<AdminQuotes> {
   initState() {
     super.initState();
     getSavedProps();
-    checkAndFetch();
+    fetchPermissions();
+    fetch();
   }
 
   @override
@@ -344,20 +344,41 @@ class AdminQuotesState extends State<AdminQuotes> {
           showDeleteDialog(quote);
           return;
         }
+
+        if (value == 'share') {
+          shareQuote(context: context, quote: quote);
+          return;
+        }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
-            value: 'quotidian',
-            child: ListTile(
-              leading: Icon(Icons.add),
-              title: Text('Add to quotidians'),
-            )),
-        PopupMenuItem(
-            value: 'delete',
+            value: 'share',
             child: ListTile(
               leading: Icon(Icons.delete_sweep),
-              title: Text('Delete'),
+              title: Text('Share'),
             )),
+        if (isConnected) ...[
+          PopupMenuItem(
+              value: 'fav',
+              child: ListTile(
+                leading: Icon(Icons.add),
+                title: Text('Like'),
+              )),
+        ],
+        if (canManage) ...[
+          PopupMenuItem(
+              value: 'quotidian',
+              child: ListTile(
+                leading: Icon(Icons.add),
+                title: Text('Add to quotidians'),
+              )),
+          PopupMenuItem(
+              value: 'delete',
+              child: ListTile(
+                leading: Icon(Icons.delete_sweep),
+                title: Text('Delete'),
+              )),
+        ]
       ],
     );
   }
@@ -376,18 +397,26 @@ class AdminQuotesState extends State<AdminQuotes> {
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
             final quote = quotes.elementAt(index);
-            final topicColor = appTopicsColors.find(quote.topics.first);
 
-            return QuoteCard(
-              title: quote.name,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => QuotePage(
-                        quoteId: quote.id,
-                      ))),
-              popupMenuButton: quotePopupMenuButton(
-                quote: quote,
-                color: Color(topicColor.decimal),
-              ),
+            return QuoteRowWithActions(
+              quote: quote,
+              layout: ItemLayoutType.card,
+              onBeforeDeletePubQuote: () {
+                setState(() {
+                  quotes.removeAt(index);
+                });
+              },
+              onAfterDeletePubQuote: (bool success) {
+                if (!success) {
+                  quotes.insert(index, quote);
+
+                  showSnack(
+                    context: context,
+                    message: "Couldn't delete the temporary quote.",
+                    type: SnackType.error,
+                  );
+                }
+              },
             );
           },
           childCount: quotes.length,
@@ -458,15 +487,28 @@ class AdminQuotesState extends State<AdminQuotes> {
     );
   }
 
-  void checkAndFetch() async {
-    final isUserConnected = await isAuthOk();
+  void fetchPermissions() async {
+    try {
+      final userAuth = await userState.userAuth;
 
-    if (!isUserConnected) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-      return;
+      if (userAuth != null) {
+        return;
+      }
+
+      final user =
+          await Firestore().collection('users').document(userAuth.uid).get();
+
+      if (user == null) {
+        return;
+      }
+
+      setState(() {
+        isConnected = true;
+        canManage = user.data['rights']['user:managequotidian'];
+      });
+    } catch (error) {
+      debugPrint(error.toString());
     }
-
-    fetch();
   }
 
   void deleteAction(Quote quote) async {
@@ -584,33 +626,6 @@ class AdminQuotesState extends State<AdminQuotes> {
     lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
     descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
     itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
-  }
-
-  Future<bool> isAuthOk() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      final userAuth = await userState.userAuth;
-
-      if (userAuth != null) {
-        return true;
-      }
-
-      setState(() {
-        isLoading = false;
-      });
-
-      return false;
-    } catch (error) {
-      debugPrint(error.toString());
-      setState(() {
-        isLoading = false;
-      });
-
-      return false;
-    }
   }
 
   void showDeleteDialog(Quote quote) {
