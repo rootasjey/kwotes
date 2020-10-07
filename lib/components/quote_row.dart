@@ -17,7 +17,7 @@ class QuoteRow extends StatefulWidget {
   final Function itemBuilder;
   final Function onSelected;
   final EdgeInsets padding;
-  final ItemLayoutType layout;
+  final ItemComponentType layout;
   final double cardSize;
   final double elevation;
   final List<Widget> stackChildren;
@@ -28,7 +28,7 @@ class QuoteRow extends StatefulWidget {
     this.quote,
     this.quoteId,
     this.itemBuilder,
-    this.layout = ItemLayoutType.row,
+    this.layout = ItemComponentType.row,
     this.onSelected,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
@@ -63,7 +63,7 @@ class _QuoteRowState extends State<QuoteRow> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.layout == ItemLayoutType.row) {
+    if (widget.layout == ItemComponentType.row) {
       return rowLayout();
     }
 

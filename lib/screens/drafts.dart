@@ -279,7 +279,7 @@ class _DraftsState extends State<Drafts> {
           return TempQuoteRowWithActions(
             onTap: () => editDraft(draft),
             tempQuote: draft,
-            layout: ItemLayoutType.card,
+            layout: ItemComponentType.card,
           );
         },
         childCount: drafts.length,

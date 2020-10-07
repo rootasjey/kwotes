@@ -28,7 +28,7 @@ class QuoteRowWithActions extends StatefulWidget {
   final Function onBeforeRemoveFromList;
   final Function onRemoveFromList;
 
-  final ItemLayoutType layout;
+  final ItemComponentType layout;
   final Quote quote;
   final QuoteRowActionType type;
 
@@ -43,7 +43,7 @@ class QuoteRowWithActions extends StatefulWidget {
   QuoteRowWithActions({
     this.canManage = false,
     this.isConnected = false,
-    this.layout = ItemLayoutType.row,
+    this.layout = ItemComponentType.row,
     this.onAfterAddToFavourites,
     this.onAfterDeletePubQuote,
     this.onAfterRemoveFromFavourites,

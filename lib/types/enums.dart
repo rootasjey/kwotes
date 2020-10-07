@@ -8,7 +8,7 @@ enum ItemsStyle {
   grid,
 }
 
-enum ItemLayoutType {
+enum ItemComponentType {
   card,
   row,
 }

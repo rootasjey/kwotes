@@ -400,7 +400,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
             return QuoteRowWithActions(
               quote: quote,
-              layout: ItemLayoutType.card,
+              layout: ItemComponentType.card,
               onBeforeDeletePubQuote: () {
                 setState(() {
                   quotes.removeAt(index);
