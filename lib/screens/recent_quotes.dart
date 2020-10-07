@@ -19,6 +19,9 @@ import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class RecentQuotes extends StatefulWidget {
+  final bool hideNavBackIcon;
+
+  RecentQuotes({this.hideNavBackIcon = false});
   @override
   RecentQuotesState createState() => RecentQuotesState();
 }
@@ -99,6 +102,7 @@ class RecentQuotesState extends State<RecentQuotes> {
           ),
         ),
       ),
+      hideNavBackIcon: widget.hideNavBackIcon,
       subHeader: Observer(
         builder: (context) {
           return Wrap(

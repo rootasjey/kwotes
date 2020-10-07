@@ -21,7 +21,9 @@ class _HomeMobileState extends State<HomeMobile> {
   int _selectedIndex = 0;
 
   static List<Widget> _listScreens = <Widget>[
-    RecentQuotes(),
+    RecentQuotes(
+      hideNavBackIcon: true,
+    ),
     Discover(),
     Topics(),
     Dashboard(),
