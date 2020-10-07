@@ -690,7 +690,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       ),
     ];
 
-    if (widget.quotePageType == QuotePageType.published) {
+    if (widget.quotePageType == QuotePageType.published && widget.isConnected) {
       popupItems.addAll([
         PopupMenuItem(
           value: 'addtofavourites',
