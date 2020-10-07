@@ -1,7 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+void shareQuote({@required BuildContext context, @required Quote quote}) {
+  if (kIsWeb) {
+    shareTwitter(quote: quote);
+    return;
+  }
+
+  shareFromMobile(quote: quote, context: context);
+}
 
 /// Sahre the target quote to twitter.
 Future shareTwitter({Quote quote}) async {
@@ -21,11 +31,12 @@ Future shareTwitter({Quote quote}) async {
 
   final hashtags = '&hashtags=outofcontext';
 
-  final url = 'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags';
+  final url =
+      'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags';
   await launch(url);
 }
 
-void shareFromMobile({Quote quote, BuildContext context}) {
+void shareFromMobile({BuildContext context, Quote quote}) {
   final RenderBox box = context.findRenderObject();
   final quoteName = quote.name;
   final authorName = quote.author?.name ?? '';
