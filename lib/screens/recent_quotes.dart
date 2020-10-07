@@ -16,6 +16,7 @@ import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class RecentQuotes extends StatefulWidget {
   @override
@@ -83,7 +84,21 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: 'All Published',
+      title: TextButton(
+        onPressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
+        child: Text(
+          'Recent',
+          style: TextStyle(
+            fontSize: 22.0,
+          ),
+        ),
+      ),
       subHeader: Observer(
         builder: (context) {
           return Wrap(
