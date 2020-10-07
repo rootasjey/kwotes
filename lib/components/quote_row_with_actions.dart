@@ -29,6 +29,9 @@ class QuoteRowWithActions extends StatefulWidget {
   final Function onRemoveFromList;
 
   final ItemComponentType componentType;
+
+  final EdgeInsets padding;
+
   final Quote quote;
   final QuotePageType quotePageType;
 
@@ -53,6 +56,10 @@ class QuoteRowWithActions extends StatefulWidget {
     this.onBeforeRemoveFromFavourites,
     this.onBeforeRemoveFromList,
     this.onRemoveFromList,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 70.0,
+      vertical: 30.0,
+    ),
     this.pageRoute = '',
     @required this.quote,
     this.quoteId,
@@ -92,6 +99,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return QuoteRow(
       quote: quote,
       quoteId: widget.quoteId,
+      padding: widget.padding,
       itemBuilder: (context) => popupItems,
       onSelected: onSelected,
       componentType: widget.componentType,
