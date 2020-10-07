@@ -236,7 +236,7 @@ class _FavouritesState extends State<Favourites> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.quoteId,
-            type: QuoteRowActionType.favourites,
+            quotePageType: QuotePageType.favourites,
             onBeforeRemoveFromFavourites: () {
               setState(() {
                 // optimistic

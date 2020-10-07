@@ -277,7 +277,7 @@ class _QuotesListState extends State<QuotesList> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.quoteId,
-            type: QuoteRowActionType.list,
+            quotePageType: QuotePageType.list,
             onRemoveFromList: () => removeQuote(quote),
           );
         },

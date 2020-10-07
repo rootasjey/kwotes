@@ -28,7 +28,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final List<Widget> stackChildren;
 
   final TempQuote tempQuote;
-  final QuoteRowActionType type;
+  final QuotePageType quotePageType;
 
   TempQuoteRowWithActions({
     this.canManage = false,
@@ -44,7 +44,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.onAfterValidate,
     this.onAfterDelete,
     @required this.tempQuote,
-    this.type = QuoteRowActionType.published,
+    this.quotePageType = QuotePageType.published,
     this.stackChildren = const [],
   });
 

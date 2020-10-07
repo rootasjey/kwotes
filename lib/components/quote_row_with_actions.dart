@@ -30,7 +30,7 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final ItemComponentType componentType;
   final Quote quote;
-  final QuoteRowActionType type;
+  final QuotePageType quotePageType;
 
   /// Specify explicitly the quote'is
   /// because quote's id in favourites reflect
@@ -56,7 +56,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.pageRoute = '',
     @required this.quote,
     this.quoteId,
-    this.type = QuoteRowActionType.published,
+    this.quotePageType = QuotePageType.published,
     this.stackChildren = const [],
   });
 
@@ -682,7 +682,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       ),
     ];
 
-    if (widget.type == QuoteRowActionType.published) {
+    if (widget.quotePageType == QuotePageType.published) {
       popupItems.addAll([
         PopupMenuItem(
           value: 'addtofavourites',
@@ -699,7 +699,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           ),
         ),
       ]);
-    } else if (widget.type == QuoteRowActionType.favourites) {
+    } else if (widget.quotePageType == QuotePageType.favourites) {
       popupItems.addAll([
         PopupMenuItem(
           value: 'removefromfavourites',
@@ -716,7 +716,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           ),
         ),
       ]);
-    } else if (widget.type == QuoteRowActionType.list) {
+    } else if (widget.quotePageType == QuotePageType.list) {
       popupItems.addAll([
         PopupMenuItem(
           value: 'addtofavourites',

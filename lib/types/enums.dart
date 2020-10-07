@@ -13,7 +13,7 @@ enum ItemComponentType {
   row,
 }
 
-enum QuoteRowActionType {
+enum QuotePageType {
   favourites,
   list,
   published,
