@@ -100,7 +100,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
                 tooltip: 'Back',
                 icon: Icon(Icons.arrow_back),
               ),
-            Padding(padding: const EdgeInsets.only(right: 40.0)),
+            Padding(padding: const EdgeInsets.only(right: 45.0)),
             widget.title != null
                 ? widget.title
                 : Text(
