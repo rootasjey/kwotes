@@ -366,7 +366,7 @@ class _TopicPageState extends State<TopicPage> {
                 onSelected: (value) {
                   switch (value) {
                     case 'share':
-                      shareTwitter(quote: quote);
+                      shareQuote(context: context, quote: quote);
                       break;
                     default:
                   }
