@@ -6,15 +6,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 void shareQuote({@required BuildContext context, @required Quote quote}) {
   if (kIsWeb) {
-    shareTwitter(quote: quote);
+    shareQuoteTwitter(quote: quote);
     return;
   }
 
-  shareFromMobile(quote: quote, context: context);
+  shareQuoteFromMobile(quote: quote, context: context);
 }
 
 /// Sahre the target quote to twitter.
-Future shareTwitter({Quote quote}) async {
+Future shareQuoteTwitter({Quote quote}) async {
   final quoteName = quote.name;
   final authorName = quote.author?.name ?? '';
   final referenceName = quote.mainReference?.name ?? '';
@@ -36,7 +36,7 @@ Future shareTwitter({Quote quote}) async {
   await launch(url);
 }
 
-void shareFromMobile({BuildContext context, Quote quote}) {
+void shareQuoteFromMobile({BuildContext context, Quote quote}) {
   final RenderBox box = context.findRenderObject();
   final quoteName = quote.name;
   final authorName = quote.author?.name ?? '';
