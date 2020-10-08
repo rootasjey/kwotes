@@ -23,14 +23,14 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  bool hasNext                = true;
-  bool hasErrors              = false;
-  bool isFabVisible           = false;
-  bool isLoading              = false;
-  bool isLoadingMore          = false;
-  bool isSearchingAuthors     = false;
-  bool isSearchingQuotes      = false;
-  bool isSearchingReferences  = false;
+  bool hasNext = true;
+  bool hasErrors = false;
+  bool isFabVisible = false;
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  bool isSearchingAuthors = false;
+  bool isSearchingQuotes = false;
+  bool isSearchingReferences = false;
 
   final authorsResults = List<Author>();
   final quotesResults = List<Quote>();
@@ -69,78 +69,75 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isFabVisible ?
-        FloatingActionButton(
-          onPressed: () {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(seconds: 1),
-              curve: Curves.easeOut,
-            );
-          },
-          backgroundColor: stateColors.primary,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.arrow_upward),
-        ) : null,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: body(),
     );
   }
 
   Widget body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        await search();
-        return null;
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotif) {
-          // FAB visibility
-          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-            setState(() {
-              isFabVisible = false;
-            });
-          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-            setState(() {
-              isFabVisible = true;
-            });
-          }
-
-          // Load more scenario
-          if (scrollNotif.metrics.pixels <
-              scrollNotif.metrics.maxScrollExtent) {
-            return false;
-          }
-
-          return false;
+        onRefresh: () async {
+          await search();
+          return null;
         },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            HomeAppBar(
-              title: 'Search',
-              automaticallyImplyLeading: true,
-            ),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
 
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 100.0,
+            // Load more scenario
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
+
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              HomeAppBar(
+                title: 'Search',
+                automaticallyImplyLeading: true,
               ),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  searchHeader(),
-
-                  quotesSection(),
-                  authorsSection(),
-                  referencesSection(),
-
-                  Padding(padding: const EdgeInsets.only(bottom: 300.0)),
-                ]),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 100.0,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    searchHeader(),
+                    quotesSection(),
+                    authorsSection(),
+                    referencesSection(),
+                    Padding(padding: const EdgeInsets.only(bottom: 300.0)),
+                  ]),
+                ),
               ),
-            ),
-          ],
-        ),
-      )
-    );
+            ],
+          ),
+        ));
   }
 
   Widget authorsSection() {
@@ -150,9 +147,8 @@ class _SearchState extends State<Search> {
       );
     }
 
-    final dataView = authorsResults.isEmpty
-      ? emptyView('authors')
-      : authorsResultsView();
+    final dataView =
+        authorsResults.isEmpty ? emptyView('authors') : authorsResultsView();
 
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
@@ -162,7 +158,6 @@ class _SearchState extends State<Search> {
           titleSection(
             text: '${authorsResults.length} authors',
           ),
-
           dataView,
         ],
       ),
@@ -176,9 +171,8 @@ class _SearchState extends State<Search> {
       );
     }
 
-    final dataView = quotesResults.isEmpty
-      ? emptyView('quotes')
-      : quotesResultsView();
+    final dataView =
+        quotesResults.isEmpty ? emptyView('quotes') : quotesResultsView();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +180,6 @@ class _SearchState extends State<Search> {
         titleSection(
           text: '${quotesResults.length} quotes',
         ),
-
         dataView,
       ],
     );
@@ -199,9 +192,8 @@ class _SearchState extends State<Search> {
       );
     }
 
-    final dataView = quotesResults.isEmpty
-      ? emptyView('quotes')
-      : referencesResultsView();
+    final dataView =
+        quotesResults.isEmpty ? emptyView('quotes') : referencesResultsView();
 
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
@@ -211,7 +203,6 @@ class _SearchState extends State<Search> {
           titleSection(
             text: '${referencesResults.length} references',
           ),
-
           dataView,
         ],
       ),
@@ -255,7 +246,6 @@ class _SearchState extends State<Search> {
             ),
           ),
         ),
-
         OutlineButton.icon(
           onPressed: () {
             switch (subject) {
@@ -279,11 +269,8 @@ class _SearchState extends State<Search> {
   }
 
   Widget searchActions() {
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
-      children: [
-        RaisedButton.icon(
+    return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
+      RaisedButton.icon(
           onPressed: () {
             searchInputValue = '';
             searchInputController.clear();
@@ -297,10 +284,8 @@ class _SearchState extends State<Search> {
             child: Text(
               'Clear content',
             ),
-          )
-        ),
-      ]
-    );
+          )),
+    ]);
   }
 
   Widget searchHeader() {
@@ -336,7 +321,9 @@ class _SearchState extends State<Search> {
           searchInputValue = newValue;
 
           if (newValue.isEmpty) {
-            if (refresh) { setState(() {}); }
+            if (refresh) {
+              setState(() {});
+            }
             return;
           }
 
@@ -355,9 +342,7 @@ class _SearchState extends State<Search> {
         decoration: InputDecoration(
           icon: Icon(Icons.search),
           hintText: 'Search quote...',
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none
-          ),
+          border: OutlineInputBorder(borderSide: BorderSide.none),
         ),
       ),
     );
@@ -380,10 +365,11 @@ class _SearchState extends State<Search> {
                 fontSize: 25.0,
               ),
             ),
-
             SizedBox(
               width: 200.0,
-              child: Divider(thickness: 1.0,),
+              child: Divider(
+                thickness: 1.0,
+              ),
             ),
           ],
         ),
@@ -409,7 +395,7 @@ class _SearchState extends State<Search> {
           ],
           onSelected: (value) {
             if (value == 'share') {
-              shareAuthor(author);
+              shareAuthor(context: context, author: author);
               return;
             }
           },
@@ -428,15 +414,15 @@ class _SearchState extends State<Search> {
           padding: EdgeInsets.zero,
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             PopupMenuItem(
-              value: 'share',
-              child: ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Share'),
-              )),
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                )),
           ],
           onSelected: (value) {
             if (value == 'share') {
-              shareQuote(quote);
+              shareQuote(context: context, quote: quote);
               return;
             }
           },
@@ -458,11 +444,11 @@ class _SearchState extends State<Search> {
           name: reference.name,
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             PopupMenuItem(
-              value: 'share',
-              child: ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Share'),
-              )),
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                )),
           ],
           onSelected: (value) {
             if (value == 'share') {
@@ -489,10 +475,10 @@ class _SearchState extends State<Search> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('authors')
-        .where('name', isGreaterThanOrEqualTo: searchInputValue)
-        .limit(10)
-        .getDocuments();
+          .collection('authors')
+          .where('name', isGreaterThanOrEqualTo: searchInputValue)
+          .limit(10)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         return;
@@ -509,7 +495,6 @@ class _SearchState extends State<Search> {
       setState(() {
         isSearchingAuthors = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -523,10 +508,10 @@ class _SearchState extends State<Search> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('quotes')
-        .where('name', isGreaterThanOrEqualTo: searchInputValue)
-        .limit(10)
-        .getDocuments();
+          .collection('quotes')
+          .where('name', isGreaterThanOrEqualTo: searchInputValue)
+          .limit(10)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         return;
@@ -543,7 +528,6 @@ class _SearchState extends State<Search> {
       setState(() {
         isSearchingQuotes = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -557,10 +541,10 @@ class _SearchState extends State<Search> {
 
     try {
       final snapshot = await Firestore.instance
-        .collection('references')
-        .where('name', isGreaterThanOrEqualTo: searchInputValue)
-        .limit(10)
-        .getDocuments();
+          .collection('references')
+          .where('name', isGreaterThanOrEqualTo: searchInputValue)
+          .limit(10)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         return;
@@ -577,61 +561,9 @@ class _SearchState extends State<Search> {
       setState(() {
         isSearchingReferences = false;
       });
-
     } catch (error) {
       debugPrint(error.toString());
     }
-  }
-
-  void shareAuthor(Author author) {
-    if (kIsWeb) {
-      shareAuthorWeb(author);
-      return;
-    }
-
-    shareAuthorMobile(author);
-  }
-
-  void shareAuthorWeb(Author author) async {
-    String sharingText = author.name;
-    final urlReference = 'https://outofcontext.app/#/reference/${author.id}';
-
-    if (author.job != null && author.job.isNotEmpty) {
-      sharingText += ' (${author.job})';
-    }
-
-    final hashtags = '&hashtags=outofcontext';
-
-    await launch(
-      'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags&url=$urlReference',
-    );
-  }
-
-  void shareAuthorMobile(Author author) {
-    final RenderBox box = context.findRenderObject();
-    String sharingText = author.name;
-    final urlReference = 'https://outofcontext.app/#/reference/${author.id}';
-
-    if (author.job != null && author.job.isNotEmpty) {
-      sharingText += ' (${author.job})';
-    }
-
-    sharingText += ' - URL: $urlReference';
-
-    Share.share(
-      sharingText,
-      subject: 'Out Of Context',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
-  }
-
-  void shareQuote(Quote quote) {
-    if (kIsWeb) {
-      shareTwitter(quote: quote,);
-      return;
-    }
-
-    shareFromMobile(context: context, quote: quote);
   }
 
   void shareReference(Reference reference) {
