@@ -104,7 +104,7 @@ class _AuthorsState extends State<Authors> {
   Widget appBar() {
     return SimpleAppBar(
       textTitle: 'Options',
-      hideNavBackIcon: true,
+      showNavBackIcon: true,
       subHeader: Observer(
         builder: (context) {
           return Wrap(

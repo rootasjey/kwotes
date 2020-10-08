@@ -16,11 +16,11 @@ class SimpleAppBar extends StatefulWidget {
   /// Typically open a drawer. Menu icon will be hidden if null.
   final Function onPressedMenu;
 
-  /// If true, the back icon will be hidden.
-  final bool hideNavBackIcon;
+  /// If true, the back icon will be visible.
+  final bool showNavBackIcon;
 
   SimpleAppBar({
-    this.hideNavBackIcon = false,
+    this.showNavBackIcon = true,
     this.onPressedMenu,
     this.subHeader,
     this.textTitle,
@@ -63,7 +63,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
           menuIconLeftPadding = 20.0;
         }
 
-        if (widget.hideNavBackIcon) {
+        if (!widget.showNavBackIcon) {
           leftSubHeaderPadding -= 40.0;
         }
 
@@ -92,7 +92,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
         ),
         child: Row(
           children: <Widget>[
-            if (!widget.hideNavBackIcon)
+            if (widget.showNavBackIcon)
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();

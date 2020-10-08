@@ -22,7 +22,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
   static List<Widget> _listScreens = <Widget>[
     RecentQuotes(
-      hideNavBackIcon: true,
+      showNavBackIcon: false,
     ),
     Discover(),
     Topics(),
