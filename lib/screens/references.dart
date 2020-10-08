@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/reference_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
@@ -17,8 +18,6 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/app_localstorage.dart';
-import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:supercharged/supercharged.dart';
 
 class References extends StatefulWidget {
@@ -524,7 +523,7 @@ class _ReferencesState extends State<References> {
               ],
               onSelected: (value) {
                 if (value == 'share') {
-                  shareReference(reference);
+                  shareReference(context: context, reference: reference);
                   return;
                 }
               },
@@ -554,7 +553,7 @@ class _ReferencesState extends State<References> {
             ],
             onSelected: (value) {
               if (value == 'share') {
-                shareReference(reference);
+                shareReference(context: context, reference: reference);
                 return;
               }
             },
@@ -653,48 +652,6 @@ class _ReferencesState extends State<References> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void shareReference(Reference reference) {
-    if (kIsWeb) {
-      shareReferenceWeb(reference);
-      return;
-    }
-
-    shareReferenceMobile(reference);
-  }
-
-  void shareReferenceWeb(Reference reference) async {
-    String sharingText = reference.name;
-    final urlReference = 'https://outofcontext.app/#/reference/${reference.id}';
-
-    if (reference.type.primary.isNotEmpty) {
-      sharingText += ' (${reference.type.primary})';
-    }
-
-    final hashtags = '&hashtags=outofcontext';
-
-    await launch(
-      'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags&url=$urlReference',
-    );
-  }
-
-  void shareReferenceMobile(Reference reference) {
-    final RenderBox box = context.findRenderObject();
-    String sharingText = reference.name;
-    final urlReference = 'https://outofcontext.app/#/reference/${reference.id}';
-
-    if (reference.type.primary.isNotEmpty) {
-      sharingText += ' (${reference.type.primary})';
-    }
-
-    sharingText += ' - URL: $urlReference';
-
-    Share.share(
-      sharingText,
-      subject: 'Out Of Context',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
   }
 
   void search() async {
