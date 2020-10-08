@@ -79,7 +79,7 @@ class RecentQuotesState extends State<RecentQuotes> {
               controller: scrollController,
               slivers: <Widget>[
                 appBar(),
-                bodyListContent(),
+                body(),
               ],
             ),
           )),
@@ -290,7 +290,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     );
   }
 
-  Widget bodyListContent() {
+  Widget body() {
     if (isLoading) {
       return SliverLoadingView();
     }
