@@ -19,12 +19,16 @@ class SimpleAppBar extends StatefulWidget {
   /// If true, the back icon will be visible.
   final bool showNavBackIcon;
 
+  // Appbar's height.
+  final double expandedHeight;
+
   SimpleAppBar({
     this.showNavBackIcon = true,
     this.onPressedMenu,
     this.subHeader,
     this.textTitle,
     this.title,
+    this.expandedHeight = 210.0,
   });
 
   @override
@@ -40,7 +44,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
           floating: true,
           snap: true,
           backgroundColor: stateColors.appBackground.withOpacity(1.0),
-          expandedHeight: 210.0,
+          expandedHeight: widget.expandedHeight,
           automaticallyImplyLeading: false,
           flexibleSpace: customFlexibleSpace(),
         );
@@ -56,10 +60,10 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
         double leftSubHeaderPadding = 165.0;
         double menuIconLeftPadding = 80.0;
 
-        if (constrains.maxWidth < 600.0) {
+        if (constrains.maxWidth < 700.0) {
           titleFontSize = 25.0;
-          leftTitlePadding = 20.0;
-          leftSubHeaderPadding = 105.0;
+          leftTitlePadding = 40.0;
+          leftSubHeaderPadding = 85.0;
           menuIconLeftPadding = 20.0;
         }
 
@@ -92,7 +96,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
         ),
         child: Row(
           children: <Widget>[
-            if (widget.showNavBackIcon)
+            if (widget.showNavBackIcon) ...[
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -100,7 +104,8 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
                 tooltip: 'Back',
                 icon: Icon(Icons.arrow_back),
               ),
-            Padding(padding: const EdgeInsets.only(right: 45.0)),
+              Padding(padding: const EdgeInsets.only(right: 45.0)),
+            ],
             widget.title != null
                 ? widget.title
                 : Text(
@@ -151,6 +156,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
       child: Padding(
         padding: EdgeInsets.only(
           left: leftSubHeaderPadding,
+          right: leftSubHeaderPadding,
         ),
         child: widget.subHeader,
       ),
