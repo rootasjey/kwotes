@@ -18,7 +18,7 @@ class HomeMobile extends StatefulWidget {
 }
 
 class _HomeMobileState extends State<HomeMobile> {
-  int _selectedIndex = 0;
+  int selectedIndex = 0;
 
   static List<Widget> _listScreens = <Widget>[
     RecentQuotes(
@@ -34,13 +34,13 @@ class _HomeMobileState extends State<HomeMobile> {
     super.initState();
 
     setState(() {
-      _selectedIndex = widget.initialIndex;
+      selectedIndex = widget.initialIndex;
     });
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
 
@@ -48,7 +48,7 @@ class _HomeMobileState extends State<HomeMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: _listScreens.elementAt(_selectedIndex),
+        child: _listScreens.elementAt(selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -77,7 +77,7 @@ class _HomeMobileState extends State<HomeMobile> {
             label: 'Account',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: stateColors.primary,
         unselectedItemColor: stateColors.foreground,
