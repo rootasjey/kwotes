@@ -22,6 +22,10 @@ class QuoteRow extends StatefulWidget {
   final double elevation;
   final List<Widget> stackChildren;
 
+  /// A widget positioned before the main content (quote's content).
+  /// Typcally an Icon or a small Container.
+  final Widget leading;
+
   QuoteRow({
     this.cardSize = 250.0,
     this.elevation = 0.0,
@@ -35,6 +39,7 @@ class QuoteRow extends StatefulWidget {
       vertical: 30.0,
     ),
     this.stackChildren = const [],
+    this.leading,
   });
 
   @override
@@ -159,6 +164,7 @@ class _QuoteRowState extends State<QuoteRow> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                if (widget.leading != null) widget.leading,
                 Expanded(
                   flex: 2,
                   child: Column(

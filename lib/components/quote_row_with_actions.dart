@@ -43,6 +43,10 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final List<Widget> stackChildren;
 
+  /// A widget positioned before the main content (quote's content).
+  /// Typcally an Icon or a small Container.
+  final Widget leading;
+
   QuoteRowWithActions({
     this.canManage = false,
     this.isConnected = false,
@@ -65,6 +69,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.quoteId,
     this.quotePageType = QuotePageType.published,
     this.stackChildren = const [],
+    this.leading,
   });
 
   @override
@@ -104,6 +109,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       onSelected: onSelected,
       componentType: widget.componentType,
       stackChildren: widget.stackChildren,
+      leading: widget.leading,
     );
   }
 
