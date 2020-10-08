@@ -13,6 +13,8 @@ class ReferenceCard extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final double titleFontSize;
   final String type;
+
+  /// Card's width.
   final double width;
 
   ReferenceCard({
@@ -95,7 +97,7 @@ class _ReferenceCardState extends State<ReferenceCard> {
                     opacity: 0.6,
                     child: Icon(
                       Icons.library_books,
-                      size: 60.0,
+                      size: widget.width <= 120.0 ? 30.0 : 60.0,
                     ),
                   ),
                 ),
