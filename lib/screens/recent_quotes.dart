@@ -7,6 +7,7 @@ import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
@@ -87,7 +88,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   Widget appBar() {
     return SimpleAppBar(
-      title: TextButton(
+      title: TextButton.icon(
         onPressed: () {
           scrollController.animateTo(
             0,
@@ -95,7 +96,11 @@ class RecentQuotesState extends State<RecentQuotes> {
             curve: Curves.easeIn,
           );
         },
-        child: Text(
+        icon: AppIconHeader(
+          padding: EdgeInsets.zero,
+          size: 30.0,
+        ),
+        label: Text(
           'Recent',
           style: TextStyle(
             fontSize: 22.0,
