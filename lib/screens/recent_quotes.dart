@@ -38,7 +38,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   final pageRoute = QuotesRoute;
 
-  int limit = 30;
+  final limit = 30;
   List<Quote> quotes = [];
   String lang = 'en';
 
