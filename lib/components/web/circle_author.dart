@@ -130,12 +130,14 @@ class _CircleAuthorState extends State<CircleAuthor> {
   }
 
   Widget name() {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(top: 20.0),
+      width: 120.0,
       child: Opacity(
         opacity: 0.6,
         child: Text(
           widget.author.name,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18.0,
           ),
