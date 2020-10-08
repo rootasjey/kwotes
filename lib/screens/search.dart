@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/circle_author.dart';
 import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
@@ -13,9 +15,9 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
-import 'package:share/share.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+String _searchInputValue = '';
 
 class Search extends StatefulWidget {
   @override
@@ -31,24 +33,27 @@ class _SearchState extends State<Search> {
   bool isSearchingAuthors = false;
   bool isSearchingQuotes = false;
   bool isSearchingReferences = false;
+  bool isNarrow = false;
+
+  bool areQuotesVisible = true;
+  bool areAuthorsVisible = true;
+  bool areReferencesVisible = true;
 
   final authorsResults = List<Author>();
   final quotesResults = List<Quote>();
   final referencesResults = List<Reference>();
 
-  int limit = 30;
+  final limit = 10;
 
   final pageRoute = SearchRoute;
   FocusNode searchFocusNode;
   ScrollController scrollController;
 
-  String searchInputValue = '';
-
   TextEditingController searchInputController;
 
   Timer _searchTimer;
 
-  var lastDoc;
+  DocumentSnapshot lastDoc;
 
   @override
   initState() {
@@ -56,6 +61,11 @@ class _SearchState extends State<Search> {
     searchFocusNode = FocusNode();
     searchInputController = TextEditingController();
     scrollController = ScrollController();
+
+    if (_searchInputValue != null && _searchInputValue.isNotEmpty) {
+      searchInputController.text = _searchInputValue;
+      search();
+    }
   }
 
   @override
@@ -83,65 +93,101 @@ class _SearchState extends State<Search> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: body(),
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await search();
+            return null;
+          },
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              // FAB visibility
+              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                setState(() {
+                  isFabVisible = false;
+                });
+              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                setState(() {
+                  isFabVisible = true;
+                });
+              }
+
+              // Load more scenario
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
+  }
+
+  Widget appBar() {
+    if (MediaQuery.of(context).size.width < 700.0) {
+      return SimpleAppBar(
+        title: TextButton.icon(
+          onPressed: () {
+            scrollController.animateTo(
+              0,
+              duration: 250.milliseconds,
+              curve: Curves.easeIn,
+            );
+          },
+          icon: AppIconHeader(
+            padding: EdgeInsets.zero,
+            size: 30.0,
+          ),
+          label: Text(
+            'Search',
+            style: TextStyle(
+              fontSize: 22.0,
+            ),
+          ),
+        ),
+        showNavBackIcon: false,
+      );
+    }
+
+    return HomeAppBar(
+      title: 'Search',
+      automaticallyImplyLeading: true,
     );
   }
 
   Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await search();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
+    isNarrow = MediaQuery.of(context).size.width < 700.0;
+    double horPadding = isNarrow ? 20.0 : 100.0;
 
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              HomeAppBar(
-                title: 'Search',
-                automaticallyImplyLeading: true,
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 100.0,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    searchHeader(),
-                    quotesSection(),
-                    authorsSection(),
-                    referencesSection(),
-                    Padding(padding: const EdgeInsets.only(bottom: 300.0)),
-                  ]),
-                ),
-              ),
-            ],
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(
+        horizontal: horPadding,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          searchHeader(),
+          quotesSection(),
+          authorsSection(),
+          referencesSection(),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 300.0,
+            ),
           ),
-        ));
+        ]),
+      ),
+    );
   }
 
   Widget authorsSection() {
-    if (searchInputValue.isEmpty) {
+    if (_searchInputValue.isEmpty) {
       return Padding(
         padding: EdgeInsets.zero,
       );
@@ -153,19 +199,24 @@ class _SearchState extends State<Search> {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           titleSection(
             text: '${authorsResults.length} authors',
+            iconData:
+                areAuthorsVisible ? Icons.close_fullscreen : Icons.open_in_full,
+            onPressed: () =>
+                setState(() => areAuthorsVisible = !areAuthorsVisible),
           ),
-          dataView,
+          if (areAuthorsVisible) dataView,
         ],
       ),
     );
   }
 
   Widget quotesSection() {
-    if (searchInputValue.isEmpty) {
+    if (_searchInputValue.isEmpty) {
       return Padding(
         padding: EdgeInsets.zero,
       );
@@ -175,18 +226,22 @@ class _SearchState extends State<Search> {
         quotesResults.isEmpty ? emptyView('quotes') : quotesResultsView();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
         titleSection(
           text: '${quotesResults.length} quotes',
+          iconData:
+              areQuotesVisible ? Icons.close_fullscreen : Icons.open_in_full,
+          onPressed: () => setState(() => areQuotesVisible = !areQuotesVisible),
         ),
-        dataView,
+        if (areQuotesVisible) dataView,
       ],
     );
   }
 
   Widget referencesSection() {
-    if (searchInputValue.isEmpty) {
+    if (_searchInputValue.isEmpty) {
       return Padding(
         padding: EdgeInsets.zero,
       );
@@ -198,25 +253,41 @@ class _SearchState extends State<Search> {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           titleSection(
             text: '${referencesResults.length} references',
+            iconData: areReferencesVisible
+                ? Icons.close_fullscreen
+                : Icons.open_in_full,
+            onPressed: () =>
+                setState(() => areReferencesVisible = !areReferencesVisible),
           ),
-          dataView,
+          if (areReferencesVisible) dataView,
         ],
       ),
     );
   }
 
-  Widget titleSection({String text}) {
+  Widget titleSection({
+    @required String text,
+    VoidCallback onPressed,
+    @required IconData iconData,
+  }) {
+    final padding = EdgeInsets.only(bottom: isNarrow ? 40.0 : 15.0);
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 26.0,
-          color: stateColors.primary,
+      padding: padding,
+      child: TextButton.icon(
+        onPressed: onPressed,
+        icon: Icon(iconData),
+        label: Text(
+          text,
+          style: TextStyle(
+            fontSize: 26.0,
+            color: stateColors.primary,
+          ),
         ),
       ),
     );
@@ -226,7 +297,7 @@ class _SearchState extends State<Search> {
     return Opacity(
       opacity: 0.6,
       child: Text(
-        'No $subject found for "$searchInputValue"',
+        'No $subject found for "$_searchInputValue"',
         style: TextStyle(
           fontSize: 18.0,
         ),
@@ -240,7 +311,7 @@ class _SearchState extends State<Search> {
         Opacity(
           opacity: 0.6,
           child: Text(
-            'There was an issue while searching $subject for "$searchInputValue". You can try again.',
+            'There was an issue while searching $subject for "$_searchInputValue". You can try again.',
             style: TextStyle(
               fontSize: 18.0,
             ),
@@ -272,7 +343,7 @@ class _SearchState extends State<Search> {
     return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
       RaisedButton.icon(
           onPressed: () {
-            searchInputValue = '';
+            _searchInputValue = '';
             searchInputController.clear();
             searchFocusNode.requestFocus();
 
@@ -290,9 +361,9 @@ class _SearchState extends State<Search> {
 
   Widget searchHeader() {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 100.0,
-        bottom: 50.0,
+      padding: EdgeInsets.only(
+        top: isNarrow ? 0.0 : 100.0,
+        bottom: 60.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,9 +387,9 @@ class _SearchState extends State<Search> {
         keyboardType: TextInputType.multiline,
         textCapitalization: TextCapitalization.sentences,
         onChanged: (newValue) {
-          final refresh = searchInputValue != newValue && newValue.isEmpty;
+          final refresh = _searchInputValue != newValue && newValue.isEmpty;
 
-          searchInputValue = newValue;
+          _searchInputValue = newValue;
 
           if (newValue.isEmpty) {
             if (refresh) {
@@ -349,20 +420,21 @@ class _SearchState extends State<Search> {
   }
 
   Widget searchResultsData() {
-    if (searchInputValue.isEmpty) {
+    if (_searchInputValue.isEmpty) {
       return Padding(padding: EdgeInsets.zero);
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: Opacity(
-        opacity: 0.6,
+        opacity: 0.5,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               '${quotesResults.length + authorsResults.length + referencesResults.length} results in total',
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 20.0,
               ),
             ),
             SizedBox(
@@ -381,8 +453,10 @@ class _SearchState extends State<Search> {
     return Wrap(
       spacing: 40.0,
       runSpacing: 40.0,
+      alignment: isNarrow ? WrapAlignment.center : WrapAlignment.start,
       children: authorsResults.map((author) {
         return CircleAuthor(
+          size: isNarrow ? 100.0 : 150.0,
           author: author,
           itemBuilder: (_) => <PopupMenuEntry<String>>[
             PopupMenuItem(
@@ -432,14 +506,23 @@ class _SearchState extends State<Search> {
   }
 
   Widget referencesResultsView() {
+    double height = 230.0;
+    double width = 170.0;
+
+    if (isNarrow) {
+      height = 180.0;
+      width = 120.0;
+    }
+
     return Wrap(
       spacing: 40.0,
       runSpacing: 40.0,
       children: referencesResults.map((reference) {
         return ReferenceCard(
-          height: 230.0,
-          width: 170.0,
+          height: height,
+          width: width,
           id: reference.id,
+          titleFontSize: isNarrow ? 14.0 : 18.0,
           imageUrl: reference.urls.image,
           name: reference.name,
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -452,7 +535,7 @@ class _SearchState extends State<Search> {
           ],
           onSelected: (value) {
             if (value == 'share') {
-              shareReference(reference);
+              shareReference(context: context, reference: reference);
               return;
             }
           },
@@ -476,8 +559,8 @@ class _SearchState extends State<Search> {
     try {
       final snapshot = await Firestore.instance
           .collection('authors')
-          .where('name', isGreaterThanOrEqualTo: searchInputValue)
-          .limit(10)
+          .where('name', isGreaterThanOrEqualTo: _searchInputValue)
+          .limit(limit)
           .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -509,8 +592,8 @@ class _SearchState extends State<Search> {
     try {
       final snapshot = await Firestore.instance
           .collection('quotes')
-          .where('name', isGreaterThanOrEqualTo: searchInputValue)
-          .limit(10)
+          .where('name', isGreaterThanOrEqualTo: _searchInputValue)
+          .limit(limit)
           .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -542,8 +625,8 @@ class _SearchState extends State<Search> {
     try {
       final snapshot = await Firestore.instance
           .collection('references')
-          .where('name', isGreaterThanOrEqualTo: searchInputValue)
-          .limit(10)
+          .where('name', isGreaterThanOrEqualTo: _searchInputValue)
+          .limit(limit)
           .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -564,47 +647,5 @@ class _SearchState extends State<Search> {
     } catch (error) {
       debugPrint(error.toString());
     }
-  }
-
-  void shareReference(Reference reference) {
-    if (kIsWeb) {
-      shareReferenceWeb(reference);
-      return;
-    }
-
-    shareReferenceMobile(reference);
-  }
-
-  void shareReferenceWeb(Reference reference) async {
-    String sharingText = reference.name;
-    final urlReference = 'https://outofcontext.app/#/reference/${reference.id}';
-
-    if (reference.type.primary.isNotEmpty) {
-      sharingText += ' (${reference.type.primary})';
-    }
-
-    final hashtags = '&hashtags=outofcontext';
-
-    await launch(
-      'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags&url=$urlReference',
-    );
-  }
-
-  void shareReferenceMobile(Reference reference) {
-    final RenderBox box = context.findRenderObject();
-    String sharingText = reference.name;
-    final urlReference = 'https://outofcontext.app/#/reference/${reference.id}';
-
-    if (reference.type.primary.isNotEmpty) {
-      sharingText += ' (${reference.type.primary})';
-    }
-
-    sharingText += ' - URL: $urlReference';
-
-    Share.share(
-      sharingText,
-      subject: 'Out Of Context',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
   }
 }

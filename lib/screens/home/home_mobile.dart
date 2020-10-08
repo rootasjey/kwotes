@@ -3,6 +3,7 @@ import 'package:memorare/common/icons_more_icons.dart';
 import 'package:memorare/screens/dashboard.dart';
 import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/recent_quotes.dart';
+import 'package:memorare/screens/search.dart';
 import 'package:memorare/screens/topics.dart';
 import 'package:memorare/state/colors.dart';
 
@@ -24,6 +25,7 @@ class _HomeMobileState extends State<HomeMobile> {
     RecentQuotes(
       showNavBackIcon: false,
     ),
+    Search(),
     Discover(),
     Topics(),
     Dashboard(),
@@ -57,6 +59,12 @@ class _HomeMobileState extends State<HomeMobile> {
               Icons.timelapse,
             ),
             label: 'Recent',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+            ),
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(
