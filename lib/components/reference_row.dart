@@ -9,11 +9,16 @@ class ReferenceRow extends StatefulWidget {
 
   final Function itemBuilder;
   final Function onSelected;
+  final EdgeInsets padding;
 
   ReferenceRow({
     this.reference,
     this.itemBuilder,
     this.onSelected,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 70.0,
+      vertical: 30.0,
+    ),
   });
 
   @override
@@ -39,10 +44,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
     final reference = widget.reference;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 70.0,
-        vertical: 30.0,
-      ),
+      padding: widget.padding,
       child: Card(
         elevation: elevation,
         color: stateColors.appBackground,
@@ -55,7 +57,6 @@ class _ReferenceRowState extends State<ReferenceRow> {
           },
           onHover: (isHover) {
             elevation = isHover ? 2.0 : 0.0;
-
             iconColor = isHover ? iconHoverColor : null;
 
             setState(() {});
@@ -113,7 +114,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
         child: Card(
           elevation: 4.0,
           child: Opacity(
-            opacity: elevation > 0.0 ? 1.0 : 0.5,
+            opacity: elevation > 0.0 ? 1.0 : 0.8,
             child: Image.network(
               reference.urls.image,
               width: 80.0,
