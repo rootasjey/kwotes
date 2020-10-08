@@ -315,7 +315,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: IconButton(
                 onPressed: () async {
-                  shareFromMobile(
+                  shareQuote(
                     context: context,
                     quote: quote,
                   );

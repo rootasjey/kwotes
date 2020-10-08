@@ -236,7 +236,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: IconButton(
               onPressed: () async {
-                shareTwitter(quote: quotidian.quote);
+                shareQuote(context: context, quote: quotidian.quote);
               },
               icon: Icon(Icons.share),
             ),

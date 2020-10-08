@@ -97,7 +97,7 @@ class _QuotePageState extends State<QuotePage> {
                   Icons.share,
                 ),
                 onPressed: () {
-                  shareFromMobile(
+                  shareQuote(
                     context: context,
                     quote: quote,
                   );

@@ -646,7 +646,7 @@ class _QuotesListState extends State<QuotesList> {
                   tooltip: 'Delete',
                   onPressed: () {
                     Navigator.of(context).pop();
-                    shareFromMobile(
+                    shareQuote(
                       context: context,
                       quote: quote,
                     );

@@ -258,7 +258,7 @@ class _QuotePageState extends State<QuotePage> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: IconButton(
               onPressed: () async {
-                shareTwitter(quote: quote);
+                shareQuote(context: context, quote: quote);
               },
               icon: Icon(Icons.share),
             ),

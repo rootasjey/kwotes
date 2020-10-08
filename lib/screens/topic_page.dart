@@ -518,7 +518,7 @@ class _TopicPageState extends State<TopicPage> {
                     child: IconButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        shareFromMobile(context: context, quote: quote);
+                        shareQuote(context: context, quote: quote);
                       },
                       tooltip: 'Share',
                       icon: Icon(Icons.share),
