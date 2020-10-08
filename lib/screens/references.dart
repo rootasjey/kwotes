@@ -34,6 +34,7 @@ class _ReferencesState extends State<References> {
   bool isLoadingMore = false;
   bool isSearching = false;
 
+  DocumentSnapshot lastDoc;
   HeaderViewType headerViewType = HeaderViewType.search;
 
   TextEditingController searchInputController;
@@ -53,7 +54,6 @@ class _ReferencesState extends State<References> {
   String lastSearchValue = '';
 
   var itemsStyle = ItemsLayout.grid;
-  var lastDoc;
 
   @override
   initState() {
@@ -574,7 +574,7 @@ class _ReferencesState extends State<References> {
       final snapshot = await Firestore.instance
           .collection('references')
           .orderBy('createdAt', descending: descending)
-          .limit(30)
+          .limit(limit)
           .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -594,9 +594,8 @@ class _ReferencesState extends State<References> {
         referencesList.add(reference);
       });
 
-      lastDoc = snapshot.documents.last;
-
       setState(() {
+        lastDoc = snapshot.documents.last;
         isLoading = false;
       });
     } catch (error) {
@@ -620,7 +619,7 @@ class _ReferencesState extends State<References> {
           .collection('references')
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
-          .limit(30)
+          .limit(limit)
           .getDocuments();
 
       if (snapshot.documents.isEmpty) {
@@ -640,10 +639,10 @@ class _ReferencesState extends State<References> {
         referencesList.add(reference);
       });
 
-      lastDoc = snapshot.documents.last;
-
       setState(() {
         isLoadingMore = false;
+        hasNext = snapshot.documents.isNotEmpty;
+        lastDoc = snapshot.documents.last;
       });
     } catch (error) {
       debugPrint(error.toString());
