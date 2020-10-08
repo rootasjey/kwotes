@@ -2,6 +2,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/main_app.dart';
@@ -47,7 +48,7 @@ class AppState extends State<App> {
       return DynamicTheme(
         defaultBrightness: Brightness.light,
         data: (brightness) => ThemeData(
-          fontFamily: 'Comfortaa',
+          fontFamily: GoogleFonts.raleway().fontFamily,
           brightness: brightness,
         ),
         themedWidgetBuilder: (context, theme) {

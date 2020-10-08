@@ -41,6 +41,7 @@ dependencies:
   flutter_inner_drawer: 0.5.7+2
   flutter_mobx: 1.0.1
   flutter_sticky_header: 0.4.2
+  google_fonts: 1.1.0
   mobx: 1.0.2
   mobx_codegen: 1.0.2
   share: 0.6.3+5
@@ -140,10 +141,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    - family: Comfortaa
-      fonts:
-        - asset: assets/fonts/Comfortaa-Medium.ttf
-          weight: 400
     - family: IconsMore
       fonts:
         - asset: assets/fonts/IconsMore.ttf

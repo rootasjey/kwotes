@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/components/error_container.dart';
@@ -202,8 +203,8 @@ class RecentQuotesState extends State<RecentQuotes> {
                     icon: Icon(Icons.keyboard_arrow_down),
                     style: TextStyle(
                       color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: 'Comfortaa',
                       fontSize: 20.0,
+                      fontFamily: GoogleFonts.raleway().fontFamily,
                     ),
                     onChanged: (String newLang) {
                       lang = newLang;

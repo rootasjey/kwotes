@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quotidian_row.dart';
 import 'package:memorare/components/simple_appbar.dart';
@@ -184,7 +185,7 @@ class QuotidiansState extends State<Quotidians> {
                     icon: Icon(Icons.keyboard_arrow_down),
                     style: TextStyle(
                       color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: 'Comfortaa',
+                      fontFamily: GoogleFonts.raleway().fontFamily,
                       fontSize: 20.0,
                     ),
                     onChanged: (String newLang) {

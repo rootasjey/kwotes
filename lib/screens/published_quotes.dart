@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
@@ -201,7 +202,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                     icon: Icon(Icons.keyboard_arrow_down),
                     style: TextStyle(
                       color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: 'Comfortaa',
+                      fontFamily: GoogleFonts.raleway().fontFamily,
                       fontSize: 20.0,
                     ),
                     onChanged: (String newLang) {

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
@@ -155,7 +156,7 @@ class _TopicPageState extends State<TopicPage> {
                     icon: Icon(Icons.keyboard_arrow_down),
                     style: TextStyle(
                       color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: 'Comfortaa',
+                      fontFamily: GoogleFonts.raleway().fontFamily,
                       fontSize: 20.0,
                     ),
                     onChanged: (String newLang) {

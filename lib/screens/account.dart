@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
@@ -738,7 +739,7 @@ class _AccountState extends State<Account> {
                   isDense: true,
                   style: TextStyle(
                     color: stateColors.foreground,
-                    fontFamily: 'Comfortaa',
+                    fontFamily: GoogleFonts.raleway().fontFamily,
                     fontWeight: FontWeight.bold,
                   ),
                   onChanged: (String newValue) {
