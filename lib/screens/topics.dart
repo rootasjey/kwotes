@@ -162,6 +162,7 @@ class _TopicsState extends State<Topics> {
                   .push(MaterialPageRoute(builder: (_) => Topics()));
             },
             color: stateColors.primary,
+            textColor: Colors.white,
             shape: RoundedRectangleBorder(
               // side: BorderSide(color: stateColors.primary),
               borderRadius: BorderRadius.circular(2.0),
