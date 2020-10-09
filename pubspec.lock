@@ -728,6 +728,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.8+1"
+  stopper:
+    dependency: "direct main"
+    description:
+      name: stopper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   stream_channel:
     dependency: transitive
     description:
