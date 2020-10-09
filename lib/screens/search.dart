@@ -412,23 +412,26 @@ class _SearchState extends State<Search> {
   }
 
   Widget searchActions() {
-    return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
-      RaisedButton.icon(
-          onPressed: () {
-            _searchInputValue = '';
-            searchInputController.clear();
-            searchFocusNode.requestFocus();
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0),
+      child: Wrap(spacing: 20.0, runSpacing: 20.0, children: [
+        RaisedButton.icon(
+            onPressed: () {
+              _searchInputValue = '';
+              searchInputController.clear();
+              searchFocusNode.requestFocus();
 
-            setState(() {});
-          },
-          icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Clear content',
-            ),
-          )),
-    ]);
+              setState(() {});
+            },
+            icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Clear content',
+              ),
+            )),
+      ]),
+    );
   }
 
   Widget searchHeader() {
