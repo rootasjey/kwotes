@@ -162,27 +162,32 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget body() {
-    isNarrow = MediaQuery.of(context).size.width < 700.0;
-    double horPadding = isNarrow ? 20.0 : 100.0;
-
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(
-        horizontal: horPadding,
-      ),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate([
-          searchHeader(),
-          quotesSection(),
-          authorsSection(),
-          referencesSection(),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 300.0,
+  Widget authorsResultsView() {
+    return Wrap(
+      spacing: 40.0,
+      runSpacing: 40.0,
+      alignment: isNarrow ? WrapAlignment.center : WrapAlignment.start,
+      children: authorsResults.map((author) {
+        return CircleAuthor(
+          size: isNarrow ? 100.0 : 150.0,
+          author: author,
+          itemBuilder: (_) => <PopupMenuEntry<String>>[
+            PopupMenuItem(
+              value: 'share',
+              child: ListTile(
+                leading: Icon(Icons.share),
+                title: Text('Share'),
+              ),
             ),
-          ),
-        ]),
-      ),
+          ],
+          onSelected: (value) {
+            if (value == 'share') {
+              shareAuthor(context: context, author: author);
+              return;
+            }
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -215,80 +220,26 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget quotesSection() {
-    if (_searchInputValue.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.zero,
-      );
-    }
+  Widget body() {
+    isNarrow = MediaQuery.of(context).size.width < 700.0;
+    double horPadding = isNarrow ? 20.0 : 100.0;
 
-    final dataView =
-        quotesResults.isEmpty ? emptyView('quotes') : quotesResultsView();
-
-    return Column(
-      crossAxisAlignment:
-          isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-      children: [
-        titleSection(
-          text: '${quotesResults.length} quotes',
-          iconData:
-              areQuotesVisible ? Icons.close_fullscreen : Icons.open_in_full,
-          onPressed: () => setState(() => areQuotesVisible = !areQuotesVisible),
-        ),
-        if (areQuotesVisible) dataView,
-      ],
-    );
-  }
-
-  Widget referencesSection() {
-    if (_searchInputValue.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.zero,
-      );
-    }
-
-    final dataView =
-        quotesResults.isEmpty ? emptyView('quotes') : referencesResultsView();
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
-      child: Column(
-        crossAxisAlignment:
-            isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-        children: [
-          titleSection(
-            text: '${referencesResults.length} references',
-            iconData: areReferencesVisible
-                ? Icons.close_fullscreen
-                : Icons.open_in_full,
-            onPressed: () =>
-                setState(() => areReferencesVisible = !areReferencesVisible),
-          ),
-          if (areReferencesVisible) dataView,
-        ],
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(
+        horizontal: horPadding,
       ),
-    );
-  }
-
-  Widget titleSection({
-    @required String text,
-    VoidCallback onPressed,
-    @required IconData iconData,
-  }) {
-    final padding = EdgeInsets.only(bottom: isNarrow ? 40.0 : 15.0);
-
-    return Padding(
-      padding: padding,
-      child: TextButton.icon(
-        onPressed: onPressed,
-        icon: Icon(iconData),
-        label: Text(
-          text,
-          style: TextStyle(
-            fontSize: 26.0,
-            color: stateColors.primary,
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          searchHeader(),
+          quotesSection(),
+          authorsSection(),
+          referencesSection(),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 300.0,
+            ),
           ),
-        ),
+        ]),
       ),
     );
   }
@@ -336,6 +287,127 @@ class _SearchState extends State<Search> {
           label: Text('Retry'),
         ),
       ]),
+    );
+  }
+
+  Widget quotesResultsView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: quotesResults.map((quote) {
+        return QuoteRow(
+          quote: quote,
+          quoteId: quote.id,
+          padding: EdgeInsets.zero,
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                )),
+          ],
+          onSelected: (value) {
+            if (value == 'share') {
+              shareQuote(context: context, quote: quote);
+              return;
+            }
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget quotesSection() {
+    if (_searchInputValue.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
+    }
+
+    final dataView =
+        quotesResults.isEmpty ? emptyView('quotes') : quotesResultsView();
+
+    return Column(
+      crossAxisAlignment:
+          isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        titleSection(
+          text: '${quotesResults.length} quotes',
+          iconData:
+              areQuotesVisible ? Icons.close_fullscreen : Icons.open_in_full,
+          onPressed: () => setState(() => areQuotesVisible = !areQuotesVisible),
+        ),
+        if (areQuotesVisible) dataView,
+      ],
+    );
+  }
+
+  Widget referencesResultsView() {
+    double height = 230.0;
+    double width = 170.0;
+
+    if (isNarrow) {
+      height = 180.0;
+      width = 120.0;
+    }
+
+    return Wrap(
+      spacing: 40.0,
+      runSpacing: 40.0,
+      children: referencesResults.map((reference) {
+        return ReferenceCard(
+          height: height,
+          width: width,
+          id: reference.id,
+          titleFontSize: isNarrow ? 14.0 : 18.0,
+          imageUrl: reference.urls.image,
+          name: reference.name,
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                )),
+          ],
+          onSelected: (value) {
+            if (value == 'share') {
+              shareReference(context: context, reference: reference);
+              return;
+            }
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget referencesSection() {
+    if (_searchInputValue.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
+    }
+
+    final dataView =
+        quotesResults.isEmpty ? emptyView('quotes') : referencesResultsView();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0),
+      child: Column(
+        crossAxisAlignment:
+            isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        children: [
+          titleSection(
+            text: '${referencesResults.length} references',
+            iconData: areReferencesVisible
+                ? Icons.close_fullscreen
+                : Icons.open_in_full,
+            onPressed: () =>
+                setState(() => areReferencesVisible = !areReferencesVisible),
+          ),
+          if (areReferencesVisible) dataView,
+        ],
+      ),
     );
   }
 
@@ -449,98 +521,26 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget authorsResultsView() {
-    return Wrap(
-      spacing: 40.0,
-      runSpacing: 40.0,
-      alignment: isNarrow ? WrapAlignment.center : WrapAlignment.start,
-      children: authorsResults.map((author) {
-        return CircleAuthor(
-          size: isNarrow ? 100.0 : 150.0,
-          author: author,
-          itemBuilder: (_) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-              value: 'share',
-              child: ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Share'),
-              ),
-            ),
-          ],
-          onSelected: (value) {
-            if (value == 'share') {
-              shareAuthor(context: context, author: author);
-              return;
-            }
-          },
-        );
-      }).toList(),
-    );
-  }
+  Widget titleSection({
+    @required String text,
+    VoidCallback onPressed,
+    @required IconData iconData,
+  }) {
+    final padding = EdgeInsets.only(bottom: isNarrow ? 40.0 : 15.0);
 
-  Widget quotesResultsView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: quotesResults.map((quote) {
-        return QuoteRow(
-          quote: quote,
-          quoteId: quote.id,
-          padding: EdgeInsets.zero,
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )),
-          ],
-          onSelected: (value) {
-            if (value == 'share') {
-              shareQuote(context: context, quote: quote);
-              return;
-            }
-          },
-        );
-      }).toList(),
-    );
-  }
-
-  Widget referencesResultsView() {
-    double height = 230.0;
-    double width = 170.0;
-
-    if (isNarrow) {
-      height = 180.0;
-      width = 120.0;
-    }
-
-    return Wrap(
-      spacing: 40.0,
-      runSpacing: 40.0,
-      children: referencesResults.map((reference) {
-        return ReferenceCard(
-          height: height,
-          width: width,
-          id: reference.id,
-          titleFontSize: isNarrow ? 14.0 : 18.0,
-          imageUrl: reference.urls.image,
-          name: reference.name,
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )),
-          ],
-          onSelected: (value) {
-            if (value == 'share') {
-              shareReference(context: context, reference: reference);
-              return;
-            }
-          },
-        );
-      }).toList(),
+    return Padding(
+      padding: padding,
+      child: TextButton.icon(
+        onPressed: onPressed,
+        icon: Icon(iconData),
+        label: Text(
+          text,
+          style: TextStyle(
+            fontSize: 26.0,
+            color: stateColors.primary,
+          ),
+        ),
+      ),
     );
   }
 
