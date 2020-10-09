@@ -16,14 +16,15 @@ class AddToListButton extends StatefulWidget {
   final ButtonType type;
   final double size;
   final bool isDisabled;
+  final String tooltip;
 
-  AddToListButton({
-    this.onBeforeShowSheet,
-    this.isDisabled = false,
-    this.quote,
-    this.size = 30.0,
-    this.type = ButtonType.icon
-  });
+  AddToListButton(
+      {this.onBeforeShowSheet,
+      this.isDisabled = false,
+      this.quote,
+      this.size = 30.0,
+      this.type = ButtonType.icon,
+      this.tooltip});
 
   @override
   _AddToListButtonState createState() => _AddToListButtonState();
@@ -53,106 +54,104 @@ class _AddToListButtonState extends State<AddToListButton> {
   Widget build(BuildContext context) {
     if (widget.type == ButtonType.icon) {
       return IconButton(
+        tooltip: widget.tooltip,
         iconSize: widget.size,
         icon: Icon(
           Icons.playlist_add,
         ),
         onPressed: widget.isDisabled
-          ? null
-          : () {
-            if (widget.onBeforeShowSheet != null) {
-              widget.onBeforeShowSheet();
-            }
+            ? null
+            : () {
+                if (widget.onBeforeShowSheet != null) {
+                  widget.onBeforeShowSheet();
+                }
 
-            showBottomSheetList();
-          },
+                showBottomSheetList();
+              },
       );
     }
 
     return ListTile(
       onTap: widget.isDisabled
-        ? null
-        : () {
-          if (widget.onBeforeShowSheet != null) {
-            widget.onBeforeShowSheet();
-          }
+          ? null
+          : () {
+              if (widget.onBeforeShowSheet != null) {
+                widget.onBeforeShowSheet();
+              }
 
-          showBottomSheetList();
-        },
+              showBottomSheetList();
+            },
       leading: Icon(Icons.playlist_add),
       title: Text(
         'Add to...',
-        style: TextStyle(
-          fontWeight: FontWeight.bold
-        ),
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }
 
   void showBottomSheetList() {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setSheetState) {
-            List<Widget> tiles = [];
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setSheetState) {
+              List<Widget> tiles = [];
 
-            if (hasErrors) {
-              tiles.add(
-                errorTileList(onPressed: () async {
+              if (hasErrors) {
+                tiles.add(errorTileList(onPressed: () async {
                   await fetchLists();
-                  setSheetState(() { isLoaded = true; });
-                })
-              );
-            }
-
-            if (userQuotesLists.length == 0 && !isLoading && !isLoaded) {
-              tiles.add(LinearProgressIndicator());
-
-              fetchLists().then((_) {
-                setSheetState(() {
-                  isLoaded = true;
-                });
-              });
-            }
-
-            if (userQuotesLists.length > 0) {
-              for (var list in userQuotesLists) {
-                tiles.add(tileList(list));
+                  setSheetState(() {
+                    isLoaded = true;
+                  });
+                }));
               }
-            }
 
-            return NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollNotif) {
-                if (scrollNotif.metrics.pixels < scrollNotif.metrics.maxScrollExtent) {
-                  return false;
+              if (userQuotesLists.length == 0 && !isLoading && !isLoaded) {
+                tiles.add(LinearProgressIndicator());
+
+                fetchLists().then((_) {
+                  setSheetState(() {
+                    isLoaded = true;
+                  });
+                });
+              }
+
+              if (userQuotesLists.length > 0) {
+                for (var list in userQuotesLists) {
+                  tiles.add(tileList(list));
                 }
+              }
 
-                if (hasNext && !isLoadingMore) {
-                  fetchMoreLists()
-                    .then((_) {
+              return NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollNotif) {
+                  if (scrollNotif.metrics.pixels <
+                      scrollNotif.metrics.maxScrollExtent) {
+                    return false;
+                  }
+
+                  if (hasNext && !isLoadingMore) {
+                    fetchMoreLists().then((_) {
                       setSheetState(() {
                         isLoadingMore = false;
                       });
                     });
-                }
+                  }
 
-                return false;
-              },
-              child: ListView(
-                children: <Widget>[
-                  newListButton(),
-
-                  Divider(thickness: 2.0,),
-
-                  ...tiles
-                ],
-              ),
-            );
-          },
-        );
-      }
-    );
+                  return false;
+                },
+                child: ListView(
+                  children: <Widget>[
+                    newListButton(),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    ...tiles
+                  ],
+                ),
+              );
+            },
+          );
+        });
   }
 
   Widget tileList(UserQuotesList list) {
@@ -176,7 +175,9 @@ class _AddToListButtonState extends State<AddToListButton> {
     return ListTile(
       onTap: () async {
         final res = await showCreateListDialog(context);
-        if (res != null && res) { Navigator.pop(context); }
+        if (res != null && res) {
+          Navigator.pop(context);
+        }
       },
       // leading: Icon(Icons.add),
       title: Row(
@@ -189,7 +190,6 @@ class _AddToListButtonState extends State<AddToListButton> {
               child: Icon(Icons.add),
             ),
           ),
-
           Text(
             'New list',
             textAlign: TextAlign.start,
@@ -207,9 +207,7 @@ class _AddToListButtonState extends State<AddToListButton> {
       padding: EdgeInsets.all(5.0),
       child: Column(
         children: <Widget>[
-          Text(
-            'There was an issue while loading your lists.'
-          ),
+          Text('There was an issue while loading your lists.'),
           FlatButton(
             onPressed: () {
               if (onPressed != null) {
@@ -238,11 +236,11 @@ class _AddToListButtonState extends State<AddToListButton> {
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -267,7 +265,6 @@ class _AddToListButtonState extends State<AddToListButton> {
         hasNext = snapshot.documents.length == limit;
         isLoading = false;
       });
-
     } catch (err) {
       debugPrint(err.toString());
 
@@ -296,12 +293,12 @@ class _AddToListButtonState extends State<AddToListButton> {
       }
 
       final snapshot = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .startAfterDocument(lastDoc)
-        .limit(limit)
-        .getDocuments();
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
 
       if (snapshot.documents.isEmpty) {
         setState(() {
@@ -326,7 +323,6 @@ class _AddToListButtonState extends State<AddToListButton> {
         hasNext = snapshot.documents.length == limit;
         isLoadingMore = false;
       });
-
     } catch (err) {
       debugPrint(err.toString());
 
@@ -346,82 +342,78 @@ class _AddToListButtonState extends State<AddToListButton> {
 
   Future<bool> showCreateListDialog(BuildContext context) {
     return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text(
-            'Create a new list'
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2.0
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Create a new list'),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+            children: <Widget>[
+              TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(width: 2.0),
                   ),
                 ),
+                onChanged: (newValue) {
+                  newListName = newValue;
+                },
+                onSubmitted: (_) {
+                  createListAndAddQuote(context);
+                  return Navigator.of(context).pop(true);
+                },
               ),
-              onChanged: (newValue) {
-                newListName = newValue;
-              },
-              onSubmitted: (_) {
-                createListAndAddQuote(context);
-                return Navigator.of(context).pop(true);
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 10.0),),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Description',
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2.0
-                  ),
-                ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
               ),
-              onChanged: (newValue) {
-                newListDescription = newValue;
-              },
-              onSubmitted: (_) {
-                createListAndAddQuote(context);
-                return Navigator.of(context).pop(true);
-              },
-            ),
-            Padding(padding: EdgeInsets.only(top: 20.0),),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    return Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'Cancel',
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(width: 2.0),
                   ),
                 ),
-
-                RaisedButton(
-                  color: Colors.green,
-                  onPressed: () {
-                    createListAndAddQuote(context);
-                    return Navigator.of(context).pop(true);
-                  },
-                  child: Text(
-                    'Create',
-                    style: TextStyle(color: Colors.white),
+                onChanged: (newValue) {
+                  newListDescription = newValue;
+                },
+                onSubmitted: (_) {
+                  createListAndAddQuote(context);
+                  return Navigator.of(context).pop(true);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      return Navigator.of(context).pop(false);
+                    },
+                    child: Text(
+                      'Cancel',
+                    ),
                   ),
-                )
-              ],
-            ),
-          ],
-        );
-      }
-    );
+                  RaisedButton(
+                    color: Colors.green,
+                    onPressed: () {
+                      createListAndAddQuote(context);
+                      return Navigator.of(context).pop(true);
+                    },
+                    child: Text(
+                      'Create',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          );
+        });
   }
 
   void addQuoteToList({String listId}) async {
@@ -435,22 +427,21 @@ class _AddToListButtonState extends State<AddToListButton> {
       }
 
       await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .document(listId)
-        .collection('quotes')
-        .add({
-          'author': {
-            'id': quote.author.id,
-            'name': quote.author.name,
-          },
-          'createdAt': DateTime.now(),
-          'name': quote.name,
-          'quoteId': quote.id,
-          'topics': quote.topics,
-        });
-
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(listId)
+          .collection('quotes')
+          .add({
+        'author': {
+          'id': quote.author.id,
+          'name': quote.author.name,
+        },
+        'createdAt': DateTime.now(),
+        'name': quote.name,
+        'quoteId': quote.id,
+        'topics': quote.topics,
+      });
     } catch (err) {
       debugPrint(err.toString());
 
@@ -481,22 +472,21 @@ class _AddToListButtonState extends State<AddToListButton> {
       }
 
       final docRef = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .collection('lists')
-        .add({
-          'createdAt'   : DateTime.now(),
-          'description' : newListDescription,
-          'name'        : newListName,
-          'iconUrl'     : '',
-          'isPublic'    : false,
-          'updatedAt'   : DateTime.now(),
-        });
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .add({
+        'createdAt': DateTime.now(),
+        'description': newListDescription,
+        'name': newListName,
+        'iconUrl': '',
+        'isPublic': false,
+        'updatedAt': DateTime.now(),
+      });
 
       final doc = await docRef.get();
 
       return doc.documentID;
-
     } catch (error) {
       debugPrint(error.toString());
 
