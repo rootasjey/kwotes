@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
@@ -15,6 +17,7 @@ import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/signin.dart';
+import 'package:memorare/screens/signup.dart';
 import 'package:memorare/screens/temp_quotes.dart';
 import 'package:memorare/screens/web/favourites.dart';
 import 'package:memorare/state/colors.dart';
@@ -37,105 +40,17 @@ class _DashboardState extends State<Dashboard> {
 
   double beginY = 100.0;
 
+  final scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.only(
-          left: 20.0,
-          right: 20.0,
-          top: 50.0,
-          bottom: 200.0,
-        ),
-        children: <Widget>[
-          Observer(builder: (context) {
-            String userName = userState.username;
-            String greetings = 'Welcome back $userName!';
-
-            if (userName == null || userName.isEmpty) {
-              greetings = 'Hi!';
-            }
-
-            if (prevIsAuthenticated != userState.isUserConnected) {
-              prevIsAuthenticated = userState.isUserConnected;
-
-              if (userState.isUserConnected) {
-                fetchUserPP();
-              } else {
-                avatarUrl = '';
-              }
-            }
-
-            return Column(
-              children: <Widget>[
-                FadeInY(
-                  delay: 1,
-                  beginY: beginY,
-                  child: avatar(),
-                ),
-                FadeInY(
-                  delay: 2,
-                  beginY: beginY,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 40.0),
-                    child: Text(
-                      greetings,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                userState.isUserConnected
-                    ? Column(
-                        children: authWidgets(context),
-                      )
-                    : Column(children: guestWidgets(context)),
-                if (canManage) ...adminWidgets(context),
-              ],
-            );
-          }),
+      body: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          appBar(),
+          body(),
         ],
-      ),
-    );
-  }
-
-  Widget avatar() {
-    String path = avatarUrl.replaceFirst('local:', '');
-    path = 'assets/images/$path-${stateColors.iconExt}.png';
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0, bottom: 60.0),
-      child: Material(
-        elevation: 4.0,
-        shape: CircleBorder(),
-        clipBehavior: Clip.hardEdge,
-        child: InkWell(
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: avatarUrl.isEmpty
-                ? Image.asset('assets/images/user-${stateColors.iconExt}.png',
-                    width: 100.0)
-                : Image.asset(path, width: 100.0),
-          ),
-          onTap: () {
-            showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog(
-                    content: avatarUrl.isEmpty
-                        ? Image.asset(
-                            'assets/images/user-${stateColors.iconExt}.png',
-                            width: 100.0,
-                            scale: .8,
-                          )
-                        : Image.asset(path, width: 100.0),
-                  );
-                });
-          },
-        ),
       ),
     );
   }
@@ -164,6 +79,74 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+    );
+  }
+
+  List<Widget> adminWidgets(BuildContext context) {
+    return [
+      ControlledAnimation(
+        duration: 1.seconds,
+        tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
+        builder: (_, value) {
+          return SizedBox(
+            width: value,
+            child: Divider(height: 30.0),
+          );
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.question_answer, size: 30.0),
+        title: Text(
+          'All published',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
+      ),
+      ListTile(
+        leading: Icon(Icons.timelapse, size: 30.0),
+        title: Text(
+          'All in validation',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
+      ),
+      ListTile(
+        leading: Icon(Icons.wb_sunny, size: 30.0),
+        title: Text(
+          'Quotidians',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => Quotidians())),
+      ),
+    ];
+  }
+
+  Widget appBar() {
+    return SimpleAppBar(
+      expandedHeight: 120.0,
+      title: TextButton.icon(
+        onPressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
+        icon: AppIconHeader(
+          padding: EdgeInsets.zero,
+          size: 30.0,
+        ),
+        label: Text(
+          'Account',
+          style: TextStyle(
+            fontSize: 22.0,
+          ),
+        ),
+      ),
+      showNavBackIcon: false,
     );
   }
 
@@ -220,46 +203,151 @@ class _DashboardState extends State<Dashboard> {
     ];
   }
 
-  List<Widget> adminWidgets(BuildContext context) {
-    return [
-      ControlledAnimation(
-        duration: 1.seconds,
-        tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
-        builder: (_, value) {
-          return SizedBox(
-            width: value,
-            child: Divider(height: 30.0),
-          );
-        },
-      ),
-      ListTile(
-        leading: Icon(Icons.question_answer, size: 30.0),
-        title: Text(
-          'All published',
-          style: TextStyle(fontSize: 20.0),
+  Widget avatarContainer() {
+    String userName = userState.username;
+    String greetings = 'Welcome back $userName!';
+
+    if (userName == null || userName.isEmpty) {
+      greetings = 'Hi!';
+    }
+
+    if (prevIsAuthenticated != userState.isUserConnected) {
+      prevIsAuthenticated = userState.isUserConnected;
+
+      if (userState.isUserConnected) {
+        fetchUserPP();
+      } else {
+        avatarUrl = '';
+      }
+    }
+
+    return Column(
+      children: [
+        FadeInY(
+          delay: 1,
+          beginY: beginY,
+          child: circlAvatar(),
         ),
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
-      ),
-      ListTile(
-        leading: Icon(Icons.timelapse, size: 30.0),
-        title: Text(
-          'All in validation',
-          style: TextStyle(fontSize: 20.0),
+        FadeInY(
+          delay: 2,
+          beginY: beginY,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 40.0),
+            child: Text(
+              greetings,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
-      ),
-      ListTile(
-        leading: Icon(Icons.wb_sunny, size: 30.0),
-        title: Text(
-          'Quotidians',
-          style: TextStyle(fontSize: 20.0),
+      ],
+    );
+  }
+
+  Widget body() {
+    return Observer(builder: (context) {
+      List<Widget> children = [];
+
+      if (userState.isUserConnected) {
+        children.add(avatarContainer());
+        children.addAll(authWidgets(context));
+
+        if (canManage) {
+          children.addAll(adminWidgets(context));
+        }
+      } else {
+        children.add(whyAccountBlock());
+        children.addAll(guestWidgets(context));
+      }
+
+      return SliverPadding(
+        padding: const EdgeInsets.only(
+          bottom: 200.0,
         ),
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => Quotidians())),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate.fixed([
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: children,
+            )
+          ]),
+        ),
+      );
+    });
+  }
+
+  Widget bulletPoint({String text}) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
       ),
-    ];
+    );
+  }
+
+  Widget circlAvatar() {
+    String path = avatarUrl.replaceFirst('local:', '');
+    path = 'assets/images/$path-${stateColors.iconExt}.png';
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0, bottom: 60.0),
+      child: Material(
+        elevation: 4.0,
+        shape: CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: avatarUrl.isEmpty
+                ? Image.asset('assets/images/user-${stateColors.iconExt}.png',
+                    width: 100.0)
+                : Image.asset(path, width: 100.0),
+          ),
+          onTap: () {
+            showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog(
+                    content: avatarUrl.isEmpty
+                        ? Image.asset(
+                            'assets/images/user-${stateColors.iconExt}.png',
+                            width: 100.0,
+                            scale: .8,
+                          )
+                        : Image.asset(path, width: 100.0),
+                  );
+                });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget connectionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 60.0,
+      ),
+      child: Column(
+        children: [
+          signinButton(),
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+          ),
+          signupButton(),
+        ],
+      ),
+    );
   }
 
   Widget draftsButton() {
@@ -297,20 +385,29 @@ class _DashboardState extends State<Dashboard> {
       FadeInY(
         delay: 3.0,
         beginY: beginY,
-        child: signinButton(),
+        child: connectionButtons(),
       ),
       Divider(
         height: 100.0,
+        thickness: 1.0,
       ),
-      FadeInY(
-        delay: 4.0,
-        beginY: beginY,
-        child: settingsButton(),
-      ),
-      FadeInY(
-        delay: 4.5,
-        beginY: beginY,
-        child: helpCenterButton(),
+      Padding(
+        padding: const EdgeInsets.only(left: 40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FadeInY(
+              delay: 4.0,
+              beginY: beginY,
+              child: settingsButton(),
+            ),
+            FadeInY(
+              delay: 4.5,
+              beginY: beginY,
+              child: helpCenterButton(),
+            ),
+          ],
+        ),
       ),
     ];
   }
@@ -445,37 +542,77 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget signinButton() {
-    return Padding(
-      padding: EdgeInsets.only(top: 30.0),
-      child: Observer(
-        builder: (context) {
-          return RaisedButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Signin()));
-            },
-            color: stateColors.softBackground,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(7.0),
-            ),
-            child: Container(
-              width: 230.0,
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'SIGN IN',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+    return RaisedButton(
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+      },
+      color: Colors.blue,
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(7.0),
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 220.0,
+          minHeight: 60.0,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'SIGN IN',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          );
-        },
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Icon(Icons.login),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget signupButton() {
+    return RaisedButton(
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signup()));
+      },
+      color: Colors.orange.shade600,
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(7.0),
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 220.0,
+          minHeight: 60.0,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'SIGN UP',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Icon(Icons.person_add),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -537,6 +674,33 @@ class _DashboardState extends State<Dashboard> {
       ),
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => MyTempQuotes())),
+    );
+  }
+
+  Widget whyAccountBlock() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 50.0,
+        top: 40.0,
+        bottom: 60.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'WHY AN ACCOUNT?',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Padding(padding: const EdgeInsets.only(top: 10.0)),
+          bulletPoint(text: '- Favourites quotes'),
+          bulletPoint(text: '- Create thematic lists'),
+          bulletPoint(text: '- Propose new quotes'),
+          bulletPoint(text: '- & more...'),
+        ],
+      ),
     );
   }
 
