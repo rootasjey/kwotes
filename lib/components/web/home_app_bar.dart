@@ -357,6 +357,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   Widget userSigninMenu() {
     return PopupMenuButton(
+      icon: Icon(Icons.more_vert),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
           value: SigninRoute,
