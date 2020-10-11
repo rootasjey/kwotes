@@ -15,7 +15,7 @@ class CircleAuthor extends StatefulWidget {
   final Function onSelected;
 
   CircleAuthor({
-    this.author,
+    @required this.author,
     this.elevation = 3.0,
     this.padding = EdgeInsets.zero,
     this.size = 150.0,
