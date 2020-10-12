@@ -526,6 +526,9 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget summarySmall() {
     return Column(
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+        ),
         Divider(
           thickness: 1.0,
         ),
