@@ -234,8 +234,12 @@ class _QuotePageState extends State<QuotePage> {
         onTap: () {
           final id = quote.mainReference.id;
 
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => ReferencePage(id: id)));
+          showMaterialModalBottomSheet(
+              context: context,
+              builder: (_, scrollController) => ReferencePage(
+                    id: id,
+                    scrollController: scrollController,
+                  ));
         },
         child: Text(
           quote.mainReference.name,

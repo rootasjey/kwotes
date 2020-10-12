@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/screens/quotes_by_author_ref.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
@@ -16,23 +18,22 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ReferencePage extends StatefulWidget {
   final String id;
+  final ScrollController scrollController;
 
-  ReferencePage({this.id});
+  ReferencePage({this.id, this.scrollController});
 
   @override
   ReferencePageState createState() => ReferencePageState();
 }
 
 class ReferencePageState extends State<ReferencePage> {
-  Reference reference;
-  List<Quote> quotes = [];
-  bool areQuotesLoading = false;
-  bool areQuotesLoaded = false;
-
   bool isLoading = false;
-  final double beginY = 100.0;
+  bool isLoadingMore = false;
+  bool descending = true;
+  bool hasNext = true;
+  bool isSummaryVisible = false;
 
-  TextOverflow nameEllipsis = TextOverflow.ellipsis;
+  DocumentSnapshot lastDoc;
 
   double avatarInitHeight = 250.0;
   double avatarInitWidth = 200.0;
@@ -40,10 +41,21 @@ class ReferencePageState extends State<ReferencePage> {
   double avatarHeight = 250.0;
   double avatarWidth = 200.0;
 
+  final limit = 30;
+  final double beginY = 20.0;
+
+  List<Quote> quotes = [];
+
+  Reference reference;
+  TextOverflow nameEllipsis = TextOverflow.ellipsis;
+
+  String lang = 'en';
+
   @override
   void initState() {
     super.initState();
     fetch();
+    fetchQuotes();
   }
 
   @override
@@ -59,12 +71,19 @@ class ReferencePageState extends State<ReferencePage> {
           return false;
         },
         child: CustomScrollView(
+          physics: ClampingScrollPhysics(),
+          controller: widget.scrollController,
           slivers: <Widget>[
             HomeAppBar(
               title: reference != null ? reference.name : '',
-              automaticallyImplyLeading: true,
+              showCloseButton: true,
+              showUserMenu: false,
             ),
-            bodyContent(),
+            infoPanel(),
+            quotesListView(),
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 200.0),
+            ),
           ],
         ),
       ),
@@ -79,6 +98,7 @@ class ReferencePageState extends State<ReferencePage> {
       width: avatarWidth * scale,
       height: avatarHeight * scale,
       duration: 250.milliseconds,
+      padding: const EdgeInsets.only(bottom: 20.0),
       child: Card(
         elevation: imageUrlOk ? 5.0 : 0.0,
         child: imageUrlOk
@@ -86,7 +106,7 @@ class ReferencePageState extends State<ReferencePage> {
                 image: NetworkImage(
                   reference.urls.image,
                 ),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 child: InkWell(
                   onHover: (isHover) {
                     if (isHover) {
@@ -151,7 +171,7 @@ class ReferencePageState extends State<ReferencePage> {
         ));
   }
 
-  Widget bodyContent() {
+  Widget infoPanel() {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
@@ -221,7 +241,7 @@ class ReferencePageState extends State<ReferencePage> {
                 ),
                 FadeInY(
                   beginY: beginY,
-                  delay: 3.0,
+                  delay: 1.2,
                   child: types(),
                 ),
                 FadeInY(
@@ -258,8 +278,8 @@ class ReferencePageState extends State<ReferencePage> {
   }
 
   Widget heroSmall() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
+    return Padding(
+      padding: const EdgeInsets.only(top: 60.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -270,47 +290,8 @@ class ReferencePageState extends State<ReferencePage> {
           ),
           FadeInY(
             beginY: beginY,
-            delay: 2.0,
-            child: name(),
-          ),
-          ControlledAnimation(
-            delay: 1.seconds,
-            duration: 1.seconds,
-            tween: Tween(begin: 0.0, end: 100.0),
-            builder: (_, value) {
-              return SizedBox(
-                width: value,
-                child: Divider(
-                  thickness: 1.0,
-                  height: 50.0,
-                ),
-              );
-            },
-          ),
-          FadeInY(
-            beginY: beginY,
-            delay: 3.0,
+            delay: 1.2,
             child: types(),
-          ),
-          FadeInY(
-            beginY: beginY,
-            delay: 3.4,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: RaisedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => QuotesByAuthorRef(
-                            id: widget.id,
-                            type: SubjectType.reference,
-                          )));
-                },
-                color: stateColors.primary,
-                textColor: Colors.white,
-                icon: Icon(Icons.chat_bubble_outline),
-                label: Text('Related quotes'),
-              ),
-            ),
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -336,6 +317,32 @@ class ReferencePageState extends State<ReferencePage> {
       spacing: 20.0,
       runSpacing: 20.0,
       children: <Widget>[
+        FadeInX(
+          beginX: 50.0,
+          delay: 0,
+          child: Tooltip(
+            message: "summary",
+            child: SizedBox(
+              height: 80.0,
+              width: 80.0,
+              child: Card(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                  onTap: () =>
+                      setState(() => isSummaryVisible = !isSummaryVisible),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Icon(
+                      Icons.list_alt_outlined,
+                      size: 30.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         if (urls.website.isNotEmpty)
           linkSquareButton(
             delay: 1.0,
@@ -464,18 +471,48 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
+  Widget quotesListView() {
+    if (isLoading) {
+      return SliverPadding(padding: EdgeInsets.zero);
+    }
+
+    return Observer(
+      builder: (context) {
+        final isConnected = userState.isUserConnected;
+
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final quote = quotes.elementAt(index);
+
+              return QuoteRowWithActions(
+                quote: quote,
+                quoteId: quote.id,
+                elevation: 2.0,
+                isConnected: isConnected,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 10.0),
+              );
+            },
+            childCount: quotes.length,
+          ),
+        );
+      },
+    );
+  }
+
   Widget smallView() {
     return Container(
       alignment: AlignmentDirectional.center,
-      padding: const EdgeInsets.only(bottom: 200.0),
+      padding: const EdgeInsets.only(bottom: 60.0),
       child: Column(
         children: <Widget>[
           heroSmall(),
-          FadeInY(
-            beginY: beginY,
-            delay: 4.0,
-            child: summarySmall(),
-          ),
+          if (isSummaryVisible)
+            FadeInY(
+              beginY: beginY,
+              child: summarySmall(),
+            ),
         ],
       ),
     );
@@ -484,6 +521,9 @@ class ReferencePageState extends State<ReferencePage> {
   Widget summarySmall() {
     return Column(
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+        ),
         Divider(
           thickness: 1.0,
         ),
@@ -583,7 +623,7 @@ class ReferencePageState extends State<ReferencePage> {
     return Column(
       children: <Widget>[
         Opacity(
-          opacity: .7,
+          opacity: 0.7,
           child: Text(
             type.primary,
             overflow: TextOverflow.ellipsis,
@@ -616,12 +656,12 @@ class ReferencePageState extends State<ReferencePage> {
     });
 
     try {
-      final docSnap = await Firestore.instance
+      final snapshot = await Firestore.instance
           .collection('references')
           .document(widget.id)
           .get();
 
-      if (!docSnap.exists) {
+      if (!snapshot.exists) {
         setState(() {
           isLoading = false;
         });
@@ -629,8 +669,8 @@ class ReferencePageState extends State<ReferencePage> {
         return;
       }
 
-      final data = docSnap.data;
-      data['id'] = docSnap.documentID;
+      final data = snapshot.data;
+      data['id'] = snapshot.documentID;
 
       setState(() {
         reference = Reference.fromJSON(data);
@@ -646,6 +686,89 @@ class ReferencePageState extends State<ReferencePage> {
 
       setState(() {
         isLoading = false;
+      });
+    }
+  }
+
+  void fetchQuotes() async {
+    try {
+      final snapshot = await Firestore.instance
+          .collection('quotes')
+          .where('mainReference.id', isEqualTo: widget.id)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
+      });
+
+      setState(() {
+        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.documents.length == limit;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  void fetchMoreQuotes() async {
+    if (!hasNext) {
+      return;
+    }
+
+    isLoadingMore = true;
+
+    try {
+      final snapshot = await Firestore.instance
+          .collection('quotes')
+          .where('mainReference.id', isEqualTo: widget.id)
+          .where('lang', isEqualTo: lang)
+          .orderBy('createdAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoadingMore = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
+      });
+
+      setState(() {
+        isLoadingMore = false;
+        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.documents.length == limit;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoadingMore = false;
       });
     }
   }
