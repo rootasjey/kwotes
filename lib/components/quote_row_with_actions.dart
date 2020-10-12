@@ -18,6 +18,8 @@ class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;
   final bool isConnected;
 
+  final double elevation;
+
   final Function onAfterAddToFavourites;
   final Function onAfterDeletePubQuote;
   final Function onAfterRemoveFromFavourites;
@@ -50,6 +52,7 @@ class QuoteRowWithActions extends StatefulWidget {
   QuoteRowWithActions({
     this.canManage = false,
     this.isConnected = false,
+    this.elevation = 0.0,
     this.componentType = ItemComponentType.row,
     this.onAfterAddToFavourites,
     this.onAfterDeletePubQuote,
@@ -104,6 +107,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return QuoteRow(
       quote: quote,
       quoteId: widget.quoteId,
+      elevation: widget.elevation,
       padding: widget.padding,
       itemBuilder: (context) => popupItems,
       onSelected: onSelected,
