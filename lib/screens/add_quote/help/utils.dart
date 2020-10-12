@@ -8,7 +8,7 @@ class TextBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Text(
         text,
         style: TextStyle(
