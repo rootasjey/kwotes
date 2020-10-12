@@ -15,8 +15,12 @@ class HomeAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
   final Function onTapIconHeader;
   final String title;
+  final bool showUserMenu;
+  final bool showCloseButton;
 
   HomeAppBar({
+    this.showCloseButton = false,
+    this.showUserMenu = true,
     this.automaticallyImplyLeading = false,
     this.onTapIconHeader,
     this.title = '',
@@ -61,7 +65,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                       ),
                     AppIconHeader(
                       size: 40.0,
-                      padding: EdgeInsets.zero,
+                      padding: const EdgeInsets.only(left: 16.0),
                       onTap: widget.onTapIconHeader,
                     ),
                     if (widget.title.isNotEmpty)
@@ -83,7 +87,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           ),
                         ),
                       ),
-                    userSection(isNarrow),
+                    if (widget.showUserMenu) userSection(isNarrow),
+                    if (widget.showCloseButton) closeButton(),
                   ],
                 ),
               ),
@@ -387,6 +392,14 @@ class _HomeAppBarState extends State<HomeAppBar> {
           value: value,
         );
       },
+    );
+  }
+
+  Widget closeButton() {
+    return IconButton(
+      onPressed: () => Navigator.of(context).pop(),
+      color: Theme.of(context).iconTheme.color,
+      icon: Icon(Icons.close),
     );
   }
 }
