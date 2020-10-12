@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -47,9 +48,11 @@ class _SigninState extends State<Signin> {
         children: <Widget>[
           Column(
             children: <Widget>[
+              AppIconHeader(
+                padding: const EdgeInsets.only(top: 30.0, bottom: 60.0),
+              ),
               Padding(
                 padding: const EdgeInsets.only(
-                  top: 100.0,
                   bottom: 300.0,
                 ),
                 child: SizedBox(
