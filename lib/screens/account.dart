@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/edit_email.dart';
 import 'package:memorare/screens/edit_password.dart';
@@ -27,25 +27,27 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
+  bool isCheckingName = false;
   bool isLoadingLang = false;
   bool isLoadingName = false;
   bool isLoadingImageURL = false;
-  bool isThemeAuto = true;
-
   bool isNameAvailable = false;
-  bool isCheckingName = false;
-  String nameErrorMessage = '';
-  Timer nameTimer;
-
-  String avatarUrl = '';
-  String newUserName = '';
-  String email = '';
-  String imageUrl = '';
-  String currentUserName = '';
-  String selectedLang = 'English';
+  bool isThemeAuto = true;
 
   Brightness brightness;
   Brightness currentBrightness;
+
+  double beginY = 20.0;
+
+  String avatarUrl = '';
+  String currentUserName = '';
+  String email = '';
+  String imageUrl = '';
+  String nameErrorMessage = '';
+  String newUserName = '';
+  String selectedLang = 'English';
+
+  Timer nameTimer;
   Timer timer;
 
   ScrollController _scrollController = ScrollController();
@@ -73,7 +75,10 @@ class _AccountState extends State<Account> {
             child: CustomScrollView(
               controller: _scrollController,
               slivers: <Widget>[
-                appBar(),
+                HomeAppBar(
+                  title: "Settings",
+                  automaticallyImplyLeading: true,
+                ),
                 body(),
               ],
             ),
@@ -93,7 +98,7 @@ class _AccountState extends State<Account> {
               Column(
                 children: <Widget>[
                   FadeInY(
-                    delay: 1.5,
+                    delay: 1.0,
                     beginY: 50.0,
                     child: avatar(isUserConnected),
                   ),
@@ -106,18 +111,18 @@ class _AccountState extends State<Account> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       FadeInY(
-                        delay: 2.0,
+                        delay: 1.2,
                         beginY: 50.0,
                         child: inputDisplayName(isUserConnected),
                       ),
                       Padding(padding: const EdgeInsets.only(top: 20.0)),
                       FadeInY(
-                        delay: 2.5,
+                        delay: 1.3,
                         beginY: 50.0,
                         child: emailButton(),
                       ),
                       FadeInY(
-                        delay: 3.0,
+                        delay: 1.4,
                         beginY: 50.0,
                         child: langSelect(),
                       ),
@@ -130,8 +135,8 @@ class _AccountState extends State<Account> {
         }
 
         return FadeInY(
-          delay: 2.5,
-          beginY: 50.0,
+          delay: 1.0,
+          beginY: beginY,
           child: Center(
             child: langSelect(isAlone: true),
           ),
@@ -238,22 +243,17 @@ class _AccountState extends State<Account> {
     });
   }
 
-  Widget appBar() {
-    return SimpleAppBar(
-      textTitle: 'Settings',
-    );
-  }
-
   Widget appSettings() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: <Widget>[
-          themeSwitcher(),
           Padding(
-              padding: const EdgeInsets.only(
-            bottom: 50.0,
-          )),
+            padding: const EdgeInsets.only(
+              bottom: 50.0,
+            ),
+            child: themeSwitcher(),
+          ),
           backgroundTasks(),
           Padding(
               padding: const EdgeInsets.only(
@@ -376,7 +376,7 @@ class _AccountState extends State<Account> {
         accountSettings(),
         Divider(
           thickness: 1.0,
-          height: 150.0,
+          height: 50.0,
         ),
         appSettings(),
       ]),
@@ -708,67 +708,77 @@ class _AccountState extends State<Account> {
   }
 
   Widget langSelect({bool isAlone = false}) {
-    final child = Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+    final child = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Icon(Icons.language),
+            ),
+            Opacity(
+              opacity: .7,
+              child: Text(
+                'Language',
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 35.0),
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: Icon(Icons.person_outline),
-              ),
-              Opacity(
-                opacity: .7,
-                child: Text(
-                  'Language',
+              DropdownButton<String>(
+                elevation: 3,
+                value: selectedLang,
+                isDense: true,
+                style: TextStyle(
+                  color: stateColors.foreground,
+                  fontFamily: GoogleFonts.raleway().fontFamily,
+                  fontWeight: FontWeight.bold,
                 ),
+                onChanged: (String newValue) {
+                  setState(() {
+                    selectedLang = newValue;
+                  });
+
+                  updateLang();
+                },
+                items: ['English', 'Français'].map((String value) {
+                  return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                      ));
+                }).toList(),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 35.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                DropdownButton<String>(
-                  elevation: 3,
-                  value: selectedLang,
-                  isDense: true,
-                  style: TextStyle(
-                    color: stateColors.foreground,
-                    fontFamily: GoogleFonts.raleway().fontFamily,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      selectedLang = newValue;
-                    });
-
-                    updateLang();
-                  },
-                  items: ['English', 'Français'].map((String value) {
-                    return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                        ));
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
 
     return isAlone
-        ? child
+        ? Padding(
+            padding: const EdgeInsets.only(
+              left: 60.0,
+              top: 80.0,
+            ),
+            child: Row(
+              children: [
+                child,
+              ],
+            ),
+          )
         : SizedBox(
             width: 250.0,
-            child: child,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: child,
+            ),
           );
   }
 
