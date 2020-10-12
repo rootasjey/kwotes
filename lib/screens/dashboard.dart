@@ -38,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
   bool canManage = false;
   bool prevIsAuthenticated = false;
 
-  double beginY = 100.0;
+  double beginY = 20.0;
 
   final scrollController = ScrollController();
 
@@ -564,8 +564,8 @@ class _DashboardState extends State<Dashboard> {
               Text(
                 'SIGN IN',
                 style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Padding(
@@ -602,8 +602,8 @@ class _DashboardState extends State<Dashboard> {
               Text(
                 'SIGN UP',
                 style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Padding(
@@ -678,28 +678,32 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget whyAccountBlock() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 50.0,
-        top: 40.0,
-        bottom: 60.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'WHY AN ACCOUNT?',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w600,
+    return FadeInY(
+      beginY: beginY,
+      delay: 0.5,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 50.0,
+          top: 40.0,
+          bottom: 60.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'WHY AN ACCOUNT?',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          Padding(padding: const EdgeInsets.only(top: 10.0)),
-          bulletPoint(text: '- Favourites quotes'),
-          bulletPoint(text: '- Create thematic lists'),
-          bulletPoint(text: '- Propose new quotes'),
-          bulletPoint(text: '- & more...'),
-        ],
+            Padding(padding: const EdgeInsets.only(top: 10.0)),
+            bulletPoint(text: '- Favourites quotes'),
+            bulletPoint(text: '- Create thematic lists'),
+            bulletPoint(text: '- Propose new quotes'),
+            bulletPoint(text: '- & more...'),
+          ],
+        ),
       ),
     );
   }
