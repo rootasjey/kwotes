@@ -87,13 +87,10 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             return Column(
               children: <Widget>[
                 widget.help,
-                OutlineButton.icon(
+                RaisedButton.icon(
                   onPressed: () => Navigator.pop(context),
                   icon: Icon(
                     Icons.close,
-                    color: stateColors.primary,
-                  ),
-                  borderSide: BorderSide(
                     color: stateColors.primary,
                   ),
                   label: Text(
