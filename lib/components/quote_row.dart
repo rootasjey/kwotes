@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -140,6 +141,62 @@ class _QuoteRowState extends State<QuoteRow> {
     );
   }
 
+  Widget quoteAuthor() {
+    return InkWell(
+      onTap: () {
+        showMaterialModalBottomSheet(
+          context: context,
+          builder: (context, scrollController) => AuthorPage(
+            id: widget.quote.author.id,
+            scrollController: scrollController,
+          ),
+        );
+      },
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          widget.quote.author.name,
+        ),
+      ),
+    );
+  }
+
+  Widget quoteName() {
+    return Text(
+      widget.quote.name,
+      style: TextStyle(
+        fontSize: 20.0,
+      ),
+    );
+  }
+
+  Widget quoteReference() {
+    final mainReference = widget.quote.mainReference;
+    if (mainReference == null ||
+        mainReference.id == null ||
+        mainReference.id.isEmpty) {
+      return Padding(padding: EdgeInsets.zero);
+    }
+
+    return InkWell(
+      onTap: () {
+        showMaterialModalBottomSheet(
+          context: context,
+          builder: (context, scrollController) => ReferencePage(
+            id: widget.quote.mainReference.id,
+            scrollController: scrollController,
+          ),
+        );
+      },
+      child: Opacity(
+        opacity: 0.4,
+        child: Text(
+          widget.quote.mainReference.name,
+        ),
+      ),
+    );
+  }
+
   Widget rowLayout() {
     return Container(
       padding: widget.padding,
@@ -174,30 +231,10 @@ class _QuoteRowState extends State<QuoteRow> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        widget.quote.name,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
+                      quoteName(),
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
-                      InkWell(
-                        onTap: () {
-                          showMaterialModalBottomSheet(
-                            context: context,
-                            builder: (context, scrollController) => AuthorPage(
-                              id: widget.quote.author.id,
-                              scrollController: scrollController,
-                            ),
-                          );
-                        },
-                        child: Opacity(
-                          opacity: .5,
-                          child: Text(
-                            widget.quote.author.name,
-                          ),
-                        ),
-                      ),
+                      quoteAuthor(),
+                      quoteReference(),
                     ],
                   ),
                 ),
