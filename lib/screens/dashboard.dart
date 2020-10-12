@@ -250,7 +250,9 @@ class _DashboardState extends State<Dashboard> {
     return Observer(builder: (context) {
       List<Widget> children = [];
 
-      if (userState.isUserConnected) {
+      final isConnected = userState.isUserConnected;
+
+      if (isConnected) {
         children.add(avatarContainer());
         children.addAll(authWidgets(context));
 
@@ -269,7 +271,9 @@ class _DashboardState extends State<Dashboard> {
         sliver: SliverList(
           delegate: SliverChildListDelegate.fixed([
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: isConnected
+                  ? CrossAxisAlignment.center
+                  : CrossAxisAlignment.start,
               children: children,
             )
           ]),
