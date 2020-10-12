@@ -181,7 +181,7 @@ class _QuoteRowState extends State<QuoteRow> {
                         ),
                       ),
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           showMaterialModalBottomSheet(
                             context: context,
