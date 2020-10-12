@@ -576,7 +576,8 @@ class ReferencePageState extends State<ReferencePage> {
           heroSmall(),
           if (isSummaryVisible)
             FadeInY(
-              beginY: beginY,
+              beginY: -20.0,
+              endY: 0.0,
               child: summarySmall(),
             ),
         ],

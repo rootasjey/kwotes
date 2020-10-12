@@ -514,8 +514,8 @@ class _AuthorPageState extends State<AuthorPage> {
           heroSmall(),
           if (isSummaryVisible)
             FadeInY(
-              beginY: 20.0,
-              delay: 0.0,
+              beginY: -20.0,
+              endY: 0.0,
               child: summarySmall(),
             ),
         ],
