@@ -55,65 +55,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     HelpComment(),
   ];
 
-  final steps = [
-    Step(
-      title: const Text('Topics'),
-      subtitle: Text('Required'),
-      content: AddQuoteTopics(),
-      // state: computeStepState(
-      //   stepIndex: 1,
-      //   compute: () {
-      //     if (!stepChanged) { return StepState.indexed; }
-
-      //     if (AddQuoteInputs.quote.topics.length == 0) {
-      //       return StepState.error;
-      //     }
-
-      //     return StepState.complete;
-      //   }
-      // ),
-    ),
-    Step(
-      subtitle: Text('Optional'),
-      title: const Text('Author'),
-      content: AddQuoteAuthor(),
-      // state: computeStepState(
-      //   stepIndex: 2,
-      //   compute: () {
-      //     return AddQuoteInputs.author.name.isEmpty
-      //       ? StepState.indexed
-      //       : StepState.complete;
-      //   }
-      // ),
-    ),
-    Step(
-      subtitle: Text('Optional'),
-      title: const Text('Reference'),
-      content: AddQuoteReference(),
-      // state: computeStepState(
-      //   stepIndex: 3,
-      //   compute: () {
-      //     return AddQuoteInputs.reference.name.isEmpty
-      //       ? StepState.indexed
-      //       : StepState.complete;
-      //   }
-      // ),
-    ),
-    Step(
-      subtitle: Text('Optional'),
-      title: const Text('Comments'),
-      content: AddQuoteComment(),
-      // state: computeStepState(
-      //   stepIndex: 2,
-      //   compute: () {
-      //     return AddQuoteInputs.comment.isEmpty
-      //       ? StepState.indexed
-      //       : StepState.complete;
-      //   }
-      // ),
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -350,6 +291,33 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     return StepState.indexed;
   }
 
+  Widget dynamicStepContent({@required num}) {
+    if (currentStep != num) {
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
+    }
+
+    switch (num) {
+      case 0:
+        return AddQuoteContent(
+          onSaveDraft: () => saveQuoteDraft(),
+        );
+      case 1:
+        return AddQuoteTopics();
+      case 2:
+        return AddQuoteAuthor();
+      case 3:
+        return AddQuoteReference();
+      case 4:
+        return AddQuoteComment();
+      default:
+        return Padding(
+          padding: EdgeInsets.zero,
+        );
+    }
+  }
+
   Widget horizontalActions() {
     return Padding(
       padding: const EdgeInsets.only(
@@ -418,9 +386,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
             Step(
               title: Text('Content'),
               subtitle: Text('Required'),
-              content: AddQuoteContent(
-                onSaveDraft: () => saveQuoteDraft(),
-              ),
+              content: dynamicStepContent(num: 0),
               state: computeStepState(
                   stepIndex: 0,
                   compute: () {
@@ -429,7 +395,60 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
                         : StepState.complete;
                   }),
             ),
-            ...steps
+            Step(
+              title: const Text('Topics'),
+              subtitle: Text('Required'),
+              content: dynamicStepContent(num: 1),
+              state: computeStepState(
+                  stepIndex: 1,
+                  compute: () {
+                    if (!stepChanged) {
+                      return StepState.indexed;
+                    }
+
+                    if (AddQuoteInputs.quote.topics.length == 0) {
+                      return StepState.error;
+                    }
+
+                    return StepState.complete;
+                  }),
+            ),
+            Step(
+              subtitle: Text('Optional'),
+              title: const Text('Author'),
+              content: dynamicStepContent(num: 2),
+              state: computeStepState(
+                  stepIndex: 2,
+                  compute: () {
+                    return AddQuoteInputs.author.name.isEmpty
+                        ? StepState.indexed
+                        : StepState.complete;
+                  }),
+            ),
+            Step(
+              subtitle: Text('Optional'),
+              title: const Text('Reference'),
+              content: dynamicStepContent(num: 3),
+              state: computeStepState(
+                  stepIndex: 3,
+                  compute: () {
+                    return AddQuoteInputs.reference.name.isEmpty
+                        ? StepState.indexed
+                        : StepState.complete;
+                  }),
+            ),
+            Step(
+              subtitle: Text('Optional'),
+              title: const Text('Comments'),
+              content: dynamicStepContent(num: 4),
+              state: computeStepState(
+                  stepIndex: 2,
+                  compute: () {
+                    return AddQuoteInputs.comment.isEmpty
+                        ? StepState.indexed
+                        : StepState.complete;
+                  }),
+            ),
           ],
         ),
       ])),
