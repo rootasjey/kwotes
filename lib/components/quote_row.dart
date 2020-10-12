@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/favourites.dart';
-import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/web/add_to_list_button.dart';
-import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/web/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quote.dart';
-import 'package:memorare/utils/animation.dart';
-import 'package:stopper/stopper.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuoteRow extends StatefulWidget {
   final Quote quote;
@@ -80,41 +75,6 @@ class _QuoteRowState extends State<QuoteRow> {
     return cardLayout();
   }
 
-  Widget addToListButton() {
-    if (userState.isUserConnected) {
-      return AddToListButton(
-        quote: widget.quote,
-      );
-    }
-
-    return IconButton(
-      tooltip: 'You must login to add this quote to a list',
-      icon: Opacity(
-        opacity: 0.5,
-        child: Icon(Icons.playlist_add),
-      ),
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return SimpleDialog(
-                title: Text("You're not logged in"),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                          "You must login to your account to add this quote to a list."),
-                    ),
-                  ),
-                ],
-              );
-            });
-      },
-    );
-  }
-
   Widget cardLayout() {
     return Container(
       width: widget.cardSize,
@@ -180,49 +140,6 @@ class _QuoteRowState extends State<QuoteRow> {
     );
   }
 
-  Widget likeButton() {
-    final quote = widget.quote;
-
-    if (userState.isUserConnected) {
-      return IconButton(
-        onPressed: () async {
-          if (quote.starred) {
-            removeQuoteFromFav();
-            return;
-          }
-
-          addQuoteToFav();
-        },
-        icon:
-            quote.starred ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-      );
-    }
-
-    return IconButton(
-      tooltip: 'You must login to like this quote',
-      icon: Opacity(opacity: 0.5, child: Icon(Icons.favorite_border)),
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return SimpleDialog(
-                title: Text("You're not logged in"),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                          "You must login to your account to like this quote."),
-                    ),
-                  ),
-                ],
-              );
-            });
-      },
-    );
-  }
-
   Widget rowLayout() {
     return Container(
       padding: widget.padding,
@@ -231,7 +148,14 @@ class _QuoteRowState extends State<QuoteRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            showQuoteSheet();
+            showMaterialModalBottomSheet(
+              context: context,
+              builder: (context, scrollController) => QuotePage(
+                quote: widget.quote,
+                quoteId: widget.quote.id,
+                scrollController: scrollController,
+              ),
+            );
           },
           onHover: (isHover) {
             setState(() {
@@ -259,10 +183,12 @@ class _QuoteRowState extends State<QuoteRow> {
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    AuthorPage(id: widget.quote.author.id)),
+                          showMaterialModalBottomSheet(
+                            context: context,
+                            builder: (context, scrollController) => AuthorPage(
+                              id: widget.quote.author.id,
+                              scrollController: scrollController,
+                            ),
                           );
                         },
                         child: Opacity(
@@ -302,180 +228,6 @@ class _QuoteRowState extends State<QuoteRow> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget sheetUserActions() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          likeButton(),
-          shareButton(),
-          addToListButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget shareButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: IconButton(
-        onPressed: () async {
-          shareQuote(context: context, quote: widget.quote);
-        },
-        icon: Icon(Icons.share),
-      ),
-    );
-  }
-
-  Widget topicsRow() {
-    if (widget.quote.topics.length == 0) {
-      return Padding(padding: EdgeInsets.zero);
-    }
-
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      foregroundDecoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.05),
-      ),
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 300,
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.only(
-                top: 80.0,
-              ),
-              scrollDirection: Axis.horizontal,
-              children: widget.quote.topics.map((topic) {
-                final topicColor = appTopicsColors.find(topic);
-
-                return TopicCardColor(
-                  color: Color(topicColor.decimal),
-                  name: topicColor.name,
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void addQuoteToFav() async {
-    final quote = widget.quote;
-    setState(() {
-      // Optimistic result
-      quote.starred = true;
-    });
-
-    final result = await addToFavourites(
-      context: context,
-      quote: quote,
-    );
-
-    if (!result) {
-      setState(() {
-        quote.starred = false;
-      });
-    }
-  }
-
-  void removeQuoteFromFav() async {
-    final quote = widget.quote;
-    setState(() {
-      // Optimistic result
-      quote.starred = false;
-    });
-
-    final result = await removeFromFavourites(
-      context: context,
-      quote: widget.quote,
-    );
-
-    if (!result) {
-      setState(() {
-        quote.starred = true;
-      });
-    }
-  }
-
-  void showQuoteSheet() {
-    final quote = widget.quote;
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-
-    showStopper(
-      context: context,
-      stops: [0.5 * height, height],
-      builder: (context, scrollController, scrollPhysics, stop) {
-        return Material(
-          elevation: 4.0,
-          child: ListView(
-            controller: scrollController,
-            physics: scrollPhysics,
-            children: [
-              Divider(
-                thickness: 2.0,
-              ),
-              Center(
-                child: Container(
-                  height: 10.0,
-                  width: 40.0,
-                  padding: const EdgeInsets.only(top: 5.0),
-                  decoration: BoxDecoration(
-                    color: iconHoverColor,
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: createHeroQuoteAnimation(
-                  isMobile: true,
-                  quote: quote,
-                  screenWidth: width,
-                  screenHeight: height,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Opacity(
-                        opacity: 0.8,
-                        child: Text(
-                          quote.author.name,
-                          style: TextStyle(fontSize: 20.0),
-                        )),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          quote.mainReference.name,
-                          style: TextStyle(fontSize: 16.0),
-                        )),
-                  ],
-                ),
-              ),
-              sheetUserActions(),
-              topicsRow(),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
+import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/screens/author_page.dart';
@@ -15,31 +15,72 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:memorare/utils/animation.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotePage extends StatefulWidget {
   final String quoteId;
+  final Quote quote;
+  final ScrollController scrollController;
 
-  QuotePage({@required this.quoteId});
+  QuotePage({
+    this.quoteId,
+    this.quote,
+    this.scrollController,
+  });
 
   @override
   _QuotePageState createState() => _QuotePageState();
 }
 
 class _QuotePageState extends State<QuotePage> {
-  bool isLoading;
+  bool isLoading = false;
   Quote quote;
   List<TopicColor> topicColors = [];
+  Color accentColor = Colors.blue;
 
   @override
   void initState() {
     super.initState();
-    fetchQuote();
+
+    if (widget.quote == null) {
+      fetchQuote();
+    } else {
+      setState(() {
+        quote = widget.quote;
+
+        final topicColor = appTopicsColors.find(quote.topics.first);
+        accentColor =
+            topicColor != null ? Color(topicColor.decimal) : accentColor;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        physics: ClampingScrollPhysics(),
+        controller: widget.scrollController,
+        slivers: <Widget>[
+          HomeAppBar(
+            showCloseButton: true,
+            showUserMenu: false,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 0.0),
+            sliver: SliverList(
+                delegate: SliverChildListDelegate.fixed([
+              body(),
+            ])),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget body() {
     if (isLoading) {
       return FullPageLoading(
         title: 'Loading quote...',
@@ -59,24 +100,32 @@ class _QuotePageState extends State<QuotePage> {
             SizedBox(
               height: MediaQuery.of(context).size.height - 0.0,
               child: Padding(
-                padding: EdgeInsets.all(70.0),
+                padding: EdgeInsets.all(40.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    backIcon(),
-                    quoteName(
-                      screenWidth: MediaQuery.of(context).size.width,
+                    quoteName(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(
+                              child: Column(children: [
+                            authorName(),
+                            if (quote.mainReference.name.length > 0)
+                              referenceName(),
+                          ])),
+                          verticalAnimatedDivider(),
+                        ],
+                      ),
                     ),
-                    animatedDivider(),
-                    authorName(),
-                    if (quote.mainReference.name.length > 0) referenceName(),
                   ],
                 ),
               ),
             ),
             userActions(),
             topicsList(),
-            NavBackFooter(),
           ],
         );
       },
@@ -107,19 +156,42 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
+  Widget verticalAnimatedDivider() {
+    return ControlledAnimation(
+      delay: 1.seconds,
+      duration: 250.milliseconds,
+      tween: Tween(begin: 0.0, end: 60.0),
+      builder: (context, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 10.0, left: 8.0),
+          child: Container(
+            width: 3.0,
+            height: value,
+            decoration: BoxDecoration(
+              color: accentColor,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget authorName() {
     return ControlledAnimation(
       delay: 1.seconds,
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 0.8),
-      child: FlatButton(
-        onPressed: () {
+      duration: 250.milliseconds,
+      tween: Tween(begin: 0.0, end: 0.6),
+      child: InkWell(
+        onTap: () {
           final id = quote.author.id;
 
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => AuthorPage(
+          showMaterialModalBottomSheet(
+              context: context,
+              builder: (_, scrollController) => AuthorPage(
                     id: id,
-                  )));
+                    scrollController: scrollController,
+                  ));
         },
         child: Text(
           quote.author.name,
@@ -129,46 +201,37 @@ class _QuotePageState extends State<QuotePage> {
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Opacity(
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Opacity(
               opacity: value,
               child: child,
-            ));
+            ),
+          ],
+        );
       },
     );
   }
 
-  Widget backIcon() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(Icons.arrow_back),
-          )
-        ],
-      ),
-    );
-  }
+  Widget quoteName() {
+    final size = MediaQuery.of(context).size;
 
-  Widget quoteName({double screenWidth}) {
     return createHeroQuoteAnimation(
       quote: quote,
-      screenWidth: screenWidth,
+      isMobile: size.width < 700.0,
+      screenWidth: size.width,
+      screenHeight: size.height,
     );
   }
 
   Widget referenceName() {
     return ControlledAnimation(
-      delay: 2.seconds,
-      duration: 1.seconds,
-      tween: Tween(begin: 0.0, end: 0.6),
-      child: FlatButton(
-        onPressed: () {
+      delay: 1.2.seconds,
+      duration: 250.milliseconds,
+      tween: Tween(begin: 0.0, end: 0.5),
+      child: InkWell(
+        onTap: () {
           final id = quote.mainReference.id;
 
           Navigator.of(context)
@@ -178,22 +241,26 @@ class _QuotePageState extends State<QuotePage> {
           quote.mainReference.name,
           style: TextStyle(
             fontSize: 18.0,
+            fontStyle: FontStyle.italic,
           ),
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Opacity(
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Opacity(
               opacity: value,
               child: child,
-            ));
+            ),
+          ],
+        );
       },
     );
   }
 
   Widget topicsList() {
-    if (topicColors.length == 0) {
+    if (quote.topics.length == 0) {
       return Padding(padding: EdgeInsets.zero);
     }
 
@@ -214,15 +281,17 @@ class _QuotePageState extends State<QuotePage> {
                 top: 80.0,
               ),
               scrollDirection: Axis.horizontal,
-              children: topicColors.map((topic) {
+              children: quote.topics.map((topic) {
                 count += 1.0;
+
+                final topicColor = appTopicsColors.find(topic);
 
                 return FadeInX(
                   delay: count,
                   beginX: 50.0,
                   child: TopicCardColor(
-                    color: Color(topic.decimal),
-                    name: topic.name,
+                    color: Color(topicColor.decimal),
+                    name: topicColor.name,
                   ),
                 );
               }).toList(),
@@ -239,34 +308,9 @@ class _QuotePageState extends State<QuotePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          IconButton(
-            onPressed: userState.isUserConnected
-                ? () async {
-                    if (quote.starred) {
-                      removeQuoteFromFav();
-                      return;
-                    }
-
-                    addQuoteToFav();
-                  }
-                : null,
-            icon: quote.starred
-                ? Icon(Icons.favorite)
-                : Icon(Icons.favorite_border),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: IconButton(
-              onPressed: () async {
-                shareQuote(context: context, quote: quote);
-              },
-              icon: Icon(Icons.share),
-            ),
-          ),
-          AddToListButton(
-            quote: quote,
-            isDisabled: !userState.isUserConnected,
-          ),
+          favIconButton(),
+          shareButton(),
+          addToListButton(),
         ],
       ),
     );
@@ -375,5 +419,95 @@ class _QuotePageState extends State<QuotePage> {
         quote.starred = true;
       });
     }
+  }
+
+  Widget favIconButton() {
+    if (userState.isUserConnected) {
+      return IconButton(
+        onPressed: () async {
+          if (quote.starred) {
+            removeQuoteFromFav();
+            return;
+          }
+
+          addQuoteToFav();
+        },
+        icon:
+            quote.starred ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+      );
+    }
+
+    return IconButton(
+      tooltip: "You're not logged in",
+      icon: Opacity(opacity: 0.5, child: Icon(Icons.favorite_border)),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return SimpleDialog(
+                title: Text("You're not logged in"),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 20.0,
+                ),
+                children: [
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      "You must be logged in to like this quote.",
+                    ),
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
+  Widget shareButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: IconButton(
+        onPressed: () async {
+          shareQuote(context: context, quote: quote);
+        },
+        icon: Icon(Icons.share),
+      ),
+    );
+  }
+
+  Widget addToListButton() {
+    if (userState.isUserConnected) {
+      return AddToListButton(
+        quote: quote,
+        isDisabled: !userState.isUserConnected,
+      );
+    }
+
+    return IconButton(
+      tooltip: "You're not logged in",
+      icon: Opacity(opacity: 0.5, child: Icon(Icons.playlist_add)),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return SimpleDialog(
+                title: Text("You're not logged in"),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 20.0,
+                ),
+                children: [
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      "You must be logged in to add this quote to a list.",
+                    ),
+                  ),
+                ],
+              );
+            });
+      },
+    );
   }
 }
