@@ -35,10 +35,10 @@ class _AuthorPageState extends State<AuthorPage> {
   bool descending = true;
   bool isLoadingMore = false;
 
+  DocumentSnapshot lastDoc;
+
   double beginY = 100.0;
   double avatarSize = 150.0;
-
-  DocumentSnapshot lastDoc;
 
   final limit = 30;
   List<Quote> quotes = [];
@@ -278,11 +278,9 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget heroSmall() {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.only(top: 60.0),
-      // height: MediaQuery.of(context).size.height,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FadeInY(
             beginY: beginY,
@@ -466,6 +464,9 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget summarySmall() {
     return Column(
       children: <Widget>[
+        Divider(
+          thickness: 1.0,
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -568,7 +569,6 @@ class _AuthorPageState extends State<AuthorPage> {
       spacing: 20.0,
       runSpacing: 20.0,
       children: <Widget>[
-        // IconButton(iconSize: 40.0, icon: Icon(Icons.list), onPressed: () {}),
         FadeInX(
           beginX: 50.0,
           delay: 0.0,
