@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
+import 'package:memorare/components/sliver_empty_view.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
@@ -12,6 +14,8 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/author.dart';
 import 'package:memorare/types/quote.dart';
+import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -41,6 +45,8 @@ class _AuthorPageState extends State<AuthorPage> {
   double avatarSize = 150.0;
 
   final limit = 30;
+  final pageRoute = 'author_page';
+
   List<Quote> quotes = [];
 
   String lang = 'en';
@@ -80,6 +86,14 @@ class _AuthorPageState extends State<AuthorPage> {
                 showUserMenu: false,
               ),
               infoPannel(),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate.fixed([
+                    Center(child: langSelectButton()),
+                  ]),
+                ),
+              ),
               quotesListView(),
               SliverPadding(
                 padding: const EdgeInsets.only(bottom: 200.0),
@@ -303,6 +317,45 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
+  Widget langSelectButton() {
+    if (isLoading) {
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 0.0),
+      child: DropdownButton<String>(
+        elevation: 2,
+        value: lang,
+        isDense: true,
+        underline: Container(
+          height: 0,
+          color: Colors.deepPurpleAccent,
+        ),
+        icon: Icon(Icons.keyboard_arrow_down),
+        style: TextStyle(
+          color: stateColors.foreground.withOpacity(0.6),
+          fontSize: 20.0,
+          fontFamily: GoogleFonts.raleway().fontFamily,
+        ),
+        onChanged: (String newLang) {
+          lang = newLang;
+          fetchQuotes();
+          appLocalStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+        },
+        items: ['en', 'fr'].map((String value) {
+          return DropdownMenuItem(
+              value: value,
+              child: Text(
+                value.toUpperCase(),
+              ));
+        }).toList(),
+      ),
+    );
+  }
+
   Widget largeView() {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -416,6 +469,15 @@ class _AuthorPageState extends State<AuthorPage> {
   Widget quotesListView() {
     if (isLoading) {
       return SliverPadding(padding: EdgeInsets.zero);
+    }
+
+    if (quotes.isEmpty) {
+      return SliverEmptyView(
+        title: "No quote found",
+        description:
+            "Sorry, we didn't found any quote in ${Language.frontend(lang)} for ${author.name}. You can try in another language.",
+        onRefresh: () => fetchQuotes(),
+      );
     }
 
     return Observer(
@@ -701,6 +763,8 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   void fetchQuotes() async {
+    quotes.clear();
+
     try {
       final snapshot = await Firestore.instance
           .collection('quotes')

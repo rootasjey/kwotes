@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
+import 'package:memorare/components/sliver_empty_view.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
@@ -12,6 +14,8 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
+import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/language.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,6 +47,7 @@ class ReferencePageState extends State<ReferencePage> {
 
   final limit = 30;
   final double beginY = 20.0;
+  final pageRoute = 'reference_page';
 
   List<Quote> quotes = [];
 
@@ -54,8 +59,13 @@ class ReferencePageState extends State<ReferencePage> {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
     fetchQuotes();
+  }
+
+  void initProps() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
   }
 
   @override
@@ -80,6 +90,14 @@ class ReferencePageState extends State<ReferencePage> {
               showUserMenu: false,
             ),
             infoPanel(),
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  Center(child: langSelectButton()),
+                ]),
+              ),
+            ),
             quotesListView(),
             SliverPadding(
               padding: const EdgeInsets.only(bottom: 200.0),
@@ -171,6 +189,33 @@ class ReferencePageState extends State<ReferencePage> {
         ));
   }
 
+  Widget heroSmall() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 60.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FadeInY(
+            beginY: beginY,
+            delay: 1.0,
+            child: avatar(),
+          ),
+          FadeInY(
+            beginY: beginY,
+            delay: 1.2,
+            child: types(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 45.0,
+            ),
+            child: links(),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget infoPanel() {
     if (isLoading) {
       return SliverList(
@@ -204,6 +249,45 @@ class ReferencePageState extends State<ReferencePage> {
           },
         ),
       ]),
+    );
+  }
+
+  Widget langSelectButton() {
+    if (isLoading) {
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 0.0),
+      child: DropdownButton<String>(
+        elevation: 2,
+        value: lang,
+        isDense: true,
+        underline: Container(
+          height: 0,
+          color: Colors.deepPurpleAccent,
+        ),
+        icon: Icon(Icons.keyboard_arrow_down),
+        style: TextStyle(
+          color: stateColors.foreground.withOpacity(0.6),
+          fontSize: 20.0,
+          fontFamily: GoogleFonts.raleway().fontFamily,
+        ),
+        onChanged: (String newLang) {
+          lang = newLang;
+          fetchQuotes();
+          appLocalStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+        },
+        items: ['en', 'fr'].map((String value) {
+          return DropdownMenuItem(
+              value: value,
+              child: Text(
+                value.toUpperCase(),
+              ));
+        }).toList(),
+      ),
     );
   }
 
@@ -271,33 +355,6 @@ class ReferencePageState extends State<ReferencePage> {
           ),
           Expanded(
             child: summaryLarge(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget heroSmall() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FadeInY(
-            beginY: beginY,
-            delay: 1.0,
-            child: avatar(),
-          ),
-          FadeInY(
-            beginY: beginY,
-            delay: 1.2,
-            child: types(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 45.0,
-            ),
-            child: links(),
           ),
         ],
       ),
@@ -414,30 +471,6 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget name() {
-    return Padding(
-      padding: EdgeInsets.only(top: 20.0),
-      child: FlatButton(
-        onPressed: () {
-          setState(() {
-            nameEllipsis = nameEllipsis == TextOverflow.ellipsis
-                ? TextOverflow.visible
-                : TextOverflow.ellipsis;
-          });
-        },
-        child: Text(
-          reference.name,
-          textAlign: TextAlign.center,
-          overflow: nameEllipsis,
-          style: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget linkSquareButton({
     double delay = 0.0,
     String name,
@@ -471,9 +504,42 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
+  Widget name() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: FlatButton(
+        onPressed: () {
+          setState(() {
+            nameEllipsis = nameEllipsis == TextOverflow.ellipsis
+                ? TextOverflow.visible
+                : TextOverflow.ellipsis;
+          });
+        },
+        child: Text(
+          reference.name,
+          textAlign: TextAlign.center,
+          overflow: nameEllipsis,
+          style: TextStyle(
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget quotesListView() {
     if (isLoading) {
       return SliverPadding(padding: EdgeInsets.zero);
+    }
+
+    if (quotes.isEmpty) {
+      return SliverEmptyView(
+        title: "No quote found",
+        description:
+            "Sorry, we didn't found any quote in ${Language.frontend(lang)} for ${reference.name}. You can try in another language.",
+        onRefresh: () => fetchQuotes(),
+      );
     }
 
     return Observer(
@@ -691,6 +757,8 @@ class ReferencePageState extends State<ReferencePage> {
   }
 
   void fetchQuotes() async {
+    quotes.clear();
+
     try {
       final snapshot = await Firestore.instance
           .collection('quotes')
