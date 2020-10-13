@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/router/route_names.dart';
@@ -16,9 +17,14 @@ class AddQuoteAppBar extends StatefulWidget {
   /// a bottom sheet containing this widget content.
   final Widget help;
 
+  final bool isNarrow;
+  final EdgeInsets padding;
+
   AddQuoteAppBar({
     this.help,
+    this.isNarrow = false,
     this.onTapIconHeader,
+    this.padding = EdgeInsets.zero,
     this.title = '',
   });
 
@@ -29,82 +35,114 @@ class AddQuoteAppBar extends StatefulWidget {
 class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return SliverLayoutBuilder(
-          builder: (context, constrains) {
-            final isNarrow = constrains.crossAxisExtent < 700.0;
-            final leftPadding = isNarrow ? 0.0 : 60.0;
+    final leftPadding = widget.isNarrow ? 0.0 : 60.0;
 
-            return SliverAppBar(
-              floating: true,
-              snap: true,
-              pinned: true,
-              backgroundColor: stateColors.appBackground.withOpacity(1.0),
-              automaticallyImplyLeading: false,
-              title: Padding(
-                padding: EdgeInsets.only(
-                  left: leftPadding,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: IconButton(
-                        color: stateColors.foreground,
-                        onPressed: () => Navigator.pop(context),
-                        icon: Icon(Icons.arrow_back),
-                      ),
-                    ),
-                    AppIconHeader(
-                        size: 40.0,
-                        padding: EdgeInsets.zero,
-                        onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => Home()),
-                            )),
-                    if (widget.title.isNotEmpty) titleBar(isNarrow: isNarrow),
-                  ],
-                ),
+    return AppBar(
+      backgroundColor: stateColors.appBackground.withOpacity(1.0),
+      automaticallyImplyLeading: false,
+      toolbarHeight: 80.0,
+      title: Padding(
+        padding: EdgeInsets.only(
+          left: leftPadding,
+        ),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: IconButton(
+                color: stateColors.foreground,
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.arrow_back),
               ),
-              flexibleSpace: userSection(isNarrow),
-            );
-          },
-        );
-      },
+            ),
+            AppIconHeader(
+                size: 40.0,
+                padding: EdgeInsets.zero,
+                onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => Home()),
+                    )),
+            if (widget.title.isNotEmpty) titleBar(isNarrow: widget.isNarrow),
+          ],
+        ),
+      ),
+      actions: [
+        helpButton(),
+        if (!widget.isNarrow) userMenu(widget.isNarrow),
+      ],
     );
   }
 
   Widget helpButton() {
-    return IconButton(
-      iconSize: 35.0,
-      color: Colors.yellow.shade700,
-      icon: Icon(Icons.help),
-      onPressed: () {
-        showModalBottomSheet(
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: CircleButton(
+        elevation: 2.0,
+        icon: Icon(
+          Icons.help_outline,
+          size: 20.0,
+          color: stateColors.primary,
+        ),
+        onTap: () => showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           builder: (context) {
             return Column(
               children: <Widget>[
-                widget.help,
-                RaisedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(
-                    Icons.close,
-                    color: stateColors.primary,
-                  ),
-                  label: Text(
-                    'Close',
-                    style: TextStyle(
-                      color: stateColors.primary,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      CircleButton(
+                        onTap: () => Navigator.of(context).pop(),
+                        icon: Icon(
+                          Icons.close,
+                          size: 20.0,
+                          color: stateColors.primary,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 0.0),
+                            child: Text(
+                              'Help',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              'Some useful informaton about the current step',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
+                Divider(
+                  height: 20.0,
+                  thickness: 2.0,
+                  color: stateColors.primary,
+                ),
+                widget.help,
               ],
             );
           },
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -179,16 +217,6 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           Rerouter.push(context: context, value: value);
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          if (isNarrow)
-            const PopupMenuItem(
-                value: AddQuoteContentRoute,
-                child: ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text(
-                    'Add quote',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
           const PopupMenuItem(
               value: FavouritesRoute,
               child: ListTile(
@@ -261,28 +289,13 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
     );
   }
 
-  Widget userSection(bool isNarrow) {
+  Widget userMenu(bool isNarrow) {
     return Observer(builder: (context) {
-      final children = List<Widget>();
-
       if (userState.isUserConnected) {
-        children.add(userAvatar(isNarrow: isNarrow));
+        return userAvatar(isNarrow: isNarrow);
       }
 
-      if (widget.help != null) {
-        children.add(helpButton());
-      }
-
-      return Container(
-        padding: const EdgeInsets.only(
-          top: 5.0,
-          right: 10.0,
-        ),
-        child: Row(
-          textDirection: TextDirection.rtl,
-          children: children,
-        ),
-      );
+      return Padding(padding: EdgeInsets.zero);
     });
   }
 }

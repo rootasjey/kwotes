@@ -69,6 +69,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        child: AddQuoteAppBar(
+          title: 'Add quote',
+          isNarrow: true,
+          help: helpSteps[currentStep],
+        ),
+        preferredSize: Size.fromHeight(80.0),
+      ),
       floatingActionButton: isFabVisible
           ? FloatingActionButton.extended(
               onPressed: () => propose(),
@@ -82,17 +90,77 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           : Padding(
               padding: EdgeInsets.zero,
             ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          AddQuoteAppBar(
-            help: helpSteps[currentStep],
-            title: AddQuoteInputs.quote.id.isEmpty ? 'New quote' : 'Edit quote',
+      body: Stepper(
+        currentStep: currentStep,
+        onStepContinue: next,
+        onStepCancel: cancel,
+        onStepTapped: (step) => goTo(step),
+        steps: [
+          Step(
+            title: Text('Content'),
+            subtitle: Text('Required'),
+            content: dynamicStepContent(num: 0),
+            state: computeStepState(
+                stepIndex: 0,
+                compute: () {
+                  return AddQuoteInputs.quote.name.isEmpty
+                      ? StepState.error
+                      : StepState.complete;
+                }),
           ),
-          SliverLayoutBuilder(
-            builder: (context, constrains) {
-              isSmallView = constrains.crossAxisExtent < 600.0;
-              return body();
-            },
+          Step(
+            title: const Text('Topics'),
+            subtitle: Text('Required'),
+            content: dynamicStepContent(num: 1),
+            state: computeStepState(
+                stepIndex: 1,
+                compute: () {
+                  if (!stepChanged) {
+                    return StepState.indexed;
+                  }
+
+                  if (AddQuoteInputs.quote.topics.length == 0) {
+                    return StepState.error;
+                  }
+
+                  return StepState.complete;
+                }),
+          ),
+          Step(
+            subtitle: Text('Optional'),
+            title: const Text('Author'),
+            content: dynamicStepContent(num: 2),
+            state: computeStepState(
+                stepIndex: 2,
+                compute: () {
+                  return AddQuoteInputs.author.name.isEmpty
+                      ? StepState.indexed
+                      : StepState.complete;
+                }),
+          ),
+          Step(
+            subtitle: Text('Optional'),
+            title: const Text('Reference'),
+            content: dynamicStepContent(num: 3),
+            state: computeStepState(
+                stepIndex: 3,
+                compute: () {
+                  return AddQuoteInputs.reference.name.isEmpty
+                      ? StepState.indexed
+                      : StepState.complete;
+                }),
+          ),
+          Step(
+            subtitle: Text('Optional'),
+            title: const Text('Comments'),
+            content: dynamicStepContent(num: 4),
+            state: computeStepState(
+                stepIndex: 2,
+                compute: () {
+                  return AddQuoteInputs.comment.isEmpty
+                      ? StepState.indexed
+                      : StepState.complete;
+                }),
           ),
         ],
       ),

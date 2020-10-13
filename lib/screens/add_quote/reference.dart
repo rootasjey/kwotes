@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/language.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddQuoteReference extends StatefulWidget {
   @override
@@ -12,48 +14,48 @@ class AddQuoteReference extends StatefulWidget {
 }
 
 class _AddQuoteReferenceState extends State<AddQuoteReference> {
-  final beginY    = 100.0;
-  final delay     = 1.0;
+  final beginY = 100.0;
+  final delay = 1.0;
   final delayStep = 1.2;
 
   String tempImgUrl = '';
 
   final nameFocusNode = FocusNode();
 
-  final affiliateUrlController    = TextEditingController();
-  final amazonUrlController       = TextEditingController();
-  final facebookUrlController     = TextEditingController();
-  final nameController            = TextEditingController();
-  final netflixUrlController      = TextEditingController();
-  final primaryTypeController     = TextEditingController();
-  final primeVideoUrlController   = TextEditingController();
-  final secondaryTypeController   = TextEditingController();
-  final summaryController         = TextEditingController();
-  final twitterUrlController      = TextEditingController();
-  final twitchUrlController       = TextEditingController();
-  final websiteUrlController      = TextEditingController();
-  final wikiUrlController         = TextEditingController();
-  final youtubeUrlController      = TextEditingController();
+  final affiliateUrlController = TextEditingController();
+  final amazonUrlController = TextEditingController();
+  final facebookUrlController = TextEditingController();
+  final nameController = TextEditingController();
+  final netflixUrlController = TextEditingController();
+  final primaryTypeController = TextEditingController();
+  final primeVideoUrlController = TextEditingController();
+  final secondaryTypeController = TextEditingController();
+  final summaryController = TextEditingController();
+  final twitterUrlController = TextEditingController();
+  final twitchUrlController = TextEditingController();
+  final websiteUrlController = TextEditingController();
+  final wikiUrlController = TextEditingController();
+  final youtubeUrlController = TextEditingController();
 
-  final linkInputController       = TextEditingController();
+  final linkInputController = TextEditingController();
 
   @override
   initState() {
     setState(() {
-      affiliateUrlController.text   = AddQuoteInputs.reference.urls.affiliate;
-      amazonUrlController.text      = AddQuoteInputs.reference.urls.amazon;
-      facebookUrlController.text    = AddQuoteInputs.reference.urls.facebook;
-      nameController.text           = AddQuoteInputs.reference.name;
-      netflixUrlController.text     = AddQuoteInputs.reference.urls.netflix;
-      primeVideoUrlController.text  = AddQuoteInputs.reference.urls.primeVideo;
-      primaryTypeController.text    = AddQuoteInputs.reference.type.primary;
-      secondaryTypeController.text  = AddQuoteInputs.reference.type.secondary;
-      summaryController.text        = AddQuoteInputs.reference.summary;
-      twitterUrlController.text     = AddQuoteInputs.reference.urls.twitter;
-      twitchUrlController.text      = AddQuoteInputs.reference.urls.twitch;
-      websiteUrlController.text     = AddQuoteInputs.reference.urls.website;
-      wikiUrlController.text        = AddQuoteInputs.reference.urls.wikipedia;
-      youtubeUrlController.text     = AddQuoteInputs.reference.urls.youtube;
+      affiliateUrlController.text = AddQuoteInputs.reference.urls.affiliate;
+      amazonUrlController.text = AddQuoteInputs.reference.urls.amazon;
+      facebookUrlController.text = AddQuoteInputs.reference.urls.facebook;
+      nameController.text = AddQuoteInputs.reference.name;
+      netflixUrlController.text = AddQuoteInputs.reference.urls.netflix;
+      primeVideoUrlController.text = AddQuoteInputs.reference.urls.primeVideo;
+      primaryTypeController.text = AddQuoteInputs.reference.type.primary;
+      secondaryTypeController.text = AddQuoteInputs.reference.type.secondary;
+      summaryController.text = AddQuoteInputs.reference.summary;
+      twitterUrlController.text = AddQuoteInputs.reference.urls.twitter;
+      twitchUrlController.text = AddQuoteInputs.reference.urls.twitch;
+      websiteUrlController.text = AddQuoteInputs.reference.urls.website;
+      wikiUrlController.text = AddQuoteInputs.reference.urls.wikipedia;
+      youtubeUrlController.text = AddQuoteInputs.reference.urls.youtube;
     });
 
     super.initState();
@@ -65,19 +67,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       width: 600.0,
       child: Column(
         children: <Widget>[
-          Wrap(
-            children: <Widget>[
-              avatar(),
-              nameAndTypesFields(),
-            ],
-          ),
-
-          FadeInY(
-            delay: delay + (4 * delayStep),
-            beginY: beginY,
-            child: langAndSummary(),
-          ),
-
+          avatar(),
+          nameCardInput(),
+          primaryTypeCardInput(),
+          secondaryTypeCardInput(),
+          clearButton(),
+          langSelector(),
+          summaryCardInput(),
           FadeInY(
             delay: delay + (5 * delayStep),
             beginY: beginY,
@@ -118,7 +114,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       label: Opacity(
         opacity: 0.6,
         child: Text(
-          'Clear all data',
+          'Clear all inputs',
         ),
       ),
     );
@@ -128,102 +124,265 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     return Padding(
       padding: EdgeInsets.only(
         bottom: 30.0,
-        right: 40.0,
       ),
       child: Card(
-        child: AddQuoteInputs.reference.urls.image.length > 0 ?
-          Ink.image(
-            width: 200.0,
-            height: 250.0,
-            fit: BoxFit.cover,
-            image: NetworkImage(AddQuoteInputs.reference.urls.image),
-            child: InkWell(
-              onTap: () => showImageDialog(),
-            ),
-          ) :
-          SizedBox(
-            width: 200.0,
-            height: 250.0,
-            child: InkWell(
-              child: Opacity(
-                opacity: .6,
-                child: Icon(Icons.add, size: 50.0,)
+        color: Colors.black12,
+        elevation: 0.0,
+        child: AddQuoteInputs.reference.urls.image.length > 0
+            ? Ink.image(
+                width: 150.0,
+                height: 200.0,
+                fit: BoxFit.cover,
+                image: NetworkImage(AddQuoteInputs.reference.urls.image),
+                child: InkWell(
+                  onTap: () => showAvatarDialog(),
+                ),
+              )
+            : SizedBox(
+                width: 150.0,
+                height: 200.0,
+                child: InkWell(
+                  child: Opacity(
+                      opacity: .6,
+                      child: Icon(
+                        Icons.add,
+                        size: 50.0,
+                        color: stateColors.primary,
+                      )),
+                  onTap: () => showAvatarDialog(),
+                ),
               ),
-              onTap: () => showImageDialog(),
-            ),
-          ),
       ),
     );
   }
 
-  Widget langAndSummary() {
+  Widget nameCardInput() {
+    final referenceName = AddQuoteInputs.reference.name;
+
+    return Container(
+      width: 250.0,
+      padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: () async {
+            await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) {
+                  return nameInput();
+                });
+
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Name',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      referenceName != null && referenceName.isNotEmpty
+                          ? referenceName
+                          : 'Tap to edit',
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.account_box),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget nameInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: CustomScrollView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 80.0,
+              left: 40.0,
+              right: 40.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: nameController,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.person_outline),
+                      labelText: "Type reference's name",
+                      alignLabelWithHint: true,
+                    ),
+                    minLines: 1,
+                    maxLines: null,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.reference.name = newValue;
+                    },
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget summaryCardInput() {
+    final summary = AddQuoteInputs.reference.summary;
+
+    return Container(
+      width: 300.0,
+      padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: () async {
+            await showMaterialModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) {
+                  return summaryInput();
+                });
+
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Summary',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      summary != null && summary.isNotEmpty
+                          ? summary
+                          : 'Tap to edit',
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.short_text),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget summaryInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: CustomScrollView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 80.0,
+              left: 40.0,
+              right: 40.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: summaryController,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.edit),
+                      labelText: "Type reference's summary...",
+                      alignLabelWithHint: true,
+                    ),
+                    minLines: 1,
+                    maxLines: null,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.reference.summary = newValue;
+                    },
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget langSelector() {
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 60.0,
       ),
-      child: Column(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(
-            width: 500,
-            child: TextField(
-              controller: summaryController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                ),
-                icon: Icon(Icons.edit),
-                labelText: "Type reference's summary there...",
-                alignLabelWithHint: true,
-              ),
-              minLines: 1,
-              maxLines: null,
+          Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Reference language: ',
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 18.0,
               ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.summary = newValue;
-              },
             ),
           ),
-
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Opacity(
-                opacity: 0.6,
-                child: Text(
-                  'Reference language: ',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-
-              Padding(padding: const EdgeInsets.only(left: 20.0,),),
-
-              DropdownButton<String>(
-                value: AddQuoteInputs.reference.lang,
-                iconEnabledColor: stateColors.primary,
-                icon: Icon(Icons.language),
-                style: TextStyle(
-                  color: stateColors.primary,
-                  fontSize: 20.0,
-                ),
-                onChanged: (newValue) {
-                  setState(() {
-                    AddQuoteInputs.reference.lang = newValue;
-                  });
-                },
-                items: Language.available()
-                  .map<DropdownMenuItem<String>>((value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value.toUpperCase()),
-                    );
-                  }).toList(),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20.0,
+            ),
+          ),
+          DropdownButton<String>(
+            value: AddQuoteInputs.reference.lang,
+            iconEnabledColor: stateColors.primary,
+            icon: Icon(Icons.language),
+            style: TextStyle(
+              color: stateColors.primary,
+              fontSize: 20.0,
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                AddQuoteInputs.reference.lang = newValue;
+              });
+            },
+            items: Language.available().map<DropdownMenuItem<String>>((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value.toUpperCase()),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -244,17 +403,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             imageUrl: 'assets/images/world-globe.png',
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Website',
-                initialValue: AddQuoteInputs.reference.urls.website,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.website = inputUrl;
+                  labelText: 'Website',
+                  initialValue: AddQuoteInputs.reference.urls.website,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.website = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           Observer(
             builder: (_) {
               return linkSquareButton(
@@ -263,20 +420,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 active: AddQuoteInputs.reference.urls.wikipedia.isNotEmpty,
                 imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
                 onTap: () {
-                    showLinkInputSheet(
+                  showLinkInputSheet(
                       labelText: 'Wikipedia',
                       initialValue: AddQuoteInputs.reference.urls.wikipedia,
                       onSave: (String inputUrl) {
                         setState(() {
                           AddQuoteInputs.reference.urls.wikipedia = inputUrl;
                         });
-                      }
-                    );
-                  },
-                );
-              },
-            ),
-
+                      });
+                },
+              );
+            },
+          ),
           linkSquareButton(
             delay: 1.4,
             name: 'Amazon',
@@ -284,17 +439,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.amazon.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Amazon',
-                initialValue: AddQuoteInputs.reference.urls.amazon,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.amazon = inputUrl;
+                  labelText: 'Amazon',
+                  initialValue: AddQuoteInputs.reference.urls.amazon,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.amazon = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           linkSquareButton(
             delay: 1.6,
             name: 'Facebook',
@@ -302,17 +455,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.facebook.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Facebook',
-                initialValue: AddQuoteInputs.reference.urls.facebook,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.facebook = inputUrl;
+                  labelText: 'Facebook',
+                  initialValue: AddQuoteInputs.reference.urls.facebook,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.facebook = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           linkSquareButton(
             delay: 1.8,
             name: 'Netflix',
@@ -320,17 +471,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.netflix.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Netflix',
-                initialValue: AddQuoteInputs.reference.urls.netflix,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.netflix = inputUrl;
+                  labelText: 'Netflix',
+                  initialValue: AddQuoteInputs.reference.urls.netflix,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.netflix = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           linkSquareButton(
             delay: 2.0,
             name: 'Prime Video',
@@ -338,17 +487,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.primeVideo.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Prime Video',
-                initialValue: AddQuoteInputs.reference.urls.primeVideo,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.primeVideo = inputUrl;
+                  labelText: 'Prime Video',
+                  initialValue: AddQuoteInputs.reference.urls.primeVideo,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.primeVideo = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           linkSquareButton(
             delay: 2.2,
             name: 'Twitch',
@@ -356,17 +503,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.twitch.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Twitch',
-                initialValue: AddQuoteInputs.reference.urls.twitch,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.twitch = inputUrl;
+                  labelText: 'Twitch',
+                  initialValue: AddQuoteInputs.reference.urls.twitch,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.twitch = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           linkSquareButton(
             delay: 2.4,
             name: 'Twitter',
@@ -374,17 +519,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.twitter.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'Twitter',
-                initialValue: AddQuoteInputs.reference.urls.twitter,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.twitter = inputUrl;
+                  labelText: 'Twitter',
+                  initialValue: AddQuoteInputs.reference.urls.twitter,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.twitter = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
-
           linkSquareButton(
             delay: 2.6,
             name: 'YouTube',
@@ -392,14 +535,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: AddQuoteInputs.reference.urls.youtube.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                labelText: 'YouTube',
-                initialValue: AddQuoteInputs.reference.urls.youtube,
-                onSave: (String inputUrl) {
-                  setState(() {
-                    AddQuoteInputs.reference.urls.youtube = inputUrl;
+                  labelText: 'YouTube',
+                  initialValue: AddQuoteInputs.reference.urls.youtube,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.youtube = inputUrl;
+                    });
                   });
-                }
-              );
             },
           ),
         ],
@@ -414,7 +556,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     String name,
     Function onTap,
   }) {
-
     return FadeInX(
       beginX: 50.0,
       delay: delay,
@@ -424,9 +565,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           height: 80.0,
           width: 80.0,
           child: Card(
-            elevation: active
-            ? 4.0
-            : 0.0,
+            elevation: active ? 4.0 : 0.0,
             clipBehavior: Clip.hardEdge,
             child: InkWell(
               onTap: onTap,
@@ -435,6 +574,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 child: Image.asset(
                   imageUrl,
                   width: 30.0,
+                  color: stateColors.foreground,
                 ),
               ),
             ),
@@ -444,153 +584,307 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget nameAndTypesFields() {
-    return Column(
-      children: <Widget>[
-        nameField(),
-        typesFields(),
-        clearButton(),
-      ],
-    );
-  }
+  Widget primaryTypeCardInput() {
+    final primaryType = AddQuoteInputs.reference.type.primary;
 
-  Widget nameField() {
-    return SizedBox(
-      width: 200.0,
-      child: TextField(
-        autofocus: true,
-        focusNode: nameFocusNode,
-        controller: nameController,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          labelText: 'Name',
-          icon: Icon(Icons.account_box)
-        ),
-        onChanged: (newValue) {
-          AddQuoteInputs.reference.name = newValue;
-        },
-      ),
-    );
-  }
+    return Container(
+      width: 300.0,
+      padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: () async {
+            await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) {
+                  return primaryTypeInput();
+                });
 
-  Widget typesFields() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 40.0,
-        bottom: 20.0,
-      ),
-      child: SizedBox(
-        width: 250.0,
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: primaryTypeController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: '1st type (e.g. TV series)',
-                icon: Icon(Icons.filter_1),
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Primary type (e.g. TV series)',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      primaryType != null && primaryType.isNotEmpty
+                          ? primaryType
+                          : 'Tap to edit',
+                    ),
+                  ],
+                ),
               ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.type.primary = newValue;
-              },
-            ),
-
-            Padding(padding: const EdgeInsets.only(bottom: 10.0)),
-
-            TextField(
-              controller: secondaryTypeController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: '2nd type (e.g. Thriller)',
-                icon: Icon(Icons.filter_2),
-              ),
-              onChanged: (newValue) {
-                AddQuoteInputs.reference.type.secondary  = newValue;
-              },
-            ),
-          ],
+              Icon(Icons.filter_1),
+            ]),
+          ),
         ),
       ),
     );
   }
 
-  void showImageDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusDirectional.all(
-              Radius.circular(5.0)
+  Widget primaryTypeInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: CustomScrollView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 80.0,
+              left: 40.0,
+              right: 40.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: primaryTypeController,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.filter_1),
+                      labelText: "Primary type (e.g. TV series)",
+                      alignLabelWithHint: true,
+                    ),
+                    minLines: 1,
+                    maxLines: null,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.reference.type.primary = newValue;
+                    },
+                  ),
+                ),
+              ]),
             ),
           ),
+        ],
+      ),
+    );
+  }
 
-          content: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: SizedBox(
-              width: 250.0,
-              height: 150.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 60.0),
-                    child: Row(
+  Widget secondaryTypeCardInput() {
+    final secondaryType = AddQuoteInputs.reference.type.secondary;
+
+    return Container(
+      width: 300.0,
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: () async {
+            await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) {
+                  return secondaryTypeInput();
+                });
+
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Secondary type (e.g. Thriller)',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      secondaryType != null && secondaryType.isNotEmpty
+                          ? secondaryType
+                          : 'Tap to edit',
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.filter_2),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget secondaryTypeInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: CustomScrollView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 80.0,
+              left: 40.0,
+              right: 40.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: secondaryTypeController,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.filter_2),
+                      labelText: "Secondary type (e.g. Thriller)",
+                      alignLabelWithHint: true,
+                    ),
+                    minLines: 1,
+                    maxLines: null,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.reference.type.secondary = newValue;
+                    },
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showAvatarDialog() {
+    showMaterialModalBottomSheet(
+        context: context,
+        builder: (context, scrollController) {
+          return Scaffold(
+            body: ListView(
+              physics: ClampingScrollPhysics(),
+              controller: scrollController,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: SizedBox(
+                    width: 250.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          "Reference image's URL",
-                          style: TextStyle(
-                            fontSize: 20.0,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            CircleButton(
+                              onTap: () => Navigator.of(context).pop(),
+                              icon: Icon(
+                                Icons.close,
+                                size: 20.0,
+                                color: stateColors.primary,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                    child: Opacity(
+                                      opacity: 0.6,
+                                      child: Text(
+                                        "Reference illustration",
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "You can either provide an online link or upload a new picture.",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40.0),
+                        ),
+                        TextField(
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText:
+                                AddQuoteInputs.author.urls.image.length > 0
+                                    ? AddQuoteInputs.author.urls.image
+                                    : 'URL',
                           ),
+                          onChanged: (newValue) {
+                            tempImgUrl = newValue;
+                          },
                         ),
                       ],
                     ),
                   ),
-
-                  TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: AddQuoteInputs.reference.urls.image.length > 0 ?
-                        AddQuoteInputs.reference.urls.image : 'URL',
-                    ),
-                    onChanged: (newValue) {
-                      tempImgUrl = newValue;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'CANCEL',
-               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text(
-                'SAVE',
-                style: TextStyle(
-                  color: Colors.green,
                 ),
-              ),
-              onPressed: () {
-                setState(() {
-                  AddQuoteInputs.reference.urls.image = tempImgUrl;
-                });
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        child: Text(
+                          'CANCEL',
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text(
+                          'SAVE',
+                          style: TextStyle(
+                            color: Colors.green,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            AddQuoteInputs.author.urls.image = tempImgUrl;
+                          });
 
-                Navigator.of(context).pop();
-              },
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        );
-      }
-    );
+          );
+        });
   }
 
   void showLinkInputSheet({
@@ -610,7 +904,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                width: 300.0,
+                width: 250.0,
                 child: TextField(
                   autofocus: true,
                   controller: linkInputController,
@@ -624,7 +918,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   },
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(
                   left: 40.0,
@@ -632,11 +925,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 ),
                 child: RaisedButton(
                   onPressed: onSave != null
-                    ? () {
-                      Navigator.pop(context);
-                      onSave(inputUrl);
-                    }
-                    : null,
+                      ? () {
+                          Navigator.pop(context);
+                          onSave(inputUrl);
+                        }
+                      : null,
                   color: stateColors.primary,
                   child: Text(
                     'Save',
@@ -646,7 +939,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   ),
                 ),
               ),
-
               FlatButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text('Cancel'),
