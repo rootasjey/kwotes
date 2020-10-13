@@ -10,39 +10,26 @@ class HelpContent extends StatelessWidget {
         children: <Widget>[
           SizedBox(
             width: 500.0,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 40.0),
-              child: Text(
-                'Help',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                ),
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: 500.0,
             child: Opacity(
               opacity: .6,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextBlock(
-                    text: "Only the quote's content and a topic are required for submission",
+                    text:
+                        "Only the quote's content and a topic are required for submission.",
                   ),
-
                   TextBlock(
-                    text: 'Quotes with an author or a reference are preferred. A reference can be a movie, a book, a song, a game or from any cultural material',
+                    text:
+                        'Quotes with an author or a reference are preferred. A reference can be a movie, a book, a song, a game or from any cultural material.',
                   ),
-
                   TextBlock(
-                    text: 'The moderators can reject, remove or modify your quotes without notice, before or after validation',
+                    text:
+                        'The moderators can reject, remove or modify your quotes without notice, before or after validation.',
                   ),
-
                   TextBlock(
-                    text: 'Explicit, offensive and disrespectful words and ideas can be rejected',
+                    text:
+                        'Explicit, offensive and disrespectful words and ideas can be rejected.',
                   ),
                 ],
               ),

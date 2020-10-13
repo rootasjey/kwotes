@@ -8,11 +8,16 @@ class TextBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 17.0,
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
+          ),
         ),
       ),
     );
