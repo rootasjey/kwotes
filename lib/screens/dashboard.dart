@@ -704,7 +704,7 @@ class _DashboardState extends State<Dashboard> {
       child: Padding(
         padding: const EdgeInsets.only(
           left: 50.0,
-          bottom: 60.0,
+          bottom: 30.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
