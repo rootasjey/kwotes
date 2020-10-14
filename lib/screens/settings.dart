@@ -371,15 +371,18 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget body() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        accountSettings(),
-        Divider(
-          thickness: 1.0,
-          height: 50.0,
-        ),
-        appSettings(),
-      ]),
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 60.0),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          accountSettings(),
+          Divider(
+            thickness: 1.0,
+            height: 50.0,
+          ),
+          appSettings(),
+        ]),
+      ),
     );
   }
 

@@ -40,10 +40,17 @@ class _HomeAppBarState extends State<HomeAppBar> {
             final isNarrow = constrains.crossAxisExtent < 700.0;
             final leftPadding = isNarrow ? 0.0 : 60.0;
 
+            bool showUserMenu = !isNarrow;
+
+            if (widget.showUserMenu != null) {
+              showUserMenu = showUserMenu;
+            }
+
             return SliverAppBar(
               floating: true,
               snap: true,
               pinned: true,
+              toolbarHeight: 80.0,
               backgroundColor: stateColors.appBackground.withOpacity(1.0),
               automaticallyImplyLeading: false,
               title: Padding(
@@ -64,7 +71,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                         ),
                       ),
                     AppIconHeader(
-                      size: 40.0,
+                      size: 30.0,
                       padding: const EdgeInsets.only(left: 16.0),
                       onTap: widget.onTapIconHeader,
                     ),
@@ -87,7 +94,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           ),
                         ),
                       ),
-                    if (widget.showUserMenu) userSection(isNarrow),
+                    if (showUserMenu) userSection(isNarrow),
                     if (widget.showCloseButton) closeButton(),
                   ],
                 ),
