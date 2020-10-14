@@ -98,7 +98,7 @@ class _SettingsState extends State<Settings> {
               Column(
                 children: <Widget>[
                   FadeInY(
-                    delay: 1.0,
+                    delay: 0.0,
                     beginY: 50.0,
                     child: avatar(isUserConnected),
                   ),
@@ -111,18 +111,18 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       FadeInY(
-                        delay: 1.2,
+                        delay: 0.2,
                         beginY: 50.0,
                         child: inputDisplayName(isUserConnected),
                       ),
                       Padding(padding: const EdgeInsets.only(top: 20.0)),
                       FadeInY(
-                        delay: 1.3,
+                        delay: 0.3,
                         beginY: 50.0,
                         child: emailButton(),
                       ),
                       FadeInY(
-                        delay: 1.4,
+                        delay: 0.4,
                         beginY: 50.0,
                         child: langSelect(),
                       ),
@@ -153,7 +153,7 @@ class _SettingsState extends State<Settings> {
           spacing: 15.0,
           children: <Widget>[
             FadeInX(
-              delay: 3.0,
+              delay: 0.0,
               beginX: 50.0,
               child: Column(
                 children: <Widget>[
@@ -182,7 +182,7 @@ class _SettingsState extends State<Settings> {
                     ),
                   ),
                   Opacity(
-                    opacity: .8,
+                    opacity: 0.8,
                     child: Text(
                       'Update password',
                       style: TextStyle(
@@ -194,7 +194,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             FadeInX(
-              delay: 3.5,
+              delay: 0.2,
               beginX: 50.0,
               child: Column(
                 children: <Widget>[
