@@ -319,23 +319,20 @@ class _DashboardState extends State<Dashboard> {
         height: 100.0,
         thickness: 1.0,
       ),
-      Padding(
-        padding: const EdgeInsets.only(left: 40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInY(
-              delay: 0.3,
-              beginY: beginY,
-              child: settingsButton(),
-            ),
-            FadeInY(
-              delay: 0.4,
-              beginY: beginY,
-              child: helpCenterButton(),
-            ),
-          ],
-        ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FadeInY(
+            delay: 0.3,
+            beginY: beginY,
+            child: settingsButton(),
+          ),
+          FadeInY(
+            delay: 0.4,
+            beginY: beginY,
+            child: helpCenterButton(),
+          ),
+        ],
       ),
     ];
   }
