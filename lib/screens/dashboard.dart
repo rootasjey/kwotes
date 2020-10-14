@@ -37,6 +37,7 @@ class _DashboardState extends State<Dashboard> {
   String avatarUrl = '';
   bool canManage = false;
   bool prevIsAuthenticated = false;
+  bool isAccountAdvVisible = false;
 
   double beginY = 20.0;
 
@@ -285,15 +286,28 @@ class _DashboardState extends State<Dashboard> {
   Widget bulletPoint({String text}) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: Opacity(
-        opacity: 0.6,
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w300,
+      child: Row(
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            color: Colors.green,
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+          ),
+          Expanded(
+            child: Opacity(
+              opacity: 0.6,
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -690,24 +704,36 @@ class _DashboardState extends State<Dashboard> {
       child: Padding(
         padding: const EdgeInsets.only(
           left: 50.0,
-          top: 40.0,
           bottom: 60.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'WHY AN ACCOUNT?',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w600,
+            FlatButton(
+              onPressed: () =>
+                  setState(() => isAccountAdvVisible = !isAccountAdvVisible),
+              child: Opacity(
+                opacity: 0.8,
+                child: Text(
+                  'WHY AN ACCOUNT?',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
-            Padding(padding: const EdgeInsets.only(top: 10.0)),
-            bulletPoint(text: '- Favourites quotes'),
-            bulletPoint(text: '- Create thematic lists'),
-            bulletPoint(text: '- Propose new quotes'),
-            bulletPoint(text: '- & more...'),
+            if (isAccountAdvVisible)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(padding: const EdgeInsets.only(top: 10.0)),
+                  bulletPoint(text: 'Favourites quotes'),
+                  bulletPoint(text: 'Create thematic lists'),
+                  bulletPoint(text: 'Propose new quotes'),
+                  bulletPoint(text: '& more...'),
+                ],
+              ),
           ],
         ),
       ),
