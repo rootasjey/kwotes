@@ -146,26 +146,24 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget accountActions(bool isUserConnected) {
-    return Observer(builder: (_) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 40.0),
-        child: Wrap(
-          spacing: 15.0,
-          children: <Widget>[
-            FadeInX(
-              delay: 0.0,
-              beginX: 50.0,
-              child: updatePasswordButton(),
-            ),
-            FadeInX(
-              delay: 0.2,
-              beginX: 50.0,
-              child: deleteAccountButton(),
-            )
-          ],
-        ),
-      );
-    });
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 40.0),
+      child: Wrap(
+        spacing: 15.0,
+        children: <Widget>[
+          FadeInX(
+            delay: 0.0,
+            beginX: 50.0,
+            child: updatePasswordButton(),
+          ),
+          FadeInX(
+            delay: 0.2,
+            beginX: 50.0,
+            child: deleteAccountButton(),
+          )
+        ],
+      ),
+    );
   }
 
   Widget appSettings() {
