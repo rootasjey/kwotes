@@ -155,87 +155,12 @@ class _SettingsState extends State<Settings> {
             FadeInX(
               delay: 0.0,
               beginX: 50.0,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(10.0),
-                    width: 90.0,
-                    height: 90.0,
-                    child: Card(
-                      elevation: 4.0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => EditPassword()));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Image.asset(
-                            'assets/images/lock-${stateColors.iconExt}.png',
-                            width: 30.0,
-                            height: 30.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Opacity(
-                    opacity: 0.8,
-                    child: Text(
-                      'Update password',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              child: updatePasswordButton(),
             ),
             FadeInX(
               delay: 0.2,
               beginX: 50.0,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(10.0),
-                    width: 90.0,
-                    height: 90.0,
-                    child: Card(
-                      elevation: 4.0,
-                      child: InkWell(
-                        onTap: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => DeleteAccount()));
-
-                          if (!userState.isUserConnected) {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (_) => Dashboard()));
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Image.asset(
-                            'assets/images/delete-user-${stateColors.iconExt}.png',
-                            width: 30.0,
-                            height: 30.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Opacity(
-                    opacity: .8,
-                    child: Text(
-                      'Delete account',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              child: deleteAccountButton(),
             )
           ],
         ),
@@ -383,6 +308,45 @@ class _SettingsState extends State<Settings> {
           appSettings(),
         ]),
       ),
+    );
+  }
+
+  Widget deleteAccountButton() {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          width: 90.0,
+          height: 90.0,
+          child: Card(
+            elevation: 4.0,
+            child: InkWell(
+              onTap: () async {
+                await Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => DeleteAccount()));
+
+                if (!userState.isUserConnected) {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => Dashboard()));
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Icon(Icons.person_remove_alt_1),
+              ),
+            ),
+          ),
+        ),
+        Opacity(
+          opacity: .8,
+          child: Text(
+            'Delete account',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -878,6 +842,42 @@ class _SettingsState extends State<Settings> {
             ),
         ],
       ),
+    );
+  }
+
+  Widget updatePasswordButton() {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          width: 90.0,
+          height: 90.0,
+          child: Card(
+            elevation: 4.0,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => EditPassword()));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Icon(
+                  Icons.lock,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Opacity(
+          opacity: 0.8,
+          child: Text(
+            'Update password',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
