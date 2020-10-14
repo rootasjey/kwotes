@@ -447,14 +447,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   child: TextField(
                     autofocus: true,
                     controller: nameController,
+                    focusNode: nameFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(Icons.person_outline),
-                      labelText: "Type author's name",
+                      labelText: "e.g. Freud, Aristote",
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
-                    maxLines: null,
+                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -472,35 +473,42 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     spacing: 20.0,
                     runSpacing: 20.0,
                     children: [
-                      RaisedButton.icon(
-                          onPressed: () {
-                            AddQuoteInputs.author.name = '';
-                            nameController.clear();
-                            nameFocusNode.requestFocus();
-                          },
-                          // color: Colors.white,
-                          icon: Opacity(
-                            opacity: 0.6,
-                            child: Icon(Icons.clear),
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.author.name = '';
+                          nameController.clear();
+                          nameFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Clear input',
                           ),
-                          label: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Clear',
-                            ),
-                          )),
-                      RaisedButton.icon(
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: Opacity(
-                            opacity: 0.6,
-                            child: Icon(Icons.check),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Save',
                           ),
-                          label: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Save',
-                            ),
-                          )),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -617,14 +625,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 child: TextField(
                   autofocus: true,
                   controller: jobController,
+                  focusNode: jobFocusNode,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     icon: Icon(Icons.work),
-                    labelText: "Type author's job",
+                    labelText: "e.g. Housekeeper, Lawyer, Student, Teacher",
                     alignLabelWithHint: true,
                   ),
                   minLines: 1,
-                  maxLines: null,
+                  maxLines: 1,
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -643,33 +652,41 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   runSpacing: 20.0,
                   children: [
                     OutlinedButton.icon(
-                        onPressed: () {
-                          AddQuoteInputs.author.job = '';
-                          jobController.clear();
-                          jobFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
+                      onPressed: () {
+                        AddQuoteInputs.author.job = '';
+                        jobController.clear();
+                        jobFocusNode.requestFocus();
+                      },
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(Icons.clear),
+                      ),
+                      label: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          'Clear input',
                         ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Clear',
-                          ),
-                        )),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        primary: stateColors.foreground,
+                      ),
+                    ),
                     OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(Icons.check),
+                      ),
+                      label: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          'Save',
                         ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Save',
-                          ),
-                        )),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        primary: stateColors.foreground,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -793,7 +810,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(Icons.edit),
-                      labelText: "Type author's summary...",
+                      labelText: "Once upon a time...",
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
@@ -816,33 +833,41 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     runSpacing: 20.0,
                     children: [
                       OutlinedButton.icon(
-                          onPressed: () {
-                            AddQuoteInputs.author.summary = '';
-                            summaryController.clear();
-                            summaryFocusNode.requestFocus();
-                          },
-                          icon: Opacity(
-                            opacity: 0.6,
-                            child: Icon(Icons.clear),
+                        onPressed: () {
+                          AddQuoteInputs.author.summary = '';
+                          summaryController.clear();
+                          summaryFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Clear input',
                           ),
-                          label: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Clear',
-                            ),
-                          )),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
                       OutlinedButton.icon(
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: Opacity(
-                            opacity: 0.6,
-                            child: Icon(Icons.check),
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Save',
                           ),
-                          label: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Save',
-                            ),
-                          )),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
                     ],
                   ),
                 ),

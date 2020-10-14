@@ -141,8 +141,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 icon: Icon(Icons.edit),
-                // border: OutlineInputBorder(borderSide: BorderSide.none),
-                labelText: 'Add comment about the quote...',
+                labelText: 'e.g. Another meaning for this quote is...',
               ),
               style: TextStyle(
                 fontSize: 20.0,
@@ -162,33 +161,41 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               runSpacing: 20.0,
               children: [
                 OutlinedButton.icon(
-                    onPressed: () {
-                      AddQuoteInputs.comment = '';
-                      commentController.clear();
-                      commentFocusNode.requestFocus();
-                    },
-                    icon: Opacity(
-                      opacity: 0.6,
-                      child: Icon(Icons.clear),
+                  onPressed: () {
+                    AddQuoteInputs.comment = '';
+                    commentController.clear();
+                    commentFocusNode.requestFocus();
+                  },
+                  icon: Opacity(
+                    opacity: 0.6,
+                    child: Icon(Icons.clear),
+                  ),
+                  label: Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      'Clear input',
                     ),
-                    label: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Clear',
-                      ),
-                    )),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    primary: stateColors.foreground,
+                  ),
+                ),
                 OutlinedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Opacity(
-                      opacity: 0.6,
-                      child: Icon(Icons.check),
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: Opacity(
+                    opacity: 0.6,
+                    child: Icon(Icons.check),
+                  ),
+                  label: Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      'Save',
                     ),
-                    label: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Save',
-                      ),
-                    )),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    primary: stateColors.foreground,
+                  ),
+                ),
               ],
             ),
           ),

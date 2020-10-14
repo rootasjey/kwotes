@@ -21,6 +21,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   String tempImgUrl = '';
 
   final nameFocusNode = FocusNode();
+  final primaryTypeFocusNode = FocusNode();
+  final secondaryTypeFocusNode = FocusNode();
+  final summaryFocusNode = FocusNode();
 
   final affiliateUrlController = TextEditingController();
   final amazonUrlController = TextEditingController();
@@ -208,31 +211,72 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget nameInput({ScrollController scrollController}) {
     return Scaffold(
-      body: CustomScrollView(
+      body: ListView(
         physics: ClampingScrollPhysics(),
         controller: scrollController,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-              left: 40.0,
-              right: 40.0,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed([
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Name",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Auto suggestions will show when you'll start typing.",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
                     controller: nameController,
+                    focusNode: nameFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(Icons.person_outline),
-                      labelText: "Type reference's name",
+                      labelText: "e.g. 1984, Interstellar",
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
-                    maxLines: null,
+                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -241,7 +285,55 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-              ]),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.reference.name = '';
+                          nameController.clear();
+                          nameFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Clear input',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -301,27 +393,68 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget summaryInput({ScrollController scrollController}) {
     return Scaffold(
-      body: CustomScrollView(
+      body: ListView(
         physics: ClampingScrollPhysics(),
         controller: scrollController,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-              left: 40.0,
-              right: 40.0,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed([
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Summary",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Write a short summary about this reference. It can be the first Wikipedia paragraph.",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
                     controller: summaryController,
+                    focusNode: summaryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(Icons.edit),
-                      labelText: "Type reference's summary...",
+                      labelText: "Once upon a time...",
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
@@ -330,11 +463,59 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       fontSize: 20.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.reference.summary = newValue;
+                      AddQuoteInputs.author.summary = newValue;
                     },
                   ),
                 ),
-              ]),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.author.summary = '';
+                          summaryController.clear();
+                          summaryFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Clear input',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -636,31 +817,72 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget primaryTypeInput({ScrollController scrollController}) {
     return Scaffold(
-      body: CustomScrollView(
+      body: ListView(
         physics: ClampingScrollPhysics(),
         controller: scrollController,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-              left: 40.0,
-              right: 40.0,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed([
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Primaey type",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "The primary type can be a Book, a Film, a Song for example.",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
                     controller: primaryTypeController,
+                    focusNode: primaryTypeFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(Icons.filter_1),
-                      labelText: "Primary type (e.g. TV series)",
+                      labelText: "e.g. TV series, Book",
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
-                    maxLines: null,
+                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -669,7 +891,55 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-              ]),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.reference.type.primary = '';
+                          primaryTypeController.clear();
+                          primaryTypeFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Clear input',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -729,27 +999,68 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget secondaryTypeInput({ScrollController scrollController}) {
     return Scaffold(
-      body: CustomScrollView(
+      body: ListView(
         physics: ClampingScrollPhysics(),
         controller: scrollController,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.only(
-              top: 80.0,
-              left: 40.0,
-              right: 40.0,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed([
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Secondary type",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "The secondary type is the sub-category. Thriller, Drama, Fiction, Horror are example.",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                  padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
                     controller: secondaryTypeController,
+                    focusNode: secondaryTypeFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(Icons.filter_2),
-                      labelText: "Secondary type (e.g. Thriller)",
+                      labelText: "e.g. Thriller, Drama",
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
@@ -762,7 +1073,55 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-              ]),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.reference.type.secondary = '';
+                          secondaryTypeController.clear();
+                          secondaryTypeFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Clear input',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
