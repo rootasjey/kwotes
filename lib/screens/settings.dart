@@ -768,7 +768,6 @@ class _SettingsState extends State<Settings> {
         ? Padding(
             padding: const EdgeInsets.only(
               left: 60.0,
-              top: 80.0,
             ),
             child: Row(
               children: [
