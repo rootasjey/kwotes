@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
@@ -13,17 +15,15 @@ class EditPassword extends StatefulWidget {
 }
 
 class _EditPasswordState extends State<EditPassword> {
-  String password = '';
-  String newPassword = '';
+  bool isCompleted = false;
+  bool isUpdating = false;
+
+  double beginY = 30.0;
 
   final newPasswordNode = FocusNode();
 
-  bool isUpdating = false;
-  bool isCompleted = false;
-
-  double beginY = 100.0;
-  final delay = 1.0;
-  final delayStep = 1.2;
+  String password = '';
+  String newPassword = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +31,42 @@ class _EditPasswordState extends State<EditPassword> {
       body: CustomScrollView(
         slivers: <Widget>[
           SimpleAppBar(
-            textTitle: 'Update password',
-            subHeader: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'If your password is old or compromised',
+            expandedHeight: 90.0,
+            title: Row(
+              children: [
+                CircleButton(
+                    onTap: () => Navigator.of(context).pop(),
+                    icon:
+                        Icon(Icons.arrow_back, color: stateColors.foreground)),
+                AppIconHeader(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  size: 30.0,
                 ),
-              ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Update password',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Opacity(
+                        opacity: .6,
+                        child: Text(
+                          'If your password is old or compromised',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           body(),
@@ -92,9 +119,8 @@ class _EditPasswordState extends State<EditPassword> {
   }
 
   Widget currentPasswordInput() {
-    return Container(
+    return SizedBox(
       width: 400.0,
-      padding: const EdgeInsets.only(top: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -124,10 +150,11 @@ class _EditPasswordState extends State<EditPassword> {
 
   Widget helpCard() {
     return Container(
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: 60.0,
         left: 25.0,
         right: 25.0,
+        bottom: 40.0,
       ),
       width: 500.0,
       child: Card(
@@ -202,22 +229,22 @@ class _EditPasswordState extends State<EditPassword> {
         Column(
           children: <Widget>[
             FadeInY(
-              delay: delay + (0 * delayStep),
+              delay: 0.0,
               beginY: beginY,
               child: helpCard(),
             ),
             FadeInY(
-              delay: delay + (1 * delayStep),
+              delay: 0.1,
               beginY: beginY,
               child: currentPasswordInput(),
             ),
             FadeInY(
-              delay: delay + (2 * delayStep),
+              delay: 0.2,
               beginY: beginY,
               child: newPasswordInput(),
             ),
             FadeInY(
-              delay: delay + (3 * delayStep),
+              delay: 0.3,
               beginY: beginY,
               child: validationButton(),
             ),
@@ -234,8 +261,8 @@ class _EditPasswordState extends State<EditPassword> {
     return Container(
       width: 400.0,
       padding: const EdgeInsets.only(
-        top: 40.0,
-        bottom: 120.0,
+        top: 20.0,
+        bottom: 60.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,15 +323,12 @@ class _EditPasswordState extends State<EditPassword> {
   }
 
   Widget validationButton() {
-    return RaisedButton(
+    return OutlinedButton(
       onPressed: () {
         updatePassword();
       },
-      color: stateColors.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
-        ),
+      style: OutlinedButton.styleFrom(
+        primary: stateColors.primary,
       ),
       child: SizedBox(
         width: 240.0,
