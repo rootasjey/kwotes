@@ -6,7 +6,7 @@ import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/edit_email.dart';
-import 'package:memorare/screens/edit_password.dart';
+import 'package:memorare/screens/update_password.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
@@ -44,7 +44,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     Quotidians(),
     Settings(),
     EditEmail(),
-    EditPassword(),
+    UpdatePassword(),
     DeleteAccount(),
   ];
 

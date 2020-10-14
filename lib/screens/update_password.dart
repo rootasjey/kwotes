@@ -9,12 +9,12 @@ import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/snack.dart';
 
-class EditPassword extends StatefulWidget {
+class UpdatePassword extends StatefulWidget {
   @override
-  _EditPasswordState createState() => _EditPasswordState();
+  _UpdatePasswordState createState() => _UpdatePasswordState();
 }
 
-class _EditPasswordState extends State<EditPassword> {
+class _UpdatePasswordState extends State<UpdatePassword> {
   bool isCompleted = false;
   bool isUpdating = false;
 

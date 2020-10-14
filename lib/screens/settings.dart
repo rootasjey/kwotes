@@ -11,7 +11,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/edit_email.dart';
-import 'package:memorare/screens/edit_password.dart';
+import 'package:memorare/screens/update_password.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -856,8 +856,8 @@ class _SettingsState extends State<Settings> {
             elevation: 4.0,
             child: InkWell(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => EditPassword()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => UpdatePassword()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
