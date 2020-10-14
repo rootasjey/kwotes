@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/settings.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
@@ -23,7 +23,7 @@ class Rerouter {
     switch (value) {
       case AccountRoute:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => Account()),
+          MaterialPageRoute(builder: (_) => Settings()),
         );
         break;
       case AddQuoteContentRoute:

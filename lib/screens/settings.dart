@@ -21,12 +21,12 @@ import 'package:memorare/utils/push_notifications.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
-class Account extends StatefulWidget {
+class Settings extends StatefulWidget {
   @override
-  _AccountState createState() => _AccountState();
+  _SettingsState createState() => _SettingsState();
 }
 
-class _AccountState extends State<Account> {
+class _SettingsState extends State<Settings> {
   bool isCheckingName = false;
   bool isLoadingLang = false;
   bool isLoadingName = false;

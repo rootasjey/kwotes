@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/settings.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/delete_account.dart';
@@ -42,7 +42,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     RecentQuotes(),
     AdminTempQuotes(),
     Quotidians(),
-    Account(),
+    Settings(),
     EditEmail(),
     EditPassword(),
     DeleteAccount(),

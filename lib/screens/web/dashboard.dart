@@ -6,7 +6,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/settings.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
@@ -90,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
             child: InkWell(
               onTap: () {
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Account()));
+                    .push(MaterialPageRoute(builder: (_) => Settings()));
               },
               child: Container(
                 padding: const EdgeInsets.all(60.0),
@@ -385,7 +385,7 @@ class _DashboardState extends State<Dashboard> {
             child: itemCard(
               color: Color(0xFF414042),
               onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Account())),
+                  .push(MaterialPageRoute(builder: (_) => Settings())),
               icon: Icon(
                 Icons.settings,
                 color: Colors.white,

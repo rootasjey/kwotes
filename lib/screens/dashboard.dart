@@ -6,7 +6,7 @@ import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
-import 'package:memorare/screens/account.dart';
+import 'package:memorare/screens/settings.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
@@ -428,7 +428,7 @@ class _DashboardState extends State<Dashboard> {
         style: TextStyle(fontSize: 20.0),
       ),
       onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => Account())),
+          .push(MaterialPageRoute(builder: (_) => Settings())),
     );
   }
 
