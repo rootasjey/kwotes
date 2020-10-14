@@ -94,28 +94,28 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
           left: leftTitlePadding,
           top: 60.0,
         ),
-        child: Row(
-          children: <Widget>[
-            if (widget.showNavBackIcon) ...[
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                tooltip: 'Back',
-                icon: Icon(Icons.arrow_back),
-              ),
-              Padding(padding: const EdgeInsets.only(right: 45.0)),
-            ],
-            widget.title != null
-                ? widget.title
-                : Text(
+        child: widget.title != null
+            ? widget.title
+            : Row(
+                children: <Widget>[
+                  if (widget.showNavBackIcon) ...[
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      tooltip: 'Back',
+                      icon: Icon(Icons.arrow_back),
+                    ),
+                    Padding(padding: const EdgeInsets.only(right: 45.0)),
+                  ],
+                  Text(
                     widget.textTitle,
                     style: TextStyle(
                       fontSize: titleFontSize,
                     ),
                   ),
-          ],
-        ),
+                ],
+              ),
       ),
     );
   }
