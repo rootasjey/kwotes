@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
-import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/account.dart';
@@ -12,7 +11,6 @@ import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
-import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/published_quotes.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/quotidians.dart';
@@ -34,7 +32,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String avatarUrl = '';
   bool canManage = false;
   bool prevIsAuthenticated = false;
   bool isAccountAdvVisible = false;
@@ -44,8 +41,24 @@ class _DashboardState extends State<Dashboard> {
   final scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Add quote"),
+        icon: Icon(Icons.add),
+        onPressed: () {
+          AddQuoteInputs.clearAll();
+          AddQuoteInputs.navigatedFromPath = 'dashboard';
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+        },
+      ),
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
@@ -56,71 +69,62 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget actionsButtons() {
-    return SizedBox(
-      height: 125.0,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        children: <Widget>[
-          FadeInX(
-            delay: 1.0,
-            beginX: 50.0,
-            child: signoutButton(),
-          ),
-          FadeInX(
-            delay: 1.5,
-            beginX: 50.0,
-            child: newQuoteButton(),
-          ),
-          FadeInX(
-            delay: 2.0,
-            beginX: 50.0,
-            child: quotidianButton(),
-          ),
-        ],
-      ),
-    );
-  }
-
   List<Widget> adminWidgets(BuildContext context) {
     return [
       ControlledAnimation(
-        duration: 1.seconds,
+        duration: 250.milliseconds,
         tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
         builder: (_, value) {
           return SizedBox(
             width: value,
-            child: Divider(height: 30.0),
+            child: Divider(
+              thickness: 1.0,
+              height: 30.0,
+            ),
           );
         },
       ),
-      ListTile(
-        leading: Icon(Icons.question_answer, size: 30.0),
-        title: Text(
-          'All published',
-          style: TextStyle(fontSize: 20.0),
+      FadeInY(
+        delay: 0.9,
+        beginY: beginY,
+        child: ListTile(
+          contentPadding: const EdgeInsets.only(left: 50.0),
+          leading: Icon(Icons.question_answer, size: 30.0),
+          title: Text(
+            'All published',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
         ),
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
       ),
-      ListTile(
-        leading: Icon(Icons.timelapse, size: 30.0),
-        title: Text(
-          'All in validation',
-          style: TextStyle(fontSize: 20.0),
+      FadeInY(
+        delay: 1.0,
+        beginY: beginY,
+        child: ListTile(
+          contentPadding: const EdgeInsets.only(left: 50.0),
+          leading: Icon(Icons.timelapse, size: 30.0),
+          title: Text(
+            'All in validation',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
         ),
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
       ),
-      ListTile(
-        leading: Icon(Icons.wb_sunny, size: 30.0),
-        title: Text(
-          'Quotidians',
-          style: TextStyle(fontSize: 20.0),
+      FadeInY(
+        delay: 1.1,
+        beginY: beginY,
+        child: ListTile(
+          contentPadding: const EdgeInsets.only(left: 50.0),
+          leading: Icon(Icons.wb_sunny, size: 30.0),
+          title: Text(
+            'Quotidians',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => Quotidians())),
         ),
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => Quotidians())),
       ),
     ];
   }
@@ -153,98 +157,43 @@ class _DashboardState extends State<Dashboard> {
 
   List<Widget> authWidgets(BuildContext context) {
     return [
-      actionsButtons(),
-      Padding(
-        padding: EdgeInsets.only(top: 20.0),
-        child: Column(
-          children: <Widget>[
-            ControlledAnimation(
-              duration: 1.seconds,
-              tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
-              builder: (_, value) {
-                return SizedBox(
-                  width: value,
-                  child: Divider(),
-                );
-              },
-            ),
-            FadeInY(
-              delay: 5.0,
-              beginY: beginY,
-              child: draftsButton(),
-            ),
-            FadeInY(
-              delay: 6.0,
-              beginY: beginY,
-              child: listsButton(),
-            ),
-            FadeInY(
-              delay: 7.0,
-              beginY: beginY,
-              child: tempQuotesButton(),
-            ),
-            FadeInY(
-              delay: 8.0,
-              beginY: beginY,
-              child: favButton(),
-            ),
-            FadeInY(
-              delay: 9.0,
-              beginY: beginY,
-              child: pubQuotesButton(),
-            ),
-            FadeInY(
-              delay: 10.0,
-              beginY: beginY,
-              child: settingsButton(),
-            ),
-          ],
-        ),
+      Column(
+        children: <Widget>[
+          FadeInY(
+            delay: 0.1,
+            beginY: beginY,
+            child: draftsButton(),
+          ),
+          FadeInY(
+            delay: 0.2,
+            beginY: beginY,
+            child: listsButton(),
+          ),
+          FadeInY(
+            delay: 0.3,
+            beginY: beginY,
+            child: tempQuotesButton(),
+          ),
+          FadeInY(
+            delay: 0.4,
+            beginY: beginY,
+            child: favButton(),
+          ),
+          FadeInY(
+            delay: 0.5,
+            beginY: beginY,
+            child: pubQuotesButton(),
+          ),
+          FadeInY(
+            delay: 0.6,
+            beginY: beginY,
+            child: settingsButton(),
+          ),
+          FadeInY(delay: 0.7, beginY: beginY, child: helpCenterButton()),
+          FadeInY(delay: 0.8, beginY: beginY, child: signOutButton()),
+        ],
       ),
     ];
-  }
-
-  Widget avatarContainer() {
-    String userName = userState.username;
-    String greetings = 'Welcome back $userName!';
-
-    if (userName == null || userName.isEmpty) {
-      greetings = 'Hi!';
-    }
-
-    if (prevIsAuthenticated != userState.isUserConnected) {
-      prevIsAuthenticated = userState.isUserConnected;
-
-      if (userState.isUserConnected) {
-        fetchUserPP();
-      } else {
-        avatarUrl = '';
-      }
-    }
-
-    return Column(
-      children: [
-        FadeInY(
-          delay: 1,
-          beginY: beginY,
-          child: circlAvatar(),
-        ),
-        FadeInY(
-          delay: 2,
-          beginY: beginY,
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 40.0),
-            child: Text(
-              greetings,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget body() {
@@ -254,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
       final isConnected = userState.isUserConnected;
 
       if (isConnected) {
-        children.add(avatarContainer());
+        // children.add(avatarContainer());
         children.addAll(authWidgets(context));
 
         if (canManage) {
@@ -267,14 +216,12 @@ class _DashboardState extends State<Dashboard> {
 
       return SliverPadding(
         padding: const EdgeInsets.only(
-          bottom: 200.0,
+          bottom: 150.0,
         ),
         sliver: SliverList(
           delegate: SliverChildListDelegate.fixed([
             Column(
-              crossAxisAlignment: isConnected
-                  ? CrossAxisAlignment.center
-                  : CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: children,
             )
           ]),
@@ -312,45 +259,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget circlAvatar() {
-    String path = avatarUrl.replaceFirst('local:', '');
-    path = 'assets/images/$path-${stateColors.iconExt}.png';
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0, bottom: 60.0),
-      child: Material(
-        elevation: 4.0,
-        shape: CircleBorder(),
-        clipBehavior: Clip.hardEdge,
-        child: InkWell(
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: avatarUrl.isEmpty
-                ? Image.asset('assets/images/user-${stateColors.iconExt}.png',
-                    width: 100.0)
-                : Image.asset(path, width: 100.0),
-          ),
-          onTap: () {
-            showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog(
-                    content: avatarUrl.isEmpty
-                        ? Image.asset(
-                            'assets/images/user-${stateColors.iconExt}.png',
-                            width: 100.0,
-                            scale: .8,
-                          )
-                        : Image.asset(path, width: 100.0),
-                  );
-                });
-          },
-        ),
-      ),
-    );
-  }
-
   Widget connectionButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -370,6 +278,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget draftsButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.edit,
         size: 30.0,
@@ -385,6 +294,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget favButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.favorite,
         size: 30.0,
@@ -401,7 +311,7 @@ class _DashboardState extends State<Dashboard> {
   List<Widget> guestWidgets(BuildContext context) {
     return [
       FadeInY(
-        delay: 3.0,
+        delay: 0.2,
         beginY: beginY,
         child: connectionButtons(),
       ),
@@ -415,12 +325,12 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FadeInY(
-              delay: 4.0,
+              delay: 0.3,
               beginY: beginY,
               child: settingsButton(),
             ),
             FadeInY(
-              delay: 4.5,
+              delay: 0.4,
               beginY: beginY,
               child: helpCenterButton(),
             ),
@@ -432,6 +342,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget helpCenterButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.help_outline,
         size: 30.0,
@@ -444,8 +355,38 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget signOutButton() {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
+      leading: Icon(
+        Icons.exit_to_app,
+        size: 30.0,
+      ),
+      title: Text(
+        'Sign out',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () async {
+        await appLocalStorage.clearUserAuthData();
+        await FirebaseAuth.instance.signOut();
+        userState.signOut();
+
+        setState(() {
+          canManage = false;
+        });
+
+        showSnack(
+          context: context,
+          message: 'You have been successfully disconnected.',
+          type: SnackType.success,
+        );
+      },
+    );
+  }
+
   Widget listsButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.list,
         size: 30.0,
@@ -459,44 +400,9 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget newQuoteButton() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      width: 100.0,
-      child: Column(
-        children: <Widget>[
-          Material(
-            elevation: 4,
-            shape: CircleBorder(),
-            clipBehavior: Clip.hardEdge,
-            child: IconButton(
-              onPressed: () {
-                AddQuoteInputs.clearAll();
-                AddQuoteInputs.navigatedFromPath = 'dashboard';
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-              },
-              icon: Icon(
-                Icons.add,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                'New quote',
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget pubQuotesButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.check,
         size: 30.0,
@@ -510,42 +416,9 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget quotidianButton() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      width: 100.0,
-      child: Column(
-        children: <Widget>[
-          Material(
-            elevation: 4,
-            shape: CircleBorder(),
-            clipBehavior: Clip.hardEdge,
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Home()));
-              },
-              icon: Icon(
-                Icons.wb_sunny,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                'Quotidian',
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget settingsButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.settings,
         size: 30.0,
@@ -637,53 +510,9 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget signoutButton() {
-    return Container(
-      width: 100.0,
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          Material(
-            elevation: 4,
-            shape: CircleBorder(),
-            clipBehavior: Clip.hardEdge,
-            child: IconButton(
-              onPressed: () async {
-                await appLocalStorage.clearUserAuthData();
-                await FirebaseAuth.instance.signOut();
-                userState.signOut();
-
-                setState(() {
-                  canManage = false;
-                });
-
-                showSnack(
-                  context: context,
-                  message: 'You have been successfully disconnected.',
-                  type: SnackType.success,
-                );
-              },
-              icon: Icon(
-                Icons.exit_to_app,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                'Sign out',
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget tempQuotesButton() {
     return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
       leading: Icon(
         Icons.timelapse,
         size: 30.0,
@@ -740,7 +569,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future fetchUserPP() async {
+  Future fetchUserData() async {
     final userAuth = await userState.userAuth;
 
     final user = await Firestore.instance
@@ -749,16 +578,9 @@ class _DashboardState extends State<Dashboard> {
         .get();
 
     final data = user.data;
-    final String imageUrl = data['urls']['image'];
-
-    canManage = data['rights']['user:managequote'] ?? false;
-
-    if (avatarUrl == imageUrl) {
-      return;
-    }
 
     setState(() {
-      avatarUrl = imageUrl;
+      canManage = data['rights']['user:managequote'] ?? false;
     });
   }
 }
