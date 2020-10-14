@@ -4,6 +4,15 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
 
 class SimpleAppBar extends StatefulWidget {
+  // Appbar's height.
+  final double expandedHeight;
+
+  /// Typically open a drawer. Menu icon will be hidden if null.
+  final Function onPressedMenu;
+
+  /// If true, the back icon will be visible.
+  final bool showNavBackIcon;
+
   /// If set, will be shown at the bottom of the title.
   final Widget subHeader;
 
@@ -13,14 +22,8 @@ class SimpleAppBar extends StatefulWidget {
   /// Will override [textTitle] if set.
   final Widget title;
 
-  /// Typically open a drawer. Menu icon will be hidden if null.
-  final Function onPressedMenu;
-
-  /// If true, the back icon will be visible.
-  final bool showNavBackIcon;
-
-  // Appbar's height.
-  final double expandedHeight;
+  /// Distance between the top of the screen and the title.
+  final double topTitleSpacing;
 
   SimpleAppBar({
     this.showNavBackIcon = true,
@@ -29,6 +32,7 @@ class SimpleAppBar extends StatefulWidget {
     this.textTitle,
     this.title,
     this.expandedHeight = 210.0,
+    this.topTitleSpacing = 20.0,
   });
 
   @override
@@ -92,7 +96,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
       child: Padding(
         padding: EdgeInsets.only(
           left: leftTitlePadding,
-          top: 60.0,
+          top: widget.topTitleSpacing,
         ),
         child: widget.title != null
             ? widget.title
