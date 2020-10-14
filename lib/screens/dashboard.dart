@@ -546,15 +546,16 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget signinButton() {
-    return RaisedButton(
+    return FlatButton(
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       },
-      color: stateColors.primary,
-      textColor: Colors.white,
+      textColor: stateColors.primary,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(7.0),
-      ),
+          borderRadius: BorderRadius.circular(7.0),
+          side: BorderSide(
+            color: stateColors.primary,
+          )),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: 220.0,
@@ -584,15 +585,16 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget signupButton() {
-    return RaisedButton(
+    return FlatButton(
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signup()));
       },
-      color: Colors.orange.shade600,
-      textColor: Colors.white,
+      textColor: Colors.orange.shade600,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(7.0),
-      ),
+          borderRadius: BorderRadius.circular(7.0),
+          side: BorderSide(
+            color: Colors.orange.shade600,
+          )),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: 220.0,
