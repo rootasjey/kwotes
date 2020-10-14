@@ -33,19 +33,19 @@ class HomeAppBar extends StatefulWidget {
 class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return SliverLayoutBuilder(
-          builder: (context, constrains) {
-            final isNarrow = constrains.crossAxisExtent < 700.0;
-            final leftPadding = isNarrow ? 0.0 : 60.0;
+    return SliverLayoutBuilder(
+      builder: (context, constrains) {
+        final isNarrow = constrains.crossAxisExtent < 700.0;
+        final leftPadding = isNarrow ? 0.0 : 60.0;
 
-            bool showUserMenu = !isNarrow;
+        bool showUserMenu = !isNarrow;
 
-            if (widget.showUserMenu != null) {
-              showUserMenu = showUserMenu;
-            }
+        if (widget.showUserMenu != null) {
+          showUserMenu = showUserMenu;
+        }
 
+        return Observer(
+          builder: (_) {
             return SliverAppBar(
               floating: true,
               snap: true,
