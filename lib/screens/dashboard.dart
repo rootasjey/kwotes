@@ -567,17 +567,25 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future fetchUserData() async {
-    final userAuth = await userState.userAuth;
+    try {
+      final userAuth = await userState.userAuth;
 
-    final user = await Firestore.instance
-        .collection('users')
-        .document(userAuth.uid)
-        .get();
+      if (userAuth == null) {
+        return;
+      }
 
-    final data = user.data;
+      final user = await Firestore.instance
+          .collection('users')
+          .document(userAuth.uid)
+          .get();
 
-    setState(() {
-      canManage = data['rights']['user:managequote'] ?? false;
-    });
+      final data = user.data;
+
+      setState(() {
+        canManage = data['rights']['user:managequote'] ?? false;
+      });
+    } on Exception catch (error) {
+      debugPrint(error.toString());
+    }
   }
 }
