@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:supercharged/supercharged.dart';
-
-import '../screens/signin.dart';
 
 void checkAuth({BuildContext context}) async {
   try {
