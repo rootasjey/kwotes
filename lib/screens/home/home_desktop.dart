@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/components/web/discover_references.dart';
 import 'package:memorare/components/web/discover_authors.dart';
 import 'package:memorare/components/web/footer.dart';
-import 'package:memorare/components/web/full_page_quotidian.dart';
+import 'package:memorare/components/quotidian_page.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/components/web/topics.dart';
 import 'package:supercharged/supercharged.dart';
@@ -32,7 +32,7 @@ class _HomeDesktopState extends State<HomeDesktop> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              FullPageQuotidian(),
+              QuotidianPage(),
               Topics(),
               DiscoverReferences(),
               DiscoverAuthors(),

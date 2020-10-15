@@ -18,18 +18,18 @@ import 'package:supercharged/supercharged.dart';
 
 String _prevLang;
 
-class FullPageQuotidian extends StatefulWidget {
+class QuotidianPage extends StatefulWidget {
   final bool noAuth;
 
-  FullPageQuotidian({
+  QuotidianPage({
     this.noAuth = false,
   });
 
   @override
-  _FullPageQuotidianState createState() => _FullPageQuotidianState();
+  _QuotidianPageState createState() => _QuotidianPageState();
 }
 
-class _FullPageQuotidianState extends State<FullPageQuotidian> {
+class _QuotidianPageState extends State<QuotidianPage> {
   bool isPrevFav = false;
   bool hasFetchedFav = false;
   bool isLoading = false;

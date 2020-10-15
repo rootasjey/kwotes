@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/full_page_quotidian.dart';
+import 'package:memorare/components/quotidian_page.dart';
 
 class Today extends StatefulWidget {
   @override
@@ -12,7 +12,9 @@ class _TodayState extends State<Today> {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          FullPageQuotidian(noAuth: true,),
+          QuotidianPage(
+            noAuth: true,
+          ),
         ],
       ),
     );
