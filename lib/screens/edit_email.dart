@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/screens/signin.dart';
@@ -19,24 +21,21 @@ class EditEmail extends StatefulWidget {
 }
 
 class _EditEmailState extends State<EditEmail> {
-  String currentEmail = '';
-  String email = '';
-  String password = '';
-
-  final passwordNode = FocusNode();
-  Timer emailTimer;
-
   bool isCheckingEmail = false;
   bool isEmailAvailable = false;
-  String emailErrorMessage = '';
-
   bool isCheckingAuth = false;
   bool isUpdating = false;
   bool isCompleted = false;
 
-  final beginY = 100.0;
-  final delay = 1.0;
-  final delayStep = 1.2;
+  final beginY = 30.0;
+  final passwordNode = FocusNode();
+
+  String currentEmail = '';
+  String email = '';
+  String emailErrorMessage = '';
+  String password = '';
+
+  Timer emailTimer;
 
   @override
   void initState() {
@@ -50,15 +49,42 @@ class _EditEmailState extends State<EditEmail> {
       body: CustomScrollView(
         slivers: <Widget>[
           SimpleAppBar(
-            textTitle: 'Update email',
-            subHeader: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'If your email is outdated',
+            expandedHeight: 90.0,
+            title: Row(
+              children: [
+                CircleButton(
+                    onTap: () => Navigator.of(context).pop(),
+                    icon:
+                        Icon(Icons.arrow_back, color: stateColors.foreground)),
+                AppIconHeader(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  size: 30.0,
                 ),
-              ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Update email',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Opacity(
+                        opacity: .6,
+                        child: Text(
+                          'If your email is outdated',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           body(),
@@ -87,22 +113,22 @@ class _EditEmailState extends State<EditEmail> {
           child: Column(
             children: <Widget>[
               FadeInY(
-                delay: delay + (0 * delayStep),
+                delay: 0.0,
                 beginY: beginY,
-                child: emailButton(),
+                child: currentEmailCard(),
               ),
               FadeInY(
-                delay: delay + (.5 * delayStep),
+                delay: 0.1,
                 beginY: beginY,
                 child: emailInput(),
               ),
               FadeInY(
-                delay: delay + (1 * delayStep),
+                delay: 0.2,
                 beginY: beginY,
                 child: passwordInput(),
               ),
               FadeInY(
-                delay: delay + (2 * delayStep),
+                delay: 0.3,
                 beginY: beginY,
                 child: validationButton(),
               ),
@@ -148,12 +174,16 @@ class _EditEmailState extends State<EditEmail> {
     );
   }
 
-  Widget emailButton() {
+  Widget currentEmailCard() {
     return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
+      padding: const EdgeInsets.only(
+        top: 60.0,
+        bottom: 40.0,
+      ),
       child: Card(
-        child: FlatButton(
-          onPressed: () {
+        elevation: 2.0,
+        child: InkWell(
+          onTap: () {
             showDialog(
                 context: context,
                 builder: (context) {
@@ -165,18 +195,22 @@ class _EditEmailState extends State<EditEmail> {
                       ),
                     ),
                     children: <Widget>[
-                      Divider(),
+                      Divider(
+                        color: stateColors.secondary,
+                        thickness: 1.0,
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 25.0,
                           right: 25.0,
-                          top: 10.0,
                         ),
-                        child: Text(
-                          currentEmail,
-                          style: TextStyle(
-                            color: stateColors.primary,
-                            fontWeight: FontWeight.bold,
+                        child: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            currentEmail,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -186,7 +220,7 @@ class _EditEmailState extends State<EditEmail> {
           },
           child: Container(
             width: 250.0,
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               children: <Widget>[
                 Row(
@@ -225,9 +259,8 @@ class _EditEmailState extends State<EditEmail> {
   }
 
   Widget emailInput() {
-    return Container(
+    return SizedBox(
       width: 350.0,
-      padding: const EdgeInsets.only(top: 80.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -236,7 +269,7 @@ class _EditEmailState extends State<EditEmail> {
             onFieldSubmitted: (_) => passwordNode.requestFocus(),
             decoration: InputDecoration(
               icon: Icon(Icons.email),
-              labelText: 'Email',
+              labelText: 'New email',
             ),
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) async {
@@ -320,8 +353,8 @@ class _EditEmailState extends State<EditEmail> {
     return Container(
       width: 350.0,
       padding: EdgeInsets.only(
-        top: 30.0,
-        bottom: 120.0,
+        top: 20.0,
+        bottom: 60.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,13 +407,10 @@ class _EditEmailState extends State<EditEmail> {
   }
 
   Widget validationButton() {
-    return RaisedButton(
-      color: stateColors.primary,
+    return OutlinedButton(
       onPressed: () => updateEmail(),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
-        ),
+      style: OutlinedButton.styleFrom(
+        primary: stateColors.primary,
       ),
       child: SizedBox(
         width: 240.0,
@@ -390,9 +420,8 @@ class _EditEmailState extends State<EditEmail> {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Text(
-                'UPDATE',
+                'UPDATE EMAIL',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),
