@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/web/topic_page.dart';
+import 'package:memorare/screens/topic_page.dart';
 import 'package:supercharged/supercharged.dart';
 
 class TopicCardColor extends StatefulWidget {
