@@ -17,16 +17,17 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final beginY = 10.0;
 
   final affiliateUrlController = TextEditingController();
-  final amazonUrlController = TextEditingController();
+  final amazonUrlController   = TextEditingController();
   final facebookUrlController = TextEditingController();
-  final nameController = TextEditingController();
-  final jobController = TextEditingController();
-  final summaryController = TextEditingController();
-  final twitchUrlController = TextEditingController();
-  final twitterUrlController = TextEditingController();
-  final websiteUrlController = TextEditingController();
-  final wikiUrlController = TextEditingController();
-  final youtubeUrlController = TextEditingController();
+  final nameController        = TextEditingController();
+  final instaController       = TextEditingController();
+  final jobController         = TextEditingController();
+  final summaryController     = TextEditingController();
+  final twitchUrlController   = TextEditingController();
+  final twitterUrlController  = TextEditingController();
+  final websiteUrlController  = TextEditingController();
+  final wikiUrlController     = TextEditingController();
+  final youtubeUrlController  = TextEditingController();
 
   final linkInputController = TextEditingController();
 
@@ -37,17 +38,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   @override
   void initState() {
     setState(() {
-      affiliateUrlController.text = AddQuoteInputs.author.urls.affiliate;
-      amazonUrlController.text = AddQuoteInputs.author.urls.amazon;
-      facebookUrlController.text = AddQuoteInputs.author.urls.facebook;
-      nameController.text = AddQuoteInputs.author.name;
-      jobController.text = AddQuoteInputs.author.job;
-      summaryController.text = AddQuoteInputs.author.summary;
-      twitchUrlController.text = AddQuoteInputs.author.urls.twitch;
-      twitterUrlController.text = AddQuoteInputs.author.urls.twitter;
-      websiteUrlController.text = AddQuoteInputs.author.urls.website;
-      wikiUrlController.text = AddQuoteInputs.author.urls.wikipedia;
-      youtubeUrlController.text = AddQuoteInputs.author.urls.youtube;
+      affiliateUrlController.text  = AddQuoteInputs.author.urls.affiliate;
+      amazonUrlController.text    = AddQuoteInputs.author.urls.amazon;
+      facebookUrlController.text  = AddQuoteInputs.author.urls.facebook;
+      nameController.text         = AddQuoteInputs.author.name;
+      jobController.text          = AddQuoteInputs.author.job;
+      instaController.text        = AddQuoteInputs.author.urls.instagram;
+      summaryController.text      = AddQuoteInputs.author.summary;
+      twitchUrlController.text    = AddQuoteInputs.author.urls.twitch;
+      twitterUrlController.text   = AddQuoteInputs.author.urls.twitter;
+      websiteUrlController.text   = AddQuoteInputs.author.urls.website;
+      wikiUrlController.text      = AddQuoteInputs.author.urls.wikipedia;
+      youtubeUrlController.text   = AddQuoteInputs.author.urls.youtube;
     });
 
     super.initState();
@@ -216,6 +218,22 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   onSave: (String inputUrl) {
                     setState(() {
                       AddQuoteInputs.author.urls.facebook = inputUrl;
+                    });
+                  });
+            },
+          ),
+          linkCircleButton(
+            delay: 1.7,
+            name: 'Instagram',
+            imageUrl: 'assets/images/instagram.png',
+            active: AddQuoteInputs.author.urls.instagram.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                  labelText: 'Instagram',
+                  initialValue: AddQuoteInputs.author.urls.instagram,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.author.urls.instagram = inputUrl;
                     });
                   });
             },

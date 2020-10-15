@@ -20,45 +20,45 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   String tempImgUrl = '';
 
-  final nameFocusNode = FocusNode();
-  final primaryTypeFocusNode = FocusNode();
-  final secondaryTypeFocusNode = FocusNode();
-  final summaryFocusNode = FocusNode();
+  final nameFocusNode           = FocusNode();
+  final primaryTypeFocusNode    = FocusNode();
+  final secondaryTypeFocusNode  = FocusNode();
+  final summaryFocusNode        = FocusNode();
 
-  final affiliateUrlController = TextEditingController();
-  final amazonUrlController = TextEditingController();
-  final facebookUrlController = TextEditingController();
-  final nameController = TextEditingController();
-  final netflixUrlController = TextEditingController();
-  final primaryTypeController = TextEditingController();
+  final affiliateUrlController   = TextEditingController();
+  final amazonUrlController     = TextEditingController();
+  final facebookUrlController   = TextEditingController();
+  final nameController          = TextEditingController();
+  final netflixUrlController     = TextEditingController();
+  final primaryTypeController   = TextEditingController();
   final primeVideoUrlController = TextEditingController();
   final secondaryTypeController = TextEditingController();
-  final summaryController = TextEditingController();
-  final twitterUrlController = TextEditingController();
-  final twitchUrlController = TextEditingController();
-  final websiteUrlController = TextEditingController();
-  final wikiUrlController = TextEditingController();
-  final youtubeUrlController = TextEditingController();
+  final summaryController       = TextEditingController();
+  final twitterUrlController    = TextEditingController();
+  final twitchUrlController     = TextEditingController();
+  final websiteUrlController    = TextEditingController();
+  final wikiUrlController       = TextEditingController();
+  final youtubeUrlController    = TextEditingController();
 
   final linkInputController = TextEditingController();
 
   @override
   initState() {
     setState(() {
-      affiliateUrlController.text = AddQuoteInputs.reference.urls.affiliate;
-      amazonUrlController.text = AddQuoteInputs.reference.urls.amazon;
-      facebookUrlController.text = AddQuoteInputs.reference.urls.facebook;
-      nameController.text = AddQuoteInputs.reference.name;
-      netflixUrlController.text = AddQuoteInputs.reference.urls.netflix;
+      affiliateUrlController.text   = AddQuoteInputs.reference.urls.affiliate;
+      amazonUrlController.text     = AddQuoteInputs.reference.urls.amazon;
+      facebookUrlController.text   = AddQuoteInputs.reference.urls.facebook;
+      nameController.text          = AddQuoteInputs.reference.name;
+      netflixUrlController.text     = AddQuoteInputs.reference.urls.netflix;
       primeVideoUrlController.text = AddQuoteInputs.reference.urls.primeVideo;
-      primaryTypeController.text = AddQuoteInputs.reference.type.primary;
+      primaryTypeController.text   = AddQuoteInputs.reference.type.primary;
       secondaryTypeController.text = AddQuoteInputs.reference.type.secondary;
-      summaryController.text = AddQuoteInputs.reference.summary;
-      twitterUrlController.text = AddQuoteInputs.reference.urls.twitter;
-      twitchUrlController.text = AddQuoteInputs.reference.urls.twitch;
-      websiteUrlController.text = AddQuoteInputs.reference.urls.website;
-      wikiUrlController.text = AddQuoteInputs.reference.urls.wikipedia;
-      youtubeUrlController.text = AddQuoteInputs.reference.urls.youtube;
+      summaryController.text       = AddQuoteInputs.reference.summary;
+      twitterUrlController.text    = AddQuoteInputs.reference.urls.twitter;
+      twitchUrlController.text     = AddQuoteInputs.reference.urls.twitch;
+      websiteUrlController.text    = AddQuoteInputs.reference.urls.website;
+      wikiUrlController.text       = AddQuoteInputs.reference.urls.wikipedia;
+      youtubeUrlController.text    = AddQuoteInputs.reference.urls.youtube;
     });
 
     super.initState();
@@ -641,6 +641,22 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   onSave: (String inputUrl) {
                     setState(() {
                       AddQuoteInputs.reference.urls.facebook = inputUrl;
+                    });
+                  });
+            },
+          ),
+          linkSquareButton(
+            delay: 1.7,
+            name: 'Instagram',
+            imageUrl: 'assets/images/instagram.png',
+            active: AddQuoteInputs.reference.urls.instagram.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                  labelText: 'Instagram',
+                  initialValue: AddQuoteInputs.reference.urls.instagram,
+                  onSave: (String inputUrl) {
+                    setState(() {
+                      AddQuoteInputs.reference.urls.instagram = inputUrl;
                     });
                   });
             },

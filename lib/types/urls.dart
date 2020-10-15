@@ -3,6 +3,7 @@ class Urls {
   String amazon;
   String facebook;
   String image;
+  String instagram;
   String netflix;
   String primeVideo;
   String twitch;
@@ -12,11 +13,12 @@ class Urls {
   String youtube;
 
   Urls({
-    this.affiliate  = '',
+    this.affiliate   = '',
     this.amazon     = '',
     this.facebook   = '',
     this.image      = '',
-    this.netflix    = '',
+    this.instagram  = '',
+    this.netflix     = '',
     this.primeVideo = '',
     this.twitch     = '',
     this.twitter    = '',
@@ -27,24 +29,26 @@ class Urls {
 
   bool areLinksEmpty() {
     return affiliate.isEmpty &&
-      amazon.isEmpty &&
-      facebook.isEmpty &&
-      netflix.isEmpty &&
-      primeVideo.isEmpty &&
-      twitch.isEmpty &&
-      twitter.isEmpty &&
-      website.isEmpty &&
-      wikipedia.isEmpty &&
+      amazon.isEmpty        &&
+      facebook.isEmpty      &&
+      netflix.isEmpty        &&
+      instagram.isEmpty     &&
+      primeVideo.isEmpty    &&
+      twitch.isEmpty        &&
+      twitter.isEmpty       &&
+      website.isEmpty       &&
+      wikipedia.isEmpty     &&
       youtube.isEmpty;
   }
 
   factory Urls.fromJSON(Map<String, dynamic> json) {
     return Urls(
-      affiliate   : json['affiliate']   ?? '',
+      affiliate    : json['affiliate']    ?? '',
       amazon      : json['amazon']      ?? '',
       facebook    : json['facebook']    ?? '',
       image       : json['image']       ?? '',
-      netflix     : json['netflix']     ?? '',
+      instagram   : json['instagram']   ?? '',
+      netflix      : json['netflix']      ?? '',
       primeVideo  : json['primeVideo']  ?? '',
       twitch      : json['twitch']      ?? '',
       twitter     : json['twitter']     ?? '',

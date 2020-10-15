@@ -160,6 +160,28 @@ class About extends StatelessWidget {
           ),
 
           FlatButton(
+            onPressed: () => launch('https://iconmonstr.com'),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text('💄'),
+                ),
+
+                Opacity(
+                  opacity: paragraphOpacity,
+                  child: Text(
+                    'Icons by iconmonstr',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          FlatButton(
             onPressed: () => launch('https://orioniconlibrary.com'),
             child: Row(
               children: <Widget>[

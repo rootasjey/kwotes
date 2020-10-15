@@ -689,6 +689,13 @@ class _AuthorPageState extends State<AuthorPage> {
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
+        if (urls.instagram.isNotEmpty)
+          linkCircleButton(
+            delay: 1.7,
+            name: 'Instagram',
+            url: urls.instagram,
+            imageUrl: 'assets/images/instagram.png',
+          ),
         if (urls.netflix.isNotEmpty)
           linkCircleButton(
             delay: 1.8,
