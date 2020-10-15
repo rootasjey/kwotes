@@ -35,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
   bool canManage = false;
   bool prevIsAuthenticated = false;
   bool isAccountAdvVisible = false;
+  bool isConnected = false;
 
   double beginY = 20.0;
 
@@ -49,16 +50,18 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("Add quote"),
-        icon: Icon(Icons.add),
-        onPressed: () {
-          AddQuoteInputs.clearAll();
-          AddQuoteInputs.navigatedFromPath = 'dashboard';
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-        },
-      ),
+      floatingActionButton: isConnected 
+        ? FloatingActionButton.extended(
+          label: Text("Add quote"),
+          icon: Icon(Icons.add),
+          onPressed: () {
+            AddQuoteInputs.clearAll();
+            AddQuoteInputs.navigatedFromPath = 'dashboard';
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+          },
+        )
+        : Padding(padding: EdgeInsets.zero),
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
@@ -200,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
     return Observer(builder: (context) {
       List<Widget> children = [];
 
-      final isConnected = userState.isUserConnected;
+      isConnected = userState.isUserConnected;
 
       if (isConnected) {
         // children.add(avatarContainer());
