@@ -10,9 +10,9 @@ import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/screens/delete_account.dart';
+import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/update_email.dart';
 import 'package:memorare/screens/update_password.dart';
-import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -325,7 +325,7 @@ class _SettingsState extends State<Settings> {
 
                 if (!userState.isUserConnected) {
                   Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => Dashboard()));
+                      MaterialPageRoute(builder: (_) => Signin()));
                 }
               },
               child: Padding(
