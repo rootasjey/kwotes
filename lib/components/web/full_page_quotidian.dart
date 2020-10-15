@@ -3,21 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
-import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quotidian.dart';
 import 'package:memorare/utils/animation.dart';
-import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/reference_page.dart';
-import 'package:memorare/screens/web/dashboard.dart';
-import 'package:memorare/screens/web/favourites.dart';
 import 'package:memorare/screens/quote_page.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -292,155 +285,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
               child: child,
             ));
       },
-    );
-  }
-
-  Widget dashboardQuickLinks() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(
-        vertical: 40.0,
-      ),
-      foregroundDecoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.05),
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 30.0),
-            child: Text(
-              'QUICK LINKS',
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 50.0,
-            child: Divider(
-              thickness: 2.0,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Opacity(
-              opacity: .6,
-              child: InkWell(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Dashboard())),
-                onHover: (isHover) {
-                  setState(() {
-                    dashboardLinkDecoration = isHover
-                        ? TextDecoration.underline
-                        : TextDecoration.none;
-                  });
-                },
-                child: Text(
-                  'Shortcuts to your dashboard',
-                  style: TextStyle(
-                    decoration: dashboardLinkDecoration,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 60.0),
-            child: PopupMenuButton<String>(
-              icon: Icon(Icons.more_horiz),
-              tooltip: 'More quick links',
-              onSelected: (value) {
-                if (value == 'signout') {
-                  userSignOut(context: context);
-                  return;
-                }
-
-                Rerouter.push(context: context, value: value);
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem(
-                  value: DraftsRoute,
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text(
-                      'Drafts',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: PublishedQuotesRoute,
-                  child: ListTile(
-                    leading: Icon(Icons.cloud_done),
-                    title: Text(
-                      'Published',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const PopupMenuItem(
-                    value: TempQuotesRoute,
-                    child: ListTile(
-                      leading: Icon(Icons.timelapse),
-                      title: Text(
-                        'In Validation',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                const PopupMenuItem(
-                  value: AccountRoute,
-                  child: ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text(
-                      'Settings',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 'signout',
-                  child: ListTile(
-                    leading: Icon(Icons.exit_to_app),
-                    title: Text(
-                      'Sign out',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const PopupMenuItem(
-                    value: 'dashboard',
-                    child: ListTile(
-                      leading: Icon(Icons.dashboard),
-                      title: Text(
-                        'Dashboard',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    )),
-              ],
-            ),
-          ),
-          Wrap(
-            spacing: 30.0,
-            runSpacing: 30.0,
-            children: <Widget>[
-              ColoredListTile(
-                icon: Icons.favorite,
-                title: Text('Favourites'),
-                hoverColor: Colors.red,
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Favourites())),
-              ),
-              ColoredListTile(
-                icon: Icons.list,
-                title: Text('Lists'),
-                hoverColor: Colors.blue.shade700,
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => QuotesLists())),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
