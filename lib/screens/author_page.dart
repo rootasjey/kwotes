@@ -317,6 +317,22 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
+  Widget job() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Opacity(
+        opacity: 0.5,
+        child: Text(
+          author.job,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget langSelectButton() {
     if (isLoading) {
       return Padding(
@@ -426,6 +442,119 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
+  Widget links() {
+    final urls = author.urls;
+    if (urls.areLinksEmpty()) {
+      return Padding(
+        padding: EdgeInsets.zero,
+      );
+    }
+
+    return Wrap(
+      spacing: 20.0,
+      runSpacing: 20.0,
+      children: <Widget>[
+        FadeInX(
+          beginX: 50.0,
+          delay: 0.0,
+          child: Tooltip(
+            message: 'summary',
+            child: Material(
+              elevation: 4.0,
+              shape: CircleBorder(),
+              clipBehavior: Clip.hardEdge,
+              child: InkWell(
+                onTap: () =>
+                    setState(() => isSummaryVisible = !isSummaryVisible),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Icon(
+                    Icons.list_alt_outlined,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        if (urls.website.isNotEmpty)
+          linkCircleButton(
+            delay: 1.0,
+            name: 'Website',
+            url: urls.website,
+            imageUrl: 'assets/images/world-globe.png',
+          ),
+        if (urls.wikipedia.isNotEmpty)
+          Observer(
+            builder: (_) {
+              return linkCircleButton(
+                delay: 1.2,
+                name: 'Wikipedia',
+                url: urls.wikipedia,
+                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+              );
+            },
+          ),
+        if (urls.amazon.isNotEmpty)
+          linkCircleButton(
+            delay: 1.4,
+            name: 'Amazon',
+            url: urls.amazon,
+            imageUrl: 'assets/images/amazon.png',
+          ),
+        if (urls.facebook.isNotEmpty)
+          linkCircleButton(
+            delay: 1.6,
+            name: 'Facebook',
+            url: urls.facebook,
+            imageUrl: 'assets/images/facebook.png',
+          ),
+        if (urls.instagram.isNotEmpty)
+          linkCircleButton(
+            delay: 1.7,
+            name: 'Instagram',
+            url: urls.instagram,
+            imageUrl: 'assets/images/instagram.png',
+          ),
+        if (urls.netflix.isNotEmpty)
+          linkCircleButton(
+            delay: 1.8,
+            name: 'Netflix',
+            url: urls.netflix,
+            imageUrl: 'assets/images/netflix.png',
+          ),
+        if (urls.primeVideo.isNotEmpty)
+          linkCircleButton(
+            delay: 2.0,
+            name: 'Prime Video',
+            url: urls.primeVideo,
+            imageUrl: 'assets/images/prime-video.png',
+          ),
+        if (urls.twitch.isNotEmpty)
+          linkCircleButton(
+            delay: 2.2,
+            name: 'Twitch',
+            url: urls.twitch,
+            imageUrl: 'assets/images/twitch.png',
+          ),
+        if (urls.twitter.isNotEmpty)
+          linkCircleButton(
+            delay: 2.4,
+            name: 'Twitter',
+            url: urls.twitter,
+            imageUrl: 'assets/images/twitter.png',
+          ),
+        if (urls.youtube.isNotEmpty)
+          linkCircleButton(
+            delay: 2.6,
+            name: 'Youtube',
+            url: urls.youtube,
+            imageUrl: 'assets/images/youtube.png',
+          ),
+      ],
+    );
+  }
+
   Widget name() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0),
@@ -444,22 +573,6 @@ class _AuthorPageState extends State<AuthorPage> {
           style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget job() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Opacity(
-        opacity: 0.5,
-        child: Text(
-          author.job,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 18.0,
           ),
         ),
       ),
@@ -619,119 +732,6 @@ class _AuthorPageState extends State<AuthorPage> {
             )
         ],
       ),
-    );
-  }
-
-  Widget links() {
-    final urls = author.urls;
-    if (urls.areLinksEmpty()) {
-      return Padding(
-        padding: EdgeInsets.zero,
-      );
-    }
-
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
-      children: <Widget>[
-        FadeInX(
-          beginX: 50.0,
-          delay: 0.0,
-          child: Tooltip(
-            message: 'summary',
-            child: Material(
-              elevation: 4.0,
-              shape: CircleBorder(),
-              clipBehavior: Clip.hardEdge,
-              child: InkWell(
-                onTap: () =>
-                    setState(() => isSummaryVisible = !isSummaryVisible),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Icon(
-                    Icons.list_alt_outlined,
-                    size: 30.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        if (urls.website.isNotEmpty)
-          linkCircleButton(
-            delay: 1.0,
-            name: 'Website',
-            url: urls.website,
-            imageUrl: 'assets/images/world-globe.png',
-          ),
-        if (urls.wikipedia.isNotEmpty)
-          Observer(
-            builder: (_) {
-              return linkCircleButton(
-                delay: 1.2,
-                name: 'Wikipedia',
-                url: urls.wikipedia,
-                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
-              );
-            },
-          ),
-        if (urls.amazon.isNotEmpty)
-          linkCircleButton(
-            delay: 1.4,
-            name: 'Amazon',
-            url: urls.amazon,
-            imageUrl: 'assets/images/amazon.png',
-          ),
-        if (urls.facebook.isNotEmpty)
-          linkCircleButton(
-            delay: 1.6,
-            name: 'Facebook',
-            url: urls.facebook,
-            imageUrl: 'assets/images/facebook.png',
-          ),
-        if (urls.instagram.isNotEmpty)
-          linkCircleButton(
-            delay: 1.7,
-            name: 'Instagram',
-            url: urls.instagram,
-            imageUrl: 'assets/images/instagram.png',
-          ),
-        if (urls.netflix.isNotEmpty)
-          linkCircleButton(
-            delay: 1.8,
-            name: 'Netflix',
-            url: urls.netflix,
-            imageUrl: 'assets/images/netflix.png',
-          ),
-        if (urls.primeVideo.isNotEmpty)
-          linkCircleButton(
-            delay: 2.0,
-            name: 'Prime Video',
-            url: urls.primeVideo,
-            imageUrl: 'assets/images/prime-video.png',
-          ),
-        if (urls.twitch.isNotEmpty)
-          linkCircleButton(
-            delay: 2.2,
-            name: 'Twitch',
-            url: urls.twitch,
-            imageUrl: 'assets/images/twitch.png',
-          ),
-        if (urls.twitter.isNotEmpty)
-          linkCircleButton(
-            delay: 2.4,
-            name: 'Twitter',
-            url: urls.twitter,
-            imageUrl: 'assets/images/twitter.png',
-          ),
-        if (urls.youtube.isNotEmpty)
-          linkCircleButton(
-            delay: 2.6,
-            name: 'Youtube',
-            url: urls.youtube,
-            imageUrl: 'assets/images/youtube.png',
-          ),
-      ],
     );
   }
 
