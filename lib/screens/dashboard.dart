@@ -470,7 +470,7 @@ class _DashboardState extends State<Dashboard> {
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signup()));
       },
-      textColor: Colors.orange.shade600,
+      textColor: stateColors.secondary,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7.0),
           side: BorderSide(
