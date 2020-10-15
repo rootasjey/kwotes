@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/signin.dart';
@@ -21,11 +23,9 @@ class DeleteAccountState extends State<DeleteAccount> {
   bool isDeleting = false;
   bool isCompleted = false;
 
-  String password = '';
+  double beginY = 30.0;
 
-  double beginY = 100.0;
-  final delay = 1.0;
-  final delayStep = 1.2;
+  String password = '';
 
   @override
   initState() {
@@ -39,15 +39,42 @@ class DeleteAccountState extends State<DeleteAccount> {
       body: CustomScrollView(
         slivers: <Widget>[
           SimpleAppBar(
-            textTitle: 'Delete account',
-            subHeader: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Opacity(
-                opacity: .6,
-                child: Text(
-                  'Well, this marks the end of the adventure',
+            expandedHeight: 90.0,
+            title: Row(
+              children: [
+                CircleButton(
+                    onTap: () => Navigator.of(context).pop(),
+                    icon:
+                        Icon(Icons.arrow_back, color: stateColors.foreground)),
+                AppIconHeader(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  size: 30.0,
                 ),
-              ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Delete accouunt',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Opacity(
+                        opacity: .6,
+                        child: Text(
+                          'Well, this marks the end of the adventure',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           body(),
@@ -161,21 +188,21 @@ class DeleteAccountState extends State<DeleteAccount> {
     return SliverList(
       delegate: SliverChildListDelegate([
         Padding(
-          padding: const EdgeInsets.all(40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Column(
             children: <Widget>[
               FadeInY(
-                delay: delay + (0 * delayStep),
+                delay: 0.0,
                 beginY: beginY,
                 child: warningCard(),
               ),
               FadeInY(
-                delay: delay + (.5 * delayStep),
+                delay: 0.1,
                 beginY: beginY,
                 child: passwordInput(),
               ),
               FadeInY(
-                delay: delay + (1 * delayStep),
+                delay: 0.2,
                 beginY: beginY,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60.0),
@@ -203,10 +230,7 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget passwordInput() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 80.0,
-      ),
+    return SizedBox(
       width: 500.0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,13 +271,10 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget validationButton() {
-    return RaisedButton(
+    return OutlinedButton(
       onPressed: () => deleteAccount(),
-      color: Colors.red,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
-        ),
+      style: OutlinedButton.styleFrom(
+        primary: Colors.red,
       ),
       child: SizedBox(
         width: 240.0,
@@ -265,7 +286,6 @@ class DeleteAccountState extends State<DeleteAccount> {
               child: Text(
                 'DELETE ACCOUNT',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -278,8 +298,14 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget warningCard() {
-    return SizedBox(
+    return Container(
       width: 500.0,
+      padding: EdgeInsets.only(
+        top: 60.0,
+        left: 25.0,
+        right: 25.0,
+        bottom: 40.0,
+      ),
       child: Card(
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
@@ -332,6 +358,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                     // contentPadding: const EdgeInsets.all(25.0),
                     children: <Widget>[
                       Divider(
+                        color: stateColors.secondary,
                         thickness: 1.0,
                       ),
                       Padding(
@@ -345,7 +372,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                             ),
                             Padding(padding: const EdgeInsets.only(top: 15.0)),
                             Text(
-                              "Your published quotes will stay",
+                              "Your published quotes will stay on the platform",
                               style: TextStyle(),
                             ),
                             Padding(padding: const EdgeInsets.only(top: 15.0)),
