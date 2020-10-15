@@ -11,6 +11,7 @@ class TempQuoteRow extends StatefulWidget {
   final double cardSize;
   final double elevation;
 
+  final EdgeInsets padding;
   final Function itemBuilder;
   final Function onSelected;
   final Function onTap;
@@ -26,10 +27,14 @@ class TempQuoteRow extends StatefulWidget {
     @required this.tempQuote,
     this.itemBuilder,
     this.isDraft = false,
-    this.componentType,
+    this.componentType = ItemComponentType.row,
     this.onSelected,
     this.onTap,
     this.stackChildren = const [],
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 70.0,
+      vertical: 30.0,
+    ),
   });
 
   @override
@@ -71,21 +76,17 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
     final author = quote.author;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 70.0,
-        vertical: 30.0,
-      ),
+      padding: widget.padding,
       child: Card(
         elevation: elevation,
         color: stateColors.appBackground,
         child: InkWell(
           onTap: widget.onTap,
           onHover: (isHover) {
-            elevation = isHover ? 2.0 : 0.0;
-
-            iconColor = isHover ? iconHoverColor : null;
-
-            setState(() {});
+            setState(() {
+              elevation = isHover ? 2.0 : 0.0;
+              iconColor = isHover ? iconHoverColor : null;
+            });
           },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
