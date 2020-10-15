@@ -259,23 +259,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget connectionButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 60.0,
-      ),
-      child: Column(
-        children: [
-          signinButton(),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-          ),
-          signupButton(),
-        ],
-      ),
-    );
-  }
-
   Widget draftsButton() {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 50.0),
@@ -313,7 +296,17 @@ class _DashboardState extends State<Dashboard> {
       FadeInY(
         delay: 0.2,
         beginY: beginY,
-        child: connectionButtons(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 60.0,
+          ),
+          child: Column(
+            children: [
+              signinButton(),
+              signupButton(),
+            ],
+          ),
+        ),
       ),
       Divider(
         height: 100.0,
@@ -430,38 +423,42 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget signinButton() {
-    return FlatButton(
-      onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-      },
-      textColor: stateColors.primary,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7.0),
-          side: BorderSide(
-            color: stateColors.primary,
-          )),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 220.0,
-          minHeight: 60.0,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'SIGN IN',
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w700,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30.0),
+      child: FlatButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => Signin()));
+        },
+        textColor: stateColors.primary,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(7.0),
+            side: BorderSide(
+              color: stateColors.primary,
+            )),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 220.0,
+            minHeight: 60.0,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'SIGN IN',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Icon(Icons.login),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Icon(Icons.login),
+                ),
+              ],
+            ),
           ),
         ),
       ),
