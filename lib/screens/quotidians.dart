@@ -46,7 +46,7 @@ class QuotidiansState extends State<Quotidians> {
   @override
   initState() {
     super.initState();
-    checkAuth(context: context);
+    checkConnectedOrNavSignin(context: context);
     initProps();
     fetch();
   }

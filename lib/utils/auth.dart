@@ -6,7 +6,7 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:supercharged/supercharged.dart';
 
-void checkAuth({BuildContext context}) async {
+void checkConnectedOrNavSignin({BuildContext context}) async {
   try {
     final userAuth = await userState.userAuth;
 
