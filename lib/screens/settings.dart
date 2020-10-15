@@ -10,7 +10,7 @@ import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
 import 'package:memorare/screens/delete_account.dart';
-import 'package:memorare/screens/edit_email.dart';
+import 'package:memorare/screens/update_email.dart';
 import 'package:memorare/screens/update_password.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/state/colors.dart';
@@ -352,7 +352,7 @@ class _SettingsState extends State<Settings> {
     return FlatButton(
       onPressed: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => EditEmail()));
+            .push(MaterialPageRoute(builder: (_) => UpdateEmail()));
       },
       onLongPress: () {
         showDialog(

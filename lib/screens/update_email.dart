@@ -15,12 +15,12 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
-class EditEmail extends StatefulWidget {
+class UpdateEmail extends StatefulWidget {
   @override
-  _EditEmailState createState() => _EditEmailState();
+  _UpdateEmailState createState() => _UpdateEmailState();
 }
 
-class _EditEmailState extends State<EditEmail> {
+class _UpdateEmailState extends State<UpdateEmail> {
   bool isCheckingEmail = false;
   bool isEmailAvailable = false;
   bool isCheckingAuth = false;
