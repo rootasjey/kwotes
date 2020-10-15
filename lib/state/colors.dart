@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -21,7 +20,11 @@ abstract class StateColorsBase with Store {
   @observable
   String iconExt = 'light';
 
+  /// Primary application's color.
   Color primary = Color(0xFF796AD2);
+
+  /// Secondary application's color.
+  Color secondary = Colors.orange.shade600;
 
   @observable
   Color softBackground = Color(0xFFEEEEEE);
