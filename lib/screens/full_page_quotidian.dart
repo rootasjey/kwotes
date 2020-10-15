@@ -10,7 +10,7 @@ import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/reference_page.dart';
-import 'package:memorare/screens/web/quote_page.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';

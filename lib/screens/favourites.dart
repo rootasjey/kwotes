@@ -7,14 +7,13 @@ import 'package:memorare/components/order_button.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/snack.dart';
-
-import 'web/quote_page.dart';
 
 class Favourites extends StatefulWidget {
   @override

@@ -18,7 +18,7 @@ import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/reference_page.dart';
 import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/screens/web/favourites.dart';
-import 'package:memorare/screens/web/quote_page.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';

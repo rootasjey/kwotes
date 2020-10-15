@@ -8,6 +8,8 @@ import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/screens/author_page.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -16,9 +18,6 @@ import 'package:memorare/utils/animation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
-
-import 'author_page.dart';
-import 'web/quote_page.dart';
 
 class TopicPage extends StatefulWidget {
   final String name;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/reference_page.dart';
-import 'package:memorare/screens/web/quote_page.dart';
+import 'package:memorare/screens/quote_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/enums.dart';
