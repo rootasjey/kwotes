@@ -99,6 +99,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
   Widget appBar() {
     return SimpleAppBar(
+      expandedHeight: 120.0,
       title: Row(
         children: [
           CircleButton(
@@ -406,14 +407,16 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget sliverQuotesList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final quoteList = userQuotesLists.elementAt(index);
-
-          return cardItem(quoteList: quoteList);
-        },
-        childCount: userQuotesLists.length,
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 20.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final quoteList = userQuotesLists.elementAt(index);
+            return cardItem(quoteList: quoteList);
+          },
+          childCount: userQuotesLists.length,
+        ),
       ),
     );
   }
