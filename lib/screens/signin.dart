@@ -8,7 +8,6 @@ import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/screens/forgot_password.dart';
 import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/signup.dart';
-import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -32,7 +31,7 @@ class _SigninState extends State<Signin> {
   @override
   void initState() {
     super.initState();
-    checkAuth();
+    ensureNotConnected();
   }
 
   @override
@@ -68,10 +67,6 @@ class _SigninState extends State<Signin> {
   }
 
   Widget body() {
-    if (isCompleted) {
-      return completedContainer();
-    }
-
     if (isSigningIn) {
       return Padding(
         padding: const EdgeInsets.only(top: 80.0),
@@ -82,47 +77,6 @@ class _SigninState extends State<Signin> {
     }
 
     return idleContainer();
-  }
-
-  Widget completedContainer() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Icon(
-            Icons.check_circle,
-            size: 80.0,
-            color: Colors.green,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
-          child: Text(
-            'You are now logged in!',
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 15.0,
-          ),
-          child: FlatButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Dashboard()));
-            },
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Go to your dashboard',
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget idleContainer() {
@@ -354,7 +308,7 @@ class _SigninState extends State<Signin> {
     );
   }
 
-  void checkAuth() async {
+  void ensureNotConnected() async {
     setState(() {
       isCheckingAuth = true;
     });
@@ -368,8 +322,7 @@ class _SigninState extends State<Signin> {
 
       if (userAuth != null) {
         userState.setUserConnected();
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => Dashboard()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
       }
     } catch (error) {
       setState(() {
@@ -432,10 +385,8 @@ class _SigninState extends State<Signin> {
 
       userState.setUserConnected();
 
-      setState(() {
-        isSigningIn = false;
-        isCompleted = true;
-      });
+      isSigningIn = false;
+      isCompleted = true;
 
       await userGetAndSetAvatarUrl(authResult);
 
