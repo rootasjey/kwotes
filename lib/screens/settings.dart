@@ -113,7 +113,7 @@ class _SettingsState extends State<Settings> {
                       FadeInY(
                         delay: 0.2,
                         beginY: 50.0,
-                        child: inputDisplayName(isUserConnected),
+                        child: updateNameButton(isUserConnected),
                       ),
                       Padding(padding: const EdgeInsets.only(top: 20.0)),
                       FadeInY(
@@ -450,7 +450,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget inputDisplayName(bool isUserConnected) {
+  Widget updateNameButton(bool isUserConnected) {
     if (isLoadingName) {
       return SizedBox(
         height: 200.0,
@@ -531,6 +531,7 @@ class _SettingsState extends State<Settings> {
                   child: Column(
                     children: <Widget>[
                       Divider(
+                        color: stateColors.secondary,
                         thickness: 1.0,
                       ),
                       Padding(
