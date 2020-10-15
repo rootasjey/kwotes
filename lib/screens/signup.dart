@@ -8,8 +8,8 @@ import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/screens/signin.dart';
-import 'package:memorare/screens/web/dashboard.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -50,7 +50,7 @@ class _SignupState extends State<Signup> {
   @override
   initState() {
     super.initState();
-    checkAuth();
+    ensureNotConnected();
   }
 
   @override
@@ -86,10 +86,6 @@ class _SignupState extends State<Signup> {
   }
 
   Widget body() {
-    if (isCompleted) {
-      return completedContainer();
-    }
-
     if (isSigningUp) {
       return Padding(
         padding: const EdgeInsets.only(top: 80.0),
@@ -100,48 +96,6 @@ class _SignupState extends State<Signup> {
     }
 
     return idleContainer();
-  }
-
-  Widget completedContainer() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Icon(
-            Icons.check_circle,
-            size: 80.0,
-            color: Colors.green,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
-          child: Text(
-            'Your account has been successfully created!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 15.0,
-          ),
-          child: FlatButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Dashboard()));
-            },
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                'Go to your dashboard',
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget emailInput() {
@@ -540,7 +494,7 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  void checkAuth() async {
+  void ensureNotConnected() async {
     setState(() {
       isCheckingAuth = true;
     });
@@ -553,8 +507,7 @@ class _SignupState extends State<Signup> {
       });
 
       if (userAuth != null) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => Dashboard()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
       }
     } catch (error) {
       setState(() {
@@ -659,10 +612,10 @@ class _SignupState extends State<Signup> {
 
       userState.setUserConnected();
 
-      setState(() {
-        isSigningUp = false;
-        isCompleted = true;
-      });
+      isSigningUp = false;
+      isCompleted = true;
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
     } catch (error) {
       debugPrint(error.toString());
 
