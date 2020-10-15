@@ -6,6 +6,7 @@ import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/screens/about.dart';
 import 'package:memorare/screens/settings.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/recent_quotes.dart';
@@ -50,18 +51,18 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isConnected 
-        ? FloatingActionButton.extended(
-          label: Text("Add quote"),
-          icon: Icon(Icons.add),
-          onPressed: () {
-            AddQuoteInputs.clearAll();
-            AddQuoteInputs.navigatedFromPath = 'dashboard';
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-          },
-        )
-        : Padding(padding: EdgeInsets.zero),
+      floatingActionButton: isConnected
+          ? FloatingActionButton.extended(
+              label: Text("Add quote"),
+              icon: Icon(Icons.add),
+              onPressed: () {
+                AddQuoteInputs.clearAll();
+                AddQuoteInputs.navigatedFromPath = 'dashboard';
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+              },
+            )
+          : Padding(padding: EdgeInsets.zero),
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
@@ -69,6 +70,22 @@ class _DashboardState extends State<Dashboard> {
           body(),
         ],
       ),
+    );
+  }
+
+  Widget aboutButton() {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
+      leading: Icon(
+        Icons.help,
+        size: 30.0,
+      ),
+      title: Text(
+        'About',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => About())),
     );
   }
 
@@ -326,8 +343,13 @@ class _DashboardState extends State<Dashboard> {
           FadeInY(
             delay: 0.4,
             beginY: beginY,
-            child: helpCenterButton(),
+            child: aboutButton(),
           ),
+          // FadeInY(
+          //   delay: 0.5,
+          //   beginY: beginY,
+          //   child: helpCenterButton(),
+          // ),
         ],
       ),
     ];

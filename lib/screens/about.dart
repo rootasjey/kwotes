@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/web/footer.dart';
 import 'package:memorare/components/web/home_app_bar.dart';
@@ -25,31 +26,36 @@ class About extends StatelessWidget {
       body: CustomScrollView(
         slivers: <Widget>[
           HomeAppBar(
+            title: 'About',
             automaticallyImplyLeading: true,
+            showUserMenu: false,
           ),
-
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Column(
-                children: <Widget>[
-                  whatIs(context),
-                  differences(),
-                  whoIs(context),
-                  whoIs2(context),
-                  creditsSection(),
-                ],
-              ),
-            ]),
-          ),
-
           SliverPadding(
-            padding: const EdgeInsets.only(top: 200.0),
+            padding: const EdgeInsets.only(
+              left: 20.0,
+              right: 20.0,
+              bottom: 200.0,
+            ),
             sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                Column(
+                  children: <Widget>[
+                    whatIs(context),
+                    differences(),
+                    whoIs(context),
+                    whoIs2(context),
+                    creditsSection(),
+                  ],
+                ),
+              ]),
+            ),
+          ),
+          if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
+            SliverList(
               delegate: SliverChildListDelegate([
                 Footer(),
               ]),
             ),
-          ),
         ],
       ),
     );
@@ -71,7 +77,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 25.0),
             child: Opacity(
@@ -82,7 +87,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: Opacity(
@@ -93,7 +97,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 35.0),
             child: Opacity(
@@ -104,7 +107,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -136,7 +138,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           FlatButton(
             onPressed: () => launch('https://icons8.com'),
             child: Row(
@@ -145,7 +146,6 @@ class About extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text('💄'),
                 ),
-
                 Opacity(
                   opacity: paragraphOpacity,
                   child: Text(
@@ -158,7 +158,6 @@ class About extends StatelessWidget {
               ],
             ),
           ),
-
           FlatButton(
             onPressed: () => launch('https://iconmonstr.com'),
             child: Row(
@@ -167,7 +166,6 @@ class About extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text('💄'),
                 ),
-
                 Opacity(
                   opacity: paragraphOpacity,
                   child: Text(
@@ -180,7 +178,6 @@ class About extends StatelessWidget {
               ],
             ),
           ),
-
           FlatButton(
             onPressed: () => launch('https://orioniconlibrary.com'),
             child: Row(
@@ -189,7 +186,6 @@ class About extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text('💄'),
                 ),
-
                 Opacity(
                   opacity: paragraphOpacity,
                   child: Text(
@@ -202,16 +198,15 @@ class About extends StatelessWidget {
               ],
             ),
           ),
-
           FlatButton(
-            onPressed: () => launch('https://www.flaticon.com/authors/pixel-perfect'),
+            onPressed: () =>
+                launch('https://www.flaticon.com/authors/pixel-perfect'),
             child: Row(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text('💄'),
                 ),
-
                 Opacity(
                   opacity: paragraphOpacity,
                   child: Text(
@@ -224,7 +219,6 @@ class About extends StatelessWidget {
               ],
             ),
           ),
-
           FlatButton(
             onPressed: () => launch('https://previewed.app/'),
             child: Row(
@@ -233,7 +227,6 @@ class About extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text('📷'),
                 ),
-
                 Opacity(
                   opacity: paragraphOpacity,
                   child: Text(
@@ -268,21 +261,22 @@ class About extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: Container(
-                        child: Image(
-                          image: AssetImage('assets/images/app-icon-text.png',),),
-                      ),
-                    );
-                  }
-                );
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Container(
+                          child: Image(
+                            image: AssetImage(
+                              'assets/images/app-icon-text.png',
+                            ),
+                          ),
+                        ),
+                      );
+                    });
               },
             ),
           ),
-
           Center(
             child: FlatButton(
               onPressed: null,
@@ -292,7 +286,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 80.0),
             child: Opacity(
@@ -303,7 +296,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -335,7 +327,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
@@ -352,23 +343,24 @@ class About extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Container(
-                              child: Image(image: AssetImage('assets/images/jeje-profile.jpg'),),
-                            ),
-                          );
-                        }
-                      );
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Container(
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/images/jeje-profile.jpg'),
+                                ),
+                              ),
+                            );
+                          });
                     },
                   ),
                 ),
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -379,7 +371,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -390,7 +381,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -401,18 +391,13 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: titleOpacity,
             child: Padding(
               padding: const EdgeInsets.only(top: 120.0),
-              child: Text(
-                "THE STORY",
-                style: titleStyle
-              ),
+              child: Text("THE STORY", style: titleStyle),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -423,7 +408,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Opacity(
@@ -434,7 +418,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(
               top: 20.0,
@@ -448,7 +431,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           FlatButton.icon(
             onPressed: () async {
               await launch('http://evene.lefigaro.fr/');
@@ -481,23 +463,25 @@ class About extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Image(image: NetworkImage('https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png'),),
-                              ),
-                            );
-                          }
-                        );
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Container(
+                                  child: Image(
+                                    image: NetworkImage(
+                                        'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png'),
+                                  ),
+                                ),
+                              );
+                            });
                       },
                     ),
                   ),
-
                   FlatButton(
                     onPressed: () async {
-                      await launch('https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png');
+                      await launch(
+                          'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png');
                     },
                     child: Opacity(
                       opacity: captionOpacity,
@@ -508,40 +492,37 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: Column(
-                children: <Widget>[
-                  Opacity(
-                    opacity: paragraphOpacity,
-                    child: Text(
-                      "I created a first prototype for Windows Phone:",
-                      style: paragraphStyle,
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Column(
+                  children: <Widget>[
+                    Opacity(
+                      opacity: paragraphOpacity,
+                      child: Text(
+                        "I created a first prototype for Windows Phone:",
+                        style: paragraphStyle,
+                      ),
                     ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: FlatButton(
-                      onPressed: () async {
-                        await launch('https://github.com/rootasjey/citations365');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'CITATIONS 365',
-                          style: titleStyle,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: FlatButton(
+                        onPressed: () async {
+                          await launch(
+                              'https://github.com/rootasjey/citations365');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'CITATIONS 365',
+                            style: titleStyle,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            ),
+                  ],
+                )),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 120.0),
             child: Column(
@@ -554,33 +535,34 @@ class About extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Container(
-                              child: Image(image: NetworkImage('https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg'),),
-                            ),
-                          );
-                        }
-                      );
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Container(
+                                child: Image(
+                                  image: NetworkImage(
+                                      'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg'),
+                                ),
+                              ),
+                            );
+                          });
                     },
                   ),
                 ),
-
                 FlatButton(
-                    onPressed: () async {
-                      await launch('https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg');
-                    },
-                    child: Opacity(
-                      opacity: captionOpacity,
-                      child: Text('Citations 365 for PC & tablet'),
-                    ),
+                  onPressed: () async {
+                    await launch(
+                        'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg');
+                  },
+                  child: Opacity(
+                    opacity: captionOpacity,
+                    child: Text('Citations 365 for PC & tablet'),
                   ),
+                ),
               ],
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -591,7 +573,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -602,7 +583,6 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(
@@ -613,33 +593,30 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 70.0),
               child: FlatButton(
-                onPressed: () async {
-                  await launch('https://github.com/outofcontextapp/app');
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    children: <Widget>[
-                      Image.asset('assets/images/app-icon-64.png'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'OUT OF CONTEXT',
-                          style: paragraphStyle,
+                  onPressed: () async {
+                    await launch('https://github.com/outofcontextapp/app');
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset('assets/images/app-icon-64.png'),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'OUT OF CONTEXT',
+                            style: paragraphStyle,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ),
+                      ],
+                    ),
+                  )),
             ),
           ),
-
           Opacity(
             opacity: paragraphOpacity,
             child: Padding(

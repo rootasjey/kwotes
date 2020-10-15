@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/screens/web/about.dart';
+import 'package:memorare/screens/about.dart';
 import 'package:memorare/screens/web/contact.dart';
 import 'package:memorare/screens/web/privacy_terms.dart';
 import 'package:memorare/state/user_state.dart';
