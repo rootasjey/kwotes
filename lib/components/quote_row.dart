@@ -11,17 +11,20 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class QuoteRow extends StatefulWidget {
   final Quote quote;
 
+  final double cardSize;
+  final double elevation;
+
+  final EdgeInsets padding;
+  final Function itemBuilder;
+  final Function onSelected;
+
+  final ItemComponentType componentType;
+  final List<Widget> stackChildren;
+
   /// Specify explicitly the quote'is
   /// because quote's id in favourites reflect
   /// the favourite's id and no the quote.
   final String quoteId;
-  final Function itemBuilder;
-  final Function onSelected;
-  final EdgeInsets padding;
-  final ItemComponentType componentType;
-  final double cardSize;
-  final double elevation;
-  final List<Widget> stackChildren;
 
   /// A widget positioned before the main content (quote's content).
   /// Typcally an Icon or a small Container.
