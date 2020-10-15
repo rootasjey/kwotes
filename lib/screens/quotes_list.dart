@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/screens/signin.dart';
@@ -35,19 +37,22 @@ class _QuotesListState extends State<QuotesList> {
   bool isLoading = false;
   bool isLoadingMore = false;
   bool isDeletingList = false;
-  int limit = 10;
+  bool updateListIsPublic = false;
 
-  var lastDoc;
+  DocumentSnapshot lastDoc;
+
   final scrollController = ScrollController();
 
+  int limit = 10;
+
   List<Quote> quotes = [];
-  UserQuotesList quotesList;
 
   ScrollController listScrollController = ScrollController();
 
   String updateListName = '';
   String updateListDesc = '';
-  bool updateListIsPublic = false;
+
+  UserQuotesList quotesList;
 
   @override
   initState() {
@@ -58,90 +63,109 @@ class _QuotesListState extends State<QuotesList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
-    );
-  }
-
-  Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await fetch();
+            return null;
           },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: quotesList == null ? 'List' : quotesList.name,
-      subHeader: Observer(
-        builder: (context) {
-          return Wrap(
-            spacing: 20.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: OutlineButton(
-                  onPressed: () => showEditListDialog(),
-                  color: stateColors.background.withAlpha(100),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.edit),
-                      ),
-                      Text('Edit'),
-                    ],
+      expandedHeight: 120.0,
+      title: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIconHeader(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  quotesList == null ? 'List' : quotesList.name,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-              ),
-              FadeInY(
-                  beginY: 10.0,
-                  delay: 2.5,
-                  child: OutlineButton(
-                    onPressed: () => showDeleteListDialog(),
-                    color: stateColors.background.withAlpha(100),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Icon(Icons.delete),
-                        ),
-                        Text('Delete'),
-                      ],
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    quotesList == null ? '' : quotesList.description,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
                     ),
-                  )),
-            ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      subHeader: Observer(
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Wrap(
+              spacing: 20.0,
+              children: <Widget>[
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 0.0,
+                  child: OutlinedButton.icon(
+                    onPressed: () => showEditListDialog(),
+                    icon: Icon(Icons.edit),
+                    label: Text('Edit'),
+                  ),
+                ),
+                FadeInY(
+                    beginY: 10.0,
+                    delay: 0.2,
+                    child: OutlinedButton.icon(
+                      onPressed: () => showDeleteListDialog(),
+                      icon: Icon(Icons.delete),
+                      label: Text('Delete'),
+                      style: OutlinedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
+                    )),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  Widget bodyListContent() {
+  Widget body() {
     if (isLoading) {
       return loadingView();
     }
@@ -161,7 +185,7 @@ class _QuotesListState extends State<QuotesList> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 0.2,
           beginY: 50.0,
           child: Container(
             padding: const EdgeInsets.all(40.0),
@@ -269,19 +293,27 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget sliverQuotesList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final quote = quotes.elementAt(index);
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
-          return QuoteRowWithActions(
-            quote: quote,
-            quoteId: quote.quoteId,
-            quotePageType: QuotePageType.list,
-            onRemoveFromList: () => removeQuote(quote),
-          );
-        },
-        childCount: quotes.length,
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 20.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final quote = quotes.elementAt(index);
+
+            return QuoteRowWithActions(
+              quote: quote,
+              quoteId: quote.quoteId,
+              quotePageType: QuotePageType.list,
+              onRemoveFromList: () => removeQuote(quote),
+              padding: EdgeInsets.symmetric(
+                horizontal: horPadding,
+              ),
+            );
+          },
+          childCount: quotes.length,
+        ),
       ),
     );
   }
