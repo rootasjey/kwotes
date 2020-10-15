@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
@@ -26,27 +28,26 @@ class _QuotesListsState extends State<QuotesLists> {
   bool hasNext = true;
   bool isLoading = false;
   bool isLoadingMore = false;
-  int limit = 10;
+  bool newIsPublic = false;
+  bool oldIsPublic = false;
+  bool updateIsPublic = false;
 
+  final pageRoute = ListsRoute;
   final scrollController = ScrollController();
+
+  int limit = 10;
 
   List<UserQuotesList> userQuotesLists = [];
 
-  var lastDoc;
+  DocumentSnapshot lastDoc;
 
   String newName = '';
   String newDescription = '';
   String newIconUrl = '';
-  bool newIsPublic = false;
-
-  String updateName = '';
-  String updateDescription = '';
-  bool updateIsPublic = false;
-
   String oldName = '';
   String oldDescription = '';
-  bool oldIsPublic = false;
-  final pageRoute = ListsRoute;
+  String updateDescription = '';
+  String updateName = '';
 
   @override
   initState() {
@@ -57,7 +58,6 @@ class _QuotesListsState extends State<QuotesLists> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
       floatingActionButton: Observer(
         builder: (_) {
           return FloatingActionButton(
@@ -68,109 +68,144 @@ class _QuotesListsState extends State<QuotesLists> {
           );
         },
       ),
-    );
-  }
-
-  Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await fetch();
+            return null;
           },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: 'Lists',
+      title: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIconHeader(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Lists',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'Thematic lists created by you',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       subHeader: Observer(
         builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Wrap(
+              spacing: 10.0,
+              children: <Widget>[
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 2.0,
+                  child: ChoiceChip(
+                    label: Text(
+                      'First added',
+                      style: TextStyle(
+                        color:
+                            !descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
+                    selected: !descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (!descending) {
+                        return;
+                      }
+
+                      descending = false;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
                   ),
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
-
-                    descending = false;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
                 ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 2.5,
+                  child: ChoiceChip(
+                    label: Text(
+                      'Last added',
+                      style: TextStyle(
+                        color:
+                            descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
+                    selected: descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (descending) {
+                        return;
+                      }
+
+                      descending = true;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
                   ),
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
-
-                    descending = true;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  Widget bodyListContent() {
+  Widget body() {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
@@ -209,7 +244,6 @@ class _QuotesListsState extends State<QuotesLists> {
         children: <Widget>[
           SizedBox(
             width: 500.0,
-            height: 120.0,
             child: Card(
               child: InkWell(
                 onTap: () async {
@@ -236,7 +270,7 @@ class _QuotesListsState extends State<QuotesLists> {
                         children: <Widget>[
                           CircleAvatar(
                             radius: 20.0,
-                            backgroundColor: stateColors.primary,
+                            backgroundColor: Colors.black12,
                             child: Icon(Icons.list, color: Colors.white),
                           ),
                           Expanded(
@@ -268,6 +302,7 @@ class _QuotesListsState extends State<QuotesLists> {
                             ),
                           ),
                           PopupMenuButton<String>(
+                            icon: Icon(Icons.more_vert),
                             onSelected: (value) {
                               if (value == 'delete') {
                                 showDeleteListDialog(quoteList);
@@ -381,6 +416,186 @@ class _QuotesListsState extends State<QuotesLists> {
         childCount: userQuotesLists.length,
       ),
     );
+  }
+
+  void create() async {
+    final quotesList = await createList(
+      context: context,
+      name: newName,
+      description: newDescription,
+      iconUrl: newIconUrl,
+      isPublic: newIsPublic,
+    );
+
+    if (quotesList == null) {
+      showSnack(
+        context: context,
+        message: 'There was and issue while creating the list. Try again later',
+        type: SnackType.error,
+      );
+
+      return;
+    }
+
+    setState(() {
+      userQuotesLists.add(quotesList);
+    });
+  }
+
+  void deleteList(UserQuotesList quoteList) async {
+    int index = userQuotesLists.indexOf(quoteList);
+
+    setState(() {
+      userQuotesLists.removeAt(index);
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        return;
+      }
+
+      // Add a new document containing information
+      // to delete the subcollection (in order to delete its documents).
+      await Firestore.instance.collection('todelete').add({
+        'objectId': quoteList.id,
+        'path': 'users/<userId>/lists/<listId>/quotes',
+        'userId': userAuth.uid,
+        'target': 'list',
+        'type': 'subcollection',
+      });
+
+      // Delete the quote collection doc.
+      await Firestore.instance
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .document(quoteList.id)
+          .delete();
+    } catch (error) {
+      setState(() {
+        userQuotesLists.insert(index, quoteList);
+      });
+
+      debugPrint(error);
+
+      showSnack(
+        context: context,
+        message: 'There was and issue while deleting the list. Try again later',
+        type: SnackType.error,
+      );
+    }
+  }
+
+  Future fetch() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      userQuotesLists.clear();
+
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        return;
+      }
+
+      final snapshot = await Firestore.instance
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .orderBy('updatedAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quoteList = UserQuotesList.fromJSON(data);
+        userQuotesLists.add(quoteList);
+      });
+
+      lastDoc = snapshot.documents.last;
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
+        isLoading = false;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void fetchMore() async {
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        return;
+      }
+
+      final snapshot = await Firestore.instance
+          .collection('users')
+          .document(userAuth.uid)
+          .collection('lists')
+          .orderBy('updatedAt', descending: descending)
+          .startAfterDocument(lastDoc)
+          .limit(limit)
+          .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        setState(() {
+          hasNext = false;
+          isLoadingMore = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final quoteList = UserQuotesList.fromJSON(data);
+        userQuotesLists.add(quoteList);
+      });
+
+      lastDoc = snapshot.documents.last;
+
+      setState(() {
+        hasNext = snapshot.documents.length == limit;
+        isLoadingMore = false;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
   }
 
   void showCreateListDialog() {
@@ -673,191 +888,6 @@ class _QuotesListsState extends State<QuotesLists> {
             );
           });
         });
-  }
-
-  // --------------------------
-  // ^
-  // |_ Silent widget functions
-  // --------------------------
-
-  void create() async {
-    final quotesList = await createList(
-      context: context,
-      name: newName,
-      description: newDescription,
-      iconUrl: newIconUrl,
-      isPublic: newIsPublic,
-    );
-
-    if (quotesList == null) {
-      showSnack(
-        context: context,
-        message: 'There was and issue while creating the list. Try again later',
-        type: SnackType.error,
-      );
-
-      return;
-    }
-
-    setState(() {
-      userQuotesLists.add(quotesList);
-    });
-  }
-
-  void deleteList(UserQuotesList quoteList) async {
-    int index = userQuotesLists.indexOf(quoteList);
-
-    setState(() {
-      userQuotesLists.removeAt(index);
-    });
-
-    try {
-      final userAuth = await userState.userAuth;
-
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-        return;
-      }
-
-      // Add a new document containing information
-      // to delete the subcollection (in order to delete its documents).
-      await Firestore.instance.collection('todelete').add({
-        'objectId': quoteList.id,
-        'path': 'users/<userId>/lists/<listId>/quotes',
-        'userId': userAuth.uid,
-        'target': 'list',
-        'type': 'subcollection',
-      });
-
-      // Delete the quote collection doc.
-      await Firestore.instance
-          .collection('users')
-          .document(userAuth.uid)
-          .collection('lists')
-          .document(quoteList.id)
-          .delete();
-    } catch (error) {
-      setState(() {
-        userQuotesLists.insert(index, quoteList);
-      });
-
-      debugPrint(error);
-
-      showSnack(
-        context: context,
-        message: 'There was and issue while deleting the list. Try again later',
-        type: SnackType.error,
-      );
-    }
-  }
-
-  Future fetch() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      userQuotesLists.clear();
-
-      final userAuth = await userState.userAuth;
-
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-        return;
-      }
-
-      final snapshot = await Firestore.instance
-          .collection('users')
-          .document(userAuth.uid)
-          .collection('lists')
-          .orderBy('updatedAt', descending: descending)
-          .limit(limit)
-          .getDocuments();
-
-      if (snapshot.documents.isEmpty) {
-        setState(() {
-          hasNext = false;
-          isLoading = false;
-        });
-
-        return;
-      }
-
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
-
-        final quoteList = UserQuotesList.fromJSON(data);
-        userQuotesLists.add(quoteList);
-      });
-
-      lastDoc = snapshot.documents.last;
-
-      setState(() {
-        hasNext = snapshot.documents.length == limit;
-        isLoading = false;
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void fetchMore() async {
-    setState(() {
-      isLoadingMore = true;
-    });
-
-    try {
-      final userAuth = await userState.userAuth;
-
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-        return;
-      }
-
-      final snapshot = await Firestore.instance
-          .collection('users')
-          .document(userAuth.uid)
-          .collection('lists')
-          .orderBy('updatedAt', descending: descending)
-          .startAfterDocument(lastDoc)
-          .limit(limit)
-          .getDocuments();
-
-      if (snapshot.documents.isEmpty) {
-        setState(() {
-          hasNext = false;
-          isLoadingMore = false;
-        });
-
-        return;
-      }
-
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
-
-        final quoteList = UserQuotesList.fromJSON(data);
-        userQuotesLists.add(quoteList);
-      });
-
-      lastDoc = snapshot.documents.last;
-
-      setState(() {
-        hasNext = snapshot.documents.length == limit;
-        isLoadingMore = false;
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        isLoadingMore = false;
-      });
-    }
   }
 
   void updateList(UserQuotesList quotesList) async {
