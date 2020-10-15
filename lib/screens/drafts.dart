@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/drafts.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
@@ -50,73 +52,139 @@ class _DraftsState extends State<Drafts> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: body());
+    return Scaffold(
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await fetch();
+            return null;
+          },
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: 'Drafts',
+      expandedHeight: 120.0,
+      title: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIconHeader(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Drafts',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'They are only visible to you',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       subHeader: Observer(
         builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Wrap(
+              spacing: 10.0,
+              children: <Widget>[
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 0.0,
+                  child: ChoiceChip(
+                    label: Text(
+                      'First added',
+                      style: TextStyle(
+                        color:
+                            !descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
+                    selected: !descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (!descending) {
+                        return;
+                      }
+
+                      descending = false;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
                   ),
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
-
-                    descending = false;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
                 ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 0.1,
+                  child: ChoiceChip(
+                    label: Text(
+                      'Last added',
+                      style: TextStyle(
+                        color:
+                            descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
+                    selected: descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (descending) {
+                        return;
+                      }
+
+                      descending = true;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
                   ),
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
-
-                    descending = true;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -124,35 +192,6 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
-  }
-
-  Widget bodyListContent() {
     if (isLoading) {
       return loadingView();
     }
@@ -210,6 +249,8 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget listQuotes() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -219,6 +260,10 @@ class _DraftsState extends State<Drafts> {
             tempQuote: draft,
             isDraft: true,
             onTap: () => editDraft(draft),
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+              vertical: 30.0,
+            ),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
                   value: 'edit',
