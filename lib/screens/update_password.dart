@@ -173,9 +173,11 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    // contentPadding: const EdgeInsets.all(25.0),
                     children: <Widget>[
-                      Divider(),
+                      Divider(
+                        color: stateColors.secondary,
+                        thickness: 1.0,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(25.0),
                         child: Column(
@@ -338,9 +340,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Text(
-                'UPDATE',
+                'UPDATE PASSWORD',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                 ),
