@@ -53,7 +53,7 @@ class _AuthorsState extends State<Authors> {
   String searchInputValue = '';
   String lastSearchValue = '';
 
-  var itemsStyle = ItemsLayout.grid;
+  var itemsLayout = ItemsLayout.grid;
   var lastDoc;
 
   @override
@@ -77,7 +77,7 @@ class _AuthorsState extends State<Authors> {
 
   void initProps() {
     descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -188,12 +188,12 @@ class _AuthorsState extends State<Authors> {
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsLayout.list) {
+                    if (itemsLayout == ItemsLayout.list) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsLayout.list;
+                      itemsLayout = ItemsLayout.list;
                     });
 
                     appLocalStorage.saveItemsStyle(
@@ -202,7 +202,7 @@ class _AuthorsState extends State<Authors> {
                     );
                   },
                   icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsLayout.list
+                  color: itemsLayout == ItemsLayout.list
                       ? stateColors.primary
                       : stateColors.foreground.withOpacity(0.5),
                 ),
@@ -212,12 +212,12 @@ class _AuthorsState extends State<Authors> {
                 delay: 3.5,
                 child: IconButton(
                   onPressed: () {
-                    if (itemsStyle == ItemsLayout.grid) {
+                    if (itemsLayout == ItemsLayout.grid) {
                       return;
                     }
 
                     setState(() {
-                      itemsStyle = ItemsLayout.grid;
+                      itemsLayout = ItemsLayout.grid;
                     });
 
                     appLocalStorage.saveItemsStyle(
@@ -226,7 +226,7 @@ class _AuthorsState extends State<Authors> {
                     );
                   },
                   icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsLayout.grid
+                  color: itemsLayout == ItemsLayout.grid
                       ? stateColors.primary
                       : stateColors.foreground.withOpacity(0.5),
                 ),
@@ -337,7 +337,7 @@ class _AuthorsState extends State<Authors> {
 
     final references = searchInputValue.isEmpty ? authorsList : searchResults;
 
-    if (itemsStyle == ItemsLayout.grid) {
+    if (itemsLayout == ItemsLayout.grid) {
       return sliverGrid(references);
     }
 
