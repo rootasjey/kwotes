@@ -10,9 +10,15 @@ class QuotidianRow extends StatefulWidget {
   final Function onSelected;
   final Quotidian quotidian;
 
+  final EdgeInsets padding;
+
   QuotidianRow({
     this.itemBuilder,
     this.onSelected,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 70.0,
+      vertical: 30.0,
+    ),
     this.quotidian,
   });
 
@@ -48,10 +54,7 @@ class _QuotidianRowState extends State<QuotidianRow> {
     final quote = widget.quotidian.quote;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 70.0,
-        vertical: 30.0,
-      ),
+      padding: widget.padding,
       child: Card(
         elevation: elevation,
         color: stateColors.appBackground,
