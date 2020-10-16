@@ -9,7 +9,6 @@ import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/about.dart';
 import 'package:memorare/screens/settings.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/my_published_quotes.dart';
@@ -105,21 +104,7 @@ class _DashboardState extends State<Dashboard> {
         },
       ),
       FadeInY(
-        delay: 0.9,
-        beginY: beginY,
-        child: ListTile(
-          contentPadding: const EdgeInsets.only(left: 50.0),
-          leading: Icon(Icons.question_answer, size: 30.0),
-          title: Text(
-            'All published',
-            style: TextStyle(fontSize: 20.0),
-          ),
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => RecentQuotes())),
-        ),
-      ),
-      FadeInY(
-        delay: 1.0,
+        delay: 0.4,
         beginY: beginY,
         child: ListTile(
           contentPadding: const EdgeInsets.only(left: 50.0),
@@ -133,7 +118,7 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       FadeInY(
-        delay: 1.1,
+        delay: 0.5,
         beginY: beginY,
         child: ListTile(
           contentPadding: const EdgeInsets.only(left: 50.0),
@@ -345,11 +330,6 @@ class _DashboardState extends State<Dashboard> {
             beginY: beginY,
             child: aboutButton(),
           ),
-          // FadeInY(
-          //   delay: 0.5,
-          //   beginY: beginY,
-          //   child: helpCenterButton(),
-          // ),
         ],
       ),
     ];
