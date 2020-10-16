@@ -91,6 +91,7 @@ class QuotidiansState extends State<Quotidians> {
   Widget appBar() {
     return PageAppBar(
       textTitle: 'Quotidians',
+      textSubTitle: 'Scheduled quotes for the coming days',
       expandedHeight: 170.0,
       onTitlePressed: () {
         scrollController.animateTo(
