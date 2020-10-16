@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -99,6 +101,9 @@ class _FavouritesState extends State<Favourites> {
             slivers: <Widget>[
               appBar(),
               listContent(screenWidth: screenWidth),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 200.0),
+              )
             ],
           ),
         );
@@ -108,68 +113,107 @@ class _FavouritesState extends State<Favourites> {
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: 'Favourites',
+      expandedHeight: 130.0,
+      title: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIconHeader(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Favourites',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                Opacity(
+                  opacity: .6,
+                  child: Text(
+                    'Quotes you loved the most',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       subHeader: Observer(
         builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Wrap(
+              spacing: 10.0,
+              children: <Widget>[
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 2.0,
+                  child: ChoiceChip(
+                    label: Text(
+                      'First added',
+                      style: TextStyle(
+                        color:
+                            !descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
+                    selected: !descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (!descending) {
+                        return;
+                      }
+
+                      descending = false;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
                   ),
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
-
-                    descending = false;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
                 ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 2.5,
+                  child: ChoiceChip(
+                    label: Text(
+                      'Last added',
+                      style: TextStyle(
+                        color:
+                            descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
+                    selected: descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (descending) {
+                        return;
+                      }
+
+                      descending = true;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
                   ),
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
-
-                    descending = true;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -228,6 +272,8 @@ class _FavouritesState extends State<Favourites> {
   }
 
   Widget sliverQuotesList() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
@@ -237,6 +283,9 @@ class _FavouritesState extends State<Favourites> {
             quote: quote,
             quoteId: quote.quoteId,
             quotePageType: QuotePageType.favourites,
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+            ),
             onBeforeRemoveFromFavourites: () {
               setState(() {
                 // optimistic
