@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
@@ -13,15 +11,14 @@ import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/state/colors.dart';
+import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:memorare/utils/auth.dart';
 import 'package:memorare/utils/snack.dart';
-
-import 'add_quote/steps.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AdminTempQuotes extends StatefulWidget {
   @override
@@ -29,253 +26,113 @@ class AdminTempQuotes extends StatefulWidget {
 }
 
 class AdminTempQuotesState extends State<AdminTempQuotes> {
+  bool descending = true;
   bool hasNext = true;
   bool hasErrors = false;
   bool isLoading = false;
   bool isLoadingMore = false;
-  String lang = 'en';
-  var lastDoc;
-  int limit = 30;
-  bool descending = true;
-  var itemsStyle = ItemsLayout.list;
-  final pageRoute = AdminTempQuotesRoute;
 
-  var scrollController = ScrollController();
-  var tempQuotes = List<TempQuote>();
+  int limit = 30;
+
+  DocumentSnapshot lastDoc;
+  ItemsLayout itemsLayout = ItemsLayout.list;
+  List<TempQuote> tempQuotes = [];
+
+  ScrollController scrollController = ScrollController();
+
+  String pageRoute = AdminTempQuotesRoute;
+  String lang = 'en';
 
   @override
   initState() {
     super.initState();
     getSavedProps();
-    checkAuth();
+    checkConnectedOrNavSignin();
     fetch();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await fetch();
+            return null;
+          },
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
+  }
+
+  Widget appBar() {
+    return PageAppBar(
+      textTitle: 'All in validation',
+      textSubTitle: 'Quotes in validation from all users',
+      expandedHeight: 170.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
+
+        descending = newDescending;
+        fetch();
+
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        fetch();
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
+
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
+
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 
   Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
-  }
-
-  Widget appBar() {
-    return BasePageAppBar(
-      textTitle: 'All In Validation',
-      subHeader: Observer(
-        builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
-
-                    descending = false;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
-
-                    descending = true;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: DropdownButton<String>(
-                    elevation: 2,
-                    value: lang,
-                    isDense: true,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: GoogleFonts.raleway().fontFamily,
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (String newLang) {
-                      lang = newLang;
-                      fetch();
-
-                      appLocalStorage.setPageLang(
-                        lang: lang,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                    items: ['en', 'fr'].map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                          ));
-                    }).toList(),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.2,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 10.0,
-                    right: 10.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    if (itemsStyle == ItemsLayout.list) {
-                      return;
-                    }
-
-                    setState(() {
-                      itemsStyle = ItemsLayout.list;
-                    });
-
-                    appLocalStorage.saveItemsStyle(
-                      pageRoute: pageRoute,
-                      style: ItemsLayout.list,
-                    );
-                  },
-                  icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsLayout.list
-                      ? stateColors.primary
-                      : stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    if (itemsStyle == ItemsLayout.grid) {
-                      return;
-                    }
-
-                    setState(() {
-                      itemsStyle = ItemsLayout.grid;
-                    });
-
-                    appLocalStorage.saveItemsStyle(
-                      pageRoute: pageRoute,
-                      style: ItemsLayout.grid,
-                    );
-                  },
-                  icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsLayout.grid
-                      ? stateColors.primary
-                      : stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget bodyListContent() {
     if (isLoading) {
       return SliverLoadingView();
     }
@@ -288,7 +145,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       return emptyView();
     }
 
-    if (itemsStyle == ItemsLayout.grid) {
+    if (itemsLayout == ItemsLayout.grid) {
       return sliverGrid();
     }
 
@@ -404,6 +261,8 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget sliverList() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -412,6 +271,10 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           return TempQuoteRow(
             tempQuote: tempQuote,
             onTap: () => editAction(tempQuote),
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+              vertical: 30.0,
+            ),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
                   value: 'delete',
@@ -453,20 +316,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         childCount: tempQuotes.length,
       ),
     );
-  }
-
-  void checkAuth() async {
-    try {
-      final userAuth = await userState.userAuth;
-
-      if (userAuth == null) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
-      }
-    } catch (error) {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
-    }
   }
 
   void deleteAction(TempQuote tempQuote) async {
@@ -596,7 +445,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   void getSavedProps() {
     lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
     descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void validateAction(TempQuote tempQuote) async {
