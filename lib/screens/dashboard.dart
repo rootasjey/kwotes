@@ -24,7 +24,6 @@ import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -194,8 +193,11 @@ class _DashboardState extends State<Dashboard> {
             beginY: beginY,
             child: settingsButton(),
           ),
-          FadeInY(delay: 0.7, beginY: beginY, child: helpCenterButton()),
-          FadeInY(delay: 0.8, beginY: beginY, child: signOutButton()),
+          FadeInY(
+            delay: 0.7,
+            beginY: beginY,
+            child: signOutButton(),
+          ),
         ],
       ),
     ];
@@ -333,21 +335,6 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     ];
-  }
-
-  Widget helpCenterButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.help_outline,
-        size: 30.0,
-      ),
-      title: Text(
-        'Help Center',
-        style: TextStyle(fontSize: 20.0),
-      ),
-      onTap: () => launch('https://help.outofcontext.app'),
-    );
   }
 
   Widget signOutButton() {
