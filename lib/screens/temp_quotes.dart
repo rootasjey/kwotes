@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/temp_quotes.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
+import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -115,117 +117,156 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   Widget appBar() {
     return SimpleAppBar(
-      textTitle: 'In Validation',
+      expandedHeight: 130.0,
+      title: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIconHeader(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'In validation',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                Opacity(
+                  opacity: .6,
+                  child: Text(
+                    'Your quotes waiting to be validated',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       subHeader: Observer(
         builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Wrap(
+              spacing: 10.0,
+              children: <Widget>[
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 2.0,
+                  child: ChoiceChip(
+                    label: Text(
+                      'First added',
+                      style: TextStyle(
+                        color:
+                            !descending ? Colors.white : stateColors.foreground,
+                      ),
                     ),
-                  ),
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
+                    selected: !descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (!descending) {
+                        return;
+                      }
 
-                    descending = false;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
-
-                    descending = true;
-                    fetch();
-
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground,
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: DropdownButton<String>(
-                    elevation: 2,
-                    value: lang,
-                    isDense: true,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: GoogleFonts.raleway().fontFamily,
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (String newLang) {
-                      lang = newLang;
+                      descending = false;
                       fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
                     },
-                    items: ['all', 'en', 'fr'].map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                          ));
-                    }).toList(),
                   ),
                 ),
-              ),
-            ],
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 2.5,
+                  child: ChoiceChip(
+                    label: Text(
+                      'Last added',
+                      style: TextStyle(
+                        color:
+                            descending ? Colors.white : stateColors.foreground,
+                      ),
+                    ),
+                    selected: descending,
+                    selectedColor: stateColors.primary,
+                    onSelected: (selected) {
+                      if (descending) {
+                        return;
+                      }
+
+                      descending = true;
+                      fetch();
+
+                      appLocalStorage.setPageOrder(
+                        descending: descending,
+                        pageRoute: pageRoute,
+                      );
+                    },
+                  ),
+                ),
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 3.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10.0,
+                      left: 20.0,
+                      right: 20.0,
+                    ),
+                    child: Container(
+                      height: 25,
+                      width: 2.0,
+                      color: stateColors.foreground,
+                    ),
+                  ),
+                ),
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 3.5,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: DropdownButton<String>(
+                      elevation: 2,
+                      value: lang,
+                      isDense: true,
+                      underline: Container(
+                        height: 0,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      style: TextStyle(
+                        color: stateColors.foreground.withOpacity(0.6),
+                        fontFamily: GoogleFonts.raleway().fontFamily,
+                        fontSize: 20.0,
+                      ),
+                      onChanged: (String newLang) {
+                        lang = newLang;
+                        fetch();
+                      },
+                      items: ['all', 'en', 'fr'].map((String value) {
+                        return DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              value.toUpperCase(),
+                            ));
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -345,43 +386,51 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Widget sliverList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final tempQuote = tempQuotes.elementAt(index);
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
-          return TempQuoteRow(
-            tempQuote: tempQuote,
-            isDraft: false,
-            onTap: () => editTempQuote(tempQuote),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'edit',
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text('Edit'),
-                  )),
-              PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete_sweep),
-                    title: Text('Delete'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'edit') {
-                editTempQuote(tempQuote);
-                return;
-              }
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 40.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final tempQuote = tempQuotes.elementAt(index);
 
-              if (value == 'delete') {
-                deleteAction(tempQuote);
-                return;
-              }
-            },
-          );
-        },
-        childCount: tempQuotes.length,
+            return TempQuoteRow(
+              tempQuote: tempQuote,
+              isDraft: false,
+              onTap: () => editTempQuote(tempQuote),
+              padding: EdgeInsets.symmetric(
+                horizontal: horPadding,
+              ),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                    value: 'edit',
+                    child: ListTile(
+                      leading: Icon(Icons.edit),
+                      title: Text('Edit'),
+                    )),
+                PopupMenuItem(
+                    value: 'delete',
+                    child: ListTile(
+                      leading: Icon(Icons.delete_sweep),
+                      title: Text('Delete'),
+                    )),
+              ],
+              onSelected: (value) {
+                if (value == 'edit') {
+                  editTempQuote(tempQuote);
+                  return;
+                }
+
+                if (value == 'delete') {
+                  deleteAction(tempQuote);
+                  return;
+                }
+              },
+            );
+          },
+          childCount: tempQuotes.length,
+        ),
       ),
     );
   }
