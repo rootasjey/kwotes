@@ -36,8 +36,7 @@ class _HomeMobileState extends State<HomeMobile> {
     super.initState();
 
     setState(() {
-      // selectedIndex = widget.initialIndex;
-      selectedIndex = 4;
+      selectedIndex = widget.initialIndex;
     });
   }
 
