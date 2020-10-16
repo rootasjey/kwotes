@@ -67,7 +67,7 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
         if (constrains.maxWidth < 700.0) {
           titleFontSize = 25.0;
           leftTitlePadding = 40.0;
-          leftSubHeaderPadding = 85.0;
+          leftSubHeaderPadding = 50.0;
           menuIconLeftPadding = 20.0;
         }
 
