@@ -12,7 +12,7 @@ import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/search.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/screens/signup.dart';
-import 'package:memorare/screens/temp_quotes.dart';
+import 'package:memorare/screens/my_temp_quotes.dart';
 import 'package:memorare/screens/web/favourites.dart';
 
 class Rerouter {

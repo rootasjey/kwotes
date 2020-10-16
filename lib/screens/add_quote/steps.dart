@@ -18,7 +18,7 @@ import 'package:memorare/screens/add_quote/reference.dart';
 import 'package:memorare/screens/add_quote/topics.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/screens/temp_quotes.dart';
+import 'package:memorare/screens/my_temp_quotes.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
