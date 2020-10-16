@@ -7,7 +7,7 @@ import 'package:memorare/screens/recent_quotes.dart';
 import 'package:memorare/screens/admin_temp_quotes.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/my_published_quotes.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/search.dart';
 import 'package:memorare/screens/signin.dart';

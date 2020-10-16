@@ -7,7 +7,7 @@ import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/drafts.dart';
 import 'package:memorare/screens/update_email.dart';
 import 'package:memorare/screens/update_password.dart';
-import 'package:memorare/screens/published_quotes.dart';
+import 'package:memorare/screens/my_published_quotes.dart';
 import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/quotidians.dart';
