@@ -21,6 +21,7 @@ class RecentQuotes extends StatefulWidget {
   final bool showNavBackIcon;
 
   RecentQuotes({this.showNavBackIcon = true});
+
   @override
   RecentQuotesState createState() => RecentQuotesState();
 }
