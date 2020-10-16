@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quotidian_row.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -32,7 +30,7 @@ class QuotidiansState extends State<Quotidians> {
   bool hasErrors = false;
   bool isLoading = false;
   bool isLoadingMore = false;
-  var itemsStyle = ItemsLayout.list;
+  var itemsLayout = ItemsLayout.list;
   String lang = 'en';
   int limit = 30;
   bool descending = false;
@@ -54,7 +52,7 @@ class QuotidiansState extends State<Quotidians> {
   void initProps() {
     lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
     descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -80,7 +78,7 @@ class QuotidiansState extends State<Quotidians> {
           },
           child: LayoutBuilder(
             builder: (context, constrains) {
-              return bodyContent(
+              return body(
                 maxWidth: constrains.maxWidth,
               );
             },
@@ -91,199 +89,60 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
+    return PageAppBar(
       textTitle: 'Quotidians',
-      subHeader: Observer(
-        builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
+      expandedHeight: 170.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
 
-                    descending = false;
-                    fetch();
+        descending = newDescending;
+        fetch();
 
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        fetch();
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
 
-                    descending = true;
-                    fetch();
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
 
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: DropdownButton<String>(
-                    elevation: 2,
-                    value: lang,
-                    isDense: true,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: GoogleFonts.raleway().fontFamily,
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (String newLang) {
-                      lang = newLang;
-                      fetch();
-                      appLocalStorage.setPageLang(
-                        lang: lang,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                    items: ['en', 'fr'].map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                          ));
-                    }).toList(),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.2,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 10.0,
-                    right: 10.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    if (itemsStyle == ItemsLayout.list) {
-                      return;
-                    }
-
-                    setState(() {
-                      itemsStyle = ItemsLayout.list;
-                    });
-
-                    appLocalStorage.saveItemsStyle(
-                      pageRoute: pageRoute,
-                      style: ItemsLayout.list,
-                    );
-                  },
-                  icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsLayout.list
-                      ? stateColors.primary
-                      : stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    if (itemsStyle == ItemsLayout.grid) {
-                      return;
-                    }
-
-                    setState(() {
-                      itemsStyle = ItemsLayout.grid;
-                    });
-
-                    appLocalStorage.saveItemsStyle(
-                      pageRoute: pageRoute,
-                      style: ItemsLayout.grid,
-                    );
-                  },
-                  icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsLayout.grid
-                      ? stateColors.primary
-                      : stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 
-  Widget bodyContent({double maxWidth}) {
+  Widget body({double maxWidth}) {
     return CustomScrollView(
       controller: scrollController,
       slivers: <Widget>[
         appBar(),
-        if (itemsStyle == ItemsLayout.list) customScrollViewChild(),
-        if (itemsStyle == ItemsLayout.grid) ...groupedGrids(),
+        if (itemsLayout == ItemsLayout.list) customScrollViewChild(),
+        if (itemsLayout == ItemsLayout.grid) ...groupedGrids(),
       ],
     );
   }
@@ -526,6 +385,9 @@ class QuotidiansState extends State<Quotidians> {
         children: group.map((quotidian) {
       return QuotidianRow(
         quotidian: quotidian,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+        ),
         itemBuilder: (context) => <PopupMenuEntry<String>>[
           PopupMenuItem(
             value: 'delete',
