@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/screens/home/home.dart';
@@ -38,7 +38,7 @@ class DeleteAccountState extends State<DeleteAccount> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SimpleAppBar(
+          BasePageAppBar(
             expandedHeight: 90.0,
             title: Row(
               children: [

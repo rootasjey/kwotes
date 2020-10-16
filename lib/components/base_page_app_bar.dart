@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
 
-class SimpleAppBar extends StatefulWidget {
+class BasePageAppBar extends StatefulWidget {
   // Appbar's height.
   final double expandedHeight;
 
@@ -25,7 +25,7 @@ class SimpleAppBar extends StatefulWidget {
   /// Distance between the top of the screen and the title.
   final double topTitleSpacing;
 
-  SimpleAppBar({
+  BasePageAppBar({
     this.showNavBackIcon = true,
     this.onPressedMenu,
     this.subHeader,
@@ -36,10 +36,10 @@ class SimpleAppBar extends StatefulWidget {
   });
 
   @override
-  _SimpleAppBarState createState() => _SimpleAppBarState();
+  _BasePageAppBarState createState() => _BasePageAppBarState();
 }
 
-class _SimpleAppBarState extends State<SimpleAppBar> {
+class _BasePageAppBarState extends State<BasePageAppBar> {
   @override
   Widget build(BuildContext context) {
     return Observer(

@@ -7,7 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/reference_row.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -101,7 +101,7 @@ class _ReferencesState extends State<References> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       textTitle: 'Options',
       showNavBackIcon: true,
       subHeader: Observer(

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
@@ -88,7 +88,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       textTitle: 'All In Validation',
       subHeader: Observer(
         builder: (context) {

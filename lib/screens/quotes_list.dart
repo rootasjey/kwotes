@@ -7,7 +7,7 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -93,7 +93,7 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       expandedHeight: 120.0,
       title: Row(
         children: [

@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/reference_row.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -84,7 +84,7 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       title: TextButton.icon(
         onPressed: () {
           scrollController.animateTo(

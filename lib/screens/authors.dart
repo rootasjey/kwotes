@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/author_row.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/circle_author.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -102,7 +102,7 @@ class _AuthorsState extends State<Authors> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       textTitle: 'Options',
       showNavBackIcon: true,
       subHeader: Observer(

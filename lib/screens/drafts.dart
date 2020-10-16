@@ -5,7 +5,7 @@ import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
@@ -83,7 +83,7 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       expandedHeight: 120.0,
       title: Row(
         children: [

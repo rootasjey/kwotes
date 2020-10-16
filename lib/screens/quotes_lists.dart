@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
 import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -98,7 +98,7 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget appBar() {
-    return SimpleAppBar(
+    return BasePageAppBar(
       expandedHeight: 120.0,
       title: Row(
         children: [

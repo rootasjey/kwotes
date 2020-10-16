@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/simple_appbar.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
@@ -101,7 +101,7 @@ class _TopicsState extends State<Topics> {
 
   Widget appBar() {
     if (MediaQuery.of(context).size.width < 700.0) {
-      return SimpleAppBar(
+      return BasePageAppBar(
         expandedHeight: 150.0,
         title: TextButton.icon(
           onPressed: () {
