@@ -6,7 +6,7 @@ import 'package:memorare/components/web/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
-import 'package:memorare/components/web/home_app_bar.dart';
+import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/screens/author_page.dart';
@@ -64,7 +64,7 @@ class _QuotePageState extends State<QuotePage> {
         physics: ClampingScrollPhysics(),
         controller: widget.scrollController,
         slivers: <Widget>[
-          HomeAppBar(
+          MainAppBar(
             showCloseButton: true,
             showUserMenu: false,
           ),

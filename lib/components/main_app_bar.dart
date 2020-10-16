@@ -11,14 +11,14 @@ import 'package:memorare/screens/signup.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 
-class HomeAppBar extends StatefulWidget {
+class MainAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
   final Function onTapIconHeader;
   final String title;
   final bool showUserMenu;
   final bool showCloseButton;
 
-  HomeAppBar({
+  MainAppBar({
     this.showCloseButton = false,
     this.showUserMenu = true,
     this.automaticallyImplyLeading = false,
@@ -27,10 +27,10 @@ class HomeAppBar extends StatefulWidget {
   });
 
   @override
-  _HomeAppBarState createState() => _HomeAppBarState();
+  _MainAppBarState createState() => _MainAppBarState();
 }
 
-class _HomeAppBarState extends State<HomeAppBar> {
+class _MainAppBarState extends State<MainAppBar> {
   @override
   Widget build(BuildContext context) {
     return SliverLayoutBuilder(

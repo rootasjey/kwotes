@@ -8,7 +8,7 @@ import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/sliver_empty_view.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/home_app_bar.dart';
+import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/screens/quotes_by_author_ref.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -80,7 +80,7 @@ class _AuthorPageState extends State<AuthorPage> {
             physics: ClampingScrollPhysics(),
             controller: widget.scrollController,
             slivers: <Widget>[
-              HomeAppBar(
+              MainAppBar(
                 title: author != null ? author.name : '',
                 showCloseButton: true,
                 showUserMenu: false,

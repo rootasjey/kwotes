@@ -10,7 +10,7 @@ import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/simple_appbar.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/home_app_bar.dart';
+import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -119,7 +119,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              HomeAppBar(),
+              MainAppBar(),
               appBar(),
               bodyListContent(),
             ],

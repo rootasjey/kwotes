@@ -11,7 +11,7 @@ import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/circle_author.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/home_app_bar.dart';
+import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
@@ -307,7 +307,7 @@ class _AuthorsState extends State<Authors> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              HomeAppBar(
+              MainAppBar(
                 title: 'Authors',
                 automaticallyImplyLeading: true,
               ),
