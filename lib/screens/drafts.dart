@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/drafts.dart';
-import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
@@ -20,6 +17,7 @@ import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Drafts extends StatefulWidget {
   @override
@@ -27,22 +25,24 @@ class Drafts extends StatefulWidget {
 }
 
 class _DraftsState extends State<Drafts> {
+  bool descending = true;
   bool hasNext = true;
   bool hasErrors = false;
   bool isLoading = false;
   bool isLoadingMore = false;
-  String lang = 'en';
+
+  DocumentSnapshot lastDoc;
+
   int limit = 30;
   int order = -1;
-  bool descending = true;
 
-  final pageRoute = DraftsRoute;
+  ItemsLayout itemsLayout = ItemsLayout.list;
 
   List<TempQuote> drafts = [];
   List<TempQuote> offlineDrafts = [];
-  ScrollController scrollController = ScrollController();
 
-  var lastDoc;
+  ScrollController scrollController = ScrollController();
+  final String pageRoute = DraftsRoute;
 
   @override
   void initState() {
@@ -83,111 +83,47 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
-      expandedHeight: 120.0,
-      title: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIconHeader(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Drafts',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    'They are only visible to you',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Wrap(
-              spacing: 10.0,
-              children: <Widget>[
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.0,
-                  child: ChoiceChip(
-                    label: Text(
-                      'First added',
-                      style: TextStyle(
-                        color:
-                            !descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: !descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (!descending) {
-                        return;
-                      }
+    return PageAppBar(
+      textTitle: 'Drafts',
+      textSubTitle: 'They are only visible to you',
+      expandedHeight: 170.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
 
-                      descending = false;
-                      fetch();
+        descending = newDescending;
+        fetch();
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.1,
-                  child: ChoiceChip(
-                    label: Text(
-                      'Last added',
-                      style: TextStyle(
-                        color:
-                            descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (descending) {
-                        return;
-                      }
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      showLangSelector: false,
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
 
-                      descending = true;
-                      fetch();
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 
@@ -204,7 +140,11 @@ class _DraftsState extends State<Drafts> {
       return emptyView();
     }
 
-    return listQuotes();
+    if (itemsLayout == ItemsLayout.list) {
+      return listQuotes();
+    }
+
+    return gridQuotes();
   }
 
   Widget emptyView() {
