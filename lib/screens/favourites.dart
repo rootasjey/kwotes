@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
-import 'package:memorare/components/circle_button.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -17,6 +14,7 @@ import 'package:memorare/types/quote.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Favourites extends StatefulWidget {
   @override
@@ -29,14 +27,17 @@ class _FavouritesState extends State<Favourites> {
   bool isFabVisible = false;
   bool isLoading = false;
   bool isLoadingMore = false;
-  int limit = 30;
 
-  final pageRoute = FavouritesRoute;
+  DocumentSnapshot lastDoc;
+
+  final int limit = 30;
+
+  ItemsLayout itemsLayout = ItemsLayout.list;
+
   List<Quote> quotes = [];
 
-  final scrollController = ScrollController();
-
-  var lastDoc;
+  final ScrollController scrollController = ScrollController();
+  final String pageRoute = FavouritesRoute;
 
   @override
   initState() {
@@ -62,156 +63,43 @@ class _FavouritesState extends State<Favourites> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: body(),
-    );
-  }
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final screenWidth = MediaQuery.of(context).size.width;
 
-  Widget body() {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final screenWidth = MediaQuery.of(context).size.width;
+          return NotificationListener(
+            onNotification: (ScrollNotification scrollNotif) {
+              // FAB visibility
+              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                setState(() {
+                  isFabVisible = false;
+                });
+              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                setState(() {
+                  isFabVisible = true;
+                });
+              }
 
-        return NotificationListener(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
+              // Load more scenario
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent - 100.0) {
+                return false;
+              }
 
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent - 100.0) {
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
               return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              listContent(screenWidth: screenWidth),
-              SliverPadding(
-                padding: const EdgeInsets.only(bottom: 200.0),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget appBar() {
-    return BasePageAppBar(
-      expandedHeight: 130.0,
-      title: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIconHeader(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Favourites',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: .6,
-                  child: Text(
-                    'Quotes you loved the most',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Wrap(
-              spacing: 10.0,
-              children: <Widget>[
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 2.0,
-                  child: ChoiceChip(
-                    label: Text(
-                      'First added',
-                      style: TextStyle(
-                        color:
-                            !descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: !descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (!descending) {
-                        return;
-                      }
-
-                      descending = false;
-                      fetch();
-
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 2.5,
-                  child: ChoiceChip(
-                    label: Text(
-                      'Last added',
-                      style: TextStyle(
-                        color:
-                            descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (descending) {
-                        return;
-                      }
-
-                      descending = true;
-                      fetch();
-
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(screenWidth: screenWidth),
+                SliverPadding(
+                  padding: const EdgeInsets.only(bottom: 200.0),
+                )
               ],
             ),
           );
@@ -220,7 +108,52 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
-  Widget listContent({double screenWidth}) {
+  Widget appBar() {
+    return PageAppBar(
+      textTitle: 'Favourites',
+      textSubTitle: 'Quotes you loved the most',
+      expandedHeight: 170.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      onIconPressed: () => Navigator.of(context).pop(),
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
+
+        descending = newDescending;
+        fetch();
+
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
+
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
+
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
+    );
+  }
+
+  Widget body({double screenWidth}) {
     if (isLoading) {
       return loadingView();
     }
@@ -229,7 +162,11 @@ class _FavouritesState extends State<Favourites> {
       return emptyView();
     }
 
-    return sliverQuotesList();
+    if (itemsLayout == ItemsLayout.list) {
+      return quotesListView();
+    }
+
+    return gridQuotes();
   }
 
   Widget emptyView() {
@@ -258,6 +195,45 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
+  Widget gridQuotes() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300.0,
+        crossAxisSpacing: 20.0,
+        mainAxisSpacing: 20.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final quote = quotes.elementAt(index);
+
+          return QuoteRowWithActions(
+            quote: quote,
+            quoteId: quote.quoteId,
+            componentType: ItemComponentType.card,
+            quotePageType: QuotePageType.favourites,
+            padding: EdgeInsets.zero,
+            onBeforeRemoveFromFavourites: () {
+              setState(() {
+                // optimistic
+                quotes.removeAt(index);
+              });
+            },
+            onAfterRemoveFromFavourites: (bool success) {
+              if (!success) {
+                setState(() {
+                  quotes.insert(index, quote);
+                });
+              }
+
+              userState.updateFavDate();
+            },
+          );
+        },
+        childCount: quotes.length,
+      ),
+    );
+  }
+
   Widget loadingView() {
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -271,7 +247,7 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
-  Widget sliverQuotesList() {
+  Widget quotesListView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
     return SliverList(
