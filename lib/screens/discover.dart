@@ -105,7 +105,6 @@ class _DiscoverState extends State<Discover> {
           pageRoute: pageRoute,
         );
       },
-      showLangSelector: false,
       itemsLayout: itemsLayout,
       onItemsLayoutSelected: (selectedLayout) {
         if (selectedLayout == itemsLayout) {

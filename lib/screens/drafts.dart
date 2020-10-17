@@ -108,7 +108,6 @@ class _DraftsState extends State<Drafts> {
           pageRoute: pageRoute,
         );
       },
-      showLangSelector: false,
       itemsLayout: itemsLayout,
       onItemsLayoutSelected: (selectedLayout) {
         if (selectedLayout == itemsLayout) {

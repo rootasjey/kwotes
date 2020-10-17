@@ -10,11 +10,8 @@ import 'package:memorare/types/enums.dart';
 import 'package:memorare/utils/language.dart';
 
 class PageAppBar extends StatefulWidget {
-  final bool showOrderButtons;
-  final bool showLangSelector;
   final bool descending;
   final bool showNavBackIcon;
-  final bool showItemsLayout;
 
   final double expandedHeight;
 
@@ -33,8 +30,6 @@ class PageAppBar extends StatefulWidget {
 
   const PageAppBar({
     Key key,
-    this.showOrderButtons = true,
-    this.showLangSelector = true,
     this.descending = true,
     this.expandedHeight = 130.0,
     this.itemsLayout = ItemsLayout.list,
@@ -44,7 +39,6 @@ class PageAppBar extends StatefulWidget {
     this.onItemsLayoutSelected,
     this.onLangChanged,
     this.onTitlePressed,
-    this.showItemsLayout = true,
     this.showNavBackIcon = true,
     @required this.textTitle,
     this.textSubTitle,
@@ -56,6 +50,24 @@ class PageAppBar extends StatefulWidget {
 
 class _PageAppBarState extends State<PageAppBar> {
   @override
+  initState() {
+    super.initState();
+
+    if (widget.onLangChanged != null &&
+        (widget.lang == null || widget.lang.isEmpty)) {
+      debugPrint("Please specify a value for the 'lang' property.");
+    }
+
+    if (widget.onItemsLayoutSelected != null && widget.itemsLayout == null) {
+      debugPrint("Please specify a value for the 'itemsLayout' property.");
+    }
+
+    if (widget.onDescendingChanged != null && widget.descending == null) {
+      debugPrint("Please specify a value for the 'descending' property.");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
@@ -63,9 +75,9 @@ class _PageAppBarState extends State<PageAppBar> {
       showNavBackIcon: widget.showNavBackIcon,
       subHeader: Observer(
         builder: (context) {
-          final showOrderButtons = widget.showOrderButtons;
-          final showLangSelector = widget.showLangSelector;
-          final showItemsLayout = widget.showItemsLayout;
+          final showOrderButtons = widget.onDescendingChanged != null;
+          final showLangSelector = widget.onLangChanged != null;
+          final showItemsLayout = widget.onItemsLayoutSelected != null;
 
           return Wrap(
             spacing: 10.0,
