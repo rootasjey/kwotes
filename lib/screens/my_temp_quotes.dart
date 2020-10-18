@@ -21,6 +21,7 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class MyTempQuotes extends StatefulWidget {
   @override
@@ -116,6 +117,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Widget appBar() {
+    // ?NOTE: Not using PageAppBar because of custom languages: 'all'.
     return BasePageAppBar(
       expandedHeight: 130.0,
       title: Row(
@@ -126,6 +128,13 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           AppIconHeader(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             size: 30.0,
+            onTap: () {
+              scrollController.animateTo(
+                0,
+                duration: 250.milliseconds,
+                curve: Curves.easeIn,
+              );
+            },
           ),
           Expanded(
             child: Column(
