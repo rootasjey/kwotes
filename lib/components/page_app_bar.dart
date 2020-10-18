@@ -24,12 +24,16 @@ class PageAppBar extends StatefulWidget {
 
   final ItemsLayout itemsLayout;
 
+  /// Additional custom icon buttons.
+  final List<Widget> additionalIconButtons;
+
   final String textTitle;
   final String textSubTitle;
   final String lang;
 
   const PageAppBar({
     Key key,
+    this.additionalIconButtons = const [],
     this.descending = true,
     this.expandedHeight = 130.0,
     this.itemsLayout = ItemsLayout.list,
@@ -91,6 +95,7 @@ class _PageAppBarState extends State<PageAppBar> {
               if (showOrderButtons && showItemsLayout && !showLangSelector)
                 separator(delay: 0.3), // separator
               if (showItemsLayout) ...itemsLayoutSelector(),
+              ...widget.additionalIconButtons,
             ],
           );
         },

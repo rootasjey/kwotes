@@ -4,9 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/circle_author.dart';
 import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/main_app_bar.dart';
@@ -132,27 +131,17 @@ class _SearchState extends State<Search> {
 
   Widget appBar() {
     if (MediaQuery.of(context).size.width < 700.0) {
-      return BasePageAppBar(
-        title: TextButton.icon(
-          onPressed: () {
-            scrollController.animateTo(
-              0,
-              duration: 250.milliseconds,
-              curve: Curves.easeIn,
-            );
-          },
-          icon: AppIconHeader(
-            padding: EdgeInsets.zero,
-            size: 30.0,
-          ),
-          label: Text(
-            'Search',
-            style: TextStyle(
-              fontSize: 22.0,
-            ),
-          ),
-        ),
+      return PageAppBar(
+        textTitle: 'Search',
+        expandedHeight: 170.0,
         showNavBackIcon: false,
+        onTitlePressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
       );
     }
 

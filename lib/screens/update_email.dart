@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/screens/signin.dart';
@@ -48,44 +46,11 @@ class _UpdateEmailState extends State<UpdateEmail> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          BasePageAppBar(
-            expandedHeight: 90.0,
-            title: Row(
-              children: [
-                CircleButton(
-                    onTap: () => Navigator.of(context).pop(),
-                    icon:
-                        Icon(Icons.arrow_back, color: stateColors.foreground)),
-                AppIconHeader(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  size: 30.0,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Update email',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Opacity(
-                        opacity: .6,
-                        child: Text(
-                          'If your email is outdated',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          PageAppBar(
+            textTitle: 'Update email',
+            textSubTitle: 'If your email is outdated',
+            expandedHeight: 170.0,
+            showNavBackIcon: true,
           ),
           body(),
         ],

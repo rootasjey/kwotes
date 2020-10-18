@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/reference_row.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/web/reference_card.dart';
 import 'package:memorare/components/web/empty_content.dart';
@@ -53,7 +52,7 @@ class _ReferencesState extends State<References> {
   String searchInputValue = '';
   String lastSearchValue = '';
 
-  var itemsStyle = ItemsLayout.grid;
+  var itemsLayout = ItemsLayout.grid;
 
   @override
   initState() {
@@ -76,7 +75,7 @@ class _ReferencesState extends State<References> {
 
   void initProps() {
     descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsStyle = appLocalStorage.getItemsStyle(pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -101,169 +100,76 @@ class _ReferencesState extends State<References> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
+    return PageAppBar(
       textTitle: 'Options',
-      showNavBackIcon: true,
-      subHeader: Observer(
-        builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.0,
-                child: ChoiceChip(
-                  label: Text(
-                    'First added',
-                    style: TextStyle(
-                      color:
-                          !descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  tooltip: 'Order by first added',
-                  selected: !descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (!descending) {
-                      return;
-                    }
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
 
-                    descending = false;
-                    fetch();
+        descending = newDescending;
+        fetch();
 
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 2.5,
-                child: ChoiceChip(
-                  label: Text(
-                    'Last added',
-                    style: TextStyle(
-                      color: descending ? Colors.white : stateColors.foreground,
-                    ),
-                  ),
-                  tooltip: 'Order by most recently added',
-                  selected: descending,
-                  selectedColor: stateColors.primary,
-                  onSelected: (selected) {
-                    if (descending) {
-                      return;
-                    }
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
 
-                    descending = true;
-                    fetch();
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
 
-                    appLocalStorage.setPageOrder(
-                      descending: descending,
-                      pageRoute: pageRoute,
-                    );
-                  },
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    if (itemsStyle == ItemsLayout.list) {
-                      return;
-                    }
-
-                    setState(() {
-                      itemsStyle = ItemsLayout.list;
-                    });
-
-                    appLocalStorage.saveItemsStyle(
-                      pageRoute: pageRoute,
-                      style: ItemsLayout.list,
-                    );
-                  },
-                  icon: Icon(Icons.list),
-                  color: itemsStyle == ItemsLayout.list
-                      ? stateColors.primary
-                      : stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    if (itemsStyle == ItemsLayout.grid) {
-                      return;
-                    }
-
-                    setState(() {
-                      itemsStyle = ItemsLayout.grid;
-                    });
-
-                    appLocalStorage.saveItemsStyle(
-                      pageRoute: pageRoute,
-                      style: ItemsLayout.grid,
-                    );
-                  },
-                  icon: Icon(Icons.grid_on),
-                  color: itemsStyle == ItemsLayout.grid
-                      ? stateColors.primary
-                      : stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 2.0,
-                    color: stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      searchInputValue = lastSearchValue;
-                      headerViewType = HeaderViewType.search;
-                    });
-                  },
-                  icon: Icon(Icons.search),
-                  color: stateColors.foreground.withOpacity(0.5),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
+      additionalIconButtons: [
+        FadeInY(
+          beginY: 10.0,
+          delay: 3.0,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 10.0,
+              left: 20.0,
+              right: 20.0,
+            ),
+            child: Container(
+              height: 25,
+              width: 2.0,
+              color: stateColors.foreground.withOpacity(0.5),
+            ),
+          ),
+        ),
+        FadeInY(
+          beginY: 10.0,
+          delay: 3.5,
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                searchInputValue = lastSearchValue;
+                headerViewType = HeaderViewType.search;
+              });
+            },
+            icon: Icon(Icons.search),
+            color: stateColors.foreground.withOpacity(0.5),
+          ),
+        ),
+      ],
     );
   }
 
@@ -337,7 +243,7 @@ class _ReferencesState extends State<References> {
     final references =
         searchInputValue.isEmpty ? referencesList : searchResults;
 
-    if (itemsStyle == ItemsLayout.grid) {
+    if (itemsLayout == ItemsLayout.grid) {
       return sliverGrid(references);
     }
 

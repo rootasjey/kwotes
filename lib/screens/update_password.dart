@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
@@ -30,44 +28,11 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          BasePageAppBar(
-            expandedHeight: 90.0,
-            title: Row(
-              children: [
-                CircleButton(
-                    onTap: () => Navigator.of(context).pop(),
-                    icon:
-                        Icon(Icons.arrow_back, color: stateColors.foreground)),
-                AppIconHeader(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  size: 30.0,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Update password',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Opacity(
-                        opacity: .6,
-                        child: Text(
-                          'If your password is old or compromised',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          PageAppBar(
+            textTitle: 'Update password',
+            textSubTitle: 'If your password is old or compromised',
+            expandedHeight: 170.0,
+            showNavBackIcon: true,
           ),
           body(),
         ],

@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/empty_view.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
@@ -101,28 +100,17 @@ class _TopicsState extends State<Topics> {
 
   Widget appBar() {
     if (MediaQuery.of(context).size.width < 700.0) {
-      return BasePageAppBar(
+      return PageAppBar(
+        textTitle: 'Topics',
         expandedHeight: 150.0,
-        title: TextButton.icon(
-          onPressed: () {
-            scrollController.animateTo(
-              0,
-              duration: 250.milliseconds,
-              curve: Curves.easeIn,
-            );
-          },
-          icon: AppIconHeader(
-            padding: EdgeInsets.zero,
-            size: 30.0,
-          ),
-          label: Text(
-            'Topics',
-            style: TextStyle(
-              fontSize: 22.0,
-            ),
-          ),
-        ),
         showNavBackIcon: false,
+        onTitlePressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
       );
     }
 

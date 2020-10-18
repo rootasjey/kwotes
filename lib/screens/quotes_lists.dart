@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/lists.dart';
-import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
@@ -16,6 +14,7 @@ import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/user_quotes_list.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class QuotesLists extends StatefulWidget {
   @override
@@ -98,111 +97,31 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
-      expandedHeight: 120.0,
-      title: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIconHeader(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Lists',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    'Thematic lists created by you',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Wrap(
-              spacing: 10.0,
-              children: <Widget>[
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 2.0,
-                  child: ChoiceChip(
-                    label: Text(
-                      'First added',
-                      style: TextStyle(
-                        color:
-                            !descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: !descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (!descending) {
-                        return;
-                      }
+    return PageAppBar(
+      textTitle: 'Lists',
+      textSubTitle: 'Thematic lists created by you',
+      expandedHeight: 170.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
 
-                      descending = false;
-                      fetch();
+        descending = newDescending;
+        fetch();
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 2.5,
-                  child: ChoiceChip(
-                    label: Text(
-                      'Last added',
-                      style: TextStyle(
-                        color:
-                            descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (descending) {
-                        return;
-                      }
-
-                      descending = true;
-                      fetch();
-
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
     );
   }
 

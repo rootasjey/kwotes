@@ -1,20 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
+import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
+import 'package:supercharged/supercharged.dart';
 
 import 'signin.dart';
 
@@ -24,20 +22,24 @@ class MyPublishedQuotes extends StatefulWidget {
 }
 
 class MyPublishedQuotesState extends State<MyPublishedQuotes> {
-  bool hasNext = true;
+  bool descending = true;
   bool hasErrors = false;
+  bool hasNext = true;
   bool isLoading = false;
   bool isLoadingMore = false;
-  String lang = 'en';
-  int limit = 30;
-  bool descending = true;
-  final pageRoute = PublishedQuotesRoute;
   bool isFabVisible = false;
 
-  ScrollController scrollController = ScrollController();
+  DocumentSnapshot lastDoc;
+
+  int limit = 30;
+  ItemsLayout itemsLayout = ItemsLayout.list;
+
   List<Quote> quotes = [];
 
-  var lastDoc;
+  ScrollController scrollController = ScrollController();
+
+  String lang = 'en';
+  final String pageRoute = PublishedQuotesRoute;
 
   @override
   initState() {
@@ -110,160 +112,51 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
-      expandedHeight: 130.0,
-      title: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIconHeader(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Published',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: .6,
-                  child: Text(
-                    'Quotes published by you',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Wrap(
-              spacing: 10.0,
-              children: <Widget>[
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 2.0,
-                  child: ChoiceChip(
-                    label: Text(
-                      'First added',
-                      style: TextStyle(
-                        color:
-                            !descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: !descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (!descending) {
-                        return;
-                      }
+    return PageAppBar(
+      textTitle: 'Published',
+      textSubTitle: 'Quotes published by you',
+      expandedHeight: 170.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
 
-                      descending = false;
-                      fetch();
+        descending = newDescending;
+        fetch();
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 2.5,
-                  child: ChoiceChip(
-                    label: Text(
-                      'Last added',
-                      style: TextStyle(
-                        color:
-                            descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (descending) {
-                        return;
-                      }
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        fetch();
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
 
-                      descending = true;
-                      fetch();
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 3.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10.0,
-                      left: 20.0,
-                      right: 20.0,
-                    ),
-                    child: Container(
-                      height: 25,
-                      width: 2.0,
-                      color: stateColors.foreground,
-                    ),
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 3.5,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: DropdownButton<String>(
-                      elevation: 2,
-                      value: lang,
-                      isDense: true,
-                      underline: Container(
-                        height: 0,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      style: TextStyle(
-                        color: stateColors.foreground.withOpacity(0.6),
-                        fontFamily: GoogleFonts.raleway().fontFamily,
-                        fontSize: 20.0,
-                      ),
-                      onChanged: (String newLang) {
-                        lang = newLang;
-                        fetch();
-                      },
-                      items: ['en', 'fr'].map((String value) {
-                        return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value.toUpperCase(),
-                            ));
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 
