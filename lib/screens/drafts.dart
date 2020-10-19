@@ -4,7 +4,6 @@ import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/page_app_bar.dart';
-import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
@@ -47,7 +46,13 @@ class _DraftsState extends State<Drafts> {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
+  }
+
+  void initProps() {
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -195,7 +200,7 @@ class _DraftsState extends State<Drafts> {
         (context, index) {
           final draft = drafts.elementAt(index);
 
-          return TempQuoteRow(
+          return TempQuoteRowWithActions(
             tempQuote: draft,
             isDraft: true,
             onTap: () => editDraft(draft),
@@ -203,34 +208,6 @@ class _DraftsState extends State<Drafts> {
               horizontal: horPadding,
               vertical: 30.0,
             ),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'edit',
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text('Edit'),
-                  )),
-              PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete_sweep),
-                    title: Text('Delete'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'edit') {
-                editDraft(draft);
-                return;
-              }
-
-              if (value == 'delete') {
-                showDeleteDialog(
-                  draft: draft,
-                  index: index,
-                );
-                return;
-              }
-            },
           );
         },
         childCount: drafts.length,
@@ -250,23 +227,30 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget gridQuotes() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300.0,
-        crossAxisSpacing: 20.0,
-        mainAxisSpacing: 20.0,
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
       ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final draft = drafts.elementAt(index);
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          crossAxisSpacing: 20.0,
+          mainAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final draft = drafts.elementAt(index);
 
-          return TempQuoteRowWithActions(
-            onTap: () => editDraft(draft),
-            tempQuote: draft,
-            componentType: ItemComponentType.card,
-          );
-        },
-        childCount: drafts.length,
+            return TempQuoteRowWithActions(
+              componentType: ItemComponentType.card,
+              elevation: 1.0,
+              isDraft: true,
+              onTap: () => editDraft(draft),
+              tempQuote: draft,
+            );
+          },
+          childCount: drafts.length,
+        ),
       ),
     );
   }
