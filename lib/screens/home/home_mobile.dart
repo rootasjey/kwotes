@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/common/icons_more_icons.dart';
+import 'package:memorare/utils/icons_more_icons.dart';
 import 'package:memorare/screens/dashboard.dart';
 import 'package:memorare/screens/discover.dart';
 import 'package:memorare/screens/recent_quotes.dart';
