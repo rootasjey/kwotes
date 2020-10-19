@@ -99,7 +99,7 @@ class _QuoteRowState extends State<QuoteRow> {
           },
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? widget.elevation * 2.0 : widget.elevation;
+              elevation = isHover ? 2.0 : 0.0;
               iconColor = isHover ? iconHoverColor : null;
             });
           },
@@ -223,7 +223,7 @@ class _QuoteRowState extends State<QuoteRow> {
           },
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? widget.elevation * 2.0 : widget.elevation;
+              elevation = isHover ? 2.0 : 0.0;
               iconColor = isHover ? iconHoverColor : null;
             });
           },
