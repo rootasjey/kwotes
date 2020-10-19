@@ -12,7 +12,7 @@ import 'package:memorare/screens/quotes_list.dart';
 import 'package:memorare/screens/quotes_lists.dart';
 import 'package:memorare/screens/quotidians.dart';
 import 'package:memorare/screens/my_temp_quotes.dart';
-import 'package:memorare/screens/web/dashboard_section_template.dart';
+import 'package:memorare/screens/dashboard_section_template.dart';
 import 'package:memorare/screens/favourites.dart';
 
 class DashboardSections extends StatefulWidget {

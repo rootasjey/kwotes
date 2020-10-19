@@ -9,7 +9,7 @@ import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
 
-import '../add_quote/steps.dart';
+import 'add_quote/steps.dart';
 
 class DashboardSectionTemplate extends StatefulWidget {
   final Widget child;
