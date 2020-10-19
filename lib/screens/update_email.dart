@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -50,7 +49,6 @@ class _UpdateEmailState extends State<UpdateEmail> {
             textTitle: 'Update email',
             textSubTitle: 'If your email is outdated',
             expandedHeight: 170.0,
-            showNavBackIcon: true,
           ),
           body(),
         ],
@@ -131,7 +129,6 @@ class _UpdateEmailState extends State<UpdateEmail> {
                   ),
                 ),
               ),
-              NavBackFooter(),
             ],
           ),
         ),

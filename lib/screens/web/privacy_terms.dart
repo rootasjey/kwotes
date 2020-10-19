@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/nav_back_footer.dart';
 import 'package:memorare/components/web/nav_back_header.dart';
 
 class PrivacyTerms extends StatelessWidget {
@@ -8,7 +7,6 @@ class PrivacyTerms extends StatelessWidget {
     return Column(
       children: <Widget>[
         NavBackHeader(),
-
         SizedBox(
           width: 600.0,
           child: Column(
@@ -24,7 +22,6 @@ class PrivacyTerms extends StatelessWidget {
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .6,
                 child: Padding(
@@ -37,7 +34,6 @@ class PrivacyTerms extends StatelessWidget {
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .8,
                 child: Padding(
@@ -46,12 +42,11 @@ class PrivacyTerms extends StatelessWidget {
                     'Analytics',
                     style: TextStyle(
                       fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .6,
                 child: Padding(
@@ -64,7 +59,6 @@ class PrivacyTerms extends StatelessWidget {
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .8,
                 child: Padding(
@@ -73,12 +67,11 @@ class PrivacyTerms extends StatelessWidget {
                     'Advertising',
                     style: TextStyle(
                       fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .6,
                 child: Padding(
@@ -91,7 +84,6 @@ class PrivacyTerms extends StatelessWidget {
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .8,
                 child: Padding(
@@ -100,12 +92,11 @@ class PrivacyTerms extends StatelessWidget {
                     'In-app purchases',
                     style: TextStyle(
                       fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-
               Opacity(
                 opacity: .6,
                 child: Padding(
@@ -121,8 +112,6 @@ class PrivacyTerms extends StatelessWidget {
             ],
           ),
         ),
-
-        NavBackFooter(),
       ],
     );
   }
