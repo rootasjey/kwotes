@@ -15,6 +15,8 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final double cardSize;
   final double elevation;
 
+  final EdgeInsets padding;
+
   final Function itemBuilder;
   final Function onSelected;
   final Function onTap;
@@ -43,6 +45,10 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.onBeforeValidate,
     this.onAfterValidate,
     this.onAfterDelete,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 20.0,
+      vertical: 30.0,
+    ),
     @required this.tempQuote,
     this.quotePageType = QuotePageType.published,
     this.stackChildren = const [],
@@ -60,10 +66,15 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     final popupItems = getPopupItems();
 
     return TempQuoteRow(
-      tempQuote: quote,
+      elevation: widget.elevation,
+      padding: widget.padding,
+      cardSize: widget.cardSize,
+      componentType: widget.componentType,
+      isDraft: widget.isDraft,
       itemBuilder: (context) => popupItems,
       onSelected: onSelected,
-      componentType: widget.componentType,
+      onTap: widget.onTap,
+      tempQuote: quote,
     );
   }
 
