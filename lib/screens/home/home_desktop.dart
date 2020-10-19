@@ -4,7 +4,7 @@ import 'package:memorare/components/discover_authors.dart';
 import 'package:memorare/components/footer.dart';
 import 'package:memorare/components/quotidian_page.dart';
 import 'package:memorare/components/main_app_bar.dart';
-import 'package:memorare/components/web/topics.dart';
+import 'package:memorare/components/topics.dart';
 import 'package:supercharged/supercharged.dart';
 
 class HomeDesktop extends StatefulWidget {

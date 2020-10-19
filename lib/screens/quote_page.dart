@@ -7,7 +7,7 @@ import 'package:memorare/components/fade_in_x.dart';
 import 'package:memorare/components/full_page_error.dart';
 import 'package:memorare/components/full_page_loading.dart';
 import 'package:memorare/components/main_app_bar.dart';
-import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/components/topic_card_color.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/screens/reference_page.dart';

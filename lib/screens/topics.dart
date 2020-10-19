@@ -4,7 +4,7 @@ import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/web/topic_card_color.dart';
+import 'package:memorare/components/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/quote.dart';

@@ -11,7 +11,7 @@ import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/web/side_bar_header.dart';
+import 'package:memorare/components/side_bar_header.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';
