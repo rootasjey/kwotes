@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/types/enums.dart';
@@ -100,32 +99,18 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        widget.tempQuote.name,
+                        quote.name,
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 18.0,
                         ),
                       ),
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
-                      GestureDetector(
-                        onTap: () {
-                          if (author == null ||
-                              author.id == null ||
-                              author.id.isEmpty) {
-                            return;
-                          }
-
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => AuthorPage(id: author.id)),
-                          );
-                        },
-                        child: Opacity(
-                          opacity: .5,
-                          child: Text(
-                            author == null || author.name.isEmpty
-                                ? ''
-                                : author.name,
-                          ),
+                      Opacity(
+                        opacity: .5,
+                        child: Text(
+                          author == null || author.name.isEmpty
+                              ? ''
+                              : author.name,
                         ),
                       ),
                     ],
@@ -237,15 +222,10 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
         elevation: elevation,
         margin: EdgeInsets.zero,
         child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (_) => AuthorPage(id: tempQuote.author.id)),
-            );
-          },
+          onTap: widget.onTap,
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? widget.elevation * 2.0 : widget.elevation;
+              elevation = isHover ? 2.0 : 0.0;
               iconColor = isHover ? iconHoverColor : null;
             });
           },
@@ -257,8 +237,8 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      tempQuote.name.length > 115
-                          ? '${tempQuote.name.substring(0, 115)}...'
+                      tempQuote.name.length > 60
+                          ? '${tempQuote.name.substring(0, 60)}...'
                           : tempQuote.name,
                       style: TextStyle(
                         fontSize: 18.0,
