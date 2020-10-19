@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/temp_quotes.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/temp_quote.dart';

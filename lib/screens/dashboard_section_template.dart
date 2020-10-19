@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:memorare/components/colored_list_tile.dart';
 import 'package:memorare/components/side_bar_header.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';

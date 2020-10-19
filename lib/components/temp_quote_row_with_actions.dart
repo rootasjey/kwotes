@@ -4,7 +4,7 @@ import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/state/user_state.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
 

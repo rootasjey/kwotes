@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/app_icon.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/router/rerouter.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/screens/add_quote/steps.dart';

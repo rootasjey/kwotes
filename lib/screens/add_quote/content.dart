@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/utils/language.dart';
 

@@ -7,7 +7,7 @@ import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';

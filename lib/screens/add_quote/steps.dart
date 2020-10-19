@@ -5,7 +5,7 @@ import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/add_quote_app_bar.dart';
 import 'package:memorare/components/full_page_error.dart';
 import 'package:memorare/components/full_page_loading.dart';
-import 'package:memorare/data/add_quote_inputs.dart';
+import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/screens/add_quote/help/author.dart';
 import 'package:memorare/screens/add_quote/help/comment.dart';
 import 'package:memorare/screens/add_quote/help/content.dart';
