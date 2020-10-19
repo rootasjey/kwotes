@@ -22,7 +22,7 @@ class MyPublishedQuotes extends StatefulWidget {
 }
 
 class MyPublishedQuotesState extends State<MyPublishedQuotes> {
-  bool descending = true;
+  final bool descending = true;
   bool hasErrors = false;
   bool hasNext = true;
   bool isLoading = false;
@@ -50,7 +50,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
   void initProps() {
     lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
     itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
@@ -122,20 +121,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           0,
           duration: 250.milliseconds,
           curve: Curves.easeIn,
-        );
-      },
-      descending: descending,
-      onDescendingChanged: (newDescending) {
-        if (descending == newDescending) {
-          return;
-        }
-
-        descending = newDescending;
-        fetch();
-
-        appLocalStorage.setPageOrder(
-          descending: newDescending,
-          pageRoute: pageRoute,
         );
       },
       lang: lang,
