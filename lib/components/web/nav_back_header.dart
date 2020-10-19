@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/app_icon.dart';
 
 class NavBackHeader extends StatelessWidget {
   final Function onLongPress;
@@ -20,13 +20,13 @@ class NavBackHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             width < 500.0
-                ? AppIconHeader(
+                ? AppIcon(
                     padding: const EdgeInsets.only(
                       top: 20.0,
                       bottom: 80.0,
                     ),
                   )
-                : AppIconHeader(),
+                : AppIcon(),
           ],
         ),
         Positioned(

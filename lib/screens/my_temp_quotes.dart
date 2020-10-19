@@ -8,7 +8,7 @@ import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/app_icon.dart';
 import 'package:memorare/components/web/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
@@ -131,7 +131,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           CircleButton(
               onTap: () => Navigator.of(context).pop(),
               icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIconHeader(
+          AppIcon(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             size: 30.0,
             onTap: () {

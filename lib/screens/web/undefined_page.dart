@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/app_icon.dart';
 import 'package:memorare/screens/home/home.dart';
 
 class UndefinedPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class _UndefinedPageState extends State<UndefinedPage> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        AppIconHeader(),
+        AppIcon(),
         Text(
           '404',
           style: TextStyle(

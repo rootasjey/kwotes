@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/app_icon.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/screens/about.dart';
@@ -144,7 +144,7 @@ class _DashboardState extends State<Dashboard> {
             curve: Curves.easeIn,
           );
         },
-        icon: AppIconHeader(
+        icon: AppIcon(
           padding: EdgeInsets.zero,
           size: 30.0,
         ),

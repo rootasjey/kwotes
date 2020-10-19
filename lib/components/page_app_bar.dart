@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/web/app_icon_header.dart';
+import 'package:memorare/components/app_icon.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/enums.dart';
@@ -166,7 +166,7 @@ class _PageAppBarState extends State<PageAppBar> {
   Widget oneLineTitle() {
     return TextButton.icon(
       onPressed: widget.onTitlePressed,
-      icon: AppIconHeader(
+      icon: AppIcon(
         padding: EdgeInsets.zero,
         size: 30.0,
       ),
@@ -243,7 +243,7 @@ class _PageAppBarState extends State<PageAppBar> {
         CircleButton(
             onTap: () => Navigator.of(context).pop(),
             icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-        AppIconHeader(
+        AppIcon(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           size: 30.0,
           onTap: widget.onIconPressed,
