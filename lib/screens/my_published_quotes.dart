@@ -44,9 +44,14 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   @override
   initState() {
     super.initState();
-
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    initProps();
     fetch();
+  }
+
+  void initProps() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -66,49 +71,45 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: body(),
-    );
-  }
-
-  Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
-
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await fetch();
+            return null;
           },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              // FAB visibility
+              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                setState(() {
+                  isFabVisible = false;
+                });
+              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                setState(() {
+                  isFabVisible = true;
+                });
+              }
+
+              // Load more scenario
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget appBar() {
@@ -160,7 +161,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     );
   }
 
-  Widget bodyListContent() {
+  Widget body() {
     if (isLoading) {
       return loadingView();
     }
@@ -173,7 +174,11 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       return emptyView();
     }
 
-    return sliverQuotesList();
+    if (itemsLayout == ItemsLayout.list) {
+      return listView();
+    }
+
+    return gridView();
   }
 
   Widget emptyView() {
@@ -224,7 +229,33 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     );
   }
 
-  Widget sliverQuotesList() {
+  Widget gridView() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          mainAxisSpacing: 20.0,
+          crossAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final quote = quotes.elementAt(index);
+
+            return QuoteRowWithActions(
+              quote: quote,
+              componentType: ItemComponentType.card,
+            );
+          },
+          childCount: quotes.length,
+        ),
+      ),
+    );
+  }
+
+  Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
     return SliverList(
