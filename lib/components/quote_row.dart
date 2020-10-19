@@ -88,9 +88,13 @@ class _QuoteRowState extends State<QuoteRow> {
         margin: EdgeInsets.zero,
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (_) => AuthorPage(id: widget.quote.author.id)),
+            showMaterialModalBottomSheet(
+              context: context,
+              builder: (context, scrollController) => QuotePage(
+                quote: widget.quote,
+                quoteId: widget.quote.id,
+                scrollController: scrollController,
+              ),
             );
           },
           onHover: (isHover) {
@@ -107,8 +111,8 @@ class _QuoteRowState extends State<QuoteRow> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      widget.quote.name.length > 115
-                          ? '${widget.quote.name.substring(0, 115)}...'
+                      widget.quote.name.length > 60
+                          ? '${widget.quote.name.substring(0, 60)}...'
                           : widget.quote.name,
                       style: TextStyle(
                         fontSize: 18.0,
