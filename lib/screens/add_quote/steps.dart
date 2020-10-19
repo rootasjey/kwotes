@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/drafts.dart';
 import 'package:memorare/actions/temp_quotes.dart';
-import 'package:memorare/components/web/add_quote_app_bar.dart';
+import 'package:memorare/components/add_quote_app_bar.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/data/add_quote_inputs.dart';

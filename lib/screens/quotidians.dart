@@ -5,7 +5,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quotidian_row.dart';
-import 'package:memorare/components/web/empty_content.dart';
+import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';

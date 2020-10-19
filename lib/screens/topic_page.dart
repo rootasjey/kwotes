@@ -8,7 +8,7 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/web/empty_content.dart';
+import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/web/side_bar_header.dart';

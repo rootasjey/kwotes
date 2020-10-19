@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/types/author.dart';
 import 'package:supercharged/supercharged.dart';
 
-import '../../screens/author_page.dart';
+import '../screens/author_page.dart';
 
 /// A widget which displays an author's image url
 /// in an circle shape. Delivered with hover animation.

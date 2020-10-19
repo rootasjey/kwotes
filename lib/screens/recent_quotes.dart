@@ -6,7 +6,7 @@ import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/web/empty_content.dart';
+import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';
