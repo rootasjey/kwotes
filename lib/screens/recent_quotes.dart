@@ -153,10 +153,10 @@ class RecentQuotesState extends State<RecentQuotes> {
     }
 
     if (itemsLayout == ItemsLayout.list) {
-      return sliverList();
+      return listView();
     }
 
-    return sliverGrid();
+    return gridView();
   }
 
   Widget emptyView() {
@@ -196,7 +196,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     );
   }
 
-  Widget sliverGrid() {
+  Widget gridView() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -238,7 +238,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     );
   }
 
-  Widget sliverList() {
+  Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
     return SliverList(

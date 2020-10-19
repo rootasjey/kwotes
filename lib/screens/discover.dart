@@ -137,10 +137,10 @@ class _DiscoverState extends State<Discover> {
     }
 
     if (itemsLayout == ItemsLayout.grid) {
-      return sliverGrid();
+      return gridView();
     }
 
-    return sliverList();
+    return listView();
   }
 
   Widget emptyView() {
@@ -180,7 +180,7 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
-  Widget sliverGrid() {
+  Widget gridView() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -188,7 +188,7 @@ class _DiscoverState extends State<Discover> {
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200.0,
-          childAspectRatio: 0.5,
+          childAspectRatio: 0.47,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,
         ),
@@ -224,7 +224,7 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
-  Widget sliverList() {
+  Widget listView() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {

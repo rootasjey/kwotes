@@ -168,10 +168,10 @@ class _FavouritesState extends State<Favourites> {
     }
 
     if (itemsLayout == ItemsLayout.list) {
-      return quotesListView();
+      return listView();
     }
 
-    return gridQuotes();
+    return gridView();
   }
 
   Widget emptyView() {
@@ -200,7 +200,7 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
-  Widget gridQuotes() {
+  Widget gridView() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -244,20 +244,7 @@ class _FavouritesState extends State<Favourites> {
     );
   }
 
-  Widget loadingView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Padding(
-          padding: const EdgeInsets.only(top: 60.0),
-          child: LoadingAnimation(
-            textTitle: 'Loading your favourites...',
-          ),
-        ),
-      ]),
-    );
-  }
-
-  Widget quotesListView() {
+  Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
     return SliverList(
@@ -291,6 +278,19 @@ class _FavouritesState extends State<Favourites> {
         },
         childCount: quotes.length,
       ),
+    );
+  }
+
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 60.0),
+          child: LoadingAnimation(
+            textTitle: 'Loading your favourites...',
+          ),
+        ),
+      ]),
     );
   }
 

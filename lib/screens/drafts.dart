@@ -145,10 +145,10 @@ class _DraftsState extends State<Drafts> {
     }
 
     if (itemsLayout == ItemsLayout.list) {
-      return listQuotes();
+      return listView();
     }
 
-    return gridQuotes();
+    return gridView();
   }
 
   Widget emptyView() {
@@ -192,7 +192,35 @@ class _DraftsState extends State<Drafts> {
     );
   }
 
-  Widget listQuotes() {
+  Widget gridView() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          crossAxisSpacing: 20.0,
+          mainAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final draft = drafts.elementAt(index);
+
+            return TempQuoteRowWithActions(
+              componentType: ItemComponentType.card,
+              isDraft: true,
+              onTap: () => editDraft(draft),
+              tempQuote: draft,
+            );
+          },
+          childCount: drafts.length,
+        ),
+      ),
+    );
+  }
+
+  Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
     return SliverList(
@@ -223,34 +251,6 @@ class _DraftsState extends State<Drafts> {
           child: LoadingAnimation(),
         ),
       ]),
-    );
-  }
-
-  Widget gridQuotes() {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20.0,
-      ),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 300.0,
-          crossAxisSpacing: 20.0,
-          mainAxisSpacing: 20.0,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            final draft = drafts.elementAt(index);
-
-            return TempQuoteRowWithActions(
-              componentType: ItemComponentType.card,
-              isDraft: true,
-              onTap: () => editDraft(draft),
-              tempQuote: draft,
-            );
-          },
-          childCount: drafts.length,
-        ),
-      ),
     );
   }
 
