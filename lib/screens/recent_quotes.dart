@@ -48,9 +48,15 @@ class RecentQuotesState extends State<RecentQuotes> {
   @override
   initState() {
     super.initState();
-    getSavedProps();
+    initProps();
     fetchPermissions();
     fetch();
+  }
+
+  void initProps() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -146,11 +152,11 @@ class RecentQuotesState extends State<RecentQuotes> {
       return emptyView();
     }
 
-    if (itemsLayout == ItemsLayout.grid) {
-      return sliverGrid();
+    if (itemsLayout == ItemsLayout.list) {
+      return sliverList();
     }
 
-    return sliverList();
+    return sliverGrid();
   }
 
   Widget emptyView() {
@@ -409,12 +415,6 @@ class RecentQuotesState extends State<RecentQuotes> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void getSavedProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void showDeleteDialog(Quote quote) {
