@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/web/full_page_loading.dart';
+import 'package:memorare/components/full_page_loading.dart';
 import 'package:memorare/main_app.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/app_icon.dart';
-import 'package:memorare/components/web/fade_in_x.dart';
+import 'package:memorare/components/fade_in_x.dart';
 import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/screens/home/home.dart';

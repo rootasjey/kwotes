@@ -7,7 +7,7 @@ import 'package:memorare/actions/share.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row.dart';
 import 'package:memorare/components/circle_author.dart';
-import 'package:memorare/components/web/reference_card.dart';
+import 'package:memorare/components/reference_card.dart';
 import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/router/route_names.dart';
 import 'package:memorare/state/colors.dart';

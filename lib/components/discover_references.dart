@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/reference_card.dart';
-import 'package:memorare/components/web/fade_in_x.dart';
+import 'package:memorare/components/reference_card.dart';
+import 'package:memorare/components/fade_in_x.dart';
 import 'package:memorare/screens/references.dart';
 import 'package:memorare/types/reference.dart';
 
