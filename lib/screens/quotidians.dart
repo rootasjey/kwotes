@@ -308,7 +308,7 @@ class QuotidiansState extends State<Quotidians> {
 
     return Material(
       elevation: 2.0,
-      color: stateColors.appBackground,
+      color: stateColors.softBackground,
       child: Stack(
         children: <Widget>[
           FlatButton(
@@ -366,6 +366,7 @@ class QuotidiansState extends State<Quotidians> {
     final quote = quotidian.quote;
 
     return QuoteRowWithActions(
+      componentType: ItemComponentType.card,
       quoteId: quotidian.quote.id,
       quote: quote,
       stackChildren: <Widget>[
