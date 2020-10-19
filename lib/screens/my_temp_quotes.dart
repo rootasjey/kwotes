@@ -18,6 +18,7 @@ import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
 import 'package:memorare/utils/snack.dart';
@@ -36,22 +37,31 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   bool isLoading = false;
   bool isLoadingMore = false;
 
-  String lang = 'all';
+  DocumentSnapshot lastDoc;
+
+  ItemsLayout itemsLayout = ItemsLayout.list;
 
   int limit = 30;
   int order = -1;
 
-  final pageRoute = TempQuotesRoute;
-
-  List<TempQuote> tempQuotes = [];
   ScrollController scrollController = ScrollController();
 
-  var lastDoc;
+  String lang = 'all';
+  final String pageRoute = TempQuotesRoute;
+
+  List<TempQuote> tempQuotes = [];
 
   @override
   initState() {
     super.initState();
+    initProps();
     fetch();
+  }
+
+  void initProps() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -71,55 +81,51 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: body(),
-    );
-  }
-
-  Widget body() {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
-
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
-            return false;
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await fetch();
+            return null;
           },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              appBar(),
-              bodyListContent(),
-            ],
-          ),
-        ));
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollNotif) {
+              // FAB visibility
+              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                setState(() {
+                  isFabVisible = false;
+                });
+              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                setState(() {
+                  isFabVisible = true;
+                });
+              }
+
+              // Load more scenario
+              if (scrollNotif.metrics.pixels <
+                  scrollNotif.metrics.maxScrollExtent) {
+                return false;
+              }
+
+              if (hasNext && !isLoadingMore) {
+                fetchMore();
+              }
+
+              return false;
+            },
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                body(),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget appBar() {
     // ?NOTE: Not using PageAppBar because of custom languages: 'all'.
     return BasePageAppBar(
-      expandedHeight: 130.0,
+      expandedHeight: 170.0,
       title: Row(
         children: [
           CircleButton(
@@ -171,7 +177,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               children: <Widget>[
                 FadeInY(
                   beginY: 10.0,
-                  delay: 2.0,
+                  delay: 0.0,
                   child: ChoiceChip(
                     label: Text(
                       'First added',
@@ -199,7 +205,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 ),
                 FadeInY(
                   beginY: 10.0,
-                  delay: 2.5,
+                  delay: 0.1,
                   child: ChoiceChip(
                     label: Text(
                       'Last added',
@@ -227,7 +233,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 ),
                 FadeInY(
                   beginY: 10.0,
-                  delay: 3.0,
+                  delay: 0.3,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       top: 10.0,
@@ -243,7 +249,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 ),
                 FadeInY(
                   beginY: 10.0,
-                  delay: 3.5,
+                  delay: 0.4,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12.0),
                     child: DropdownButton<String>(
@@ -274,6 +280,70 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                     ),
                   ),
                 ),
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10.0,
+                      left: 20.0,
+                      right: 20.0,
+                    ),
+                    child: Container(
+                      height: 25,
+                      width: 2.0,
+                      color: stateColors.foreground,
+                    ),
+                  ),
+                ),
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 0.6,
+                  child: IconButton(
+                    onPressed: () {
+                      if (itemsLayout == ItemsLayout.list) {
+                        return;
+                      }
+
+                      setState(() {
+                        itemsLayout = ItemsLayout.list;
+                      });
+
+                      appLocalStorage.saveItemsStyle(
+                        pageRoute: pageRoute,
+                        style: ItemsLayout.list,
+                      );
+                    },
+                    icon: Icon(Icons.list),
+                    color: itemsLayout == ItemsLayout.list
+                        ? stateColors.primary
+                        : stateColors.foreground.withOpacity(0.5),
+                  ),
+                ),
+                FadeInY(
+                  beginY: 10.0,
+                  delay: 0.7,
+                  child: IconButton(
+                    onPressed: () {
+                      if (itemsLayout == ItemsLayout.grid) {
+                        return;
+                      }
+
+                      setState(() {
+                        itemsLayout = ItemsLayout.grid;
+                      });
+
+                      appLocalStorage.saveItemsStyle(
+                        pageRoute: pageRoute,
+                        style: ItemsLayout.grid,
+                      );
+                    },
+                    icon: Icon(Icons.grid_on),
+                    color: itemsLayout == ItemsLayout.grid
+                        ? stateColors.primary
+                        : stateColors.foreground.withOpacity(0.5),
+                  ),
+                ),
               ],
             ),
           );
@@ -282,7 +352,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     );
   }
 
-  Widget bodyListContent() {
+  Widget body() {
     if (isLoading) {
       return loadingView();
     }
@@ -295,34 +365,11 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       return emptyView();
     }
 
-    return contentView();
-  }
+    if (itemsLayout == ItemsLayout.list) {
+      return listView();
+    }
 
-  Widget contentView() {
-    return SliverLayoutBuilder(
-      builder: (context, constrains) {
-        return sliverList();
-
-        // if (constrains.crossAxisExtent < 600.0) {
-        //   return SliverPadding(
-        //     padding: const EdgeInsets.only(
-        //       top: 80.0,
-        //     ),
-        //     sliver: sliverList(),
-        //   );
-        // }
-
-        // return SliverPadding(
-        //   padding: const EdgeInsets.only(
-        //     top: 80.0,
-        //     left: 10.0,
-        //     right: 10.0,
-        //     bottom: 200.0,
-        //   ),
-        //   sliver: sliverGrid(),
-        // );
-      },
-    );
+    return gridView();
   }
 
   Widget emptyView() {
@@ -362,39 +409,34 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     );
   }
 
-  Widget loadingView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Padding(
-          padding: const EdgeInsets.only(top: 200.0),
-          child: LoadingAnimation(),
+  Widget gridView() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
         ),
-      ]),
-    );
-  }
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final tempQuote = tempQuotes.elementAt(index);
 
-  Widget sliverGrid() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300.0,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final tempQuote = tempQuotes.elementAt(index);
-
-          return TempQuoteRowWithActions(
-            onTap: () => editTempQuote(tempQuote),
-            tempQuote: tempQuote,
-          );
-        },
-        childCount: tempQuotes.length,
+            return TempQuoteRowWithActions(
+              componentType: ItemComponentType.card,
+              onTap: () => editAction(tempQuote),
+              tempQuote: tempQuote,
+            );
+          },
+          childCount: tempQuotes.length,
+        ),
       ),
     );
   }
 
-  Widget sliverList() {
+  Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
     return SliverPadding(
@@ -407,7 +449,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             return TempQuoteRow(
               tempQuote: tempQuote,
               isDraft: false,
-              onTap: () => editTempQuote(tempQuote),
+              onTap: () => editAction(tempQuote),
               padding: EdgeInsets.symmetric(
                 horizontal: horPadding,
               ),
@@ -427,7 +469,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               ],
               onSelected: (value) {
                 if (value == 'edit') {
-                  editTempQuote(tempQuote);
+                  editAction(tempQuote);
                   return;
                 }
 
@@ -441,6 +483,17 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           childCount: tempQuotes.length,
         ),
       ),
+    );
+  }
+
+  Widget loadingView() {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: LoadingAnimation(),
+        ),
+      ]),
     );
   }
 
@@ -467,7 +520,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     }
   }
 
-  void editTempQuote(TempQuote tempQuote) async {
+  void editAction(TempQuote tempQuote) async {
     AddQuoteInputs.populateWithTempQuote(tempQuote);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
