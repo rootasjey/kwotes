@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/web/topic_card_color.dart';
 import 'package:memorare/screens/topic_page.dart';
 import 'package:memorare/state/topics_colors.dart';

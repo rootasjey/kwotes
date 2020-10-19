@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/footer.dart';
 import 'package:memorare/components/main_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 

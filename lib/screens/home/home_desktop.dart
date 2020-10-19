@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/discover_references.dart';
-import 'package:memorare/components/web/discover_authors.dart';
-import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/discover_references.dart';
+import 'package:memorare/components/discover_authors.dart';
+import 'package:memorare/components/footer.dart';
 import 'package:memorare/components/quotidian_page.dart';
 import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/components/web/topics.dart';

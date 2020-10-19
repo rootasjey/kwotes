@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/app_icon.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
 
 class SliverAppHeader extends StatelessWidget {

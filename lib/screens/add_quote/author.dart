@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/data/add_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -17,17 +17,17 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final beginY = 10.0;
 
   final affiliateUrlController = TextEditingController();
-  final amazonUrlController   = TextEditingController();
+  final amazonUrlController = TextEditingController();
   final facebookUrlController = TextEditingController();
-  final nameController        = TextEditingController();
-  final instaController       = TextEditingController();
-  final jobController         = TextEditingController();
-  final summaryController     = TextEditingController();
-  final twitchUrlController   = TextEditingController();
-  final twitterUrlController  = TextEditingController();
-  final websiteUrlController  = TextEditingController();
-  final wikiUrlController     = TextEditingController();
-  final youtubeUrlController  = TextEditingController();
+  final nameController = TextEditingController();
+  final instaController = TextEditingController();
+  final jobController = TextEditingController();
+  final summaryController = TextEditingController();
+  final twitchUrlController = TextEditingController();
+  final twitterUrlController = TextEditingController();
+  final websiteUrlController = TextEditingController();
+  final wikiUrlController = TextEditingController();
+  final youtubeUrlController = TextEditingController();
 
   final linkInputController = TextEditingController();
 
@@ -38,18 +38,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   @override
   void initState() {
     setState(() {
-      affiliateUrlController.text  = AddQuoteInputs.author.urls.affiliate;
-      amazonUrlController.text    = AddQuoteInputs.author.urls.amazon;
-      facebookUrlController.text  = AddQuoteInputs.author.urls.facebook;
-      nameController.text         = AddQuoteInputs.author.name;
-      jobController.text          = AddQuoteInputs.author.job;
-      instaController.text        = AddQuoteInputs.author.urls.instagram;
-      summaryController.text      = AddQuoteInputs.author.summary;
-      twitchUrlController.text    = AddQuoteInputs.author.urls.twitch;
-      twitterUrlController.text   = AddQuoteInputs.author.urls.twitter;
-      websiteUrlController.text   = AddQuoteInputs.author.urls.website;
-      wikiUrlController.text      = AddQuoteInputs.author.urls.wikipedia;
-      youtubeUrlController.text   = AddQuoteInputs.author.urls.youtube;
+      affiliateUrlController.text = AddQuoteInputs.author.urls.affiliate;
+      amazonUrlController.text = AddQuoteInputs.author.urls.amazon;
+      facebookUrlController.text = AddQuoteInputs.author.urls.facebook;
+      nameController.text = AddQuoteInputs.author.name;
+      jobController.text = AddQuoteInputs.author.job;
+      instaController.text = AddQuoteInputs.author.urls.instagram;
+      summaryController.text = AddQuoteInputs.author.summary;
+      twitchUrlController.text = AddQuoteInputs.author.urls.twitch;
+      twitterUrlController.text = AddQuoteInputs.author.urls.twitter;
+      websiteUrlController.text = AddQuoteInputs.author.urls.website;
+      wikiUrlController.text = AddQuoteInputs.author.urls.wikipedia;
+      youtubeUrlController.text = AddQuoteInputs.author.urls.youtube;
     });
 
     super.initState();

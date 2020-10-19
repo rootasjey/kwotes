@@ -4,7 +4,7 @@ import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/empty_content.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';

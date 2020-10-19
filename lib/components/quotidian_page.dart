@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/web/add_to_list_button.dart';
+import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/web/full_page_loading.dart';
 import 'package:memorare/state/topics_colors.dart';
 import 'package:memorare/state/user_state.dart';

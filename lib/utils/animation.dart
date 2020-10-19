@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/types/font_size.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -15,13 +15,12 @@ Widget createHeroQuoteAnimation({
   TextStyle style,
   bool isMobile = false,
 }) {
-
   screenHeight = screenHeight ?? screenWidth;
 
   final quoteName = quote.name;
   final denominator = dividerNumber(
-    isMobile    : isMobile,
-    screenWidth : screenWidth,
+    isMobile: isMobile,
+    screenWidth: screenWidth,
     screenHeight: screenHeight,
   );
 
@@ -31,7 +30,6 @@ Widget createHeroQuoteAnimation({
     style = TextStyle(
       fontSize: fontSize,
     );
-
   } else {
     style = style.merge(TextStyle(
       fontSize: fontSize,
@@ -107,7 +105,6 @@ Widget createPunctuationAnimation({
   double screenWidth,
   TextStyle style,
 }) {
-
   final quoteName = quote.name;
 
   final indexes = <int>[];
@@ -118,7 +115,6 @@ Widget createPunctuationAnimation({
 
     if (indexes.contains(index)) {
       hasNext = false;
-
     } else {
       indexes.add(index);
     }
@@ -126,24 +122,23 @@ Widget createPunctuationAnimation({
 
   int delayFactor = 0;
 
-  final children = quoteName
-    .split(' ')
-    .map((word) {
-      word += ' ';
+  final children = quoteName.split(' ').map((word) {
+    word += ' ';
 
-      if (word.endsWith(punctuation)) {
-        delayFactor++;
-      }
+    if (word.endsWith(punctuation)) {
+      delayFactor++;
+    }
 
-      return FadeInY(
-        endY: 0.0,
-        beginY: 50.0,
-        delay: delayFactor * 3.0,
-        child: Text(word,
-          style: style,
-        ),
-      );
-    });
+    return FadeInY(
+      endY: 0.0,
+      beginY: 50.0,
+      delay: delayFactor * 3.0,
+      child: Text(
+        word,
+        style: style,
+      ),
+    );
+  });
 
   return Wrap(
     children: <Widget>[
@@ -153,7 +148,8 @@ Widget createPunctuationAnimation({
 }
 
 /// Create animations according to the quote's length.
-Widget createLengthAnimation({Quote quote, double screenWidth, TextStyle style}) {
+Widget createLengthAnimation(
+    {Quote quote, double screenWidth, TextStyle style}) {
   final quoteName = quote.name;
 
   final half = quoteName.length ~/ 2;
@@ -162,26 +158,25 @@ Widget createLengthAnimation({Quote quote, double screenWidth, TextStyle style})
   int index = 0;
   int delayFactor = 0;
 
-  final children = quoteName
-    .split(' ')
-    .map((word) {
-      word += ' ';
+  final children = quoteName.split(' ').map((word) {
+    word += ' ';
 
-      if (rightHalf > index) {
-        delayFactor++;
-      }
+    if (rightHalf > index) {
+      delayFactor++;
+    }
 
-      index ++;
+    index++;
 
-      return FadeInY(
-        endY: 0.0,
-        beginY: 50.0,
-        delay: delayFactor * 3.0,
-        child: Text(word,
-          style: style,
-        ),
-      );
-    });
+    return FadeInY(
+      endY: 0.0,
+      beginY: 50.0,
+      delay: delayFactor * 3.0,
+      child: Text(
+        word,
+        style: style,
+      ),
+    );
+  });
 
   return Wrap(
     children: <Widget>[

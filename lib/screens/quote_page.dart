@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/favourites.dart';
 import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/web/add_to_list_button.dart';
+import 'package:memorare/components/add_to_list_button.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
 import 'package:memorare/components/web/full_page_error.dart';
 import 'package:memorare/components/web/full_page_loading.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/web/footer.dart';
+import 'package:memorare/components/footer.dart';
 import 'package:memorare/screens/home/home.dart';
 
 class AppIcon extends StatefulWidget {

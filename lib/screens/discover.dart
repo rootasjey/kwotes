@@ -7,7 +7,7 @@ import 'package:memorare/components/reference_row.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/web/reference_card.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/app_localstorage.dart';

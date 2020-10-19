@@ -7,7 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorare/actions/users.dart';
 import 'package:memorare/components/web/fade_in_x.dart';
-import 'package:memorare/components/web/fade_in_y.dart';
+import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/screens/delete_account.dart';
 import 'package:memorare/screens/signin.dart';
