@@ -102,7 +102,7 @@ class _TopicsState extends State<Topics> {
     if (MediaQuery.of(context).size.width < 700.0) {
       return PageAppBar(
         textTitle: 'Topics',
-        expandedHeight: 150.0,
+        expandedHeight: 90.0,
         showNavBackIcon: false,
         onTitlePressed: () {
           scrollController.animateTo(
