@@ -46,9 +46,15 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   @override
   initState() {
     super.initState();
-    getSavedProps();
+    initProps();
     checkConnectedOrNavSignin();
     fetch();
+  }
+
+  void initProps() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -146,10 +152,10 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     }
 
     if (itemsLayout == ItemsLayout.grid) {
-      return sliverGrid();
+      return gridView();
     }
 
-    return sliverList();
+    return listView();
   }
 
   Widget emptyView() {
@@ -189,7 +195,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     );
   }
 
-  Widget sliverGrid() {
+  Widget gridView() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -205,12 +211,71 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             final tempQuote = tempQuotes.elementAt(index);
 
             return TempQuoteRowWithActions(
+              componentType: ItemComponentType.card,
               onTap: () => editAction(tempQuote),
+              canManage: true,
               tempQuote: tempQuote,
             );
           },
           childCount: tempQuotes.length,
         ),
+      ),
+    );
+  }
+
+  Widget listView() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final tempQuote = tempQuotes.elementAt(index);
+
+          return TempQuoteRow(
+            tempQuote: tempQuote,
+            onTap: () => editAction(tempQuote),
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+            ),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_forever),
+                    title: Text('Delete'),
+                  )),
+              PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  )),
+              PopupMenuItem(
+                  value: 'validate',
+                  child: ListTile(
+                    leading: Icon(Icons.check),
+                    title: Text('Validate'),
+                  )),
+            ],
+            onSelected: (value) {
+              if (value == 'delete') {
+                deleteAction(tempQuote);
+                return;
+              }
+
+              if (value == 'edit') {
+                editAction(tempQuote);
+                return;
+              }
+
+              if (value == 'validate') {
+                validateAction(tempQuote);
+                return;
+              }
+            },
+          );
+        },
+        childCount: tempQuotes.length,
       ),
     );
   }
@@ -257,64 +322,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
               title: Text('Validate'),
             )),
       ],
-    );
-  }
-
-  Widget sliverList() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
-
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final tempQuote = tempQuotes.elementAt(index);
-
-          return TempQuoteRow(
-            tempQuote: tempQuote,
-            onTap: () => editAction(tempQuote),
-            padding: EdgeInsets.symmetric(
-              horizontal: horPadding,
-              vertical: 30.0,
-            ),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete_forever),
-                    title: Text('Delete'),
-                  )),
-              PopupMenuItem(
-                  value: 'edit',
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text('Edit'),
-                  )),
-              PopupMenuItem(
-                  value: 'validate',
-                  child: ListTile(
-                    leading: Icon(Icons.check),
-                    title: Text('Validate'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'delete') {
-                deleteAction(tempQuote);
-                return;
-              }
-
-              if (value == 'edit') {
-                editAction(tempQuote);
-                return;
-              }
-
-              if (value == 'validate') {
-                validateAction(tempQuote);
-                return;
-              }
-            },
-          );
-        },
-        childCount: tempQuotes.length,
-      ),
     );
   }
 
@@ -440,12 +447,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void getSavedProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   void validateAction(TempQuote tempQuote) async {
