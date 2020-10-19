@@ -42,8 +42,13 @@ class _FavouritesState extends State<Favourites> {
   @override
   initState() {
     super.initState();
-    getSavedOrder();
+    initProps();
     fetch();
+  }
+
+  void initProps() {
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -196,40 +201,45 @@ class _FavouritesState extends State<Favourites> {
   }
 
   Widget gridQuotes() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 300.0,
-        crossAxisSpacing: 20.0,
-        mainAxisSpacing: 20.0,
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
       ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final quote = quotes.elementAt(index);
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300.0,
+          crossAxisSpacing: 20.0,
+          mainAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final quote = quotes.elementAt(index);
 
-          return QuoteRowWithActions(
-            quote: quote,
-            quoteId: quote.quoteId,
-            componentType: ItemComponentType.card,
-            quotePageType: QuotePageType.favourites,
-            padding: EdgeInsets.zero,
-            onBeforeRemoveFromFavourites: () {
-              setState(() {
-                // optimistic
-                quotes.removeAt(index);
-              });
-            },
-            onAfterRemoveFromFavourites: (bool success) {
-              if (!success) {
+            return QuoteRowWithActions(
+              quote: quote,
+              quoteId: quote.quoteId,
+              componentType: ItemComponentType.card,
+              quotePageType: QuotePageType.favourites,
+              padding: EdgeInsets.zero,
+              onBeforeRemoveFromFavourites: () {
                 setState(() {
-                  quotes.insert(index, quote);
+                  // optimistic
+                  quotes.removeAt(index);
                 });
-              }
+              },
+              onAfterRemoveFromFavourites: (bool success) {
+                if (!success) {
+                  setState(() {
+                    quotes.insert(index, quote);
+                  });
+                }
 
-              userState.updateFavDate();
-            },
-          );
-        },
-        childCount: quotes.length,
+                userState.updateFavDate();
+              },
+            );
+          },
+          childCount: quotes.length,
+        ),
       ),
     );
   }
@@ -398,10 +408,6 @@ class _FavouritesState extends State<Favourites> {
         type: SnackType.error,
       );
     }
-  }
-
-  void getSavedOrder() {
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
   }
 
   Future removeFav(Quote quote) async {
