@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/loading_animation.dart';
+import 'package:memorare/components/main_app_bar.dart';
 import 'package:memorare/components/web/fade_in_y.dart';
-import 'package:memorare/components/web/nav_back_header.dart';
 import 'package:memorare/screens/home/home.dart';
 import 'package:memorare/utils/snack.dart';
 
@@ -22,19 +22,26 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              NavBackHeader(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 300.0),
-                child: SizedBox(
-                  width: 320,
-                  child: body(),
-                ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          MainAppBar(
+            title: "Forgot password",
+            automaticallyImplyLeading: true,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate.fixed([
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 300.0),
+                    child: SizedBox(
+                      width: 320,
+                      child: body(),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ]),
           ),
         ],
       ),
