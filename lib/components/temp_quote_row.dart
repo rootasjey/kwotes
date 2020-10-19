@@ -92,7 +92,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                if (widget.isDraft) draftInfo(),
+                if (widget.isDraft) chipDraftInfo(),
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -146,7 +146,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
     );
   }
 
-  Widget draftInfo() {
+  Widget chipDraftInfo() {
     final tempQuote = widget.tempQuote;
 
     return Padding(
@@ -267,6 +267,12 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                   ),
                 ),
               if (widget.stackChildren.length > 0) ...widget.stackChildren,
+              if (widget.isDraft)
+                Positioned(
+                  left: 20,
+                  top: 20.0,
+                  child: chipDraftInfo(),
+                ),
             ],
           ),
         ),
