@@ -45,17 +45,17 @@ class Reference {
   }
 
   factory Reference.fromJSON(Map<String, dynamic> json) {
-    final _links = List<String>();
+    final links = List<String>();
 
     if (json['links'] != null) {
       for (String ref in json['links']) {
-        _links.add(ref);
+        links.add(ref);
       }
     }
 
-    final _urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
+    final urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
 
-    final _type = json['type'] != null
+    final type = json['type'] != null
         ? ReferenceType.fromJSON(json['type'])
         : ReferenceType();
 
@@ -65,12 +65,12 @@ class Reference {
     return Reference(
       id: json['id'] ?? '',
       lang: json['lang'],
-      links: _links,
+      links: links,
       name: json['name'] ?? '',
       release: release,
       summary: json['summary'],
-      type: _type,
-      urls: _urls,
+      type: type,
+      urls: urls,
       wikiUrl: json['wikiUrl'],
     );
   }

@@ -49,7 +49,7 @@ class Author {
   }
 
   factory Author.fromJSON(Map<String, dynamic> json) {
-    final _urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
+    final urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
 
     final born = json['born'] != null
         ? PointInTime.fromJSON(json['born'])
@@ -69,7 +69,7 @@ class Author {
       job: json['job'],
       name: json['name'],
       summary: json['summary'],
-      urls: _urls,
+      urls: urls,
     );
   }
 
