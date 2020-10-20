@@ -12,7 +12,6 @@ class Reference {
   String lang;
   String name;
   String summary;
-  final String wikiUrl;
 
   final ReferenceType type;
 
@@ -27,7 +26,6 @@ class Reference {
     this.summary = '',
     this.type,
     this.urls,
-    this.wikiUrl,
   });
 
   factory Reference.empty() {
@@ -40,7 +38,6 @@ class Reference {
       summary: '',
       type: ReferenceType(),
       urls: Urls(),
-      wikiUrl: '',
     );
   }
 
@@ -71,7 +68,6 @@ class Reference {
       summary: json['summary'],
       type: type,
       urls: urls,
-      wikiUrl: json['wikiUrl'],
     );
   }
 
@@ -85,7 +81,6 @@ class Reference {
     json['release'] = release;
     json['summary'] = summary;
     json['type'] = type;
-    json['wikiUrl'] = wikiUrl;
 
     return json;
   }
