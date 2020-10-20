@@ -1,8 +1,12 @@
+import 'package:memorare/types/point_in_time.dart';
 import 'package:memorare/types/urls.dart';
 
 class Author {
   final String id;
   final String imgUrl;
+
+  final PointInTime born;
+  final PointInTime death;
 
   /// True if the author is fictional.
   bool isFictional;
@@ -14,6 +18,8 @@ class Author {
   final Urls urls;
 
   Author({
+    this.born,
+    this.death,
     this.id = '',
     this.isFictional = false,
     this.imgUrl = '',
@@ -25,6 +31,8 @@ class Author {
 
   factory Author.empty() {
     return Author(
+      born: PointInTime(),
+      death: PointInTime(),
       id: '',
       isFictional: false,
       imgUrl: '',
@@ -37,8 +45,16 @@ class Author {
 
   factory Author.fromJSON(Map<String, dynamic> json) {
     final _urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
+    final born = json['born'] != null
+        ? PointInTime.fromJSON(json['born'])
+        : PointInTime();
+    final death = json['death'] != null
+        ? PointInTime.fromJSON(json['death'])
+        : PointInTime();
 
     return Author(
+      born: born,
+      death: death,
       id: json['id'] ?? '',
       isFictional: json['isFictional'] ?? false,
       imgUrl: json['imgUrl'] ?? '',
@@ -52,6 +68,8 @@ class Author {
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> json = Map();
 
+    json['born'] = born;
+    json['death'] = death;
     json['id'] = id;
     json['isFictional'] = isFictional;
     json['imgUrl'] = imgUrl;
