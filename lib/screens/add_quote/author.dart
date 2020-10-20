@@ -13,8 +13,9 @@ class AddQuoteAuthor extends StatefulWidget {
 }
 
 class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
+  final double beginY = 10.0;
+
   String tempImgUrl = '';
-  final beginY = 10.0;
 
   final affiliateUrlController = TextEditingController();
   final amazonUrlController = TextEditingController();
@@ -70,6 +71,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             beginY: beginY,
             child: summaryCardInput(),
           ),
+          fictionalCharacterBox(),
           FadeInY(
             delay: 0.8,
             beginY: beginY,
@@ -144,6 +146,23 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget fictionalCharacterBox() {
+    return Container(
+      width: 400.0,
+      padding: const EdgeInsets.only(bottom: 32.0),
+      child: CheckboxListTile(
+          title: Text('is fictional?'),
+          subtitle: Text(
+              "If true, a reference's id property will be added to this author."),
+          value: AddQuoteInputs.author.isFictional,
+          onChanged: (newValue) {
+            setState(() {
+              AddQuoteInputs.author.isFictional = newValue;
+            });
+          }),
     );
   }
 
