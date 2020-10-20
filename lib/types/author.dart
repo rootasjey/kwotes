@@ -1,7 +1,10 @@
+import 'package:memorare/types/from_reference.dart';
 import 'package:memorare/types/point_in_time.dart';
 import 'package:memorare/types/urls.dart';
 
 class Author {
+  /// Useful if the author is fictional.
+  final FromReference fromReference;
   final String id;
   final String imgUrl;
 
@@ -20,6 +23,7 @@ class Author {
   Author({
     this.born,
     this.death,
+    this.fromReference,
     this.id = '',
     this.isFictional = false,
     this.imgUrl = '',
@@ -33,6 +37,7 @@ class Author {
     return Author(
       born: PointInTime(),
       death: PointInTime(),
+      fromReference: FromReference(),
       id: '',
       isFictional: false,
       imgUrl: '',
@@ -45,9 +50,11 @@ class Author {
 
   factory Author.fromJSON(Map<String, dynamic> json) {
     final _urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
+
     final born = json['born'] != null
         ? PointInTime.fromJSON(json['born'])
         : PointInTime();
+
     final death = json['death'] != null
         ? PointInTime.fromJSON(json['death'])
         : PointInTime();
@@ -55,6 +62,7 @@ class Author {
     return Author(
       born: born,
       death: death,
+      fromReference: FromReference.fromJSON(json['fromReference']),
       id: json['id'] ?? '',
       isFictional: json['isFictional'] ?? false,
       imgUrl: json['imgUrl'] ?? '',
@@ -70,12 +78,14 @@ class Author {
 
     json['born'] = born;
     json['death'] = death;
+    json['fromReference'] = fromReference;
     json['id'] = id;
     json['isFictional'] = isFictional;
     json['imgUrl'] = imgUrl;
     json['job'] = job;
     json['name'] = name;
     json['summary'] = summary;
+    json['urls'] = urls;
 
     return json;
   }
