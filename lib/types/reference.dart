@@ -1,21 +1,29 @@
 import 'package:memorare/types/reference_type.dart';
+import 'package:memorare/types/release.dart';
 import 'package:memorare/types/urls.dart';
 
 class Reference {
+  /// When this reference was released.
+  final Release release;
+
+  final List<String> links;
+
   final String id;
   String lang;
-  final List<String> links;
   String name;
   String summary;
-  final ReferenceType type;
-  final Urls urls;
   final String wikiUrl;
+
+  final ReferenceType type;
+
+  final Urls urls;
 
   Reference({
     this.id = '',
     this.lang = 'en',
     this.links,
     this.name = '',
+    this.release,
     this.summary = '',
     this.type,
     this.urls,
@@ -24,14 +32,15 @@ class Reference {
 
   factory Reference.empty() {
     return Reference(
-      id          : '',
-      lang        : 'en',
-      links       : [],
-      name        : '',
-      summary     : '',
-      type        : ReferenceType(),
-      urls        : Urls(),
-      wikiUrl     : '',
+      id: '',
+      lang: 'en',
+      links: [],
+      name: '',
+      release: Release(),
+      summary: '',
+      type: ReferenceType(),
+      urls: Urls(),
+      wikiUrl: '',
     );
   }
 
@@ -44,34 +53,39 @@ class Reference {
       }
     }
 
-    final _urls = json['urls'] != null ?
-      Urls.fromJSON(json['urls']) : Urls();
+    final _urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
 
-    final _type = json['type'] != null ?
-      ReferenceType.fromJSON(json['type']) : ReferenceType();
+    final _type = json['type'] != null
+        ? ReferenceType.fromJSON(json['type'])
+        : ReferenceType();
+
+    final release =
+        json['release'] != null ? Release.fromJSON(json['release']) : Release();
 
     return Reference(
-      id          : json['id'] ?? '',
-      lang        : json['lang'],
-      links       : _links,
-      name        : json['name'] ?? '',
-      summary     : json['summary'],
-      type        : _type,
-      urls        : _urls,
-      wikiUrl     : json['wikiUrl'],
+      id: json['id'] ?? '',
+      lang: json['lang'],
+      links: _links,
+      name: json['name'] ?? '',
+      release: release,
+      summary: json['summary'],
+      type: _type,
+      urls: _urls,
+      wikiUrl: json['wikiUrl'],
     );
   }
 
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> json = Map();
 
-    json['id']          = id;
-    json['lang']        = lang;
-    json['links']       = links;
-    json['name']        = name;
-    json['summary']     = summary;
-    json['type']        = type;
-    json['wikiUrl']     = wikiUrl;
+    json['id'] = id;
+    json['lang'] = lang;
+    json['links'] = links;
+    json['name'] = name;
+    json['release'] = release;
+    json['summary'] = summary;
+    json['type'] = type;
+    json['wikiUrl'] = wikiUrl;
 
     return json;
   }
