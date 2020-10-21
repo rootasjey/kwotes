@@ -2,14 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/snack.dart';
-
-enum AddQuoteType {
-  draft,
-  offline,
-  tempquote,
-}
 
 Future addNewTempQuote({
   List<String> comments,
@@ -21,6 +16,17 @@ Future addNewTempQuote({
   await Firestore.instance.collection('tempquotes').add({
     'author': {
       'id': AddQuoteInputs.author.id,
+      'born': {
+        'city': AddQuoteInputs.author.born.city,
+        'country': AddQuoteInputs.author.born.country,
+        'date': AddQuoteInputs.author.born.date,
+      },
+      'death': {
+        'city': AddQuoteInputs.author.death.city,
+        'country': AddQuoteInputs.author.death.country,
+        'date': AddQuoteInputs.author.death.date,
+      },
+      'isFictional': AddQuoteInputs.author.isFictional,
       'job': AddQuoteInputs.author.job,
       'jobLang': {},
       'name': AddQuoteInputs.author.name,
@@ -28,10 +34,10 @@ Future addNewTempQuote({
       'summaryLang': {},
       'updatedAt': DateTime.now(),
       'urls': {
-        'affiliate': AddQuoteInputs.author.urls.affiliate,
         'amazon': AddQuoteInputs.author.urls.amazon,
         'facebook': AddQuoteInputs.author.urls.facebook,
         'image': AddQuoteInputs.author.urls.image,
+        'instagram': AddQuoteInputs.author.urls.instagram,
         'netflix': AddQuoteInputs.author.urls.netflix,
         'primeVideo': AddQuoteInputs.author.urls.primeVideo,
         'twitch': AddQuoteInputs.author.urls.twitch,
@@ -233,16 +239,19 @@ List<Map<String, dynamic>> formatReferences() {
     'lang': AddQuoteInputs.reference.lang,
     'links': [],
     'name': AddQuoteInputs.reference.name,
+    'release': {
+      'original': AddQuoteInputs.reference.release.original,
+    },
     'summary': AddQuoteInputs.reference.summary,
     'type': {
       'primary': AddQuoteInputs.reference.type.primary,
       'secondary': AddQuoteInputs.reference.type.secondary,
     },
     'urls': {
-      'affiliate': AddQuoteInputs.reference.urls.affiliate,
       'amazon': AddQuoteInputs.reference.urls.amazon,
       'facebook': AddQuoteInputs.reference.urls.facebook,
       'image': AddQuoteInputs.reference.urls.image,
+      'instagram': AddQuoteInputs.reference.urls.instagram,
       'netflix': AddQuoteInputs.reference.urls.netflix,
       'primeVideo': AddQuoteInputs.reference.urls.primeVideo,
       'twitch': AddQuoteInputs.reference.urls.twitch,
@@ -269,6 +278,17 @@ Future saveExistingTempQuote({
       .setData({
     'author': {
       'id': AddQuoteInputs.author.id,
+      'born': {
+        'city': AddQuoteInputs.author.born.city,
+        'country': AddQuoteInputs.author.born.country,
+        'date': AddQuoteInputs.author.born.date,
+      },
+      'death': {
+        'city': AddQuoteInputs.author.death.city,
+        'country': AddQuoteInputs.author.death.country,
+        'date': AddQuoteInputs.author.death.date,
+      },
+      'isFictional': AddQuoteInputs.author.isFictional,
       'job': AddQuoteInputs.author.job,
       'jobLang': {},
       'name': AddQuoteInputs.author.name,
@@ -276,9 +296,9 @@ Future saveExistingTempQuote({
       'summaryLang': {},
       'updatedAt': DateTime.now(),
       'urls': {
-        'affiliate': AddQuoteInputs.author.urls.affiliate,
         'amazon': AddQuoteInputs.author.urls.amazon,
         'facebook': AddQuoteInputs.author.urls.facebook,
+        'instagram': AddQuoteInputs.author.urls.instagram,
         'image': AddQuoteInputs.author.urls.image,
         'netflix': AddQuoteInputs.author.urls.netflix,
         'primeVideo': AddQuoteInputs.author.urls.primeVideo,

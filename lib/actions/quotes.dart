@@ -21,12 +21,12 @@ Future<bool> validateTempQuote({
   String uid,
 }) async {
   try {
-    // 2.Create or get author if any
-    final author = await createOrGetAuthor(tempQuote);
-
-    // 3.Create or get reference if any
+    // 1.Create or get reference if any.
     final reference = await createOrGetReference(tempQuote);
     final referencesArray = [];
+
+    // 2.Create or get author if any.
+    final author = await createOrGetAuthor(tempQuote, reference);
 
     if (reference.id.isNotEmpty) {
       referencesArray.add({
@@ -35,13 +35,11 @@ Future<bool> validateTempQuote({
       });
     }
 
-    // 4.Create topics map
+    // 3.Create topics map.
     final topics = createTopicsMap(tempQuote);
 
-    // 5.Format data and add new quote
-    final docQuote = await Firestore.instance
-    .collection('quotes')
-    .add({
+    // 5.Format data and add new quote.
+    final addedQuote = await Firestore.instance.collection('quotes').add({
       'author': {
         'id': author.id,
         'name': author.name,
@@ -67,21 +65,20 @@ Future<bool> validateTempQuote({
       }
     });
 
-    // 6.Create comment if any
+    // 6.Create comment if any.
     await createComments(
-      quoteId: docQuote.documentID,
+      quoteId: addedQuote.documentID,
       tempQuote: tempQuote,
       uid: uid,
     );
 
-    // 7.Delete temp quote
+    // 7.Delete temp quote.
     await Firestore.instance
-    .collection('tempquotes')
-    .document(tempQuote.id)
-    .delete();
+        .collection('tempquotes')
+        .document(tempQuote.id)
+        .delete();
 
     return true;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -93,7 +90,6 @@ Future createComments({
   String quoteId,
   String uid,
 }) async {
-
   final tempComments = tempQuote.comments;
 
   tempComments.forEach((tempComment) {
@@ -111,11 +107,12 @@ Future createComments({
   });
 }
 
-Future<Author> createOrGetAuthor(TempQuote tempQuote) async {
+Future<Author> createOrGetAuthor(
+    TempQuote tempQuote, Reference reference) async {
   final author = tempQuote.author;
 
   // Anonymous author
-  if (author.name.isEmpty) {
+  if (author.name.isEmpty && author.id.isEmpty) {
     final anonymousSnap = await Firestore.instance
         .collection('authors')
         .where('name', isEqualTo: 'Anonymous')
@@ -125,10 +122,10 @@ Future<Author> createOrGetAuthor(TempQuote tempQuote) async {
       throw ErrorDescription('Document not found for Anonymous author.');
     }
 
-    final firstDoc = anonymousSnap.documents.first;
+    final match = anonymousSnap.documents.first;
 
     return Author(
-      id: firstDoc.documentID,
+      id: match.documentID,
       name: 'Anonymous',
     );
   }
@@ -140,25 +137,22 @@ Future<Author> createOrGetAuthor(TempQuote tempQuote) async {
     );
   }
 
-  final existingSnapshot = await Firestore.instance
-      .collection('authors')
-      .where('name', isEqualTo: author.name)
-      .getDocuments();
-
-  if (existingSnapshot.documents.isNotEmpty) {
-    final existingAuthor = existingSnapshot.documents.first;
-    final data = existingAuthor.data;
-
-    return Author(
-      id: existingAuthor.documentID,
-      name: data['name'],
-    );
-  }
-
-  final newAuthor = await Firestore.instance
-  .collection('authors')
-  .add({
+  final newAuthor = await Firestore.instance.collection('authors').add({
+    'born': {
+      'city': author.born.city,
+      'country': author.born.country,
+      'date': author.born.date,
+    },
     'createdAt': DateTime.now(),
+    'death': {
+      'city': author.death.city,
+      'country': author.death.country,
+      'date': author.death.date,
+    },
+    'fromReference': {
+      'id': author.isFictional ? reference.id : '',
+    },
+    'isFictional': author.isFictional,
     'job': author.job,
     'jobLang': {},
     'name': author.name,
@@ -166,16 +160,17 @@ Future<Author> createOrGetAuthor(TempQuote tempQuote) async {
     'summaryLang': {},
     'updatedAt': DateTime.now(),
     'urls': {
-      'amazon'    : author.urls.amazon,
-      'facebook'  : author.urls.facebook,
-      'image'     : author.urls.image,
-      'netflix'   : author.urls.netflix,
+      'amazon': author.urls.amazon,
+      'facebook': author.urls.facebook,
+      'image': author.urls.image,
+      'instagram': author.urls.instagram,
+      'netflix': author.urls.netflix,
       'primeVideo': author.urls.primeVideo,
-      'twitch'    : author.urls.twitch,
-      'twitter'   : author.urls.twitter,
-      'website'   : author.urls.website,
-      'wikipedia' : author.urls.wikipedia,
-      'youtube'   : author.urls.youtube,
+      'twitch': author.urls.twitch,
+      'twitter': author.urls.twitter,
+      'website': author.urls.website,
+      'wikipedia': author.urls.wikipedia,
+      'youtube': author.urls.youtube,
     }
   });
 
@@ -199,26 +194,14 @@ Future<Reference> createOrGetReference(TempQuote tempQuote) async {
     );
   }
 
-  final existingSnapshot = await Firestore.instance
-      .collection('references')
-      .where('name', isEqualTo: reference.name)
-      .getDocuments();
-
-  if (existingSnapshot.documents.isNotEmpty) {
-    final existingRef = existingSnapshot.documents.first;
-    final data = existingRef.data;
-
-    return Reference(
-      id: existingRef.documentID,
-      name: data['name'],
-    );
-  }
-
   final newReference = await Firestore.instance.collection('references').add({
     'createdAt': DateTime.now(),
     'lang': reference.lang,
     'linkedRefs': [],
     'name': reference.name,
+    'release': {
+      'original': reference.release.original,
+    },
     'summary': reference.summary,
     'type': {
       'primary': reference.type.primary,
@@ -226,16 +209,17 @@ Future<Reference> createOrGetReference(TempQuote tempQuote) async {
     },
     'updatedAt': DateTime.now(),
     'urls': {
-      'amazon'      : reference.urls.amazon,
-      'facebook'    : reference.urls.facebook,
-      'image'       : reference.urls.image,
-      'netflix'     : reference.urls.netflix,
-      'primeVideo'  : reference.urls.primeVideo,
-      'twitch'      : reference.urls.twitch,
-      'twitter'     : reference.urls.twitter,
-      'website'     : reference.urls.website,
-      'wikipedia'   : reference.urls.wikipedia,
-      'youtube'     : reference.urls.youtube,
+      'amazon': reference.urls.amazon,
+      'facebook': reference.urls.facebook,
+      'image': reference.urls.image,
+      'instagram': reference.urls.instagram,
+      'netflix': reference.urls.netflix,
+      'primeVideo': reference.urls.primeVideo,
+      'twitch': reference.urls.twitch,
+      'twitter': reference.urls.twitter,
+      'website': reference.urls.website,
+      'wikipedia': reference.urls.wikipedia,
+      'youtube': reference.urls.youtube,
     },
   });
 

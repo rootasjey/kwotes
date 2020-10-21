@@ -22,6 +22,7 @@ import 'package:memorare/screens/my_temp_quotes.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
+import 'package:memorare/types/enums.dart';
 import 'package:memorare/utils/snack.dart';
 
 class AddQuoteSteps extends StatefulWidget {

@@ -1,3 +1,9 @@
+enum AddQuoteType {
+  draft,
+  offline,
+  tempquote,
+}
+
 enum HeaderViewType {
   options,
   search,
