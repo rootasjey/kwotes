@@ -1,7 +1,9 @@
 import 'package:memorare/types/author.dart';
+import 'package:memorare/types/point_in_time.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/types/reference_type.dart';
+import 'package:memorare/types/release.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/urls.dart';
 
@@ -26,7 +28,6 @@ class AddQuoteInputs {
   static Reference reference = Reference.empty();
 
   static String region = '';
-
 
   static void clearAll() {
     clearAuthor();
@@ -69,50 +70,60 @@ class AddQuoteInputs {
       topics: tempQuote.topics,
     );
 
+    final born = tempQuote.author.born;
+    final death = tempQuote.author.death;
+
     author = Author(
-      id      : tempQuote.author.id,
-      job     : tempQuote.author.job,
-      name    : tempQuote.author.name,
-      summary : tempQuote.author.summary,
+      born: born ?? PointInTime(),
+      death: death ?? PointInTime(),
+      id: tempQuote.author.id,
+      isFictional: tempQuote.author.isFictional ?? false,
+      job: tempQuote.author.job,
+      name: tempQuote.author.name,
+      summary: tempQuote.author.summary,
       urls: Urls(
-        affiliate : tempQuote.author.urls.affiliate,
-        amazon    : tempQuote.author.urls.amazon,
-        facebook  : tempQuote.author.urls.facebook,
-        image     : tempQuote.author.urls.image,
-        netflix   : tempQuote.author.urls.netflix,
+        affiliate: tempQuote.author.urls.affiliate,
+        amazon: tempQuote.author.urls.amazon,
+        facebook: tempQuote.author.urls.facebook,
+        image: tempQuote.author.urls.image,
+        instagram: tempQuote.author.urls.instagram,
+        netflix: tempQuote.author.urls.netflix,
         primeVideo: tempQuote.author.urls.primeVideo,
-        twitch    : tempQuote.author.urls.twitch,
-        twitter   : tempQuote.author.urls.twitter,
-        website   : tempQuote.author.urls.website,
-        wikipedia : tempQuote.author.urls.wikipedia,
-        youtube   : tempQuote.author.urls.youtube,
+        twitch: tempQuote.author.urls.twitch,
+        twitter: tempQuote.author.urls.twitter,
+        website: tempQuote.author.urls.website,
+        wikipedia: tempQuote.author.urls.wikipedia,
+        youtube: tempQuote.author.urls.youtube,
       ),
     );
 
     if (tempQuote.references.length > 0) {
       final ref = tempQuote.references.first;
+      final release = ref.release ?? Release();
 
       reference = Reference(
-        id      : ref.id,
-        lang    : ref.lang,
-        name    : ref.name,
-        summary : ref.summary,
-        type    : ReferenceType(
-          primary   : ref.type.primary,
-          secondary : ref.type.secondary,
+        id: ref.id,
+        lang: ref.lang,
+        name: ref.name,
+        release: release,
+        summary: ref.summary,
+        type: ReferenceType(
+          primary: ref.type.primary,
+          secondary: ref.type.secondary,
         ),
-        urls    : Urls(
-          affiliate : ref.urls.affiliate,
-          amazon    : ref.urls.amazon,
-          facebook  : ref.urls.facebook,
-          image     : ref.urls.image,
-          netflix   : ref.urls.netflix,
+        urls: Urls(
+          affiliate: ref.urls.affiliate,
+          amazon: ref.urls.amazon,
+          facebook: ref.urls.facebook,
+          image: ref.urls.image,
+          instagram: ref.urls.instagram,
+          netflix: ref.urls.netflix,
           primeVideo: ref.urls.primeVideo,
-          twitch    : ref.urls.twitch,
-          twitter   : ref.urls.twitter,
-          website   : ref.urls.website,
-          wikipedia : ref.urls.wikipedia,
-          youtube   : ref.urls.youtube,
+          twitch: ref.urls.twitch,
+          twitter: ref.urls.twitter,
+          website: ref.urls.website,
+          wikipedia: ref.urls.wikipedia,
+          youtube: ref.urls.youtube,
         ),
       );
     } else {
