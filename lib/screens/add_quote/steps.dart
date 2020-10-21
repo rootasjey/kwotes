@@ -33,7 +33,6 @@ class AddQuoteSteps extends StatefulWidget {
 class _AddQuoteStepsState extends State<AddQuoteSteps> {
   int currentStep = 0;
   bool isCheckingAuth = false;
-  bool isCompleted = false;
   bool isSubmitting = false;
   bool stepChanged = false;
   String errorMessage = '';
@@ -91,80 +90,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           : Padding(
               padding: EdgeInsets.zero,
             ),
-      body: Stepper(
-        currentStep: currentStep,
-        onStepContinue: next,
-        onStepCancel: cancel,
-        onStepTapped: (step) => goTo(step),
-        steps: [
-          Step(
-            title: Text('Content'),
-            subtitle: Text('Required'),
-            content: dynamicStepContent(num: 0),
-            state: computeStepState(
-                stepIndex: 0,
-                compute: () {
-                  return AddQuoteInputs.quote.name.isEmpty
-                      ? StepState.error
-                      : StepState.complete;
-                }),
-          ),
-          Step(
-            title: const Text('Topics'),
-            subtitle: Text('Required'),
-            content: dynamicStepContent(num: 1),
-            state: computeStepState(
-                stepIndex: 1,
-                compute: () {
-                  if (!stepChanged) {
-                    return StepState.indexed;
-                  }
-
-                  if (AddQuoteInputs.quote.topics.length == 0) {
-                    return StepState.error;
-                  }
-
-                  return StepState.complete;
-                }),
-          ),
-          Step(
-            subtitle: Text('Optional'),
-            title: const Text('Author'),
-            content: dynamicStepContent(num: 2),
-            state: computeStepState(
-                stepIndex: 2,
-                compute: () {
-                  return AddQuoteInputs.author.name.isEmpty
-                      ? StepState.indexed
-                      : StepState.complete;
-                }),
-          ),
-          Step(
-            subtitle: Text('Optional'),
-            title: const Text('Reference'),
-            content: dynamicStepContent(num: 3),
-            state: computeStepState(
-                stepIndex: 3,
-                compute: () {
-                  return AddQuoteInputs.reference.name.isEmpty
-                      ? StepState.indexed
-                      : StepState.complete;
-                }),
-          ),
-          Step(
-            subtitle: Text('Optional'),
-            title: const Text('Comments'),
-            content: dynamicStepContent(num: 4),
-            state: computeStepState(
-                stepIndex: 2,
-                compute: () {
-                  return AddQuoteInputs.comment.isEmpty
-                      ? StepState.indexed
-                      : StepState.complete;
-                }),
-          ),
-        ],
-      ),
+      body: body(),
     );
   }
 
@@ -252,96 +178,24 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   Widget body() {
     if (errorMessage.isNotEmpty) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          FullPageError(
-            message: errorMessage,
-          ),
-        ]),
+      return FullPageError(
+        message: errorMessage,
       );
     }
 
     if (isCheckingAuth) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          FullPageLoading(),
-        ]),
-      );
+      return FullPageLoading();
     }
 
     if (isSubmitting) {
-      return SliverList(
-        delegate: SliverChildListDelegate([
-          FullPageLoading(
-            title: AddQuoteInputs.quote.id.isEmpty
-                ? 'Submitting quote...'
-                : 'Saving quote...',
-          ),
-        ]),
+      return FullPageLoading(
+        title: AddQuoteInputs.quote.id.isEmpty
+            ? 'Submitting quote...'
+            : 'Saving quote...',
       );
     }
 
-    if (isCompleted) {
-      return completedView();
-    }
-
     return stepperSections();
-  }
-
-  Widget completedView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 60.0,
-            vertical: 140.0,
-          ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                width: 500.0,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Opacity(
-                  opacity: .8,
-                  child: Text(
-                    getResultMessage(
-                      actionIntent: actionIntent,
-                      actionResult: actionResult,
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 22.0,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                width: 500.0,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Opacity(
-                  opacity: .5,
-                  child: Text(
-                    getResultSubMessage(
-                      actionIntent: actionIntent,
-                      actionResult: actionResult,
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
-                ),
-              ),
-              completedViewActions(),
-            ],
-          ),
-        ),
-      ]),
-    );
-  }
-
-  Widget completedViewActions() {
-    return isSmallView ? verticalActions() : horizontalActions();
   }
 
   StepState computeStepState({
@@ -439,88 +293,79 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   }
 
   Widget stepperSections() {
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(
-        vertical: 80.0,
-        horizontal: isSmallView ? 0.0 : 80,
-      ),
-      sliver: SliverList(
-          delegate: SliverChildListDelegate([
-        Stepper(
-          currentStep: currentStep,
-          onStepContinue: next,
-          onStepCancel: cancel,
-          onStepTapped: (step) => goTo(step),
-          steps: [
-            Step(
-              title: Text('Content'),
-              subtitle: Text('Required'),
-              content: dynamicStepContent(num: 0),
-              state: computeStepState(
-                  stepIndex: 0,
-                  compute: () {
-                    return AddQuoteInputs.quote.name.isEmpty
-                        ? StepState.error
-                        : StepState.complete;
-                  }),
-            ),
-            Step(
-              title: const Text('Topics'),
-              subtitle: Text('Required'),
-              content: dynamicStepContent(num: 1),
-              state: computeStepState(
-                  stepIndex: 1,
-                  compute: () {
-                    if (!stepChanged) {
-                      return StepState.indexed;
-                    }
-
-                    if (AddQuoteInputs.quote.topics.length == 0) {
-                      return StepState.error;
-                    }
-
-                    return StepState.complete;
-                  }),
-            ),
-            Step(
-              subtitle: Text('Optional'),
-              title: const Text('Author'),
-              content: dynamicStepContent(num: 2),
-              state: computeStepState(
-                  stepIndex: 2,
-                  compute: () {
-                    return AddQuoteInputs.author.name.isEmpty
-                        ? StepState.indexed
-                        : StepState.complete;
-                  }),
-            ),
-            Step(
-              subtitle: Text('Optional'),
-              title: const Text('Reference'),
-              content: dynamicStepContent(num: 3),
-              state: computeStepState(
-                  stepIndex: 3,
-                  compute: () {
-                    return AddQuoteInputs.reference.name.isEmpty
-                        ? StepState.indexed
-                        : StepState.complete;
-                  }),
-            ),
-            Step(
-              subtitle: Text('Optional'),
-              title: const Text('Comments'),
-              content: dynamicStepContent(num: 4),
-              state: computeStepState(
-                  stepIndex: 2,
-                  compute: () {
-                    return AddQuoteInputs.comment.isEmpty
-                        ? StepState.indexed
-                        : StepState.complete;
-                  }),
-            ),
-          ],
+    return Stepper(
+      currentStep: currentStep,
+      onStepContinue: next,
+      onStepCancel: cancel,
+      onStepTapped: (step) => goTo(step),
+      steps: [
+        Step(
+          title: Text('Content'),
+          subtitle: Text('Required'),
+          content: dynamicStepContent(num: 0),
+          state: computeStepState(
+              stepIndex: 0,
+              compute: () {
+                return AddQuoteInputs.quote.name.isEmpty
+                    ? StepState.error
+                    : StepState.complete;
+              }),
         ),
-      ])),
+        Step(
+          title: const Text('Topics'),
+          subtitle: Text('Required'),
+          content: dynamicStepContent(num: 1),
+          state: computeStepState(
+              stepIndex: 1,
+              compute: () {
+                if (!stepChanged) {
+                  return StepState.indexed;
+                }
+
+                if (AddQuoteInputs.quote.topics.length == 0) {
+                  return StepState.error;
+                }
+
+                return StepState.complete;
+              }),
+        ),
+        Step(
+          subtitle: Text('Optional'),
+          title: const Text('Author'),
+          content: dynamicStepContent(num: 2),
+          state: computeStepState(
+              stepIndex: 2,
+              compute: () {
+                return AddQuoteInputs.author.name.isEmpty
+                    ? StepState.indexed
+                    : StepState.complete;
+              }),
+        ),
+        Step(
+          subtitle: Text('Optional'),
+          title: const Text('Reference'),
+          content: dynamicStepContent(num: 3),
+          state: computeStepState(
+              stepIndex: 3,
+              compute: () {
+                return AddQuoteInputs.reference.name.isEmpty
+                    ? StepState.indexed
+                    : StepState.complete;
+              }),
+        ),
+        Step(
+          subtitle: Text('Optional'),
+          title: const Text('Comments'),
+          content: dynamicStepContent(num: 4),
+          state: computeStepState(
+              stepIndex: 2,
+              compute: () {
+                return AddQuoteInputs.comment.isEmpty
+                    ? StepState.indexed
+                    : StepState.complete;
+              }),
+        ),
+      ],
     );
   }
 
@@ -675,11 +520,23 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     final success = await proposeQuote(context: context);
 
+    showSnack(
+      context: context,
+      message: getResultMessage(
+        actionIntent: actionIntent,
+        actionResult: actionResult,
+      ),
+      type: SnackType.success,
+    );
+
     if (success) {
       setState(() {
         actionResult = AddQuoteType.tempquote;
         isSubmitting = false;
-        isCompleted = true;
+        isFabVisible = true;
+
+        AddQuoteInputs.quote.name = '';
+        currentStep = 0;
       });
 
       if (AddQuoteInputs.isOfflineDraft) {
@@ -703,7 +560,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       setState(() {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
-        isCompleted = true;
       });
 
       return;
@@ -717,7 +573,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       setState(() {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
-        isCompleted = true;
       });
 
       if (AddQuoteInputs.isOfflineDraft) {
@@ -754,7 +609,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       setState(() {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
-        isCompleted = true;
       });
 
       if (AddQuoteInputs.isOfflineDraft) {
@@ -771,7 +625,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     setState(() {
       actionResult = AddQuoteType.offline;
       isSubmitting = false;
-      isCompleted = true;
     });
   }
 }
