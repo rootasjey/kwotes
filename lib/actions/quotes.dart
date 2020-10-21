@@ -139,12 +139,14 @@ Future<Author> createOrGetAuthor(
 
   final newAuthor = await Firestore.instance.collection('authors').add({
     'born': {
+      'beforeJC': author.born.beforeJC,
       'city': author.born.city,
       'country': author.born.country,
       'date': author.born.date,
     },
     'createdAt': DateTime.now(),
     'death': {
+      'beforeJC': author.death.beforeJC,
       'city': author.death.city,
       'country': author.death.country,
       'date': author.death.date,
@@ -201,6 +203,7 @@ Future<Reference> createOrGetReference(TempQuote tempQuote) async {
     'name': reference.name,
     'release': {
       'original': reference.release.original,
+      'beforeJC': reference.release.beforeJC,
     },
     'summary': reference.summary,
     'type': {

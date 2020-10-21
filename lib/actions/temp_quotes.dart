@@ -17,11 +17,13 @@ Future addNewTempQuote({
     'author': {
       'id': AddQuoteInputs.author.id,
       'born': {
+        'beforeJC': AddQuoteInputs.author.born.beforeJC,
         'city': AddQuoteInputs.author.born.city,
         'country': AddQuoteInputs.author.born.country,
         'date': AddQuoteInputs.author.born.date,
       },
       'death': {
+        'beforeJC': AddQuoteInputs.author.death.beforeJC,
         'city': AddQuoteInputs.author.death.city,
         'country': AddQuoteInputs.author.death.country,
         'date': AddQuoteInputs.author.death.date,
@@ -241,6 +243,7 @@ List<Map<String, dynamic>> formatReferences() {
     'name': AddQuoteInputs.reference.name,
     'release': {
       'original': AddQuoteInputs.reference.release.original,
+      'beforeJC': AddQuoteInputs.reference.release.beforeJC,
     },
     'summary': AddQuoteInputs.reference.summary,
     'type': {
@@ -279,11 +282,13 @@ Future saveExistingTempQuote({
     'author': {
       'id': AddQuoteInputs.author.id,
       'born': {
+        'beforeJC': AddQuoteInputs.author.born.beforeJC,
         'city': AddQuoteInputs.author.born.city,
         'country': AddQuoteInputs.author.born.country,
         'date': AddQuoteInputs.author.born.date,
       },
       'death': {
+        'beforeJC': AddQuoteInputs.author.death.beforeJC,
         'city': AddQuoteInputs.author.death.city,
         'country': AddQuoteInputs.author.death.country,
         'date': AddQuoteInputs.author.death.date,
