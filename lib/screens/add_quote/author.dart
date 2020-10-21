@@ -876,7 +876,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               child: Image.asset(
                 imageUrl,
                 width: 30.0,
-                color: stateColors.foreground,
+                color: active ? stateColors.secondary : stateColors.foreground,
               ),
             ),
           ),

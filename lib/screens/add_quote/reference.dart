@@ -772,7 +772,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 child: Image.asset(
                   imageUrl,
                   width: 30.0,
-                  color: stateColors.foreground,
+                  color:
+                      active ? stateColors.secondary : stateColors.foreground,
                 ),
               ),
             ),
