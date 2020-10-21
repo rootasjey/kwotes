@@ -5,7 +5,7 @@ class Release {
 
   Release({
     this.original,
-    this.beforeJC,
+    this.beforeJC = false,
   });
 
   factory Release.fromJSON(Map<String, dynamic> json) {
