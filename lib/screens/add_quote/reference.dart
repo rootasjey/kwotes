@@ -74,6 +74,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           nameCardInput(),
           primaryTypeCardInput(),
           secondaryTypeCardInput(),
+          releaseDate(),
           clearButton(),
           langSelector(),
           summaryCardInput(),
@@ -112,7 +113,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       },
       icon: Opacity(
         opacity: 0.6,
-        child: Icon(Icons.clear),
+        child: Icon(Icons.delete_sweep),
       ),
       label: Opacity(
         opacity: 0.6,
@@ -463,7 +464,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       fontSize: 20.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.author.summary = newValue;
+                      AddQuoteInputs.reference.summary = newValue;
                     },
                   ),
                 ),
@@ -478,7 +479,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () {
-                          AddQuoteInputs.author.summary = '';
+                          AddQuoteInputs.reference.summary = '';
                           summaryController.clear();
                           summaryFocusNode.requestFocus();
                         },
@@ -526,7 +527,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget langSelector() {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: 60.0,
+        vertical: 40.0,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -963,6 +964,50 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
+  Widget releaseDate() {
+    final selectedDate = AddQuoteInputs.reference.release.original;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        children: [
+          OutlinedButton.icon(
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialEntryMode: DatePickerEntryMode.input,
+                initialDate: selectedDate ?? DateTime.now(),
+                firstDate: DateTime(0),
+                lastDate: DateTime.now(),
+              );
+
+              setState(
+                  () => AddQuoteInputs.reference.release.original = picked);
+            },
+            icon: Icon(Icons.calendar_today),
+            label: Text(selectedDate != null
+                ? selectedDate.toLocal().toString().split(' ')[0]
+                : 'Select a new date'),
+          ),
+          SizedBox(
+            width: 300.0,
+            child: CheckboxListTile(
+              title: Text('Before J-C (Jesus Christ)',
+                  style: TextStyle(fontSize: 16)),
+              subtitle:
+                  Text('(e.g. year -500)', style: TextStyle(fontSize: 13)),
+              value: AddQuoteInputs.reference.release.beforeJC,
+              onChanged: (newValue) {
+                setState(
+                    () => AddQuoteInputs.reference.release.beforeJC = newValue);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget secondaryTypeCardInput() {
     final secondaryType = AddQuoteInputs.reference.type.secondary;
 
@@ -1213,8 +1258,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText:
-                                AddQuoteInputs.author.urls.image.length > 0
-                                    ? AddQuoteInputs.author.urls.image
+                                AddQuoteInputs.reference.urls.image.length > 0
+                                    ? AddQuoteInputs.reference.urls.image
                                     : 'URL',
                           ),
                           onChanged: (newValue) {
@@ -1247,7 +1292,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         ),
                         onPressed: () {
                           setState(() {
-                            AddQuoteInputs.author.urls.image = tempImgUrl;
+                            AddQuoteInputs.reference.urls.image = tempImgUrl;
                           });
 
                           Navigator.of(context).pop();
