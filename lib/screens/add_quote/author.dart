@@ -30,11 +30,20 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   final wikiUrlController = TextEditingController();
   final youtubeUrlController = TextEditingController();
 
+  final bornCityController = TextEditingController();
+  final bornCountryController = TextEditingController();
+  final deathCityController = TextEditingController();
+  final deathCountryController = TextEditingController();
+
   final linkInputController = TextEditingController();
 
   final nameFocusNode = FocusNode();
   final jobFocusNode = FocusNode();
   final summaryFocusNode = FocusNode();
+  final bornCityFocusNode = FocusNode();
+  final bornCountryFocusNode = FocusNode();
+  final deathCityFocusNode = FocusNode();
+  final deathCountryFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -51,6 +60,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       websiteUrlController.text = AddQuoteInputs.author.urls.website;
       wikiUrlController.text = AddQuoteInputs.author.urls.wikipedia;
       youtubeUrlController.text = AddQuoteInputs.author.urls.youtube;
+      bornCityController.text = AddQuoteInputs.author.born.city;
+      bornCountryController.text = AddQuoteInputs.author.born.country;
+      deathCityController.text = AddQuoteInputs.author.death.city;
+      deathCountryController.text = AddQuoteInputs.author.death.country;
     });
 
     super.initState();
@@ -66,6 +79,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           nameCardInput(),
           jobCardInput(),
           clearButton(),
+          dates(),
           FadeInY(
             delay: 0.6,
             beginY: beginY,
@@ -76,6 +90,502 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 0.8,
             beginY: beginY,
             child: links(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget bornInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Born",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "When and where this author was born?",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                StatefulBuilder(builder: (context, childSetState) {
+                  var selectedDate = AddQuoteInputs.author.born.date;
+
+                  return Padding(
+                    padding: EdgeInsets.only(top: 60.0),
+                    child: Wrap(
+                      spacing: 10.0,
+                      runSpacing: 10.0,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialEntryMode: DatePickerEntryMode.input,
+                              initialDate: selectedDate ?? DateTime.now(),
+                              firstDate: DateTime(0),
+                              lastDate: DateTime.now(),
+                            );
+
+                            childSetState(
+                                () => AddQuoteInputs.author.born.date = picked);
+                          },
+                          icon: Icon(Icons.calendar_today),
+                          label: Text(selectedDate != null
+                              ? selectedDate.toLocal().toString().split(' ')[0]
+                              : 'Select a new date'),
+                        ),
+                        SizedBox(
+                          width: 400.0,
+                          child: CheckboxListTile(
+                            title: Text('Before J-C (Jesus Christ)'),
+                            subtitle: Text('(e.g. year -500)'),
+                            value: AddQuoteInputs.author.born.beforeJC,
+                            onChanged: (newValue) {
+                              childSetState(() => AddQuoteInputs
+                                  .author.born.beforeJC = newValue);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    controller: bornCountryController,
+                    focusNode: bornCountryFocusNode,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.flag_outlined),
+                      labelText: "Country (e.g. Italy)",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.author.born.country = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    controller: bornCityController,
+                    focusNode: bornCityFocusNode,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.pin_drop),
+                      labelText: "City (e.g. Rome)",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.author.born.city = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.author.born.city = '';
+                          AddQuoteInputs.author.born.country = '';
+                          AddQuoteInputs.author.born.date = null;
+
+                          bornCityController.clear();
+                          bornCountryController.clear();
+                          bornCityFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.delete_sweep),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Clear inputs',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget deathInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Death",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "When and where this author died?",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                StatefulBuilder(builder: (context, childSetState) {
+                  final selectedDate = AddQuoteInputs.author.death.date;
+                  return Padding(
+                    padding: EdgeInsets.only(top: 60.0),
+                    child: Wrap(
+                      spacing: 10.0,
+                      runSpacing: 10.0,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialEntryMode: DatePickerEntryMode.input,
+                              initialDate: selectedDate ?? DateTime.now(),
+                              firstDate: DateTime(0),
+                              lastDate: DateTime.now(),
+                            );
+
+                            childSetState(() =>
+                                AddQuoteInputs.author.death.date = picked);
+                          },
+                          icon: Icon(Icons.calendar_today),
+                          label: Text(selectedDate != null
+                              ? selectedDate.toLocal().toString().split(' ')[0]
+                              : 'Select a new date'),
+                        ),
+                        SizedBox(
+                          width: 400.0,
+                          child: CheckboxListTile(
+                            title: Text('Before J-C (Jesus Christ)'),
+                            subtitle: Text('(e.g. year -500)'),
+                            value: AddQuoteInputs.author.death.beforeJC,
+                            onChanged: (newValue) {
+                              childSetState(() => AddQuoteInputs
+                                  .author.death.beforeJC = newValue);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    controller: deathCountryController,
+                    focusNode: deathCountryFocusNode,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.flag_outlined),
+                      labelText: "Country (e.g. Italy)",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.author.death.country = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    controller: deathCityController,
+                    focusNode: deathCityFocusNode,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.pin_drop),
+                      labelText: "City (e.g. Rome)",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.author.death.city = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.author.death.city = '';
+                          AddQuoteInputs.author.death.country = '';
+                          AddQuoteInputs.author.death.date = null;
+
+                          deathCityController.clear();
+                          deathCountryController.clear();
+                          deathCityFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.delete_sweep),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Clear inputs',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.8,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget dates() {
+    final born = AddQuoteInputs.author.born;
+    final death = AddQuoteInputs.author.death;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: [
+          SizedBox(
+            width: 150.0,
+            child: Card(
+              elevation: 0.0,
+              child: InkWell(
+                onTap: () async {
+                  await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return bornInput(scrollController: scrollController);
+                      });
+
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              'Born',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            born != null && born.date != null
+                                ? born.date.toLocal().toString().split(' ')[0]
+                                : 'Tap to edit',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.hourglass_full),
+                  ]),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 150.0,
+            child: Card(
+              elevation: 0.0,
+              child: InkWell(
+                onTap: () async {
+                  await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return deathInput();
+                      });
+
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              'Death',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            death != null && death.date != null
+                                ? death.date.toLocal().toString().split(' ')[0]
+                                : 'Tap to edit',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.hourglass_empty),
+                  ]),
+                ),
+              ),
+            ),
           ),
         ],
       ),
