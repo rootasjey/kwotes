@@ -4,7 +4,7 @@ import algolia from 'algoliasearch';
 const env = functions.config();
 
 const client = algolia(env.algolia.appid, env.algolia.apikey);
-const quotesIndex = client.initIndex('quotes_search');
+const quotesIndex = client.initIndex('quotes');
 
 export const onIndexQuote = functions
   .region('europe-west3')
