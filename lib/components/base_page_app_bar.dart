@@ -6,9 +6,12 @@ import 'package:memorare/state/colors.dart';
 class BasePageAppBar extends StatefulWidget {
   // Appbar's height.
   final double expandedHeight;
+  final double collapsedHeight;
 
   /// Typically open a drawer. Menu icon will be hidden if null.
   final Function onPressedMenu;
+
+  final bool pinned;
 
   /// If true, the back icon will be visible.
   final bool showNavBackIcon;
@@ -26,12 +29,14 @@ class BasePageAppBar extends StatefulWidget {
   final double topTitleSpacing;
 
   BasePageAppBar({
-    this.showNavBackIcon = true,
+    this.collapsedHeight,
+    this.expandedHeight = 210.0,
     this.onPressedMenu,
+    this.pinned = false,
+    this.showNavBackIcon = true,
     this.subHeader,
     this.textTitle,
     this.title,
-    this.expandedHeight = 210.0,
     this.topTitleSpacing = 20.0,
   });
 
@@ -47,6 +52,8 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
         return SliverAppBar(
           floating: true,
           snap: true,
+          pinned: widget.pinned,
+          collapsedHeight: widget.collapsedHeight,
           backgroundColor: stateColors.appBackground.withOpacity(1.0),
           expandedHeight: widget.expandedHeight,
           automaticallyImplyLeading: false,
