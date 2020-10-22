@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  algolia:
+    dependency: "direct main"
+    description:
+      name: algolia
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.7"
   analyzer:
     dependency: transitive
     description:
@@ -819,6 +826,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0+2"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.2"
   vector_math:
     dependency: transitive
     description:
