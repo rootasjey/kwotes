@@ -8,7 +8,7 @@ const authorsIndex = client.initIndex('authors');
 const quotesIndex = client.initIndex('quotes');
 const referencesIndex = client.initIndex('references');
 
-// Author index
+// Authors index
 // ------------
 export const onIndexAuthor = functions
   .region('europe-west3')
