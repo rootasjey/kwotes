@@ -6,6 +6,7 @@ const env = functions.config();
 const client = algolia(env.algolia.appid, env.algolia.apikey);
 const authorsIndex = client.initIndex('authors');
 const quotesIndex = client.initIndex('quotes');
+const referencesIndex = client.initIndex('references');
 
 // Author index
 // ------------
@@ -83,4 +84,43 @@ export const onUnIndexQuote = functions
   .onDelete(async (snapshot) => {
     const objectID = snapshot.id;
     return quotesIndex.deleteObject(objectID);
+  });
+
+// References index
+// ----------------
+export const onIndexReference = functions
+  .region('europe-west3')
+  .firestore
+  .document('references/{referenceId}')
+  .onCreate(async (snapshot) => {
+    const data = snapshot.data();
+    const objectID = snapshot.id;
+
+    return referencesIndex.saveObject({
+      objectID,
+      ...data,
+    })
+  });
+
+export const onReIndexReference = functions
+  .region('europe-west3')
+  .firestore
+  .document('references/{referenceId}')
+  .onUpdate(async (snapshot) => {
+    const data = snapshot.after.data();
+    const objectID = snapshot.after.id;
+
+    return referencesIndex.saveObject({
+      objectID,
+      ...data,
+    })
+  });
+
+export const onUnIndexReference = functions
+  .region('europe-west3')
+  .firestore
+  .document('references/{referenceId}')
+  .onDelete(async (snapshot) => {
+    const objectID = snapshot.id;
+    return referencesIndex.deleteObject(objectID);
   });
