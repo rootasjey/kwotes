@@ -135,6 +135,8 @@ class _DashboardState extends State<Dashboard> {
 
   Widget appBar() {
     return BasePageAppBar(
+      pinned: true,
+      collapsedHeight: 100.0,
       expandedHeight: 120.0,
       title: TextButton.icon(
         onPressed: () {
