@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Release {
   /// Original release.
   DateTime original;
@@ -10,7 +12,7 @@ class Release {
 
   factory Release.fromJSON(Map<String, dynamic> json) {
     return Release(
-      original: json['original'],
+      original: (json['original'] as Timestamp)?.toDate(),
       beforeJC: json['beforeJC'],
     );
   }
