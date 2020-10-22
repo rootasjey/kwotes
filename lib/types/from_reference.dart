@@ -9,7 +9,7 @@ class FromReference {
 
   factory FromReference.fromJSON(Map<String, dynamic> json) {
     return FromReference(
-      id: '',
+      id: json['id'] ?? '',
     );
   }
 }
