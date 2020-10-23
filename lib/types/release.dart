@@ -13,6 +13,13 @@ class Release {
   factory Release.fromJSON(Map<String, dynamic> json) {
     DateTime original;
 
+    if (json['original'] == null) {
+      return Release(
+        original: original,
+        beforeJC: json['beforeJC'],
+      );
+    }
+
     if (json['original'].runtimeType != Timestamp) {
       original = DateTime.fromMillisecondsSinceEpoch(
           json['original']['_seconds'] * 1000);
