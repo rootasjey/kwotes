@@ -20,6 +20,7 @@ class AddQuoteAuthor extends StatefulWidget {
 
 class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   bool prefilledInputs = false;
+  bool isLoadingSuggestions = false;
   final double beginY = 10.0;
 
   final affiliateUrlController = TextEditingController();
@@ -481,6 +482,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
           prefilledInputs = false;
           tapToEditStr = 'Tap to edit';
+          isLoadingSuggestions = false;
 
           setState(() {});
 
@@ -1236,7 +1238,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             }
 
                             searchTimer = Timer(1.seconds, () async {
-                              authorsSuggestions.clear();
+                              childSetState(() {
+                                isLoadingSuggestions = true;
+                                authorsSuggestions.clear();
+                              });
 
                               final query =
                                   algolia.index('authors').search(newValue);
@@ -1244,7 +1249,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                               final snapshot = await query.getObjects();
 
                               if (snapshot.empty) {
-                                childSetState(() {});
+                                childSetState(
+                                    () => isLoadingSuggestions = false);
                                 return;
                               }
 
@@ -1278,11 +1284,16 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                                 authorsSuggestions.add(authorSuggestion);
                               }
 
-                              childSetState(() {});
+                              childSetState(() => isLoadingSuggestions = false);
                             });
                           },
                         ),
                       ),
+                      if (isLoadingSuggestions)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: LinearProgressIndicator(),
+                        ),
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 20.0,

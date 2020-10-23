@@ -20,6 +20,7 @@ class AddQuoteReference extends StatefulWidget {
 
 class _AddQuoteReferenceState extends State<AddQuoteReference> {
   bool prefilledInputs = false;
+  bool isLoadingSuggestions = false;
   final beginY = 10.0;
 
   final nameFocusNode = FocusNode();
@@ -156,9 +157,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         wikiUrlController.clear();
         youtubeUrlController.clear();
 
+        referencesSuggestions.clear();
+
         prefilledInputs = false;
         tapToEditStr = 'Tap to edit';
-        referencesSuggestions.clear();
+        isLoadingSuggestions = false;
 
         setState(() {});
 
@@ -573,7 +576,10 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             }
 
                             searchTimer = Timer(1.seconds, () async {
-                              referencesSuggestions.clear();
+                              setState(() {
+                                isLoadingSuggestions = true;
+                                referencesSuggestions.clear();
+                              });
 
                               final query =
                                   algolia.index('references').search(newValue);
@@ -581,7 +587,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                               final snapshot = await query.getObjects();
 
                               if (snapshot.empty) {
-                                childSetState(() {});
+                                childSetState(
+                                    () => isLoadingSuggestions = false);
                                 return;
                               }
 
@@ -595,11 +602,16 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                                 referencesSuggestions.add(referenceSuggestion);
                               }
 
-                              childSetState(() {});
+                              childSetState(() => isLoadingSuggestions = false);
                             });
                           },
                         ),
                       ),
+                      if (isLoadingSuggestions)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: LinearProgressIndicator(),
+                        ),
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 20.0,
