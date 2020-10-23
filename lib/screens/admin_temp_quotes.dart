@@ -118,6 +118,12 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       lang: lang,
       onLangChanged: (String newLang) {
         lang = newLang;
+
+        appLocalStorage.setPageLang(
+          pageRoute: pageRoute,
+          lang: lang,
+        );
+
         fetch();
       },
       itemsLayout: itemsLayout,
