@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/circle_button.dart';
@@ -5,8 +7,11 @@ import 'package:memorare/components/fade_in_x.dart';
 import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/state/colors.dart';
+import 'package:memorare/types/reference_suggestion.dart';
 import 'package:memorare/utils/language.dart';
+import 'package:memorare/utils/search.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AddQuoteReference extends StatefulWidget {
   @override
@@ -14,9 +19,8 @@ class AddQuoteReference extends StatefulWidget {
 }
 
 class _AddQuoteReferenceState extends State<AddQuoteReference> {
-  final beginY = 100.0;
-  final delay = 1.0;
-  final delayStep = 1.2;
+  bool prefilledInputs = false;
+  final beginY = 10.0;
 
   String tempImgUrl = '';
 
@@ -41,6 +45,10 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   final youtubeUrlController = TextEditingController();
 
   final linkInputController = TextEditingController();
+
+  String tapToEditStr = 'Tap to edit';
+  Timer searchTimer;
+  List<ReferenceSuggestion> referencesSuggestions = [];
 
   @override
   initState() {
@@ -79,7 +87,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           langSelector(),
           summaryCardInput(),
           FadeInY(
-            delay: delay + (5 * delayStep),
+            delay: 0.0,
             beginY: beginY,
             child: links(),
           ),
@@ -106,6 +114,10 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         websiteUrlController.clear();
         wikiUrlController.clear();
         youtubeUrlController.clear();
+
+        prefilledInputs = false;
+        tapToEditStr = 'Tap to edit';
+        referencesSuggestions.clear();
 
         setState(() {});
 
@@ -139,7 +151,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 fit: BoxFit.cover,
                 image: NetworkImage(AddQuoteInputs.reference.urls.image),
                 child: InkWell(
-                  onTap: () => showAvatarDialog(),
+                  onTap: prefilledInputs
+                      ? showPrefilledAlert
+                      : () => showAvatarDialog(),
                 ),
               )
             : SizedBox(
@@ -153,7 +167,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         size: 50.0,
                         color: stateColors.primary,
                       )),
-                  onTap: () => showAvatarDialog(),
+                  onTap: prefilledInputs
+                      ? showPrefilledAlert
+                      : () => showAvatarDialog(),
                 ),
               ),
       ),
@@ -197,7 +213,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     Text(
                       referenceName != null && referenceName.isNotEmpty
                           ? referenceName
-                          : 'Tap to edit',
+                          : tapToEditStr,
                     ),
                   ],
                 ),
@@ -253,7 +269,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             ),
                           ),
                           Text(
-                            "Auto suggestions will show when you'll start typing.",
+                            "Suggestions will show when you'll start typing.",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
@@ -264,76 +280,134 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 60.0),
-                  child: TextField(
-                    autofocus: true,
-                    controller: nameController,
-                    focusNode: nameFocusNode,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.person_outline),
-                      labelText: "e.g. 1984, Interstellar",
-                      alignLabelWithHint: true,
-                    ),
-                    minLines: 1,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (newValue) {
-                      AddQuoteInputs.reference.name = newValue;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
+                StatefulBuilder(builder: (context, childSetState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          AddQuoteInputs.reference.name = '';
-                          nameController.clear();
-                          nameFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Clear input',
+                      Padding(
+                        padding: EdgeInsets.only(top: 60.0),
+                        child: TextField(
+                          autofocus: true,
+                          controller: nameController,
+                          focusNode: nameFocusNode,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.person_outline),
+                            labelText: "e.g. 1984, Interstellar",
+                            alignLabelWithHint: true,
                           ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
+                          minLines: 1,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                          onChanged: (newValue) {
+                            AddQuoteInputs.reference.name = newValue;
+                            prefilledInputs = false;
+                            tapToEditStr = 'Tap to edit';
+
+                            if (searchTimer != null && searchTimer.isActive) {
+                              searchTimer.cancel();
+                            }
+
+                            searchTimer = Timer(1.seconds, () async {
+                              referencesSuggestions.clear();
+
+                              final query =
+                                  algolia.index('references').search(newValue);
+
+                              final snapshot = await query.getObjects();
+
+                              if (snapshot.empty) {
+                                childSetState(() {});
+                                return;
+                              }
+
+                              for (final hit in snapshot.hits) {
+                                final data = hit.data;
+                                data['id'] = data['objectID'];
+
+                                final referenceSuggestion =
+                                    ReferenceSuggestion.fromJSON(data);
+
+                                referencesSuggestions.add(referenceSuggestion);
+                              }
+
+                              childSetState(() {});
+                            });
+                          },
                         ),
                       ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 20.0,
+                          left: 40.0,
+                          bottom: 40.0,
                         ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Save',
-                          ),
+                        child: Wrap(
+                          spacing: 20.0,
+                          runSpacing: 20.0,
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                AddQuoteInputs.reference.name = '';
+                                nameController.clear();
+                                nameFocusNode.requestFocus();
+                              },
+                              icon: Opacity(
+                                opacity: 0.6,
+                                child: Icon(Icons.clear),
+                              ),
+                              label: Opacity(
+                                opacity: 0.8,
+                                child: Text(
+                                  'Clear input',
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                primary: stateColors.foreground,
+                              ),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: Opacity(
+                                opacity: 0.6,
+                                child: Icon(Icons.check),
+                              ),
+                              label: Opacity(
+                                opacity: 0.8,
+                                child: Text(
+                                  'Save',
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                primary: stateColors.foreground,
+                              ),
+                            ),
+                          ],
                         ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:
+                            referencesSuggestions.map((referenceSuggestion) {
+                          return Card(
+                            child: ListTile(
+                              onTap: () {
+                                AddQuoteInputs.reference =
+                                    referenceSuggestion.reference;
+                                prefilledInputs = true;
+                                tapToEditStr = '-';
+                                Navigator.of(context).pop();
+                              },
+                              title: Text(referenceSuggestion.getTitle()),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ],
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),
@@ -351,15 +425,17 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Card(
         elevation: 2.0,
         child: InkWell(
-          onTap: () async {
-            await showMaterialModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) {
-                  return summaryInput();
-                });
+          onTap: prefilledInputs
+              ? showPrefilledAlert
+              : () async {
+                  await showMaterialModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return summaryInput();
+                      });
 
-            setState(() {});
-          },
+                  setState(() {});
+                },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(children: [
@@ -379,7 +455,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     Text(
                       summary != null && summary.isNotEmpty
                           ? summary
-                          : 'Tap to edit',
+                          : tapToEditStr,
                     ),
                   ],
                 ),
@@ -554,11 +630,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               color: stateColors.primary,
               fontSize: 20.0,
             ),
-            onChanged: (newValue) {
-              setState(() {
-                AddQuoteInputs.reference.lang = newValue;
-              });
-            },
+            onChanged: prefilledInputs
+                ? null
+                : (newValue) {
+                    setState(() {
+                      AddQuoteInputs.reference.lang = newValue;
+                    });
+                  },
             items: Language.available().map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem(
                 value: value,
@@ -766,7 +844,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             elevation: active ? 4.0 : 0.0,
             clipBehavior: Clip.hardEdge,
             child: InkWell(
-              onTap: onTap,
+              onTap: prefilledInputs ? showPrefilledAlert : onTap,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Image.asset(
@@ -792,15 +870,17 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Card(
         elevation: 2.0,
         child: InkWell(
-          onTap: () async {
-            await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) {
-                  return primaryTypeInput();
-                });
+          onTap: prefilledInputs
+              ? showPrefilledAlert
+              : () async {
+                  await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return primaryTypeInput();
+                      });
 
-            setState(() {});
-          },
+                  setState(() {});
+                },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(children: [
@@ -820,7 +900,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     Text(
                       primaryType != null && primaryType.isNotEmpty
                           ? primaryType
-                          : 'Tap to edit',
+                          : tapToEditStr,
                     ),
                   ],
                 ),
@@ -973,18 +1053,20 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Column(
         children: [
           OutlinedButton.icon(
-            onPressed: () async {
-              final picked = await showDatePicker(
-                context: context,
-                initialEntryMode: DatePickerEntryMode.input,
-                initialDate: selectedDate ?? DateTime.now(),
-                firstDate: DateTime(0),
-                lastDate: DateTime.now(),
-              );
+            onPressed: prefilledInputs
+                ? showPrefilledAlert
+                : () async {
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialEntryMode: DatePickerEntryMode.input,
+                      initialDate: selectedDate ?? DateTime.now(),
+                      firstDate: DateTime(0),
+                      lastDate: DateTime.now(),
+                    );
 
-              setState(
-                  () => AddQuoteInputs.reference.release.original = picked);
-            },
+                    setState(() =>
+                        AddQuoteInputs.reference.release.original = picked);
+                  },
             icon: Icon(Icons.calendar_today),
             label: Text(selectedDate != null
                 ? selectedDate.toLocal().toString().split(' ')[0]
@@ -998,10 +1080,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               subtitle:
                   Text('(e.g. year -500)', style: TextStyle(fontSize: 13)),
               value: AddQuoteInputs.reference.release.beforeJC,
-              onChanged: (newValue) {
-                setState(
-                    () => AddQuoteInputs.reference.release.beforeJC = newValue);
-              },
+              onChanged: prefilledInputs
+                  ? null
+                  : (newValue) {
+                      setState(() =>
+                          AddQuoteInputs.reference.release.beforeJC = newValue);
+                    },
             ),
           ),
         ],
@@ -1018,15 +1102,17 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Card(
         elevation: 2.0,
         child: InkWell(
-          onTap: () async {
-            await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) {
-                  return secondaryTypeInput();
-                });
+          onTap: prefilledInputs
+              ? showPrefilledAlert
+              : () async {
+                  await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return secondaryTypeInput();
+                      });
 
-            setState(() {});
-          },
+                  setState(() {});
+                },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(children: [
@@ -1046,7 +1132,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     Text(
                       secondaryType != null && secondaryType.isNotEmpty
                           ? secondaryType
-                          : 'Tap to edit',
+                          : tapToEditStr,
                     ),
                   ],
                 ),
@@ -1369,5 +1455,21 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         );
       },
     );
+  }
+
+  void showPrefilledAlert() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text(
+              "Reference's fields have been filled out for you.",
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+            titlePadding: const EdgeInsets.all(20.0),
+          );
+        });
   }
 }
