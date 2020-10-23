@@ -47,9 +47,11 @@ class AddQuoteInputs {
 
   static void clearQuoteData({bool keepLang = true}) {
     final prevLang = quote.lang;
+    final topicsCopy = quote.topics.sublist(0);
 
     quote = Quote.empty();
     quote.lang = keepLang ? prevLang : 'en';
+    quote.topics = topicsCopy;
     draft = null;
     isOfflineDraft = false;
   }

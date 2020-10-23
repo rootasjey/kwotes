@@ -7,11 +7,12 @@ class Quote {
   String lang;
   String name;
   final Reference mainReference;
+
   /// Match the quote's id in the 'quotes' collection.
   final String quoteId;
   final List<Reference> references;
   bool starred;
-  final List<String> topics;
+  List<String> topics;
 
   Quote({
     this.author,
@@ -27,15 +28,15 @@ class Quote {
 
   factory Quote.empty() {
     return Quote(
-      author        : Author.empty(),
-      id            : '',
-      lang          : 'en',
-      name          : '',
-      mainReference : Reference.empty(),
-      quoteId       : '',
-      references    : [],
-      starred       : false,
-      topics        : [],
+      author: Author.empty(),
+      id: '',
+      lang: 'en',
+      name: '',
+      mainReference: Reference.empty(),
+      quoteId: '',
+      references: [],
+      starred: false,
+      topics: [],
     );
   }
 
@@ -43,11 +44,12 @@ class Quote {
     List<Reference> _references = [];
     List<String> _topics = [];
 
-    final _author = json['author'] != null ?
-      Author.fromJSON(json['author']) : null;
+    final _author =
+        json['author'] != null ? Author.fromJSON(json['author']) : null;
 
-    final _mainReference = json['mainReference'] != null ?
-      Reference.fromJSON(json['mainReference']) : null;
+    final _mainReference = json['mainReference'] != null
+        ? Reference.fromJSON(json['mainReference'])
+        : null;
 
     if (json['references'] != null) {
       for (var ref in json['references']) {
@@ -56,11 +58,10 @@ class Quote {
     }
 
     if (json['topics'] != null) {
-        if (json['topics'] is Iterable<dynamic>) {
-          for (var tag in json['topics']) {
+      if (json['topics'] is Iterable<dynamic>) {
+        for (var tag in json['topics']) {
           _topics.add(tag);
         }
-
       } else {
         Map<String, dynamic> mapTopics = json['topics'];
 
@@ -71,15 +72,15 @@ class Quote {
     }
 
     return Quote(
-      author        : _author,
-      id            : json['id'],
-      lang          : json['lang'],
-      name          : json['name'],
-      mainReference : _mainReference,
-      quoteId       : json['quoteId'] ?? '',
-      references    : _references,
-      starred       : json['starred'] ?? false,
-      topics        : _topics,
+      author: _author,
+      id: json['id'],
+      lang: json['lang'],
+      name: json['name'],
+      mainReference: _mainReference,
+      quoteId: json['quoteId'] ?? '',
+      references: _references,
+      starred: json['starred'] ?? false,
+      topics: _topics,
     );
   }
 
@@ -91,14 +92,14 @@ class Quote {
       refStr.add(ref.toJSON());
     }
 
-    json['author']      = author.toJSON();
-    json['id']          = id;
-    json['lang']        = lang;
-    json['name']        = name;
-    json['quoteId']     = quoteId;
-    json['references']  = refStr;
-    json['starred']     = starred;
-    json['topics']      = topics;
+    json['author'] = author.toJSON();
+    json['id'] = id;
+    json['lang'] = lang;
+    json['name'] = name;
+    json['quoteId'] = quoteId;
+    json['references'] = refStr;
+    json['starred'] = starred;
+    json['topics'] = topics;
 
     return json;
   }

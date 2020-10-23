@@ -535,7 +535,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isSubmitting = false;
         isFabVisible = true;
 
-        AddQuoteInputs.quote.name = '';
+        AddQuoteInputs.clearQuoteData();
         currentStep = 0;
       });
 
