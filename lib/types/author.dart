@@ -59,10 +59,14 @@ class Author {
         ? PointInTime.fromJSON(json['death'])
         : PointInTime();
 
+    final fromReference = json['fromReference'] != null
+        ? FromReference.fromJSON(json['fromReference'])
+        : FromReference();
+
     return Author(
       born: born,
       death: death,
-      fromReference: FromReference.fromJSON(json['fromReference']),
+      fromReference: fromReference,
       id: json['id'] ?? '',
       isFictional: json['isFictional'] ?? false,
       imgUrl: json['imgUrl'] ?? '',
