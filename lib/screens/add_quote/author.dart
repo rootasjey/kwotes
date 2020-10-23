@@ -116,6 +116,152 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
+  Widget avatar() {
+    return Material(
+      elevation: AddQuoteInputs.author.urls.image.isEmpty ? 0.0 : 4.0,
+      shape: CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: AddQuoteInputs.author.urls.image.isNotEmpty
+          ? Ink.image(
+              image: NetworkImage(AddQuoteInputs.author.urls.image),
+              fit: BoxFit.cover,
+              width: 150.0,
+              height: 150.0,
+              child: InkWell(
+                onTap: prefilledInputs
+                    ? showPrefilledAlert
+                    : () => showAvatarDialog(),
+              ),
+            )
+          : Ink(
+              width: 150.0,
+              height: 150.0,
+              child: InkWell(
+                onTap: prefilledInputs
+                    ? showPrefilledAlert
+                    : () => showAvatarDialog(),
+                child: CircleAvatar(
+                  child: Icon(
+                    Icons.add,
+                    size: 50.0,
+                    color: stateColors.primary,
+                  ),
+                  backgroundColor: Colors.black12,
+                  radius: 60.0,
+                ),
+              )),
+    );
+  }
+
+  Widget bornAndDeathCards() {
+    final born = AddQuoteInputs.author.born;
+    final death = AddQuoteInputs.author.death;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: [
+          SizedBox(
+            width: 150.0,
+            child: Card(
+              elevation: 0.0,
+              child: InkWell(
+                onTap: prefilledInputs
+                    ? showPrefilledAlert
+                    : () async {
+                        await showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context, scrollController) {
+                              return bornInput(
+                                  scrollController: scrollController);
+                            });
+
+                        setState(() {});
+                      },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              'Born',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            born != null && born.date != null
+                                ? born.date.toLocal().toString().split(' ')[0]
+                                : tapToEditStr,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.hourglass_full),
+                  ]),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 150.0,
+            child: Card(
+              elevation: 0.0,
+              child: InkWell(
+                onTap: prefilledInputs
+                    ? showPrefilledAlert
+                    : () async {
+                        await showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context, scrollController) {
+                              return deathInput();
+                            });
+
+                        setState(() {});
+                      },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              'Death',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            death != null && death.date != null
+                                ? death.date.toLocal().toString().split(' ')[0]
+                                : tapToEditStr,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.hourglass_empty),
+                  ]),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget bornInput({ScrollController scrollController}) {
     return Scaffold(
       body: ListView(
@@ -309,6 +455,44 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget clearButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: FlatButton.icon(
+        onPressed: () {
+          AddQuoteInputs.clearAuthor();
+
+          amazonUrlController.clear();
+          facebookUrlController.clear();
+          jobController.clear();
+          nameController.clear();
+          summaryController.clear();
+          twitchUrlController.clear();
+          twitterUrlController.clear();
+          websiteUrlController.clear();
+          wikiUrlController.clear();
+          youtubeUrlController.clear();
+
+          authorsSuggestions.clear();
+
+          prefilledInputs = false;
+          tapToEditStr = 'Tap to edit';
+
+          setState(() {});
+
+          nameFocusNode.requestFocus();
+        },
+        icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+        label: Opacity(
+          opacity: 0.6,
+          child: Text(
+            'Clear all inputs',
+          ),
+        ),
       ),
     );
   }
@@ -509,190 +693,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  Widget bornAndDeathCards() {
-    final born = AddQuoteInputs.author.born;
-    final death = AddQuoteInputs.author.death;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Wrap(
-        spacing: 20.0,
-        runSpacing: 20.0,
-        children: [
-          SizedBox(
-            width: 150.0,
-            child: Card(
-              elevation: 0.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () async {
-                        await showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context, scrollController) {
-                              return bornInput(
-                                  scrollController: scrollController);
-                            });
-
-                        setState(() {});
-                      },
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Born',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            born != null && born.date != null
-                                ? born.date.toLocal().toString().split(' ')[0]
-                                : tapToEditStr,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.hourglass_full),
-                  ]),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 150.0,
-            child: Card(
-              elevation: 0.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () async {
-                        await showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context, scrollController) {
-                              return deathInput();
-                            });
-
-                        setState(() {});
-                      },
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Death',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            death != null && death.date != null
-                                ? death.date.toLocal().toString().split(' ')[0]
-                                : tapToEditStr,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.hourglass_empty),
-                  ]),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget avatar() {
-    return Material(
-      elevation: AddQuoteInputs.author.urls.image.isEmpty ? 0.0 : 4.0,
-      shape: CircleBorder(),
-      clipBehavior: Clip.hardEdge,
-      color: Colors.transparent,
-      child: AddQuoteInputs.author.urls.image.isNotEmpty
-          ? Ink.image(
-              image: NetworkImage(AddQuoteInputs.author.urls.image),
-              fit: BoxFit.cover,
-              width: 150.0,
-              height: 150.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () => showAvatarDialog(),
-              ),
-            )
-          : Ink(
-              width: 150.0,
-              height: 150.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () => showAvatarDialog(),
-                child: CircleAvatar(
-                  child: Icon(
-                    Icons.add,
-                    size: 50.0,
-                    color: stateColors.primary,
-                  ),
-                  backgroundColor: Colors.black12,
-                  radius: 60.0,
-                ),
-              )),
-    );
-  }
-
-  Widget clearButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: FlatButton.icon(
-        onPressed: () {
-          AddQuoteInputs.clearAuthor();
-
-          amazonUrlController.clear();
-          facebookUrlController.clear();
-          jobController.clear();
-          nameController.clear();
-          summaryController.clear();
-          twitchUrlController.clear();
-          twitterUrlController.clear();
-          websiteUrlController.clear();
-          wikiUrlController.clear();
-          youtubeUrlController.clear();
-
-          authorsSuggestions.clear();
-
-          prefilledInputs = false;
-          tapToEditStr = 'Tap to edit';
-
-          setState(() {});
-
-          nameFocusNode.requestFocus();
-        },
-        icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
-        label: Opacity(
-          opacity: 0.6,
-          child: Text(
-            'Clear all inputs',
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget fictionalCharacterBox() {
     return Container(
       width: 400.0,
@@ -709,6 +709,185 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   AddQuoteInputs.author.isFictional = newValue;
                 });
               },
+      ),
+    );
+  }
+
+  Widget jobCardInput() {
+    final job = AddQuoteInputs.author.job;
+
+    return SizedBox(
+      width: 250.0,
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: prefilledInputs
+              ? showPrefilledAlert
+              : () async {
+                  await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return jobInput();
+                      });
+
+                  setState(() {});
+                },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Job',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      job != null && job.isNotEmpty ? job : tapToEditStr,
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.work),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget jobInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CircleButton(
+                    onTap: () => Navigator.of(context).pop(),
+                    icon: Icon(
+                      Icons.close,
+                      size: 20.0,
+                      color: stateColors.primary,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              "Job",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "This author job or role in real life or in the artistic material (film, book, ...).",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 60.0),
+                child: TextField(
+                  autofocus: true,
+                  controller: jobController,
+                  focusNode: jobFocusNode,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.work),
+                    labelText: "e.g. Housekeeper, Lawyer, Student, Teacher",
+                    alignLabelWithHint: true,
+                  ),
+                  minLines: 1,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                  onChanged: (newValue) {
+                    AddQuoteInputs.author.job = newValue;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  left: 40.0,
+                ),
+                child: Wrap(
+                  spacing: 20.0,
+                  runSpacing: 20.0,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        AddQuoteInputs.author.job = '';
+                        jobController.clear();
+                        jobFocusNode.requestFocus();
+                      },
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(Icons.clear),
+                      ),
+                      label: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          'Clear input',
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        primary: stateColors.foreground,
+                      ),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(Icons.check),
+                      ),
+                      label: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          'Save',
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        primary: stateColors.foreground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        ],
       ),
     );
   }
@@ -1174,185 +1353,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 }),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget jobCardInput() {
-    final job = AddQuoteInputs.author.job;
-
-    return SizedBox(
-      width: 250.0,
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context, scrollController) {
-                        return jobInput();
-                      });
-
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Job',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      job != null && job.isNotEmpty ? job : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.work),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget jobInput({ScrollController scrollController}) {
-    return Scaffold(
-      body: ListView(
-        physics: ClampingScrollPhysics(),
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CircleButton(
-                    onTap: () => Navigator.of(context).pop(),
-                    icon: Icon(
-                      Icons.close,
-                      size: 20.0,
-                      color: stateColors.primary,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              "Job",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          "This author job or role in real life or in the artistic material (film, book, ...).",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 60.0),
-                child: TextField(
-                  autofocus: true,
-                  controller: jobController,
-                  focusNode: jobFocusNode,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.work),
-                    labelText: "e.g. Housekeeper, Lawyer, Student, Teacher",
-                    alignLabelWithHint: true,
-                  ),
-                  minLines: 1,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  onChanged: (newValue) {
-                    AddQuoteInputs.author.job = newValue;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20.0,
-                  left: 40.0,
-                ),
-                child: Wrap(
-                  spacing: 20.0,
-                  runSpacing: 20.0,
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        AddQuoteInputs.author.job = '';
-                        jobController.clear();
-                        jobFocusNode.requestFocus();
-                      },
-                      icon: Opacity(
-                        opacity: 0.6,
-                        child: Icon(Icons.clear),
-                      ),
-                      label: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          'Clear input',
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        primary: stateColors.foreground,
-                      ),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Opacity(
-                        opacity: 0.6,
-                        child: Icon(Icons.check),
-                      ),
-                      label: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          'Save',
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        primary: stateColors.foreground,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ]),
           ),
         ],
       ),

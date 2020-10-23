@@ -22,8 +22,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   bool prefilledInputs = false;
   final beginY = 10.0;
 
-  String tempImgUrl = '';
-
   final nameFocusNode = FocusNode();
   final primaryTypeFocusNode = FocusNode();
   final secondaryTypeFocusNode = FocusNode();
@@ -46,9 +44,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   final linkInputController = TextEditingController();
 
-  String tapToEditStr = 'Tap to edit';
-  Timer searchTimer;
   List<ReferenceSuggestion> referencesSuggestions = [];
+
+  String tapToEditStr = 'Tap to edit';
+  String tempImgUrl = '';
+
+  Timer searchTimer;
 
   @override
   initState() {
@@ -96,46 +97,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget clearButton() {
-    return FlatButton.icon(
-      onPressed: () {
-        AddQuoteInputs.clearReference();
-
-        amazonUrlController.clear();
-        facebookUrlController.clear();
-        nameController.clear();
-        netflixUrlController.clear();
-        primaryTypeController.clear();
-        primeVideoUrlController.clear();
-        secondaryTypeController.clear();
-        summaryController.clear();
-        twitchUrlController.clear();
-        twitterUrlController.clear();
-        websiteUrlController.clear();
-        wikiUrlController.clear();
-        youtubeUrlController.clear();
-
-        prefilledInputs = false;
-        tapToEditStr = 'Tap to edit';
-        referencesSuggestions.clear();
-
-        setState(() {});
-
-        nameFocusNode.requestFocus();
-      },
-      icon: Opacity(
-        opacity: 0.6,
-        child: Icon(Icons.delete_sweep),
-      ),
-      label: Opacity(
-        opacity: 0.6,
-        child: Text(
-          'Clear all inputs',
-        ),
-      ),
-    );
-  }
-
   Widget avatar() {
     return Padding(
       padding: EdgeInsets.only(
@@ -176,426 +137,42 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  Widget nameCardInput() {
-    final referenceName = AddQuoteInputs.reference.name;
+  Widget clearButton() {
+    return FlatButton.icon(
+      onPressed: () {
+        AddQuoteInputs.clearReference();
 
-    return Container(
-      width: 250.0,
-      padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: () async {
-            await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) {
-                  return nameInput();
-                });
+        amazonUrlController.clear();
+        facebookUrlController.clear();
+        nameController.clear();
+        netflixUrlController.clear();
+        primaryTypeController.clear();
+        primeVideoUrlController.clear();
+        secondaryTypeController.clear();
+        summaryController.clear();
+        twitchUrlController.clear();
+        twitterUrlController.clear();
+        websiteUrlController.clear();
+        wikiUrlController.clear();
+        youtubeUrlController.clear();
 
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Name',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      referenceName != null && referenceName.isNotEmpty
-                          ? referenceName
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.account_box),
-            ]),
-          ),
+        prefilledInputs = false;
+        tapToEditStr = 'Tap to edit';
+        referencesSuggestions.clear();
+
+        setState(() {});
+
+        nameFocusNode.requestFocus();
+      },
+      icon: Opacity(
+        opacity: 0.6,
+        child: Icon(Icons.delete_sweep),
+      ),
+      label: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'Clear all inputs',
         ),
-      ),
-    );
-  }
-
-  Widget nameInput({ScrollController scrollController}) {
-    return Scaffold(
-      body: ListView(
-        physics: ClampingScrollPhysics(),
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Name",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Suggestions will show when you'll start typing.",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                StatefulBuilder(builder: (context, childSetState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 60.0),
-                        child: TextField(
-                          autofocus: true,
-                          controller: nameController,
-                          focusNode: nameFocusNode,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.person_outline),
-                            labelText: "e.g. 1984, Interstellar",
-                            alignLabelWithHint: true,
-                          ),
-                          minLines: 1,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          ),
-                          onChanged: (newValue) {
-                            AddQuoteInputs.reference.name = newValue;
-                            prefilledInputs = false;
-                            tapToEditStr = 'Tap to edit';
-
-                            if (searchTimer != null && searchTimer.isActive) {
-                              searchTimer.cancel();
-                            }
-
-                            searchTimer = Timer(1.seconds, () async {
-                              referencesSuggestions.clear();
-
-                              final query =
-                                  algolia.index('references').search(newValue);
-
-                              final snapshot = await query.getObjects();
-
-                              if (snapshot.empty) {
-                                childSetState(() {});
-                                return;
-                              }
-
-                              for (final hit in snapshot.hits) {
-                                final data = hit.data;
-                                data['id'] = data['objectID'];
-
-                                final referenceSuggestion =
-                                    ReferenceSuggestion.fromJSON(data);
-
-                                referencesSuggestions.add(referenceSuggestion);
-                              }
-
-                              childSetState(() {});
-                            });
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 20.0,
-                          left: 40.0,
-                          bottom: 40.0,
-                        ),
-                        child: Wrap(
-                          spacing: 20.0,
-                          runSpacing: 20.0,
-                          children: [
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                AddQuoteInputs.reference.name = '';
-                                nameController.clear();
-                                nameFocusNode.requestFocus();
-                              },
-                              icon: Opacity(
-                                opacity: 0.6,
-                                child: Icon(Icons.clear),
-                              ),
-                              label: Opacity(
-                                opacity: 0.8,
-                                child: Text(
-                                  'Clear input',
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: stateColors.foreground,
-                              ),
-                            ),
-                            OutlinedButton.icon(
-                              onPressed: () => Navigator.of(context).pop(),
-                              icon: Opacity(
-                                opacity: 0.6,
-                                child: Icon(Icons.check),
-                              ),
-                              label: Opacity(
-                                opacity: 0.8,
-                                child: Text(
-                                  'Save',
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: stateColors.foreground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:
-                            referencesSuggestions.map((referenceSuggestion) {
-                          return Card(
-                            child: ListTile(
-                              onTap: () {
-                                AddQuoteInputs.reference =
-                                    referenceSuggestion.reference;
-                                prefilledInputs = true;
-                                tapToEditStr = '-';
-                                Navigator.of(context).pop();
-                              },
-                              title: Text(referenceSuggestion.getTitle()),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  );
-                }),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget summaryCardInput() {
-    final summary = AddQuoteInputs.reference.summary;
-
-    return Container(
-      width: 300.0,
-      padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showMaterialModalBottomSheet(
-                      context: context,
-                      builder: (context, scrollController) {
-                        return summaryInput();
-                      });
-
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Summary',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      summary != null && summary.isNotEmpty
-                          ? summary
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.short_text),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget summaryInput({ScrollController scrollController}) {
-    return Scaffold(
-      body: ListView(
-        physics: ClampingScrollPhysics(),
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Summary",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Write a short summary about this reference. It can be the first Wikipedia paragraph.",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 60.0),
-                  child: TextField(
-                    autofocus: true,
-                    controller: summaryController,
-                    focusNode: summaryFocusNode,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.edit),
-                      labelText: "Once upon a time...",
-                      alignLabelWithHint: true,
-                    ),
-                    minLines: 1,
-                    maxLines: null,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (newValue) {
-                      AddQuoteInputs.reference.summary = newValue;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          AddQuoteInputs.reference.summary = '';
-                          summaryController.clear();
-                          summaryFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Clear input',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -857,6 +434,246 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget nameCardInput() {
+    final referenceName = AddQuoteInputs.reference.name;
+
+    return Container(
+      width: 250.0,
+      padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: () async {
+            await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) {
+                  return nameInput();
+                });
+
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Name',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      referenceName != null && referenceName.isNotEmpty
+                          ? referenceName
+                          : tapToEditStr,
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.account_box),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget nameInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Name",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Suggestions will show when you'll start typing.",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                StatefulBuilder(builder: (context, childSetState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 60.0),
+                        child: TextField(
+                          autofocus: true,
+                          controller: nameController,
+                          focusNode: nameFocusNode,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.person_outline),
+                            labelText: "e.g. 1984, Interstellar",
+                            alignLabelWithHint: true,
+                          ),
+                          minLines: 1,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                          onChanged: (newValue) {
+                            AddQuoteInputs.reference.name = newValue;
+                            prefilledInputs = false;
+                            tapToEditStr = 'Tap to edit';
+
+                            if (searchTimer != null && searchTimer.isActive) {
+                              searchTimer.cancel();
+                            }
+
+                            searchTimer = Timer(1.seconds, () async {
+                              referencesSuggestions.clear();
+
+                              final query =
+                                  algolia.index('references').search(newValue);
+
+                              final snapshot = await query.getObjects();
+
+                              if (snapshot.empty) {
+                                childSetState(() {});
+                                return;
+                              }
+
+                              for (final hit in snapshot.hits) {
+                                final data = hit.data;
+                                data['id'] = data['objectID'];
+
+                                final referenceSuggestion =
+                                    ReferenceSuggestion.fromJSON(data);
+
+                                referencesSuggestions.add(referenceSuggestion);
+                              }
+
+                              childSetState(() {});
+                            });
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 20.0,
+                          left: 40.0,
+                          bottom: 40.0,
+                        ),
+                        child: Wrap(
+                          spacing: 20.0,
+                          runSpacing: 20.0,
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                AddQuoteInputs.reference.name = '';
+                                nameController.clear();
+                                nameFocusNode.requestFocus();
+                              },
+                              icon: Opacity(
+                                opacity: 0.6,
+                                child: Icon(Icons.clear),
+                              ),
+                              label: Opacity(
+                                opacity: 0.8,
+                                child: Text(
+                                  'Clear input',
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                primary: stateColors.foreground,
+                              ),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: Opacity(
+                                opacity: 0.6,
+                                child: Icon(Icons.check),
+                              ),
+                              label: Opacity(
+                                opacity: 0.8,
+                                child: Text(
+                                  'Save',
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                primary: stateColors.foreground,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:
+                            referencesSuggestions.map((referenceSuggestion) {
+                          return Card(
+                            child: ListTile(
+                              onTap: () {
+                                AddQuoteInputs.reference =
+                                    referenceSuggestion.reference;
+                                prefilledInputs = true;
+                                tapToEditStr = '-';
+                                Navigator.of(context).pop();
+                              },
+                              title: Text(referenceSuggestion.getTitle()),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1258,6 +1075,190 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         ),
                         label: Opacity(
                           opacity: 0.8,
+                          child: Text(
+                            'Save',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget summaryCardInput() {
+    final summary = AddQuoteInputs.reference.summary;
+
+    return Container(
+      width: 300.0,
+      padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
+      child: Card(
+        elevation: 2.0,
+        child: InkWell(
+          onTap: prefilledInputs
+              ? showPrefilledAlert
+              : () async {
+                  await showMaterialModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) {
+                        return summaryInput();
+                      });
+
+                  setState(() {});
+                },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        'Summary',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      summary != null && summary.isNotEmpty
+                          ? summary
+                          : tapToEditStr,
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.short_text),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget summaryInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Summary",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Write a short summary about this reference. It can be the first Wikipedia paragraph.",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 60.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: summaryController,
+                    focusNode: summaryFocusNode,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.edit),
+                      labelText: "Once upon a time...",
+                      alignLabelWithHint: true,
+                    ),
+                    minLines: 1,
+                    maxLines: null,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (newValue) {
+                      AddQuoteInputs.reference.summary = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 40.0,
+                  ),
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          AddQuoteInputs.reference.summary = '';
+                          summaryController.clear();
+                          summaryFocusNode.requestFocus();
+                        },
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Clear input',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
                           child: Text(
                             'Save',
                           ),
