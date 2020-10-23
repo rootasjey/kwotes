@@ -1088,7 +1088,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           clipBehavior: Clip.hardEdge,
           color: Colors.black12,
           child: InkWell(
-            onTap: prefilledInputs ? null : onTap,
+            onTap: prefilledInputs ? showPrefilledAlert : onTap,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Image.asset(
