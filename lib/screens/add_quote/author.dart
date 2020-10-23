@@ -1031,7 +1031,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 60.0),
+                        padding: const EdgeInsets.only(top: 60.0),
                         child: TextField(
                           autofocus: true,
                           controller: nameController,
