@@ -32,7 +32,6 @@ dependencies:
   cupertino_icons: 1.0.0
   data_connection_checker: 0.3.4
   dynamic_theme: 1.0.1
-  file_picker: 2.0.10
   firebase_auth: 0.16.1
   firebase_core: 0.4.5
   firebase_analytics: 5.0.11
