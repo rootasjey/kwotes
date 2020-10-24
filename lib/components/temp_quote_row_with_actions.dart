@@ -25,6 +25,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final Function onBeforeValidate;
   final Function(bool) onAfterValidate;
   final Function(bool) onAfterDelete;
+  final Function onNavBack;
 
   final ItemComponentType componentType;
   final List<Widget> stackChildren;
@@ -45,6 +46,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.onBeforeValidate,
     this.onAfterValidate,
     this.onAfterDelete,
+    this.onNavBack,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 20.0,
       vertical: 30.0,
@@ -179,7 +181,12 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void editAction(TempQuote tempQuote) async {
     AddQuoteInputs.navigatedFromPath = 'admintempquotes';
     AddQuoteInputs.populateWithTempQuote(tempQuote);
-    Navigator.of(context)
+
+    await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+
+    if (widget.onNavBack != null) {
+      widget.onNavBack();
+    }
   }
 }
