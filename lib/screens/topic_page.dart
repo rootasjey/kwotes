@@ -146,7 +146,7 @@ class _TopicPageState extends State<TopicPage> {
       subHeader: Observer(
         builder: (context) {
           return Wrap(
-            spacing: 10.0,
+            spacing: 15.0,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
