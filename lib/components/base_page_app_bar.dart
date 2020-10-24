@@ -69,29 +69,24 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
         double titleFontSize = 40.0;
         double leftTitlePadding = 80.0;
         double leftSubHeaderPadding = 165.0;
-        double menuIconLeftPadding = 80.0;
 
         if (constrains.maxWidth < 700.0) {
           titleFontSize = 25.0;
           leftTitlePadding = 40.0;
           leftSubHeaderPadding = 50.0;
-          menuIconLeftPadding = 20.0;
         }
 
         if (!widget.showNavBackIcon) {
           leftSubHeaderPadding -= 40.0;
         }
 
-        return Stack(children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              headerSection(leftTitlePadding, titleFontSize),
-              subHeaderSection(leftSubHeaderPadding),
-            ],
-          ),
-          menuButton(menuIconLeftPadding),
-        ]);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            headerSection(leftTitlePadding, titleFontSize),
+            subHeaderSection(leftSubHeaderPadding),
+          ],
+        );
       },
     );
   }
@@ -127,29 +122,6 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
                   ),
                 ],
               ),
-      ),
-    );
-  }
-
-  Widget menuButton(double menuIconLeftPadding) {
-    if (widget.onPressedMenu == null) {
-      return Padding(
-        padding: EdgeInsets.zero,
-      );
-    }
-
-    return Positioned(
-      top: 107.0,
-      left: menuIconLeftPadding,
-      child: FadeInY(
-        delay: 1.4,
-        beginY: 50.0,
-        child: IconButton(
-          onPressed: widget.onPressedMenu,
-          tooltip: 'menu',
-          color: stateColors.foreground.withOpacity(0.5),
-          icon: Icon(Icons.menu),
-        ),
       ),
     );
   }
