@@ -4,9 +4,12 @@ import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/state/colors.dart';
 
 class BasePageAppBar extends StatefulWidget {
-  // Appbar's height.
+  // Appbar's expanded height.
   final double expandedHeight;
+  // Appbar's collapsed height.
   final double collapsedHeight;
+  // Appbar's  height.
+  final double toolbarHeight;
 
   /// Typically open a drawer. Menu icon will be hidden if null.
   final Function onPressedMenu;
@@ -29,6 +32,7 @@ class BasePageAppBar extends StatefulWidget {
   final double topTitleSpacing;
 
   BasePageAppBar({
+    this.toolbarHeight = kToolbarHeight,
     this.collapsedHeight,
     this.expandedHeight = 210.0,
     this.onPressedMenu,
@@ -53,6 +57,7 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
           floating: true,
           snap: true,
           pinned: widget.pinned,
+          toolbarHeight: widget.toolbarHeight,
           collapsedHeight: widget.collapsedHeight,
           backgroundColor: stateColors.appBackground.withOpacity(1.0),
           expandedHeight: widget.expandedHeight,
