@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
@@ -104,89 +106,76 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget avatar() {
-    if (author.urls.image != null && author.urls.image.length > 0) {
-      return Material(
-        elevation: 3.0,
-        shape: CircleBorder(),
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: AnimatedContainer(
-          duration: 150.milliseconds,
-          width: avatarSize,
-          height: avatarSize,
-          child: Ink.image(
-            image: NetworkImage(author.urls.image),
+    final isImageUrlOk =
+        author.urls.image != null && author.urls.image.length > 0;
+
+    return OpenContainer(
+      closedColor: Colors.transparent,
+      closedElevation: 0.0,
+      closedBuilder: (_, openContainer) {
+        return Material(
+          elevation: 3.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          color: Colors.transparent,
+          child: AnimatedContainer(
+            duration: 150.milliseconds,
             width: avatarSize,
             height: avatarSize,
-            fit: BoxFit.cover,
-            child: InkWell(
-              onHover: (isHover) {
-                if (isHover) {
-                  setState(() {
-                    avatarSize = 160.0;
-                  });
-
-                  return;
-                }
-
-                setState(() {
-                  avatarSize = 150.0;
-                });
-              },
-              onTap: () {
-                showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Container(
-                          child: Image(
-                            image: NetworkImage(author.urls.image),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
+            child: Ink.image(
+              image: isImageUrlOk
+                  ? NetworkImage(author.urls.image)
+                  : AssetImage('assets/images/user-m.png'),
+              width: avatarSize,
+              height: avatarSize,
+              fit: BoxFit.cover,
+              child: InkWell(
+                onTap: openContainer,
+                onHover: (isHover) {
+                  if (isHover) {
+                    setState(() {
+                      avatarSize = 160.0;
                     });
-              },
+
+                    return;
+                  }
+
+                  setState(() {
+                    avatarSize = 150.0;
+                  });
+                },
+              ),
             ),
           ),
-        ),
-      );
-    }
-
-    return Material(
-      elevation: 3.0,
-      shape: CircleBorder(),
-      clipBehavior: Clip.hardEdge,
-      color: Colors.transparent,
-      child: InkWell(
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Image.asset(
-            'assets/images/user-${stateColors.iconExt}.png',
-            width: 80.0,
+        );
+      },
+      openBuilder: (context, callback) {
+        return Container(
+          height: 800.0,
+          width: 600.0,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              InkWell(
+                onTap: () => Navigator.of(context).pop(),
+                child: Image(
+                  image: isImageUrlOk
+                      ? NetworkImage(author.urls.image)
+                      : AssetImage('assets/images/user-m.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                top: 10.0,
+                right: 10.0,
+                child: CircleButton(
+                    icon: Icon(Icons.close),
+                    onTap: () => Navigator.of(context).pop()),
+              ),
+            ],
           ),
-        ),
-        onTap: () {
-          showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  content: Container(
-                    height: 500.0,
-                    width: 500.0,
-                    child: Image(
-                      image: AssetImage(
-                        'assets/images/user-${stateColors.iconExt}.png',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              });
-        },
-      ),
+        );
+      },
     );
   }
 
