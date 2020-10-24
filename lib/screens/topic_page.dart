@@ -37,9 +37,7 @@ class _TopicPageState extends State<TopicPage> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey =
       GlobalKey<InnerDrawerState>();
 
-  final beginY = 50.0;
-  final delay = 1.0;
-  final delayStep = 1.2;
+  final beginY = 10.0;
 
   bool descending = true;
   Color fabColor = Colors.amber;
@@ -52,7 +50,7 @@ class _TopicPageState extends State<TopicPage> {
   bool isLoadingMore = false;
 
   String pageRoute;
-  String selectedLang = 'en';
+  String lang = 'en';
   bool smallViewVisible = false;
   String topicName;
 
@@ -83,7 +81,7 @@ class _TopicPageState extends State<TopicPage> {
 
     final storageKey = '$pageRoute?lang';
 
-    selectedLang = appLocalStorage.containsKey(storageKey)
+    lang = appLocalStorage.containsKey(storageKey)
         ? appLocalStorage.getPageLang(pageRoute: pageRoute)
         : userState.lang;
   }
@@ -165,13 +163,13 @@ class _TopicPageState extends State<TopicPage> {
                 ),
               ),
               FadeInY(
-                beginY: 10.0,
+                beginY: beginY,
                 delay: 0.0,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: DropdownButton<String>(
                     elevation: 2,
-                    value: selectedLang,
+                    value: lang,
                     isDense: true,
                     underline: Container(
                       height: 0,
@@ -184,9 +182,9 @@ class _TopicPageState extends State<TopicPage> {
                       fontSize: 20.0,
                     ),
                     onChanged: (String newLang) {
-                      selectedLang = newLang;
+                      lang = newLang;
                       appLocalStorage.setPageLang(
-                        lang: selectedLang,
+                        lang: lang,
                         pageRoute: pageRoute,
                       );
 
@@ -230,7 +228,7 @@ class _TopicPageState extends State<TopicPage> {
       delegate: SliverChildListDelegate([
         FadeInY(
           delay: 2.0,
-          beginY: 50.0,
+          beginY: beginY,
           child: Padding(
             padding: const EdgeInsets.only(top: 40.0),
             child: EmptyContent(
@@ -281,24 +279,6 @@ class _TopicPageState extends State<TopicPage> {
           ),
         ),
       ]),
-    );
-  }
-
-  Widget loadMoreButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: FlatButton(
-        onPressed: () {
-          fetchMore();
-        },
-        shape: RoundedRectangleBorder(
-          side: BorderSide(),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text('Load more...'),
-        ),
-      ),
     );
   }
 
@@ -417,13 +397,14 @@ class _TopicPageState extends State<TopicPage> {
 
         return ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 60.0,
-                bottom: 100.0,
+            if (!smallViewVisible)
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 60.0,
+                  bottom: 100.0,
+                ),
+                child: SideBarHeader(),
               ),
-              child: SideBarHeader(),
-            ),
             ...items,
             Padding(
               padding: const EdgeInsets.only(bottom: 100.0),
@@ -526,7 +507,7 @@ class _TopicPageState extends State<TopicPage> {
       final snapshot = await Firestore.instance
           .collection('quotes')
           .where('topics.$topicName', isEqualTo: true)
-          .where('lang', isEqualTo: selectedLang)
+          .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(10)
           .getDocuments();
@@ -586,7 +567,7 @@ class _TopicPageState extends State<TopicPage> {
       final snapshot = await Firestore.instance
           .collection('quotes')
           .where('topics.$topicName', isEqualTo: true)
-          .where('lang', isEqualTo: selectedLang)
+          .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(10)
