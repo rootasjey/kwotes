@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/quote_row.dart';
+import 'package:memorare/components/app_icon.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
 import 'package:memorare/components/base_page_app_bar.dart';
 import 'package:memorare/components/empty_content.dart';
@@ -111,27 +111,37 @@ class _TopicPageState extends State<TopicPage> {
 
   Widget appBar() {
     return BasePageAppBar(
-      onPressedMenu: smallViewVisible
-          ? () {
-              _innerDrawerKey.currentState.toggle();
-            }
-          : null,
+      expandedHeight: 150.0,
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
+          CircleButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: stateColors.foreground,
+            ),
+            onTap: () => Navigator.of(context).pop(),
+          ),
+          AppIcon(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
           Text(
             topicName,
             style: TextStyle(
               fontSize: 40.0,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-          ),
           if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
-            CircleAvatar(
-              radius: 10.0,
-              backgroundColor: Color(appTopicsColors.find(topicName).decimal),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                top: 2.5,
+              ),
+              child: CircleAvatar(
+                radius: 10.0,
+                backgroundColor: Color(appTopicsColors.find(topicName).decimal),
+              ),
             ),
         ],
       ),
@@ -140,11 +150,25 @@ class _TopicPageState extends State<TopicPage> {
           return Wrap(
             spacing: 10.0,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Opacity(
+                  opacity: 0.6,
+                  child: InkWell(
+                    onTap: smallViewVisible
+                        ? () {
+                            _innerDrawerKey.currentState.toggle();
+                          }
+                        : null,
+                    child: Icon(Icons.menu),
+                  ),
+                ),
+              ),
               FadeInY(
                 beginY: 10.0,
-                delay: 1.0,
+                delay: 0.0,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
+                  padding: const EdgeInsets.only(top: 10.0),
                   child: DropdownButton<String>(
                     elevation: 2,
                     value: selectedLang,
@@ -198,7 +222,7 @@ class _TopicPageState extends State<TopicPage> {
       return emptyView();
     }
 
-    return sliverQuotesList();
+    return listView();
   }
 
   Widget emptyView() {
@@ -329,49 +353,25 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget sliverQuotesList() {
+  Widget listView() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
     return Observer(
       builder: (context) {
-        if (userState.isUserConnected) {
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final quote = quotes.elementAt(index);
-                return QuoteRowWithActions(
-                  quote: quote,
-                  quoteId: quote.id,
-                );
-              },
-              childCount: quotes.length,
-            ),
-          );
-        }
+        final isConnected = userState.isUserConnected;
 
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               final quote = quotes.elementAt(index);
 
-              return QuoteRow(
+              return QuoteRowWithActions(
                 quote: quote,
                 quoteId: quote.id,
-                itemBuilder: (context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem(
-                    value: 'share',
-                    child: ListTile(
-                      leading: Icon(Icons.share),
-                      title: Text('Share'),
-                    ),
-                  ),
-                ],
-                onSelected: (value) {
-                  switch (value) {
-                    case 'share':
-                      shareQuote(context: context, quote: quote);
-                      break;
-                    default:
-                  }
-                },
+                isConnected: isConnected,
+                padding: EdgeInsets.symmetric(
+                  horizontal: horPadding,
+                ),
               );
             },
             childCount: quotes.length,
