@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/loading_animation.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
@@ -110,65 +112,74 @@ class ReferencePageState extends State<ReferencePage> {
 
   Widget avatar({double scale = 1.0}) {
     final imageUrl = reference.urls.image;
-    final imageUrlOk = imageUrl != null && imageUrl.length > 0;
+    final isImageUrlOk = imageUrl != null && imageUrl.length > 0;
 
-    return AnimatedContainer(
-      width: avatarWidth * scale,
-      height: avatarHeight * scale,
-      duration: 250.milliseconds,
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Card(
-        elevation: imageUrlOk ? 5.0 : 0.0,
-        child: imageUrlOk
-            ? Ink.image(
-                image: NetworkImage(
-                  reference.urls.image,
-                ),
-                fit: BoxFit.contain,
-                child: InkWell(
-                  onHover: (isHover) {
-                    if (isHover) {
-                      setState(() {
-                        avatarHeight = (avatarInitHeight) + 10.0;
-                        avatarWidth = (avatarInitWidth) + 10.0;
-                      });
+    return OpenContainer(
+      closedColor: Colors.transparent,
+      closedBuilder: (context, openContainer) {
+        return AnimatedContainer(
+          width: avatarWidth * scale,
+          height: avatarHeight * scale,
+          duration: 250.milliseconds,
+          child: Ink.image(
+            height: avatarHeight * scale,
+            width: avatarWidth * scale,
+            fit: BoxFit.cover,
+            image: isImageUrlOk
+                ? NetworkImage(
+                    reference.urls.image,
+                  )
+                : AssetImage('assets/images/reference.png'),
+            child: InkWell(
+              onTap: openContainer,
+              onHover: (isHover) {
+                if (isHover) {
+                  setState(() {
+                    avatarHeight = (avatarInitHeight) + 10.0;
+                    avatarWidth = (avatarInitWidth) + 10.0;
+                  });
 
-                      return;
-                    }
+                  return;
+                }
 
-                    setState(() {
-                      avatarHeight = avatarInitHeight;
-                      avatarWidth = avatarInitWidth;
-                    });
+                setState(() {
+                  avatarHeight = avatarInitHeight;
+                  avatarWidth = avatarInitWidth;
+                });
 
-                    return;
-                  },
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Container(
-                              child: Image(
-                                image: NetworkImage(reference.urls.image),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        });
-                  },
-                ),
-              )
-            : Center(
-                child: Text(
-                  reference.name.substring(0, 2).toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 50.0,
-                  ),
+                return;
+              },
+            ),
+          ),
+        );
+      },
+      openBuilder: (context, callback) {
+        return Container(
+          height: 800.0,
+          width: 600.0,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              InkWell(
+                onTap: () => Navigator.of(context).pop(),
+                child: Image(
+                  image: isImageUrlOk
+                      ? NetworkImage(reference.urls.image)
+                      : AssetImage('assets/images/reference.png'),
+                  fit: BoxFit.cover,
                 ),
               ),
-      ),
+              Positioned(
+                top: 10.0,
+                right: 10.0,
+                child: CircleButton(
+                    icon: Icon(Icons.close),
+                    onTap: () => Navigator.of(context).pop()),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -694,33 +705,36 @@ class ReferencePageState extends State<ReferencePage> {
   Widget types() {
     final type = reference.type;
 
-    return Column(
-      children: <Widget>[
-        Opacity(
-          opacity: 0.7,
-          child: Text(
-            type.primary,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-        ),
-        if (type.secondary != null && type.secondary.length > 0)
-          Padding(
-            padding: EdgeInsets.only(top: 5.0),
-            child: Opacity(
-              opacity: .7,
-              child: Text(
-                type.secondary,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: <Widget>[
+          Opacity(
+            opacity: 0.7,
+            child: Text(
+              type.primary,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18.0,
               ),
             ),
           ),
-      ],
+          if (type.secondary != null && type.secondary.length > 0)
+            Padding(
+              padding: EdgeInsets.only(top: 5.0),
+              child: Opacity(
+                opacity: .7,
+                child: Text(
+                  type.secondary,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
