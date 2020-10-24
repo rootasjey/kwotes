@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/components/empty_view.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/quote_row_with_actions.dart';
@@ -7,6 +8,7 @@ import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/topic_card_color.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/topics_colors.dart';
+import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/quote.dart';
 import 'package:memorare/types/topic_color.dart';
 import 'package:mobx/mobx.dart';
@@ -166,57 +168,62 @@ class _TopicsState extends State<Topics> {
   }
 
   Widget topicsAndQuotes() {
-    return SliverList(
-      delegate: SliverChildListDelegate.fixed(_topicsList.map((topic) {
-        final index = _topicsList.indexOf(topic);
-        final color = appTopicsColors.getColorFor(topic.name);
+    return Observer(builder: (context) {
+      final isConnected = userState.isUserConnected;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 8.0,
-                top: 10.0,
-              ),
-              child: TopicCardColor(
-                size: 50.0,
-                elevation: 6.0,
-                color: Color(topic.decimal),
-                name: topic.name,
-                style: TextStyle(
-                  fontSize: 20.0,
+      return SliverList(
+        delegate: SliverChildListDelegate.fixed(_topicsList.map((topic) {
+          final index = _topicsList.indexOf(topic);
+          final color = appTopicsColors.getColorFor(topic.name);
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8.0,
+                  top: 10.0,
+                ),
+                child: TopicCardColor(
+                  size: 50.0,
+                  elevation: 6.0,
+                  color: Color(topic.decimal),
+                  name: topic.name,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
               ),
-            ),
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: quotesByTopicsList[index].map((quote) {
-                  return QuoteRowWithActions(
-                    quote: quote,
-                    leading: Container(
-                      width: 15.0,
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: Container(
-                        width: 5.0,
-                        height: 100.0,
-                        decoration: ShapeDecoration(
-                          color: color,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: quotesByTopicsList[index].map((quote) {
+                    return QuoteRowWithActions(
+                      quote: quote,
+                      isConnected: isConnected,
+                      leading: Container(
+                        width: 15.0,
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Container(
+                          width: 5.0,
+                          height: 100.0,
+                          decoration: ShapeDecoration(
+                            color: color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                  );
-                }).toList()),
-          ],
-        );
-      }).toList()),
-    );
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                    );
+                  }).toList()),
+            ],
+          );
+        }).toList()),
+      );
+    });
   }
 
   void fetch() async {
