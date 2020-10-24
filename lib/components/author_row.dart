@@ -137,13 +137,15 @@ class _AuthorRowState extends State<AuthorRow> {
               fontSize: 20.0,
             ),
           ),
-          Padding(padding: const EdgeInsets.only(top: 10.0)),
           if (author.job?.isNotEmpty)
-            FlatButton.icon(
-              onPressed: null,
-              icon: Icon(Icons.work),
-              label: Text(
-                author.job,
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: OutlinedButton.icon(
+                onPressed: null,
+                icon: Icon(Icons.work_outline),
+                label: Text(
+                  author.job,
+                ),
               ),
             ),
         ],
