@@ -68,12 +68,26 @@ export const onReIndexQuote = functions
   .firestore
   .document('quotes/{quoteId}')
   .onUpdate(async (snapshot) => {
-    const data = snapshot.after.data();
+    const beforeData = snapshot.before.data();
+    const afterData = snapshot.after.data();
     const objectID = snapshot.after.id;
+
+    // Prevent update index on stats changes
+    let statsChanged = false;
+
+    if ((beforeData.stats && afterData.stats)
+      && (beforeData.stats.likes !== afterData.stats.likes
+        || beforeData.stats.shares !== afterData.stats.shares)) {
+      statsChanged = true;
+    }
+
+    if (statsChanged) {
+      return;
+    }
 
     return quotesIndex.saveObject({
       objectID,
-      ...data,
+      ...afterData,
     })
   });
 
