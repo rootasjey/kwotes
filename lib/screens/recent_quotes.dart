@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:memorare/actions/quotes.dart';
 import 'package:memorare/actions/quotidians.dart';
 import 'package:memorare/components/error_container.dart';
@@ -197,66 +198,76 @@ class RecentQuotesState extends State<RecentQuotes> {
   }
 
   Widget gridView() {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20.0,
-      ),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 300.0,
-          mainAxisSpacing: 20.0,
-          crossAxisSpacing: 20.0,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            final quote = quotes.elementAt(index);
+    return Observer(builder: (context) {
+      final isConnected = userState.isUserConnected;
 
-            return QuoteRowWithActions(
-              quote: quote,
-              componentType: ItemComponentType.card,
-              onBeforeDeletePubQuote: () {
-                setState(() {
-                  quotes.removeAt(index);
-                });
-              },
-              onAfterDeletePubQuote: (bool success) {
-                if (!success) {
-                  quotes.insert(index, quote);
-
-                  showSnack(
-                    context: context,
-                    message: "Couldn't delete the temporary quote.",
-                    type: SnackType.error,
-                  );
-                }
-              },
-            );
-          },
-          childCount: quotes.length,
+      return SliverPadding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
         ),
-      ),
-    );
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 300.0,
+            mainAxisSpacing: 20.0,
+            crossAxisSpacing: 20.0,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              final quote = quotes.elementAt(index);
+
+              return QuoteRowWithActions(
+                quote: quote,
+                isConnected: isConnected,
+                componentType: ItemComponentType.card,
+                onBeforeDeletePubQuote: () {
+                  setState(() {
+                    quotes.removeAt(index);
+                  });
+                },
+                onAfterDeletePubQuote: (bool success) {
+                  if (!success) {
+                    quotes.insert(index, quote);
+
+                    showSnack(
+                      context: context,
+                      message: "Couldn't delete the temporary quote.",
+                      type: SnackType.error,
+                    );
+                  }
+                },
+              );
+            },
+            childCount: quotes.length,
+          ),
+        ),
+      );
+    });
   }
 
   Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final quote = quotes.elementAt(index);
+    return Observer(builder: (context) {
+      final isConnected = userState.isUserConnected;
 
-          return QuoteRowWithActions(
-            quote: quote,
-            padding: EdgeInsets.symmetric(
-              horizontal: horPadding,
-            ),
-            quotePageType: QuotePageType.published,
-          );
-        },
-        childCount: quotes.length,
-      ),
-    );
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final quote = quotes.elementAt(index);
+
+            return QuoteRowWithActions(
+              quote: quote,
+              isConnected: isConnected,
+              padding: EdgeInsets.symmetric(
+                horizontal: horPadding,
+              ),
+              quotePageType: QuotePageType.published,
+            );
+          },
+          childCount: quotes.length,
+        ),
+      );
+    });
   }
 
   void addQuotidianAction(Quote quote) async {
