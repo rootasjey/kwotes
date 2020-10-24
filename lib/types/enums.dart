@@ -4,6 +4,11 @@ enum AddQuoteType {
   tempquote,
 }
 
+enum DiscoverType {
+  authors,
+  references,
+}
+
 enum HeaderViewType {
   options,
   search,
