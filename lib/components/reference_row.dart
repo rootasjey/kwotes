@@ -51,7 +51,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            showMaterialModalBottomSheet(
+            showCupertinoModalBottomSheet(
                 context: context,
                 builder: (_, scrollController) => ReferencePage(
                       id: reference.id,
