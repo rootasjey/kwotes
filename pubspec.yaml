@@ -109,6 +109,7 @@ flutter:
     - assets/images/reference.png
     - assets/images/twitch.png
     - assets/images/twitter.png
+    - assets/images/user-m.png
     - assets/images/user-dark.png
     - assets/images/user-light.png
     - assets/images/world-globe.png
