@@ -254,6 +254,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                   type: SnackType.error,
                 );
               },
+              onNavBack: () {
+                fetch();
+              },
             );
           },
           childCount: tempQuotes.length,
@@ -315,6 +318,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                 message: "Couldn't validate your temporary quote.",
                 type: SnackType.error,
               );
+            },
+            onNavBack: () {
+              fetch();
             },
           );
         },
