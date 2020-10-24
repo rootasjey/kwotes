@@ -60,7 +60,7 @@ bool deleteOfflineDraft({String createdAt}) {
 Future<bool> saveDraft({
   BuildContext context,
 }) async {
-  if (AddQuoteInputs.quote.name.isEmpty) {
+  if (DataQuoteInputs.quote.name.isEmpty) {
     showSnack(
       context: context,
       message: "The quote's content cannot be empty.",
@@ -72,15 +72,15 @@ Future<bool> saveDraft({
 
   final comments = List<String>();
 
-  if (AddQuoteInputs.comment.isNotEmpty) {
-    comments.add(AddQuoteInputs.comment);
+  if (DataQuoteInputs.comment.isNotEmpty) {
+    comments.add(DataQuoteInputs.comment);
   }
 
   final references = formatReferences();
 
   final topics = Map<String, bool>();
 
-  AddQuoteInputs.quote.topics.forEach((topic) {
+  DataQuoteInputs.quote.topics.forEach((topic) {
     topics[topic] = true;
   });
 
@@ -97,37 +97,37 @@ Future<bool> saveDraft({
         .collection('drafts')
         .add({
       'author': {
-        'id': AddQuoteInputs.author.id,
-        'job': AddQuoteInputs.author.job,
+        'id': DataQuoteInputs.author.id,
+        'job': DataQuoteInputs.author.job,
         'jobLang': {},
-        'name': AddQuoteInputs.author.name,
-        'summary': AddQuoteInputs.author.summary,
+        'name': DataQuoteInputs.author.name,
+        'summary': DataQuoteInputs.author.summary,
         'summaryLang': {},
         'updatedAt': DateTime.now(),
         'urls': {
-          'affiliate': AddQuoteInputs.author.urls.affiliate,
-          'amazon': AddQuoteInputs.author.urls.amazon,
-          'facebook': AddQuoteInputs.author.urls.facebook,
-          'image': AddQuoteInputs.author.urls.image,
-          'netflix': AddQuoteInputs.author.urls.netflix,
-          'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-          'twitch': AddQuoteInputs.author.urls.twitch,
-          'twitter': AddQuoteInputs.author.urls.twitter,
-          'website': AddQuoteInputs.author.urls.website,
-          'wikipedia': AddQuoteInputs.author.urls.wikipedia,
-          'youtube': AddQuoteInputs.author.urls.youtube,
+          'affiliate': DataQuoteInputs.author.urls.affiliate,
+          'amazon': DataQuoteInputs.author.urls.amazon,
+          'facebook': DataQuoteInputs.author.urls.facebook,
+          'image': DataQuoteInputs.author.urls.image,
+          'netflix': DataQuoteInputs.author.urls.netflix,
+          'primeVideo': DataQuoteInputs.author.urls.primeVideo,
+          'twitch': DataQuoteInputs.author.urls.twitch,
+          'twitter': DataQuoteInputs.author.urls.twitter,
+          'website': DataQuoteInputs.author.urls.website,
+          'wikipedia': DataQuoteInputs.author.urls.wikipedia,
+          'youtube': DataQuoteInputs.author.urls.youtube,
         }
       },
       'comments': comments,
       'createdAt': DateTime.now(),
-      'lang': AddQuoteInputs.quote.lang,
-      'name': AddQuoteInputs.quote.name,
+      'lang': DataQuoteInputs.quote.lang,
+      'name': DataQuoteInputs.quote.name,
       'mainReference': {
-        'id': AddQuoteInputs.reference.id,
-        'name': AddQuoteInputs.reference.name,
+        'id': DataQuoteInputs.reference.id,
+        'name': DataQuoteInputs.reference.name,
       },
       'references': references,
-      'region': AddQuoteInputs.region,
+      'region': DataQuoteInputs.region,
       'topics': topics,
       'user': {
         'id': userAuth.uid,
@@ -155,15 +155,15 @@ Future<bool> saveOfflineDraft({
 }) async {
   final comments = List<String>();
 
-  if (AddQuoteInputs.comment.isNotEmpty) {
-    comments.add(AddQuoteInputs.comment);
+  if (DataQuoteInputs.comment.isNotEmpty) {
+    comments.add(DataQuoteInputs.comment);
   }
 
   final references = formatReferences();
 
   final topics = Map<String, bool>();
 
-  AddQuoteInputs.quote.topics.forEach((topic) {
+  DataQuoteInputs.quote.topics.forEach((topic) {
     topics[topic] = true;
   });
 
@@ -172,38 +172,38 @@ Future<bool> saveOfflineDraft({
 
     Map<String, dynamic> draft = {
       'author': {
-        'id': AddQuoteInputs.author.id,
-        'job': AddQuoteInputs.author.job,
+        'id': DataQuoteInputs.author.id,
+        'job': DataQuoteInputs.author.job,
         'jobLang': {},
-        'name': AddQuoteInputs.author.name,
-        'summary': AddQuoteInputs.author.summary,
+        'name': DataQuoteInputs.author.name,
+        'summary': DataQuoteInputs.author.summary,
         'summaryLang': {},
         'updatedAt': DateTime.now().toString(),
         'urls': {
-          'affiliate': AddQuoteInputs.author.urls.affiliate,
-          'amazon': AddQuoteInputs.author.urls.amazon,
-          'facebook': AddQuoteInputs.author.urls.facebook,
-          'image': AddQuoteInputs.author.urls.image,
-          'netflix': AddQuoteInputs.author.urls.netflix,
-          'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-          'twitch': AddQuoteInputs.author.urls.twitch,
-          'twitter': AddQuoteInputs.author.urls.twitter,
-          'website': AddQuoteInputs.author.urls.website,
-          'wikipedia': AddQuoteInputs.author.urls.wikipedia,
-          'youtube': AddQuoteInputs.author.urls.youtube,
+          'affiliate': DataQuoteInputs.author.urls.affiliate,
+          'amazon': DataQuoteInputs.author.urls.amazon,
+          'facebook': DataQuoteInputs.author.urls.facebook,
+          'image': DataQuoteInputs.author.urls.image,
+          'netflix': DataQuoteInputs.author.urls.netflix,
+          'primeVideo': DataQuoteInputs.author.urls.primeVideo,
+          'twitch': DataQuoteInputs.author.urls.twitch,
+          'twitter': DataQuoteInputs.author.urls.twitter,
+          'website': DataQuoteInputs.author.urls.website,
+          'wikipedia': DataQuoteInputs.author.urls.wikipedia,
+          'youtube': DataQuoteInputs.author.urls.youtube,
         }
       },
       'comments': comments,
       'createdAt': DateTime.now().toString(),
       'isOffline': true,
-      'lang': AddQuoteInputs.quote.lang,
-      'name': AddQuoteInputs.quote.name,
+      'lang': DataQuoteInputs.quote.lang,
+      'name': DataQuoteInputs.quote.name,
       'mainReference': {
-        'id': AddQuoteInputs.reference.id,
-        'name': AddQuoteInputs.reference.name,
+        'id': DataQuoteInputs.reference.id,
+        'name': DataQuoteInputs.reference.name,
       },
       'references': references,
-      'region': AddQuoteInputs.region,
+      'region': DataQuoteInputs.region,
       'topics': topics,
       'user': {
         'id': userAuth.uid,

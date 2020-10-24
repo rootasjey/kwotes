@@ -475,9 +475,9 @@ class _DraftsState extends State<Drafts> {
   }
 
   void editDraft(TempQuote draft) async {
-    AddQuoteInputs.isOfflineDraft = draft.isOffline;
-    AddQuoteInputs.draft = draft;
-    AddQuoteInputs.populateWithTempQuote(draft);
+    DataQuoteInputs.isOfflineDraft = draft.isOffline;
+    DataQuoteInputs.draft = draft;
+    DataQuoteInputs.populateWithTempQuote(draft);
 
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));

@@ -45,7 +45,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       padding: const EdgeInsets.only(top: 8.0),
       child: FlatButton.icon(
           onPressed: () {
-            setState(() => AddQuoteInputs.clearTopics());
+            setState(() => DataQuoteInputs.clearTopics());
           },
           icon: Opacity(
             opacity: 0.6,
@@ -91,7 +91,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
               children: appTopicsColors.topicsColors.map<Widget>((topicColor) {
                 final name = topicColor.name;
                 final selected =
-                    AddQuoteInputs.quote.topics.contains(topicColor.name);
+                    DataQuoteInputs.quote.topics.contains(topicColor.name);
 
                 return ChoiceChip(
                   label: Text(
@@ -105,8 +105,9 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
                   onSelected: (bool selected) {
                     setState(() {
                       selected
-                          ? AddQuoteInputs.quote.topics.add(topicColor.name)
-                          : AddQuoteInputs.quote.topics.remove(topicColor.name);
+                          ? DataQuoteInputs.quote.topics.add(topicColor.name)
+                          : DataQuoteInputs.quote.topics
+                              .remove(topicColor.name);
                     });
                   },
                 );

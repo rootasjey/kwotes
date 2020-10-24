@@ -109,14 +109,14 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
 
         break;
       case 'edit':
-        AddQuoteInputs.navigatedFromPath = 'admintempquotes';
-        AddQuoteInputs.populateWithTempQuote(tempQuote);
+        DataQuoteInputs.navigatedFromPath = 'admintempquotes';
+        DataQuoteInputs.populateWithTempQuote(tempQuote);
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
         break;
       case 'copy':
-        AddQuoteInputs.navigatedFromPath = 'admintempquotes';
-        AddQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
+        DataQuoteInputs.navigatedFromPath = 'admintempquotes';
+        DataQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
         break;
@@ -179,8 +179,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   }
 
   void editAction(TempQuote tempQuote) async {
-    AddQuoteInputs.navigatedFromPath = 'admintempquotes';
-    AddQuoteInputs.populateWithTempQuote(tempQuote);
+    DataQuoteInputs.navigatedFromPath = 'admintempquotes';
+    DataQuoteInputs.populateWithTempQuote(tempQuote);
 
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));

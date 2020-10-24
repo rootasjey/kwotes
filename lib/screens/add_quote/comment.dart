@@ -16,7 +16,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
   @override
   void initState() {
     super.initState();
-    commentController.text = AddQuoteInputs.comment;
+    commentController.text = DataQuoteInputs.comment;
   }
 
   @override
@@ -30,7 +30,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
   }
 
   Widget commentCardInput() {
-    final comment = AddQuoteInputs.comment;
+    final comment = DataQuoteInputs.comment;
 
     return Container(
       width: 300.0,
@@ -147,7 +147,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                 fontSize: 20.0,
               ),
               onChanged: (newValue) {
-                AddQuoteInputs.comment = newValue;
+                DataQuoteInputs.comment = newValue;
               },
             ),
           ),
@@ -162,7 +162,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               children: [
                 OutlinedButton.icon(
                   onPressed: () {
-                    AddQuoteInputs.comment = '';
+                    DataQuoteInputs.comment = '';
                     commentController.clear();
                     commentFocusNode.requestFocus();
                   },

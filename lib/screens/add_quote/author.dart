@@ -60,22 +60,22 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   @override
   void initState() {
     setState(() {
-      affiliateUrlController.text = AddQuoteInputs.author.urls.affiliate;
-      amazonUrlController.text = AddQuoteInputs.author.urls.amazon;
-      facebookUrlController.text = AddQuoteInputs.author.urls.facebook;
-      nameController.text = AddQuoteInputs.author.name;
-      jobController.text = AddQuoteInputs.author.job;
-      instaController.text = AddQuoteInputs.author.urls.instagram;
-      summaryController.text = AddQuoteInputs.author.summary;
-      twitchUrlController.text = AddQuoteInputs.author.urls.twitch;
-      twitterUrlController.text = AddQuoteInputs.author.urls.twitter;
-      websiteUrlController.text = AddQuoteInputs.author.urls.website;
-      wikiUrlController.text = AddQuoteInputs.author.urls.wikipedia;
-      youtubeUrlController.text = AddQuoteInputs.author.urls.youtube;
-      bornCityController.text = AddQuoteInputs.author.born.city;
-      bornCountryController.text = AddQuoteInputs.author.born.country;
-      deathCityController.text = AddQuoteInputs.author.death.city;
-      deathCountryController.text = AddQuoteInputs.author.death.country;
+      affiliateUrlController.text = DataQuoteInputs.author.urls.affiliate;
+      amazonUrlController.text = DataQuoteInputs.author.urls.amazon;
+      facebookUrlController.text = DataQuoteInputs.author.urls.facebook;
+      nameController.text = DataQuoteInputs.author.name;
+      jobController.text = DataQuoteInputs.author.job;
+      instaController.text = DataQuoteInputs.author.urls.instagram;
+      summaryController.text = DataQuoteInputs.author.summary;
+      twitchUrlController.text = DataQuoteInputs.author.urls.twitch;
+      twitterUrlController.text = DataQuoteInputs.author.urls.twitter;
+      websiteUrlController.text = DataQuoteInputs.author.urls.website;
+      wikiUrlController.text = DataQuoteInputs.author.urls.wikipedia;
+      youtubeUrlController.text = DataQuoteInputs.author.urls.youtube;
+      bornCityController.text = DataQuoteInputs.author.born.city;
+      bornCountryController.text = DataQuoteInputs.author.born.country;
+      deathCityController.text = DataQuoteInputs.author.death.city;
+      deathCountryController.text = DataQuoteInputs.author.death.country;
     });
 
     super.initState();
@@ -119,13 +119,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget avatar() {
     return Material(
-      elevation: AddQuoteInputs.author.urls.image.isEmpty ? 0.0 : 4.0,
+      elevation: DataQuoteInputs.author.urls.image.isEmpty ? 0.0 : 4.0,
       shape: CircleBorder(),
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
-      child: AddQuoteInputs.author.urls.image.isNotEmpty
+      child: DataQuoteInputs.author.urls.image.isNotEmpty
           ? Ink.image(
-              image: NetworkImage(AddQuoteInputs.author.urls.image),
+              image: NetworkImage(DataQuoteInputs.author.urls.image),
               fit: BoxFit.cover,
               width: 150.0,
               height: 150.0,
@@ -156,8 +156,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget bornAndDeathCards() {
-    final born = AddQuoteInputs.author.born;
-    final death = AddQuoteInputs.author.death;
+    final born = DataQuoteInputs.author.born;
+    final death = DataQuoteInputs.author.death;
 
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
@@ -318,7 +318,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ],
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
-                  var selectedDate = AddQuoteInputs.author.born.date;
+                  var selectedDate = DataQuoteInputs.author.born.date;
 
                   return Padding(
                     padding: EdgeInsets.only(top: 60.0),
@@ -336,8 +336,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                               lastDate: DateTime.now(),
                             );
 
-                            childSetState(
-                                () => AddQuoteInputs.author.born.date = picked);
+                            childSetState(() =>
+                                DataQuoteInputs.author.born.date = picked);
                           },
                           icon: Icon(Icons.calendar_today),
                           label: Text(selectedDate != null
@@ -349,9 +349,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           child: CheckboxListTile(
                             title: Text('Before J-C (Jesus Christ)'),
                             subtitle: Text('(e.g. year -500)'),
-                            value: AddQuoteInputs.author.born.beforeJC,
+                            value: DataQuoteInputs.author.born.beforeJC,
                             onChanged: (newValue) {
-                              childSetState(() => AddQuoteInputs
+                              childSetState(() => DataQuoteInputs
                                   .author.born.beforeJC = newValue);
                             },
                           ),
@@ -376,7 +376,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       fontSize: 18.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.author.born.country = newValue;
+                      DataQuoteInputs.author.born.country = newValue;
                     },
                   ),
                 ),
@@ -396,7 +396,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       fontSize: 18.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.author.born.city = newValue;
+                      DataQuoteInputs.author.born.city = newValue;
                     },
                   ),
                 ),
@@ -411,9 +411,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () {
-                          AddQuoteInputs.author.born.city = '';
-                          AddQuoteInputs.author.born.country = '';
-                          AddQuoteInputs.author.born.date = null;
+                          DataQuoteInputs.author.born.city = '';
+                          DataQuoteInputs.author.born.country = '';
+                          DataQuoteInputs.author.born.date = null;
 
                           bornCityController.clear();
                           bornCountryController.clear();
@@ -465,7 +465,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       padding: const EdgeInsets.only(top: 8.0),
       child: FlatButton.icon(
         onPressed: () {
-          AddQuoteInputs.clearAuthor();
+          DataQuoteInputs.clearAuthor();
 
           amazonUrlController.clear();
           facebookUrlController.clear();
@@ -554,7 +554,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ],
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
-                  final selectedDate = AddQuoteInputs.author.death.date;
+                  final selectedDate = DataQuoteInputs.author.death.date;
                   return Padding(
                     padding: EdgeInsets.only(top: 60.0),
                     child: Wrap(
@@ -572,7 +572,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             );
 
                             childSetState(() =>
-                                AddQuoteInputs.author.death.date = picked);
+                                DataQuoteInputs.author.death.date = picked);
                           },
                           icon: Icon(Icons.calendar_today),
                           label: Text(selectedDate != null
@@ -584,9 +584,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           child: CheckboxListTile(
                             title: Text('Before J-C (Jesus Christ)'),
                             subtitle: Text('(e.g. year -500)'),
-                            value: AddQuoteInputs.author.death.beforeJC,
+                            value: DataQuoteInputs.author.death.beforeJC,
                             onChanged: (newValue) {
-                              childSetState(() => AddQuoteInputs
+                              childSetState(() => DataQuoteInputs
                                   .author.death.beforeJC = newValue);
                             },
                           ),
@@ -611,7 +611,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       fontSize: 18.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.author.death.country = newValue;
+                      DataQuoteInputs.author.death.country = newValue;
                     },
                   ),
                 ),
@@ -631,7 +631,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       fontSize: 18.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.author.death.city = newValue;
+                      DataQuoteInputs.author.death.city = newValue;
                     },
                   ),
                 ),
@@ -646,9 +646,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () {
-                          AddQuoteInputs.author.death.city = '';
-                          AddQuoteInputs.author.death.country = '';
-                          AddQuoteInputs.author.death.date = null;
+                          DataQuoteInputs.author.death.city = '';
+                          DataQuoteInputs.author.death.country = '';
+                          DataQuoteInputs.author.death.date = null;
 
                           deathCityController.clear();
                           deathCountryController.clear();
@@ -703,12 +703,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         title: Text('is fictional?'),
         subtitle: Text(
             "If true, a reference's id property will be added to this author."),
-        value: AddQuoteInputs.author.isFictional,
+        value: DataQuoteInputs.author.isFictional,
         onChanged: prefilledInputs
             ? null
             : (newValue) {
                 setState(() {
-                  AddQuoteInputs.author.isFictional = newValue;
+                  DataQuoteInputs.author.isFictional = newValue;
                 });
               },
       ),
@@ -716,7 +716,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget jobCardInput() {
-    final job = AddQuoteInputs.author.job;
+    final job = DataQuoteInputs.author.job;
 
     return SizedBox(
       width: 250.0,
@@ -835,7 +835,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     fontSize: 20.0,
                   ),
                   onChanged: (newValue) {
-                    AddQuoteInputs.author.job = newValue;
+                    DataQuoteInputs.author.job = newValue;
                   },
                 ),
               ),
@@ -850,7 +850,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   children: [
                     OutlinedButton.icon(
                       onPressed: () {
-                        AddQuoteInputs.author.job = '';
+                        DataQuoteInputs.author.job = '';
                         jobController.clear();
                         jobFocusNode.requestFocus();
                       },
@@ -904,15 +904,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 1.0,
             name: 'Website',
-            active: AddQuoteInputs.author.urls.website.isNotEmpty,
+            active: DataQuoteInputs.author.urls.website.isNotEmpty,
             imageUrl: 'assets/images/world-globe.png',
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Website',
-                  initialValue: AddQuoteInputs.author.urls.website,
+                  initialValue: DataQuoteInputs.author.urls.website,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.website = inputUrl;
+                      DataQuoteInputs.author.urls.website = inputUrl;
                     });
                   });
             },
@@ -922,15 +922,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               return linkCircleButton(
                 delay: 1.2,
                 name: 'Wikipedia',
-                active: AddQuoteInputs.author.urls.wikipedia.isNotEmpty,
+                active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
                 imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
                 onTap: () {
                   showLinkInputSheet(
                       labelText: 'Wikipedia',
-                      initialValue: AddQuoteInputs.author.urls.wikipedia,
+                      initialValue: DataQuoteInputs.author.urls.wikipedia,
                       onSave: (String inputUrl) {
                         setState(() {
-                          AddQuoteInputs.author.urls.wikipedia = inputUrl;
+                          DataQuoteInputs.author.urls.wikipedia = inputUrl;
                         });
                       });
                 },
@@ -941,14 +941,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 1.4,
             name: 'Amazon',
             imageUrl: 'assets/images/amazon.png',
-            active: AddQuoteInputs.author.urls.amazon.isNotEmpty,
+            active: DataQuoteInputs.author.urls.amazon.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Amazon',
-                  initialValue: AddQuoteInputs.author.urls.amazon,
+                  initialValue: DataQuoteInputs.author.urls.amazon,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.amazon = inputUrl;
+                      DataQuoteInputs.author.urls.amazon = inputUrl;
                     });
                   });
             },
@@ -957,14 +957,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 1.6,
             name: 'Facebook',
             imageUrl: 'assets/images/facebook.png',
-            active: AddQuoteInputs.author.urls.facebook.isNotEmpty,
+            active: DataQuoteInputs.author.urls.facebook.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Facebook',
-                  initialValue: AddQuoteInputs.author.urls.facebook,
+                  initialValue: DataQuoteInputs.author.urls.facebook,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.facebook = inputUrl;
+                      DataQuoteInputs.author.urls.facebook = inputUrl;
                     });
                   });
             },
@@ -973,14 +973,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 1.7,
             name: 'Instagram',
             imageUrl: 'assets/images/instagram.png',
-            active: AddQuoteInputs.author.urls.instagram.isNotEmpty,
+            active: DataQuoteInputs.author.urls.instagram.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Instagram',
-                  initialValue: AddQuoteInputs.author.urls.instagram,
+                  initialValue: DataQuoteInputs.author.urls.instagram,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.instagram = inputUrl;
+                      DataQuoteInputs.author.urls.instagram = inputUrl;
                     });
                   });
             },
@@ -989,14 +989,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 1.8,
             name: 'Netflix',
             imageUrl: 'assets/images/netflix.png',
-            active: AddQuoteInputs.author.urls.netflix.isNotEmpty,
+            active: DataQuoteInputs.author.urls.netflix.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Netflix',
-                  initialValue: AddQuoteInputs.author.urls.netflix,
+                  initialValue: DataQuoteInputs.author.urls.netflix,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.netflix = inputUrl;
+                      DataQuoteInputs.author.urls.netflix = inputUrl;
                     });
                   });
             },
@@ -1005,14 +1005,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 2.0,
             name: 'Prime Video',
             imageUrl: 'assets/images/prime-video.png',
-            active: AddQuoteInputs.author.urls.primeVideo.isNotEmpty,
+            active: DataQuoteInputs.author.urls.primeVideo.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Prime Video',
-                  initialValue: AddQuoteInputs.author.urls.primeVideo,
+                  initialValue: DataQuoteInputs.author.urls.primeVideo,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.primeVideo = inputUrl;
+                      DataQuoteInputs.author.urls.primeVideo = inputUrl;
                     });
                   });
             },
@@ -1021,14 +1021,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 2.2,
             name: 'Twitch',
             imageUrl: 'assets/images/twitch.png',
-            active: AddQuoteInputs.author.urls.twitch.isNotEmpty,
+            active: DataQuoteInputs.author.urls.twitch.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Twitch',
-                  initialValue: AddQuoteInputs.author.urls.twitch,
+                  initialValue: DataQuoteInputs.author.urls.twitch,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.twitch = inputUrl;
+                      DataQuoteInputs.author.urls.twitch = inputUrl;
                     });
                   });
             },
@@ -1037,14 +1037,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 2.4,
             name: 'Twitter',
             imageUrl: 'assets/images/twitter.png',
-            active: AddQuoteInputs.author.urls.twitter.isNotEmpty,
+            active: DataQuoteInputs.author.urls.twitter.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'Twitter',
-                  initialValue: AddQuoteInputs.author.urls.twitter,
+                  initialValue: DataQuoteInputs.author.urls.twitter,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.twitter = inputUrl;
+                      DataQuoteInputs.author.urls.twitter = inputUrl;
                     });
                   });
             },
@@ -1053,14 +1053,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             delay: 2.6,
             name: 'YouTube',
             imageUrl: 'assets/images/youtube.png',
-            active: AddQuoteInputs.author.urls.youtube.isNotEmpty,
+            active: DataQuoteInputs.author.urls.youtube.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
                   labelText: 'YouTube',
-                  initialValue: AddQuoteInputs.author.urls.youtube,
+                  initialValue: DataQuoteInputs.author.urls.youtube,
                   onSave: (String inputUrl) {
                     setState(() {
-                      AddQuoteInputs.author.urls.youtube = inputUrl;
+                      DataQuoteInputs.author.urls.youtube = inputUrl;
                     });
                   });
             },
@@ -1104,7 +1104,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget nameCardInput() {
-    final authorName = AddQuoteInputs.author.name;
+    final authorName = DataQuoteInputs.author.name;
 
     return Container(
       width: 250.0,
@@ -1229,7 +1229,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             fontSize: 20.0,
                           ),
                           onChanged: (newValue) async {
-                            AddQuoteInputs.author.name = newValue;
+                            DataQuoteInputs.author.name = newValue;
                             prefilledInputs = false;
                             tapToEditStr = 'Tap to edit';
 
@@ -1306,7 +1306,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           children: [
                             OutlinedButton.icon(
                               onPressed: () {
-                                AddQuoteInputs.author.name = '';
+                                DataQuoteInputs.author.name = '';
                                 nameController.clear();
                                 nameFocusNode.requestFocus();
                               },
@@ -1349,7 +1349,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           return Card(
                             child: ListTile(
                               onTap: () {
-                                AddQuoteInputs.author = authorSuggestion.author;
+                                DataQuoteInputs.author =
+                                    authorSuggestion.author;
                                 prefilledInputs = true;
                                 tapToEditStr = '-';
                                 Navigator.of(context).pop();
@@ -1371,7 +1372,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget summaryCardInput() {
-    final summary = AddQuoteInputs.author.summary;
+    final summary = DataQuoteInputs.author.summary;
 
     return Container(
       width: 300.0,
@@ -1494,7 +1495,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       fontSize: 20.0,
                     ),
                     onChanged: (newValue) {
-                      AddQuoteInputs.author.summary = newValue;
+                      DataQuoteInputs.author.summary = newValue;
                     },
                   ),
                 ),
@@ -1509,7 +1510,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () {
-                          AddQuoteInputs.author.summary = '';
+                          DataQuoteInputs.author.summary = '';
                           summaryController.clear();
                           summaryFocusNode.requestFocus();
                         },
@@ -1646,8 +1647,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText:
-                                AddQuoteInputs.author.urls.image.length > 0
-                                    ? AddQuoteInputs.author.urls.image
+                                DataQuoteInputs.author.urls.image.length > 0
+                                    ? DataQuoteInputs.author.urls.image
                                     : 'URL',
                           ),
                           onChanged: (newValue) {
@@ -1680,7 +1681,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                         ),
                         onPressed: () {
                           setState(() {
-                            AddQuoteInputs.author.urls.image = tempImgUrl;
+                            DataQuoteInputs.author.urls.image = tempImgUrl;
                           });
 
                           Navigator.of(context).pop();

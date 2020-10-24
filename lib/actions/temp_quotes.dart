@@ -15,50 +15,50 @@ Future addNewTempQuote({
 
   await Firestore.instance.collection('tempquotes').add({
     'author': {
-      'id': AddQuoteInputs.author.id,
+      'id': DataQuoteInputs.author.id,
       'born': {
-        'beforeJC': AddQuoteInputs.author.born.beforeJC,
-        'city': AddQuoteInputs.author.born.city,
-        'country': AddQuoteInputs.author.born.country,
-        'date': AddQuoteInputs.author.born.date,
+        'beforeJC': DataQuoteInputs.author.born.beforeJC,
+        'city': DataQuoteInputs.author.born.city,
+        'country': DataQuoteInputs.author.born.country,
+        'date': DataQuoteInputs.author.born.date,
       },
       'death': {
-        'beforeJC': AddQuoteInputs.author.death.beforeJC,
-        'city': AddQuoteInputs.author.death.city,
-        'country': AddQuoteInputs.author.death.country,
-        'date': AddQuoteInputs.author.death.date,
+        'beforeJC': DataQuoteInputs.author.death.beforeJC,
+        'city': DataQuoteInputs.author.death.city,
+        'country': DataQuoteInputs.author.death.country,
+        'date': DataQuoteInputs.author.death.date,
       },
-      'isFictional': AddQuoteInputs.author.isFictional,
-      'job': AddQuoteInputs.author.job,
+      'isFictional': DataQuoteInputs.author.isFictional,
+      'job': DataQuoteInputs.author.job,
       'jobLang': {},
-      'name': AddQuoteInputs.author.name,
-      'summary': AddQuoteInputs.author.summary,
+      'name': DataQuoteInputs.author.name,
+      'summary': DataQuoteInputs.author.summary,
       'summaryLang': {},
       'updatedAt': DateTime.now(),
       'urls': {
-        'amazon': AddQuoteInputs.author.urls.amazon,
-        'facebook': AddQuoteInputs.author.urls.facebook,
-        'image': AddQuoteInputs.author.urls.image,
-        'instagram': AddQuoteInputs.author.urls.instagram,
-        'netflix': AddQuoteInputs.author.urls.netflix,
-        'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-        'twitch': AddQuoteInputs.author.urls.twitch,
-        'twitter': AddQuoteInputs.author.urls.twitter,
-        'website': AddQuoteInputs.author.urls.website,
-        'wikipedia': AddQuoteInputs.author.urls.wikipedia,
-        'youtube': AddQuoteInputs.author.urls.youtube,
+        'amazon': DataQuoteInputs.author.urls.amazon,
+        'facebook': DataQuoteInputs.author.urls.facebook,
+        'image': DataQuoteInputs.author.urls.image,
+        'instagram': DataQuoteInputs.author.urls.instagram,
+        'netflix': DataQuoteInputs.author.urls.netflix,
+        'primeVideo': DataQuoteInputs.author.urls.primeVideo,
+        'twitch': DataQuoteInputs.author.urls.twitch,
+        'twitter': DataQuoteInputs.author.urls.twitter,
+        'website': DataQuoteInputs.author.urls.website,
+        'wikipedia': DataQuoteInputs.author.urls.wikipedia,
+        'youtube': DataQuoteInputs.author.urls.youtube,
       }
     },
     'comments': comments,
     'createdAt': DateTime.now(),
-    'lang': AddQuoteInputs.quote.lang,
-    'name': AddQuoteInputs.quote.name,
+    'lang': DataQuoteInputs.quote.lang,
+    'name': DataQuoteInputs.quote.name,
     'mainReference': {
-      'id': AddQuoteInputs.reference.id,
-      'name': AddQuoteInputs.reference.name,
+      'id': DataQuoteInputs.reference.id,
+      'name': DataQuoteInputs.reference.name,
     },
     'references': references,
-    'region': AddQuoteInputs.region,
+    'region': DataQuoteInputs.region,
     'topics': topics,
     'user': {
       'id': userAuth.uid,
@@ -113,7 +113,7 @@ String getResultMessage(
     {AddQuoteType actionIntent, AddQuoteType actionResult}) {
   if ((actionIntent == actionResult) &&
       actionIntent == AddQuoteType.tempquote) {
-    return AddQuoteInputs.quote.id.isEmpty
+    return DataQuoteInputs.quote.id.isEmpty
         ? 'Your quote has been successfully proposed'
         : 'Your quote has been successfully saved';
   }
@@ -144,7 +144,7 @@ String getResultSubMessage(
     {AddQuoteType actionIntent, AddQuoteType actionResult}) {
   if ((actionIntent == actionResult) &&
       actionIntent == AddQuoteType.tempquote) {
-    return AddQuoteInputs.quote.id.isEmpty
+    return DataQuoteInputs.quote.id.isEmpty
         ? 'Soon, a moderator will review it and it will be validated if everything is alright'
         : "It's time to let things happen";
   }
@@ -174,7 +174,7 @@ String getResultSubMessage(
 Future<bool> proposeQuote({
   BuildContext context,
 }) async {
-  if (AddQuoteInputs.quote.name.isEmpty) {
+  if (DataQuoteInputs.quote.name.isEmpty) {
     showSnack(
       context: context,
       message: "The quote's content cannot be empty.",
@@ -184,7 +184,7 @@ Future<bool> proposeQuote({
     return false;
   }
 
-  if (AddQuoteInputs.quote.topics.length == 0) {
+  if (DataQuoteInputs.quote.topics.length == 0) {
     showSnack(
       context: context,
       message: 'You must select at least 1 topics for the quote.',
@@ -196,20 +196,20 @@ Future<bool> proposeQuote({
 
   final comments = List<String>();
 
-  if (AddQuoteInputs.comment.isNotEmpty) {
-    comments.add(AddQuoteInputs.comment);
+  if (DataQuoteInputs.comment.isNotEmpty) {
+    comments.add(DataQuoteInputs.comment);
   }
 
   final references = formatReferences();
 
   final topics = Map<String, bool>();
 
-  AddQuoteInputs.quote.topics.forEach((topic) {
+  DataQuoteInputs.quote.topics.forEach((topic) {
     topics[topic] = true;
   });
 
   try {
-    if (AddQuoteInputs.quote.id.isEmpty) {
+    if (DataQuoteInputs.quote.id.isEmpty) {
       await addNewTempQuote(
         comments: comments,
         references: references,
@@ -233,35 +233,35 @@ Future<bool> proposeQuote({
 List<Map<String, dynamic>> formatReferences() {
   final references = List<Map<String, dynamic>>();
 
-  if (AddQuoteInputs.reference.name.isEmpty) {
+  if (DataQuoteInputs.reference.name.isEmpty) {
     return references;
   }
 
   references.add({
-    'lang': AddQuoteInputs.reference.lang,
+    'lang': DataQuoteInputs.reference.lang,
     'links': [],
-    'name': AddQuoteInputs.reference.name,
+    'name': DataQuoteInputs.reference.name,
     'release': {
-      'original': AddQuoteInputs.reference.release.original,
-      'beforeJC': AddQuoteInputs.reference.release.beforeJC,
+      'original': DataQuoteInputs.reference.release.original,
+      'beforeJC': DataQuoteInputs.reference.release.beforeJC,
     },
-    'summary': AddQuoteInputs.reference.summary,
+    'summary': DataQuoteInputs.reference.summary,
     'type': {
-      'primary': AddQuoteInputs.reference.type.primary,
-      'secondary': AddQuoteInputs.reference.type.secondary,
+      'primary': DataQuoteInputs.reference.type.primary,
+      'secondary': DataQuoteInputs.reference.type.secondary,
     },
     'urls': {
-      'amazon': AddQuoteInputs.reference.urls.amazon,
-      'facebook': AddQuoteInputs.reference.urls.facebook,
-      'image': AddQuoteInputs.reference.urls.image,
-      'instagram': AddQuoteInputs.reference.urls.instagram,
-      'netflix': AddQuoteInputs.reference.urls.netflix,
-      'primeVideo': AddQuoteInputs.reference.urls.primeVideo,
-      'twitch': AddQuoteInputs.reference.urls.twitch,
-      'twitter': AddQuoteInputs.reference.urls.twitter,
-      'website': AddQuoteInputs.reference.urls.website,
-      'wikipedia': AddQuoteInputs.reference.urls.wikipedia,
-      'youtube': AddQuoteInputs.reference.urls.youtube,
+      'amazon': DataQuoteInputs.reference.urls.amazon,
+      'facebook': DataQuoteInputs.reference.urls.facebook,
+      'image': DataQuoteInputs.reference.urls.image,
+      'instagram': DataQuoteInputs.reference.urls.instagram,
+      'netflix': DataQuoteInputs.reference.urls.netflix,
+      'primeVideo': DataQuoteInputs.reference.urls.primeVideo,
+      'twitch': DataQuoteInputs.reference.urls.twitch,
+      'twitter': DataQuoteInputs.reference.urls.twitter,
+      'website': DataQuoteInputs.reference.urls.website,
+      'wikipedia': DataQuoteInputs.reference.urls.wikipedia,
+      'youtube': DataQuoteInputs.reference.urls.youtube,
     },
   });
 
@@ -277,53 +277,53 @@ Future saveExistingTempQuote({
 
   await Firestore.instance
       .collection('tempquotes')
-      .document(AddQuoteInputs.quote.id)
+      .document(DataQuoteInputs.quote.id)
       .setData({
     'author': {
-      'id': AddQuoteInputs.author.id,
+      'id': DataQuoteInputs.author.id,
       'born': {
-        'beforeJC': AddQuoteInputs.author.born.beforeJC,
-        'city': AddQuoteInputs.author.born.city,
-        'country': AddQuoteInputs.author.born.country,
-        'date': AddQuoteInputs.author.born.date,
+        'beforeJC': DataQuoteInputs.author.born.beforeJC,
+        'city': DataQuoteInputs.author.born.city,
+        'country': DataQuoteInputs.author.born.country,
+        'date': DataQuoteInputs.author.born.date,
       },
       'death': {
-        'beforeJC': AddQuoteInputs.author.death.beforeJC,
-        'city': AddQuoteInputs.author.death.city,
-        'country': AddQuoteInputs.author.death.country,
-        'date': AddQuoteInputs.author.death.date,
+        'beforeJC': DataQuoteInputs.author.death.beforeJC,
+        'city': DataQuoteInputs.author.death.city,
+        'country': DataQuoteInputs.author.death.country,
+        'date': DataQuoteInputs.author.death.date,
       },
-      'isFictional': AddQuoteInputs.author.isFictional,
-      'job': AddQuoteInputs.author.job,
+      'isFictional': DataQuoteInputs.author.isFictional,
+      'job': DataQuoteInputs.author.job,
       'jobLang': {},
-      'name': AddQuoteInputs.author.name,
-      'summary': AddQuoteInputs.author.summary,
+      'name': DataQuoteInputs.author.name,
+      'summary': DataQuoteInputs.author.summary,
       'summaryLang': {},
       'updatedAt': DateTime.now(),
       'urls': {
-        'amazon': AddQuoteInputs.author.urls.amazon,
-        'facebook': AddQuoteInputs.author.urls.facebook,
-        'instagram': AddQuoteInputs.author.urls.instagram,
-        'image': AddQuoteInputs.author.urls.image,
-        'netflix': AddQuoteInputs.author.urls.netflix,
-        'primeVideo': AddQuoteInputs.author.urls.primeVideo,
-        'twitch': AddQuoteInputs.author.urls.twitch,
-        'twitter': AddQuoteInputs.author.urls.twitter,
-        'website': AddQuoteInputs.author.urls.website,
-        'wikipedia': AddQuoteInputs.author.urls.wikipedia,
-        'youtube': AddQuoteInputs.author.urls.youtube,
+        'amazon': DataQuoteInputs.author.urls.amazon,
+        'facebook': DataQuoteInputs.author.urls.facebook,
+        'instagram': DataQuoteInputs.author.urls.instagram,
+        'image': DataQuoteInputs.author.urls.image,
+        'netflix': DataQuoteInputs.author.urls.netflix,
+        'primeVideo': DataQuoteInputs.author.urls.primeVideo,
+        'twitch': DataQuoteInputs.author.urls.twitch,
+        'twitter': DataQuoteInputs.author.urls.twitter,
+        'website': DataQuoteInputs.author.urls.website,
+        'wikipedia': DataQuoteInputs.author.urls.wikipedia,
+        'youtube': DataQuoteInputs.author.urls.youtube,
       }
     },
     'comments': comments,
     'createdAt': DateTime.now(),
-    'lang': AddQuoteInputs.quote.lang,
-    'name': AddQuoteInputs.quote.name,
+    'lang': DataQuoteInputs.quote.lang,
+    'name': DataQuoteInputs.quote.name,
     'mainReference': {
-      'id': AddQuoteInputs.reference.id,
-      'name': AddQuoteInputs.reference.name,
+      'id': DataQuoteInputs.reference.id,
+      'name': DataQuoteInputs.reference.name,
     },
     'references': references,
-    'region': AddQuoteInputs.region,
+    'region': DataQuoteInputs.region,
     'topics': topics,
     'user': {
       'id': userAuth.uid,

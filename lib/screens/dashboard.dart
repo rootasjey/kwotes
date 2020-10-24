@@ -54,8 +54,8 @@ class _DashboardState extends State<Dashboard> {
               label: Text("Add quote"),
               icon: Icon(Icons.add),
               onPressed: () {
-                AddQuoteInputs.clearAll();
-                AddQuoteInputs.navigatedFromPath = 'dashboard';
+                DataQuoteInputs.clearAll();
+                DataQuoteInputs.navigatedFromPath = 'dashboard';
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
               },

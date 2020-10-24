@@ -60,7 +60,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     super.initState();
     checkAuth();
 
-    if (AddQuoteInputs.quote.id.isNotEmpty) {
+    if (DataQuoteInputs.quote.id.isNotEmpty) {
       fabText = 'Save quote';
       fabIcon = Icon(Icons.save);
     }
@@ -189,7 +189,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     if (isSubmitting) {
       return FullPageLoading(
-        title: AddQuoteInputs.quote.id.isEmpty
+        title: DataQuoteInputs.quote.id.isEmpty
             ? 'Submitting quote...'
             : 'Saving quote...',
       );
@@ -263,9 +263,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
             icon: Icon(Icons.add, color: Colors.white),
             backgroundIconColor: stateColors.primary,
             onTap: () {
-              AddQuoteInputs.clearQuoteData();
-              AddQuoteInputs.clearTopics();
-              AddQuoteInputs.clearComment();
+              DataQuoteInputs.clearQuoteData();
+              DataQuoteInputs.clearTopics();
+              DataQuoteInputs.clearComment();
 
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => AddQuoteSteps()));
@@ -306,7 +306,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           state: computeStepState(
               stepIndex: 0,
               compute: () {
-                return AddQuoteInputs.quote.name.isEmpty
+                return DataQuoteInputs.quote.name.isEmpty
                     ? StepState.error
                     : StepState.complete;
               }),
@@ -322,7 +322,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
                   return StepState.indexed;
                 }
 
-                if (AddQuoteInputs.quote.topics.length == 0) {
+                if (DataQuoteInputs.quote.topics.length == 0) {
                   return StepState.error;
                 }
 
@@ -336,7 +336,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           state: computeStepState(
               stepIndex: 2,
               compute: () {
-                return AddQuoteInputs.author.name.isEmpty
+                return DataQuoteInputs.author.name.isEmpty
                     ? StepState.indexed
                     : StepState.complete;
               }),
@@ -348,7 +348,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           state: computeStepState(
               stepIndex: 3,
               compute: () {
-                return AddQuoteInputs.reference.name.isEmpty
+                return DataQuoteInputs.reference.name.isEmpty
                     ? StepState.indexed
                     : StepState.complete;
               }),
@@ -360,7 +360,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           state: computeStepState(
               stepIndex: 2,
               compute: () {
-                return AddQuoteInputs.comment.isEmpty
+                return DataQuoteInputs.comment.isEmpty
                     ? StepState.indexed
                     : StepState.complete;
               }),
@@ -393,9 +393,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
             ),
             iconBackgroundColor: stateColors.primary,
             onTap: () {
-              AddQuoteInputs.clearQuoteData();
-              AddQuoteInputs.clearTopics();
-              AddQuoteInputs.clearComment();
+              DataQuoteInputs.clearQuoteData();
+              DataQuoteInputs.clearTopics();
+              DataQuoteInputs.clearComment();
 
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
@@ -425,7 +425,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   }
 
   bool badQuoteFormat() {
-    if (AddQuoteInputs.quote.name.isEmpty) {
+    if (DataQuoteInputs.quote.name.isEmpty) {
       showSnack(
         context: context,
         message: "The quote's content cannot be empty.",
@@ -435,7 +435,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       return true;
     }
 
-    if (AddQuoteInputs.quote.topics.length == 0) {
+    if (DataQuoteInputs.quote.topics.length == 0) {
       showSnack(
         context: context,
         message: 'You must select at least 1 topics for the quote.',
@@ -535,20 +535,20 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isSubmitting = false;
         isFabVisible = true;
 
-        AddQuoteInputs.clearQuoteData();
+        DataQuoteInputs.clearQuoteData();
         currentStep = 0;
       });
 
-      if (AddQuoteInputs.isOfflineDraft) {
+      if (DataQuoteInputs.isOfflineDraft) {
         deleteOfflineDraft(
-          createdAt: AddQuoteInputs.draft.createdAt.toString(),
+          createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
 
-      if (AddQuoteInputs.draft != null) {
+      if (DataQuoteInputs.draft != null) {
         await deleteDraft(
           context: context,
-          draft: AddQuoteInputs.draft,
+          draft: DataQuoteInputs.draft,
         );
       }
 
@@ -556,7 +556,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     }
 
     // Don't duplicate the draft (if it's already one)
-    if (AddQuoteInputs.draft != null) {
+    if (DataQuoteInputs.draft != null) {
       setState(() {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
@@ -575,9 +575,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isSubmitting = false;
       });
 
-      if (AddQuoteInputs.isOfflineDraft) {
+      if (DataQuoteInputs.isOfflineDraft) {
         deleteOfflineDraft(
-          createdAt: AddQuoteInputs.draft.createdAt.toString(),
+          createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
 
@@ -589,7 +589,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   }
 
   void saveQuoteDraft() async {
-    if (AddQuoteInputs.quote.name.isEmpty) {
+    if (DataQuoteInputs.quote.name.isEmpty) {
       showSnack(
         context: context,
         message: "The quote's content cannot be empty.",
@@ -611,9 +611,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isSubmitting = false;
       });
 
-      if (AddQuoteInputs.isOfflineDraft) {
+      if (DataQuoteInputs.isOfflineDraft) {
         deleteOfflineDraft(
-          createdAt: AddQuoteInputs.draft.createdAt.toString(),
+          createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
 

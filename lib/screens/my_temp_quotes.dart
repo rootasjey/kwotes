@@ -521,7 +521,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   void editAction(TempQuote tempQuote) async {
-    AddQuoteInputs.populateWithTempQuote(tempQuote);
+    DataQuoteInputs.populateWithTempQuote(tempQuote);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }

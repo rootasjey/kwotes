@@ -26,7 +26,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     super.initState();
     nameFocusNode = FocusNode();
     clearFocusNode = FocusNode();
-    nameController.text = AddQuoteInputs.quote.name;
+    nameController.text = DataQuoteInputs.quote.name;
   }
 
   @override
@@ -54,7 +54,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
 
   Widget langSelect() {
     return DropdownButton<String>(
-      value: AddQuoteInputs.quote.lang,
+      value: DataQuoteInputs.quote.lang,
       style: TextStyle(
         color: stateColors.primary,
         fontSize: 20.0,
@@ -63,7 +63,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       iconEnabledColor: stateColors.primary,
       onChanged: (newValue) {
         setState(() {
-          AddQuoteInputs.quote.lang = newValue;
+          DataQuoteInputs.quote.lang = newValue;
         });
       },
       items: Language.available().map<DropdownMenuItem<String>>((value) {
@@ -91,7 +91,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
           FlatButton.icon(
               focusNode: clearFocusNode,
               onPressed: () {
-                AddQuoteInputs.quote.name = '';
+                DataQuoteInputs.quote.name = '';
                 nameController.clear();
                 nameFocusNode.requestFocus();
               },
@@ -131,7 +131,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         keyboardType: TextInputType.multiline,
         textCapitalization: TextCapitalization.sentences,
         onChanged: (newValue) {
-          AddQuoteInputs.quote.name = newValue;
+          DataQuoteInputs.quote.name = newValue;
         },
         style: TextStyle(
           fontSize: 22.0,

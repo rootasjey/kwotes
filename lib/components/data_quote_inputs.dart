@@ -7,7 +7,7 @@ import 'package:memorare/types/release.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/types/urls.dart';
 
-class AddQuoteInputs {
+class DataQuoteInputs {
   /// If not empty, the author already exists.
   static Author author = Author.empty();
 
