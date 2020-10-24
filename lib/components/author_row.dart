@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
-
-import '../screens/author_page.dart';
 
 class AuthorRow extends StatefulWidget {
   final Author author;
@@ -10,10 +9,16 @@ class AuthorRow extends StatefulWidget {
   final Function itemBuilder;
   final Function onSelected;
 
+  final EdgeInsets padding;
+
   AuthorRow({
     this.author,
     this.itemBuilder,
     this.onSelected,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 70.0,
+      vertical: 30.0,
+    ),
   });
 
   @override
@@ -39,10 +44,7 @@ class _AuthorRowState extends State<AuthorRow> {
     final author = widget.author;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 70.0,
-        vertical: 30.0,
-      ),
+      padding: widget.padding,
       child: Card(
         elevation: elevation,
         color: stateColors.appBackground,
@@ -53,11 +55,10 @@ class _AuthorRowState extends State<AuthorRow> {
             );
           },
           onHover: (isHover) {
-            elevation = isHover ? 2.0 : 0.0;
-
-            iconColor = isHover ? iconHoverColor : null;
-
-            setState(() {});
+            setState(() {
+              elevation = isHover ? 2.0 : 0.0;
+              iconColor = isHover ? iconHoverColor : null;
+            });
           },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -113,7 +114,7 @@ class _AuthorRowState extends State<AuthorRow> {
           elevation: 4.0,
           shape: CircleBorder(),
           child: Opacity(
-            opacity: elevation > 0.0 ? 1.0 : 0.5,
+            opacity: elevation > 0.0 ? 1.0 : 0.8,
             child: Image.network(
               author.urls.image,
               width: 80.0,
