@@ -37,10 +37,7 @@ class _TopicPageState extends State<TopicPage> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey =
       GlobalKey<InnerDrawerState>();
 
-  final beginY = 10.0;
-
   bool descending = true;
-  Color fabColor = Colors.amber;
   bool hasNext = true;
   bool isFabVisible = false;
   bool isFav = false;
@@ -48,17 +45,25 @@ class _TopicPageState extends State<TopicPage> {
   bool isFavLoading = false;
   bool isLoading = false;
   bool isLoadingMore = false;
-
-  String pageRoute;
-  String lang = 'en';
   bool smallViewVisible = false;
-  String topicName;
 
-  var lastDoc;
-  ScrollController scrollController;
-  List<Quote> quotes = [];
-  ReactionDisposer topicDisposer;
+  Color fabColor = Colors.amber;
+
+  DocumentSnapshot lastDoc;
+
+  final double beginY = 10.0;
+
   FirebaseUser userAuth;
+
+  List<Quote> quotes = [];
+
+  ReactionDisposer topicDisposer;
+
+  ScrollController scrollController;
+
+  String lang = 'en';
+  String pageRoute;
+  String topicName;
 
   @override
   void initState() {
@@ -282,6 +287,34 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
+  Widget listView() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+
+    return Observer(
+      builder: (context) {
+        final isConnected = userState.isUserConnected;
+
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final quote = quotes.elementAt(index);
+
+              return QuoteRowWithActions(
+                quote: quote,
+                quoteId: quote.id,
+                isConnected: isConnected,
+                padding: EdgeInsets.symmetric(
+                  horizontal: horPadding,
+                ),
+              );
+            },
+            childCount: quotes.length,
+          ),
+        );
+      },
+    );
+  }
+
   Widget mainContent() {
     return Scaffold(
       floatingActionButton: isFabVisible
@@ -330,34 +363,6 @@ class _TopicPageState extends State<TopicPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
-
-    return Observer(
-      builder: (context) {
-        final isConnected = userState.isUserConnected;
-
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final quote = quotes.elementAt(index);
-
-              return QuoteRowWithActions(
-                quote: quote,
-                quoteId: quote.id,
-                isConnected: isConnected,
-                padding: EdgeInsets.symmetric(
-                  horizontal: horPadding,
-                ),
-              );
-            },
-            childCount: quotes.length,
-          ),
-        );
-      },
     );
   }
 
