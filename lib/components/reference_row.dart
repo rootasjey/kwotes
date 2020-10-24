@@ -140,13 +140,15 @@ class _ReferenceRowState extends State<ReferenceRow> {
               fontSize: 20.0,
             ),
           ),
-          Padding(padding: const EdgeInsets.only(top: 10.0)),
           if (reference.type?.primary?.isNotEmpty)
-            FlatButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.filter_1),
-              label: Text(
-                reference.type.primary,
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: OutlinedButton.icon(
+                onPressed: null,
+                icon: Icon(Icons.filter_1),
+                label: Text(
+                  reference.type.primary,
+                ),
               ),
             ),
         ],
