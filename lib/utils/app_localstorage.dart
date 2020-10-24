@@ -40,6 +40,11 @@ class AppLocalStorage {
     return credentials;
   }
 
+  DiscoverType getDiscoverType() {
+    final value = _localStorage.getString('discover_type');
+    return value == 'authors' ? DiscoverType.authors : DiscoverType.references;
+  }
+
   List<String> getDrafts() {
     List<String> drafts = _localStorage.getStringList('drafts') ?? [];
     return drafts;
@@ -121,6 +126,13 @@ class AppLocalStorage {
 
   void saveItemsStyle({String pageRoute, ItemsLayout style}) {
     _localStorage.setString('items_style_$pageRoute', style.toString());
+  }
+
+  void saveDiscoverType(DiscoverType discoverType) {
+    final value =
+        discoverType == DiscoverType.authors ? 'authors' : 'references';
+
+    _localStorage.setString('discover_type', value);
   }
 
   void setLang(String lang) => _localStorage.setString('lang', lang);
