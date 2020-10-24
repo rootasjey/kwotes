@@ -250,7 +250,6 @@ class RecentQuotesState extends State<RecentQuotes> {
             quote: quote,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
-              vertical: 30.0,
             ),
             quotePageType: QuotePageType.published,
           );
