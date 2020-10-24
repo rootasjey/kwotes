@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memorare/actions/share.dart';
+import 'package:memorare/components/author_row.dart';
+import 'package:memorare/components/base_page_app_bar.dart';
+import 'package:memorare/components/circle_author.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/reference_row.dart';
@@ -8,6 +11,8 @@ import 'package:memorare/components/sliver_loading_view.dart';
 import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/reference_card.dart';
 import 'package:memorare/components/fade_in_y.dart';
+import 'package:memorare/state/colors.dart';
+import 'package:memorare/types/author.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/reference.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -25,6 +30,8 @@ class _DiscoverState extends State<Discover> {
   bool isLoading = false;
   bool isLoadingMore = false;
 
+  DiscoverType discoverType = DiscoverType.references;
+
   DocumentSnapshot lastDoc;
 
   final limit = 30;
@@ -32,6 +39,7 @@ class _DiscoverState extends State<Discover> {
   final pageRoute = 'DiscoverRoute';
 
   ItemsLayout itemsLayout;
+  List<Author> authors = [];
   List<Reference> references = [];
 
   String lang = 'en';
@@ -39,13 +47,24 @@ class _DiscoverState extends State<Discover> {
   @override
   void initState() {
     super.initState();
-    getSavedProps();
+    initProps();
 
-    if (references.length > 0) {
+    if (discoverType == DiscoverType.references && references.length > 0) {
+      return;
+    }
+
+    if (discoverType == DiscoverType.authors && authors.length > 0) {
       return;
     }
 
     fetch();
+  }
+
+  void initProps() {
+    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
+    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    discoverType = appLocalStorage.getDiscoverType();
   }
 
   @override
@@ -73,6 +92,7 @@ class _DiscoverState extends State<Discover> {
               controller: scrollController,
               slivers: <Widget>[
                 appBar(),
+                appBarType(),
                 body(),
               ],
             ),
@@ -123,6 +143,64 @@ class _DiscoverState extends State<Discover> {
     );
   }
 
+  Widget appBarType() {
+    final isReferencesSelected = discoverType == DiscoverType.references;
+
+    return BasePageAppBar(
+      pinned: true,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Wrap(
+          spacing: 10.0,
+          children: [
+            Opacity(
+              opacity: isReferencesSelected ? 1.0 : 0.5,
+              child: TextButton(
+                onPressed: () {
+                  appLocalStorage.saveDiscoverType(DiscoverType.references);
+                  setState(() => discoverType = DiscoverType.references);
+                  fetch();
+                },
+                child: Text(
+                  'References',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: isReferencesSelected
+                        ? stateColors.secondary
+                        : stateColors.foreground,
+                  ),
+                ),
+              ),
+            ),
+            Opacity(
+              opacity: !isReferencesSelected ? 1.0 : 0.5,
+              child: TextButton(
+                onPressed: () {
+                  appLocalStorage.saveDiscoverType(DiscoverType.authors);
+                  setState(() => discoverType = DiscoverType.authors);
+                  fetch();
+                },
+                child: Text(
+                  'Authors',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: !isReferencesSelected
+                        ? stateColors.secondary
+                        : stateColors.foreground,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      toolbarHeight: 60.0,
+      collapsedHeight: 70.0,
+      expandedHeight: 70.0,
+      showNavBackIcon: false,
+    );
+  }
+
   Widget body() {
     if (isLoading) {
       return SliverLoadingView();
@@ -132,7 +210,8 @@ class _DiscoverState extends State<Discover> {
       return errorView();
     }
 
-    if (references.length == 0) {
+    if ((discoverType == DiscoverType.references && references.length == 0) ||
+        (discoverType == DiscoverType.authors && authors.length == 0)) {
       return emptyView();
     }
 
@@ -181,6 +260,38 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget gridView() {
+    if (discoverType == DiscoverType.authors) {
+      return gridViewAuthors();
+    }
+
+    return gridViewReferences();
+  }
+
+  Widget gridViewAuthors() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200.0,
+          childAspectRatio: 0.47,
+          mainAxisSpacing: 20.0,
+          crossAxisSpacing: 20.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final author = authors.elementAt(index);
+
+            return CircleAuthor(author: author);
+          },
+          childCount: authors.length,
+        ),
+      ),
+    );
+  }
+
+  Widget gridViewReferences() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -225,6 +336,50 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget listView() {
+    if (discoverType == DiscoverType.authors) {
+      return listViewAuthors();
+    }
+
+    return listViewReferences();
+  }
+
+  Widget listViewAuthors() {
+    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 70.0;
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final author = authors.elementAt(index);
+
+          return AuthorRow(
+            author: author,
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+            ),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                  value: 'share',
+                  child: ListTile(
+                    leading: Icon(Icons.share),
+                    title: Text('Share'),
+                  )),
+            ],
+            onSelected: (value) {
+              if (value == 'share') {
+                shareAuthor(context: context, author: author);
+                return;
+              }
+            },
+          );
+        },
+        childCount: authors.length,
+      ),
+    );
+  }
+
+  Widget listViewReferences() {
+    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 70.0;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -232,9 +387,8 @@ class _DiscoverState extends State<Discover> {
 
           return ReferenceRow(
             reference: reference,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 30.0,
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
             ),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem(
@@ -283,7 +437,112 @@ class _DiscoverState extends State<Discover> {
     return cards;
   }
 
-  Future fetch() async {
+  Future fetch() {
+    if (discoverType == DiscoverType.authors) {
+      return fetchAuthors();
+    }
+
+    return fetchReferences();
+  }
+
+  Future fetchMore() {
+    if (discoverType == DiscoverType.authors) {
+      return fetchMoreAuthors();
+    }
+
+    return fetchMoreReferences();
+  }
+
+  Future fetchAuthors() async {
+    setState(() {
+      authors.clear();
+      isLoading = true;
+    });
+
+    try {
+      final snapshot = await Firestore.instance
+          .collection('authors')
+          .orderBy('updatedAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        print('empty authors');
+        setState(() {
+          hasNext = false;
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
+
+        final author = Author.fromJSON(data);
+        authors.add(author);
+      });
+
+      if (!this.mounted) {
+        return;
+      }
+
+      setState(() {
+        isLoading = false;
+        hasNext = snapshot.documents.isNotEmpty;
+        lastDoc = snapshot.documents.last;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future fetchMoreAuthors() async {
+    if (lastDoc == null) {
+      return;
+    }
+
+    isLoadingMore = true;
+
+    try {
+      final snapshot = await Firestore.instance
+          .collection('authors')
+          .orderBy('updatedAt', descending: descending)
+          .limit(limit)
+          .getDocuments();
+
+      if (snapshot.documents.isEmpty) {
+        hasNext = false;
+        isLoadingMore = false;
+        return;
+      }
+
+      if (snapshot.documents.isNotEmpty) {
+        snapshot.documents.forEach((doc) {
+          final data = doc.data;
+          data['id'] = doc.documentID;
+
+          final author = Author.fromJSON(data);
+          authors.add(author);
+        });
+      }
+
+      setState(() {
+        isLoadingMore = false;
+        hasNext = snapshot.documents.isNotEmpty;
+        lastDoc = snapshot.documents.last;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  Future fetchReferences() async {
     setState(() {
       references.clear();
       isLoading = true;
@@ -305,15 +564,13 @@ class _DiscoverState extends State<Discover> {
         return;
       }
 
-      if (snapshot.documents.isNotEmpty) {
-        snapshot.documents.forEach((doc) {
-          final data = doc.data;
-          data['id'] = doc.documentID;
+      snapshot.documents.forEach((doc) {
+        final data = doc.data;
+        data['id'] = doc.documentID;
 
-          final ref = Reference.fromJSON(data);
-          references.add(ref);
-        });
-      }
+        final ref = Reference.fromJSON(data);
+        references.add(ref);
+      });
 
       if (!this.mounted) {
         return;
@@ -333,7 +590,7 @@ class _DiscoverState extends State<Discover> {
     }
   }
 
-  Future fetchMore() async {
+  Future fetchMoreReferences() async {
     if (lastDoc == null) {
       return;
     }
@@ -371,11 +628,5 @@ class _DiscoverState extends State<Discover> {
     } catch (error) {
       debugPrint(error.toString());
     }
-  }
-
-  void getSavedProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
   }
 }
