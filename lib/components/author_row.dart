@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memorare/screens/author_page.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/types/author.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AuthorRow extends StatefulWidget {
   final Author author;
@@ -50,9 +51,12 @@ class _AuthorRowState extends State<AuthorRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => AuthorPage(id: author.id)),
-            );
+            showCupertinoModalBottomSheet(
+                context: context,
+                builder: (_, scrollController) => AuthorPage(
+                      id: author.id,
+                      scrollController: scrollController,
+                    ));
           },
           onHover: (isHover) {
             setState(() {
