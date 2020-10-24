@@ -1,18 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/quotes.dart';
-import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/state/user_state.dart';
 import 'package:memorare/types/enums.dart';
 import 'package:memorare/types/temp_quote.dart';
 import 'package:memorare/utils/app_localstorage.dart';
@@ -218,9 +212,48 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
             return TempQuoteRowWithActions(
               componentType: ItemComponentType.card,
-              onTap: () => editAction(tempQuote),
               canManage: true,
               tempQuote: tempQuote,
+              onBeforeDelete: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterDelete: (success) {
+                if (success) {
+                  return;
+                }
+
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
+
+                showSnack(
+                  context: context,
+                  message: "Couldn't delete the temporary quote",
+                  type: SnackType.error,
+                );
+              },
+              onBeforeValidate: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterValidate: (success) {
+                if (success) {
+                  return;
+                }
+
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
+
+                showSnack(
+                  context: context,
+                  message: "Couldn't validate your temporary quote.",
+                  type: SnackType.error,
+                );
+              },
             );
           },
           childCount: tempQuotes.length,
@@ -237,132 +270,57 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         (context, index) {
           final tempQuote = tempQuotes.elementAt(index);
 
-          return TempQuoteRow(
+          return TempQuoteRowWithActions(
             tempQuote: tempQuote,
-            onTap: () => editAction(tempQuote),
+            canManage: true,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete_forever),
-                    title: Text('Delete'),
-                  )),
-              PopupMenuItem(
-                  value: 'edit',
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text('Edit'),
-                  )),
-              PopupMenuItem(
-                  value: 'validate',
-                  child: ListTile(
-                    leading: Icon(Icons.check),
-                    title: Text('Validate'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'delete') {
-                deleteAction(tempQuote);
+            onBeforeDelete: () {
+              setState(() {
+                tempQuotes.removeAt(index);
+              });
+            },
+            onAfterDelete: (success) {
+              if (success) {
                 return;
               }
 
-              if (value == 'edit') {
-                editAction(tempQuote);
+              setState(() {
+                tempQuotes.insert(index, tempQuote);
+              });
+
+              showSnack(
+                context: context,
+                message: "Couldn't delete the temporary quote",
+                type: SnackType.error,
+              );
+            },
+            onBeforeValidate: () {
+              setState(() {
+                tempQuotes.removeAt(index);
+              });
+            },
+            onAfterValidate: (success) {
+              if (success) {
                 return;
               }
 
-              if (value == 'validate') {
-                validateAction(tempQuote);
-                return;
-              }
+              setState(() {
+                tempQuotes.insert(index, tempQuote);
+              });
+
+              showSnack(
+                context: context,
+                message: "Couldn't validate your temporary quote.",
+                type: SnackType.error,
+              );
             },
           );
         },
         childCount: tempQuotes.length,
       ),
     );
-  }
-
-  Widget popupMenuButton({Color color, TempQuote tempQuote}) {
-    return PopupMenuButton<String>(
-      icon: Icon(
-        Icons.more_horiz,
-        color: color != null ? color : Colors.primaries,
-      ),
-      onSelected: (value) {
-        if (value == 'delete') {
-          deleteAction(tempQuote);
-          return;
-        }
-
-        if (value == 'edit') {
-          editAction(tempQuote);
-          return;
-        }
-
-        if (value == 'validate') {
-          validateAction(tempQuote);
-          return;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem(
-            value: 'delete',
-            child: ListTile(
-              leading: Icon(Icons.delete_forever),
-              title: Text('Delete'),
-            )),
-        PopupMenuItem(
-            value: 'edit',
-            child: ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Edit'),
-            )),
-        PopupMenuItem(
-            value: 'validate',
-            child: ListTile(
-              leading: Icon(Icons.check),
-              title: Text('Validate'),
-            )),
-      ],
-    );
-  }
-
-  void deleteAction(TempQuote tempQuote) async {
-    int index = tempQuotes.indexOf(tempQuote);
-
-    setState(() {
-      tempQuotes.remove(tempQuote);
-    });
-
-    final isOk = await deleteTempQuoteAdmin(
-      context: context,
-      tempQuote: tempQuote,
-    );
-
-    if (isOk) {
-      return;
-    }
-
-    setState(() {
-      tempQuotes.insert(index, tempQuote);
-    });
-
-    showSnack(
-      context: context,
-      message: "Couldn't delete the temporary quote",
-      type: SnackType.error,
-    );
-  }
-
-  void editAction(TempQuote tempQuote) async {
-    AddQuoteInputs.navigatedFromPath = 'admintempquotes';
-    AddQuoteInputs.populateWithTempQuote(tempQuote);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }
 
   Future fetch() async {
@@ -453,34 +411,5 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void validateAction(TempQuote tempQuote) async {
-    int index = tempQuotes.indexOf(tempQuote);
-
-    setState(() {
-      tempQuotes.remove(tempQuote);
-    });
-
-    final userAuth = await userState.userAuth;
-
-    final isOk = await validateTempQuote(
-      tempQuote: tempQuote,
-      uid: userAuth.uid,
-    );
-
-    if (isOk) {
-      return;
-    }
-
-    setState(() {
-      tempQuotes.insert(index, tempQuote);
-    });
-
-    showSnack(
-      context: context,
-      message: "Couldn't validate your temporary quote.",
-      type: SnackType.error,
-    );
   }
 }

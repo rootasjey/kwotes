@@ -23,8 +23,8 @@ class TempQuoteRowWithActions extends StatefulWidget {
 
   final Function onBeforeDelete;
   final Function onBeforeValidate;
-  final Function onAfterValidate;
-  final Function onAfterDelete;
+  final Function(bool) onAfterValidate;
+  final Function(bool) onAfterDelete;
 
   final ItemComponentType componentType;
   final List<Widget> stackChildren;
@@ -73,7 +73,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       isDraft: widget.isDraft,
       itemBuilder: (context) => popupItems,
       onSelected: onSelected,
-      onTap: widget.onTap,
+      onTap: widget.onTap ?? () => editAction(quote),
       tempQuote: quote,
     );
   }
@@ -87,10 +87,19 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
           widget.onBeforeDelete();
         }
 
-        final success = await deleteTempQuote(
-          context: context,
-          tempQuote: tempQuote,
-        );
+        bool success;
+
+        if (widget.canManage) {
+          success = await deleteTempQuoteAdmin(
+            context: context,
+            tempQuote: tempQuote,
+          );
+        } else {
+          success = await deleteTempQuote(
+            context: context,
+            tempQuote: tempQuote,
+          );
+        }
 
         if (widget.onAfterDelete != null) {
           widget.onAfterDelete(success);
@@ -100,6 +109,12 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       case 'edit':
         AddQuoteInputs.navigatedFromPath = 'admintempquotes';
         AddQuoteInputs.populateWithTempQuote(tempQuote);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+        break;
+      case 'copy':
+        AddQuoteInputs.navigatedFromPath = 'admintempquotes';
+        AddQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
         break;
@@ -134,6 +149,12 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
             title: Text('Edit'),
           )),
       PopupMenuItem(
+          value: 'copy',
+          child: ListTile(
+            leading: Icon(Icons.copy),
+            title: Text('Copy from...'),
+          )),
+      PopupMenuItem(
           value: 'deletetempquote',
           child: ListTile(
             leading: Icon(Icons.delete_forever),
@@ -153,5 +174,12 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     }
 
     return popupItems;
+  }
+
+  void editAction(TempQuote tempQuote) async {
+    AddQuoteInputs.navigatedFromPath = 'admintempquotes';
+    AddQuoteInputs.populateWithTempQuote(tempQuote);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }
 }

@@ -64,9 +64,15 @@ class AddQuoteInputs {
     quote.topics.clear();
   }
 
-  static populateWithTempQuote(TempQuote tempQuote) {
+  static populateWithTempQuote(TempQuote tempQuote, {bool copy = false}) {
+    String id = '';
+
+    if (!copy) {
+      id = tempQuote.id ?? '';
+    }
+
     quote = Quote(
-      id: tempQuote.id ?? '',
+      id: id,
       name: tempQuote.name,
       lang: tempQuote.lang,
       topics: tempQuote.topics,
