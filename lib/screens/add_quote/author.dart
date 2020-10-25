@@ -1256,7 +1256,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
                               for (final hit in snapshot.hits) {
                                 final data = hit.data;
-                                data['id'] = data['objectID'];
+                                data['id'] = hit.objectID;
 
                                 final authorSuggestion =
                                     AuthorSuggestion.fromJSON(data);
@@ -1353,6 +1353,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                                     authorSuggestion.author;
                                 prefilledInputs = true;
                                 tapToEditStr = '-';
+
                                 Navigator.of(context).pop();
                               },
                               title: Text(authorSuggestion.getTitle()),
