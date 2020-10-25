@@ -31,29 +31,32 @@ class AddQuoteSteps extends StatefulWidget {
 }
 
 class _AddQuoteStepsState extends State<AddQuoteSteps> {
-  int currentStep = 0;
-  bool isCheckingAuth = false;
-  bool isSubmitting = false;
-  bool stepChanged = false;
-  String errorMessage = '';
-
-  bool canManage = false;
-
-  String fabText = 'Submit quote';
-  Icon fabIcon = Icon(Icons.send);
-  bool isFabVisible = true;
-  bool isSmallView = false;
-
   AddQuoteType actionIntent;
   AddQuoteType actionResult;
 
-  var helpSteps = [
+  bool canManage = false;
+  bool isCheckingAuth = false;
+  bool isFabVisible = true;
+  bool isSmallView = false;
+  bool isSubmitting = false;
+  bool stepChanged = false;
+
+  Color fabBackgroundColor = stateColors.primary;
+
+  Icon fabIcon = Icon(Icons.send);
+
+  int currentStep = 0;
+
+  List<Widget> helpSteps = [
     HelpContent(),
     HelpTopics(),
     HelpAuthor(),
     HelpReference(),
     HelpComment(),
   ];
+
+  String errorMessage = '';
+  String fabText = 'Submit quote';
 
   @override
   void initState() {
@@ -62,7 +65,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     if (DataQuoteInputs.quote.id.isNotEmpty) {
       fabText = 'Save quote';
-      fabIcon = Icon(Icons.save);
+      fabIcon = Icon(Icons.save_alt);
+      fabBackgroundColor = stateColors.secondary;
     }
   }
 
@@ -80,7 +84,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       floatingActionButton: isFabVisible
           ? FloatingActionButton.extended(
               onPressed: () => propose(),
-              backgroundColor: stateColors.primary,
+              backgroundColor: fabBackgroundColor,
               foregroundColor: Colors.white,
               icon: fabIcon,
               label: Text(
