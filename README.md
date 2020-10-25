@@ -2,8 +2,6 @@
   <img src="./assets/images/app-icon-512.png" title="fig.style icon" width="200"/>
 </p>
 
-<h1 align="middle">fig.style</h1>
-
 <p align="middle">5 seconds of emotion</p>
 
 <p align="middle">
