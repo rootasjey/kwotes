@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/author_row.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/circle_author.dart';
-import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/page_app_bar.dart';
-import 'package:memorare/components/reference_row.dart';
-import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/empty_content.dart';
-import 'package:memorare/components/reference_card.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/reference.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/components/author_row.dart';
+import 'package:figstyle/components/base_page_app_bar.dart';
+import 'package:figstyle/components/circle_author.dart';
+import 'package:figstyle/components/error_container.dart';
+import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/components/reference_row.dart';
+import 'package:figstyle/components/sliver_loading_view.dart';
+import 'package:figstyle/components/empty_content.dart';
+import 'package:figstyle/components/reference_card.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Discover extends StatefulWidget {

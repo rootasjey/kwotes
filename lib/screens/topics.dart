@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/empty_view.dart';
-import 'package:memorare/components/page_app_bar.dart';
-import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/topic_card_color.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/topic_color.dart';
+import 'package:figstyle/components/empty_view.dart';
+import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/components/quote_row_with_actions.dart';
+import 'package:figstyle/components/sliver_loading_view.dart';
+import 'package:figstyle/components/topic_card_color.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/topic_color.dart';
 import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
 

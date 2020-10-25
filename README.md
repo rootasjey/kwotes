@@ -1,13 +1,13 @@
 <p align="middle">
-  <img src="./assets/images/app-icon-512.png" title="outofcontext icon" width="200"/>
+  <img src="./assets/images/app-icon-512.png" title="fig.style icon" width="200"/>
 </p>
 
-<h1 align="middle">Out Of Context</h1>
+<h1 align="middle">fig.style</h1>
 
 <p align="middle">5 seconds of emotion</p>
 
 <p align="middle">
-  <img src="./screenshots/ooc-letterhead-envelope.png" title="out of context home web" />
+  <img src="./screenshots/ooc-letterhead-envelope.png" title="fig.style home web" />
 </p>
 
 # Status
@@ -43,18 +43,24 @@
 
 # Table of Contents
 
-* [Presentation](#presentation)
-* [Add a quote](#add-a-quote)
-* [Roadmap](#roadmap)
-* [Contribute](#contribute)
-* [License](#license)
-* [Privacy Policy](#privacy-policy)
-* [Help Center](#help-center)
-* [Screenshots](#screenshots)
+- [Status](#status)
+- [Download](#download)
+- [Table of Contents](#table-of-contents)
+- [Presentation](#presentation)
+- [Add a quote](#add-a-quote)
+- [Roadmap](#roadmap)
+- [Contribute](#contribute)
+    - [PLEASE READ](#please-read)
+  - [Code styles](#code-styles)
+    - [Dart class](#dart-class)
+- [License](#license)
+- [Privacy Policy](#privacy-policy)
+- [Help Center](#help-center)
+- [Screenshots](#screenshots)
 
 # Presentation
 
-Out Of Context is a quotes app and service delivering one quote each day. It's available on multiplatform and has multilanguage. It only support English & French for now.
+fig.style is a quotes app and service delivering one quote each day. It's available on multiplatform and has multilanguage. It only support English & French for now.
 
 # Add a quote
 
@@ -70,48 +76,14 @@ Adding an author or a reference is highly appreciated. It helps to better unders
 
 # Roadmap
 
-You can check the roadmap there: [Roadmap](https://roadmap.outofcontext.app)
+* Fix notifications (mobile)
+* Re-work web home page
 
 # Contribute
 
-## Quickstart
+### PLEASE READ
 
-> ⚠️ This project is in early development stage so you may find bugs. The developer part hasn't been built yet, so you won't be able to contribute to it at the moment without explicit authorization.
-
-## Pre-requisites
-
-Make sure you have Flutter dev tools installed.
-You can test that by running the following command in a terminal:
-
-```bash
-flutter doctor -v
-```
-
-This will check that everything is alright.
-
-If you don't have the flutter dev tools yet, please visit the [official Flutter page](https://flutter.dev).
-
-## Setup the project
-
-1. Clone the project
-
-```bash
-git clone https://github.com/memorare/mobile.git
-```
-
-2. Fill up the file `lib/app_keys.json` with your url and your private key:
-
-> You can find them at [dev.outofcontext.app](https://dev.outofcontext.app)
-
-```dart
-/// Will be available soon
-```
-
-* Run the app using Android Studio, VSCode or the Command line interface
-
-```bash
-flutter run lib/main.dart
-```
+> ⚠️ This project is in early development stage so the developer part hasn't been built yet, so you won't be able to contribute to it at the moment without explicit authorization.
 
 ## Code styles
 

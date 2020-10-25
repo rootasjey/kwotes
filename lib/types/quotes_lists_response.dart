@@ -1,5 +1,5 @@
-import 'package:memorare/types/pagination.dart';
-import 'package:memorare/types/quotes_list.dart';
+import 'package:figstyle/types/pagination.dart';
+import 'package:figstyle/types/quotes_list.dart';
 
 class QuotesListsResponse {
   Pagination pagination;

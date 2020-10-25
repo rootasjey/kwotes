@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/temp_quote.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/temp_quote.dart';
 
 class TempQuoteRow extends StatefulWidget {
   final bool isDraft;

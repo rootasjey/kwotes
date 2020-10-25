@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
 
 class Language {
   /// Current application's language.

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/reference_page.dart';
+import 'package:figstyle/screens/reference_page.dart';
 import 'package:supercharged/supercharged.dart';
 
 class ReferenceCard extends StatefulWidget {

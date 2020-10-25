@@ -1,4 +1,4 @@
-import 'package:memorare/types/partial_user.dart';
+import 'package:figstyle/types/partial_user.dart';
 
 class Comment {
   final String commentId;

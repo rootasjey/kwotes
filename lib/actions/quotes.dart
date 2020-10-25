@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/reference.dart';
-import 'package:memorare/types/temp_quote.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/types/temp_quote.dart';
 
 Future<bool> deleteQuote({Quote quote}) async {
   try {

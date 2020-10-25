@@ -1,6 +1,6 @@
-import 'package:memorare/types/from_reference.dart';
-import 'package:memorare/types/point_in_time.dart';
-import 'package:memorare/types/urls.dart';
+import 'package:figstyle/types/from_reference.dart';
+import 'package:figstyle/types/point_in_time.dart';
+import 'package:figstyle/types/urls.dart';
 
 class Author {
   /// Useful if the author is fictional.

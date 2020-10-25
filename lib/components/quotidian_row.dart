@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/screens/quote_page.dart';
-import 'package:memorare/types/quotidian.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/screens/author_page.dart';
+import 'package:figstyle/screens/quote_page.dart';
+import 'package:figstyle/types/quotidian.dart';
 
 class QuotidianRow extends StatefulWidget {
   final Function itemBuilder;

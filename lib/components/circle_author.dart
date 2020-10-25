@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/types/author.dart';
+import 'package:figstyle/types/author.dart';
 import 'package:supercharged/supercharged.dart';
 
 import '../screens/author_page.dart';

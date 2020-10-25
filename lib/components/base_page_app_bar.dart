@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/state/colors.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/state/colors.dart';
 
 class BasePageAppBar extends StatefulWidget {
   // Appbar's expanded height.

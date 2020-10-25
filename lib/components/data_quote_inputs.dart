@@ -1,11 +1,11 @@
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/point_in_time.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/reference.dart';
-import 'package:memorare/types/reference_type.dart';
-import 'package:memorare/types/release.dart';
-import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/types/urls.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/point_in_time.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/types/reference_type.dart';
+import 'package:figstyle/types/release.dart';
+import 'package:figstyle/types/temp_quote.dart';
+import 'package:figstyle/types/urls.dart';
 
 class DataQuoteInputs {
   /// If not empty, the author already exists.

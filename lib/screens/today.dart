@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/quotidian_page.dart';
+import 'package:figstyle/components/quotidian_page.dart';
 
 class Today extends StatefulWidget {
   @override

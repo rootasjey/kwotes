@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/settings.dart';
-import 'package:memorare/screens/recent_quotes.dart';
-import 'package:memorare/screens/admin_temp_quotes.dart';
-import 'package:memorare/screens/delete_account.dart';
-import 'package:memorare/screens/drafts.dart';
-import 'package:memorare/screens/update_email.dart';
-import 'package:memorare/screens/update_password.dart';
-import 'package:memorare/screens/my_published_quotes.dart';
-import 'package:memorare/screens/quotes_list.dart';
-import 'package:memorare/screens/quotes_lists.dart';
-import 'package:memorare/screens/quotidians.dart';
-import 'package:memorare/screens/my_temp_quotes.dart';
-import 'package:memorare/screens/dashboard_section_template.dart';
-import 'package:memorare/screens/favourites.dart';
+import 'package:figstyle/router/route_names.dart';
+import 'package:figstyle/screens/settings.dart';
+import 'package:figstyle/screens/recent_quotes.dart';
+import 'package:figstyle/screens/admin_temp_quotes.dart';
+import 'package:figstyle/screens/delete_account.dart';
+import 'package:figstyle/screens/drafts.dart';
+import 'package:figstyle/screens/update_email.dart';
+import 'package:figstyle/screens/update_password.dart';
+import 'package:figstyle/screens/my_published_quotes.dart';
+import 'package:figstyle/screens/quotes_list.dart';
+import 'package:figstyle/screens/quotes_lists.dart';
+import 'package:figstyle/screens/quotidians.dart';
+import 'package:figstyle/screens/my_temp_quotes.dart';
+import 'package:figstyle/screens/dashboard_section_template.dart';
+import 'package:figstyle/screens/favourites.dart';
 
 class DashboardSections extends StatefulWidget {
   final int initialIndex;

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/temp_quote.dart';
+import 'package:figstyle/utils/snack.dart';
 
 Future addNewTempQuote({
   List<String> comments,

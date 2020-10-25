@@ -1,6 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/state/colors.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:supercharged/supercharged.dart';
 
 enum SnackType { error, info, success }

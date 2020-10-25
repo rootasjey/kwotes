@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/types/reference.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/types/reference.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../screens/reference_page.dart';

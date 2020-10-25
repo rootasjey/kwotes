@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/main_app_bar.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/components/loading_animation.dart';
+import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/screens/home/home.dart';
+import 'package:figstyle/utils/snack.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override

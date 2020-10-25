@@ -1,5 +1,5 @@
-import 'package:memorare/types/pagination.dart';
-import 'package:memorare/types/quotidian.dart';
+import 'package:figstyle/types/pagination.dart';
+import 'package:figstyle/types/quotidian.dart';
 
 class QuotidiansResponse {
   Pagination pagination;

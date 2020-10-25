@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/components/topic_card_color.dart';
-import 'package:memorare/screens/topic_page.dart';
-import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/types/topic_color.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/topic_card_color.dart';
+import 'package:figstyle/screens/topic_page.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/types/topic_color.dart';
 
 List<TopicColor> _topics = [];
 

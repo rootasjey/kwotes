@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/partial_user.dart';
-import 'package:memorare/types/reference.dart';
-import 'package:memorare/types/validation.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/partial_user.dart';
+import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/types/validation.dart';
 
 class TempQuote {
   final Author author;

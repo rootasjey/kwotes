@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/reference.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/reference.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 

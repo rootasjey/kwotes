@@ -1,4 +1,4 @@
-import 'package:memorare/types/reference.dart';
+import 'package:figstyle/types/reference.dart';
 
 class ReferenceSuggestion {
   Reference reference;

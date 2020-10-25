@@ -1,9 +1,9 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/screens/home/home.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 /// Executed from main.dart

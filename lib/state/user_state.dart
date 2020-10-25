@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_state.g.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/screens/reference_page.dart';
-import 'package:memorare/screens/quote_page.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/quote.dart';
+import 'package:figstyle/screens/author_page.dart';
+import 'package:figstyle/screens/reference_page.dart';
+import 'package:figstyle/screens/quote_page.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/quote.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuoteRow extends StatefulWidget {

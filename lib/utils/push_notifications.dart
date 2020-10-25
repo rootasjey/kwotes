@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/router/rerouter.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:figstyle/router/rerouter.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:supercharged/supercharged.dart';
 
 class PushNotifications {

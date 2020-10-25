@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:figstyle/screens/home/home.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
 
 Future<bool> checkEmailAvailability(String email) async {
   try {

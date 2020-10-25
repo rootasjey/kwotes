@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/footer.dart';
-import 'package:memorare/screens/home/home.dart';
+import 'package:figstyle/components/footer.dart';
+import 'package:figstyle/screens/home/home.dart';
 
 class AppIcon extends StatefulWidget {
   final Function onTap;

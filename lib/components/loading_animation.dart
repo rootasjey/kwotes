@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/animated_app_icon.dart';
+import 'package:figstyle/components/animated_app_icon.dart';
 
 class LoadingAnimation extends StatelessWidget {
   final TextStyle style;

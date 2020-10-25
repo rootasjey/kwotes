@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/app_icon.dart';
+import 'package:figstyle/components/app_icon.dart';
 
 class AnimatedAppIcon extends StatelessWidget {
   final double size;

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/app_icon.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/utils/language.dart';
+import 'package:figstyle/components/base_page_app_bar.dart';
+import 'package:figstyle/components/circle_button.dart';
+import 'package:figstyle/components/app_icon.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/language.dart';
 
 class PageAppBar extends StatefulWidget {
   final bool descending;

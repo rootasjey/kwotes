@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/full_page_loading.dart';
-import 'package:memorare/main_app.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/topics_colors.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/utils/app_localstorage.dart';
+import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/components/full_page_loading.dart';
+import 'package:figstyle/main_app.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
 
 void main() {
   return runApp(App());

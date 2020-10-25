@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:memorare/types/validation_comment.dart';
+import 'package:figstyle/types/validation_comment.dart';
 
 class Validation {
   final ValidationComment comment;

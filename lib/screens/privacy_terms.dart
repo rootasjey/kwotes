@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/main_app_bar.dart';
+import 'package:figstyle/components/main_app_bar.dart';
 
 class PrivacyTerms extends StatelessWidget {
   final double titleFontSize = 16.0;

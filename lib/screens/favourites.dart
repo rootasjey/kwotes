@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/favourites.dart';
-import 'package:memorare/components/page_app_bar.dart';
-import 'package:memorare/components/quote_row_with_actions.dart';
-import 'package:memorare/components/empty_content.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/actions/favourites.dart';
+import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/components/quote_row_with_actions.dart';
+import 'package:figstyle/components/empty_content.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/loading_animation.dart';
+import 'package:figstyle/screens/signin.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/router/route_names.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Favourites extends StatefulWidget {

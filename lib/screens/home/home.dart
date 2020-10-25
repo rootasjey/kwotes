@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/home/home_desktop.dart';
-import 'package:memorare/screens/home/home_mobile.dart';
+import 'package:figstyle/screens/home/home_desktop.dart';
+import 'package:figstyle/screens/home/home_mobile.dart';
 
 class Home extends StatefulWidget {
   Home();

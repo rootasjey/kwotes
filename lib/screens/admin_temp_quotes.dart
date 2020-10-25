@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:memorare/components/error_container.dart';
-import 'package:memorare/components/page_app_bar.dart';
-import 'package:memorare/components/sliver_loading_view.dart';
-import 'package:memorare/components/temp_quote_row_with_actions.dart';
-import 'package:memorare/components/empty_content.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/auth.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/components/error_container.dart';
+import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/components/sliver_loading_view.dart';
+import 'package:figstyle/components/temp_quote_row_with_actions.dart';
+import 'package:figstyle/components/empty_content.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/router/route_names.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/temp_quote.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/auth.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class AdminTempQuotes extends StatefulWidget {

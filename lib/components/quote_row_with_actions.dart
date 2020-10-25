@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/favourites.dart';
-import 'package:memorare/actions/quotes.dart';
-import 'package:memorare/actions/quotidians.dart';
-import 'package:memorare/actions/share.dart';
-import 'package:memorare/components/quote_row.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/user_quotes_list.dart';
-import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/actions/favourites.dart';
+import 'package:figstyle/actions/quotes.dart';
+import 'package:figstyle/actions/quotidians.dart';
+import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/components/quote_row.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/user_quotes_list.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/snack.dart';
 
 class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;

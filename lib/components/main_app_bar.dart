@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/app_icon.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
-import 'package:memorare/router/rerouter.dart';
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/screens/signup.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
+import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/components/app_icon.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/router/rerouter.dart';
+import 'package:figstyle/router/route_names.dart';
+import 'package:figstyle/screens/add_quote/steps.dart';
+import 'package:figstyle/screens/signin.dart';
+import 'package:figstyle/screens/signup.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
 
 class MainAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;

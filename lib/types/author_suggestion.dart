@@ -1,5 +1,5 @@
-import 'package:memorare/types/author.dart';
-import 'package:memorare/types/reference.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/reference.dart';
 
 class AuthorSuggestion {
   final Author author;

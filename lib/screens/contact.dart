@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/utils/icons_more_icons.dart';
-import 'package:memorare/components/main_app_bar.dart';
+import 'package:figstyle/utils/icons_more_icons.dart';
+import 'package:figstyle/components/main_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contact extends StatefulWidget {

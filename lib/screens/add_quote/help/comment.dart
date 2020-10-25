@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/add_quote/help/utils.dart';
+import 'package:figstyle/screens/add_quote/help/utils.dart';
 
 class HelpComment extends StatelessWidget {
   @override

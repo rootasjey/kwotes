@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:memorare/types/quote.dart';
+import 'package:figstyle/types/quote.dart';
 
 Future<bool> addToQuotidians({Quote quote, String lang = 'en'}) async {
   try {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
-import 'package:memorare/state/colors.dart';
+import 'package:figstyle/components/circle_button.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddQuoteComment extends StatefulWidget {

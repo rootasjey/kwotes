@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/screens/author_page.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/types/author.dart';
+import 'package:figstyle/screens/author_page.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/types/author.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AuthorRow extends StatefulWidget {

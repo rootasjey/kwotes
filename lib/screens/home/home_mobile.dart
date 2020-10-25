@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/utils/icons_more_icons.dart';
-import 'package:memorare/screens/dashboard.dart';
-import 'package:memorare/screens/discover.dart';
-import 'package:memorare/screens/recent_quotes.dart';
-import 'package:memorare/screens/search.dart';
-import 'package:memorare/screens/topics.dart';
-import 'package:memorare/state/colors.dart';
+import 'package:figstyle/utils/icons_more_icons.dart';
+import 'package:figstyle/screens/dashboard.dart';
+import 'package:figstyle/screens/discover.dart';
+import 'package:figstyle/screens/recent_quotes.dart';
+import 'package:figstyle/screens/search.dart';
+import 'package:figstyle/screens/topics.dart';
+import 'package:figstyle/state/colors.dart';
 
 class HomeMobile extends StatefulWidget {
   final int initialIndex;

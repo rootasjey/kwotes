@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:memorare/components/circle_button.dart';
-import 'package:memorare/components/fade_in_x.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/types/reference_suggestion.dart';
-import 'package:memorare/utils/language.dart';
-import 'package:memorare/utils/search.dart';
+import 'package:figstyle/components/circle_button.dart';
+import 'package:figstyle/components/fade_in_x.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/types/reference_suggestion.dart';
+import 'package:figstyle/utils/language.dart';
+import 'package:figstyle/utils/search.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 

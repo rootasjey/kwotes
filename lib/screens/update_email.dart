@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/users.dart';
-import 'package:memorare/components/page_app_bar.dart';
-import 'package:memorare/components/fade_in_y.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/state/colors.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/screens/signin.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class UpdateEmail extends StatefulWidget {

@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/temp_quotes.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/temp_quote.dart';
-import 'package:memorare/utils/app_localstorage.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/actions/temp_quotes.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/screens/signin.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/temp_quote.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/snack.dart';
 
 void clearOfflineDrafts() {
   appLocalStorage.clearDrafts();

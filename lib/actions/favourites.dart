@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/types/quote.dart';
-import 'package:memorare/types/quotidian.dart';
-import 'package:memorare/utils/snack.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/quotidian.dart';
+import 'package:figstyle/utils/snack.dart';
 
 /// Add the target quote to the current authenticated user's favourites subcollection.
 /// You only need to specify either the `quotidian` parameter or `quote` one.

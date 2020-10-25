@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:memorare/actions/quotes.dart';
-import 'package:memorare/actions/temp_quotes.dart';
-import 'package:memorare/components/temp_quote_row.dart';
-import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/state/user_state.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
-import 'package:memorare/types/enums.dart';
-import 'package:memorare/types/temp_quote.dart';
+import 'package:figstyle/actions/quotes.dart';
+import 'package:figstyle/actions/temp_quotes.dart';
+import 'package:figstyle/components/temp_quote_row.dart';
+import 'package:figstyle/screens/add_quote/steps.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/temp_quote.dart';
 
 class TempQuoteRowWithActions extends StatefulWidget {
   final bool canManage;

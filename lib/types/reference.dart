@@ -1,6 +1,6 @@
-import 'package:memorare/types/reference_type.dart';
-import 'package:memorare/types/release.dart';
-import 'package:memorare/types/urls.dart';
+import 'package:figstyle/types/reference_type.dart';
+import 'package:figstyle/types/release.dart';
+import 'package:figstyle/types/urls.dart';
 
 class Reference {
   /// When this reference was released.

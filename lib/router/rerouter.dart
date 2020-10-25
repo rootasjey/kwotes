@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/settings.dart';
-import 'package:memorare/screens/add_quote/steps.dart';
-import 'package:memorare/screens/recent_quotes.dart';
-import 'package:memorare/screens/admin_temp_quotes.dart';
-import 'package:memorare/screens/drafts.dart';
-import 'package:memorare/screens/home/home.dart';
-import 'package:memorare/screens/my_published_quotes.dart';
-import 'package:memorare/screens/quotes_lists.dart';
-import 'package:memorare/screens/search.dart';
-import 'package:memorare/screens/signin.dart';
-import 'package:memorare/screens/signup.dart';
-import 'package:memorare/screens/my_temp_quotes.dart';
-import 'package:memorare/screens/favourites.dart';
+import 'package:figstyle/router/route_names.dart';
+import 'package:figstyle/screens/settings.dart';
+import 'package:figstyle/screens/add_quote/steps.dart';
+import 'package:figstyle/screens/recent_quotes.dart';
+import 'package:figstyle/screens/admin_temp_quotes.dart';
+import 'package:figstyle/screens/drafts.dart';
+import 'package:figstyle/screens/home/home.dart';
+import 'package:figstyle/screens/my_published_quotes.dart';
+import 'package:figstyle/screens/quotes_lists.dart';
+import 'package:figstyle/screens/search.dart';
+import 'package:figstyle/screens/signin.dart';
+import 'package:figstyle/screens/signup.dart';
+import 'package:figstyle/screens/my_temp_quotes.dart';
+import 'package:figstyle/screens/favourites.dart';
 
 class Rerouter {
   static void push({

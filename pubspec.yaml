@@ -1,4 +1,4 @@
-name: memorare
+name: figstyle
 description: 5 seconds of emotion
 licence: MPL-2.0
 
@@ -56,6 +56,7 @@ dependencies:
 dev_dependencies:
   build_runner:
   flutter_launcher_icons: 0.7.5
+  flutter_rename_app: 1.0.0
   flutter_test:
     sdk: flutter
 
@@ -64,6 +65,10 @@ flutter_icons:
   ios: "launcher_icon"
   image_path_android: "assets/images/app-launch-icon-android.png"
   image_path_ios: "assets/images/app-launch-icon-ios.jpg"
+
+flutter_rename_app:
+  application_name: fig.style
+  dart_package_name: figstyle
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
