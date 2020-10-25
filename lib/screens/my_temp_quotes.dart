@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memorare/actions/temp_quotes.dart';
 import 'package:memorare/components/circle_button.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/base_page_app_bar.dart';
-import 'package:memorare/components/temp_quote_row.dart';
 import 'package:memorare/components/temp_quote_row_with_actions.dart';
 import 'package:memorare/components/app_icon.dart';
 import 'package:memorare/components/empty_content.dart';
 import 'package:memorare/components/fade_in_y.dart';
 import 'package:memorare/components/loading_animation.dart';
-import 'package:memorare/components/data_quote_inputs.dart';
 import 'package:memorare/router/route_names.dart';
-import 'package:memorare/screens/add_quote/steps.dart';
 import 'package:memorare/screens/signin.dart';
 import 'package:memorare/state/colors.dart';
 import 'package:memorare/state/user_state.dart';
@@ -426,8 +423,52 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
             return TempQuoteRowWithActions(
               componentType: ItemComponentType.card,
-              onTap: () => editAction(tempQuote),
               tempQuote: tempQuote,
+              onBeforeDelete: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterDelete: (success) {
+                if (success) {
+                  return;
+                }
+
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
+
+                showSnack(
+                  context: context,
+                  message: "Couldn't delete the temporary quote",
+                  type: SnackType.error,
+                );
+              },
+              onBeforeValidate: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterValidate: (success) {
+                if (success) {
+                  return;
+                }
+
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
+
+                showSnack(
+                  context: context,
+                  message: "Couldn't validate your temporary quote.",
+                  type: SnackType.error,
+                );
+              },
+              onNavBack: () {
+                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                  fetch();
+                });
+              },
             );
           },
           childCount: tempQuotes.length,
@@ -446,37 +487,56 @@ class MyTempQuotesState extends State<MyTempQuotes> {
           (context, index) {
             final tempQuote = tempQuotes.elementAt(index);
 
-            return TempQuoteRow(
+            return TempQuoteRowWithActions(
               tempQuote: tempQuote,
               isDraft: false,
-              onTap: () => editAction(tempQuote),
               padding: EdgeInsets.symmetric(
                 horizontal: horPadding,
               ),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem(
-                    value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Edit'),
-                    )),
-                PopupMenuItem(
-                    value: 'delete',
-                    child: ListTile(
-                      leading: Icon(Icons.delete_sweep),
-                      title: Text('Delete'),
-                    )),
-              ],
-              onSelected: (value) {
-                if (value == 'edit') {
-                  editAction(tempQuote);
+              onBeforeDelete: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterDelete: (success) {
+                if (success) {
                   return;
                 }
 
-                if (value == 'delete') {
-                  deleteAction(tempQuote);
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
+
+                showSnack(
+                  context: context,
+                  message: "Couldn't delete the temporary quote",
+                  type: SnackType.error,
+                );
+              },
+              onBeforeValidate: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterValidate: (success) {
+                if (success) {
                   return;
                 }
+
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
+
+                showSnack(
+                  context: context,
+                  message: "Couldn't validate your temporary quote.",
+                  type: SnackType.error,
+                );
+              },
+              onNavBack: () {
+                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                  fetch();
+                });
               },
             );
           },
@@ -495,35 +555,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         ),
       ]),
     );
-  }
-
-  void deleteAction(TempQuote tempQuote) async {
-    int index = tempQuotes.indexOf(tempQuote);
-
-    setState(() {
-      tempQuotes.removeAt(index);
-    });
-
-    final success = await deleteTempQuote(
-      context: context,
-      tempQuote: tempQuote,
-    );
-
-    if (!success) {
-      tempQuotes.insert(index, tempQuote);
-
-      showSnack(
-        context: context,
-        message: "Couldn't delete the temporary quote.",
-        type: SnackType.error,
-      );
-    }
-  }
-
-  void editAction(TempQuote tempQuote) async {
-    DataQuoteInputs.populateWithTempQuote(tempQuote);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }
 
   Future fetch() async {
