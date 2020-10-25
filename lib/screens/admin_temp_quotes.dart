@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:memorare/components/error_container.dart';
 import 'package:memorare/components/page_app_bar.dart';
 import 'package:memorare/components/sliver_loading_view.dart';
@@ -255,7 +256,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                 );
               },
               onNavBack: () {
-                fetch();
+                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                  fetch();
+                });
               },
             );
           },
@@ -320,7 +323,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
               );
             },
             onNavBack: () {
-              fetch();
+              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                fetch();
+              });
             },
           );
         },
