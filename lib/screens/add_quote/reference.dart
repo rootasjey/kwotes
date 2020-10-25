@@ -594,7 +594,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
                               for (final hit in snapshot.hits) {
                                 final data = hit.data;
-                                data['id'] = data['objectID'];
+                                data['id'] = hit.objectID;
 
                                 final referenceSuggestion =
                                     ReferenceSuggestion.fromJSON(data);
