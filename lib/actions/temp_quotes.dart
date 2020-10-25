@@ -238,6 +238,7 @@ List<Map<String, dynamic>> formatReferences() {
   }
 
   references.add({
+    'id': DataQuoteInputs.reference.id,
     'lang': DataQuoteInputs.reference.lang,
     'links': [],
     'name': DataQuoteInputs.reference.name,
