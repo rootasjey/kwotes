@@ -170,6 +170,15 @@ class _TopicsState extends State<Topics> {
   Widget topicsAndQuotes() {
     return Observer(builder: (context) {
       final isConnected = userState.isUserConnected;
+      final width = MediaQuery.of(context).size.width;
+
+      double horizontal = 10.0;
+      double quoteFontSize = 20.0;
+
+      if (width < 390) {
+        horizontal = 0.0;
+        quoteFontSize = 16.0;
+      }
 
       return SliverList(
         delegate: SliverChildListDelegate.fixed(_topicsList.map((topic) {
@@ -199,6 +208,7 @@ class _TopicsState extends State<Topics> {
                   children: quotesByTopicsList[index].map((quote) {
                     return QuoteRowWithActions(
                       quote: quote,
+                      quoteFontSize: quoteFontSize,
                       isConnected: isConnected,
                       leading: Container(
                         width: 15.0,
@@ -214,8 +224,8 @@ class _TopicsState extends State<Topics> {
                           ),
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontal,
                       ),
                     );
                   }).toList()),
