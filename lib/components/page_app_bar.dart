@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
@@ -101,7 +102,7 @@ class _PageAppBarState extends State<PageAppBar> {
           return Wrap(
             spacing: 10.0,
             children: <Widget>[
-              if (showOrderButtons) ...orderButtons(),
+              if (showOrderButtons) orderButton(),
               if (showOrderButtons && showLangSelector)
                 separator(delay: 0.3), // separator
               if (showLangSelector) langSelector(),
@@ -194,43 +195,27 @@ class _PageAppBarState extends State<PageAppBar> {
     );
   }
 
-  List<Widget> orderButtons() {
+  Widget orderButton() {
     final descending = widget.descending;
 
-    return [
-      FadeInY(
-        beginY: 10.0,
-        delay: 0.0,
-        child: ChoiceChip(
-          label: Text(
-            'First added',
-            style: TextStyle(
-              color: !descending ? Colors.white : stateColors.foreground,
-            ),
-          ),
-          tooltip: 'Order by first added',
-          selected: !descending,
-          selectedColor: stateColors.primary,
-          onSelected: (selected) => widget.onDescendingChanged(!descending),
+    return DropdownButton<bool>(
+      value: descending,
+      icon: Container(),
+      underline: Container(),
+      onChanged: (newDescending) {
+        widget.onDescendingChanged(newDescending);
+      },
+      items: [
+        DropdownMenuItem(
+          child: FaIcon(FontAwesomeIcons.sortAlphaDown),
+          value: true,
         ),
-      ),
-      FadeInY(
-        beginY: 10.0,
-        delay: 0.1,
-        child: ChoiceChip(
-          label: Text(
-            'Last added',
-            style: TextStyle(
-              color: descending ? Colors.white : stateColors.foreground,
-            ),
-          ),
-          tooltip: 'Order by most recently added',
-          selected: descending,
-          selectedColor: stateColors.primary,
-          onSelected: (selected) => widget.onDescendingChanged(!descending),
+        DropdownMenuItem(
+          child: FaIcon(FontAwesomeIcons.sortAlphaUp),
+          value: false,
         ),
-      ),
-    ];
+      ],
+    );
   }
 
   Widget separator({double delay = 0.0}) {
