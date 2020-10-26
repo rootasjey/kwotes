@@ -1,14 +1,10 @@
+import 'package:figstyle/state/colors.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/main_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyTerms extends StatelessWidget {
-  final double titleFontSize = 16.0;
-  final double textFontSize = 20.0;
-  final FontWeight titleFontWeight = FontWeight.w600;
-  final double titleOpacity = 0.6;
-  final double textOpacity = 0.8;
-  final double topPadding = 40.0;
-
   @override
   Widget build(BuildContext context) {
     final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20 : 80.0;
@@ -29,6 +25,7 @@ class PrivacyTerms extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    termsBlock(),
                     cookiesBlock(),
                     analyticsBlock(),
                     advertisingBlock(),
@@ -45,27 +42,12 @@ class PrivacyTerms extends StatelessWidget {
 
   Widget cookiesBlock() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Opacity(
-        opacity: titleOpacity,
-        child: Text(
-          'COOKIES',
-          style: TextStyle(
-            fontSize: titleFontSize,
-            fontWeight: titleFontWeight,
-          ),
-        ),
+      titleBlock(
+        text: 'COOKIES',
       ),
-      Opacity(
-        opacity: textOpacity,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Text(
+      textSuperBlock(
+        text:
             'The application does not use cookies neither for user preferences nor tracking with id advertising.',
-            style: TextStyle(
-              fontSize: textFontSize,
-            ),
-          ),
-        ),
       ),
     ]);
   }
@@ -74,30 +56,12 @@ class PrivacyTerms extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Opacity(
-          opacity: titleOpacity,
-          child: Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: Text(
-              'ANALYTICS',
-              style: TextStyle(
-                fontSize: titleFontSize,
-                fontWeight: titleFontWeight,
-              ),
-            ),
-          ),
+        titleBlock(
+          text: 'ANALYTICS',
         ),
-        Opacity(
-          opacity: textOpacity,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Text(
+        textSuperBlock(
+          text:
               'The web & mobile apps collect usage data to improve the apps & services. However, personal data is never shared or sell to third parties.',
-              style: TextStyle(
-                fontSize: textFontSize,
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -107,30 +71,12 @@ class PrivacyTerms extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Opacity(
-          opacity: titleOpacity,
-          child: Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: Text(
-              'ADVERTISING',
-              style: TextStyle(
-                fontSize: titleFontSize,
-                fontWeight: titleFontWeight,
-              ),
-            ),
-          ),
+        titleBlock(
+          text: 'ADVERTISING',
         ),
-        Opacity(
-          opacity: textOpacity,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Text(
+        textSuperBlock(
+          text:
               'The web & mobile apps may contain advertising to generate revenues. Advertisers may collect additional data on your navigation and preferences.',
-              style: TextStyle(
-                fontSize: textFontSize,
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -140,32 +86,100 @@ class PrivacyTerms extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Opacity(
-          opacity: titleOpacity,
-          child: Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: Text(
-              'IN-APP PURCHASES',
-              style: TextStyle(
-                fontSize: titleFontSize,
-                fontWeight: titleFontWeight,
-              ),
-            ),
-          ),
+        titleBlock(
+          text: 'IN-APP PURCHASES',
         ),
-        Opacity(
-          opacity: textOpacity,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Text(
+        textSuperBlock(
+          text:
               'The apps contain in-app purchases which offer additional features.',
-              style: TextStyle(
-                fontSize: textFontSize,
-              ),
-            ),
-          ),
         ),
       ],
+    );
+  }
+
+  Widget termsBlock() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 60.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          textSuperBlock(
+            text:
+                "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, http://www.outofcontext.app, and other sites we own and operate including mobile apps.",
+          ),
+          textSuperBlock(
+            text:
+                "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.",
+          ),
+          textSuperBlock(
+            text:
+                "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.",
+          ),
+          textSuperBlock(
+            text:
+                "We don’t share any personally identifying information publicly or with third-parties, except when required to by law.",
+          ),
+          textSuperBlock(
+            text:
+                "Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.",
+          ),
+          textSuperBlock(
+            text:
+                "You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with some of your desired services.",
+          ),
+          textSuperBlock(
+            text:
+                "Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.",
+          ),
+          textSuperBlock(
+            text: "This policy is effective as of 1 May 2020.",
+          ),
+          Text.rich(
+            TextSpan(
+              text: "Privacy Policy created with GetTerms.",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  launch("https://getterms.io/");
+                },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget titleBlock({@required String text}) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 18.0, bottom: 16.0),
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: stateColors.primary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget textSuperBlock({@required String text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30.0),
+      child: Opacity(
+        opacity: 0.8,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+      ),
     );
   }
 }
