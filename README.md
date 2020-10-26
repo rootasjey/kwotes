@@ -5,7 +5,7 @@
 <p align="middle">5 seconds of emotion</p>
 
 <p align="middle">
-  <img src="./screenshots/ooc-letterhead-envelope.png" title="fig.style home web" />
+  <img src="./screenshots/presentation.png" title="fig.style home web" />
 </p>
 
 # Status
@@ -126,6 +126,4 @@ You can find the help center at: [https://help.outofcontext.app](https://help.ou
 
 # Screenshots
 
-<p align="middle">
-  <img src="./screenshots/ooc-mobile.png" title="fig.style mobile" />
-</p>
+<img src="./screenshots/author_page.png" title="fig.style mobile" width="300" />
