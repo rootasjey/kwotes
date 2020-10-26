@@ -188,7 +188,7 @@ class _QuotePageState extends State<QuotePage> {
         onTap: () {
           final id = quote.author.id;
 
-          showMaterialModalBottomSheet(
+          showCupertinoModalBottomSheet(
               context: context,
               builder: (_, scrollController) => AuthorPage(
                     id: id,
@@ -238,7 +238,7 @@ class _QuotePageState extends State<QuotePage> {
         onTap: () {
           final id = quote.mainReference.id;
 
-          showMaterialModalBottomSheet(
+          showCupertinoModalBottomSheet(
               context: context,
               builder: (_, scrollController) => ReferencePage(
                     id: id,
