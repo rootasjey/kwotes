@@ -2,6 +2,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/full_page_loading.dart';
@@ -12,6 +13,11 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_localstorage.dart';
 
 void main() {
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+
   return runApp(App());
 }
 
