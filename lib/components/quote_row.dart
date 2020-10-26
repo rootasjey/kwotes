@@ -153,7 +153,7 @@ class _QuoteRowState extends State<QuoteRow> {
   Widget quoteAuthor() {
     return InkWell(
       onTap: () {
-        showMaterialModalBottomSheet(
+        showCupertinoModalBottomSheet(
           context: context,
           builder: (context, scrollController) => AuthorPage(
             id: widget.quote.author.id,
@@ -189,7 +189,7 @@ class _QuoteRowState extends State<QuoteRow> {
 
     return InkWell(
       onTap: () {
-        showMaterialModalBottomSheet(
+        showCupertinoModalBottomSheet(
           context: context,
           builder: (context, scrollController) => ReferencePage(
             id: widget.quote.mainReference.id,
