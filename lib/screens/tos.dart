@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/components/main_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PrivacyTerms extends StatelessWidget {
+/// Terms Of Service.
+class Tos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20 : 80.0;

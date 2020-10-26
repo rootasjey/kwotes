@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/contact.dart';
-import 'package:figstyle/screens/privacy_terms.dart';
+import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -217,7 +217,7 @@ class _FooterState extends State<Footer> {
             onPressed: () {
               onBeforeNav();
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => PrivacyTerms()),
+                MaterialPageRoute(builder: (_) => Tos()),
               );
             },
             child: Opacity(

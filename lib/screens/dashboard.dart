@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/screens/privacy_terms.dart';
+import 'package:figstyle/screens/tos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -529,8 +529,8 @@ class _DashboardState extends State<Dashboard> {
         'Terms of service',
         style: TextStyle(fontSize: 20.0),
       ),
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => PrivacyTerms())),
+      onTap: () =>
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => Tos())),
     );
   }
 
