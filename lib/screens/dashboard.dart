@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/settings.dart';
@@ -103,33 +102,25 @@ class _DashboardState extends State<Dashboard> {
           );
         },
       ),
-      FadeInY(
-        delay: 0.4,
-        beginY: beginY,
-        child: ListTile(
-          contentPadding: const EdgeInsets.only(left: 50.0),
-          leading: Icon(Icons.timelapse, size: 30.0),
-          title: Text(
-            'All in validation',
-            style: TextStyle(fontSize: 20.0),
-          ),
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
+      ListTile(
+        contentPadding: const EdgeInsets.only(left: 50.0),
+        leading: Icon(Icons.timelapse, size: 30.0),
+        title: Text(
+          'All in validation',
+          style: TextStyle(fontSize: 20.0),
         ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
       ),
-      FadeInY(
-        delay: 0.5,
-        beginY: beginY,
-        child: ListTile(
-          contentPadding: const EdgeInsets.only(left: 50.0),
-          leading: Icon(Icons.wb_sunny, size: 30.0),
-          title: Text(
-            'Quotidians',
-            style: TextStyle(fontSize: 20.0),
-          ),
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => Quotidians())),
+      ListTile(
+        contentPadding: const EdgeInsets.only(left: 50.0),
+        leading: Icon(Icons.wb_sunny, size: 30.0),
+        title: Text(
+          'Quotidians',
+          style: TextStyle(fontSize: 20.0),
         ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => Quotidians())),
       ),
     ];
   }
@@ -166,41 +157,13 @@ class _DashboardState extends State<Dashboard> {
     return [
       Column(
         children: <Widget>[
-          FadeInY(
-            delay: 0.1,
-            beginY: beginY,
-            child: draftsButton(),
-          ),
-          FadeInY(
-            delay: 0.2,
-            beginY: beginY,
-            child: listsButton(),
-          ),
-          FadeInY(
-            delay: 0.3,
-            beginY: beginY,
-            child: tempQuotesButton(),
-          ),
-          FadeInY(
-            delay: 0.4,
-            beginY: beginY,
-            child: favButton(),
-          ),
-          FadeInY(
-            delay: 0.5,
-            beginY: beginY,
-            child: pubQuotesButton(),
-          ),
-          FadeInY(
-            delay: 0.6,
-            beginY: beginY,
-            child: settingsButton(),
-          ),
-          FadeInY(
-            delay: 0.7,
-            beginY: beginY,
-            child: signOutButton(),
-          ),
+          draftsButton(),
+          listsButton(),
+          tempQuotesButton(),
+          favButton(),
+          pubQuotesButton(),
+          settingsButton(),
+          signOutButton(),
           aboutButton(),
           tosButton(),
         ],
@@ -305,19 +268,15 @@ class _DashboardState extends State<Dashboard> {
 
   List<Widget> guestWidgets(BuildContext context) {
     return [
-      FadeInY(
-        delay: 0.2,
-        beginY: beginY,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 60.0,
-          ),
-          child: Column(
-            children: [
-              signinButton(),
-              signupButton(),
-            ],
-          ),
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 60.0,
+        ),
+        child: Column(
+          children: [
+            signinButton(),
+            signupButton(),
+          ],
         ),
       ),
       Divider(
@@ -327,16 +286,8 @@ class _DashboardState extends State<Dashboard> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FadeInY(
-            delay: 0.3,
-            beginY: beginY,
-            child: settingsButton(),
-          ),
-          FadeInY(
-            delay: 0.4,
-            beginY: beginY,
-            child: aboutButton(),
-          ),
+          settingsButton(),
+          aboutButton(),
           tosButton(),
         ],
       ),
@@ -535,44 +486,40 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget whyAccountBlock() {
-    return FadeInY(
-      beginY: beginY,
-      delay: 0.5,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 50.0,
-          bottom: 30.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FlatButton(
-              onPressed: () =>
-                  setState(() => isAccountAdvVisible = !isAccountAdvVisible),
-              child: Opacity(
-                opacity: 0.8,
-                child: Text(
-                  'WHY AN ACCOUNT?',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 50.0,
+        bottom: 30.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FlatButton(
+            onPressed: () =>
+                setState(() => isAccountAdvVisible = !isAccountAdvVisible),
+            child: Opacity(
+              opacity: 0.8,
+              child: Text(
+                'WHY AN ACCOUNT?',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            if (isAccountAdvVisible)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(padding: const EdgeInsets.only(top: 10.0)),
-                  bulletPoint(text: 'Favourites quotes'),
-                  bulletPoint(text: 'Create thematic lists'),
-                  bulletPoint(text: 'Propose new quotes'),
-                  bulletPoint(text: '& more...'),
-                ],
-              ),
-          ],
-        ),
+          ),
+          if (isAccountAdvVisible)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(padding: const EdgeInsets.only(top: 10.0)),
+                bulletPoint(text: 'Favourites quotes'),
+                bulletPoint(text: 'Create thematic lists'),
+                bulletPoint(text: 'Propose new quotes'),
+                bulletPoint(text: '& more...'),
+              ],
+            ),
+        ],
       ),
     );
   }
