@@ -714,12 +714,13 @@ class ReferencePageState extends State<ReferencePage> {
       child: Column(
         children: <Widget>[
           Opacity(
-            opacity: 0.7,
+            opacity: 0.8,
             child: Text(
               type.primary,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 18.0,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -727,12 +728,13 @@ class ReferencePageState extends State<ReferencePage> {
             Padding(
               padding: EdgeInsets.only(top: 5.0),
               child: Opacity(
-                opacity: .7,
+                opacity: 0.5,
                 child: Text(
                   type.secondary,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ),
