@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../screens/reference_page.dart';
-
 class ReferenceRow extends StatefulWidget {
-  final Reference reference;
-
+  final bool isNarrow;
+  final EdgeInsets padding;
   final Function itemBuilder;
   final Function onSelected;
-  final EdgeInsets padding;
+  final Reference reference;
 
   ReferenceRow({
+    this.isNarrow = false,
     this.reference,
     this.itemBuilder,
     this.onSelected,
@@ -112,8 +112,10 @@ class _ReferenceRowState extends State<ReferenceRow> {
       return Padding(padding: EdgeInsets.zero);
     }
 
+    final right = widget.isNarrow ? 10.0 : 40.0;
+
     return Padding(
-        padding: const EdgeInsets.only(right: 40.0),
+        padding: EdgeInsets.only(right: right),
         child: Card(
           elevation: 4.0,
           child: Opacity(
@@ -143,13 +145,26 @@ class _ReferenceRowState extends State<ReferenceRow> {
           if (reference.type?.primary?.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: OutlinedButton.icon(
-                onPressed: null,
-                icon: Icon(Icons.filter_1),
-                label: Text(
-                  reference.type.primary,
-                ),
-              ),
+              child: widget.isNarrow
+                  ? OutlinedButton(
+                      onPressed: null,
+                      child: Text(
+                        reference.type.primary,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    )
+                  : OutlinedButton.icon(
+                      onPressed: null,
+                      icon: Icon(Icons.filter_1),
+                      label: Text(
+                        reference.type.primary,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
             ),
         ],
       ),
