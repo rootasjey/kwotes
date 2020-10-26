@@ -19,6 +19,9 @@ class BasePageAppBar extends StatefulWidget {
   /// If true, the back icon will be visible.
   final bool showNavBackIcon;
 
+  final EdgeInsets titlePadding;
+  final EdgeInsets subHeaderPadding;
+
   /// If set, will be shown at the bottom of the title.
   final Widget subHeader;
 
@@ -33,6 +36,7 @@ class BasePageAppBar extends StatefulWidget {
 
   BasePageAppBar({
     this.toolbarHeight = kToolbarHeight,
+    this.subHeaderPadding = const EdgeInsets.only(left: 165.0),
     this.collapsedHeight,
     this.expandedHeight = 210.0,
     this.onPressedMenu,
@@ -41,6 +45,7 @@ class BasePageAppBar extends StatefulWidget {
     this.subHeader,
     this.textTitle,
     this.title,
+    this.titlePadding,
     this.topTitleSpacing = 20.0,
   });
 
@@ -73,23 +78,17 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
       builder: (context, constrains) {
         double titleFontSize = 40.0;
         double leftTitlePadding = 80.0;
-        double leftSubHeaderPadding = 165.0;
 
         if (constrains.maxWidth < 700.0) {
           titleFontSize = 25.0;
           leftTitlePadding = 40.0;
-          leftSubHeaderPadding = 50.0;
-        }
-
-        if (!widget.showNavBackIcon) {
-          leftSubHeaderPadding -= 40.0;
         }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             headerSection(leftTitlePadding, titleFontSize),
-            subHeaderSection(leftSubHeaderPadding),
+            subHeaderSection(),
           ],
         );
       },
@@ -101,10 +100,12 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
       delay: 1.0,
       beginY: 50.0,
       child: Padding(
-        padding: EdgeInsets.only(
-          left: leftTitlePadding,
-          top: widget.topTitleSpacing,
-        ),
+        padding: widget.titlePadding != null
+            ? widget.titlePadding
+            : EdgeInsets.only(
+                left: leftTitlePadding,
+                top: widget.topTitleSpacing,
+              ),
         child: widget.title != null
             ? widget.title
             : Row(
@@ -131,7 +132,7 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
     );
   }
 
-  Widget subHeaderSection(double leftSubHeaderPadding) {
+  Widget subHeaderSection() {
     if (widget.subHeader == null) {
       return Padding(
         padding: EdgeInsets.zero,
@@ -142,10 +143,7 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
       delay: 1.2,
       beginY: 50.0,
       child: Padding(
-        padding: EdgeInsets.only(
-          left: leftSubHeaderPadding,
-          right: leftSubHeaderPadding,
-        ),
+        padding: widget.subHeaderPadding,
         child: widget.subHeader,
       ),
     );

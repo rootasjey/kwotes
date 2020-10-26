@@ -73,10 +73,25 @@ class _PageAppBarState extends State<PageAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    double leftSubHeaderPadding = 165.0;
+
+    if (width < 700.0) {
+      leftSubHeaderPadding = 50.0;
+    }
+    if (width < 390.0) {
+      leftSubHeaderPadding = 30.0;
+    }
+
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
       title: widget.textSubTitle != null ? twoLinesTitle() : oneLineTitle(),
+      titlePadding: width < 390.0 ? EdgeInsets.only(left: 20.0) : null,
       showNavBackIcon: widget.showNavBackIcon,
+      subHeaderPadding: EdgeInsets.only(
+        left: leftSubHeaderPadding,
+      ),
       subHeader: Observer(
         builder: (context) {
           final showOrderButtons = widget.onDescendingChanged != null;
@@ -244,7 +259,7 @@ class _PageAppBarState extends State<PageAppBar> {
             onTap: () => Navigator.of(context).pop(),
             icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
         AppIcon(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: EdgeInsets.zero,
           size: 30.0,
           onTap: widget.onIconPressed,
         ),
@@ -262,7 +277,7 @@ class _PageAppBarState extends State<PageAppBar> {
                   ),
                 ),
                 Opacity(
-                  opacity: .6,
+                  opacity: 0.6,
                   child: Text(
                     widget.textSubTitle,
                     style: TextStyle(
