@@ -385,26 +385,22 @@ class ReferencePageState extends State<ReferencePage> {
       spacing: 20.0,
       runSpacing: 20.0,
       children: <Widget>[
-        FadeInX(
-          beginX: 50.0,
-          delay: 0,
-          child: Tooltip(
-            message: "summary",
-            child: SizedBox(
-              height: 80.0,
-              width: 80.0,
-              child: Card(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () =>
-                      setState(() => isSummaryVisible = !isSummaryVisible),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Icon(
-                      Icons.list_alt_outlined,
-                      size: 30.0,
-                    ),
+        Tooltip(
+          message: 'summary',
+          child: SizedBox(
+            height: 80.0,
+            width: 80.0,
+            child: Card(
+              elevation: 4.0,
+              clipBehavior: Clip.hardEdge,
+              child: InkWell(
+                onTap: () =>
+                    setState(() => isSummaryVisible = !isSummaryVisible),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Icon(
+                    Icons.list_alt_outlined,
+                    size: 30.0,
                   ),
                 ),
               ),
@@ -413,74 +409,71 @@ class ReferencePageState extends State<ReferencePage> {
         ),
         if (urls.website.isNotEmpty)
           linkSquareButton(
-            delay: 1.0,
+            delay: 0.0,
             name: 'Website',
             url: urls.website,
             imageUrl: 'assets/images/world-globe.png',
           ),
         if (urls.wikipedia.isNotEmpty)
-          Observer(
-            builder: (_) {
-              return linkSquareButton(
-                delay: 1.2,
-                name: 'Wikipedia',
-                url: urls.wikipedia,
-                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
-              );
-            },
+          linkSquareButton(
+            delay: 0.1,
+            name: 'Wikipedia',
+            url: urls.wikipedia,
+            // icon: FaIcon(FontAwesomeIcons.wikipediaW),
+            imageUrl: 'assets/images/wikipedia-light.png',
           ),
         if (urls.amazon.isNotEmpty)
           linkSquareButton(
-            delay: 1.2,
+            delay: 0.2,
             name: 'Amazon',
             url: urls.amazon,
             imageUrl: 'assets/images/amazon.png',
           ),
         if (urls.facebook.isNotEmpty)
           linkSquareButton(
-            delay: 1.4,
+            delay: 0.3,
             name: 'Facebook',
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
         if (urls.instagram.isNotEmpty)
           linkSquareButton(
-            delay: 1.7,
+            delay: 0.4,
             name: 'Instagram',
             url: urls.instagram,
             imageUrl: 'assets/images/instagram.png',
           ),
         if (urls.netflix.isNotEmpty)
           linkSquareButton(
-            delay: 1.6,
+            delay: 0.5,
             name: 'Netflix',
             url: urls.netflix,
             imageUrl: 'assets/images/netflix.png',
           ),
         if (urls.primeVideo.isNotEmpty)
           linkSquareButton(
-            delay: 1.8,
+            delay: 0.6,
             name: 'Prime Video',
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
           ),
         if (urls.twitch.isNotEmpty)
           linkSquareButton(
-            delay: 2.0,
+            delay: 0.7,
             name: 'Twitch',
             url: urls.twitch,
             imageUrl: 'assets/images/twitch.png',
           ),
         if (urls.twitter.isNotEmpty)
           linkSquareButton(
-            delay: 2.2,
+            delay: 0.8,
             name: 'Twitter',
             url: urls.twitter,
             imageUrl: 'assets/images/twitter.png',
           ),
         if (urls.youtube.isNotEmpty)
           linkSquareButton(
-            delay: 2.4,
+            delay: 0.9,
             name: 'Youtube',
             url: urls.youtube,
             imageUrl: 'assets/images/youtube.png',
@@ -494,9 +487,10 @@ class ReferencePageState extends State<ReferencePage> {
     String name,
     String url,
     String imageUrl,
+    Widget icon,
   }) {
     return FadeInX(
-      beginX: 50.0,
+      beginX: 10.0,
       delay: delay,
       child: Tooltip(
         message: name,
@@ -510,10 +504,13 @@ class ReferencePageState extends State<ReferencePage> {
               onTap: () => launch(url),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Image.asset(
-                  imageUrl,
-                  width: 30.0,
-                ),
+                child: icon != null
+                    ? icon
+                    : Image.asset(
+                        imageUrl,
+                        width: 30.0,
+                        color: stateColors.foreground,
+                      ),
               ),
             ),
           ),
