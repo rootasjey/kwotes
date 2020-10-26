@@ -214,7 +214,7 @@ class _QuoteRowState extends State<QuoteRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            showMaterialModalBottomSheet(
+            showCupertinoModalBottomSheet(
               context: context,
               builder: (context, scrollController) => QuotePage(
                 quote: widget.quote,
