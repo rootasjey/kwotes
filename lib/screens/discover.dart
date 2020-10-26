@@ -34,6 +34,8 @@ class _DiscoverState extends State<Discover> {
 
   DocumentSnapshot lastDoc;
 
+  final double narrowWidthLimit = 390.0;
+
   final limit = 30;
   final scrollController = ScrollController();
   final pageRoute = 'DiscoverRoute';
@@ -103,7 +105,7 @@ class _DiscoverState extends State<Discover> {
   Widget appBar() {
     return PageAppBar(
       textTitle: 'Discover',
-      // expandedHeight: 170.0,
+      expandedHeight: 130.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -145,54 +147,59 @@ class _DiscoverState extends State<Discover> {
 
   Widget appBarType() {
     final isReferencesSelected = discoverType == DiscoverType.references;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return BasePageAppBar(
       pinned: true,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: Wrap(
-          spacing: 10.0,
-          children: [
-            Opacity(
-              opacity: isReferencesSelected ? 1.0 : 0.5,
-              child: TextButton(
-                onPressed: () {
-                  appLocalStorage.saveDiscoverType(DiscoverType.references);
-                  setState(() => discoverType = DiscoverType.references);
-                  fetch();
-                },
-                child: Text(
-                  'References',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: isReferencesSelected
-                        ? stateColors.secondary
-                        : stateColors.foreground,
-                  ),
+      titlePadding: screenWidth < narrowWidthLimit
+          ? const EdgeInsets.only(left: 30.0)
+          : null,
+      title: Wrap(
+        spacing: 10.0,
+        children: [
+          Opacity(
+            opacity: isReferencesSelected ? 1.0 : 0.5,
+            child: TextButton(
+              onPressed: () {
+                appLocalStorage.saveDiscoverType(DiscoverType.references);
+                setState(() => discoverType = DiscoverType.references);
+                fetch();
+              },
+              style: TextButton.styleFrom(
+                primary: isReferencesSelected
+                    ? stateColors.secondary
+                    : stateColors.foreground,
+              ),
+              child: Text(
+                'References',
+                style: TextStyle(
+                  fontSize: 16.0,
                 ),
               ),
             ),
-            Opacity(
-              opacity: !isReferencesSelected ? 1.0 : 0.5,
-              child: TextButton(
-                onPressed: () {
-                  appLocalStorage.saveDiscoverType(DiscoverType.authors);
-                  setState(() => discoverType = DiscoverType.authors);
-                  fetch();
-                },
-                child: Text(
-                  'Authors',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: !isReferencesSelected
-                        ? stateColors.secondary
-                        : stateColors.foreground,
-                  ),
+          ),
+          Opacity(
+            opacity: !isReferencesSelected ? 1.0 : 0.5,
+            child: TextButton(
+              onPressed: () {
+                appLocalStorage.saveDiscoverType(DiscoverType.authors);
+                setState(() => discoverType = DiscoverType.authors);
+                fetch();
+              },
+              style: TextButton.styleFrom(
+                primary: !isReferencesSelected
+                    ? stateColors.secondary
+                    : stateColors.foreground,
+              ),
+              child: Text(
+                'Authors',
+                style: TextStyle(
+                  fontSize: 16.0,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       toolbarHeight: 60.0,
       collapsedHeight: 70.0,
@@ -344,7 +351,15 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget listViewAuthors() {
-    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 70.0;
+    double horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 70.0;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    bool isNarrow = false;
+
+    if (screenWidth < narrowWidthLimit) {
+      isNarrow = true;
+      horPadding = 10.0;
+    }
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -353,6 +368,7 @@ class _DiscoverState extends State<Discover> {
 
           return AuthorRow(
             author: author,
+            isNarrow: isNarrow,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),
@@ -378,7 +394,15 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget listViewReferences() {
-    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 70.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    double horPadding = screenWidth < 700.0 ? 20.0 : 70.0;
+    bool isNarrow = false;
+
+    if (screenWidth < narrowWidthLimit) {
+      isNarrow = true;
+      horPadding = 10.0;
+    }
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -387,6 +411,7 @@ class _DiscoverState extends State<Discover> {
 
           return ReferenceRow(
             reference: reference,
+            isNarrow: isNarrow,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),
