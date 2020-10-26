@@ -104,13 +104,12 @@ class _PageAppBarState extends State<PageAppBar> {
             children: <Widget>[
               if (showOrderButtons) orderButton(),
               if (showOrderButtons && showLangSelector)
-                separator(delay: 0.3), // separator
+                separator(), // separator
               if (showLangSelector) langSelector(),
-              if (showLangSelector && showItemsLayout)
-                separator(delay: 0.6), // separator
+              if (showLangSelector && showItemsLayout) separator(), // separator
               if (showOrderButtons && showItemsLayout && !showLangSelector)
-                separator(delay: 0.3), // separator
-              if (showItemsLayout) ...itemsLayoutSelector(),
+                separator(), // separator
+              if (showItemsLayout) itemsLayoutSelector(),
               ...widget.additionalIconButtons,
             ],
           );
@@ -119,62 +118,55 @@ class _PageAppBarState extends State<PageAppBar> {
     );
   }
 
-  List<Widget> itemsLayoutSelector() {
-    return [
-      FadeInY(
-        beginY: 10.0,
-        delay: 0.7,
-        child: IconButton(
-          onPressed: () => widget.onItemsLayoutSelected(ItemsLayout.list),
-          icon: Icon(Icons.list),
-          color: widget.itemsLayout == ItemsLayout.list
-              ? stateColors.primary
-              : stateColors.foreground.withOpacity(0.5),
+  Widget itemsLayoutSelector() {
+    return DropdownButton<ItemsLayout>(
+      icon: Container(),
+      underline: Container(),
+      value: widget.itemsLayout,
+      onChanged: (itemsLayout) {
+        widget.onItemsLayoutSelected(itemsLayout);
+      },
+      items: [
+        DropdownMenuItem(
+          value: ItemsLayout.list,
+          child: Opacity(
+            opacity: 0.6,
+            child: Icon(Icons.list),
+          ),
         ),
-      ),
-      FadeInY(
-        beginY: 10.0,
-        delay: 0.8,
-        child: IconButton(
-          onPressed: () => widget.onItemsLayoutSelected(ItemsLayout.grid),
-          icon: Icon(Icons.grid_on),
-          color: widget.itemsLayout == ItemsLayout.grid
-              ? stateColors.primary
-              : stateColors.foreground.withOpacity(0.5),
+        DropdownMenuItem(
+          value: ItemsLayout.grid,
+          child: Opacity(
+            opacity: 0.6,
+            child: Icon(Icons.grid_on),
+          ),
         ),
-      ),
-    ];
+      ],
+    );
   }
 
   Widget langSelector() {
-    return FadeInY(
-      beginY: 10.0,
-      delay: 0.4,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12.0),
-        child: DropdownButton<String>(
-          elevation: 2,
-          value: widget.lang,
-          isDense: true,
-          underline: Container(
-            height: 0,
-            color: Colors.deepPurpleAccent,
-          ),
-          icon: Icon(Icons.keyboard_arrow_down),
-          style: TextStyle(
-            color: stateColors.foreground.withOpacity(0.6),
-            fontSize: 20.0,
-            fontFamily: GoogleFonts.raleway().fontFamily,
-          ),
-          onChanged: widget.onLangChanged,
-          items: Language.available().map((String value) {
-            return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value.toUpperCase(),
-                ));
-          }).toList(),
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: DropdownButton<String>(
+        elevation: 2,
+        value: widget.lang,
+        isDense: true,
+        underline: Container(),
+        icon: Container(),
+        style: TextStyle(
+          color: stateColors.foreground.withOpacity(0.6),
+          fontSize: 20.0,
+          fontFamily: GoogleFonts.raleway().fontFamily,
         ),
+        onChanged: widget.onLangChanged,
+        items: Language.available().map((String value) {
+          return DropdownMenuItem(
+              value: value,
+              child: Text(
+                value.toUpperCase(),
+              ));
+        }).toList(),
       ),
     );
   }
@@ -207,31 +199,32 @@ class _PageAppBarState extends State<PageAppBar> {
       },
       items: [
         DropdownMenuItem(
-          child: FaIcon(FontAwesomeIcons.sortAlphaDown),
+          child: Opacity(
+              opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
           value: true,
         ),
         DropdownMenuItem(
-          child: FaIcon(FontAwesomeIcons.sortAlphaUp),
+          child: Opacity(
+              opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
           value: false,
         ),
       ],
     );
   }
 
-  Widget separator({double delay = 0.0}) {
-    return FadeInY(
-      beginY: 10.0,
-      delay: delay,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 10.0,
-          left: 20.0,
-          right: 20.0,
-        ),
-        child: Container(
-          height: 25,
-          width: 2.0,
-          color: stateColors.foreground.withOpacity(0.5),
+  Widget separator() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 10.0,
+        right: 10.0,
+        top: 20.0,
+      ),
+      child: Container(
+        width: 10.0,
+        height: 10.0,
+        decoration: BoxDecoration(
+          color: stateColors.primary,
+          shape: BoxShape.circle,
         ),
       ),
     );
