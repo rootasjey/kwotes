@@ -178,6 +178,8 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget authorName() {
+    final fontSize = MediaQuery.of(context).size.width < 400.0 ? 18.0 : 25.0;
+
     return ControlledAnimation(
       delay: 1.seconds,
       duration: 250.milliseconds,
@@ -197,14 +199,20 @@ class _QuotePageState extends State<QuotePage> {
           quote.author.name,
           textAlign: TextAlign.right,
           style: TextStyle(
-            fontSize: 25.0,
+            fontSize: fontSize,
           ),
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Opacity(
-          opacity: value,
-          child: child,
+        return Row(
+          children: [
+            Expanded(
+              child: Opacity(
+                opacity: value,
+                child: child,
+              ),
+            ),
+          ],
         );
       },
     );
@@ -239,6 +247,7 @@ class _QuotePageState extends State<QuotePage> {
         },
         child: Text(
           quote.mainReference.name,
+          textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 18.0,
             fontStyle: FontStyle.italic,
@@ -249,9 +258,11 @@ class _QuotePageState extends State<QuotePage> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Opacity(
-              opacity: value,
-              child: child,
+            Expanded(
+              child: Opacity(
+                opacity: value,
+                child: child,
+              ),
             ),
           ],
         );
