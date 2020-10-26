@@ -582,6 +582,8 @@ class _AuthorPageState extends State<AuthorPage> {
       );
     }
 
+    final horPadding = MediaQuery.of(context).size.width < 400.0 ? 10.0 : 20.0;
+
     return Observer(
       builder: (context) {
         final isConnected = userState.isUserConnected;
@@ -596,8 +598,10 @@ class _AuthorPageState extends State<AuthorPage> {
                 quoteId: quote.id,
                 elevation: 2.0,
                 isConnected: isConnected,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 10.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: horPadding,
+                  vertical: 10.0,
+                ),
               );
             },
             childCount: quotes.length,
