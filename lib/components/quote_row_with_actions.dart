@@ -19,6 +19,7 @@ class QuoteRowWithActions extends StatefulWidget {
   final bool isConnected;
 
   final double elevation;
+  final double quoteFontSize;
 
   final Function onAfterAddToFavourites;
   final Function onAfterDeletePubQuote;
@@ -69,6 +70,7 @@ class QuoteRowWithActions extends StatefulWidget {
     ),
     this.pageRoute = '',
     @required this.quote,
+    this.quoteFontSize = 20.0,
     this.quoteId,
     this.quotePageType = QuotePageType.published,
     this.stackChildren = const [],
@@ -107,6 +109,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return QuoteRow(
       quote: quote,
       quoteId: widget.quoteId,
+      quoteFontSize: widget.quoteFontSize,
       elevation: widget.elevation,
       padding: widget.padding,
       itemBuilder: (context) => popupItems,

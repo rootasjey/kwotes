@@ -13,6 +13,7 @@ class QuoteRow extends StatefulWidget {
 
   final double cardSize;
   final double elevation;
+  final double quoteFontSize;
 
   final EdgeInsets padding;
   final Function itemBuilder;
@@ -42,6 +43,7 @@ class QuoteRow extends StatefulWidget {
       horizontal: 70.0,
       vertical: 30.0,
     ),
+    this.quoteFontSize = 24.0,
     this.stackChildren = const [],
     this.leading,
   });
@@ -172,7 +174,7 @@ class _QuoteRowState extends State<QuoteRow> {
     return Text(
       widget.quote.name,
       style: TextStyle(
-        fontSize: 20.0,
+        fontSize: widget.quoteFontSize,
       ),
     );
   }
@@ -253,7 +255,7 @@ class _QuoteRowState extends State<QuoteRow> {
                     children: <Widget>[
                       PopupMenuButton<String>(
                         icon: Opacity(
-                          opacity: .6,
+                          opacity: 0.6,
                           child: iconColor != null
                               ? Icon(
                                   Icons.more_vert,
