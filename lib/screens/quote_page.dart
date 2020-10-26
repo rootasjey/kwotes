@@ -195,20 +195,16 @@ class _QuotePageState extends State<QuotePage> {
         },
         child: Text(
           quote.author.name,
+          textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 25.0,
           ),
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Opacity(
-              opacity: value,
-              child: child,
-            ),
-          ],
+        return Opacity(
+          opacity: value,
+          child: child,
         );
       },
     );
