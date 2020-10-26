@@ -156,12 +156,12 @@ class Tos extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 18.0, bottom: 16.0),
       child: Opacity(
-        opacity: 0.6,
+        opacity: 1.0,
         child: Text(
           text,
           style: TextStyle(
             fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.bold,
             color: stateColors.primary,
           ),
         ),
