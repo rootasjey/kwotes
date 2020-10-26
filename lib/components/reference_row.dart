@@ -131,6 +131,8 @@ class _ReferenceRowState extends State<ReferenceRow> {
   }
 
   Widget title(Reference reference) {
+    var titleFontSize = widget.isNarrow ? 14.0 : 20.0;
+
     return Expanded(
       flex: 2,
       child: Column(
@@ -139,15 +141,15 @@ class _ReferenceRowState extends State<ReferenceRow> {
           Text(
             reference.name,
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: titleFontSize,
             ),
           ),
           if (reference.type?.primary?.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: widget.isNarrow
-                  ? OutlinedButton(
-                      onPressed: null,
+                  ? Opacity(
+                      opacity: 0.6,
                       child: Text(
                         reference.type.primary,
                         style: TextStyle(
