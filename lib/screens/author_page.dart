@@ -254,6 +254,7 @@ class _AuthorPageState extends State<AuthorPage> {
               child: Image.asset(
                 imageUrl,
                 width: 30.0,
+                color: stateColors.foreground,
               ),
             ),
           ),
@@ -468,74 +469,70 @@ class _AuthorPageState extends State<AuthorPage> {
         ),
         if (urls.website.isNotEmpty)
           linkCircleButton(
-            delay: 1.0,
+            delay: 0.1,
             name: 'Website',
             url: urls.website,
             imageUrl: 'assets/images/world-globe.png',
           ),
         if (urls.wikipedia.isNotEmpty)
-          Observer(
-            builder: (_) {
-              return linkCircleButton(
-                delay: 1.2,
-                name: 'Wikipedia',
-                url: urls.wikipedia,
-                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
-              );
-            },
+          linkCircleButton(
+            delay: 0.2,
+            name: 'Wikipedia',
+            url: urls.wikipedia,
+            imageUrl: 'assets/images/wikipedia-light.png',
           ),
         if (urls.amazon.isNotEmpty)
           linkCircleButton(
-            delay: 1.4,
+            delay: 0.3,
             name: 'Amazon',
             url: urls.amazon,
             imageUrl: 'assets/images/amazon.png',
           ),
         if (urls.facebook.isNotEmpty)
           linkCircleButton(
-            delay: 1.6,
+            delay: 0.4,
             name: 'Facebook',
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
         if (urls.instagram.isNotEmpty)
           linkCircleButton(
-            delay: 1.7,
+            delay: 0.5,
             name: 'Instagram',
             url: urls.instagram,
             imageUrl: 'assets/images/instagram.png',
           ),
         if (urls.netflix.isNotEmpty)
           linkCircleButton(
-            delay: 1.8,
+            delay: 0.6,
             name: 'Netflix',
             url: urls.netflix,
             imageUrl: 'assets/images/netflix.png',
           ),
         if (urls.primeVideo.isNotEmpty)
           linkCircleButton(
-            delay: 2.0,
+            delay: 0.7,
             name: 'Prime Video',
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
           ),
         if (urls.twitch.isNotEmpty)
           linkCircleButton(
-            delay: 2.2,
+            delay: 0.8,
             name: 'Twitch',
             url: urls.twitch,
             imageUrl: 'assets/images/twitch.png',
           ),
         if (urls.twitter.isNotEmpty)
           linkCircleButton(
-            delay: 2.4,
+            delay: 0.9,
             name: 'Twitter',
             url: urls.twitter,
             imageUrl: 'assets/images/twitter.png',
           ),
         if (urls.youtube.isNotEmpty)
           linkCircleButton(
-            delay: 2.6,
+            delay: 1.0,
             name: 'Youtube',
             url: urls.youtube,
             imageUrl: 'assets/images/youtube.png',
