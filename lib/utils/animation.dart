@@ -131,8 +131,8 @@ Widget createPunctuationAnimation({
 
     return FadeInY(
       endY: 0.0,
-      beginY: 50.0,
-      delay: delayFactor * 3.0,
+      beginY: 10.0,
+      delay: delayFactor * 2.0,
       child: Text(
         word,
         style: style,
@@ -169,8 +169,8 @@ Widget createLengthAnimation(
 
     return FadeInY(
       endY: 0.0,
-      beginY: 50.0,
-      delay: delayFactor * 3.0,
+      beginY: 10.0,
+      delay: delayFactor * 2.0,
       child: Text(
         word,
         style: style,
