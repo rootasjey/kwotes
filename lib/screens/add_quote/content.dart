@@ -121,26 +121,22 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
   }
 
   Widget quoteInput() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
-      child: TextField(
-        maxLines: null,
-        autofocus: true,
-        focusNode: nameFocusNode,
-        controller: nameController,
-        keyboardType: TextInputType.multiline,
-        textCapitalization: TextCapitalization.sentences,
-        onChanged: (newValue) {
-          DataQuoteInputs.quote.name = newValue;
-        },
-        style: TextStyle(
-          fontSize: 22.0,
-        ),
-        decoration: InputDecoration(
-          icon: Icon(Icons.edit),
-          hintText: 'Type your quote...',
-          border: OutlineInputBorder(borderSide: BorderSide.none),
-        ),
+    return TextField(
+      maxLines: null,
+      autofocus: true,
+      focusNode: nameFocusNode,
+      controller: nameController,
+      keyboardType: TextInputType.multiline,
+      textCapitalization: TextCapitalization.sentences,
+      onChanged: (newValue) {
+        DataQuoteInputs.quote.name = newValue;
+      },
+      style: TextStyle(
+        fontSize: 22.0,
+      ),
+      decoration: InputDecoration(
+        hintText: 'Type your quote...',
+        border: OutlineInputBorder(borderSide: BorderSide.none),
       ),
     );
   }
