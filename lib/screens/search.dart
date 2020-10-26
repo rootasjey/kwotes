@@ -404,7 +404,7 @@ class _SearchState extends State<Search> {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
       child: Wrap(spacing: 20.0, runSpacing: 20.0, children: [
-        RaisedButton.icon(
+        OutlinedButton.icon(
             onPressed: () {
               _searchInputValue = '';
               searchInputController.clear();
@@ -441,6 +441,8 @@ class _SearchState extends State<Search> {
   }
 
   Widget searchInput() {
+    final fontSize = MediaQuery.of(context).size.width < 390.0 ? 20.0 : 36.0;
+
     return Padding(
       padding: const EdgeInsets.only(left: 15.0),
       child: TextField(
@@ -472,7 +474,7 @@ class _SearchState extends State<Search> {
           );
         },
         style: TextStyle(
-          fontSize: 36.0,
+          fontSize: fontSize,
         ),
         decoration: InputDecoration(
           icon: Icon(Icons.search),
