@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/screens/privacy_terms.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -200,6 +201,8 @@ class _DashboardState extends State<Dashboard> {
             beginY: beginY,
             child: signOutButton(),
           ),
+          aboutButton(),
+          tosButton(),
         ],
       ),
     ];
@@ -334,6 +337,7 @@ class _DashboardState extends State<Dashboard> {
             beginY: beginY,
             child: aboutButton(),
           ),
+          tosButton(),
         ],
       ),
     ];
@@ -511,6 +515,22 @@ class _DashboardState extends State<Dashboard> {
       ),
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => MyTempQuotes())),
+    );
+  }
+
+  Widget tosButton() {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 50.0),
+      leading: Icon(
+        Icons.privacy_tip,
+        size: 30.0,
+      ),
+      title: Text(
+        'Terms of service',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => PrivacyTerms())),
     );
   }
 
