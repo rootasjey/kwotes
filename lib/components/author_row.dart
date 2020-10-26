@@ -7,6 +7,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class AuthorRow extends StatefulWidget {
   final Author author;
 
+  final bool isNarrow;
+
   final Function itemBuilder;
   final Function onSelected;
 
@@ -14,6 +16,7 @@ class AuthorRow extends StatefulWidget {
 
   AuthorRow({
     this.author,
+    this.isNarrow = false,
     this.itemBuilder,
     this.onSelected,
     this.padding = const EdgeInsets.symmetric(
@@ -112,8 +115,10 @@ class _AuthorRowState extends State<AuthorRow> {
       return Padding(padding: EdgeInsets.zero);
     }
 
+    final right = widget.isNarrow ? 10.0 : 40.0;
+
     return Padding(
-        padding: const EdgeInsets.only(right: 40.0),
+        padding: EdgeInsets.only(right: right),
         child: Material(
           elevation: 4.0,
           shape: CircleBorder(),
@@ -130,6 +135,8 @@ class _AuthorRowState extends State<AuthorRow> {
   }
 
   Widget title(Author author) {
+    final titleFontSize = widget.isNarrow ? 14.0 : 20.0;
+
     return Expanded(
       flex: 2,
       child: Column(
@@ -138,19 +145,26 @@ class _AuthorRowState extends State<AuthorRow> {
           Text(
             author.name,
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: titleFontSize,
             ),
           ),
           if (author.job?.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: OutlinedButton.icon(
-                onPressed: null,
-                icon: Icon(Icons.work_outline),
-                label: Text(
-                  author.job,
-                ),
-              ),
+              child: widget.isNarrow
+                  ? Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        author.job,
+                      ),
+                    )
+                  : OutlinedButton.icon(
+                      onPressed: null,
+                      icon: Icon(Icons.work_outline),
+                      label: Text(
+                        author.job,
+                      ),
+                    ),
             ),
         ],
       ),
