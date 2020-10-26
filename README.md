@@ -127,5 +127,5 @@ You can find the help center at: [https://help.outofcontext.app](https://help.ou
 # Screenshots
 
 <p align="middle">
-  <img src="./screenshots/ooc-mobile.png" title="out of context mobile" />
+  <img src="./screenshots/ooc-mobile.png" title="fig.style mobile" />
 </p>

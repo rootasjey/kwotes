@@ -29,7 +29,7 @@ void shareAuthorMobile(
 
   Share.share(
     sharingText,
-    subject: 'Out Of Context',
+    subject: 'fig.style',
     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
   );
 }
@@ -76,7 +76,7 @@ void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
 
   Share.share(
     sharingText,
-    subject: 'Out Of Context',
+    subject: 'fig.style',
     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
   );
 }
@@ -144,7 +144,7 @@ void shareReferenceMobile(
 
   Share.share(
     sharingText,
-    subject: 'Out Of Context',
+    subject: 'fig.style',
     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
   );
 }

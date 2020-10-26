@@ -59,7 +59,7 @@ class AppState extends State<App> {
     }
 
     return MaterialApp(
-      title: 'Out Of Context',
+      title: 'fig.style',
       home: Scaffold(
         body: FullPageLoading(),
       ),

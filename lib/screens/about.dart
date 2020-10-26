@@ -255,7 +255,7 @@ class About extends StatelessWidget {
         children: <Widget>[
           Ink.image(
             image: AssetImage(
-              'assets/images/app-icon-text.png',
+              'assets/images/app-icon-512.png',
             ),
             height: 380.0,
             child: InkWell(
@@ -268,7 +268,7 @@ class About extends StatelessWidget {
                         content: Container(
                           child: Image(
                             image: AssetImage(
-                              'assets/images/app-icon-text.png',
+                              'assets/images/app-icon-412.png',
                             ),
                           ),
                         ),
@@ -301,7 +301,7 @@ class About extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 25.0),
               child: Text(
-                'Out Of Context is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. There are several categories like: fun, philosophy, and motivation. You can also browse quotes by topics, authors, references or search them.',
+                'fig.style is a quotes application and service. Its main purpose is to deliver you one meaningful quote each day. There are several categories like: fun, philosophy, and motivation. You can also browse quotes by topics, authors, references or search them.',
                 style: paragraphStyle,
               ),
             ),
@@ -608,7 +608,7 @@ class About extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'OUT OF CONTEXT',
+                            'fig.style',
                             style: paragraphStyle,
                           ),
                         ),

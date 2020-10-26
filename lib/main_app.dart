@@ -23,7 +23,7 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Out Of Context',
+      title: 'fig.style',
       theme: stateColors.themeData,
       debugShowCheckedModeBanner: false,
       home: Home(),

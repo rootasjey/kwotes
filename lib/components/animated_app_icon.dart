@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/app_icon.dart';
 
 class AnimatedAppIcon extends StatelessWidget {
   final double size;
@@ -14,12 +13,16 @@ class AnimatedAppIcon extends StatelessWidget {
         height: size,
         child: Column(
           children: [
-            AppIcon(
+            Padding(
               padding: const EdgeInsets.only(
-                bottom: 20.0,
+                bottom: 0.0,
+              ),
+              child: Image.asset(
+                'assets/images/app-icon-animation.gif',
+                height: 100.0,
+                width: 100.0,
               ),
             ),
-            LinearProgressIndicator(),
           ],
         ),
       ),

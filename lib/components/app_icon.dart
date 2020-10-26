@@ -27,7 +27,7 @@ class _AppIconState extends State<AppIcon> {
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: Ink.image(
-          image: AssetImage('assets/images/app-icon-64.png'),
+          image: AssetImage('assets/images/app-icon-90.png'),
           fit: BoxFit.cover,
           width: widget.size,
           height: widget.size,

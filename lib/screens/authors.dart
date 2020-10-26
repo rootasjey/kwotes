@@ -688,7 +688,7 @@ class _AuthorsState extends State<Authors> {
 
     Share.share(
       sharingText,
-      subject: 'Out Of Context',
+      subject: 'fig.style',
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
     );
   }
