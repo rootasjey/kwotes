@@ -146,19 +146,17 @@ class _TopicsState extends State<Topics> {
       sliver: SliverList(
           delegate: SliverChildListDelegate.fixed([
         Center(
-          child: RaisedButton(
+          child: OutlinedButton.icon(
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => Topics()));
             },
-            color: stateColors.primary,
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              // side: BorderSide(color: stateColors.primary),
-              borderRadius: BorderRadius.circular(2.0),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.secondary,
             ),
-            child: Opacity(
-              opacity: .6,
+            icon: Icon(Icons.open_in_new),
+            label: Opacity(
+              opacity: 0.6,
               child: Text('Discover more topics'),
             ),
           ),
