@@ -148,8 +148,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
 
   Widget titleBar({bool isNarrow = false}) {
     return Container(
-      width: MediaQuery.of(context).size.width - 320.0,
-      padding: const EdgeInsets.only(left: 40.0),
+      padding: const EdgeInsets.only(left: 10.0),
       child: isNarrow
           ? Tooltip(
               message: widget.title,
@@ -160,6 +159,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: stateColors.foreground,
+                    fontSize: 16.0,
                   ),
                 ),
               ),
