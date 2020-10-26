@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/language.dart';
