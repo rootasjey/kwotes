@@ -260,7 +260,7 @@ class _FooterState extends State<Footer> {
   }
 
   void updateUserAccountLang() async {
-    final userAuth = await FirebaseAuth.instance.currentUser();
+    final userAuth = FirebaseAuth.instance.currentUser;
 
     if (userAuth == null) {
       notifyLangSuccess();
@@ -268,10 +268,10 @@ class _FooterState extends State<Footer> {
     }
 
     try {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
-          .updateData({
+          .doc(userAuth.uid)
+          .update({
         'lang': userState.lang,
       });
 

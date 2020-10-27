@@ -574,23 +574,23 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       QuerySnapshot snapshot;
 
       if (lang == 'all') {
-        snapshot = await Firestore.instance
+        snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
             .where('user.id', isEqualTo: userAuth.uid)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
-            .getDocuments();
+            .get();
       } else {
-        snapshot = await Firestore.instance
+        snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
             .where('user.id', isEqualTo: userAuth.uid)
             .where('lang', isEqualTo: lang)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
-            .getDocuments();
+            .get();
       }
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasErrors = false;
           hasNext = false;
@@ -600,20 +600,20 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
         hasErrors = false;
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -648,25 +648,25 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       QuerySnapshot snapshot;
 
       if (lang == 'all') {
-        snapshot = await Firestore.instance
+        snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
             .startAfterDocument(lastDoc)
             .where('user.id', isEqualTo: userAuth.uid)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
-            .getDocuments();
+            .get();
       } else {
-        snapshot = await Firestore.instance
+        snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
             .startAfterDocument(lastDoc)
             .where('user.id', isEqualTo: userAuth.uid)
             .where('lang', isEqualTo: lang)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
-            .getDocuments();
+            .get();
       }
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -675,16 +675,16 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.insert(tempQuotes.length - 1, quote);
       });
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoadingMore = false;
       });
     } catch (error) {

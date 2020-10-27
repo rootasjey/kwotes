@@ -309,7 +309,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
 
       final snapshot = await fetchSnapshot();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           isLoading = false;
         });
@@ -317,15 +317,15 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -351,7 +351,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
     try {
       final snapshot = await fetchNextSnapshot();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           isLoadingMore = false;
         });
@@ -359,9 +359,9 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.insert(quotes.length - 1, quote);
@@ -383,14 +383,14 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
     DocumentSnapshot snapshot;
 
     if (widget.type == SubjectType.author) {
-      snapshot = await Firestore.instance
+      snapshot = await FirebaseFirestore.instance
           .collection('authors')
-          .document(widget.id)
+          .doc(widget.id)
           .get();
     } else {
-      snapshot = await Firestore.instance
+      snapshot = await FirebaseFirestore.instance
           .collection('references')
-          .document(widget.id)
+          .doc(widget.id)
           .get();
     }
 
@@ -399,52 +399,52 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
     }
 
     setState(() {
-      subjectName = snapshot.data['name'];
+      subjectName = snapshot.data()['name'];
     });
   }
 
   /// Handle subject type.
   Future<QuerySnapshot> fetchSnapshot() async {
     if (widget.type == SubjectType.author) {
-      return await Firestore.instance
+      return await FirebaseFirestore.instance
           .collection('quotes')
           .where('author.id', isEqualTo: widget.id)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(30)
-          .getDocuments();
+          .get();
     }
 
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection('quotes')
         .where('mainReference.id', isEqualTo: widget.id)
         .where('lang', isEqualTo: lang)
         .orderBy('createdAt', descending: descending)
         .limit(30)
-        .getDocuments();
+        .get();
   }
 
   /// Handle subject type.
   Future<QuerySnapshot> fetchNextSnapshot() async {
     if (widget.type == SubjectType.author) {
-      return await Firestore.instance
+      return await FirebaseFirestore.instance
           .collection('quotes')
           .where('author.id', isEqualTo: widget.id)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(30)
-          .getDocuments();
+          .get();
     }
 
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection('quotes')
         .where('mainReference.id', isEqualTo: widget.id)
         .where('lang', isEqualTo: lang)
         .orderBy('createdAt', descending: descending)
         .startAfterDocument(lastDoc)
         .limit(30)
-        .getDocuments();
+        .get();
   }
 
   void getSavedProps() {

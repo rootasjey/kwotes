@@ -568,13 +568,13 @@ class _AuthorsState extends State<Authors> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .orderBy('createdAt', descending: descending)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -583,15 +583,15 @@ class _AuthorsState extends State<Authors> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final author = Author.fromJSON(data);
         authorsList.add(author);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -613,14 +613,14 @@ class _AuthorsState extends State<Authors> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -629,15 +629,15 @@ class _AuthorsState extends State<Authors> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final author = Author.fromJSON(data);
         authorsList.add(author);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoadingMore = false;
@@ -698,19 +698,19 @@ class _AuthorsState extends State<Authors> {
     searchResults.clear();
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .where('name', isGreaterThanOrEqualTo: searchInputValue)
           .limit(20)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         return;
       }
 
-      snapshot.documents.forEach((element) {
-        final data = element.data;
-        data['id'] = element.documentID;
+      snapshot.docs.forEach((element) {
+        final data = element.data();
+        data['id'] = element.id;
 
         final author = Author.fromJSON(data);
         searchResults.add(author);

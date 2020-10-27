@@ -276,15 +276,15 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('user.id', isEqualTo: userAuth.uid)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           isLoading = false;
         });
@@ -292,15 +292,15 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -331,16 +331,16 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('user.id', isEqualTo: userAuth.uid)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           isLoadingMore = false;
         });
@@ -348,9 +348,9 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.insert(quotes.length - 1, quote);

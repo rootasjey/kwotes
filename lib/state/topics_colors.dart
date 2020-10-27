@@ -14,16 +14,17 @@ abstract class TopicsColorsBase with Store {
 
   @action
   Future fetchTopicsColors() async {
-    final snapshot = await Firestore.instance
-      .collection('topics')
-      .getDocuments();
+    final snapshot =
+        await FirebaseFirestore.instance.collection('topics').get();
 
-    if (snapshot.documents.isEmpty) { return; }
+    if (snapshot.docs.isEmpty) {
+      return;
+    }
 
     final List<TopicColor> list = [];
 
-    snapshot.documents.forEach((doc) {
-      final topicColor = TopicColor.fromJSON(doc.data);
+    snapshot.docs.forEach((doc) {
+      final topicColor = TopicColor.fromJSON(doc.data());
       list.add(topicColor);
     });
 
@@ -37,8 +38,8 @@ abstract class TopicsColorsBase with Store {
       return null;
     }
 
-    final topicColor = topicsColors
-      .firstWhere((element) => element.name == topic);
+    final topicColor =
+        topicsColors.firstWhere((element) => element.name == topic);
 
     return topicColor;
   }

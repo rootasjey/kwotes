@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:figstyle/screens/tos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -532,15 +532,15 @@ class _DashboardState extends State<Dashboard> {
         return;
       }
 
-      final user = await Firestore.instance
+      final user = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .get();
 
       final data = user.data;
 
       setState(() {
-        canManage = data['rights']['user:managequote'] ?? false;
+        canManage = data()['rights']['user:managequote'] ?? false;
       });
     } on Exception catch (error) {
       debugPrint(error.toString());

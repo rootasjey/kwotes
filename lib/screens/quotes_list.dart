@@ -337,11 +337,11 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      final docList = await Firestore.instance
+      final docList = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
-          .document(widget.id)
+          .doc(widget.id)
           .get();
 
       if (!docList.exists) {
@@ -355,22 +355,22 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      final data = docList.data;
-      data['id'] = docList.documentID;
+      final data = docList.data();
+      data['id'] = docList.id;
       quotesList = UserQuotesList.fromJSON(data);
 
       updateListIsPublic = quotesList.isPublic;
 
-      final collSnap = await Firestore.instance
+      final collSnap = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
-          .document(quotesList.id)
+          .doc(quotesList.id)
           .collection('quotes')
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (collSnap.documents.isEmpty) {
+      if (collSnap.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -379,15 +379,15 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      collSnap.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      collSnap.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
       setState(() {
-        hasNext = collSnap.documents.length == limit;
+        hasNext = collSnap.docs.length == limit;
         isLoading = false;
       });
     } catch (err) {
@@ -416,17 +416,17 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
-          .document(quotesList.id)
+          .doc(quotesList.id)
           .collection('quotes')
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
         });
@@ -434,16 +434,16 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoadingMore = false;
       });
     } catch (err) {

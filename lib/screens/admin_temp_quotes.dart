@@ -341,14 +341,14 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('tempquotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -357,15 +357,15 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -389,15 +389,15 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('tempquotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -406,9 +406,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = TempQuote.fromJSON(data);
         tempQuotes.insert(tempQuotes.length - 1, quote);

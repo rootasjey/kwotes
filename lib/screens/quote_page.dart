@@ -349,13 +349,13 @@ class _QuotePageState extends State<QuotePage> {
     final _topicsColors = <TopicColor>[];
 
     for (String topicName in quote.topics) {
-      final doc = await Firestore.instance
+      final doc = await FirebaseFirestore.instance
           .collection('topics')
-          .document(topicName)
+          .doc(topicName)
           .get();
 
       if (doc.exists) {
-        final topic = TopicColor.fromJSON(doc.data);
+        final topic = TopicColor.fromJSON(doc.data());
         _topicsColors.add(topic);
       }
     }
@@ -371,9 +371,9 @@ class _QuotePageState extends State<QuotePage> {
     });
 
     try {
-      final doc = await Firestore.instance
+      final doc = await FirebaseFirestore.instance
           .collection('quotes')
-          .document(widget.quoteId)
+          .doc(widget.quoteId)
           .get();
 
       if (!doc.exists) {
@@ -384,8 +384,8 @@ class _QuotePageState extends State<QuotePage> {
         return;
       }
 
-      final data = doc.data;
-      data['id'] = doc.documentID;
+      final data = doc.data();
+      data['id'] = doc.id;
       quote = Quote.fromJSON(data);
 
       await fetchIsFav();

@@ -477,13 +477,13 @@ class _ReferencesState extends State<References> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .orderBy('createdAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -492,16 +492,16 @@ class _ReferencesState extends State<References> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final reference = Reference.fromJSON(data);
         referencesList.add(reference);
       });
 
       setState(() {
-        lastDoc = snapshot.documents.last;
+        lastDoc = snapshot.docs.last;
         isLoading = false;
       });
     } catch (error) {
@@ -521,14 +521,14 @@ class _ReferencesState extends State<References> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -537,9 +537,9 @@ class _ReferencesState extends State<References> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final reference = Reference.fromJSON(data);
         referencesList.add(reference);
@@ -547,8 +547,8 @@ class _ReferencesState extends State<References> {
 
       setState(() {
         isLoadingMore = false;
-        hasNext = snapshot.documents.isNotEmpty;
-        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.docs.isNotEmpty;
+        lastDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -564,19 +564,19 @@ class _ReferencesState extends State<References> {
     searchResults.clear();
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .where('name', isGreaterThanOrEqualTo: searchInputValue)
           .limit(20)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         return;
       }
 
-      snapshot.documents.forEach((element) {
-        final data = element.data;
-        data['id'] = element.documentID;
+      snapshot.docs.forEach((element) {
+        final data = element.data();
+        data['id'] = element.id;
 
         final reference = Reference.fromJSON(data);
         searchResults.add(reference);

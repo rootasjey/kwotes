@@ -7,7 +7,10 @@ import 'package:figstyle/types/temp_quote.dart';
 
 Future<bool> deleteQuote({Quote quote}) async {
   try {
-    await Firestore.instance.collection('quotes').document(quote.id).delete();
+    await FirebaseFirestore.instance
+        .collection('quotes')
+        .doc(quote.id)
+        .delete();
 
     return true;
   } catch (error) {
@@ -39,7 +42,8 @@ Future<bool> validateTempQuote({
     final topics = createTopicsMap(tempQuote);
 
     // 5.Format data and add new quote.
-    final addedQuote = await Firestore.instance.collection('quotes').add({
+    final addedQuote =
+        await FirebaseFirestore.instance.collection('quotes').add({
       'author': {
         'id': author.id,
         'name': author.name,
@@ -67,15 +71,15 @@ Future<bool> validateTempQuote({
 
     // 6.Create comment if any.
     await createComments(
-      quoteId: addedQuote.documentID,
+      quoteId: addedQuote.id,
       tempQuote: tempQuote,
       uid: uid,
     );
 
     // 7.Delete temp quote.
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('tempquotes')
-        .document(tempQuote.id)
+        .doc(tempQuote.id)
         .delete();
 
     return true;
@@ -93,7 +97,7 @@ Future createComments({
   final tempComments = tempQuote.comments;
 
   tempComments.forEach((tempComment) {
-    Firestore.instance.collection('comments').add({
+    FirebaseFirestore.instance.collection('comments').add({
       'commentId': '',
       'createdAt': DateTime.now(),
       'level': 0,
@@ -113,19 +117,19 @@ Future<Author> createOrGetAuthor(
 
   // Anonymous author
   if (author.name.isEmpty && author.id.isEmpty) {
-    final anonymousSnap = await Firestore.instance
+    final anonymousSnap = await FirebaseFirestore.instance
         .collection('authors')
         .where('name', isEqualTo: 'Anonymous')
-        .getDocuments();
+        .get();
 
-    if (anonymousSnap.documents.isEmpty) {
+    if (anonymousSnap.docs.isEmpty) {
       throw ErrorDescription('Document not found for Anonymous author.');
     }
 
-    final match = anonymousSnap.documents.first;
+    final match = anonymousSnap.docs.first;
 
     return Author(
-      id: match.documentID,
+      id: match.id,
       name: 'Anonymous',
     );
   }
@@ -137,7 +141,7 @@ Future<Author> createOrGetAuthor(
     );
   }
 
-  final newAuthor = await Firestore.instance.collection('authors').add({
+  final newAuthor = await FirebaseFirestore.instance.collection('authors').add({
     'born': {
       'beforeJC': author.born.beforeJC,
       'city': author.born.city,
@@ -177,7 +181,7 @@ Future<Author> createOrGetAuthor(
   });
 
   return Author(
-    id: newAuthor.documentID,
+    id: newAuthor.id,
     name: author.name,
   );
 }
@@ -196,7 +200,8 @@ Future<Reference> createOrGetReference(TempQuote tempQuote) async {
     );
   }
 
-  final newReference = await Firestore.instance.collection('references').add({
+  final newReference =
+      await FirebaseFirestore.instance.collection('references').add({
     'createdAt': DateTime.now(),
     'lang': reference.lang,
     'linkedRefs': [],
@@ -227,7 +232,7 @@ Future<Reference> createOrGetReference(TempQuote tempQuote) async {
   });
 
   return Reference(
-    id: newReference.documentID,
+    id: newReference.id,
     name: reference.name,
   );
 }

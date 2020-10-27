@@ -21,8 +21,8 @@ void checkConnectedOrNavSignin({BuildContext context}) async {
   }
 }
 
-Future<FirebaseUser> getUserAuth() async {
-  FirebaseUser userAuth = await tryGetUserAuth();
+Future<User> getUserAuth() async {
+  User userAuth = await tryGetUserAuth();
 
   if (userAuth == null) {
     userAuth = await Future.delayed(2.seconds, () async {
@@ -33,10 +33,10 @@ Future<FirebaseUser> getUserAuth() async {
   return userAuth;
 }
 
-Future<FirebaseUser> tryGetUserAuth() async {
-  FirebaseUser userAuth;
+Future<User> tryGetUserAuth() async {
+  User userAuth;
 
-  userAuth = await FirebaseAuth.instance.currentUser();
+  userAuth = FirebaseAuth.instance.currentUser;
 
   if (userAuth != null) {
     return userAuth;

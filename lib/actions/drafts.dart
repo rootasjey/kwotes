@@ -30,11 +30,11 @@ Future<bool> deleteDraft({
   final id = draft.id;
 
   try {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .doc(userAuth.uid)
         .collection('drafts')
-        .document(id)
+        .doc(id)
         .delete();
 
     return true;
@@ -91,9 +91,9 @@ Future<bool> saveDraft({
       return false;
     }
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .doc(userAuth.uid)
         .collection('drafts')
         .add({
       'author': {

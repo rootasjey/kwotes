@@ -567,12 +567,9 @@ class _SignupState extends State<Signup> {
           ? username
           : email.substring(0, email.indexOf('@'));
 
-      final userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.displayName = name;
+      await user.updateProfile(displayName: name);
 
-      await user.updateProfile(userUpdateInfo);
-
-      await Firestore.instance.collection('users').document(user.uid).setData({
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'email': user.email,
         'flag': '',
         'lang': 'en',

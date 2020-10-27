@@ -480,9 +480,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         return;
       }
 
-      final user = await Firestore.instance
+      final user = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .get();
 
       if (!user.exists) {
@@ -490,7 +490,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       }
 
       setState(() {
-        canManage = user.data['rights']['user:managequote'] == true;
+        canManage = user.data()['rights']['user:managequote'] == true;
       });
     } catch (error) {
       debugPrint(error.toString());

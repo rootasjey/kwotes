@@ -454,7 +454,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         return;
       }
 
-      final credentials = EmailAuthProvider.getCredential(
+      final credentials = EmailAuthProvider.credential(
         email: userAuth.email,
         password: password,
       );
@@ -464,10 +464,10 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
       await authResult.user.updateEmail(email);
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(authResult.user.uid)
-          .updateData({
+          .doc(authResult.user.uid)
+          .update({
         'email': email,
       });
 

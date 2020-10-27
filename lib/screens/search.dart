@@ -551,19 +551,19 @@ class _SearchState extends State<Search> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .where('name', isGreaterThanOrEqualTo: _searchInputValue)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         return;
       }
 
-      snapshot.documents.forEach((element) {
-        final data = element.data;
-        data['id'] = element.documentID;
+      snapshot.docs.forEach((element) {
+        final data = element.data();
+        data['id'] = element.id;
 
         final author = Author.fromJSON(data);
         authorsResults.add(author);
@@ -584,19 +584,19 @@ class _SearchState extends State<Search> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('name', isGreaterThanOrEqualTo: _searchInputValue)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         return;
       }
 
-      snapshot.documents.forEach((element) {
-        final data = element.data;
-        data['id'] = element.documentID;
+      snapshot.docs.forEach((element) {
+        final data = element.data();
+        data['id'] = element.id;
 
         final quote = Quote.fromJSON(data);
         quotesResults.add(quote);
@@ -617,19 +617,19 @@ class _SearchState extends State<Search> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .where('name', isGreaterThanOrEqualTo: _searchInputValue)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         return;
       }
 
-      snapshot.documents.forEach((element) {
-        final data = element.data;
-        data['id'] = element.documentID;
+      snapshot.docs.forEach((element) {
+        final data = element.data();
+        data['id'] = element.id;
 
         final reference = Reference.fromJSON(data);
         referencesResults.add(reference);

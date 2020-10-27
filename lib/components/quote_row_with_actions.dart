@@ -270,11 +270,11 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         return;
       }
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
-          .document(listId)
+          .doc(listId)
           .collection('quotes')
           .add({
         'author': {
@@ -315,9 +315,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         return null;
       }
 
-      final docRef = await Firestore.instance
+      final docRef = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
           .add({
         'createdAt': DateTime.now(),
@@ -330,7 +330,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
       final doc = await docRef.get();
 
-      return doc.documentID;
+      return doc.id;
     } catch (error) {
       debugPrint(error.toString());
 
@@ -355,14 +355,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -371,18 +371,18 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quoteList = UserQuotesList.fromJSON(data);
         userQuotesLists.add(quoteList);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoading = false;
       });
     } catch (err) {
@@ -412,15 +412,15 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -429,18 +429,18 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quoteList = UserQuotesList.fromJSON(data);
         userQuotesLists.add(quoteList);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoadingMore = false;
       });
     } catch (err) {

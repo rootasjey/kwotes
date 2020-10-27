@@ -305,8 +305,10 @@ class RecentQuotesState extends State<RecentQuotes> {
         return;
       }
 
-      final user =
-          await Firestore().collection('users').document(userAuth.uid).get();
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userAuth.uid)
+          .get();
 
       if (user == null) {
         return;
@@ -314,7 +316,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
       setState(() {
         isConnected = true;
-        canManage = user.data['rights']['user:managequotidian'];
+        canManage = user.data()['rights']['user:managequotidian'];
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -348,14 +350,14 @@ class RecentQuotesState extends State<RecentQuotes> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -364,15 +366,15 @@ class RecentQuotesState extends State<RecentQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -393,15 +395,15 @@ class RecentQuotesState extends State<RecentQuotes> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(30)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -410,15 +412,15 @@ class RecentQuotesState extends State<RecentQuotes> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoadingMore = false;

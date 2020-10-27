@@ -1268,13 +1268,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                                     fromReference.id != null &&
                                     fromReference.id.isNotEmpty) {
                                   try {
-                                    final ref = await Firestore.instance
+                                    final ref = await FirebaseFirestore.instance
                                         .collection('references')
-                                        .document(fromReference.id)
+                                        .doc(fromReference.id)
                                         .get();
 
-                                    final refData = ref.data;
-                                    refData['id'] = ref.documentID;
+                                    final refData = ref.data();
+                                    refData['id'] = ref.id;
 
                                     authorSuggestion
                                         .parseReferenceJSON(refData);

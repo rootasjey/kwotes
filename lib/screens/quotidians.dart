@@ -424,9 +424,9 @@ class QuotidiansState extends State<Quotidians> {
 
   void deleteAction(Quotidian quotidian) async {
     try {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('quotidians')
-          .document(quotidian.id)
+          .doc(quotidian.id)
           .delete();
 
       setState(() {
@@ -449,9 +449,9 @@ class QuotidiansState extends State<Quotidians> {
   void deleteMonth(List<Quotidian> group) async {
     // NOTE: maybe do this job in a cloud function
     group.forEach((quotidian) async {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('quotidians')
-          .document(quotidian.id)
+          .doc(quotidian.id)
           .delete();
 
       setState(() {
@@ -553,14 +553,14 @@ class QuotidiansState extends State<Quotidians> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotidians')
           .where('lang', isEqualTo: lang)
           .orderBy('date', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -569,18 +569,18 @@ class QuotidiansState extends State<Quotidians> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quotidian = Quotidian.fromJSON(data);
         quotidians.add(quotidian);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoading = false;
       });
     } catch (error) {
@@ -601,15 +601,15 @@ class QuotidiansState extends State<Quotidians> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotidians')
           .where('lang', isEqualTo: lang)
           .orderBy('date', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -618,17 +618,17 @@ class QuotidiansState extends State<Quotidians> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quotidian = Quotidian.fromJSON(data);
         quotidians.add(quotidian);
       });
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
-        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.docs.length == limit;
+        lastDoc = snapshot.docs.last;
         isLoadingMore = false;
       });
     } catch (error) {

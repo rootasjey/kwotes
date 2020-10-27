@@ -257,9 +257,9 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
     try {
       final userAuth = await userState.userAuth;
 
-      final user = await Firestore.instance
+      final user = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .get();
 
       if (!user.exists) {
@@ -267,7 +267,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       }
 
       setState(() {
-        isAdmin = user.data['rights']['user:managequote'] == true;
+        isAdmin = user.data()['rights']['user:managequote'] == true;
       });
     } catch (error) {
       debugPrint(error.toString());

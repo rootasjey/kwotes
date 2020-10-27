@@ -96,7 +96,7 @@ Rules for dart classes.
 
 ```dart
 class _DashboardState extends State<Dashboard> {
-  FirebaseUser userAuth;
+  User userAuth;
   bool canManage = false;
   // ...
 }

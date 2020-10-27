@@ -40,25 +40,25 @@ class Language {
   }
 
   /// Fetch user's lang from database.
-  static Future<String> fetch(FirebaseUser userAuth) async {
+  static Future<String> fetch(User userAuth) async {
     if (userAuth == null) {
       String savedLang = appLocalStorage.getLang();
       return savedLang ?? 'en';
-     }
+    }
 
-    final user = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .get();
+    final user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .get();
 
     if (user.exists) {
-      current = user.data['lang'];
+      current = user.data()['lang'];
     }
 
     return current;
   }
 
-  static Future fetchAndPopulate(FirebaseUser userAuth) async {
+  static Future fetchAndPopulate(User userAuth) async {
     String lang = await fetch(userAuth) ?? 'en';
     setLang(lang);
   }

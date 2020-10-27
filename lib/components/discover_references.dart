@@ -124,16 +124,16 @@ class _DiscoverReferencesState extends State<DiscoverReferences> {
     });
 
     try {
-      final refsSnapshot = await Firestore.instance
+      final refsSnapshot = await FirebaseFirestore.instance
           .collection('references')
           .orderBy('updatedAt', descending: true)
           .limit(3)
-          .getDocuments();
+          .get();
 
-      if (refsSnapshot.documents.isNotEmpty) {
-        refsSnapshot.documents.forEach((doc) {
-          final data = doc.data;
-          data['id'] = doc.documentID;
+      if (refsSnapshot.docs.isNotEmpty) {
+        refsSnapshot.docs.forEach((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
 
           final ref = Reference.fromJSON(data);
           _references.add(ref);

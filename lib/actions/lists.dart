@@ -23,9 +23,9 @@ Future<UserQuotesList> createList({
       return null;
     }
 
-    final docRef = await Firestore.instance
+    final docRef = await FirebaseFirestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .doc(userAuth.uid)
         .collection('lists')
         .add({
       'createdAt': DateTime.now(),
@@ -38,8 +38,8 @@ Future<UserQuotesList> createList({
 
     final doc = await docRef.get();
 
-    final data = doc.data;
-    data['id'] = doc.documentID;
+    final data = doc.data();
+    data['id'] = doc.id;
 
     return UserQuotesList.fromJSON(data);
   } catch (error) {
@@ -64,7 +64,7 @@ Future<bool> deleteList({
 
     // Add a new document containing information
     // to delete the subcollection (in order to delete its documents).
-    await Firestore.instance.collection('todelete').add({
+    await FirebaseFirestore.instance.collection('todelete').add({
       'objectId': id,
       'path': 'users/<userId>/lists/<listId>/quotes',
       'userId': userAuth.uid,
@@ -73,11 +73,11 @@ Future<bool> deleteList({
     });
 
     // Delete the quote collection doc.
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .doc(userAuth.uid)
         .collection('lists')
-        .document(id)
+        .doc(id)
         .delete();
 
     return true;
@@ -102,13 +102,13 @@ Future<bool> removeFromList({
       return false;
     }
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .doc(userAuth.uid)
         .collection('lists')
-        .document(id)
+        .doc(id)
         .collection('quotes')
-        .document(quote.id)
+        .doc(quote.id)
         .delete();
 
     return true;
@@ -136,12 +136,12 @@ Future<bool> updateList({
       return false;
     }
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(userAuth.uid)
+        .doc(userAuth.uid)
         .collection('lists')
-        .document(id)
-        .updateData({
+        .doc(id)
+        .update({
       'description': description,
       'name': name,
       'iconUrl': iconUrl,

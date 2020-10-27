@@ -308,15 +308,15 @@ class _DraftsState extends State<Drafts> {
         throw Error();
       }
 
-      final snapColl = await Firestore.instance
+      final snapColl = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('drafts')
           .orderBy('createdAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapColl.documents.isEmpty) {
+      if (snapColl.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -325,20 +325,20 @@ class _DraftsState extends State<Drafts> {
         return;
       }
 
-      snapColl.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapColl.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final draft = TempQuote.fromJSON(data);
         drafts.add(draft);
       });
 
-      lastDoc = snapColl.documents.last;
+      lastDoc = snapColl.docs.last;
 
       setState(() {
         isLoading = false;
         hasErrors = false;
-        hasNext = snapColl.documents.length == limit;
+        hasNext = snapColl.docs.length == limit;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -362,16 +362,16 @@ class _DraftsState extends State<Drafts> {
         throw Error();
       }
 
-      final snapColl = await Firestore.instance
+      final snapColl = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('drafts')
           .startAfterDocument(lastDoc)
           .orderBy('createdAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapColl.documents.isEmpty) {
+      if (snapColl.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -380,20 +380,20 @@ class _DraftsState extends State<Drafts> {
         return;
       }
 
-      snapColl.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapColl.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final draft = TempQuote.fromJSON(data);
         drafts.add(draft);
       });
 
-      lastDoc = snapColl.documents.last;
+      lastDoc = snapColl.docs.last;
 
       setState(() {
         isLoading = false;
         hasErrors = false;
-        hasNext = snapColl.documents.length == limit;
+        hasNext = snapColl.docs.length == limit;
       });
     } catch (error) {
       debugPrint(error.toString());

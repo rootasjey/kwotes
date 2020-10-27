@@ -123,16 +123,16 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .orderBy('updatedAt', descending: true)
           .limit(3)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isNotEmpty) {
-        snapshot.documents.forEach((doc) {
-          final data = doc.data;
-          data['id'] = doc.documentID;
+      if (snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
 
           final author = Author.fromJSON(data);
           _authorsList.add(author);

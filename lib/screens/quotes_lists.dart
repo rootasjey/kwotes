@@ -381,7 +381,7 @@ class _QuotesListsState extends State<QuotesLists> {
 
       // Add a new document containing information
       // to delete the subcollection (in order to delete its documents).
-      await Firestore.instance.collection('todelete').add({
+      await FirebaseFirestore.instance.collection('todelete').add({
         'objectId': quoteList.id,
         'path': 'users/<userId>/lists/<listId>/quotes',
         'userId': userAuth.uid,
@@ -390,11 +390,11 @@ class _QuotesListsState extends State<QuotesLists> {
       });
 
       // Delete the quote collection doc.
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
-          .document(quoteList.id)
+          .doc(quoteList.id)
           .delete();
     } catch (error) {
       setState(() {
@@ -426,15 +426,15 @@ class _QuotesListsState extends State<QuotesLists> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
           .orderBy('updatedAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -443,18 +443,18 @@ class _QuotesListsState extends State<QuotesLists> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quoteList = UserQuotesList.fromJSON(data);
         userQuotesLists.add(quoteList);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoading = false;
       });
     } catch (error) {
@@ -479,16 +479,16 @@ class _QuotesListsState extends State<QuotesLists> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
           .orderBy('updatedAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -497,18 +497,18 @@ class _QuotesListsState extends State<QuotesLists> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quoteList = UserQuotesList.fromJSON(data);
         userQuotesLists.add(quoteList);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
-        hasNext = snapshot.documents.length == limit;
+        hasNext = snapshot.docs.length == limit;
         isLoadingMore = false;
       });
     } catch (error) {
@@ -832,12 +832,12 @@ class _QuotesListsState extends State<QuotesLists> {
         return;
       }
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('lists')
-          .document(quotesList.id)
-          .updateData({
+          .doc(quotesList.id)
+          .update({
         'description': updateDescription,
         'name': updateName,
         'isPublic': updateIsPublic,

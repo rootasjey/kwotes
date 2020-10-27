@@ -313,15 +313,15 @@ class _FavouritesState extends State<Favourites> {
         return;
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('favourites')
           .orderBy('createdAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           isLoading = false;
           hasNext = false;
@@ -330,19 +330,19 @@ class _FavouritesState extends State<Favourites> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
-        hasNext = limit == snapshot.documents.length;
+        hasNext = limit == snapshot.docs.length;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -367,16 +367,16 @@ class _FavouritesState extends State<Favourites> {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
 
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('favourites')
           .orderBy('createdAt', descending: true)
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -385,19 +385,19 @@ class _FavouritesState extends State<Favourites> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoadingMore = false;
-        hasNext = limit == snapshot.documents.length;
+        hasNext = limit == snapshot.docs.length;
       });
     } catch (error) {
       debugPrint(error.toString());

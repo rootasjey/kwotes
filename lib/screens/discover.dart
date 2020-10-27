@@ -485,13 +485,13 @@ class _DiscoverState extends State<Discover> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .orderBy('updatedAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         print('empty authors');
         setState(() {
           hasNext = false;
@@ -501,9 +501,9 @@ class _DiscoverState extends State<Discover> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final author = Author.fromJSON(data);
         authors.add(author);
@@ -515,8 +515,8 @@ class _DiscoverState extends State<Discover> {
 
       setState(() {
         isLoading = false;
-        hasNext = snapshot.documents.isNotEmpty;
-        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.docs.isNotEmpty;
+        lastDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -535,22 +535,22 @@ class _DiscoverState extends State<Discover> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .orderBy('updatedAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         hasNext = false;
         isLoadingMore = false;
         return;
       }
 
-      if (snapshot.documents.isNotEmpty) {
-        snapshot.documents.forEach((doc) {
-          final data = doc.data;
-          data['id'] = doc.documentID;
+      if (snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
 
           final author = Author.fromJSON(data);
           authors.add(author);
@@ -559,8 +559,8 @@ class _DiscoverState extends State<Discover> {
 
       setState(() {
         isLoadingMore = false;
-        hasNext = snapshot.documents.isNotEmpty;
-        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.docs.isNotEmpty;
+        lastDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -574,13 +574,13 @@ class _DiscoverState extends State<Discover> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .orderBy('updatedAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -589,9 +589,9 @@ class _DiscoverState extends State<Discover> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final ref = Reference.fromJSON(data);
         references.add(ref);
@@ -603,8 +603,8 @@ class _DiscoverState extends State<Discover> {
 
       setState(() {
         isLoading = false;
-        hasNext = snapshot.documents.isNotEmpty;
-        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.docs.isNotEmpty;
+        lastDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -623,22 +623,22 @@ class _DiscoverState extends State<Discover> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .orderBy('updatedAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         hasNext = false;
         isLoadingMore = false;
         return;
       }
 
-      if (snapshot.documents.isNotEmpty) {
-        snapshot.documents.forEach((doc) {
-          final data = doc.data;
-          data['id'] = doc.documentID;
+      if (snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
 
           final ref = Reference.fromJSON(data);
           references.add(ref);
@@ -647,8 +647,8 @@ class _DiscoverState extends State<Discover> {
 
       setState(() {
         isLoadingMore = false;
-        hasNext = snapshot.documents.isNotEmpty;
-        lastDoc = snapshot.documents.last;
+        hasNext = snapshot.docs.isNotEmpty;
+        lastDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());

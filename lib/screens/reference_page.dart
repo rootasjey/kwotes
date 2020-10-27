@@ -747,9 +747,9 @@ class ReferencePageState extends State<ReferencePage> {
     });
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('references')
-          .document(widget.id)
+          .doc(widget.id)
           .get();
 
       if (!snapshot.exists) {
@@ -760,8 +760,8 @@ class ReferencePageState extends State<ReferencePage> {
         return;
       }
 
-      final data = snapshot.data;
-      data['id'] = snapshot.documentID;
+      final data = snapshot.data();
+      data['id'] = snapshot.id;
 
       setState(() {
         reference = Reference.fromJSON(data);
@@ -785,15 +785,15 @@ class ReferencePageState extends State<ReferencePage> {
     quotes.clear();
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('mainReference.id', isEqualTo: widget.id)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
         });
@@ -801,17 +801,17 @@ class ReferencePageState extends State<ReferencePage> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
       setState(() {
-        lastDoc = snapshot.documents.last;
-        hasNext = snapshot.documents.length == limit;
+        lastDoc = snapshot.docs.last;
+        hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -826,16 +826,16 @@ class ReferencePageState extends State<ReferencePage> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('mainReference.id', isEqualTo: widget.id)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(limit)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -844,9 +844,9 @@ class ReferencePageState extends State<ReferencePage> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
@@ -854,8 +854,8 @@ class ReferencePageState extends State<ReferencePage> {
 
       setState(() {
         isLoadingMore = false;
-        lastDoc = snapshot.documents.last;
-        hasNext = snapshot.documents.length == limit;
+        lastDoc = snapshot.docs.last;
+        hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
       debugPrint(error.toString());

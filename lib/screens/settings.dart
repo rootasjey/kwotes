@@ -998,12 +998,12 @@ class _SettingsState extends State<Settings> {
         return;
       }
 
-      final user = await Firestore.instance
+      final user = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .get();
 
-      final data = user.data;
+      final data = user.data();
 
       avatarUrl = data['urls']['image'];
       currentUserName = data['name'] ?? '';
@@ -1082,10 +1082,10 @@ class _SettingsState extends State<Settings> {
         throw Error();
       }
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
-          .updateData({'name': newUserName});
+          .doc(userAuth.uid)
+          .update({'name': newUserName});
 
       setState(() {
         isLoadingName = false;
@@ -1123,10 +1123,10 @@ class _SettingsState extends State<Settings> {
     try {
       final userAuth = await userState.userAuth;
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
-          .updateData({
+          .doc(userAuth.uid)
+          .update({
         'urls.image': 'local:$imageName',
       });
 

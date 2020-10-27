@@ -30,7 +30,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   bool isPrevFav = false;
   bool hasFetchedFav = false;
   bool isLoading = false;
-  FirebaseUser userAuth;
+  User userAuth;
 
   Quotidian quotidian;
   bool hasFetchFav = false;
@@ -377,9 +377,9 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
     day = day.length == 2 ? day : '0$day';
 
     try {
-      final doc = await Firestore.instance
+      final doc = await FirebaseFirestore.instance
           .collection('quotidians')
-          .document('${now.year}:$month:$day:en')
+          .doc('${now.year}:$month:$day:en')
           .get();
 
       if (!doc.exists) {
@@ -391,7 +391,7 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
       }
 
       setState(() {
-        quotidian = Quotidian.fromJSON(doc.data);
+        quotidian = Quotidian.fromJSON(doc.data());
         isLoading = false;
       });
     } catch (error, stackTrace) {

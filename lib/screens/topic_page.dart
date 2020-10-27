@@ -53,7 +53,7 @@ class _TopicPageState extends State<TopicPage> {
 
   final double beginY = 10.0;
 
-  FirebaseUser userAuth;
+  User userAuth;
 
   List<Quote> quotes = [];
 
@@ -472,7 +472,7 @@ class _TopicPageState extends State<TopicPage> {
     isFavLoading = true;
 
     if (userAuth == null) {
-      userAuth = await FirebaseAuth.instance.currentUser();
+      userAuth = FirebaseAuth.instance.currentUser;
     }
 
     if (userAuth == null) {
@@ -480,11 +480,11 @@ class _TopicPageState extends State<TopicPage> {
     }
 
     try {
-      final doc = await Firestore.instance
+      final doc = await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
+          .doc(userAuth.uid)
           .collection('favourites')
-          .document(quoteId)
+          .doc(quoteId)
           .get();
 
       setState(() {
@@ -509,15 +509,15 @@ class _TopicPageState extends State<TopicPage> {
     hasNext = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('topics.$topicName', isEqualTo: true)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(10)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -526,15 +526,15 @@ class _TopicPageState extends State<TopicPage> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -550,9 +550,9 @@ class _TopicPageState extends State<TopicPage> {
 
   void fetchColor() async {
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('topics')
-          .document(topicName)
+          .doc(topicName)
           .get();
 
       if (snapshot == null || !snapshot.exists) {
@@ -560,7 +560,7 @@ class _TopicPageState extends State<TopicPage> {
       }
 
       setState(() {
-        fabColor = Color(snapshot.data['color']);
+        fabColor = Color(snapshot.data()['color']);
       });
     } catch (error) {}
   }
@@ -569,16 +569,16 @@ class _TopicPageState extends State<TopicPage> {
     isLoadingMore = true;
 
     try {
-      final snapshot = await Firestore.instance
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('topics.$topicName', isEqualTo: true)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(10)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoadingMore = false;
@@ -586,15 +586,15 @@ class _TopicPageState extends State<TopicPage> {
         return;
       }
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.documents.last;
+      lastDoc = snapshot.docs.last;
 
       setState(() {
         isLoadingMore = false;

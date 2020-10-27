@@ -13,7 +13,7 @@ Future addNewTempQuote({
 }) async {
   final userAuth = await userState.userAuth;
 
-  await Firestore.instance.collection('tempquotes').add({
+  await FirebaseFirestore.instance.collection('tempquotes').add({
     'author': {
       'id': DataQuoteInputs.author.id,
       'born': {
@@ -80,9 +80,9 @@ Future<bool> deleteTempQuote({
   TempQuote tempQuote,
 }) async {
   try {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('tempquotes')
-        .document(tempQuote.id)
+        .doc(tempQuote.id)
         .delete();
 
     return true;
@@ -97,9 +97,9 @@ Future<bool> deleteTempQuoteAdmin({
   TempQuote tempQuote,
 }) async {
   try {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('tempquotes')
-        .document(tempQuote.id)
+        .doc(tempQuote.id)
         .delete();
 
     return true;
@@ -276,10 +276,10 @@ Future saveExistingTempQuote({
 }) async {
   final userAuth = await userState.userAuth;
 
-  await Firestore.instance
+  await FirebaseFirestore.instance
       .collection('tempquotes')
-      .document(DataQuoteInputs.quote.id)
-      .setData({
+      .doc(DataQuoteInputs.quote.id)
+      .set({
     'author': {
       'id': DataQuoteInputs.author.id,
       'born': {

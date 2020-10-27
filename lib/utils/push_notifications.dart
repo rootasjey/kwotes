@@ -184,18 +184,18 @@ class PushNotifications {
     }
 
     try {
-      final tokenRef = await Firestore.instance
+      final tokenRef = await FirebaseFirestore.instance
           .collection('users')
-          .document(userUid)
+          .doc(userUid)
           .collection('tokens')
-          .document(fcmToken)
+          .doc(fcmToken)
           .get();
 
       if (tokenRef.exists) {
         return;
       }
 
-      await tokenRef.reference.setData({
+      await tokenRef.reference.set({
         'token': fcmToken,
         'createdAt': FieldValue.serverTimestamp(),
         'platform': Platform.operatingSystem,

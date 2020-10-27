@@ -12,7 +12,7 @@ import 'package:figstyle/utils/app_localstorage.dart';
 Future<bool> checkEmailAvailability(String email) async {
   try {
     final callable = CloudFunctions(
-      app: FirebaseApp.instance,
+      app: Firebase.app(),
       region: 'europe-west3',
     ).getHttpsCallable(
       functionName: 'users-checkEmailAvailability',
@@ -36,7 +36,7 @@ bool checkEmailFormat(String email) {
 Future<bool> checkNameAvailability(String username) async {
   try {
     final callable = CloudFunctions(
-      app: FirebaseApp.instance,
+      app: Firebase.app(),
       region: 'europe-west3',
     ).getHttpsCallable(
       functionName: 'users-checkNameAvailability',
@@ -72,14 +72,14 @@ void userSignOut({
   }
 }
 
-Future userGetAndSetAvatarUrl(AuthResult authResult) async {
-  final user = await Firestore.instance
+Future userGetAndSetAvatarUrl(UserCredential authResult) async {
+  final user = await FirebaseFirestore.instance
       .collection('users')
-      .document(authResult.user.uid)
+      .doc(authResult.user.uid)
       .get();
 
   final data = user.data;
-  final avatarUrl = data['urls']['image'];
+  final avatarUrl = data()['urls']['image'];
 
   String imageName = avatarUrl.replaceFirst('local:', '');
   String path = 'assets/images/$imageName-${stateColors.iconExt}.png';

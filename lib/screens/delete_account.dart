@@ -426,7 +426,7 @@ class DeleteAccountState extends State<DeleteAccount> {
         return;
       }
 
-      final credentials = EmailAuthProvider.getCredential(
+      final credentials = EmailAuthProvider.credential(
         email: userAuth.email,
         password: password,
       );
@@ -434,10 +434,10 @@ class DeleteAccountState extends State<DeleteAccount> {
       await userAuth.reauthenticateWithCredential(credentials);
       await PushNotifications.unsubMobileQuotidians(lang: userState.lang);
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(userAuth.uid)
-          .updateData({'flag': 'delete'});
+          .doc(userAuth.uid)
+          .update({'flag': 'delete'});
 
       await userAuth.delete();
 

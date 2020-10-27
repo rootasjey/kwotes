@@ -12,7 +12,6 @@ Future<bool> addToFavourites({
   Quotidian quotidian,
   Quote quote,
 }) async {
-
   try {
     final userAuth = await userState.userAuth;
 
@@ -26,55 +25,51 @@ Future<bool> addToFavourites({
       return false;
     }
 
-    String lang = quotidian != null ?
-      quotidian.lang : quote.lang;
+    String lang = quotidian != null ? quotidian.lang : quote.lang;
 
     if (quote == null) {
       quote = quotidian.quote;
     }
 
-    final doc = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('favourites')
-      .document(quote.id)
-      .get();
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .collection('favourites')
+        .doc(quote.id)
+        .get();
 
     if (doc.exists) {
       return true;
     }
 
-    final mainReferenceId = quote.mainReference != null
-      ? quote.mainReference.id
-      : '';
+    final mainReferenceId =
+        quote.mainReference != null ? quote.mainReference.id : '';
 
-    final mainReferenceName = quote.mainReference != null
-      ? quote.mainReference.name
-      : '';
+    final mainReferenceName =
+        quote.mainReference != null ? quote.mainReference.name : '';
 
-    await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('favourites')
-      .document(quote.id)
-      .setData({
-        'author'        : {
-          'id'          : quote.author.id,
-          'name'        : quote.author.name,
-        },
-        'createdAt'     : DateTime.now(),
-        'lang'          : lang,
-        'mainReference' : {
-          'id'          : mainReferenceId,
-          'name'        : mainReferenceName,
-        },
-        'name'          : quote.name,
-        'quoteId'       : quote.id,
-        'topics'        : quote.topics,
-      });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .collection('favourites')
+        .doc(quote.id)
+        .set({
+      'author': {
+        'id': quote.author.id,
+        'name': quote.author.name,
+      },
+      'createdAt': DateTime.now(),
+      'lang': lang,
+      'mainReference': {
+        'id': mainReferenceId,
+        'name': mainReferenceName,
+      },
+      'name': quote.name,
+      'quoteId': quote.id,
+      'topics': quote.topics,
+    });
 
     return true;
-
   } catch (error) {
     debugPrint(error.toString());
 
@@ -93,19 +88,17 @@ Future<bool> addToFavourites({
 Future<bool> isFavourite({
   String quoteId,
 }) async {
-
   final userAuth = await userState.userAuth;
 
   try {
-    final doc = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('favourites')
-      .document(quoteId)
-      .get();
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .collection('favourites')
+        .doc(quoteId)
+        .get();
 
     return doc.exists;
-
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -119,14 +112,14 @@ Future<bool> removeFromFavourites({
   Quotidian quotidian,
   Quote quote,
 }) async {
-
   try {
     final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
       showSnack(
         context: context,
-        message: "You're not connected to remove this quote from your favourites.",
+        message:
+            "You're not connected to remove this quote from your favourites.",
         type: SnackType.error,
       );
 
@@ -137,26 +130,25 @@ Future<bool> removeFromFavourites({
       quote = quotidian.quote;
     }
 
-    final doc = await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('favourites')
-      .document(quote.id)
-      .get();
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .collection('favourites')
+        .doc(quote.id)
+        .get();
 
     if (!doc.exists) {
       return true;
     }
 
-    await Firestore.instance
-      .collection('users')
-      .document(userAuth.uid)
-      .collection('favourites')
-      .document(quote.id)
-      .delete();
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .collection('favourites')
+        .doc(quote.id)
+        .delete();
 
     return true;
-
   } catch (error) {
     debugPrint(error.toString());
 

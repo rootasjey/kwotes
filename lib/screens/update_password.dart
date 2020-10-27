@@ -339,7 +339,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
         return;
       }
 
-      final credentials = EmailAuthProvider.getCredential(
+      final credentials = EmailAuthProvider.credential(
         email: userAuth.email,
         password: password,
       );

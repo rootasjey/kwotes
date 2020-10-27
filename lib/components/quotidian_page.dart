@@ -335,9 +335,9 @@ class _QuotidianPageState extends State<QuotidianPage> {
     day = day.length == 2 ? day : '0$day';
 
     try {
-      final doc = await Firestore.instance
+      final doc = await FirebaseFirestore.instance
           .collection('quotidians')
-          .document('${now.year}:$month:$day:$_prevLang')
+          .doc('${now.year}:$month:$day:$_prevLang')
           .get();
 
       if (!doc.exists) {
@@ -349,7 +349,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
       }
 
       setState(() {
-        quotidian = Quotidian.fromJSON(doc.data);
+        quotidian = Quotidian.fromJSON(doc.data());
         isLoading = false;
       });
     } catch (error, stackTrace) {

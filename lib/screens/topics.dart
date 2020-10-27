@@ -248,14 +248,14 @@ class _TopicsState extends State<Topics> {
     try {
       final topicName = _topicsList[index].name;
 
-      final snapshot = await Firestore()
+      final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('topics.$topicName', isEqualTo: true)
           .where('lang', isEqualTo: selectedLang)
           .limit(3)
-          .getDocuments();
+          .get();
 
-      if (snapshot.documents.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         setState(() {
           isLoading = false;
         });
@@ -264,9 +264,9 @@ class _TopicsState extends State<Topics> {
 
       final quotes = <Quote>[];
 
-      snapshot.documents.forEach((doc) {
-        final data = doc.data;
-        data['id'] = doc.documentID;
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
 
         quotes.add(Quote.fromJSON(data));
       });
