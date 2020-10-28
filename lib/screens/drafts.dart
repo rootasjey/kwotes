@@ -221,7 +221,7 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
