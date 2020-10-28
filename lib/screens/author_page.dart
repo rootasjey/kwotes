@@ -440,104 +440,107 @@ class _AuthorPageState extends State<AuthorPage> {
       );
     }
 
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
-      children: <Widget>[
-        FadeInX(
-          beginX: 50.0,
-          delay: 0.0,
-          child: Tooltip(
-            message: 'summary',
-            child: Material(
-              elevation: 4.0,
-              shape: CircleBorder(),
-              clipBehavior: Clip.hardEdge,
-              child: InkWell(
-                onTap: () =>
-                    setState(() => isSummaryVisible = !isSummaryVisible),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Icon(
-                    Icons.list_alt_outlined,
-                    size: 30.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: <Widget>[
+          FadeInX(
+            beginX: 50.0,
+            delay: 0.0,
+            child: Tooltip(
+              message: 'summary',
+              child: Material(
+                elevation: 4.0,
+                shape: CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                  onTap: () =>
+                      setState(() => isSummaryVisible = !isSummaryVisible),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Icon(
+                      Icons.list_alt_outlined,
+                      size: 30.0,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        if (urls.website.isNotEmpty)
-          linkCircleButton(
-            delay: 0.1,
-            name: 'Website',
-            url: urls.website,
-            imageUrl: 'assets/images/world-globe.png',
-          ),
-        if (urls.wikipedia.isNotEmpty)
-          linkCircleButton(
-            delay: 0.2,
-            name: 'Wikipedia',
-            url: urls.wikipedia,
-            imageUrl: 'assets/images/wikipedia-light.png',
-          ),
-        if (urls.amazon.isNotEmpty)
-          linkCircleButton(
-            delay: 0.3,
-            name: 'Amazon',
-            url: urls.amazon,
-            imageUrl: 'assets/images/amazon.png',
-          ),
-        if (urls.facebook.isNotEmpty)
-          linkCircleButton(
-            delay: 0.4,
-            name: 'Facebook',
-            url: urls.facebook,
-            imageUrl: 'assets/images/facebook.png',
-          ),
-        if (urls.instagram.isNotEmpty)
-          linkCircleButton(
-            delay: 0.5,
-            name: 'Instagram',
-            url: urls.instagram,
-            imageUrl: 'assets/images/instagram.png',
-          ),
-        if (urls.netflix.isNotEmpty)
-          linkCircleButton(
-            delay: 0.6,
-            name: 'Netflix',
-            url: urls.netflix,
-            imageUrl: 'assets/images/netflix.png',
-          ),
-        if (urls.primeVideo.isNotEmpty)
-          linkCircleButton(
-            delay: 0.7,
-            name: 'Prime Video',
-            url: urls.primeVideo,
-            imageUrl: 'assets/images/prime-video.png',
-          ),
-        if (urls.twitch.isNotEmpty)
-          linkCircleButton(
-            delay: 0.8,
-            name: 'Twitch',
-            url: urls.twitch,
-            imageUrl: 'assets/images/twitch.png',
-          ),
-        if (urls.twitter.isNotEmpty)
-          linkCircleButton(
-            delay: 0.9,
-            name: 'Twitter',
-            url: urls.twitter,
-            imageUrl: 'assets/images/twitter.png',
-          ),
-        if (urls.youtube.isNotEmpty)
-          linkCircleButton(
-            delay: 1.0,
-            name: 'Youtube',
-            url: urls.youtube,
-            imageUrl: 'assets/images/youtube.png',
-          ),
-      ],
+          if (urls.website.isNotEmpty)
+            linkCircleButton(
+              delay: 0.1,
+              name: 'Website',
+              url: urls.website,
+              imageUrl: 'assets/images/world-globe.png',
+            ),
+          if (urls.wikipedia.isNotEmpty)
+            linkCircleButton(
+              delay: 0.2,
+              name: 'Wikipedia',
+              url: urls.wikipedia,
+              imageUrl: 'assets/images/wikipedia-light.png',
+            ),
+          if (urls.amazon.isNotEmpty)
+            linkCircleButton(
+              delay: 0.3,
+              name: 'Amazon',
+              url: urls.amazon,
+              imageUrl: 'assets/images/amazon.png',
+            ),
+          if (urls.facebook.isNotEmpty)
+            linkCircleButton(
+              delay: 0.4,
+              name: 'Facebook',
+              url: urls.facebook,
+              imageUrl: 'assets/images/facebook.png',
+            ),
+          if (urls.instagram.isNotEmpty)
+            linkCircleButton(
+              delay: 0.5,
+              name: 'Instagram',
+              url: urls.instagram,
+              imageUrl: 'assets/images/instagram.png',
+            ),
+          if (urls.netflix.isNotEmpty)
+            linkCircleButton(
+              delay: 0.6,
+              name: 'Netflix',
+              url: urls.netflix,
+              imageUrl: 'assets/images/netflix.png',
+            ),
+          if (urls.primeVideo.isNotEmpty)
+            linkCircleButton(
+              delay: 0.7,
+              name: 'Prime Video',
+              url: urls.primeVideo,
+              imageUrl: 'assets/images/prime-video.png',
+            ),
+          if (urls.twitch.isNotEmpty)
+            linkCircleButton(
+              delay: 0.8,
+              name: 'Twitch',
+              url: urls.twitch,
+              imageUrl: 'assets/images/twitch.png',
+            ),
+          if (urls.twitter.isNotEmpty)
+            linkCircleButton(
+              delay: 0.9,
+              name: 'Twitter',
+              url: urls.twitter,
+              imageUrl: 'assets/images/twitter.png',
+            ),
+          if (urls.youtube.isNotEmpty)
+            linkCircleButton(
+              delay: 1.0,
+              name: 'Youtube',
+              url: urls.youtube,
+              imageUrl: 'assets/images/youtube.png',
+            ),
+        ],
+      ),
     );
   }
 
