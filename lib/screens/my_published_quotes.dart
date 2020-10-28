@@ -115,7 +115,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     return PageAppBar(
       textTitle: 'Published',
       textSubTitle: 'Quotes published by you',
-      expandedHeight: 170.0,
+      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -241,7 +241,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -250,6 +250,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.id,
+            color: stateColors.softBackground,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),
