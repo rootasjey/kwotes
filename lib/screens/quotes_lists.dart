@@ -159,7 +159,9 @@ class _QuotesListsState extends State<QuotesLists> {
 
   Widget cardItem({UserQuotesList quoteList}) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10.0,
+      ),
       child: Column(
         children: <Widget>[
           SizedBox(

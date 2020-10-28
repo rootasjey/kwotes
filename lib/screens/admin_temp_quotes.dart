@@ -88,7 +88,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     return PageAppBar(
       textTitle: 'All in validation',
       textSubTitle: 'Quotes in validation from all users',
-      expandedHeight: 170.0,
+      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -269,7 +269,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(

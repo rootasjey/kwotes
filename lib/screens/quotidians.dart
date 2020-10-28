@@ -92,7 +92,7 @@ class QuotidiansState extends State<Quotidians> {
     return PageAppBar(
       textTitle: 'Quotidians',
       textSubTitle: 'Scheduled quotes for the coming days',
-      expandedHeight: 170.0,
+      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -387,9 +387,7 @@ class QuotidiansState extends State<Quotidians> {
         children: group.map((quotidian) {
       return QuotidianRow(
         quotidian: quotidian,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-        ),
+        padding: EdgeInsets.zero,
         itemBuilder: (context) => <PopupMenuEntry<String>>[
           PopupMenuItem(
             value: 'delete',
