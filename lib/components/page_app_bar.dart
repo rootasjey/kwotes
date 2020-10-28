@@ -83,19 +83,23 @@ class _PageAppBarState extends State<PageAppBar> {
           final showLangSelector = widget.onLangChanged != null;
           final showItemsLayout = widget.onItemsLayoutSelected != null;
 
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              if (showOrderButtons) orderButton(),
-              if (showOrderButtons && showLangSelector)
-                separator(), // separator
-              if (showLangSelector) langSelector(),
-              if (showLangSelector && showItemsLayout) separator(), // separator
-              if (showOrderButtons && showItemsLayout && !showLangSelector)
-                separator(), // separator
-              if (showItemsLayout) itemsLayoutSelector(),
-              ...widget.additionalIconButtons,
-            ],
+          return Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: Wrap(
+              spacing: 10.0,
+              children: <Widget>[
+                if (showOrderButtons) orderButton(),
+                if (showOrderButtons && showLangSelector)
+                  separator(), // separator
+                if (showLangSelector) langSelector(),
+                if (showLangSelector && showItemsLayout)
+                  separator(), // separator
+                if (showOrderButtons && showItemsLayout && !showLangSelector)
+                  separator(), // separator
+                if (showItemsLayout) itemsLayoutSelector(),
+                ...widget.additionalIconButtons,
+              ],
+            ),
           );
         },
       ),
@@ -157,7 +161,7 @@ class _PageAppBarState extends State<PageAppBar> {
 
   Widget oneLineTitle() {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, top: 40.0),
+      padding: const EdgeInsets.only(left: 15.0, top: 40.0),
       child: TextButton.icon(
         onPressed: widget.onTitlePressed,
         icon: AppIcon(
