@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/error_container.dart';
-import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/temp_quote_row_with_actions.dart';
-import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -43,7 +39,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   ScrollController scrollController = ScrollController();
 
-  String lang = 'all';
+  String lang = 'en';
   final String pageRoute = TempQuotesRoute;
 
   List<TempQuote> tempQuotes = [];
@@ -120,232 +116,51 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Widget appBar() {
-    // ?NOTE: Not using PageAppBar because of custom languages: 'all'.
-    return BasePageAppBar(
-      expandedHeight: 170.0,
-      title: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIcon(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-            onTap: () {
-              scrollController.animateTo(
-                0,
-                duration: 250.milliseconds,
-                curve: Curves.easeIn,
-              );
-            },
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'In validation',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: .6,
-                  child: Text(
-                    'Your quotes waiting to be validated',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Wrap(
-              spacing: 10.0,
-              children: <Widget>[
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.0,
-                  child: ChoiceChip(
-                    label: Text(
-                      'First added',
-                      style: TextStyle(
-                        color:
-                            !descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: !descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (!descending) {
-                        return;
-                      }
+    return PageAppBar(
+      textTitle: 'In validation',
+      textSubTitle: 'Your quotes waiting to be validated',
+      expandedHeight: 120.0,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
 
-                      descending = false;
-                      fetch();
+        descending = newDescending;
+        fetch();
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.1,
-                  child: ChoiceChip(
-                    label: Text(
-                      'Last added',
-                      style: TextStyle(
-                        color:
-                            descending ? Colors.white : stateColors.foreground,
-                      ),
-                    ),
-                    selected: descending,
-                    selectedColor: stateColors.primary,
-                    onSelected: (selected) {
-                      if (descending) {
-                        return;
-                      }
+        appLocalStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        fetch();
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
 
-                      descending = true;
-                      fetch();
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
 
-                      appLocalStorage.setPageOrder(
-                        descending: descending,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10.0,
-                      left: 20.0,
-                      right: 20.0,
-                    ),
-                    child: Container(
-                      height: 25,
-                      width: 2.0,
-                      color: stateColors.foreground,
-                    ),
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.4,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: DropdownButton<String>(
-                      elevation: 2,
-                      value: lang,
-                      isDense: true,
-                      underline: Container(
-                        height: 0,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      style: TextStyle(
-                        color: stateColors.foreground.withOpacity(0.6),
-                        fontFamily: GoogleFonts.raleway().fontFamily,
-                        fontSize: 20.0,
-                      ),
-                      onChanged: (String newLang) {
-                        lang = newLang;
-                        fetch();
-                      },
-                      items: ['all', 'en', 'fr'].map((String value) {
-                        return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value.toUpperCase(),
-                            ));
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.5,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10.0,
-                      left: 20.0,
-                      right: 20.0,
-                    ),
-                    child: Container(
-                      height: 25,
-                      width: 2.0,
-                      color: stateColors.foreground,
-                    ),
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.6,
-                  child: IconButton(
-                    onPressed: () {
-                      if (itemsLayout == ItemsLayout.list) {
-                        return;
-                      }
-
-                      setState(() {
-                        itemsLayout = ItemsLayout.list;
-                      });
-
-                      appLocalStorage.saveItemsStyle(
-                        pageRoute: pageRoute,
-                        style: ItemsLayout.list,
-                      );
-                    },
-                    icon: Icon(Icons.list),
-                    color: itemsLayout == ItemsLayout.list
-                        ? stateColors.primary
-                        : stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.7,
-                  child: IconButton(
-                    onPressed: () {
-                      if (itemsLayout == ItemsLayout.grid) {
-                        return;
-                      }
-
-                      setState(() {
-                        itemsLayout = ItemsLayout.grid;
-                      });
-
-                      appLocalStorage.saveItemsStyle(
-                        pageRoute: pageRoute,
-                        style: ItemsLayout.grid,
-                      );
-                    },
-                    icon: Icon(Icons.grid_on),
-                    color: itemsLayout == ItemsLayout.grid
-                        ? stateColors.primary
-                        : stateColors.foreground.withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+        appLocalStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 
@@ -478,7 +293,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverPadding(
       padding: const EdgeInsets.only(top: 40.0),
