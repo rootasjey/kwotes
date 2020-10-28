@@ -303,6 +303,9 @@ class _QuotePageState extends State<QuotePage> {
                   child: TopicCardColor(
                     color: Color(topicColor.decimal),
                     name: topicColor.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 );
               }).toList(),
