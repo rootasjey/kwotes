@@ -100,7 +100,7 @@ class _QuotesListsState extends State<QuotesLists> {
     return PageAppBar(
       textTitle: 'Lists',
       textSubTitle: 'Thematic lists created by you',
-      expandedHeight: 170.0,
+      expandedHeight: 100.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
