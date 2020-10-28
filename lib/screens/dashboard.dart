@@ -72,16 +72,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget aboutButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.help,
-        size: 30.0,
-      ),
-      title: Text(
-        'About',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.help,
+      textTitle: 'About',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => About())),
     );
@@ -102,23 +95,15 @@ class _DashboardState extends State<Dashboard> {
           );
         },
       ),
-      ListTile(
-        contentPadding: const EdgeInsets.only(left: 50.0),
-        leading: Icon(Icons.timelapse, size: 30.0),
-        title: Text(
-          'All in validation',
-          style: TextStyle(fontSize: 20.0),
-        ),
+      tileButton(
+        iconData: Icons.timelapse,
+        textTitle: 'Admin validation',
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
       ),
-      ListTile(
-        contentPadding: const EdgeInsets.only(left: 50.0),
-        leading: Icon(Icons.wb_sunny, size: 30.0),
-        title: Text(
-          'Quotidians',
-          style: TextStyle(fontSize: 20.0),
-        ),
+      tileButton(
+        iconData: Icons.wb_sunny,
+        textTitle: 'Quotidians',
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => Quotidians())),
       ),
@@ -128,10 +113,10 @@ class _DashboardState extends State<Dashboard> {
   Widget appBar() {
     return BasePageAppBar(
       pinned: true,
-      collapsedHeight: 100.0,
-      expandedHeight: 120.0,
+      collapsedHeight: 70.0,
+      expandedHeight: 90.0,
       title: Padding(
-        padding: const EdgeInsets.only(top: 40.0, left: 40.0),
+        padding: const EdgeInsets.only(top: 40.0, left: 30.0),
         child: TextButton.icon(
           onPressed: () {
             scrollController.animateTo(
@@ -181,7 +166,6 @@ class _DashboardState extends State<Dashboard> {
       isConnected = userState.isUserConnected;
 
       if (isConnected) {
-        // children.add(avatarContainer());
         children.addAll(authWidgets(context));
 
         if (canManage) {
@@ -238,32 +222,18 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget draftsButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.edit,
-        size: 30.0,
-      ),
-      title: Text(
-        'Drafts',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.edit,
+      textTitle: 'Drafts',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => Drafts())),
     );
   }
 
   Widget favButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.favorite,
-        size: 30.0,
-      ),
-      title: Text(
-        'Favourites',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.favorite,
+      textTitle: 'Favourites',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => Favourites())),
     );
@@ -298,16 +268,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget signOutButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.exit_to_app,
-        size: 30.0,
-      ),
-      title: Text(
-        'Sign out',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.exit_to_app,
+      textTitle: 'Sign out',
       onTap: () async {
         await appLocalStorage.clearUserAuthData();
         await FirebaseAuth.instance.signOut();
@@ -327,48 +290,27 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget listsButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.list,
-        size: 30.0,
-      ),
-      title: Text(
-        'Lists',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.list,
+      textTitle: 'Lists',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => QuotesLists())),
     );
   }
 
   Widget pubQuotesButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.check,
-        size: 30.0,
-      ),
-      title: Text(
-        'Published',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.check,
+      textTitle: 'Published',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => MyPublishedQuotes())),
     );
   }
 
   Widget settingsButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.settings,
-        size: 30.0,
-      ),
-      title: Text(
-        'Settings',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.settings,
+      textTitle: 'Settings',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => Settings())),
     );
@@ -457,32 +399,37 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget tempQuotesButton() {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
-      leading: Icon(
-        Icons.timelapse,
-        size: 30.0,
-      ),
-      title: Text(
-        'In validation',
-        style: TextStyle(fontSize: 20.0),
-      ),
+    return tileButton(
+      iconData: Icons.timelapse,
+      textTitle: 'In validation',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => MyTempQuotes())),
     );
   }
 
-  Widget tosButton() {
+  Widget tileButton({
+    @required IconData iconData,
+    @required String textTitle,
+    @required VoidCallback onTap,
+  }) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 50.0),
+      contentPadding: const EdgeInsets.only(left: 40.0),
       leading: Icon(
-        Icons.privacy_tip,
+        iconData,
         size: 30.0,
       ),
       title: Text(
-        'Terms of service',
+        textTitle,
         style: TextStyle(fontSize: 20.0),
       ),
+      onTap: onTap,
+    );
+  }
+
+  Widget tosButton() {
+    return tileButton(
+      iconData: Icons.privacy_tip,
+      textTitle: 'Terms of service',
       onTap: () =>
           Navigator.of(context).push(MaterialPageRoute(builder: (_) => Tos())),
     );
