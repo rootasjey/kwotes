@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 class About extends StatelessWidget {
   final titleStyle = TextStyle(
     fontSize: 20.0,
+    fontWeight: FontWeight.w600,
   );
 
   final paragraphStyle = TextStyle(
@@ -125,6 +126,36 @@ class About extends StatelessWidget {
     );
   }
 
+  Widget creditItem({
+    @required String textTitle,
+    VoidCallback onPressed,
+    Widget leading,
+  }) {
+    return FlatButton(
+      onPressed: onPressed,
+      child: Row(
+        children: <Widget>[
+          if (leading != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: leading,
+            ),
+          Expanded(
+            child: Opacity(
+              opacity: paragraphOpacity,
+              child: Text(
+                textTitle,
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget creditsSection() {
     return SizedBox(
       width: 600.0,
@@ -141,106 +172,31 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-          FlatButton(
+          creditItem(
+            textTitle: 'Icons by Icons8',
             onPressed: () => launch('https://icons8.com'),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('💄'),
-                ),
-                Opacity(
-                  opacity: paragraphOpacity,
-                  child: Text(
-                    'Icons by Icons8',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            leading: Text('💄'),
           ),
-          FlatButton(
+          creditItem(
+            textTitle: 'Icons by iconmonstr',
             onPressed: () => launch('https://iconmonstr.com'),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('💄'),
-                ),
-                Opacity(
-                  opacity: paragraphOpacity,
-                  child: Text(
-                    'Icons by iconmonstr',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            leading: Text('💄'),
           ),
-          FlatButton(
+          creditItem(
+            textTitle: 'Icons by Orion Icon Library',
             onPressed: () => launch('https://orioniconlibrary.com'),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('💄'),
-                ),
-                Opacity(
-                  opacity: paragraphOpacity,
-                  child: Text(
-                    'Icons by Orion Icon Librairy',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            leading: Text('💄'),
           ),
-          FlatButton(
+          creditItem(
+            textTitle: 'Icons by Pixel Perfect',
             onPressed: () =>
                 launch('https://www.flaticon.com/authors/pixel-perfect'),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('💄'),
-                ),
-                Opacity(
-                  opacity: paragraphOpacity,
-                  child: Text(
-                    'Icons by Pixel Perfect',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            leading: Text('💄'),
           ),
-          FlatButton(
+          creditItem(
+            textTitle: 'Mobile app screenshots created with Previewed',
             onPressed: () => launch('https://previewed.app/'),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('📷'),
-                ),
-                Opacity(
-                  opacity: paragraphOpacity,
-                  child: Text(
-                    'Mobile app screenshots created with Previewed',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            leading: Text('📷'),
           ),
         ],
       ),
@@ -260,7 +216,8 @@ class About extends StatelessWidget {
         children: <Widget>[
           Center(
             child: OpenContainer(
-              closedColor: stateColors.background,
+              closedColor: Colors.transparent,
+              closedElevation: 0.0,
               closedBuilder: (context, openContainer) {
                 return Container(
                   width: size,
@@ -357,34 +314,50 @@ class About extends StatelessWidget {
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 60.0),
-              child: Material(
-                elevation: 1.0,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Ink.image(
-                  image: AssetImage('assets/images/jeje-profile.jpg'),
-                  fit: BoxFit.cover,
-                  width: 200.0,
-                  height: 200.0,
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/jeje-profile.jpg'),
-                                ),
-                              ),
-                            );
-                          });
-                    },
-                  ),
-                ),
+              child: OpenContainer(
+                closedColor: Colors.transparent,
+                closedElevation: 0.0,
+                closedBuilder: (context, openContainer) {
+                  return Material(
+                    elevation: 1.0,
+                    shape: CircleBorder(),
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: AssetImage('assets/images/jeje-profile.jpg'),
+                      fit: BoxFit.cover,
+                      width: 200.0,
+                      height: 200.0,
+                      child: InkWell(
+                        onTap: openContainer,
+                      ),
+                    ),
+                  );
+                },
+                openBuilder: (context, callback) {
+                  return Container(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        InkWell(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Image(
+                            image: AssetImage('assets/images/jeje-profile.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 40.0,
+                          right: 20.0,
+                          child: CircleButton(
+                              icon: Icon(Icons.close,
+                                  color: stateColors.secondary),
+                              onTap: () => Navigator.of(context).pop()),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -481,29 +454,53 @@ class About extends StatelessWidget {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  Ink.image(
-                    image: NetworkImage(
-                      'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
-                    ),
-                    width: 230.0,
-                    height: 400.0,
-                    child: InkWell(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Container(
-                                  child: Image(
-                                    image: NetworkImage(
-                                        'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png'),
-                                  ),
+                  OpenContainer(
+                    closedColor: Colors.transparent,
+                    closedBuilder: (context, openContainer) {
+                      return Container(
+                        width: 230.0,
+                        height: 400.0,
+                        child: Ink.image(
+                          width: 230.0,
+                          height: 400.0,
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
+                          ),
+                          child: InkWell(
+                            onTap: openContainer,
+                          ),
+                        ),
+                      );
+                    },
+                    openBuilder: (context, callback) {
+                      return Container(
+                        height: 800.0,
+                        width: 600.0,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Image(
+                                image: NetworkImage(
+                                  'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
                                 ),
-                              );
-                            });
-                      },
-                    ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              top: 40.0,
+                              right: 20.0,
+                              child: CircleButton(
+                                  icon: Icon(Icons.close,
+                                      color: stateColors.secondary),
+                                  onTap: () => Navigator.of(context).pop()),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                   FlatButton(
                     onPressed: () async {
@@ -554,37 +551,64 @@ class About extends StatelessWidget {
             padding: const EdgeInsets.only(top: 120.0),
             child: Column(
               children: <Widget>[
-                Ink.image(
-                  image: NetworkImage(
-                    'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg',
-                  ),
-                  height: 380.0,
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Image(
-                                  image: NetworkImage(
-                                      'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg'),
+                Center(
+                  child: OpenContainer(
+                    closedColor: Colors.transparent,
+                    closedBuilder: (context, openContainer) {
+                      return Container(
+                        height: 200.0,
+                        width: 320.0,
+                        child: Ink.image(
+                          height: 200.0,
+                          width: 320.0,
+                          image: NetworkImage(
+                            'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg',
+                          ),
+                          child: InkWell(
+                            onTap: openContainer,
+                          ),
+                        ),
+                      );
+                    },
+                    openBuilder: (context, callback) {
+                      return Container(
+                        height: 380.0,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Image(
+                                image: NetworkImage(
+                                  'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg',
                                 ),
+                                fit: BoxFit.cover,
                               ),
-                            );
-                          });
+                            ),
+                            Positioned(
+                              top: 40.0,
+                              right: 20.0,
+                              child: CircleButton(
+                                  icon: Icon(Icons.close,
+                                      color: stateColors.secondary),
+                                  onTap: () => Navigator.of(context).pop()),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ),
-                FlatButton(
-                  onPressed: () async {
-                    await launch(
-                        'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg');
-                  },
-                  child: Opacity(
-                    opacity: captionOpacity,
-                    child: Text('Citations 365 for PC & tablet'),
+                Center(
+                  child: FlatButton(
+                    onPressed: () async {
+                      await launch(
+                          'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg');
+                    },
+                    child: Opacity(
+                      opacity: captionOpacity,
+                      child: Text('Citations 365 for PC & tablet'),
+                    ),
                   ),
                 ),
               ],
