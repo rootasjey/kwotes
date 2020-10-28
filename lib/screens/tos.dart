@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Tos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20 : 80.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 80.0;
 
     return Scaffold(
         body: CustomScrollView(
