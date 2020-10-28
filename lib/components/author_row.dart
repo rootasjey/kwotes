@@ -122,6 +122,7 @@ class _AuthorRowState extends State<AuthorRow> {
         child: Material(
           elevation: 4.0,
           shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
           child: Opacity(
             opacity: elevation > 0.0 ? 1.0 : 0.8,
             child: Image.network(
