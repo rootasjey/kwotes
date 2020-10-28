@@ -92,7 +92,7 @@ class _QuoteRowState extends State<QuoteRow> {
         margin: EdgeInsets.zero,
         child: InkWell(
           onTap: () {
-            showMaterialModalBottomSheet(
+            showCupertinoModalBottomSheet(
               context: context,
               builder: (context, scrollController) => QuotePage(
                 quote: widget.quote,
