@@ -147,59 +147,58 @@ class _DiscoverState extends State<Discover> {
 
   Widget appBarType() {
     final isReferencesSelected = discoverType == DiscoverType.references;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return BasePageAppBar(
       pinned: true,
-      titlePadding: screenWidth < narrowWidthLimit
-          ? const EdgeInsets.only(left: 30.0)
-          : null,
-      title: Wrap(
-        spacing: 10.0,
-        children: [
-          Opacity(
-            opacity: isReferencesSelected ? 1.0 : 0.5,
-            child: TextButton(
-              onPressed: () {
-                appLocalStorage.saveDiscoverType(DiscoverType.references);
-                setState(() => discoverType = DiscoverType.references);
-                fetch();
-              },
-              style: TextButton.styleFrom(
-                primary: isReferencesSelected
-                    ? stateColors.secondary
-                    : stateColors.foreground,
-              ),
-              child: Text(
-                'References',
-                style: TextStyle(
-                  fontSize: 16.0,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 30.0),
+        child: Wrap(
+          spacing: 10.0,
+          children: [
+            Opacity(
+              opacity: isReferencesSelected ? 1.0 : 0.5,
+              child: TextButton(
+                onPressed: () {
+                  appLocalStorage.saveDiscoverType(DiscoverType.references);
+                  setState(() => discoverType = DiscoverType.references);
+                  fetch();
+                },
+                style: TextButton.styleFrom(
+                  primary: isReferencesSelected
+                      ? stateColors.secondary
+                      : stateColors.foreground,
+                ),
+                child: Text(
+                  'References',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
             ),
-          ),
-          Opacity(
-            opacity: !isReferencesSelected ? 1.0 : 0.5,
-            child: TextButton(
-              onPressed: () {
-                appLocalStorage.saveDiscoverType(DiscoverType.authors);
-                setState(() => discoverType = DiscoverType.authors);
-                fetch();
-              },
-              style: TextButton.styleFrom(
-                primary: !isReferencesSelected
-                    ? stateColors.secondary
-                    : stateColors.foreground,
-              ),
-              child: Text(
-                'Authors',
-                style: TextStyle(
-                  fontSize: 16.0,
+            Opacity(
+              opacity: !isReferencesSelected ? 1.0 : 0.5,
+              child: TextButton(
+                onPressed: () {
+                  appLocalStorage.saveDiscoverType(DiscoverType.authors);
+                  setState(() => discoverType = DiscoverType.authors);
+                  fetch();
+                },
+                style: TextButton.styleFrom(
+                  primary: !isReferencesSelected
+                      ? stateColors.secondary
+                      : stateColors.foreground,
+                ),
+                child: Text(
+                  'Authors',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       toolbarHeight: 60.0,
       collapsedHeight: 70.0,
