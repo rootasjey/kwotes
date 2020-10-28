@@ -94,46 +94,49 @@ class _QuotesListState extends State<QuotesList> {
 
   Widget appBar() {
     return BasePageAppBar(
-      expandedHeight: 120.0,
-      title: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIcon(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  quotesList == null ? 'List' : quotesList.name,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    quotesList == null ? '' : quotesList.description,
+      expandedHeight: 140.0,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 20.0, top: 40.0),
+        child: Row(
+          children: [
+            CircleButton(
+                onTap: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+            AppIcon(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              size: 30.0,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    quotesList == null ? 'List' : quotesList.name,
                     style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
-                ),
-              ],
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      quotesList == null ? '' : quotesList.description,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       subHeader: Observer(
         builder: (context) {
           return Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.only(left: 20.0, top: 8.0),
             child: Wrap(
               spacing: 20.0,
               children: <Widget>[
@@ -178,7 +181,7 @@ class _QuotesListState extends State<QuotesList> {
       return emptyView();
     }
 
-    return sliverQuotesList();
+    return listView();
   }
 
   Widget emptyView() {
@@ -292,8 +295,8 @@ class _QuotesListState extends State<QuotesList> {
     );
   }
 
-  Widget sliverQuotesList() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+  Widget listView() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverPadding(
       padding: const EdgeInsets.only(top: 20.0),
