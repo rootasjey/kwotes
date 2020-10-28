@@ -151,7 +151,7 @@ class _DiscoverState extends State<Discover> {
     return BasePageAppBar(
       pinned: true,
       title: Padding(
-        padding: const EdgeInsets.only(left: 30.0),
+        padding: const EdgeInsets.only(left: 30.0, top: 30.0),
         child: Wrap(
           spacing: 10.0,
           children: [
