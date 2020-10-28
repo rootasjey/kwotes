@@ -8,7 +8,7 @@ import 'package:figstyle/types/quote.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuoteRow extends StatefulWidget {
-  final Quote quote;
+  final Color color;
 
   final double cardSize;
   final double elevation;
@@ -21,6 +21,8 @@ class QuoteRow extends StatefulWidget {
   final ItemComponentType componentType;
   final List<Widget> stackChildren;
 
+  final Quote quote;
+
   /// Specify explicitly the quote'is
   /// because quote's id in favourites reflect
   /// the favourite's id and no the quote.
@@ -32,6 +34,7 @@ class QuoteRow extends StatefulWidget {
 
   QuoteRow({
     this.cardSize = 250.0,
+    this.color,
     this.elevation = 0.0,
     this.quote,
     this.quoteId,
@@ -210,6 +213,7 @@ class _QuoteRowState extends State<QuoteRow> {
       padding: widget.padding,
       child: Card(
         elevation: elevation,
+        color: widget.color,
         child: InkWell(
           onTap: () {
             showCupertinoModalBottomSheet(

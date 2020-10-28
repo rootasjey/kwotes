@@ -18,6 +18,8 @@ class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;
   final bool isConnected;
 
+  final Color color;
+
   final double elevation;
   final double quoteFontSize;
 
@@ -52,6 +54,7 @@ class QuoteRowWithActions extends StatefulWidget {
 
   QuoteRowWithActions({
     this.canManage = false,
+    this.color,
     this.isConnected = false,
     this.elevation = 0.0,
     this.componentType = ItemComponentType.row,
@@ -109,6 +112,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return QuoteRow(
       quote: quote,
       quoteId: widget.quoteId,
+      color: widget.color,
       quoteFontSize: widget.quoteFontSize,
       elevation: widget.elevation,
       padding: widget.padding,
