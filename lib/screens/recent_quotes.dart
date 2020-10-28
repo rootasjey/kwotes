@@ -263,6 +263,7 @@ class RecentQuotesState extends State<RecentQuotes> {
             return QuoteRowWithActions(
               quote: quote,
               isConnected: isConnected,
+              color: stateColors.appBackground,
               padding: EdgeInsets.symmetric(
                 horizontal: horPadding,
               ),
