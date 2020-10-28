@@ -95,7 +95,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   Widget appBar() {
     return PageAppBar(
       textTitle: 'Recent',
-      expandedHeight: 110.0,
+      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
