@@ -268,7 +268,7 @@ class About extends StatelessWidget {
                         content: Container(
                           child: Image(
                             image: AssetImage(
-                              'assets/images/app-icon-412.png',
+                              'assets/images/app-icon-512.png',
                             ),
                           ),
                         ),
