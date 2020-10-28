@@ -211,7 +211,6 @@ class _QuoteRowState extends State<QuoteRow> {
       padding: widget.padding,
       child: Card(
         elevation: elevation,
-        color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
             showCupertinoModalBottomSheet(
