@@ -669,9 +669,10 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
         ),
         if (author.urls.wikipedia?.isNotEmpty)
-          OutlineButton(
+          OutlineButton.icon(
             onPressed: () => launch(author.urls.wikipedia),
-            child: Text('More on Wikipedia'),
+            icon: Icon(Icons.open_in_new),
+            label: Text('More on Wikipedia'),
           ),
       ],
     );
