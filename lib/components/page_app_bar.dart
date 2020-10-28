@@ -232,44 +232,47 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget twoLinesTitle() {
-    return Row(
-      children: [
-        CircleButton(
-            onTap: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-        AppIcon(
-          padding: EdgeInsets.zero,
-          size: 30.0,
-          onTap: widget.onIconPressed,
-        ),
-        Expanded(
-          child: InkWell(
-            onTap: widget.onTitlePressed,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.textTitle,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    widget.textSubTitle,
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, top: 40.0),
+      child: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIcon(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+            onTap: widget.onIconPressed,
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: widget.onTitlePressed,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.textTitle,
                     style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-              ],
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      widget.textSubTitle,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
