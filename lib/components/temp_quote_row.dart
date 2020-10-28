@@ -223,55 +223,63 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
           },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (widget.isDraft) chipDraftInfo(),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        quote.name,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+            child: Stack(
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            quote.name,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          Padding(padding: const EdgeInsets.only(top: 10.0)),
+                          Opacity(
+                            opacity: .5,
+                            child: Text(
+                              author == null || author.name.isEmpty
+                                  ? ''
+                                  : author.name,
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(padding: const EdgeInsets.only(top: 10.0)),
-                      Opacity(
-                        opacity: .5,
-                        child: Text(
-                          author == null || author.name.isEmpty
-                              ? ''
-                              : author.name,
-                        ),
+                    ),
+                    SizedBox(
+                      width: 50.0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          PopupMenuButton<String>(
+                            icon: Opacity(
+                              opacity: .6,
+                              child: iconColor != null
+                                  ? Icon(
+                                      Icons.more_vert,
+                                      color: iconColor,
+                                    )
+                                  : Icon(Icons.more_vert),
+                            ),
+                            onSelected: widget.onSelected,
+                            itemBuilder: widget.itemBuilder,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 50.0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      PopupMenuButton<String>(
-                        icon: Opacity(
-                          opacity: .6,
-                          child: iconColor != null
-                              ? Icon(
-                                  Icons.more_vert,
-                                  color: iconColor,
-                                )
-                              : Icon(Icons.more_vert),
-                        ),
-                        onSelected: widget.onSelected,
-                        itemBuilder: widget.itemBuilder,
-                      ),
-                    ],
+                if (widget.isDraft)
+                  Positioned(
+                    right: 2.5,
+                    child: chipDraftInfo(),
                   ),
-                ),
               ],
             ),
           ),
