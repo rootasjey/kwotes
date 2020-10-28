@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/quote_page.dart';
-import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
