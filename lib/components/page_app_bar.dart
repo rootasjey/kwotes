@@ -73,24 +73,10 @@ class _PageAppBarState extends State<PageAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
-    double leftSubHeaderPadding = 165.0;
-
-    if (width < 700.0) {
-      leftSubHeaderPadding = 50.0;
-    }
-    if (width < 390.0) {
-      leftSubHeaderPadding = 30.0;
-    }
-
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
       title: widget.textSubTitle != null ? twoLinesTitle() : oneLineTitle(),
       showNavBackIcon: widget.showNavBackIcon,
-      subHeaderPadding: EdgeInsets.only(
-        left: leftSubHeaderPadding,
-      ),
       subHeader: Observer(
         builder: (context) {
           final showOrderButtons = widget.onDescendingChanged != null;

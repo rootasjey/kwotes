@@ -18,8 +18,6 @@ class BasePageAppBar extends StatefulWidget {
   /// If true, the back icon will be visible.
   final bool showNavBackIcon;
 
-  final EdgeInsets subHeaderPadding;
-
   /// If set, will be shown at the bottom of the title.
   final Widget subHeader;
 
@@ -31,7 +29,6 @@ class BasePageAppBar extends StatefulWidget {
 
   BasePageAppBar({
     this.toolbarHeight = kToolbarHeight,
-    this.subHeaderPadding = const EdgeInsets.only(left: 165.0),
     this.collapsedHeight,
     this.expandedHeight = 210.0,
     this.onPressedMenu,
@@ -118,9 +115,6 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
       );
     }
 
-    return Padding(
-      padding: widget.subHeaderPadding,
-      child: widget.subHeader,
-    );
+    return widget.subHeader;
   }
 }
