@@ -171,7 +171,7 @@ class _PageAppBarState extends State<PageAppBar> {
 
   Widget oneLineTitle() {
     return Padding(
-      padding: const EdgeInsets.only(left: 30.0, top: 40.0),
+      padding: const EdgeInsets.only(left: 20.0, top: 40.0),
       child: TextButton.icon(
         onPressed: widget.onTitlePressed,
         icon: AppIcon(
