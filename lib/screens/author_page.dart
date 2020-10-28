@@ -166,10 +166,10 @@ class _AuthorPageState extends State<AuthorPage> {
                 ),
               ),
               Positioned(
-                top: 10.0,
-                right: 10.0,
+                top: 40.0,
+                right: 20.0,
                 child: CircleButton(
-                    icon: Icon(Icons.close),
+                    icon: Icon(Icons.close, color: stateColors.secondary),
                     onTap: () => Navigator.of(context).pop()),
               ),
             ],
