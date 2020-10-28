@@ -130,22 +130,25 @@ class _DashboardState extends State<Dashboard> {
       pinned: true,
       collapsedHeight: 100.0,
       expandedHeight: 120.0,
-      title: TextButton.icon(
-        onPressed: () {
-          scrollController.animateTo(
-            0,
-            duration: 250.milliseconds,
-            curve: Curves.easeIn,
-          );
-        },
-        icon: AppIcon(
-          padding: EdgeInsets.zero,
-          size: 30.0,
-        ),
-        label: Text(
-          'Account',
-          style: TextStyle(
-            fontSize: 22.0,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 40.0, left: 40.0),
+        child: TextButton.icon(
+          onPressed: () {
+            scrollController.animateTo(
+              0,
+              duration: 250.milliseconds,
+              curve: Curves.easeIn,
+            );
+          },
+          icon: AppIcon(
+            padding: EdgeInsets.zero,
+            size: 30.0,
+          ),
+          label: Text(
+            'Account',
+            style: TextStyle(
+              fontSize: 22.0,
+            ),
           ),
         ),
       ),
