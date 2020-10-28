@@ -3,16 +3,21 @@ import 'package:figstyle/screens/topic_page.dart';
 import 'package:supercharged/supercharged.dart';
 
 class TopicCardColor extends StatefulWidget {
+  final bool outline;
+
   final Color color;
-  final String displayName;
+
   final double elevation;
-  final String name;
+  final double size;
+
   final Function onColorTap;
   final Function onTextTap;
-  final bool outline;
-  final double size;
-  final TextStyle style;
+
+  final String displayName;
+  final String name;
   final String tooltip;
+
+  final TextStyle style;
 
   TopicCardColor({
     this.color,
@@ -104,7 +109,7 @@ class _TopicCardColorState extends State<TopicCardColor> {
     final text = Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Opacity(
-        opacity: .5,
+        opacity: 0.5,
         child: InkWell(
           onTap: widget.onTextTap,
           child: Text(
