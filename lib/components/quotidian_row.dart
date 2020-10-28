@@ -76,21 +76,6 @@ class _QuotidianRowState extends State<QuotidianRow> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Tooltip(
-                    message:
-                        'This quote will be shown on the ${widget.quotidian.date}',
-                    child: CircleAvatar(
-                      radius: 20.0,
-                      backgroundColor: stateColors.primary,
-                      foregroundColor: Colors.white,
-                      child: Text(
-                        widget.quotidian.date.day.toString(),
-                      ),
-                    ),
-                  ),
-                ),
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -141,6 +126,18 @@ class _QuotidianRowState extends State<QuotidianRow> {
                         itemBuilder: widget.itemBuilder,
                       ),
                     ],
+                  ),
+                ),
+                Tooltip(
+                  message:
+                      'This quote will be shown on the ${widget.quotidian.date}',
+                  child: CircleAvatar(
+                    radius: 20.0,
+                    backgroundColor: stateColors.primary,
+                    foregroundColor: Colors.white,
+                    child: Text(
+                      widget.quotidian.date.day.toString(),
+                    ),
                   ),
                 ),
               ],
