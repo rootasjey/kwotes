@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:animations/animations.dart';
+import 'package:figstyle/components/circle_button.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/footer.dart';
@@ -245,6 +248,8 @@ class About extends StatelessWidget {
   }
 
   Widget whatIs(BuildContext context) {
+    final size = MediaQuery.of(context).size.width < 500.0 ? 280.0 : 380.0;
+
     return Container(
       width: 600.0,
       padding: const EdgeInsets.only(
@@ -253,27 +258,49 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Ink.image(
-            image: AssetImage(
-              'assets/images/app-icon-512.png',
-            ),
-            height: 380.0,
-            child: InkWell(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Container(
-                          child: Image(
-                            image: AssetImage(
-                              'assets/images/app-icon-512.png',
-                            ),
-                          ),
+          Center(
+            child: OpenContainer(
+              closedColor: stateColors.background,
+              closedBuilder: (context, openContainer) {
+                return Container(
+                  width: size,
+                  height: size,
+                  child: Ink.image(
+                    height: size,
+                    width: size,
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/app-icon-512.png'),
+                    child: InkWell(
+                      onTap: openContainer,
+                    ),
+                  ),
+                );
+              },
+              openBuilder: (context, callback) {
+                return Container(
+                  // height: 800.0,
+                  // width: 600.0,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Image(
+                          image: AssetImage('assets/images/app-icon-512.png'),
+                          fit: BoxFit.contain,
                         ),
-                      );
-                    });
+                      ),
+                      Positioned(
+                        top: 40.0,
+                        right: 20.0,
+                        child: CircleButton(
+                            icon:
+                                Icon(Icons.close, color: stateColors.secondary),
+                            onTap: () => Navigator.of(context).pop()),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ),
