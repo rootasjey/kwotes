@@ -43,7 +43,7 @@ class _AuthorPageState extends State<AuthorPage> {
 
   DocumentSnapshot lastDoc;
 
-  double beginY = 100.0;
+  double beginY = 20.0;
   double avatarSize = 150.0;
 
   final limit = 30;
@@ -293,7 +293,7 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
           FadeInY(
             beginY: beginY,
-            delay: 3.0,
+            delay: 1.0,
             child: job(),
           ),
           Padding(
@@ -396,7 +396,7 @@ class _AuthorPageState extends State<AuthorPage> {
                 ),
                 FadeInY(
                   beginY: beginY,
-                  delay: 3.0,
+                  delay: 1.0,
                   child: job(),
                 ),
                 FadeInY(
