@@ -87,7 +87,6 @@ class _PageAppBarState extends State<PageAppBar> {
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
       title: widget.textSubTitle != null ? twoLinesTitle() : oneLineTitle(),
-      titlePadding: width < 390.0 ? EdgeInsets.only(left: 20.0) : null,
       showNavBackIcon: widget.showNavBackIcon,
       subHeaderPadding: EdgeInsets.only(
         left: leftSubHeaderPadding,
@@ -171,16 +170,19 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget oneLineTitle() {
-    return TextButton.icon(
-      onPressed: widget.onTitlePressed,
-      icon: AppIcon(
-        padding: EdgeInsets.zero,
-        size: 30.0,
-      ),
-      label: Text(
-        widget.textTitle,
-        style: TextStyle(
-          fontSize: 22.0,
+    return Padding(
+      padding: const EdgeInsets.only(left: 30.0, top: 40.0),
+      child: TextButton.icon(
+        onPressed: widget.onTitlePressed,
+        icon: AppIcon(
+          padding: EdgeInsets.zero,
+          size: 30.0,
+        ),
+        label: Text(
+          widget.textTitle,
+          style: TextStyle(
+            fontSize: 22.0,
+          ),
         ),
       ),
     );

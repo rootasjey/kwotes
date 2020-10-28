@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/state/colors.dart';
 
 class BasePageAppBar extends StatefulWidget {
@@ -19,7 +18,6 @@ class BasePageAppBar extends StatefulWidget {
   /// If true, the back icon will be visible.
   final bool showNavBackIcon;
 
-  final EdgeInsets titlePadding;
   final EdgeInsets subHeaderPadding;
 
   /// If set, will be shown at the bottom of the title.
@@ -30,9 +28,6 @@ class BasePageAppBar extends StatefulWidget {
 
   /// Will override [textTitle] if set.
   final Widget title;
-
-  /// Distance between the top of the screen and the title.
-  final double topTitleSpacing;
 
   BasePageAppBar({
     this.toolbarHeight = kToolbarHeight,
@@ -45,8 +40,6 @@ class BasePageAppBar extends StatefulWidget {
     this.subHeader,
     this.textTitle,
     this.title,
-    this.titlePadding,
-    this.topTitleSpacing = 20.0,
   });
 
   @override
@@ -77,17 +70,15 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
     return LayoutBuilder(
       builder: (context, constrains) {
         double titleFontSize = 40.0;
-        double leftTitlePadding = 80.0;
 
         if (constrains.maxWidth < 700.0) {
           titleFontSize = 25.0;
-          leftTitlePadding = 40.0;
         }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            headerSection(leftTitlePadding, titleFontSize),
+            headerSection(titleFontSize),
             subHeaderSection(),
           ],
         );
@@ -95,41 +86,29 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
     );
   }
 
-  Widget headerSection(double leftTitlePadding, double titleFontSize) {
-    return FadeInY(
-      delay: 1.0,
-      beginY: 50.0,
-      child: Padding(
-        padding: widget.titlePadding != null
-            ? widget.titlePadding
-            : EdgeInsets.only(
-                left: leftTitlePadding,
-                top: widget.topTitleSpacing,
+  Widget headerSection(double titleFontSize) {
+    return widget.title != null
+        ? widget.title
+        : Row(
+            children: <Widget>[
+              if (widget.showNavBackIcon) ...[
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  tooltip: 'Back',
+                  icon: Icon(Icons.arrow_back),
+                ),
+                Padding(padding: const EdgeInsets.only(right: 45.0)),
+              ],
+              Text(
+                widget.textTitle,
+                style: TextStyle(
+                  fontSize: titleFontSize,
+                ),
               ),
-        child: widget.title != null
-            ? widget.title
-            : Row(
-                children: <Widget>[
-                  if (widget.showNavBackIcon) ...[
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      tooltip: 'Back',
-                      icon: Icon(Icons.arrow_back),
-                    ),
-                    Padding(padding: const EdgeInsets.only(right: 45.0)),
-                  ],
-                  Text(
-                    widget.textTitle,
-                    style: TextStyle(
-                      fontSize: titleFontSize,
-                    ),
-                  ),
-                ],
-              ),
-      ),
-    );
+            ],
+          );
   }
 
   Widget subHeaderSection() {
@@ -139,13 +118,9 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
       );
     }
 
-    return FadeInY(
-      delay: 1.2,
-      beginY: 50.0,
-      child: Padding(
-        padding: widget.subHeaderPadding,
-        child: widget.subHeader,
-      ),
+    return Padding(
+      padding: widget.subHeaderPadding,
+      child: widget.subHeader,
     );
   }
 }
