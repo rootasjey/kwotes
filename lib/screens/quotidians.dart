@@ -216,7 +216,7 @@ class QuotidiansState extends State<Quotidians> {
           padding: const EdgeInsets.all(10.0),
           sliver: SliverGrid(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.0,
+              maxCrossAxisExtent: 350.0,
               crossAxisSpacing: 10.0,
               mainAxisSpacing: 10.0,
             ),
