@@ -78,6 +78,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
       padding: const EdgeInsets.only(right: 16.0),
       child: CircleButton(
         elevation: 2.0,
+        backgroundColor: stateColors.softBackground,
         icon: Icon(
           Icons.help_outline,
           size: 20.0,
@@ -114,14 +115,11 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 0.0),
-                                  child: Text(
-                                    'Help',
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                Text(
+                                  'Help',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Opacity(
@@ -172,7 +170,8 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: stateColors.foreground,
-                    fontSize: 16.0,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
