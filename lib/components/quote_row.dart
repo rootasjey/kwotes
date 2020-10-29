@@ -115,12 +115,11 @@ class _QuoteRowState extends State<QuoteRow> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      widget.quote.name.length > 60
-                          ? '${widget.quote.name.substring(0, 60)}...'
-                          : widget.quote.name,
+                      widget.quote.name,
+                      maxLines: 6,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 18.0,
-                        // fontSize: FontSize.gridItem(widget.title),
+                        fontSize: 22.0,
                       ),
                     ),
                   ],
