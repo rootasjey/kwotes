@@ -8,6 +8,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddQuoteAppBar extends StatefulWidget {
   final Function onTapIconHeader;
@@ -82,63 +83,75 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           size: 20.0,
           color: stateColors.primary,
         ),
-        onTap: () => showModalBottomSheet(
+        onTap: () => showCupertinoModalBottomSheet(
           context: context,
-          isScrollControlled: true,
-          builder: (context) {
-            return Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      CircleButton(
-                        onTap: () => Navigator.of(context).pop(),
-                        icon: Icon(
-                          Icons.close,
-                          size: 20.0,
-                          color: stateColors.primary,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+          builder: (context, scrollController) {
+            final padding =
+                MediaQuery.of(context).size.width < 600.0 ? 20.0 : 40.0;
+
+            return Scaffold(
+              body: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 0.0),
-                            child: Text(
-                              'Help',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          CircleButton(
+                            onTap: () => Navigator.of(context).pop(),
+                            icon: Icon(
+                              Icons.close,
+                              size: 20.0,
+                              color: stateColors.primary,
                             ),
                           ),
-                          Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Some useful informaton about the current step',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 0.0),
+                                  child: Text(
+                                    'Help',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Opacity(
+                                  opacity: 0.6,
+                                  child: Text(
+                                    'Some useful informaton about the current step',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Divider(
+                      height: 20.0,
+                      thickness: 2.0,
+                      color: stateColors.primary,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: widget.help,
+                    ),
+                  ],
                 ),
-                Divider(
-                  height: 20.0,
-                  thickness: 2.0,
-                  color: stateColors.primary,
-                ),
-                widget.help,
-              ],
+              ),
             );
           },
         ),
