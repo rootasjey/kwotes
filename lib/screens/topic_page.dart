@@ -461,6 +461,11 @@ class _TopicPageState extends State<TopicPage> {
         initProps();
         fetchColor();
         fetch();
+
+        final width = MediaQuery.of(context).size.width;
+        if (width < 500.0) {
+          _innerDrawerKey.currentState.close();
+        }
       },
     );
   }
