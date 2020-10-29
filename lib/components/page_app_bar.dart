@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
@@ -73,35 +72,29 @@ class _PageAppBarState extends State<PageAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final showOrderButtons = widget.onDescendingChanged != null;
+    final showLangSelector = widget.onLangChanged != null;
+    final showItemsLayout = widget.onItemsLayoutSelected != null;
+
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
       title: widget.textSubTitle != null ? twoLinesTitle() : oneLineTitle(),
       showNavBackIcon: widget.showNavBackIcon,
-      subHeader: Observer(
-        builder: (context) {
-          final showOrderButtons = widget.onDescendingChanged != null;
-          final showLangSelector = widget.onLangChanged != null;
-          final showItemsLayout = widget.onItemsLayoutSelected != null;
-
-          return Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: Wrap(
-              spacing: 10.0,
-              children: <Widget>[
-                if (showOrderButtons) orderButton(),
-                if (showOrderButtons && showLangSelector)
-                  separator(), // separator
-                if (showLangSelector) langSelector(),
-                if (showLangSelector && showItemsLayout)
-                  separator(), // separator
-                if (showOrderButtons && showItemsLayout && !showLangSelector)
-                  separator(), // separator
-                if (showItemsLayout) itemsLayoutSelector(),
-                ...widget.additionalIconButtons,
-              ],
-            ),
-          );
-        },
+      subHeader: Padding(
+        padding: const EdgeInsets.only(left: 25.0),
+        child: Wrap(
+          spacing: 10.0,
+          children: <Widget>[
+            if (showOrderButtons) orderButton(),
+            if (showOrderButtons && showLangSelector) separator(), // separator
+            if (showLangSelector) langSelector(),
+            if (showLangSelector && showItemsLayout) separator(), // separator
+            if (showOrderButtons && showItemsLayout && !showLangSelector)
+              separator(), // separator
+            if (showItemsLayout) itemsLayoutSelector(),
+            ...widget.additionalIconButtons,
+          ],
+        ),
       ),
     );
   }
