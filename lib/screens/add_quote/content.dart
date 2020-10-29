@@ -46,8 +46,65 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           quoteInput(),
-          quoteActionsInput(),
+          actionsInput(),
         ],
+      ),
+    );
+  }
+
+  Widget actionsInput() {
+    final isSmall = MediaQuery.of(context).size.width < 600.0;
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 12.0,
+        top: 40.0,
+        bottom: 30.0,
+      ),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 10.0,
+        children: <Widget>[
+          langSelect(),
+          clearAction(isSmall: isSmall),
+          saveDraftAction(isSmall: isSmall),
+        ],
+      ),
+    );
+  }
+
+  Widget clearAction({bool isSmall = false}) {
+    if (isSmall) {
+      return IconButton(
+        tooltip: 'Clear content',
+        onPressed: () {
+          DataQuoteInputs.quote.name = '';
+          nameController.clear();
+          nameFocusNode.requestFocus();
+        },
+        icon: Opacity(
+          opacity: 0.6,
+          child: Icon(Icons.delete_sweep),
+        ),
+      );
+    }
+
+    return OutlinedButton.icon(
+      focusNode: clearFocusNode,
+      onPressed: () {
+        DataQuoteInputs.quote.name = '';
+        nameController.clear();
+        nameFocusNode.requestFocus();
+      },
+      icon: Opacity(
+        opacity: 0.6,
+        child: Icon(Icons.delete_sweep),
+      ),
+      label: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'Clear content',
+        ),
       ),
     );
   }
@@ -75,51 +132,6 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget quoteActionsInput() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 12.0,
-        top: 40.0,
-        bottom: 30.0,
-      ),
-      child: Wrap(
-        children: <Widget>[
-          langSelect(),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-          ),
-          FlatButton.icon(
-              focusNode: clearFocusNode,
-              onPressed: () {
-                DataQuoteInputs.quote.name = '';
-                nameController.clear();
-                nameFocusNode.requestFocus();
-              },
-              icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
-              label: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  'Clear content',
-                ),
-              )),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-          ),
-          FlatButton.icon(
-              focusNode: clearFocusNode,
-              onPressed: widget.onSaveDraft,
-              icon: Opacity(opacity: 0.6, child: Icon(Icons.save)),
-              label: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  'Save draft',
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-
   Widget quoteInput() {
     return TextField(
       maxLines: null,
@@ -137,6 +149,31 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       decoration: InputDecoration(
         hintText: 'Type your quote...',
         border: OutlineInputBorder(borderSide: BorderSide.none),
+      ),
+    );
+  }
+
+  Widget saveDraftAction({bool isSmall = false}) {
+    if (isSmall) {
+      return IconButton(
+        tooltip: 'Save draft',
+        onPressed: widget.onSaveDraft,
+        icon: Opacity(
+          opacity: 0.6,
+          child: Icon(Icons.save_alt),
+        ),
+      );
+    }
+
+    return OutlinedButton.icon(
+      focusNode: clearFocusNode,
+      onPressed: widget.onSaveDraft,
+      icon: Opacity(opacity: 0.6, child: Icon(Icons.save_alt)),
+      label: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'Save draft',
+        ),
       ),
     );
   }
