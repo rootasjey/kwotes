@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/screens/topic_page.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/empty_view.dart';
@@ -148,8 +150,22 @@ class _TopicsState extends State<Topics> {
         Center(
           child: OutlinedButton.icon(
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Topics()));
+              final topic = appTopicsColors.shuffle(max: 1)?.first;
+
+              if (topic == null) {
+                showSnack(
+                  context: context,
+                  message:
+                      "Couldn't navigate to topic page because topics list is empty",
+                  type: SnackType.error,
+                );
+                return;
+              }
+
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => TopicPage(
+                        name: topic.name,
+                      )));
             },
             style: OutlinedButton.styleFrom(
               primary: stateColors.secondary,
