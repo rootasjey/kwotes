@@ -25,7 +25,7 @@ class TopicPage extends StatefulWidget {
   final String name;
 
   TopicPage({
-    this.name,
+    @required this.name,
   });
 
   @override
@@ -114,98 +114,110 @@ class _TopicPageState extends State<TopicPage> {
 
   Widget appBar() {
     return BasePageAppBar(
-      expandedHeight: 150.0,
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          CircleButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: stateColors.foreground,
-            ),
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          AppIcon(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Text(
-            topicName,
-            style: TextStyle(
-              fontSize: 40.0,
-            ),
-          ),
-          if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                top: 2.5,
+      expandedHeight: 120.0,
+      title: Padding(
+        padding: const EdgeInsets.only(
+          left: 30.0,
+          top: 40.0,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CircleButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: stateColors.foreground,
               ),
-              child: CircleAvatar(
-                radius: 10.0,
-                backgroundColor: Color(appTopicsColors.find(topicName).decimal),
+              onTap: () => Navigator.of(context).pop(),
+            ),
+            AppIcon(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              size: 30.0,
+            ),
+            Text(
+              topicName,
+              style: TextStyle(
+                fontSize: 40.0,
               ),
             ),
-        ],
+            if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  top: 2.5,
+                ),
+                child: CircleAvatar(
+                  radius: 10.0,
+                  backgroundColor:
+                      Color(appTopicsColors.find(topicName).decimal),
+                ),
+              ),
+          ],
+        ),
       ),
       subHeader: Observer(
         builder: (context) {
-          return Wrap(
-            spacing: 15.0,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Opacity(
-                  opacity: 0.6,
-                  child: InkWell(
-                    onTap: smallViewVisible
-                        ? () {
-                            _innerDrawerKey.currentState.toggle();
-                          }
-                        : null,
-                    child: Icon(Icons.menu),
-                  ),
-                ),
-              ),
-              FadeInY(
-                beginY: beginY,
-                delay: 0.0,
-                child: Padding(
+          return Padding(
+            padding: const EdgeInsets.only(
+              left: 35.0,
+            ),
+            child: Wrap(
+              spacing: 15.0,
+              children: <Widget>[
+                Padding(
                   padding: const EdgeInsets.only(top: 10.0),
-                  child: DropdownButton<String>(
-                    elevation: 2,
-                    value: lang,
-                    isDense: true,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.deepPurpleAccent,
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: InkWell(
+                      onTap: smallViewVisible
+                          ? () {
+                              _innerDrawerKey.currentState.toggle();
+                            }
+                          : null,
+                      child: Icon(Icons.menu),
                     ),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: GoogleFonts.raleway().fontFamily,
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (String newLang) {
-                      lang = newLang;
-                      appLocalStorage.setPageLang(
-                        lang: lang,
-                        pageRoute: pageRoute,
-                      );
-
-                      fetch();
-                    },
-                    items: ['en', 'fr'].map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                          ));
-                    }).toList(),
                   ),
                 ),
-              ),
-            ],
+                FadeInY(
+                  beginY: beginY,
+                  delay: 0.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: DropdownButton<String>(
+                      elevation: 2,
+                      value: lang,
+                      isDense: true,
+                      underline: Container(
+                        height: 0,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      style: TextStyle(
+                        color: stateColors.foreground.withOpacity(0.6),
+                        fontFamily: GoogleFonts.raleway().fontFamily,
+                        fontSize: 20.0,
+                      ),
+                      onChanged: (String newLang) {
+                        lang = newLang;
+                        appLocalStorage.setPageLang(
+                          lang: lang,
+                          pageRoute: pageRoute,
+                        );
+
+                        fetch();
+                      },
+                      items: ['en', 'fr'].map((String value) {
+                        return DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              value.toUpperCase(),
+                            ));
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -288,7 +300,7 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 20.0 : 70.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return Observer(
       builder: (context) {
@@ -302,6 +314,7 @@ class _TopicPageState extends State<TopicPage> {
               return QuoteRowWithActions(
                 quote: quote,
                 quoteId: quote.id,
+                color: stateColors.appBackground,
                 isConnected: isConnected,
                 padding: EdgeInsets.symmetric(
                   horizontal: horPadding,
@@ -367,11 +380,14 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget smallView() {
+    final width = MediaQuery.of(context).size.width;
+    final leftOffset = width < 500.00 ? 0.6 : 0.0;
+
     return InnerDrawer(
       key: _innerDrawerKey,
       tapScaffoldEnabled: true,
       offset: IDOffset.only(
-        left: 0.0,
+        left: leftOffset,
       ),
       leftChild: Material(
         child: Padding(
@@ -430,7 +446,12 @@ class _TopicPageState extends State<TopicPage> {
         radius: 10.0,
         backgroundColor: Color(topicColor.decimal),
       ),
-      title: Text(topicColor.name),
+      title: Text(
+        topicColor.name,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       trailing: topicColor.name == topicName
           ? Icon(Icons.keyboard_arrow_right)
           : null,
