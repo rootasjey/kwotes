@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,28 @@ class _TopicsState extends State<Topics> {
   Widget appBar() {
     if (MediaQuery.of(context).size.width < 700.0) {
       return PageAppBar(
-        textTitle: 'Topics',
+        title: Padding(
+          padding: const EdgeInsets.only(left: 40.0, top: 40.0),
+          child: TextButton.icon(
+            onPressed: () {
+              scrollController.animateTo(
+                0,
+                duration: 250.milliseconds,
+                curve: Curves.easeIn,
+              );
+            },
+            icon: AppIcon(
+              padding: EdgeInsets.zero,
+              size: 30.0,
+            ),
+            label: Text(
+              'Topics',
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
+            ),
+          ),
+        ),
         expandedHeight: 90.0,
         showNavBackIcon: false,
         onTitlePressed: () {
@@ -223,6 +245,7 @@ class _TopicsState extends State<Topics> {
                     return QuoteRowWithActions(
                       quote: quote,
                       quoteFontSize: quoteFontSize,
+                      color: stateColors.appBackground,
                       isConnected: isConnected,
                       leading: Container(
                         width: 15.0,
