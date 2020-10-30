@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
@@ -127,29 +128,31 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget langSelector() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
-      child: DropdownButton<String>(
-        elevation: 2,
-        value: widget.lang,
-        isDense: true,
-        underline: Container(),
-        icon: Container(),
-        style: TextStyle(
-          color: stateColors.foreground.withOpacity(0.6),
-          fontSize: 20.0,
-          fontFamily: GoogleFonts.raleway().fontFamily,
+    return Observer(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: DropdownButton<String>(
+          elevation: 2,
+          value: widget.lang,
+          isDense: true,
+          underline: Container(),
+          icon: Container(),
+          style: TextStyle(
+            color: stateColors.foreground.withOpacity(0.6),
+            fontSize: 20.0,
+            fontFamily: GoogleFonts.raleway().fontFamily,
+          ),
+          onChanged: widget.onLangChanged,
+          items: Language.available().map((String value) {
+            return DropdownMenuItem(
+                value: value,
+                child: Text(
+                  value.toUpperCase(),
+                ));
+          }).toList(),
         ),
-        onChanged: widget.onLangChanged,
-        items: Language.available().map((String value) {
-          return DropdownMenuItem(
-              value: value,
-              child: Text(
-                value.toUpperCase(),
-              ));
-        }).toList(),
-      ),
-    );
+      );
+    });
   }
 
   Widget oneLineTitle() {
