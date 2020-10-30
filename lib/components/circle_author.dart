@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/types/author.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
-
-import '../screens/author_page.dart';
 
 /// A widget which displays an author's image url
 /// in an circle shape. Delivered with hover animation.
@@ -86,10 +86,13 @@ class _CircleAuthorState extends State<CircleAuthor> {
         Positioned.fill(
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => AuthorPage(
-                        id: author.id,
-                      )));
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) => AuthorPage(
+                  id: author.id,
+                  scrollController: scrollController,
+                ),
+              );
             },
             onHover: (isHover) {
               if (isHover) {
