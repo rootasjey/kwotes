@@ -18,6 +18,10 @@ class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;
   final bool isConnected;
 
+  /// Specify this only when componentType = ComponentType.Card.
+  /// If true, author will be displayed on card.
+  final bool showAuthor;
+
   final Color color;
 
   final double elevation;
@@ -76,6 +80,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.quoteFontSize = 20.0,
     this.quoteId,
     this.quotePageType = QuotePageType.published,
+    this.showAuthor = false,
     this.stackChildren = const [],
     this.leading,
   });
@@ -119,6 +124,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       itemBuilder: (context) => popupItems,
       onSelected: onSelected,
       componentType: widget.componentType,
+      showAuthor: widget.showAuthor,
       stackChildren: widget.stackChildren,
       leading: widget.leading,
     );

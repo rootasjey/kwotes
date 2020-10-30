@@ -8,6 +8,10 @@ import 'package:figstyle/types/quote.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuoteRow extends StatefulWidget {
+  /// Specify this only when componentType = ComponentType.Card.
+  /// If true, author will be displayed on card.
+  final bool showAuthor;
+
   final Color color;
 
   final double cardSize;
@@ -46,6 +50,7 @@ class QuoteRow extends StatefulWidget {
       vertical: 30.0,
     ),
     this.quoteFontSize = 24.0,
+    this.showAuthor = false,
     this.stackChildren = const [],
     this.leading,
   });
@@ -132,7 +137,6 @@ class _QuoteRowState extends State<QuoteRow> {
               if (widget.itemBuilder != null)
                 Positioned(
                   right: 0,
-                  bottom: 0,
                   child: PopupMenuButton<String>(
                     icon: Opacity(
                       opacity: .6,
@@ -148,6 +152,26 @@ class _QuoteRowState extends State<QuoteRow> {
                   ),
                 ),
               if (widget.stackChildren.length > 0) ...widget.stackChildren,
+              if (widget.showAuthor)
+                Positioned(
+                  left: 40.0,
+                  bottom: 10.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.quote.author != null)
+                        Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            '— ${widget.quote.author.name}',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
