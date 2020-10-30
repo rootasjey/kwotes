@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/utils/app_localstorage.dart';
-import 'package:supercharged/supercharged.dart';
 
 class PushNotifications {
   static FirebaseMessaging fcm;
@@ -15,10 +15,6 @@ class PushNotifications {
 
   /// For navigation purposes.
   static BuildContext _context;
-
-  static Color _kKeyUmbraOpacity = Color(0x33000000); // alpha = 0.2
-  static Color _kKeyPenumbraOpacity = Color(0x24000000); // alpha = 0.14
-  static Color _kAmbientShadowOpacity = Color(0x1F000000); // alpha = 0.12
 
   static void initialize({
     String userUid,
@@ -71,39 +67,11 @@ class PushNotifications {
 
         if ((payload['data'] == null || payload['data'].length == 0) &&
             path == null) {
-          await Flushbar(
-            duration: 10.seconds,
-            icon: Icon(
-              Icons.info,
-              color: Colors.white,
-            ),
-            title: title,
-            messageText: Text(
-              body,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 5,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            boxShadows: <BoxShadow>[
-              BoxShadow(
-                  offset: Offset(0.0, 3.0),
-                  blurRadius: 5.0,
-                  spreadRadius: -1.0,
-                  color: _kKeyUmbraOpacity),
-              BoxShadow(
-                  offset: Offset(0.0, 6.0),
-                  blurRadius: 10.0,
-                  spreadRadius: 0.0,
-                  color: _kKeyPenumbraOpacity),
-              BoxShadow(
-                  offset: Offset(0.0, 1.0),
-                  blurRadius: 18.0,
-                  spreadRadius: 0.0,
-                  color: _kAmbientShadowOpacity),
-            ],
-          ).show(_context);
+          showSnack(
+            context: _context,
+            message: "$title: $body",
+            type: SnackType.info,
+          );
 
           return;
         }
@@ -114,42 +82,11 @@ class PushNotifications {
             ? payload['message']
             : payload['data']['message'];
 
-        await Flushbar(
-          duration: 10.seconds,
-          icon: Icon(
-            Icons.info,
-            color: Colors.white,
-          ),
-          title: title,
-          messageText: Text(
-            message,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 5,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          boxShadows: <BoxShadow>[
-            BoxShadow(
-                offset: Offset(0.0, 3.0),
-                blurRadius: 5.0,
-                spreadRadius: -1.0,
-                color: _kKeyUmbraOpacity),
-            BoxShadow(
-                offset: Offset(0.0, 6.0),
-                blurRadius: 10.0,
-                spreadRadius: 0.0,
-                color: _kKeyPenumbraOpacity),
-            BoxShadow(
-                offset: Offset(0.0, 1.0),
-                blurRadius: 18.0,
-                spreadRadius: 0.0,
-                color: _kAmbientShadowOpacity),
-          ],
-          onTap: path != null
-              ? (_) => Rerouter.push(context: _context, value: path)
-              : null,
-        ).show(_context);
+        showSnack(
+          context: _context,
+          message: "$title: $message",
+          type: SnackType.info,
+        );
       },
       onResume: (Map<String, dynamic> payload) async {
         String path =
