@@ -142,6 +142,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
             reference.name,
             style: TextStyle(
               fontSize: titleFontSize,
+              fontWeight: FontWeight.w600,
             ),
           ),
           if (reference.type?.primary?.isNotEmpty)
