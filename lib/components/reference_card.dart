@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/reference_page.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 class ReferenceCard extends StatefulWidget {
@@ -105,8 +106,13 @@ class _ReferenceCardState extends State<ReferenceCard> {
         Positioned.fill(
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => ReferencePage(id: widget.id)));
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) => ReferencePage(
+                  id: widget.id,
+                  scrollController: scrollController,
+                ),
+              );
             },
             onHover: (isHover) {
               if (isHover) {
