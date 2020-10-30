@@ -56,7 +56,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.canManage = false,
     this.color,
     this.isConnected = false,
-    this.elevation = 0.0,
+    this.elevation,
     this.componentType = ItemComponentType.row,
     this.onAfterAddToFavourites,
     this.onAfterDeletePubQuote,

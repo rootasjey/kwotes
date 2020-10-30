@@ -35,7 +35,7 @@ class QuoteRow extends StatefulWidget {
   QuoteRow({
     this.cardSize = 250.0,
     this.color,
-    this.elevation = 0.0,
+    this.elevation,
     this.quote,
     this.quoteId,
     this.itemBuilder,
@@ -55,9 +55,12 @@ class QuoteRow extends StatefulWidget {
 }
 
 class _QuoteRowState extends State<QuoteRow> {
-  double elevation = 0.0;
+  bool elevationSpecified = false;
+
   Color iconColor;
   Color iconHoverColor;
+
+  double elevation = 0.0;
 
   @override
   initState() {
@@ -69,7 +72,8 @@ class _QuoteRowState extends State<QuoteRow> {
     }
 
     setState(() {
-      elevation = widget.elevation;
+      elevation = widget.elevation ?? 0.0;
+      elevationSpecified = widget.elevation != null;
       iconHoverColor = Color(topicColor.decimal);
     });
   }
@@ -103,7 +107,7 @@ class _QuoteRowState extends State<QuoteRow> {
           },
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? 2.0 : 0.0;
+              elevation = isHover ? getHoverElevation() : getElevation();
               iconColor = isHover ? iconHoverColor : null;
             });
           },
@@ -276,5 +280,13 @@ class _QuoteRowState extends State<QuoteRow> {
         ),
       ),
     );
+  }
+
+  double getHoverElevation() {
+    return elevationSpecified ? widget.elevation * 2.0 : 2.0;
+  }
+
+  double getElevation() {
+    return elevationSpecified ? widget.elevation : 0.0;
   }
 }
