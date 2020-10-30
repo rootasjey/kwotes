@@ -174,8 +174,8 @@ class RecentQuotesState extends State<RecentQuotes> {
                 color: Color(0xFFFF005C),
               ),
             ),
-            title: "You've no quote in validation at this moment",
-            subtitle: 'They will appear after you propose a new quote',
+            title: "There's no recent quotes",
+            subtitle: "Maybe your this language has been added recently",
             onRefresh: () => fetch(),
           ),
         ),
@@ -354,7 +354,7 @@ class RecentQuotesState extends State<RecentQuotes> {
           .collection('quotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
-          .limit(30)
+          .limit(limit)
           .get();
 
       if (snapshot.docs.isEmpty) {
@@ -400,7 +400,7 @@ class RecentQuotesState extends State<RecentQuotes> {
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
-          .limit(30)
+          .limit(limit)
           .get();
 
       if (snapshot.docs.isEmpty) {
