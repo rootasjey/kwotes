@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/quote.dart';

@@ -1,43 +1,17 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:supercharged/supercharged.dart';
-
-enum SnackType { error, info, success }
 
 Future showSnack({
   BuildContext context,
-  Function onTap,
   String message,
-  String title,
   SnackType type,
 }) {
-  Color color;
-  if (type == SnackType.error) { color = Colors.red; }
-  else if (type == SnackType.success) { color =  Colors.green; }
-  else { color = stateColors.softBackground; }
+  if (type == SnackType.error) {
+    return FlashHelper.errorBar(context, message: message);
+  } else if (type == SnackType.success) {
+    return FlashHelper.successBar(context, message: message);
+  }
 
-  IconData iconData;
-  if (type == SnackType.error) { iconData = Icons.error; }
-  else if (type == SnackType.success) { iconData = Icons.check_circle; }
-  else { iconData = Icons.info; }
-
-  return Flushbar(
-    backgroundColor: color,
-    duration: 5.seconds,
-    icon: Icon(
-      iconData,
-      color: Colors.white,
-    ),
-    title: title,
-    messageText: Text(
-      message,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 5,
-      style: TextStyle(
-        color: Colors.white,
-      ),
-    ),
-    onTap: onTap,
-  ).show(context);
+  return FlashHelper.infoBar(context, message: message);
 }

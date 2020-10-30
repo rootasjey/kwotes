@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/screens/topic_page.dart';
+import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

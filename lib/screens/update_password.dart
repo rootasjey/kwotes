@@ -1,3 +1,4 @@
+import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -363,7 +364,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       showSnack(
         context: context,
         message:
-            'Error while updating your password. Please try again or contact us.',
+            "Error while updating your password. Please try again or contact us.",
         type: SnackType.error,
       );
     }

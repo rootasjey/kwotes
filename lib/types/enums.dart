@@ -29,3 +29,9 @@ enum QuotePageType {
   list,
   published,
 }
+
+enum SnackType {
+  error,
+  info,
+  success,
+}
