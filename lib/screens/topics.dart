@@ -107,7 +107,7 @@ class _TopicsState extends State<Topics> {
     if (MediaQuery.of(context).size.width < 700.0) {
       return PageAppBar(
         title: Padding(
-          padding: const EdgeInsets.only(left: 40.0, top: 40.0),
+          padding: const EdgeInsets.only(left: 30.0, top: 40.0),
           child: TextButton.icon(
             onPressed: () {
               scrollController.animateTo(
