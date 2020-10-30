@@ -226,7 +226,6 @@ class _TopicsState extends State<Topics> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 8.0,
                   top: 10.0,
                 ),
                 child: TopicCardColor(
