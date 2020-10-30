@@ -31,6 +31,10 @@ class PageAppBar extends StatefulWidget {
   final String textSubTitle;
   final String lang;
 
+  /// App bar's title. Usually a Text widget.
+  /// If set, 'textTitle' property will be ignored.
+  final Widget title;
+
   const PageAppBar({
     Key key,
     this.additionalIconButtons = const [],
@@ -44,8 +48,9 @@ class PageAppBar extends StatefulWidget {
     this.onLangChanged,
     this.onTitlePressed,
     this.showNavBackIcon = true,
-    @required this.textTitle,
+    this.textTitle,
     this.textSubTitle,
+    this.title,
   }) : super(key: key);
 
   @override
@@ -156,6 +161,10 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget oneLineTitle() {
+    if (widget.title != null) {
+      return widget.title;
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 15.0, top: 40.0),
       child: TextButton.icon(
@@ -236,13 +245,15 @@ class _PageAppBarState extends State<PageAppBar> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.textTitle,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  widget.title != null
+                      ? widget.title
+                      : Text(
+                          widget.textTitle,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                   Opacity(
                     opacity: 0.6,
                     child: Text(
