@@ -147,6 +147,7 @@ class _AuthorRowState extends State<AuthorRow> {
             author.name,
             style: TextStyle(
               fontSize: titleFontSize,
+              fontWeight: FontWeight.w600,
             ),
           ),
           if (author.job?.isNotEmpty)
