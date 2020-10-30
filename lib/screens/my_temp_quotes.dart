@@ -119,7 +119,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     return PageAppBar(
       textTitle: 'In validation',
       textSubTitle: 'Your quotes waiting to be validated',
-      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

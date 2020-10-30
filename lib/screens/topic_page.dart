@@ -114,112 +114,101 @@ class _TopicPageState extends State<TopicPage> {
 
   Widget appBar() {
     return BasePageAppBar(
-      expandedHeight: 120.0,
-      title: Padding(
-        padding: const EdgeInsets.only(
-          left: 30.0,
-          top: 40.0,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CircleButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: stateColors.foreground,
-              ),
-              onTap: () => Navigator.of(context).pop(),
+      expandedHeight: 100.0,
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          CircleButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: stateColors.foreground,
             ),
-            AppIcon(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              size: 30.0,
+            onTap: () => Navigator.of(context).pop(),
+          ),
+          AppIcon(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Text(
+            topicName,
+            style: TextStyle(
+              fontSize: 40.0,
+              color: stateColors.foreground,
             ),
-            Text(
-              topicName,
-              style: TextStyle(
-                fontSize: 40.0,
+          ),
+          if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                top: 2.5,
+              ),
+              child: CircleAvatar(
+                radius: 10.0,
+                backgroundColor: Color(appTopicsColors.find(topicName).decimal),
               ),
             ),
-            if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 20.0,
-                  top: 2.5,
-                ),
-                child: CircleAvatar(
-                  radius: 10.0,
-                  backgroundColor:
-                      Color(appTopicsColors.find(topicName).decimal),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 35.0,
-            ),
-            child: Wrap(
-              spacing: 15.0,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Opacity(
-                    opacity: 0.6,
-                    child: InkWell(
-                      onTap: smallViewVisible
-                          ? () {
-                              _innerDrawerKey.currentState.toggle();
-                            }
-                          : null,
-                      child: Icon(Icons.menu),
-                    ),
+      bottom: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+          ),
+          child: Wrap(
+            spacing: 15.0,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Opacity(
+                  opacity: 0.6,
+                  child: InkWell(
+                    onTap: smallViewVisible
+                        ? () {
+                            _innerDrawerKey.currentState.toggle();
+                          }
+                        : null,
+                    child: Icon(Icons.menu),
                   ),
                 ),
-                FadeInY(
-                  beginY: beginY,
-                  delay: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: DropdownButton<String>(
-                      elevation: 2,
-                      value: lang,
-                      isDense: true,
-                      underline: Container(
-                        height: 0,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      style: TextStyle(
-                        color: stateColors.foreground.withOpacity(0.6),
-                        fontFamily: GoogleFonts.raleway().fontFamily,
-                        fontSize: 20.0,
-                      ),
-                      onChanged: (String newLang) {
-                        lang = newLang;
-                        appLocalStorage.setPageLang(
-                          lang: lang,
-                          pageRoute: pageRoute,
-                        );
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: DropdownButton<String>(
+                  elevation: 2,
+                  value: lang,
+                  isDense: true,
+                  underline: Container(
+                    height: 0,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  style: TextStyle(
+                    color: stateColors.foreground.withOpacity(0.6),
+                    fontFamily: GoogleFonts.raleway().fontFamily,
+                    fontSize: 20.0,
+                  ),
+                  onChanged: (String newLang) {
+                    lang = newLang;
+                    appLocalStorage.setPageLang(
+                      lang: lang,
+                      pageRoute: pageRoute,
+                    );
 
-                        fetch();
-                      },
-                      items: ['en', 'fr'].map((String value) {
-                        return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value.toUpperCase(),
-                            ));
-                      }).toList(),
-                    ),
-                  ),
+                    fetch();
+                  },
+                  items: ['en', 'fr'].map((String value) {
+                    return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value.toUpperCase(),
+                        ));
+                  }).toList(),
                 ),
-              ],
-            ),
-          );
-        },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

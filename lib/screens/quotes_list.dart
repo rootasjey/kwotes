@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/circle_button.dart';
@@ -94,9 +93,9 @@ class _QuotesListState extends State<QuotesList> {
 
   Widget appBar() {
     return BasePageAppBar(
-      expandedHeight: 140.0,
+      expandedHeight: 110.0,
       title: Padding(
-        padding: const EdgeInsets.only(left: 20.0, top: 40.0),
+        padding: const EdgeInsets.only(left: 0.0, top: 0.0),
         child: Row(
           children: [
             CircleButton(
@@ -115,6 +114,7 @@ class _QuotesListState extends State<QuotesList> {
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w300,
+                      color: stateColors.foreground,
                     ),
                   ),
                   Opacity(
@@ -124,6 +124,7 @@ class _QuotesListState extends State<QuotesList> {
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w400,
+                        color: stateColors.foreground,
                       ),
                     ),
                   ),
@@ -133,37 +134,29 @@ class _QuotesListState extends State<QuotesList> {
           ],
         ),
       ),
-      subHeader: Observer(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 8.0),
-            child: Wrap(
-              spacing: 20.0,
-              children: <Widget>[
-                FadeInY(
-                  beginY: 10.0,
-                  delay: 0.0,
-                  child: OutlinedButton.icon(
-                    onPressed: () => showEditListDialog(),
-                    icon: Icon(Icons.edit),
-                    label: Text('Edit'),
-                  ),
+      bottom: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Wrap(
+            spacing: 20.0,
+            children: <Widget>[
+              OutlinedButton.icon(
+                onPressed: () => showEditListDialog(),
+                icon: Icon(Icons.edit),
+                label: Text('Edit'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => showDeleteListDialog(),
+                icon: Icon(Icons.delete),
+                label: Text('Delete'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.red,
                 ),
-                FadeInY(
-                    beginY: 10.0,
-                    delay: 0.2,
-                    child: OutlinedButton.icon(
-                      onPressed: () => showDeleteListDialog(),
-                      icon: Icon(Icons.delete),
-                      label: Text('Delete'),
-                      style: OutlinedButton.styleFrom(
-                        primary: Colors.red,
-                      ),
-                    )),
-              ],
-            ),
-          );
-        },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -308,7 +301,7 @@ class _QuotesListState extends State<QuotesList> {
             return QuoteRowWithActions(
               quote: quote,
               quoteId: quote.quoteId,
-              color: stateColors.softBackground,
+              color: stateColors.appBackground,
               quotePageType: QuotePageType.list,
               onRemoveFromList: () => removeQuote(quote),
               padding: EdgeInsets.symmetric(

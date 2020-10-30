@@ -130,52 +130,48 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   Widget appBar() {
     return BasePageAppBar(
       textTitle: "Quotes of $subjectName",
-      subHeader: Observer(
-        builder: (context) {
-          return Wrap(
-            spacing: 10.0,
-            children: <Widget>[
-              FadeInY(
-                beginY: 10.0,
-                delay: 3.5,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: DropdownButton<String>(
-                    elevation: 2,
-                    value: lang,
-                    isDense: true,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: GoogleFonts.raleway().fontFamily,
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (String newLang) {
-                      lang = newLang;
-                      fetch();
-
-                      appLocalStorage.setPageLang(
-                        lang: newLang,
-                        pageRoute: pageRoute,
-                      );
-                    },
-                    items: ['en', 'fr'].map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                          ));
-                    }).toList(),
-                  ),
+      bottom: Wrap(
+        spacing: 10.0,
+        children: <Widget>[
+          FadeInY(
+            beginY: 10.0,
+            delay: 3.5,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: DropdownButton<String>(
+                elevation: 2,
+                value: lang,
+                isDense: true,
+                underline: Container(
+                  height: 0,
+                  color: Colors.deepPurpleAccent,
                 ),
+                icon: Icon(Icons.keyboard_arrow_down),
+                style: TextStyle(
+                  color: stateColors.foreground.withOpacity(0.6),
+                  fontFamily: GoogleFonts.raleway().fontFamily,
+                  fontSize: 20.0,
+                ),
+                onChanged: (String newLang) {
+                  lang = newLang;
+                  fetch();
+
+                  appLocalStorage.setPageLang(
+                    lang: newLang,
+                    pageRoute: pageRoute,
+                  );
+                },
+                items: ['en', 'fr'].map((String value) {
+                  return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value.toUpperCase(),
+                      ));
+                }).toList(),
               ),
-            ],
-          );
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

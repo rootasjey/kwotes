@@ -91,7 +91,6 @@ class _DraftsState extends State<Drafts> {
     return PageAppBar(
       textTitle: 'Drafts',
       textSubTitle: 'They are only visible to you',
-      expandedHeight: 100.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

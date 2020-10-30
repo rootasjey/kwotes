@@ -39,7 +39,7 @@ class PageAppBar extends StatefulWidget {
     Key key,
     this.additionalIconButtons = const [],
     this.descending = true,
-    this.expandedHeight = 130.0,
+    this.expandedHeight = 110.0,
     this.itemsLayout = ItemsLayout.list,
     this.lang = '',
     this.onDescendingChanged,
@@ -86,20 +86,25 @@ class _PageAppBarState extends State<PageAppBar> {
       expandedHeight: widget.expandedHeight,
       title: widget.textSubTitle != null ? twoLinesTitle() : oneLineTitle(),
       showNavBackIcon: widget.showNavBackIcon,
-      subHeader: Padding(
-        padding: const EdgeInsets.only(left: 25.0),
-        child: Wrap(
-          spacing: 10.0,
-          children: <Widget>[
-            if (showOrderButtons) orderButton(),
-            if (showOrderButtons && showLangSelector) separator(), // separator
-            if (showLangSelector) langSelector(),
-            if (showLangSelector && showItemsLayout) separator(), // separator
-            if (showOrderButtons && showItemsLayout && !showLangSelector)
-              separator(), // separator
-            if (showItemsLayout) itemsLayoutSelector(),
-            ...widget.additionalIconButtons,
-          ],
+      bottom: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 24.0),
+          child: Wrap(
+            spacing: 10.0,
+            alignment: WrapAlignment.start,
+            children: <Widget>[
+              if (showOrderButtons) orderButton(),
+              if (showOrderButtons && showLangSelector)
+                separator(), // separator
+              if (showLangSelector) langSelector(),
+              if (showLangSelector && showItemsLayout) separator(), // separator
+              if (showOrderButtons && showItemsLayout && !showLangSelector)
+                separator(), // separator
+              if (showItemsLayout) itemsLayoutSelector(),
+              ...widget.additionalIconButtons,
+            ],
+          ),
         ),
       ),
     );
@@ -165,19 +170,16 @@ class _PageAppBarState extends State<PageAppBar> {
       return widget.title;
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0, top: 40.0),
-      child: TextButton.icon(
-        onPressed: widget.onTitlePressed,
-        icon: AppIcon(
-          padding: EdgeInsets.zero,
-          size: 30.0,
-        ),
-        label: Text(
-          widget.textTitle,
-          style: TextStyle(
-            fontSize: 22.0,
-          ),
+    return TextButton.icon(
+      onPressed: widget.onTitlePressed,
+      icon: AppIcon(
+        padding: EdgeInsets.zero,
+        size: 30.0,
+      ),
+      label: Text(
+        widget.textTitle,
+        style: TextStyle(
+          fontSize: 22.0,
         ),
       ),
     );
@@ -227,49 +229,48 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget twoLinesTitle() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0, top: 40.0),
-      child: Row(
-        children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-          AppIcon(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-            onTap: widget.onIconPressed,
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: widget.onTitlePressed,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.title != null
-                      ? widget.title
-                      : Text(
-                          widget.textTitle,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+    return Row(
+      children: [
+        CircleButton(
+            onTap: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+        AppIcon(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          size: 30.0,
+          onTap: widget.onIconPressed,
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: widget.onTitlePressed,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                widget.title != null
+                    ? widget.title
+                    : Text(
+                        widget.textTitle,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: stateColors.foreground,
+                          fontWeight: FontWeight.w600,
                         ),
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      widget.textSubTitle,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w400,
                       ),
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    widget.textSubTitle,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: stateColors.foreground,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

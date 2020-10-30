@@ -19,7 +19,7 @@ class BasePageAppBar extends StatefulWidget {
   final bool showNavBackIcon;
 
   /// If set, will be shown at the bottom of the title.
-  final Widget subHeader;
+  final Widget bottom;
 
   /// App bar title.
   final String textTitle;
@@ -34,7 +34,7 @@ class BasePageAppBar extends StatefulWidget {
     this.onPressedMenu,
     this.pinned = false,
     this.showNavBackIcon = true,
-    this.subHeader,
+    this.bottom,
     this.textTitle,
     this.title,
   });
@@ -57,13 +57,15 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
           backgroundColor: stateColors.appBackground.withOpacity(1.0),
           expandedHeight: widget.expandedHeight,
           automaticallyImplyLeading: false,
-          flexibleSpace: customFlexibleSpace(),
+          title: titleContainer(),
+          centerTitle: false,
+          bottom: bottomContainer(),
         );
       },
     );
   }
 
-  Widget customFlexibleSpace() {
+  Widget titleContainer() {
     return LayoutBuilder(
       builder: (context, constrains) {
         double titleFontSize = 40.0;
@@ -72,13 +74,7 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
           titleFontSize = 25.0;
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            headerSection(titleFontSize),
-            subHeaderSection(),
-          ],
-        );
+        return headerSection(titleFontSize);
       },
     );
   }
@@ -108,13 +104,17 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
           );
   }
 
-  Widget subHeaderSection() {
-    if (widget.subHeader == null) {
-      return Padding(
-        padding: EdgeInsets.zero,
-      );
+  Widget bottomContainer() {
+    if (widget.bottom == null) {
+      // return Padding(
+      //   padding: EdgeInsets.zero,
+      // );
+      return null;
     }
 
-    return widget.subHeader;
+    return PreferredSize(
+      child: widget.bottom,
+      preferredSize: Size.fromHeight(20.0),
+    );
   }
 }

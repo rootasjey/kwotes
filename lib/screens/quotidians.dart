@@ -92,7 +92,6 @@ class QuotidiansState extends State<Quotidians> {
     return PageAppBar(
       textTitle: 'Quotidians',
       textSubTitle: 'Scheduled quotes for the coming days',
-      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

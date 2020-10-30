@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -57,15 +56,11 @@ class _QuotesListsState extends State<QuotesLists> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Observer(
-        builder: (_) {
-          return FloatingActionButton(
-            onPressed: () => showCreateListDialog(),
-            child: Icon(Icons.add),
-            backgroundColor: stateColors.primary,
-            foregroundColor: Colors.white,
-          );
-        },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showCreateListDialog(),
+        child: Icon(Icons.add),
+        backgroundColor: stateColors.primary,
+        foregroundColor: Colors.white,
       ),
       body: RefreshIndicator(
           onRefresh: () async {

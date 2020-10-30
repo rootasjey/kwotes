@@ -88,7 +88,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     return PageAppBar(
       textTitle: 'All in validation',
       textSubTitle: 'Quotes in validation from all users',
-      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

@@ -250,7 +250,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.id,
-            color: stateColors.softBackground,
+            color: stateColors.appBackground,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),

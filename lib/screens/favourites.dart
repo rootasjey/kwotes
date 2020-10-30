@@ -117,7 +117,6 @@ class _FavouritesState extends State<Favourites> {
     return PageAppBar(
       textTitle: 'Favourites',
       textSubTitle: 'Quotes you loved the most',
-      expandedHeight: 120.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -245,7 +244,7 @@ class _FavouritesState extends State<Favourites> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 10.0 : 70.0;
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -255,7 +254,7 @@ class _FavouritesState extends State<Favourites> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.quoteId,
-            color: stateColors.softBackground,
+            color: stateColors.appBackground,
             quotePageType: QuotePageType.favourites,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,

@@ -105,7 +105,6 @@ class _DiscoverState extends State<Discover> {
   Widget appBar() {
     return PageAppBar(
       textTitle: 'Discover',
-      expandedHeight: 130.0,
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -150,8 +149,12 @@ class _DiscoverState extends State<Discover> {
 
     return BasePageAppBar(
       pinned: true,
+      toolbarHeight: 60.0,
+      collapsedHeight: 70.0,
+      expandedHeight: 70.0,
+      showNavBackIcon: false,
       title: Padding(
-        padding: const EdgeInsets.only(left: 30.0, top: 30.0),
+        padding: const EdgeInsets.only(left: 4.0),
         child: Wrap(
           spacing: 10.0,
           children: [
@@ -172,6 +175,9 @@ class _DiscoverState extends State<Discover> {
                   'References',
                   style: TextStyle(
                     fontSize: 16.0,
+                    fontWeight: isReferencesSelected
+                        ? FontWeight.w600
+                        : FontWeight.w400,
                   ),
                 ),
               ),
@@ -193,6 +199,9 @@ class _DiscoverState extends State<Discover> {
                   'Authors',
                   style: TextStyle(
                     fontSize: 16.0,
+                    fontWeight: !isReferencesSelected
+                        ? FontWeight.w600
+                        : FontWeight.w400,
                   ),
                 ),
               ),
@@ -200,10 +209,6 @@ class _DiscoverState extends State<Discover> {
           ],
         ),
       ),
-      toolbarHeight: 60.0,
-      collapsedHeight: 70.0,
-      expandedHeight: 70.0,
-      showNavBackIcon: false,
     );
   }
 
@@ -357,7 +362,7 @@ class _DiscoverState extends State<Discover> {
 
     if (screenWidth < narrowWidthLimit) {
       isNarrow = true;
-      horPadding = 10.0;
+      horPadding = 0.0;
     }
 
     return SliverList(
@@ -400,7 +405,7 @@ class _DiscoverState extends State<Discover> {
 
     if (screenWidth < narrowWidthLimit) {
       isNarrow = true;
-      horPadding = 10.0;
+      horPadding = 0.0;
     }
 
     return SliverList(
