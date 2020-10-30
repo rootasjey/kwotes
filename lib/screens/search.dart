@@ -1,19 +1,22 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/quote_row_with_actions.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/author_suggestion.dart';
+import 'package:figstyle/types/reference_suggestion.dart';
+import 'package:figstyle/utils/search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/components/quote_row.dart';
 import 'package:figstyle/components/circle_author.dart';
 import 'package:figstyle/components/reference_card.dart';
 import 'package:figstyle/components/main_app_bar.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/reference.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 String _searchInputValue = '';
@@ -38,9 +41,9 @@ class _SearchState extends State<Search> {
   bool areAuthorsVisible = true;
   bool areReferencesVisible = true;
 
-  final authorsResults = List<Author>();
-  final quotesResults = List<Quote>();
-  final referencesResults = List<Reference>();
+  List<AuthorSuggestion> authorsSuggestions = [];
+  List<Quote> quotesSuggestions = [];
+  List<ReferenceSuggestion> referencesSuggestions = [];
 
   final limit = 10;
 
@@ -133,7 +136,7 @@ class _SearchState extends State<Search> {
     if (MediaQuery.of(context).size.width < 700.0) {
       return PageAppBar(
         textTitle: 'Search',
-        expandedHeight: 170.0,
+        expandedHeight: 60.0,
         showNavBackIcon: false,
         onTitlePressed: () {
           scrollController.animateTo(
@@ -151,32 +154,38 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget authorsResultsView() {
-    return Wrap(
-      spacing: 40.0,
-      runSpacing: 40.0,
-      alignment: isNarrow ? WrapAlignment.center : WrapAlignment.start,
-      children: authorsResults.map((author) {
-        return CircleAuthor(
-          size: isNarrow ? 100.0 : 150.0,
-          author: author,
-          itemBuilder: (_) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-              value: 'share',
-              child: ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Share'),
+  Widget authorsListView() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 20.0,
+        top: 10.0,
+      ),
+      child: Wrap(
+        spacing: 40.0,
+        runSpacing: 40.0,
+        alignment: isNarrow ? WrapAlignment.center : WrapAlignment.start,
+        children: authorsSuggestions.map((suggestion) {
+          return CircleAuthor(
+            size: isNarrow ? 100.0 : 150.0,
+            author: suggestion.author,
+            itemBuilder: (_) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('Share'),
+                ),
               ),
-            ),
-          ],
-          onSelected: (value) {
-            if (value == 'share') {
-              shareAuthor(context: context, author: author);
-              return;
-            }
-          },
-        );
-      }).toList(),
+            ],
+            onSelected: (value) {
+              if (value == 'share') {
+                shareAuthor(context: context, author: suggestion.author);
+                return;
+              }
+            },
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -188,16 +197,19 @@ class _SearchState extends State<Search> {
     }
 
     final dataView =
-        authorsResults.isEmpty ? emptyView('authors') : authorsResultsView();
+        authorsSuggestions.isEmpty ? emptyView('authors') : authorsListView();
+
+    final length = authorsSuggestions.length;
+
+    final text = length > 1 ? '$length authors' : '$length author';
 
     return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: Column(
-        crossAxisAlignment:
-            isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleSection(
-            text: '${authorsResults.length} authors',
+            text: text,
             iconData:
                 areAuthorsVisible ? Icons.close_fullscreen : Icons.open_in_full,
             onPressed: () =>
@@ -211,7 +223,7 @@ class _SearchState extends State<Search> {
 
   Widget body() {
     isNarrow = MediaQuery.of(context).size.width < 700.0;
-    double horPadding = isNarrow ? 20.0 : 100.0;
+    double horPadding = isNarrow ? 0.0 : 100.0;
 
     return SliverPadding(
       padding: EdgeInsets.symmetric(
@@ -225,7 +237,7 @@ class _SearchState extends State<Search> {
           referencesSection(),
           Padding(
             padding: const EdgeInsets.only(
-              bottom: 300.0,
+              bottom: 100.0,
             ),
           ),
         ]),
@@ -279,31 +291,23 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget quotesResultsView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: quotesResults.map((quote) {
-        return QuoteRow(
-          quote: quote,
-          quoteId: quote.id,
-          padding: EdgeInsets.zero,
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )),
-          ],
-          onSelected: (value) {
-            if (value == 'share') {
-              shareQuote(context: context, quote: quote);
-              return;
-            }
-          },
-        );
-      }).toList(),
-    );
+  Widget quotesListView() {
+    return Observer(builder: (context) {
+      final isConnected = userState.isUserConnected;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: quotesSuggestions.map((quote) {
+          return QuoteRowWithActions(
+            quote: quote,
+            quoteId: quote.id,
+            padding: EdgeInsets.zero,
+            color: stateColors.appBackground,
+            isConnected: isConnected,
+          );
+        }).toList(),
+      );
+    });
   }
 
   Widget quotesSection() {
@@ -314,14 +318,17 @@ class _SearchState extends State<Search> {
     }
 
     final dataView =
-        quotesResults.isEmpty ? emptyView('quotes') : quotesResultsView();
+        quotesSuggestions.isEmpty ? emptyView('quotes') : quotesListView();
+
+    final length = quotesSuggestions.length;
+
+    final text = length > 1 ? '$length quotes' : '$length quote';
 
     return Column(
-      crossAxisAlignment:
-          isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         titleSection(
-          text: '${quotesResults.length} quotes',
+          text: text,
           iconData:
               areQuotesVisible ? Icons.close_fullscreen : Icons.open_in_full,
           onPressed: () => setState(() => areQuotesVisible = !areQuotesVisible),
@@ -331,7 +338,7 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget referencesResultsView() {
+  Widget referencesListView() {
     double height = 230.0;
     double width = 170.0;
 
@@ -340,33 +347,40 @@ class _SearchState extends State<Search> {
       width = 120.0;
     }
 
-    return Wrap(
-      spacing: 40.0,
-      runSpacing: 40.0,
-      children: referencesResults.map((reference) {
-        return ReferenceCard(
-          height: height,
-          width: width,
-          id: reference.id,
-          titleFontSize: isNarrow ? 14.0 : 18.0,
-          imageUrl: reference.urls.image,
-          name: reference.name,
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                )),
-          ],
-          onSelected: (value) {
-            if (value == 'share') {
-              shareReference(context: context, reference: reference);
-              return;
-            }
-          },
-        );
-      }).toList(),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 20.0,
+        top: 10.0,
+      ),
+      child: Wrap(
+        spacing: 40.0,
+        runSpacing: 40.0,
+        children: referencesSuggestions.map((suggestion) {
+          return ReferenceCard(
+            height: height,
+            width: width,
+            id: suggestion.reference.id,
+            titleFontSize: isNarrow ? 14.0 : 18.0,
+            imageUrl: suggestion.reference.urls.image,
+            name: suggestion.reference.name,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                  value: 'share',
+                  child: ListTile(
+                    leading: Icon(Icons.share),
+                    title: Text('Share'),
+                  )),
+            ],
+            onSelected: (value) {
+              if (value == 'share') {
+                shareReference(
+                    context: context, reference: suggestion.reference);
+                return;
+              }
+            },
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -378,16 +392,19 @@ class _SearchState extends State<Search> {
     }
 
     final dataView =
-        quotesResults.isEmpty ? emptyView('quotes') : referencesResultsView();
+        quotesSuggestions.isEmpty ? emptyView('quotes') : referencesListView();
+
+    final length = referencesSuggestions.length;
+
+    final text = length > 1 ? '$length references' : '$length reference';
 
     return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: Column(
-        crossAxisAlignment:
-            isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleSection(
-            text: '${referencesResults.length} references',
+            text: text,
             iconData: areReferencesVisible
                 ? Icons.close_fullscreen
                 : Icons.open_in_full,
@@ -402,7 +419,7 @@ class _SearchState extends State<Search> {
 
   Widget searchActions() {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0),
+      padding: const EdgeInsets.only(left: 10.0),
       child: Wrap(spacing: 20.0, runSpacing: 20.0, children: [
         OutlinedButton.icon(
             onPressed: () {
@@ -412,11 +429,11 @@ class _SearchState extends State<Search> {
 
               setState(() {});
             },
-            icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+            icon: Opacity(opacity: 0.6, child: Icon(Icons.delete_sweep)),
             label: Opacity(
               opacity: 0.6,
               child: Text(
-                'Clear content',
+                'Clear input',
               ),
             )),
       ]),
@@ -427,6 +444,7 @@ class _SearchState extends State<Search> {
     return Padding(
       padding: EdgeInsets.only(
         top: isNarrow ? 0.0 : 100.0,
+        left: 20.0,
         bottom: 60.0,
       ),
       child: Column(
@@ -444,7 +462,7 @@ class _SearchState extends State<Search> {
     final fontSize = MediaQuery.of(context).size.width < 390.0 ? 20.0 : 36.0;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
+      padding: const EdgeInsets.only(left: 5.0),
       child: TextField(
         maxLines: null,
         autofocus: true,
@@ -491,14 +509,17 @@ class _SearchState extends State<Search> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(
+        left: 10.0,
+        top: 20.0,
+      ),
       child: Opacity(
         opacity: 0.5,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              '${quotesResults.length + authorsResults.length + referencesResults.length} results in total',
+              '${quotesSuggestions.length + authorsSuggestions.length + referencesSuggestions.length} results in total',
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -520,10 +541,10 @@ class _SearchState extends State<Search> {
     VoidCallback onPressed,
     @required IconData iconData,
   }) {
-    final padding = EdgeInsets.only(bottom: isNarrow ? 40.0 : 15.0);
-
     return Padding(
-      padding: padding,
+      padding: EdgeInsets.only(
+        left: 20.0,
+      ),
       child: TextButton.icon(
         onPressed: onPressed,
         icon: Icon(iconData),
@@ -547,27 +568,48 @@ class _SearchState extends State<Search> {
   void searchAuthors() async {
     setState(() {
       isSearchingAuthors = false;
-      authorsResults.clear();
+      authorsSuggestions.clear();
     });
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('authors')
-          .where('name', isGreaterThanOrEqualTo: _searchInputValue)
-          .limit(limit)
-          .get();
+      final query = algolia
+          .index('authors')
+          .search(_searchInputValue)
+          .setHitsPerPage(10)
+          .setPage(0);
 
-      if (snapshot.docs.isEmpty) {
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() => isSearchingAuthors = false);
         return;
       }
 
-      snapshot.docs.forEach((element) {
-        final data = element.data();
-        data['id'] = element.id;
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
 
-        final author = Author.fromJSON(data);
-        authorsResults.add(author);
-      });
+        final author = AuthorSuggestion.fromJSON(data);
+        final fromReference = author.author.fromReference;
+
+        if (fromReference != null &&
+            fromReference.id != null &&
+            fromReference.id.isNotEmpty) {
+          try {
+            final ref = await FirebaseFirestore.instance
+                .collection('references')
+                .doc(fromReference.id)
+                .get();
+
+            final refData = ref.data();
+            refData['id'] = ref.id;
+
+            author.parseReferenceJSON(refData);
+          } catch (error) {}
+        }
+
+        authorsSuggestions.add(author);
+      }
 
       setState(() {
         isSearchingAuthors = false;
@@ -580,27 +622,30 @@ class _SearchState extends State<Search> {
   void searchQuotes() async {
     setState(() {
       isSearchingQuotes = false;
-      quotesResults.clear();
+      quotesSuggestions.clear();
     });
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('quotes')
-          .where('name', isGreaterThanOrEqualTo: _searchInputValue)
-          .limit(limit)
-          .get();
+      final query = algolia
+          .index('quotes')
+          .search(_searchInputValue)
+          .setHitsPerPage(10)
+          .setPage(0);
 
-      if (snapshot.docs.isEmpty) {
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() => isSearchingAuthors = false);
         return;
       }
 
-      snapshot.docs.forEach((element) {
-        final data = element.data();
-        data['id'] = element.id;
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
 
         final quote = Quote.fromJSON(data);
-        quotesResults.add(quote);
-      });
+        quotesSuggestions.add(quote);
+      }
 
       setState(() {
         isSearchingQuotes = false;
@@ -613,27 +658,30 @@ class _SearchState extends State<Search> {
   void searchReferences() async {
     setState(() {
       isSearchingReferences = false;
-      referencesResults.clear();
+      referencesSuggestions.clear();
     });
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('references')
-          .where('name', isGreaterThanOrEqualTo: _searchInputValue)
-          .limit(limit)
-          .get();
+      final query = algolia
+          .index('references')
+          .search(_searchInputValue)
+          .setHitsPerPage(10)
+          .setPage(0);
 
-      if (snapshot.docs.isEmpty) {
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() => isSearchingReferences = false);
         return;
       }
 
-      snapshot.docs.forEach((element) {
-        final data = element.data();
-        data['id'] = element.id;
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
 
-        final reference = Reference.fromJSON(data);
-        referencesResults.add(reference);
-      });
+        final reference = ReferenceSuggestion.fromJSON(data);
+        referencesSuggestions.add(reference);
+      }
 
       setState(() {
         isSearchingReferences = false;
