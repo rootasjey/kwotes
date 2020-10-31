@@ -13,16 +13,23 @@ import 'package:figstyle/state/user_state.dart';
 
 class MainAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
-  final Function onTapIconHeader;
-  final String title;
   final bool showUserMenu;
   final bool showCloseButton;
+  final bool pinned;
+
+  final EdgeInsets padding;
+
+  final Function onTapIconHeader;
+
+  final String title;
 
   MainAppBar({
-    this.showCloseButton = false,
-    this.showUserMenu = true,
     this.automaticallyImplyLeading = false,
     this.onTapIconHeader,
+    this.padding = EdgeInsets.zero,
+    this.pinned = true,
+    this.showCloseButton = false,
+    this.showUserMenu = true,
     this.title = '',
   });
 
@@ -36,27 +43,55 @@ class _MainAppBarState extends State<MainAppBar> {
     return SliverLayoutBuilder(
       builder: (context, constrains) {
         final isNarrow = constrains.crossAxisExtent < 700.0;
-        final leftPadding = isNarrow ? 0.0 : 60.0;
 
         bool showUserMenu = !isNarrow;
 
         if (widget.showUserMenu != null) {
-          showUserMenu = showUserMenu;
+          showUserMenu = widget.showUserMenu;
         }
 
         return Observer(
           builder: (_) {
+            final userSectionWidgets = List<Widget>();
+
+            if (userState.isUserConnected) {
+              isNarrow
+                  ? userSectionWidgets.add(userAvatar(isNarrow: isNarrow))
+                  : userSectionWidgets.addAll([
+                      userAvatar(),
+                      addNewQuoteButton(),
+                      searchButton(),
+                    ]);
+            } else {
+              isNarrow
+                  ? userSectionWidgets.add(userSigninMenu())
+                  : userSectionWidgets.addAll([
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: IconButton(
+                          onPressed: () => Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => Signin())),
+                          tooltip: 'Sign in',
+                          icon: Icon(Icons.login),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 60.0),
+                        child: searchButton(),
+                      ),
+                    ]);
+            }
+
             return SliverAppBar(
               floating: true,
               snap: true,
-              pinned: true,
+              pinned: widget.pinned,
               toolbarHeight: 80.0,
               backgroundColor: stateColors.appBackground.withOpacity(1.0),
               automaticallyImplyLeading: false,
+              actions: showUserMenu ? userSectionWidgets : [],
               title: Padding(
-                padding: EdgeInsets.only(
-                  left: leftPadding,
-                ),
+                padding: widget.padding,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
@@ -72,29 +107,26 @@ class _MainAppBarState extends State<MainAppBar> {
                       ),
                     AppIcon(
                       size: 30.0,
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.zero,
                       onTap: widget.onTapIconHeader,
                     ),
                     if (widget.title.isNotEmpty)
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 40.0),
-                          child: Tooltip(
-                            message: widget.title,
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                widget.title,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: stateColors.foreground,
-                                ),
+                          child: Opacity(
+                            opacity: 0.6,
+                            child: Text(
+                              widget.title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: stateColors.foreground,
                               ),
                             ),
                           ),
                         ),
                       ),
-                    if (showUserMenu) userSection(isNarrow),
+                    // if (showUserMenu) userSection(isNarrow),
                     if (widget.showCloseButton) closeButton(),
                   ],
                 ),
@@ -141,6 +173,7 @@ class _MainAppBarState extends State<MainAppBar> {
 
   Widget searchButton() {
     return IconButton(
+      tooltip: 'Search',
       onPressed: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (_) => AddQuoteSteps()));
