@@ -67,6 +67,13 @@ class _RecentHeroState extends State<RecentHero> {
   }
 
   Widget quotidianRow() {
+    final now = DateTime.now();
+    var icon = Icon(Icons.wb_sunny);
+
+    if (now.hour < 6 || now.hour > 18) {
+      icon = Icon(Icons.brightness_2);
+    }
+
     return Padding(
       padding: const EdgeInsets.only(
         top: 24.0,
@@ -78,7 +85,7 @@ class _RecentHeroState extends State<RecentHero> {
         children: [
           ElevatedButton.icon(
             onPressed: showQuotidian,
-            icon: Icon(Icons.wb_sunny),
+            icon: icon,
             label: Text(
               "Tap here to see today quote",
             ),
