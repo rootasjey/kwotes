@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/topic_color.dart';
+import 'package:mobx/mobx.dart';
 
 List<TopicColor> _topics = [];
 
@@ -15,6 +14,30 @@ class Topics extends StatefulWidget {
 
 class _TopicsState extends State<Topics> {
   bool isLoading = false;
+
+  ReactionDisposer reactionDisposer;
+
+  @override
+  initState() {
+    super.initState();
+
+    reactionDisposer = autorun((reaction) {
+      if (_topics.length == 0) {
+        setState(() {
+          _topics = appTopicsColors.shuffle(max: 3);
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    if (reactionDisposer != null) {
+      reactionDisposer.reaction.dispose();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,33 +106,16 @@ class _TopicsState extends State<Topics> {
   }
 
   Widget topicsColorsCards() {
-    int count = 0;
-
-    return Observer(
-      builder: (context) {
-        if (_topics.length == 0) {
-          _topics = appTopicsColors.shuffle(max: 3);
-        }
-
-        return GridView.count(
-          crossAxisCount: 3,
-          childAspectRatio: .8,
-          children: _topics.map((topicColor) {
-            count++;
-
-            return FadeInY(
-              beginY: 50.0,
-              endY: 0.0,
-              delay: count.toDouble(),
-              child: TopicCardColor(
-                color: Color(topicColor.decimal),
-                name:
-                    '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
-              ),
-            );
-          }).toList(),
+    return GridView.count(
+      crossAxisCount: 3,
+      childAspectRatio: .8,
+      children: _topics.map((topicColor) {
+        return TopicCardColor(
+          color: Color(topicColor.decimal),
+          name:
+              '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
         );
-      },
+      }).toList(),
     );
   }
 }
