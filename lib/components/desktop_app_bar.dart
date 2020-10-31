@@ -1,3 +1,6 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/brightness.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/users.dart';
@@ -66,6 +69,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               isNarrow
                   ? userSectionWidgets.add(userSigninMenu())
                   : userSectionWidgets.addAll([
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: brightnessButton(),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: IconButton(
@@ -231,6 +238,62 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           ],
         ),
       ),
+    );
+  }
+
+  /// Switch from dark to light and vice-versa.
+  Widget brightnessButton() {
+    IconData iconBrightness = Icons.brightness_auto;
+    final autoBrightness = appLocalStorage.getAutoBrightness();
+
+    if (!autoBrightness) {
+      final currentBrightness = appLocalStorage.getBrightness();
+
+      iconBrightness = currentBrightness == Brightness.dark
+          ? Icons.brightness_2
+          : Icons.brightness_low;
+    }
+
+    return PopupMenuButton<String>(
+      icon: Icon(
+        iconBrightness,
+        color: stateColors.foreground,
+      ),
+      tooltip: 'Brightness',
+      onSelected: (value) {
+        if (value == 'auto') {
+          setAutoBrightness(context: context);
+          return;
+        }
+
+        final brightness = value == 'dark' ? Brightness.dark : Brightness.light;
+
+        setBrightness(brightness: brightness, context: context);
+        DynamicTheme.of(context).setBrightness(brightness);
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 'auto',
+          child: ListTile(
+            leading: Icon(Icons.brightness_auto),
+            title: Text('Auto'),
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'dark',
+          child: ListTile(
+            leading: Icon(Icons.brightness_2),
+            title: Text('Dark'),
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'light',
+          child: ListTile(
+            leading: Icon(Icons.brightness_5),
+            title: Text('Light'),
+          ),
+        ),
+      ],
     );
   }
 
