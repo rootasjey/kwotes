@@ -61,18 +61,16 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               isNarrow
                   ? userSectionWidgets.add(userAvatar(isNarrow: isNarrow))
                   : userSectionWidgets.addAll([
-                      userAvatar(),
-                      addNewQuoteButton(),
+                      brightnessButton(),
                       searchButton(),
+                      newQuoteButton(),
+                      userAvatar(),
                     ]);
             } else {
               isNarrow
                   ? userSectionWidgets.add(userSigninMenu())
                   : userSectionWidgets.addAll([
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: brightnessButton(),
-                      ),
+                      brightnessButton(),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: IconButton(
@@ -136,7 +134,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                           ),
                         ),
                       ),
-                    // if (showUserMenu) userSection(isNarrow),
                     if (widget.showCloseButton) closeButton(),
                   ],
                 ),
@@ -148,48 +145,32 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
-  Widget addNewQuoteButton() {
-    return RaisedButton(
+  Widget newQuoteButton() {
+    return IconButton(
+      tooltip: "New quote",
       onPressed: () {
         DataQuoteInputs.clearAll();
         DataQuoteInputs.navigatedFromPath = 'dashboard';
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
       },
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
-      color: stateColors.primary,
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Icon(Icons.add, color: Colors.white),
-          ),
-          Text(
-            'New quote',
-            style: TextStyle(
-              color: Colors.white,
-              // fontSize: 12.0,
-            ),
-          ),
-        ],
-      ),
+      color: stateColors.foreground,
+      icon: Icon(Icons.add),
     );
   }
 
   Widget searchButton() {
-    return IconButton(
-      tooltip: 'Search',
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-      },
-      color: stateColors.foreground,
-      icon: Icon(Icons.search),
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: IconButton(
+        tooltip: 'Search',
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+        },
+        color: stateColors.foreground,
+        icon: Icon(Icons.search),
+      ),
     );
   }
 
@@ -254,46 +235,50 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           : Icons.brightness_low;
     }
 
-    return PopupMenuButton<String>(
-      icon: Icon(
-        iconBrightness,
-        color: stateColors.foreground,
+    return Padding(
+      padding: const EdgeInsets.only(right: 20.0),
+      child: PopupMenuButton<String>(
+        icon: Icon(
+          iconBrightness,
+          color: stateColors.foreground,
+        ),
+        tooltip: 'Brightness',
+        onSelected: (value) {
+          if (value == 'auto') {
+            setAutoBrightness(context: context);
+            return;
+          }
+
+          final brightness =
+              value == 'dark' ? Brightness.dark : Brightness.light;
+
+          setBrightness(brightness: brightness, context: context);
+          DynamicTheme.of(context).setBrightness(brightness);
+        },
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: 'auto',
+            child: ListTile(
+              leading: Icon(Icons.brightness_auto),
+              title: Text('Auto'),
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'dark',
+            child: ListTile(
+              leading: Icon(Icons.brightness_2),
+              title: Text('Dark'),
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'light',
+            child: ListTile(
+              leading: Icon(Icons.brightness_5),
+              title: Text('Light'),
+            ),
+          ),
+        ],
       ),
-      tooltip: 'Brightness',
-      onSelected: (value) {
-        if (value == 'auto') {
-          setAutoBrightness(context: context);
-          return;
-        }
-
-        final brightness = value == 'dark' ? Brightness.dark : Brightness.light;
-
-        setBrightness(brightness: brightness, context: context);
-        DynamicTheme.of(context).setBrightness(brightness);
-      },
-      itemBuilder: (context) => [
-        const PopupMenuItem(
-          value: 'auto',
-          child: ListTile(
-            leading: Icon(Icons.brightness_auto),
-            title: Text('Auto'),
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'dark',
-          child: ListTile(
-            leading: Icon(Icons.brightness_2),
-            title: Text('Dark'),
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'light',
-          child: ListTile(
-            leading: Icon(Icons.brightness_5),
-            title: Text('Light'),
-          ),
-        ),
-      ],
     );
   }
 
@@ -314,7 +299,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     return Padding(
       padding: const EdgeInsets.only(
         left: 20.0,
-        right: 20.0,
+        right: 60.0,
       ),
       child: PopupMenuButton<String>(
         icon: CircleAvatar(
@@ -440,7 +425,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ? children.add(userAvatar(isNarrow: isNarrow))
             : children.addAll([
                 userAvatar(),
-                addNewQuoteButton(),
+                newQuoteButton(),
                 searchButton(),
               ]);
       } else {
