@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/screens/delete_account.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/update_email.dart';
@@ -76,7 +76,7 @@ class _SettingsState extends State<Settings> {
             child: CustomScrollView(
               controller: _scrollController,
               slivers: <Widget>[
-                MainAppBar(
+                DesktopAppBar(
                   title: "Settings",
                   automaticallyImplyLeading: true,
                 ),

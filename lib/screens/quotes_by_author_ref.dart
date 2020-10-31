@@ -10,7 +10,7 @@ import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
@@ -119,7 +119,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              MainAppBar(),
+              DesktopAppBar(),
               appBar(),
               bodyListContent(),
             ],

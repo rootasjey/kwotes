@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:figstyle/utils/icons_more_icons.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contact extends StatefulWidget {
@@ -14,7 +14,7 @@ class _ContactState extends State<Contact> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          MainAppBar(
+          DesktopAppBar(
             title: "Contact",
             automaticallyImplyLeading: true,
           ),

@@ -1,7 +1,7 @@
 import 'package:figstyle/state/colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Terms Of Service.
@@ -13,7 +13,7 @@ class Tos extends StatelessWidget {
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        MainAppBar(
+        DesktopAppBar(
           title: "Privacy Terms",
           automaticallyImplyLeading: true,
         ),

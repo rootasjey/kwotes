@@ -12,7 +12,7 @@ import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/circle_author.dart';
 import 'package:figstyle/components/reference_card.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/quote.dart';
@@ -148,7 +148,7 @@ class _SearchState extends State<Search> {
       );
     }
 
-    return MainAppBar(
+    return DesktopAppBar(
       title: 'Search',
       automaticallyImplyLeading: true,
     );

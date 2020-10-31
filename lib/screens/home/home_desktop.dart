@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/components/discover_references.dart';
 import 'package:figstyle/components/discover_authors.dart';
 import 'package:figstyle/components/footer.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/topics.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -24,7 +24,7 @@ class _HomeDesktopState extends State<HomeDesktop> {
             return CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
-                MainAppBar(
+                DesktopAppBar(
                   title: "fig.style",
                   padding: const EdgeInsets.only(left: 65.0),
                   onTapIconHeader: () {

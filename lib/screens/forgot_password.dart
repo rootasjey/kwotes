@@ -2,7 +2,7 @@ import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -25,7 +25,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          MainAppBar(
+          DesktopAppBar(
             title: "Forgot password",
             automaticallyImplyLeading: true,
           ),

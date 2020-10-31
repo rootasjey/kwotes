@@ -11,7 +11,7 @@ import 'package:figstyle/components/sliver_loading_view.dart';
 import 'package:figstyle/components/reference_card.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
@@ -212,7 +212,7 @@ class _ReferencesState extends State<References> {
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
-              MainAppBar(
+              DesktopAppBar(
                 title: 'References',
                 automaticallyImplyLeading: true,
               ),

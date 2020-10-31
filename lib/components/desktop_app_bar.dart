@@ -11,7 +11,7 @@ import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 
-class MainAppBar extends StatefulWidget {
+class DesktopAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
   final bool showUserMenu;
   final bool showCloseButton;
@@ -23,7 +23,7 @@ class MainAppBar extends StatefulWidget {
 
   final String title;
 
-  MainAppBar({
+  DesktopAppBar({
     this.automaticallyImplyLeading = false,
     this.onTapIconHeader,
     this.padding = EdgeInsets.zero,
@@ -34,10 +34,10 @@ class MainAppBar extends StatefulWidget {
   });
 
   @override
-  _MainAppBarState createState() => _MainAppBarState();
+  _DesktopAppBarState createState() => _DesktopAppBarState();
 }
 
-class _MainAppBarState extends State<MainAppBar> {
+class _DesktopAppBarState extends State<DesktopAppBar> {
   @override
   Widget build(BuildContext context) {
     return SliverLayoutBuilder(

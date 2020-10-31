@@ -5,7 +5,7 @@ import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/add_to_list_button.dart';
 import 'package:figstyle/components/full_page_error.dart';
 import 'package:figstyle/components/full_page_loading.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/screens/author_page.dart';
@@ -73,7 +73,7 @@ class _QuotePageState extends State<QuotePage> {
         physics: ClampingScrollPhysics(),
         controller: widget.scrollController,
         slivers: <Widget>[
-          MainAppBar(
+          DesktopAppBar(
             padding: widget.padding,
             pinned: widget.pinnedAppBar,
             showCloseButton: true,

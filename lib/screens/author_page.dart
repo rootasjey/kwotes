@@ -10,7 +10,7 @@ import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/components/sliver_empty_view.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/screens/quotes_by_author_ref.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
@@ -82,7 +82,7 @@ class _AuthorPageState extends State<AuthorPage> {
             physics: ClampingScrollPhysics(),
             controller: widget.scrollController,
             slivers: <Widget>[
-              MainAppBar(
+              DesktopAppBar(
                 title: author != null ? author.name : '',
                 showCloseButton: true,
                 showUserMenu: false,

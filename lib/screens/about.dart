@@ -6,7 +6,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/footer.dart';
-import 'package:figstyle/components/main_app_bar.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatelessWidget {
@@ -29,7 +29,7 @@ class About extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          MainAppBar(
+          DesktopAppBar(
             title: 'About',
             automaticallyImplyLeading: true,
             showUserMenu: false,
