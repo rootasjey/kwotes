@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/add_to_list_button.dart';
-import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/full_page_error.dart';
 import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/components/main_app_bar.dart';
@@ -20,11 +19,18 @@ import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotePage extends StatefulWidget {
-  final String quoteId;
+  final bool pinnedAppBar;
+
+  final EdgeInsets padding;
+
   final Quote quote;
+
   final ScrollController scrollController;
+  final String quoteId;
 
   QuotePage({
+    this.padding = EdgeInsets.zero,
+    this.pinnedAppBar = true,
     this.quoteId,
     this.quote,
     this.scrollController,
@@ -36,9 +42,12 @@ class QuotePage extends StatefulWidget {
 
 class _QuotePageState extends State<QuotePage> {
   bool isLoading = false;
-  Quote quote;
-  List<TopicColor> topicColors = [];
+
   Color accentColor = Colors.blue;
+
+  List<TopicColor> topicColors = [];
+
+  Quote quote;
 
   @override
   void initState() {
@@ -65,6 +74,8 @@ class _QuotePageState extends State<QuotePage> {
         controller: widget.scrollController,
         slivers: <Widget>[
           MainAppBar(
+            padding: widget.padding,
+            pinned: widget.pinnedAppBar,
             showCloseButton: true,
             showUserMenu: false,
           ),
@@ -108,6 +119,7 @@ class _QuotePageState extends State<QuotePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Expanded(
@@ -203,15 +215,12 @@ class _QuotePageState extends State<QuotePage> {
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Row(
-          children: [
-            Expanded(
-              child: Opacity(
-                opacity: value,
-                child: child,
-              ),
-            ),
-          ],
+        return Align(
+          alignment: Alignment.topRight,
+          child: Opacity(
+            opacity: value,
+            child: child,
+          ),
         );
       },
     );
@@ -254,16 +263,12 @@ class _QuotePageState extends State<QuotePage> {
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Opacity(
-                opacity: value,
-                child: child,
-              ),
-            ),
-          ],
+        return Align(
+          alignment: Alignment.topRight,
+          child: Opacity(
+            opacity: value,
+            child: child,
+          ),
         );
       },
     );
@@ -274,15 +279,13 @@ class _QuotePageState extends State<QuotePage> {
       return Padding(padding: EdgeInsets.zero);
     }
 
-    double count = 0;
-
     return Container(
       width: MediaQuery.of(context).size.width,
-      foregroundDecoration: BoxDecoration(
-        color: Color.fromRGBO(0, 0, 0, 0.05),
-      ),
       child: Column(
         children: <Widget>[
+          Divider(
+            thickness: 1.0,
+          ),
           SizedBox(
             height: 300,
             child: ListView(
@@ -292,19 +295,14 @@ class _QuotePageState extends State<QuotePage> {
               ),
               scrollDirection: Axis.horizontal,
               children: quote.topics.map((topic) {
-                count += 1.0;
-
                 final topicColor = appTopicsColors.find(topic);
 
-                return FadeInX(
-                  delay: count,
-                  beginX: 50.0,
-                  child: TopicCardColor(
-                    color: Color(topicColor.decimal),
-                    name: topicColor.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
+                return TopicCardColor(
+                  elevation: 3.0,
+                  color: Color(topicColor.decimal),
+                  name: topicColor.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
                   ),
                 );
               }).toList(),
