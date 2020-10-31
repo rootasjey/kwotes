@@ -102,6 +102,14 @@ class _RecentHeroState extends State<RecentHero> {
               "Random quotes",
             ),
           ),
+          Tooltip(
+            message: "Restore recent",
+            child: OutlinedButton.icon(
+              onPressed: fetch,
+              icon: Icon(Icons.restore),
+              label: Text(''),
+            ),
+          ),
         ],
       ),
     );
