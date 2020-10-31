@@ -355,7 +355,7 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget listViewAuthors() {
-    double horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 70.0;
+    double horPadding = MediaQuery.of(context).size.width < 700.0 ? 0.0 : 70.0;
 
     final screenWidth = MediaQuery.of(context).size.width;
     bool isNarrow = false;
@@ -400,7 +400,7 @@ class _DiscoverState extends State<Discover> {
   Widget listViewReferences() {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    double horPadding = screenWidth < 700.0 ? 20.0 : 70.0;
+    double horPadding = screenWidth < 700.0 ? 0.0 : 70.0;
     bool isNarrow = false;
 
     if (screenWidth < narrowWidthLimit) {

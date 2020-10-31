@@ -244,7 +244,7 @@ class _DashboardState extends State<Dashboard> {
     return [
       Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 60.0,
+          horizontal: 40.0,
         ),
         child: Column(
           children: [
@@ -439,7 +439,7 @@ class _DashboardState extends State<Dashboard> {
   Widget whyAccountBlock() {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 50.0,
+        left: 30.0,
         bottom: 30.0,
       ),
       child: Column(
@@ -460,15 +460,18 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           if (isAccountAdvVisible)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(padding: const EdgeInsets.only(top: 10.0)),
-                bulletPoint(text: 'Favourites quotes'),
-                bulletPoint(text: 'Create thematic lists'),
-                bulletPoint(text: 'Propose new quotes'),
-                bulletPoint(text: '& more...'),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(padding: const EdgeInsets.only(top: 10.0)),
+                  bulletPoint(text: 'Favourites quotes'),
+                  bulletPoint(text: 'Create thematic lists'),
+                  bulletPoint(text: 'Propose new quotes'),
+                  bulletPoint(text: '& more...'),
+                ],
+              ),
             ),
         ],
       ),

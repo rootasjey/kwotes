@@ -245,7 +245,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   Widget listView() {
     final width = MediaQuery.of(context).size.width;
-    double horPadding = width < 700.00 ? 20.0 : 70.0;
+    double horPadding = width < 700.00 ? 0.0 : 70.0;
 
     if (width < 390.0) {
       horPadding = 0.0;
