@@ -68,13 +68,10 @@ class _QuotePageState extends State<QuotePage> {
             showCloseButton: true,
             showUserMenu: false,
           ),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 0.0),
-            sliver: SliverList(
-                delegate: SliverChildListDelegate.fixed([
-              body(),
-            ])),
-          ),
+          SliverList(
+              delegate: SliverChildListDelegate.fixed([
+            body(),
+          ])),
         ],
       ),
     );
@@ -97,31 +94,33 @@ class _QuotePageState extends State<QuotePage> {
       builder: (context, orientation) {
         return Column(
           children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 0.0,
-              child: Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    quoteName(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                              child: Column(children: [
-                            authorName(),
-                            if (quote.mainReference.name.length > 0)
-                              referenceName(),
-                          ])),
-                          verticalAnimatedDivider(),
-                        ],
-                      ),
+            Container(
+              padding: EdgeInsets.only(
+                top: 100.0,
+                left: 20.0,
+                right: 20.0,
+                bottom: 40.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  quoteName(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                            child: Column(children: [
+                          authorName(),
+                          if (quote.mainReference.name.length > 0)
+                            referenceName(),
+                        ])),
+                        verticalAnimatedDivider(),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             userActions(),
