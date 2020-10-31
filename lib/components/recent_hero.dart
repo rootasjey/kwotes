@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -60,13 +62,13 @@ class _RecentHeroState extends State<RecentHero> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        quotidianRow(),
+        actionsRow(),
         gridView(),
       ],
     );
   }
 
-  Widget quotidianRow() {
+  Widget actionsRow() {
     final now = DateTime.now();
     var icon = Icon(Icons.wb_sunny);
 
@@ -91,7 +93,7 @@ class _RecentHeroState extends State<RecentHero> {
             ),
           ),
           OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: getRandomQuotes,
             style: OutlinedButton.styleFrom(
               primary: stateColors.secondary,
             ),
@@ -242,6 +244,53 @@ class _RecentHeroState extends State<RecentHero> {
     } catch (error, stackTrace) {
       debugPrint('error => $error');
       debugPrint(stackTrace.toString());
+    }
+  }
+
+  void getRandomQuotes() async {
+    setState(() {
+      isLoading = true;
+      hasErrors = false;
+      quotes.clear();
+    });
+
+    try {
+      final date = DateTime.now();
+      final createdAt = date.subtract(Duration(days: Random().nextInt(90)));
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('quotes')
+          .where('lang', isEqualTo: lang)
+          .where('createdAt', isGreaterThanOrEqualTo: createdAt)
+          .limit(6)
+          .get();
+
+      if (snapshot.size == 0) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        final quote = Quote.fromJSON(data);
+        quotes.add(quote);
+      });
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (err) {
+      print(err.toString());
+
+      setState(() {
+        isLoading = false;
+        hasErrors = true;
+      });
     }
   }
 
