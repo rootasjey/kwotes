@@ -1,6 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/brightness.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
@@ -44,21 +45,23 @@ class MainAppState extends State<MainApp> {
   }
 
   void loadBrightness() {
-    final now = DateTime.now();
+    final autoBrightness = appLocalStorage.getAutoBrightness();
 
-    Brightness brightness = Brightness.light;
+    if (!autoBrightness) {
+      final brightness = appLocalStorage.getBrightness();
 
-    if (now.hour < 6 || now.hour > 17) {
-      brightness = Brightness.dark;
+      setBrightness(
+        brightness: brightness,
+        context: context,
+        duration: 500.milliseconds,
+      );
+
+      return;
     }
 
-    Future.delayed(2.seconds, () {
-      try {
-        DynamicTheme.of(context).setBrightness(brightness);
-        stateColors.refreshTheme(brightness);
-      } catch (error) {
-        debugPrint(error.toString());
-      }
-    });
+    setAutoBrightness(
+      context: context,
+      duration: 500.milliseconds,
+    );
   }
 }
