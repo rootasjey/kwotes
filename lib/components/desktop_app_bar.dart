@@ -42,7 +42,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   Widget build(BuildContext context) {
     return SliverLayoutBuilder(
       builder: (context, constrains) {
-        final isNarrow = constrains.crossAxisExtent < 700.0;
+        final isNarrow = constrains.crossAxisExtent < 600.0;
 
         bool showUserMenu = !isNarrow;
 
@@ -69,8 +69,11 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: IconButton(
-                          onPressed: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Signin())),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => Signin()),
+                          ),
+                          color: stateColors.foreground,
                           tooltip: 'Sign in',
                           icon: Icon(Icons.login),
                         ),
