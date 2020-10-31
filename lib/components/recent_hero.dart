@@ -3,10 +3,13 @@ import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
+import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/types/quotidian.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,6 +28,7 @@ class _RecentHeroState extends State<RecentHero> {
   final scrollController = ScrollController();
 
   List<Quote> quotes = [];
+  Quotidian quotidian;
 
   String lang = 'en';
 
@@ -32,6 +36,7 @@ class _RecentHeroState extends State<RecentHero> {
   void initState() {
     super.initState();
     fetch();
+    fetchQuotidian();
   }
 
   @override
@@ -70,10 +75,9 @@ class _RecentHeroState extends State<RecentHero> {
       child: Wrap(
         spacing: 20.0,
         runSpacing: 20.0,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: showQuotidian,
             icon: Icon(Icons.wb_sunny),
             label: Text(
               "Tap here to see today quote",
@@ -196,5 +200,73 @@ class _RecentHeroState extends State<RecentHero> {
         isLoading = false;
       });
     }
+  }
+
+  void fetchQuotidian() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final now = DateTime.now();
+
+    String month = now.month.toString();
+    month = month.length == 2 ? month : '0$month';
+
+    String day = now.day.toString();
+    day = day.length == 2 ? day : '0$day';
+
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('quotidians')
+          .doc('${now.year}:$month:$day:${lang.toLowerCase()}')
+          .get();
+
+      if (!snapshot.exists) {
+        setState(() {
+          isLoading = false;
+        });
+
+        return;
+      }
+
+      setState(() {
+        quotidian = Quotidian.fromJSON(snapshot.data());
+      });
+    } catch (error, stackTrace) {
+      debugPrint('error => $error');
+      debugPrint(stackTrace.toString());
+    }
+  }
+
+  void showQuotidian() {
+    showFlash(
+      context: context,
+      persistent: false,
+      builder: (context, controller) {
+        return Flash.dialog(
+          controller: controller,
+          backgroundColor: stateColors.appBackground.withOpacity(1.0),
+          enableDrag: true,
+          margin: const EdgeInsets.only(
+            left: 120.0,
+            right: 120.0,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          child: FlashBar(
+            message: Container(
+              height: MediaQuery.of(context).size.height - 100.0,
+              padding: const EdgeInsets.all(60.0),
+              child: QuotePage(
+                pinnedAppBar: false,
+                quote: quotidian.quote,
+                quoteId: quotidian.quote.id,
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
