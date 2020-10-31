@@ -1,8 +1,8 @@
+import 'package:figstyle/components/recent_hero.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/discover_references.dart';
 import 'package:figstyle/components/discover_authors.dart';
 import 'package:figstyle/components/footer.dart';
-import 'package:figstyle/components/quotidian_page.dart';
 import 'package:figstyle/components/main_app_bar.dart';
 import 'package:figstyle/components/topics.dart';
 import 'package:supercharged/supercharged.dart';
@@ -18,29 +18,37 @@ class _HomeDesktopState extends State<HomeDesktop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        controller: scrollController,
-        slivers: <Widget>[
-          MainAppBar(
-            onTapIconHeader: () {
-              scrollController.animateTo(
-                0,
-                duration: 250.milliseconds,
-                curve: Curves.decelerate,
-              );
-            },
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              QuotidianPage(),
-              Topics(),
-              DiscoverReferences(),
-              DiscoverAuthors(),
-              Footer(
-                pageScrollController: scrollController,
-              ),
-            ]),
-          ),
+      body: Overlay(
+        initialEntries: [
+          OverlayEntry(builder: (_) {
+            return CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                MainAppBar(
+                  title: "fig.style",
+                  padding: const EdgeInsets.only(left: 65.0),
+                  onTapIconHeader: () {
+                    scrollController.animateTo(
+                      0,
+                      duration: 250.milliseconds,
+                      curve: Curves.decelerate,
+                    );
+                  },
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    RecentHero(),
+                    Topics(),
+                    DiscoverReferences(),
+                    DiscoverAuthors(),
+                    Footer(
+                      pageScrollController: scrollController,
+                    ),
+                  ]),
+                ),
+              ],
+            );
+          })
         ],
       ),
     );
