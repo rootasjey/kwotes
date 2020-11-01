@@ -1,11 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/quote_row_with_actions.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/quote.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/topic_color.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
-List<TopicColor> _topics = [];
+List<TopicColor> _topicsList = [];
 
 class Topics extends StatefulWidget {
   @override
@@ -14,19 +20,25 @@ class Topics extends StatefulWidget {
 
 class _TopicsState extends State<Topics> {
   bool isLoading = false;
+  bool hasErrors = false;
 
-  ReactionDisposer reactionDisposer;
+  final quotesByTopicsList = <List<Quote>>[];
+  final limit = 3;
+
+  ReactionDisposer topicsDisposer;
+
+  String lang = 'en';
 
   @override
   initState() {
     super.initState();
 
-    reactionDisposer = autorun((reaction) {
-      if (_topics.length == 0) {
-        setState(() {
-          _topics = appTopicsColors.shuffle(max: 3);
-        });
+    topicsDisposer = autorun((reaction) {
+      if (_topicsList.length == 0) {
+        _topicsList = appTopicsColors.shuffle(max: limit);
       }
+
+      fetch();
     });
   }
 
@@ -34,8 +46,8 @@ class _TopicsState extends State<Topics> {
   void dispose() {
     super.dispose();
 
-    if (reactionDisposer != null) {
-      reactionDisposer.reaction.dispose();
+    if (topicsDisposer != null) {
+      topicsDisposer.reaction.dispose();
     }
   }
 
@@ -50,34 +62,10 @@ class _TopicsState extends State<Topics> {
         color: Color.fromRGBO(0, 0, 0, 0.05),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 30.0),
-            child: Text(
-              'TOPICS',
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 50.0,
-            child: Divider(
-              thickness: 2.0,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 70.0),
-            child: Opacity(
-              opacity: .6,
-              child: Text('3 Topics you might like'),
-            ),
-          ),
-          SizedBox(
-            width: 400.0,
-            height: 200.0,
-            child: topicsColorsCards(),
-          ),
+          sectionTitle(),
+          topicsAndQuotesClone(),
           allTopicsButton(),
         ],
       ),
@@ -85,37 +73,161 @@ class _TopicsState extends State<Topics> {
   }
 
   Widget allTopicsButton() {
-    return RaisedButton.icon(
-      onPressed: () {
-        final topicName = appTopicsColors.shuffle(max: 1).first.name;
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => TopicPage(name: topicName)));
-      },
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0),
+      child: RaisedButton.icon(
+        onPressed: () {
+          final topicName = appTopicsColors.shuffle(max: 1).first.name;
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => TopicPage(name: topicName)));
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(7.0),
+          ),
         ),
-      ),
-      color: Colors.black12,
-      icon: Opacity(opacity: 0.6, child: Icon(Icons.filter_none)),
-      label: Opacity(
-        opacity: .6,
-        child: Text('Discover more topics'),
+        color: Colors.black12,
+        icon: Opacity(opacity: 0.6, child: Icon(Icons.filter_none)),
+        label: Opacity(
+          opacity: .6,
+          child: Text('Discover more topics'),
+        ),
       ),
     );
   }
 
-  Widget topicsColorsCards() {
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: .8,
-      children: _topics.map((topicColor) {
-        return TopicCardColor(
-          color: Color(topicColor.decimal),
-          name:
-              '${topicColor.name.substring(0, 1).toUpperCase()}${topicColor.name.substring(1)}',
-        );
-      }).toList(),
+  Widget sectionTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 20.0,
+        top: 0.0,
+      ),
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'Topics',
+          style: TextStyle(
+            fontSize: 60.0,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      ),
     );
+  }
+
+  Widget topicsAndQuotesClone() {
+    return Observer(builder: (context) {
+      final isConnected = userState.isUserConnected;
+      final width = MediaQuery.of(context).size.width;
+
+      double horizontal = 10.0;
+      double quoteFontSize = 20.0;
+
+      if (width < 390) {
+        horizontal = 0.0;
+        quoteFontSize = 16.0;
+      }
+
+      return Column(
+        children: _topicsList.map((topic) {
+          final index = _topicsList.indexOf(topic);
+          final color = appTopicsColors.getColorFor(topic.name);
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 40.0,
+                ),
+                child: TopicCardColor(
+                  size: 50.0,
+                  elevation: 6.0,
+                  color: Color(topic.decimal),
+                  name: topic.name,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: quotesByTopicsList.length > 0
+                    ? quotesByTopicsList[index].map((quote) {
+                        return QuoteRowWithActions(
+                          quote: quote,
+                          quoteFontSize: quoteFontSize,
+                          color: stateColors.appBackground,
+                          isConnected: isConnected,
+                          leading: Container(
+                            width: 15.0,
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Container(
+                              width: 5.0,
+                              height: 100.0,
+                              decoration: ShapeDecoration(
+                                color: color,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: horizontal,
+                          ),
+                        );
+                      }).toList()
+                    : [],
+              ),
+            ],
+          );
+        }).toList(),
+      );
+    });
+  }
+
+  void fetch() async {
+    setState(() => isLoading = true);
+
+    for (var i = 0; i < limit; i++) {
+      await fetchTopicQuotes(i);
+    }
+
+    setState(() => isLoading = false);
+  }
+
+  Future fetchTopicQuotes(int index) async {
+    try {
+      final topicName = _topicsList[index].name;
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('quotes')
+          .where('topics.$topicName', isEqualTo: true)
+          .where('lang', isEqualTo: lang)
+          .limit(3)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      final quotes = <Quote>[];
+
+      snapshot.docs.forEach((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+
+        quotes.add(Quote.fromJSON(data));
+      });
+
+      quotesByTopicsList.insert(index, quotes);
+    } catch (error) {
+      debugPrint(error.toString());
+      hasErrors = true;
+    }
   }
 }
