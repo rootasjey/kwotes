@@ -33,6 +33,7 @@ class _RecentHeroState extends State<RecentHero> {
   Quotidian quotidian;
 
   String lang = 'en';
+  String textTitle = 'Recent';
 
   @override
   void initState() {
@@ -55,14 +56,11 @@ class _RecentHeroState extends State<RecentHero> {
       return emptyView();
     }
 
-    return body();
-  }
-
-  Widget body() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         actionsRow(),
+        sectionTitle(),
         gridView(),
       ],
     );
@@ -93,7 +91,10 @@ class _RecentHeroState extends State<RecentHero> {
             ),
           ),
           OutlinedButton.icon(
-            onPressed: getRandomQuotes,
+            onPressed: () {
+              textTitle = 'Random';
+              getRandomQuotes();
+            },
             style: OutlinedButton.styleFrom(
               primary: stateColors.secondary,
             ),
@@ -105,7 +106,10 @@ class _RecentHeroState extends State<RecentHero> {
           Tooltip(
             message: "Restore recent",
             child: OutlinedButton.icon(
-              onPressed: fetch,
+              onPressed: () {
+                textTitle = 'Recent';
+                fetch();
+              },
               icon: Icon(Icons.restore),
               label: Text(''),
             ),
@@ -160,7 +164,7 @@ class _RecentHeroState extends State<RecentHero> {
             padding: const EdgeInsets.only(
               left: 80.0,
               right: 80.0,
-              top: 40.0,
+              top: 20.0,
             ),
             child: Wrap(
               spacing: 40.0,
@@ -179,6 +183,25 @@ class _RecentHeroState extends State<RecentHero> {
         ],
       );
     });
+  }
+
+  Widget sectionTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 80.0,
+        top: 20.0,
+      ),
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          textTitle,
+          style: TextStyle(
+            fontSize: 60.0,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      ),
+    );
   }
 
   Future fetch() async {
