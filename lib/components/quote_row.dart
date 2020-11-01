@@ -241,6 +241,36 @@ class _QuoteRowState extends State<QuoteRow> {
 
     return InkWell(
       onTap: () {
+        if (MediaQuery.of(context).size.width > 600.0) {
+          return showFlash(
+            context: context,
+            persistent: false,
+            builder: (context, controller) {
+              return Flash.dialog(
+                controller: controller,
+                backgroundColor: stateColors.appBackground.withOpacity(1.0),
+                enableDrag: true,
+                margin: const EdgeInsets.only(
+                  left: 120.0,
+                  right: 120.0,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                child: FlashBar(
+                  message: Container(
+                    height: MediaQuery.of(context).size.height - 100.0,
+                    padding: const EdgeInsets.all(60.0),
+                    child: ReferencePage(
+                      id: widget.quote.mainReference.id,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context, scrollController) => ReferencePage(
