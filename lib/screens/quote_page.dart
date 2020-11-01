@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/state/colors.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
 import 'package:figstyle/actions/share.dart';
@@ -196,16 +198,7 @@ class _QuotePageState extends State<QuotePage> {
       duration: 250.milliseconds,
       tween: Tween(begin: 0.0, end: 0.6),
       child: InkWell(
-        onTap: () {
-          final id = quote.author.id;
-
-          showCupertinoModalBottomSheet(
-              context: context,
-              builder: (_, scrollController) => AuthorPage(
-                    id: id,
-                    scrollController: scrollController,
-                  ));
-        },
+        onTap: onTapAuthor,
         child: Text(
           quote.author.name,
           textAlign: TextAlign.right,
@@ -520,5 +513,46 @@ class _QuotePageState extends State<QuotePage> {
             });
       },
     );
+  }
+
+  Future onTapAuthor() {
+    final id = quote.author.id;
+
+    if (MediaQuery.of(context).size.width > 600.0) {
+      return showFlash(
+        context: context,
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: stateColors.appBackground.withOpacity(1.0),
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: AuthorPage(
+                  id: id,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return showCupertinoModalBottomSheet(
+        context: context,
+        builder: (_, scrollController) => AuthorPage(
+              id: id,
+              scrollController: scrollController,
+            ));
   }
 }
