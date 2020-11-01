@@ -69,7 +69,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
                   'Discover',
                   style: TextStyle(
                     fontSize: 60.0,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ),
