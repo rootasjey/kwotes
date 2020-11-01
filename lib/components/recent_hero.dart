@@ -57,8 +57,8 @@ class _RecentHeroState extends State<RecentHero> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        actionsRow(),
         sectionTitle(),
+        actionsRow(),
         gridView(),
       ],
     );
