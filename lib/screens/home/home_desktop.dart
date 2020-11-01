@@ -1,7 +1,6 @@
+import 'package:figstyle/components/discover_desktop.dart';
 import 'package:figstyle/components/recent_hero.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/discover_references.dart';
-import 'package:figstyle/components/discover_authors.dart';
 import 'package:figstyle/components/footer.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/topics.dart';
@@ -38,9 +37,8 @@ class _HomeDesktopState extends State<HomeDesktop> {
                 SliverList(
                   delegate: SliverChildListDelegate([
                     RecentHero(),
+                    DiscoverDesktop(),
                     Topics(),
-                    DiscoverReferences(),
-                    DiscoverAuthors(),
                     Footer(
                       pageScrollController: scrollController,
                     ),
