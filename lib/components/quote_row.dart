@@ -149,21 +149,7 @@ class _QuoteRowState extends State<QuoteRow> {
                 Positioned(
                   left: 40.0,
                   bottom: 10.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.quote.author != null)
-                        Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            '— ${widget.quote.author.name}',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
+                  child: quoteAuthor(),
                 ),
             ],
           ),
