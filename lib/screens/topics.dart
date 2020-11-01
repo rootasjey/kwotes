@@ -33,20 +33,21 @@ class _TopicsState extends State<Topics> {
   final limit = 3;
   final quotesByTopicsList = <List<Quote>>[];
 
+  ReactionDisposer topicsDisposer;
+
   ScrollController scrollController = ScrollController();
 
-  ReactionDisposer colorDisposer;
-
-  String selectedLang = 'en';
+  String lang = 'en';
 
   @override
   initState() {
     super.initState();
 
-    colorDisposer = autorun((reaction) {
+    topicsDisposer = autorun((reaction) {
       if (_topicsList.length == 0) {
         _topicsList = appTopicsColors.shuffle(max: limit);
       }
+
       fetch();
     });
   }
@@ -54,7 +55,7 @@ class _TopicsState extends State<Topics> {
   @override
   void dispose() {
     super.dispose();
-    colorDisposer?.reaction?.dispose();
+    topicsDisposer?.reaction?.dispose();
   }
 
   @override
@@ -238,31 +239,33 @@ class _TopicsState extends State<Topics> {
               ),
               Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: quotesByTopicsList[index].map((quote) {
-                    return QuoteRowWithActions(
-                      quote: quote,
-                      quoteFontSize: quoteFontSize,
-                      color: stateColors.appBackground,
-                      isConnected: isConnected,
-                      leading: Container(
-                        width: 15.0,
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: Container(
-                          width: 5.0,
-                          height: 100.0,
-                          decoration: ShapeDecoration(
-                            color: color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
+                  children: quotesByTopicsList[index].map(
+                    (quote) {
+                      return QuoteRowWithActions(
+                        quote: quote,
+                        quoteFontSize: quoteFontSize,
+                        color: stateColors.appBackground,
+                        isConnected: isConnected,
+                        leading: Container(
+                          width: 15.0,
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+                            width: 5.0,
+                            height: 100.0,
+                            decoration: ShapeDecoration(
+                              color: color,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: horizontal,
-                      ),
-                    );
-                  }).toList()),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontal,
+                        ),
+                      );
+                    },
+                  ).toList()),
             ],
           );
         }).toList()),
@@ -287,7 +290,7 @@ class _TopicsState extends State<Topics> {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
           .where('topics.$topicName', isEqualTo: true)
-          .where('lang', isEqualTo: selectedLang)
+          .where('lang', isEqualTo: lang)
           .limit(3)
           .get();
 
