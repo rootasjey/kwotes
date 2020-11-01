@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/empty_content.dart';
-import 'package:figstyle/components/error_container.dart';
-import 'package:figstyle/components/loading_animation.dart';
+import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/colors.dart';
@@ -121,32 +119,136 @@ class _RecentHeroState extends State<RecentHero> {
 
   Widget loadingView() {
     return Container(
-      padding: const EdgeInsets.all(20.0),
-      child: LoadingAnimation(),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 80.0,
+        vertical: 40.0,
+      ),
+      height: MediaQuery.of(context).size.height,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Recent...',
+              style: TextStyle(
+                fontSize: 60.0,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          AnimatedAppIcon(
+            size: 80.0,
+          ),
+        ],
+      ),
     );
   }
 
   Widget emptyView() {
-    return EmptyContent(
-      icon: Opacity(
-        opacity: .8,
-        child: Icon(
-          Icons.sentiment_neutral,
-          size: 120.0,
-          color: Color(0xFFFF005C),
-        ),
+    return Container(
+      padding: const EdgeInsets.all(80.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Opacity(
+                opacity: 0.6,
+                child: Text(
+                  'Recent...',
+                  style: TextStyle(
+                    fontSize: 60.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: fetch,
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Opacity(
+              opacity: 0.8,
+              child: Text(
+                "There's no recent quotes",
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+          Opacity(
+            opacity: 0.6,
+            child: Text(
+              "Maybe your this language has been added recently",
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
       ),
-      title: "There's no recent quotes",
-      subtitle: "Maybe your this language has been added recently",
-      onRefresh: () => fetch(),
     );
   }
 
   Widget errorView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 150.0),
-      child: ErrorContainer(
-        onRefresh: () => fetch(),
+    return Container(
+      padding: const EdgeInsets.all(80.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Opacity(
+                opacity: 0.6,
+                child: Text(
+                  'Recent...',
+                  style: TextStyle(
+                    fontSize: 60.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: fetch,
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Opacity(
+              opacity: 0.8,
+              child: Text(
+                "There was an error while loading",
+                style: TextStyle(
+                  fontSize: 26.0,
+                ),
+              ),
+            ),
+          ),
+          Opacity(
+            opacity: 0.6,
+            child: Text(
+              "Check your connection and try again.",
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
