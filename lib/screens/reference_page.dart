@@ -26,7 +26,7 @@ class ReferencePage extends StatefulWidget {
   final String id;
   final ScrollController scrollController;
 
-  ReferencePage({this.id, this.scrollController});
+  ReferencePage({@required this.id, this.scrollController});
 
   @override
   ReferencePageState createState() => ReferencePageState();

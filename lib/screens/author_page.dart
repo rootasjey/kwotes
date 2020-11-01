@@ -26,7 +26,7 @@ class AuthorPage extends StatefulWidget {
   final String id;
   final ScrollController scrollController;
 
-  AuthorPage({this.id, this.scrollController});
+  AuthorPage({@required this.id, this.scrollController});
 
   @override
   _AuthorPageState createState() => _AuthorPageState();
