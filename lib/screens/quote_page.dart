@@ -293,16 +293,7 @@ class _QuotePageState extends State<QuotePage> {
       duration: 250.milliseconds,
       tween: Tween(begin: 0.0, end: 0.5),
       child: InkWell(
-        onTap: () {
-          final id = quote.mainReference.id;
-
-          showCupertinoModalBottomSheet(
-              context: context,
-              builder: (_, scrollController) => ReferencePage(
-                    id: id,
-                    scrollController: scrollController,
-                  ));
-        },
+        onTap: onReferenceTap,
         child: Text(
           quote.mainReference.name,
           textAlign: TextAlign.right,
@@ -533,6 +524,54 @@ class _QuotePageState extends State<QuotePage> {
     return showCupertinoModalBottomSheet(
         context: context,
         builder: (_, scrollController) => AuthorPage(
+              id: id,
+              scrollController: scrollController,
+            ));
+  }
+
+  Future onReferenceTap() {
+    final id = quote.mainReference.id;
+
+    if (MediaQuery.of(context).size.width > 600.0) {
+      return showFlash(
+        context: context,
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: stateColors.appBackground.withOpacity(1.0),
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: ReferencePage(
+                  id: id,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    showCupertinoModalBottomSheet(
+        context: context,
+        builder: (_, scrollController) => AuthorPage(
+              id: id,
+              scrollController: scrollController,
+            ));
+
+    return showCupertinoModalBottomSheet(
+        context: context,
+        builder: (_, scrollController) => ReferencePage(
               id: id,
               scrollController: scrollController,
             ));
