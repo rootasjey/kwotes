@@ -145,6 +145,41 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
+  Widget addToListButton() {
+    if (userState.isUserConnected) {
+      return AddToListButton(
+        quote: quote,
+        isDisabled: !userState.isUserConnected,
+      );
+    }
+
+    return IconButton(
+      tooltip: "You're not logged in",
+      icon: Opacity(opacity: 0.5, child: Icon(Icons.playlist_add)),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return SimpleDialog(
+                title: Text("You're not logged in"),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 20.0,
+                ),
+                children: [
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      "You must be logged in to add this quote to a list.",
+                    ),
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
   Widget animatedDivider() {
     final topicColor = appTopicsColors.find(quote.topics.first);
     final color = topicColor != null ? Color(topicColor.decimal) : Colors.white;
@@ -163,27 +198,6 @@ class _QuotePageState extends State<QuotePage> {
           child: SizedBox(
             width: value,
             child: child,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget verticalAnimatedDivider() {
-    return ControlledAnimation(
-      delay: 1.seconds,
-      duration: 250.milliseconds,
-      tween: Tween(begin: 0.0, end: 60.0),
-      builder: (context, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 10.0, left: 8.0),
-          child: Container(
-            width: 3.0,
-            height: value,
-            decoration: BoxDecoration(
-              color: accentColor,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
           ),
         );
       },
@@ -215,6 +229,49 @@ class _QuotePageState extends State<QuotePage> {
             child: child,
           ),
         );
+      },
+    );
+  }
+
+  Widget favIconButton() {
+    if (userState.isUserConnected) {
+      return IconButton(
+        onPressed: () async {
+          if (quote.starred) {
+            removeQuoteFromFav();
+            return;
+          }
+
+          addQuoteToFav();
+        },
+        icon:
+            quote.starred ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+      );
+    }
+
+    return IconButton(
+      tooltip: "You're not logged in",
+      icon: Opacity(opacity: 0.5, child: Icon(Icons.favorite_border)),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return SimpleDialog(
+                title: Text("You're not logged in"),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 20.0,
+                ),
+                children: [
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      "You must be logged in to like this quote.",
+                    ),
+                  ),
+                ],
+              );
+            });
       },
     );
   }
@@ -264,6 +321,18 @@ class _QuotePageState extends State<QuotePage> {
           ),
         );
       },
+    );
+  }
+
+  Widget shareButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: IconButton(
+        onPressed: () async {
+          shareQuote(context: context, quote: quote);
+        },
+        icon: Icon(Icons.share),
+      ),
     );
   }
 
@@ -317,6 +386,27 @@ class _QuotePageState extends State<QuotePage> {
           addToListButton(),
         ],
       ),
+    );
+  }
+
+  Widget verticalAnimatedDivider() {
+    return ControlledAnimation(
+      delay: 1.seconds,
+      duration: 250.milliseconds,
+      tween: Tween(begin: 0.0, end: 60.0),
+      builder: (context, value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 10.0, left: 8.0),
+          child: Container(
+            width: 3.0,
+            height: value,
+            decoration: BoxDecoration(
+              color: accentColor,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -407,114 +497,6 @@ class _QuotePageState extends State<QuotePage> {
     }
   }
 
-  void removeQuoteFromFav() async {
-    setState(() {
-      // Optimistic result
-      quote.starred = false;
-    });
-
-    final result = await removeFromFavourites(
-      context: context,
-      quote: quote,
-    );
-
-    if (!result) {
-      setState(() {
-        quote.starred = true;
-      });
-    }
-  }
-
-  Widget favIconButton() {
-    if (userState.isUserConnected) {
-      return IconButton(
-        onPressed: () async {
-          if (quote.starred) {
-            removeQuoteFromFav();
-            return;
-          }
-
-          addQuoteToFav();
-        },
-        icon:
-            quote.starred ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-      );
-    }
-
-    return IconButton(
-      tooltip: "You're not logged in",
-      icon: Opacity(opacity: 0.5, child: Icon(Icons.favorite_border)),
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return SimpleDialog(
-                title: Text("You're not logged in"),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 20.0,
-                ),
-                children: [
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      "You must be logged in to like this quote.",
-                    ),
-                  ),
-                ],
-              );
-            });
-      },
-    );
-  }
-
-  Widget shareButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: IconButton(
-        onPressed: () async {
-          shareQuote(context: context, quote: quote);
-        },
-        icon: Icon(Icons.share),
-      ),
-    );
-  }
-
-  Widget addToListButton() {
-    if (userState.isUserConnected) {
-      return AddToListButton(
-        quote: quote,
-        isDisabled: !userState.isUserConnected,
-      );
-    }
-
-    return IconButton(
-      tooltip: "You're not logged in",
-      icon: Opacity(opacity: 0.5, child: Icon(Icons.playlist_add)),
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return SimpleDialog(
-                title: Text("You're not logged in"),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 20.0,
-                ),
-                children: [
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      "You must be logged in to add this quote to a list.",
-                    ),
-                  ),
-                ],
-              );
-            });
-      },
-    );
-  }
-
   Future onTapAuthor() {
     final id = quote.author.id;
 
@@ -554,5 +536,23 @@ class _QuotePageState extends State<QuotePage> {
               id: id,
               scrollController: scrollController,
             ));
+  }
+
+  void removeQuoteFromFav() async {
+    setState(() {
+      // Optimistic result
+      quote.starred = false;
+    });
+
+    final result = await removeFromFavourites(
+      context: context,
+      quote: quote,
+    );
+
+    if (!result) {
+      setState(() {
+        quote.starred = true;
+      });
+    }
   }
 }
