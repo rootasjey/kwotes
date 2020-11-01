@@ -130,12 +130,12 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
           opacity: 0.6,
           child: Icon(
             Icons.list,
-            color: Colors.black,
+            color: stateColors.foreground,
           )),
       label: Text(
         textValue,
         style: TextStyle(
-          color: Colors.black,
+          color: stateColors.foreground,
         ),
       ),
     );
