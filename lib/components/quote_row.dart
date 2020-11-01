@@ -102,7 +102,7 @@ class _QuoteRowState extends State<QuoteRow> {
         elevation: elevation,
         margin: EdgeInsets.zero,
         child: InkWell(
-          onTap: onTap,
+          onTap: onQuoteTap,
           onHover: (isHover) {
             setState(() {
               elevation = isHover ? getHoverElevation() : getElevation();
@@ -175,6 +175,36 @@ class _QuoteRowState extends State<QuoteRow> {
   Widget quoteAuthor() {
     return InkWell(
       onTap: () {
+        if (MediaQuery.of(context).size.width > 600.0) {
+          return showFlash(
+            context: context,
+            persistent: false,
+            builder: (context, controller) {
+              return Flash.dialog(
+                controller: controller,
+                backgroundColor: stateColors.appBackground.withOpacity(1.0),
+                enableDrag: true,
+                margin: const EdgeInsets.only(
+                  left: 120.0,
+                  right: 120.0,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                child: FlashBar(
+                  message: Container(
+                    height: MediaQuery.of(context).size.height - 100.0,
+                    padding: const EdgeInsets.all(60.0),
+                    child: AuthorPage(
+                      id: widget.quote.author.id,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context, scrollController) => AuthorPage(
@@ -235,7 +265,7 @@ class _QuoteRowState extends State<QuoteRow> {
         elevation: elevation,
         color: widget.color,
         child: InkWell(
-          onTap: onTap,
+          onTap: onQuoteTap,
           onHover: (isHover) {
             setState(() {
               elevation = isHover ? 2.0 : 0.0;
@@ -298,7 +328,7 @@ class _QuoteRowState extends State<QuoteRow> {
     return elevationSpecified ? widget.elevation : 0.0;
   }
 
-  Future onTap() {
+  Future onQuoteTap() {
     if (MediaQuery.of(context).size.width > 600.0) {
       return showFlash(
         context: context,
