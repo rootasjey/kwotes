@@ -158,6 +158,7 @@ class _SearchState extends State<Search> {
 
     return DesktopAppBar(
       title: 'Search',
+      padding: const EdgeInsets.only(left: 65.0),
       automaticallyImplyLeading: true,
     );
   }
@@ -212,7 +213,7 @@ class _SearchState extends State<Search> {
     final text = length > 1 ? '$length authors' : '$length author';
 
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 30.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -306,12 +307,22 @@ class _SearchState extends State<Search> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: quotesSuggestions.map((quote) {
-          return QuoteRowWithActions(
-            quote: quote,
-            quoteId: quote.id,
-            padding: EdgeInsets.zero,
-            color: stateColors.appBackground,
-            isConnected: isConnected,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 700.0,
+                ),
+                child: QuoteRowWithActions(
+                  quote: quote,
+                  quoteId: quote.id,
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  color: stateColors.appBackground,
+                  isConnected: isConnected,
+                ),
+              ),
+            ],
           );
         }).toList(),
       );
@@ -407,7 +418,7 @@ class _SearchState extends State<Search> {
     final text = length > 1 ? '$length references' : '$length reference';
 
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 30.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
