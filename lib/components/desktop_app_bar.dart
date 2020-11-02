@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +167,11 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         tooltip: 'Search',
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+            context,
+            MaterialPageRoute(
+              builder: (_) => Search(),
+            ),
+          );
         },
         color: stateColors.foreground,
         icon: Icon(Icons.search),
