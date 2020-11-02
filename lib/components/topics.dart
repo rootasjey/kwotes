@@ -65,7 +65,7 @@ class _TopicsState extends State<Topics> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           sectionTitle(),
-          topicsAndQuotesClone(),
+          topicsAndQuotes(),
           allTopicsButton(),
         ],
       ),
@@ -115,7 +115,7 @@ class _TopicsState extends State<Topics> {
     );
   }
 
-  Widget topicsAndQuotesClone() {
+  Widget topicsAndQuotes() {
     return Observer(builder: (context) {
       final isConnected = userState.isUserConnected;
       final width = MediaQuery.of(context).size.width;
@@ -154,27 +154,32 @@ class _TopicsState extends State<Topics> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: quotesByTopicsList.length > 0
                     ? quotesByTopicsList[index].map((quote) {
-                        return QuoteRowWithActions(
-                          quote: quote,
-                          quoteFontSize: quoteFontSize,
-                          color: stateColors.appBackground,
-                          isConnected: isConnected,
-                          leading: Container(
-                            width: 15.0,
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Container(
-                              width: 5.0,
-                              height: 100.0,
-                              decoration: ShapeDecoration(
-                                color: color,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 700.0,
+                          ),
+                          child: QuoteRowWithActions(
+                            quote: quote,
+                            quoteFontSize: quoteFontSize,
+                            color: stateColors.appBackground,
+                            isConnected: isConnected,
+                            leading: Container(
+                              width: 15.0,
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Container(
+                                width: 5.0,
+                                height: 100.0,
+                                decoration: ShapeDecoration(
+                                  color: color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: horizontal,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: horizontal,
+                            ),
                           ),
                         );
                       }).toList()
