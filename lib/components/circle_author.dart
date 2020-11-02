@@ -1,3 +1,4 @@
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/types/author.dart';
@@ -85,15 +86,7 @@ class _CircleAuthorState extends State<CircleAuthor> {
         ),
         Positioned.fill(
           child: InkWell(
-            onTap: () {
-              showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) => AuthorPage(
-                  id: author.id,
-                  scrollController: scrollController,
-                ),
-              );
-            },
+            onTap: () => onTap(author),
             onHover: (isHover) {
               if (isHover) {
                 opacity = 0.0;
@@ -161,6 +154,46 @@ class _CircleAuthorState extends State<CircleAuthor> {
       ),
       onSelected: widget.onSelected,
       itemBuilder: widget.itemBuilder,
+    );
+  }
+
+  Future onTap(Author author) {
+    if (MediaQuery.of(context).size.width > 600.0) {
+      return showFlash(
+        context: context,
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: AuthorPage(
+                  id: author.id,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context, scrollController) => AuthorPage(
+        id: author.id,
+        scrollController: scrollController,
+      ),
     );
   }
 }
