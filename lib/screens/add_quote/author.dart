@@ -1254,13 +1254,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: authorsSuggestions.map((authorSuggestion) {
-        ImageProvider backgroundImage;
+        ImageProvider image;
         final imageUrl = authorSuggestion.author.urls.image;
 
         if (imageUrl != null && imageUrl.isNotEmpty) {
-          backgroundImage = NetworkImage(imageUrl);
+          image = NetworkImage(imageUrl);
         } else {
-          backgroundImage = AssetImage('assets/images/user-m.png');
+          image = AssetImage('assets/images/user-m.png');
         }
 
         return ListTile(
@@ -1277,7 +1277,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             shape: CircleBorder(),
             clipBehavior: Clip.hardEdge,
             child: Image(
-              image: backgroundImage,
+              image: image,
               width: 50.0,
               height: 50.0,
               fit: BoxFit.cover,
