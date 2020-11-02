@@ -180,6 +180,58 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
+  Widget inputActions() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        left: 40.0,
+        bottom: 40.0,
+      ),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: [
+          OutlinedButton.icon(
+            onPressed: () {
+              DataQuoteInputs.reference.name = '';
+              nameController.clear();
+              nameFocusNode.requestFocus();
+            },
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.clear),
+            ),
+            label: Opacity(
+              opacity: 0.8,
+              child: Text(
+                'Clear input',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.check),
+            ),
+            label: Opacity(
+              opacity: 0.8,
+              child: Text(
+                'Save',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget langSelector() {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -566,45 +618,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
-                          onChanged: (newValue) {
-                            DataQuoteInputs.reference.name = newValue;
-                            prefilledInputs = false;
-                            tapToEditStr = 'Tap to edit';
-
-                            if (searchTimer != null && searchTimer.isActive) {
-                              searchTimer.cancel();
-                            }
-
-                            searchTimer = Timer(1.seconds, () async {
-                              setState(() {
-                                isLoadingSuggestions = true;
-                                referencesSuggestions.clear();
-                              });
-
-                              final query =
-                                  algolia.index('references').search(newValue);
-
-                              final snapshot = await query.getObjects();
-
-                              if (snapshot.empty) {
-                                childSetState(
-                                    () => isLoadingSuggestions = false);
-                                return;
-                              }
-
-                              for (final hit in snapshot.hits) {
-                                final data = hit.data;
-                                data['id'] = hit.objectID;
-
-                                final referenceSuggestion =
-                                    ReferenceSuggestion.fromJSON(data);
-
-                                referencesSuggestions.add(referenceSuggestion);
-                              }
-
-                              childSetState(() => isLoadingSuggestions = false);
-                            });
-                          },
+                          onChanged: (newValue) =>
+                              onChanged(newValue, childSetState),
                         ),
                       ),
                       if (isLoadingSuggestions)
@@ -612,73 +627,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           padding: const EdgeInsets.only(left: 40.0),
                           child: LinearProgressIndicator(),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 20.0,
-                          left: 40.0,
-                          bottom: 40.0,
-                        ),
-                        child: Wrap(
-                          spacing: 20.0,
-                          runSpacing: 20.0,
-                          children: [
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                DataQuoteInputs.reference.name = '';
-                                nameController.clear();
-                                nameFocusNode.requestFocus();
-                              },
-                              icon: Opacity(
-                                opacity: 0.6,
-                                child: Icon(Icons.clear),
-                              ),
-                              label: Opacity(
-                                opacity: 0.8,
-                                child: Text(
-                                  'Clear input',
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: stateColors.foreground,
-                              ),
-                            ),
-                            OutlinedButton.icon(
-                              onPressed: () => Navigator.of(context).pop(),
-                              icon: Opacity(
-                                opacity: 0.6,
-                                child: Icon(Icons.check),
-                              ),
-                              label: Opacity(
-                                opacity: 0.8,
-                                child: Text(
-                                  'Save',
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: stateColors.foreground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:
-                            referencesSuggestions.map((referenceSuggestion) {
-                          return Card(
-                            child: ListTile(
-                              onTap: () {
-                                DataQuoteInputs.reference =
-                                    referenceSuggestion.reference;
-                                prefilledInputs = true;
-                                tapToEditStr = '-';
-                                Navigator.of(context).pop();
-                              },
-                              title: Text(referenceSuggestion.getTitle()),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                      inputActions(),
+                      suggestions(),
                     ],
                   );
                 }),
@@ -1106,6 +1056,41 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
+  Widget suggestions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: referencesSuggestions.map((referenceSuggestion) {
+        ImageProvider image;
+        final imageUrl = referenceSuggestion.reference.urls.image;
+
+        if (imageUrl != null && imageUrl.isNotEmpty) {
+          image = NetworkImage(imageUrl);
+        } else {
+          image = AssetImage('assets/images/reference.png');
+        }
+
+        return ListTile(
+          onTap: () {
+            DataQuoteInputs.reference = referenceSuggestion.reference;
+            prefilledInputs = true;
+            tapToEditStr = '-';
+            Navigator.of(context).pop();
+          },
+          title: Text(referenceSuggestion.getTitle()),
+          contentPadding: const EdgeInsets.all(8.0),
+          leading: Card(
+            child: Image(
+              image: image,
+              width: 50.0,
+              height: 50.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   Widget summaryCardInput() {
     final summary = DataQuoteInputs.reference.summary;
 
@@ -1290,121 +1275,158 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
+  void onChanged(String newValue, childSetState) {
+    DataQuoteInputs.reference.name = newValue;
+    prefilledInputs = false;
+    tapToEditStr = 'Tap to edit';
+
+    if (searchTimer != null && searchTimer.isActive) {
+      searchTimer.cancel();
+    }
+
+    searchTimer = Timer(1.seconds, () async {
+      setState(() {
+        isLoadingSuggestions = true;
+        referencesSuggestions.clear();
+      });
+
+      final query = algolia.index('references').search(newValue);
+
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        childSetState(() => isLoadingSuggestions = false);
+        return;
+      }
+
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
+
+        final referenceSuggestion = ReferenceSuggestion.fromJSON(data);
+
+        referencesSuggestions.add(referenceSuggestion);
+      }
+
+      childSetState(() => isLoadingSuggestions = false);
+    });
+  }
+
   void showAvatarDialog() {
     showMaterialModalBottomSheet(
-        context: context,
-        builder: (context, scrollController) {
-          return Scaffold(
-            body: ListView(
-              physics: ClampingScrollPhysics(),
-              controller: scrollController,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: SizedBox(
-                    width: 250.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CircleButton(
-                              onTap: () => Navigator.of(context).pop(),
-                              icon: Icon(
-                                Icons.close,
-                                size: 20.0,
-                                color: stateColors.primary,
-                              ),
+      context: context,
+      builder: (context, scrollController) {
+        return Scaffold(
+          body: ListView(
+            physics: ClampingScrollPhysics(),
+            controller: scrollController,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: SizedBox(
+                  width: 250.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CircleButton(
+                            onTap: () => Navigator.of(context).pop(),
+                            icon: Icon(
+                              Icons.close,
+                              size: 20.0,
+                              color: stateColors.primary,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Opacity(
-                                      opacity: 0.6,
-                                      child: Text(
-                                        "Reference illustration",
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Opacity(
+                                    opacity: 0.6,
+                                    child: Text(
+                                      "Reference illustration",
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
-                                  Text(
-                                    "You can either provide an online link or upload a new picture.",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                ),
+                                Text(
+                                  "You can either provide an online link or upload a new picture.",
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 40.0),
-                        ),
-                        TextField(
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText:
-                                DataQuoteInputs.reference.urls.image.length > 0
-                                    ? DataQuoteInputs.reference.urls.image
-                                    : 'URL',
                           ),
-                          onChanged: (newValue) {
-                            tempImgUrl = newValue;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        child: Text(
-                          'CANCEL',
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        ],
                       ),
-                      TextButton(
-                        child: Text(
-                          'SAVE',
-                          style: TextStyle(
-                            color: Colors.green,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0),
+                      ),
+                      TextField(
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText:
+                              DataQuoteInputs.reference.urls.image.length > 0
+                                  ? DataQuoteInputs.reference.urls.image
+                                  : 'URL',
                         ),
-                        onPressed: () {
-                          setState(() {
-                            DataQuoteInputs.reference.urls.image = tempImgUrl;
-                          });
-
-                          Navigator.of(context).pop();
+                        onChanged: (newValue) {
+                          tempImgUrl = newValue;
                         },
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      child: Text(
+                        'CANCEL',
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text(
+                        'SAVE',
+                        style: TextStyle(
+                          color: Colors.green,
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          DataQuoteInputs.reference.urls.image = tempImgUrl;
+                        });
+
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void showLinkInputSheet({
