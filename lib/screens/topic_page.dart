@@ -119,7 +119,6 @@ class _TopicPageState extends State<TopicPage> {
       expandedHeight: 100.0,
       title: Padding(
         padding: EdgeInsets.only(
-          top: 0.0,
           left: horPadding,
         ),
         child: Row(
@@ -136,11 +135,17 @@ class _TopicPageState extends State<TopicPage> {
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               size: 30.0,
             ),
-            Text(
-              topicName,
-              style: TextStyle(
-                fontSize: 40.0,
-                color: stateColors.foreground,
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 8.0,
+                bottom: 4.0,
+              ),
+              child: Text(
+                topicName,
+                style: TextStyle(
+                  fontSize: 40.0,
+                  color: stateColors.foreground,
+                ),
               ),
             ),
             if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
@@ -407,7 +412,12 @@ class _TopicPageState extends State<TopicPage> {
           child: topicsItemsList(),
         ),
       ),
-      scaffold: mainContent(),
+      scaffold: Material(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 60.0),
+          child: mainContent(),
+        ),
+      ),
     );
   }
 
