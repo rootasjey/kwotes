@@ -109,9 +109,9 @@ class _QuotePageState extends State<QuotePage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(
-                top: 100.0,
-                left: 20.0,
-                right: 20.0,
+                top: 50.0,
+                left: 10.0,
+                right: 10.0,
                 bottom: 40.0,
               ),
               child: Column(
