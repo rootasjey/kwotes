@@ -216,6 +216,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
               return QuoteRowWithActions(
                 quote: quote,
+                canManage: canManage,
                 isConnected: isConnected,
                 componentType: ItemComponentType.card,
                 onBeforeDeletePubQuote: () {
@@ -261,6 +262,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
             return QuoteRowWithActions(
               quote: quote,
+              canManage: canManage,
               isConnected: isConnected,
               color: stateColors.appBackground,
               padding: EdgeInsets.symmetric(

@@ -23,6 +23,7 @@ class MyPublishedQuotes extends StatefulWidget {
 
 class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   final bool descending = true;
+  bool canManage = false;
   bool hasErrors = false;
   bool hasNext = true;
   bool isLoading = false;
@@ -46,6 +47,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     super.initState();
     initProps();
     fetch();
+    fetchPermissions();
   }
 
   void initProps() {
@@ -215,6 +217,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget gridView() {
+    final isConnected = userState.isUserConnected;
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -231,6 +235,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
             return QuoteRowWithActions(
               quote: quote,
+              canManage: canManage,
+              isConnected: isConnected,
               componentType: ItemComponentType.card,
             );
           },
@@ -241,6 +247,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget listView() {
+    final isConnected = userState.isUserConnected;
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverList(
@@ -250,6 +257,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.id,
+            canManage: canManage,
+            isConnected: isConnected,
             color: stateColors.appBackground,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
@@ -366,6 +375,31 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       setState(() {
         isLoadingMore = false;
       });
+    }
+  }
+
+  void fetchPermissions() async {
+    try {
+      final userAuth = await userState.userAuth;
+
+      if (userAuth == null) {
+        return;
+      }
+
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userAuth.uid)
+          .get();
+
+      if (user == null) {
+        return;
+      }
+
+      setState(() {
+        canManage = user.data()['rights']['user:managequotidian'];
+      });
+    } catch (error) {
+      debugPrint(error.toString());
     }
   }
 }
