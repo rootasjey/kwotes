@@ -521,15 +521,24 @@ class _AuthorPageState extends State<AuthorPage> {
             (context, index) {
               final quote = quotes.elementAt(index);
 
-              return QuoteRowWithActions(
-                quote: quote,
-                quoteId: quote.id,
-                elevation: 2.0,
-                isConnected: isConnected,
-                padding: EdgeInsets.symmetric(
-                  horizontal: horPadding,
-                  vertical: 10.0,
-                ),
+              return Column(
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 700.0,
+                    ),
+                    child: QuoteRowWithActions(
+                      quote: quote,
+                      quoteId: quote.id,
+                      elevation: 2.0,
+                      isConnected: isConnected,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horPadding,
+                        vertical: 10.0,
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
             childCount: quotes.length,
