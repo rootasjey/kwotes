@@ -505,7 +505,7 @@ class ReferencePageState extends State<ReferencePage> {
                     child: QuoteRowWithActions(
                       quote: quote,
                       quoteId: quote.id,
-                      elevation: 2.0,
+                      color: stateColors.appBackground,
                       isConnected: isConnected,
                       padding: EdgeInsets.symmetric(
                         horizontal: horPadding,
