@@ -254,7 +254,7 @@ class ReferencePageState extends State<ReferencePage> {
       delegate: SliverChildListDelegate([
         LayoutBuilder(
           builder: (context, constrains) {
-            return smallView();
+            return refPanel();
           },
         ),
       ]),
@@ -514,7 +514,7 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget smallView() {
+  Widget refPanel() {
     return Container(
       alignment: AlignmentDirectional.center,
       padding: const EdgeInsets.only(bottom: 60.0),
@@ -525,14 +525,14 @@ class ReferencePageState extends State<ReferencePage> {
             FadeInY(
               beginY: -20.0,
               endY: 0.0,
-              child: summarySmall(),
+              child: summaryContainer(),
             ),
         ],
       ),
     );
   }
 
-  Widget summarySmall() {
+  Widget summaryContainer() {
     final width = MediaQuery.of(context).size.width < 600.0 ? 600.0 : 800;
 
     return Column(
