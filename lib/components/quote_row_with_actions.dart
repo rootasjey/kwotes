@@ -11,7 +11,6 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class QuoteRowWithActions extends StatefulWidget {
@@ -182,14 +181,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         shareQuote(context: context, quote: quote);
         break;
       case 'addquotidian':
-        final pageRoute = widget.pageRoute;
-        final lang = pageRoute.isEmpty
-            ? 'en'
-            : appLocalStorage.getPageLang(pageRoute: pageRoute);
-
         await addToQuotidians(
           quote: quote,
-          lang: lang,
+          lang: quote.lang,
         );
 
         break;
