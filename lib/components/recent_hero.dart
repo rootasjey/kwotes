@@ -260,26 +260,30 @@ class _RecentHeroState extends State<RecentHero> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: 1000.0,
-            padding: const EdgeInsets.only(
-              left: 80.0,
-              right: 80.0,
-              top: 20.0,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 1000.0,
             ),
-            child: Wrap(
-              spacing: 40.0,
-              runSpacing: 40.0,
-              children: quotes.map((quote) {
-                return QuoteRowWithActions(
-                  quote: quote,
-                  elevation: 4.0,
-                  showAuthor: true,
-                  isConnected: isConnected,
-                  componentType: ItemComponentType.card,
-                );
-              }).toList(),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 80.0,
+                right: 80.0,
+                top: 20.0,
+                bottom: 80.0,
+              ),
+              child: Wrap(
+                spacing: 40.0,
+                runSpacing: 40.0,
+                children: quotes.map((quote) {
+                  return QuoteRowWithActions(
+                    quote: quote,
+                    elevation: 4.0,
+                    showAuthor: true,
+                    isConnected: isConnected,
+                    componentType: ItemComponentType.card,
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],
