@@ -168,7 +168,6 @@ class _TopicsState extends State<Topics> {
                               padding: const EdgeInsets.only(right: 10.0),
                               child: Container(
                                 width: 5.0,
-                                height: 100.0,
                                 decoration: ShapeDecoration(
                                   color: color,
                                   shape: RoundedRectangleBorder(

@@ -290,45 +290,48 @@ class _QuoteRowState extends State<QuoteRow> {
           },
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (widget.leading != null) widget.leading,
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      quoteName(),
-                      Padding(padding: const EdgeInsets.only(top: 10.0)),
-                      quoteAuthor(),
-                      quoteReference(),
-                    ],
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  if (widget.leading != null) widget.leading,
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        quoteName(),
+                        Padding(padding: const EdgeInsets.only(top: 10.0)),
+                        quoteAuthor(),
+                        quoteReference(),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 50.0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      PopupMenuButton<String>(
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: iconColor != null
-                              ? Icon(
-                                  Icons.more_vert,
-                                  color: iconColor,
-                                )
-                              : Icon(Icons.more_vert),
+                  SizedBox(
+                    width: 50.0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        PopupMenuButton<String>(
+                          icon: Opacity(
+                            opacity: 0.6,
+                            child: iconColor != null
+                                ? Icon(
+                                    Icons.more_vert,
+                                    color: iconColor,
+                                  )
+                                : Icon(Icons.more_vert),
+                          ),
+                          onSelected: widget.onSelected,
+                          itemBuilder: widget.itemBuilder,
                         ),
-                        onSelected: widget.onSelected,
-                        itemBuilder: widget.itemBuilder,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
