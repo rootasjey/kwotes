@@ -35,7 +35,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   AddQuoteType actionResult;
 
   bool canManage = false;
-  bool isCheckingAuth = true;
+  bool isCheckingAuth = false;
   bool isFabVisible = false;
   bool isSmallView = false;
   bool isSubmitting = false;
@@ -461,39 +461,44 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     Navigator.pop(context);
   }
 
-  void checkAuth() async {
-    isCheckingAuth = true;
-    isFabVisible = false;
+  void checkAuth() {
+    setState(() {
+      isCheckingAuth = true;
+      isFabVisible = false;
+    });
 
-    try {
-      final userAuth = await userState.userAuth;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      try {
+        final userAuth = await userState.userAuth;
 
-      if (userAuth == null) {
-        setState(() => isCheckingAuth = false);
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-        return;
-      }
+        if (userAuth == null) {
+          setState(() => isCheckingAuth = false);
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => Signin()));
+          return;
+        }
 
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .get();
+        final user = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userAuth.uid)
+            .get();
 
-      if (!user.exists) {
-        setState(() => isCheckingAuth = false);
-        return;
-      }
+        if (!user.exists) {
+          setState(() => isCheckingAuth = false);
+          return;
+        }
 
-      setState(() {
+        setState(() {
+          isCheckingAuth = false;
+          isFabVisible = true;
+          canManage = user.data()['rights']['user:managequote'] == true;
+        });
+      } catch (error) {
+        debugPrint(error.toString());
         isCheckingAuth = false;
-        isFabVisible = true;
-        canManage = user.data()['rights']['user:managequote'] == true;
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-      isCheckingAuth = false;
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-    }
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+      }
+    });
   }
 
   void goTo(int step) {
