@@ -14,11 +14,20 @@ class PointInTime {
   });
 
   factory PointInTime.fromJSON(Map<String, dynamic> json) {
+    DateTime date;
+
+    if (json['date'] != null && json['date']['_seconds'] != null) {
+      date =
+          DateTime.fromMillisecondsSinceEpoch(json['date']['_seconds'] * 1000);
+    } else {
+      date = (json['date'] as Timestamp)?.toDate();
+    }
+
     return PointInTime(
       beforeJC: json['beforeJC'],
       country: json['country'],
       city: json['city'],
-      date: (json['date'] as Timestamp)?.toDate(),
+      date: date,
     );
   }
 }
