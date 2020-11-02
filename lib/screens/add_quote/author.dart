@@ -1228,65 +1228,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
-                          onChanged: (newValue) async {
-                            DataQuoteInputs.author.name = newValue;
-                            prefilledInputs = false;
-                            tapToEditStr = 'Tap to edit';
-
-                            if (searchTimer != null && searchTimer.isActive) {
-                              searchTimer.cancel();
-                            }
-
-                            searchTimer = Timer(1.seconds, () async {
-                              childSetState(() {
-                                isLoadingSuggestions = true;
-                                authorsSuggestions.clear();
-                              });
-
-                              final query =
-                                  algolia.index('authors').search(newValue);
-
-                              final snapshot = await query.getObjects();
-
-                              if (snapshot.empty) {
-                                childSetState(
-                                    () => isLoadingSuggestions = false);
-                                return;
-                              }
-
-                              for (final hit in snapshot.hits) {
-                                final data = hit.data;
-                                data['id'] = hit.objectID;
-
-                                final authorSuggestion =
-                                    AuthorSuggestion.fromJSON(data);
-
-                                final fromReference =
-                                    authorSuggestion.author.fromReference;
-
-                                if (fromReference != null &&
-                                    fromReference.id != null &&
-                                    fromReference.id.isNotEmpty) {
-                                  try {
-                                    final ref = await FirebaseFirestore.instance
-                                        .collection('references')
-                                        .doc(fromReference.id)
-                                        .get();
-
-                                    final refData = ref.data();
-                                    refData['id'] = ref.id;
-
-                                    authorSuggestion
-                                        .parseReferenceJSON(refData);
-                                  } catch (error) {}
-                                }
-
-                                authorsSuggestions.add(authorSuggestion);
-                              }
-
-                              childSetState(() => isLoadingSuggestions = false);
-                            });
-                          },
+                          onChanged: (newValue) =>
+                              onChanged(newValue, childSetState),
                         ),
                       ),
                       if (isLoadingSuggestions)
@@ -1294,77 +1237,102 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           padding: const EdgeInsets.only(left: 40.0),
                           child: LinearProgressIndicator(),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 20.0,
-                          left: 40.0,
-                          bottom: 40.0,
-                        ),
-                        child: Wrap(
-                          spacing: 20.0,
-                          runSpacing: 20.0,
-                          children: [
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                DataQuoteInputs.author.name = '';
-                                nameController.clear();
-                                nameFocusNode.requestFocus();
-                              },
-                              icon: Opacity(
-                                opacity: 0.6,
-                                child: Icon(Icons.clear),
-                              ),
-                              label: Opacity(
-                                opacity: 0.8,
-                                child: Text(
-                                  'Clear input',
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: stateColors.foreground,
-                              ),
-                            ),
-                            OutlinedButton.icon(
-                              onPressed: () => Navigator.of(context).pop(),
-                              icon: Opacity(
-                                opacity: 0.6,
-                                child: Icon(Icons.check),
-                              ),
-                              label: Opacity(
-                                opacity: 0.8,
-                                child: Text(
-                                  'Save',
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: stateColors.foreground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: authorsSuggestions.map((authorSuggestion) {
-                          return Card(
-                            child: ListTile(
-                              onTap: () {
-                                DataQuoteInputs.author =
-                                    authorSuggestion.author;
-                                prefilledInputs = true;
-                                tapToEditStr = '-';
-
-                                Navigator.of(context).pop();
-                              },
-                              title: Text(authorSuggestion.getTitle()),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                      inputActions(),
+                      suggestions(),
                     ],
                   );
                 }),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget suggestions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: authorsSuggestions.map((authorSuggestion) {
+        ImageProvider backgroundImage;
+        final imageUrl = authorSuggestion.author.urls.image;
+
+        if (imageUrl != null && imageUrl.isNotEmpty) {
+          backgroundImage = NetworkImage(imageUrl);
+        } else {
+          backgroundImage = AssetImage('assets/images/user-m.png');
+        }
+
+        return ListTile(
+          onTap: () {
+            DataQuoteInputs.author = authorSuggestion.author;
+            prefilledInputs = true;
+            tapToEditStr = '-';
+
+            Navigator.of(context).pop();
+          },
+          title: Text(authorSuggestion.getTitle()),
+          contentPadding: const EdgeInsets.all(8.0),
+          leading: Material(
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: Image(
+              image: backgroundImage,
+              width: 50.0,
+              height: 50.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget inputActions() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        left: 40.0,
+        bottom: 40.0,
+      ),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: [
+          OutlinedButton.icon(
+            onPressed: () {
+              DataQuoteInputs.author.name = '';
+              nameController.clear();
+              nameFocusNode.requestFocus();
+            },
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.clear),
+            ),
+            label: Opacity(
+              opacity: 0.8,
+              child: Text(
+                'Clear input',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.check),
+            ),
+            label: Opacity(
+              opacity: 0.8,
+              child: Text(
+                'Save',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
             ),
           ),
         ],
@@ -1578,6 +1546,61 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         )
       ],
     );
+  }
+
+  void onChanged(String newValue, childSetState) {
+    DataQuoteInputs.author.name = newValue;
+    prefilledInputs = false;
+    tapToEditStr = 'Tap to edit';
+
+    if (searchTimer != null && searchTimer.isActive) {
+      searchTimer.cancel();
+    }
+
+    searchTimer = Timer(1.seconds, () async {
+      childSetState(() {
+        isLoadingSuggestions = true;
+        authorsSuggestions.clear();
+      });
+
+      final query = algolia.index('authors').search(newValue);
+
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        childSetState(() => isLoadingSuggestions = false);
+        return;
+      }
+
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
+
+        final authorSuggestion = AuthorSuggestion.fromJSON(data);
+
+        final fromReference = authorSuggestion.author.fromReference;
+
+        if (fromReference != null &&
+            fromReference.id != null &&
+            fromReference.id.isNotEmpty) {
+          try {
+            final ref = await FirebaseFirestore.instance
+                .collection('references')
+                .doc(fromReference.id)
+                .get();
+
+            final refData = ref.data();
+            refData['id'] = ref.id;
+
+            authorSuggestion.parseReferenceJSON(refData);
+          } catch (error) {}
+        }
+
+        authorsSuggestions.add(authorSuggestion);
+      }
+
+      childSetState(() => isLoadingSuggestions = false);
+    });
   }
 
   void showAvatarDialog() {
