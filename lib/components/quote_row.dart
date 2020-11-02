@@ -352,7 +352,7 @@ class _QuoteRowState extends State<QuoteRow> {
         builder: (context, controller) {
           return Flash.dialog(
             controller: controller,
-            backgroundColor: stateColors.appBackground.withOpacity(1.0),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             enableDrag: true,
             margin: const EdgeInsets.only(
               left: 120.0,
