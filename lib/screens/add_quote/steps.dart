@@ -35,8 +35,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   AddQuoteType actionResult;
 
   bool canManage = false;
-  bool isCheckingAuth = false;
-  bool isFabVisible = true;
+  bool isCheckingAuth = true;
+  bool isFabVisible = false;
   bool isSmallView = false;
   bool isSubmitting = false;
   bool stepChanged = false;
@@ -462,20 +462,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   }
 
   void checkAuth() async {
-    setState(() {
-      isCheckingAuth = true;
-      isFabVisible = false;
-    });
+    isCheckingAuth = true;
+    isFabVisible = false;
 
     try {
       final userAuth = await userState.userAuth;
 
-      setState(() {
-        isCheckingAuth = false;
-        isFabVisible = true;
-      });
-
       if (userAuth == null) {
+        setState(() => isCheckingAuth = false);
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
         return;
       }
@@ -486,10 +480,13 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           .get();
 
       if (!user.exists) {
+        setState(() => isCheckingAuth = false);
         return;
       }
 
       setState(() {
+        isCheckingAuth = false;
+        isFabVisible = true;
         canManage = user.data()['rights']['user:managequote'] == true;
       });
     } catch (error) {
