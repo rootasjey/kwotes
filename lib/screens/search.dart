@@ -410,8 +410,9 @@ class _SearchState extends State<Search> {
       );
     }
 
-    final dataView =
-        quotesSuggestions.isEmpty ? emptyView('quotes') : referencesListView();
+    final dataView = referencesSuggestions.isEmpty
+        ? emptyView('quotes')
+        : referencesListView();
 
     final length = referencesSuggestions.length;
 
