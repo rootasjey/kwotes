@@ -309,14 +309,25 @@ class _TopicPageState extends State<TopicPage> {
               (context, index) {
                 final quote = quotes.elementAt(index);
 
-                return QuoteRowWithActions(
-                  quote: quote,
-                  quoteId: quote.id,
-                  color: stateColors.appBackground,
-                  isConnected: isConnected,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: horPadding,
-                  ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 900.0,
+                      ),
+                      child: QuoteRowWithActions(
+                        quote: quote,
+                        quoteId: quote.id,
+                        color: stateColors.appBackground,
+                        isConnected: isConnected,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horPadding,
+                          vertical: 10.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               },
               childCount: quotes.length,
