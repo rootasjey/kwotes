@@ -192,6 +192,10 @@ class _TopicsState extends State<Topics> {
   }
 
   void fetch() async {
+    if (!this.mounted) {
+      return;
+    }
+
     setState(() => isLoading = true);
 
     for (var i = 0; i < limit; i++) {
