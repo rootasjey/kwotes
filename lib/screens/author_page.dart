@@ -11,14 +11,12 @@ import 'package:figstyle/components/sliver_empty_view.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
-import 'package:figstyle/screens/quotes_by_author_ref.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:figstyle/utils/language.dart';
-import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -225,7 +223,7 @@ class _AuthorPageState extends State<AuthorPage> {
       delegate: SliverChildListDelegate([
         LayoutBuilder(
           builder: (context, constrains) {
-            return constrains.maxWidth < 700 ? smallView() : largeView();
+            return authorPanel();
           },
         ),
       ]),
@@ -358,76 +356,6 @@ class _AuthorPageState extends State<AuthorPage> {
                 value.toUpperCase(),
               ));
         }).toList(),
-      ),
-    );
-  }
-
-  Widget largeView() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 120.0,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FadeInY(
-                  beginY: beginY,
-                  delay: 1.0,
-                  child: avatar(),
-                ),
-                ControlledAnimation(
-                  delay: 1.seconds,
-                  duration: 1.seconds,
-                  tween: Tween(begin: 0.0, end: 100.0),
-                  builder: (_, value) {
-                    return SizedBox(
-                      width: value,
-                      child: Divider(
-                        thickness: 1.0,
-                        height: 50.0,
-                      ),
-                    );
-                  },
-                ),
-                FadeInY(
-                  beginY: beginY,
-                  delay: 1.0,
-                  child: job(),
-                ),
-                FadeInY(
-                  beginY: beginY,
-                  delay: 3.2,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: RaisedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => QuotesByAuthorRef(
-                                  id: widget.id,
-                                  type: SubjectType.author,
-                                )));
-                      },
-                      color: stateColors.primary,
-                      textColor: Colors.white,
-                      icon: Icon(Icons.chat_bubble_outline),
-                      label: Text('Related quotes'),
-                    ),
-                  ),
-                ),
-                Padding(padding: const EdgeInsets.only(top: 40.0)),
-                links(),
-              ],
-            ),
-          ),
-          Expanded(
-            child: summaryLarge(),
-          ),
-        ],
       ),
     );
   }
@@ -611,7 +539,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget smallView() {
+  Widget authorPanel() {
     return Container(
       alignment: AlignmentDirectional.center,
       padding: const EdgeInsets.only(bottom: 60.0),
@@ -622,14 +550,16 @@ class _AuthorPageState extends State<AuthorPage> {
             FadeInY(
               beginY: -20.0,
               endY: 0.0,
-              child: summarySmall(),
+              child: summaryContainer(),
             ),
         ],
       ),
     );
   }
 
-  Widget summarySmall() {
+  Widget summaryContainer() {
+    final width = MediaQuery.of(context).size.width < 600.0 ? 600.0 : 800;
+
     return Column(
       children: <Widget>[
         Padding(
@@ -661,7 +591,7 @@ class _AuthorPageState extends State<AuthorPage> {
             horizontal: 40.0,
             vertical: 70.0,
           ),
-          width: 600.0,
+          width: width,
           child: Text(
             author.summary,
             style: TextStyle(
@@ -678,54 +608,6 @@ class _AuthorPageState extends State<AuthorPage> {
             label: Text('More on Wikipedia'),
           ),
       ],
-    );
-  }
-
-  Widget summaryLarge() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Column(
-        children: <Widget>[
-          Opacity(
-            opacity: 0.5,
-            child: Text(
-              'SUMMARY',
-              style: TextStyle(
-                fontSize: 15.0,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100.0,
-            child: Divider(
-              thickness: 1.0,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 60.0,
-            ),
-            width: 600.0,
-            child: Opacity(
-              opacity: 0.7,
-              child: Text(
-                author.summary,
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w100,
-                  height: 1.5,
-                ),
-              ),
-            ),
-          ),
-          if (author.urls.wikipedia?.isNotEmpty)
-            OutlineButton(
-              onPressed: () => launch(author.urls.wikipedia),
-              child: Text('More on Wikipedia'),
-            )
-        ],
-      ),
     );
   }
 
