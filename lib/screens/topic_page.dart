@@ -113,100 +113,111 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget appBar() {
+    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
+
     return BasePageAppBar(
       expandedHeight: 100.0,
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          CircleButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: stateColors.foreground,
-            ),
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          AppIcon(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            size: 30.0,
-          ),
-          Text(
-            topicName,
-            style: TextStyle(
-              fontSize: 40.0,
-              color: stateColors.foreground,
-            ),
-          ),
-          if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                top: 2.5,
+      title: Padding(
+        padding: EdgeInsets.only(
+          top: 0.0,
+          left: horPadding,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CircleButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: stateColors.foreground,
               ),
-              child: CircleAvatar(
-                radius: 10.0,
-                backgroundColor: Color(appTopicsColors.find(topicName).decimal),
+              onTap: () => Navigator.of(context).pop(),
+            ),
+            AppIcon(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              size: 30.0,
+            ),
+            Text(
+              topicName,
+              style: TextStyle(
+                fontSize: 40.0,
+                color: stateColors.foreground,
               ),
             ),
-        ],
+            if (topicName.isNotEmpty && appTopicsColors.topicsColors.length > 0)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  top: 2.5,
+                ),
+                child: CircleAvatar(
+                  radius: 10.0,
+                  backgroundColor:
+                      Color(appTopicsColors.find(topicName).decimal),
+                ),
+              ),
+          ],
+        ),
       ),
-      bottom: Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-          ),
-          child: Wrap(
-            spacing: 15.0,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Opacity(
-                  opacity: 0.6,
-                  child: InkWell(
-                    onTap: smallViewVisible
-                        ? () {
-                            _innerDrawerKey.currentState.toggle();
-                          }
-                        : null,
-                    child: Icon(Icons.menu),
+      bottom: Padding(
+        padding: EdgeInsets.only(left: horPadding),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Wrap(
+              spacing: 15.0,
+              children: <Widget>[
+                if (smallViewVisible)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: InkWell(
+                        onTap: () {
+                          _innerDrawerKey.currentState.toggle();
+                        },
+                        child: Icon(Icons.menu),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: DropdownButton<String>(
-                  elevation: 2,
-                  value: lang,
-                  isDense: true,
-                  underline: Container(
-                    height: 0,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  style: TextStyle(
-                    color: stateColors.foreground.withOpacity(0.6),
-                    fontFamily: GoogleFonts.raleway().fontFamily,
-                    fontSize: 20.0,
-                  ),
-                  onChanged: (String newLang) {
-                    lang = newLang;
-                    appLocalStorage.setPageLang(
-                      lang: lang,
-                      pageRoute: pageRoute,
-                    );
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: DropdownButton<String>(
+                    elevation: 2,
+                    value: lang,
+                    isDense: true,
+                    underline: Container(
+                      height: 0,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    style: TextStyle(
+                      color: stateColors.foreground.withOpacity(0.6),
+                      fontFamily: GoogleFonts.raleway().fontFamily,
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (String newLang) {
+                      lang = newLang;
+                      appLocalStorage.setPageLang(
+                        lang: lang,
+                        pageRoute: pageRoute,
+                      );
 
-                    fetch();
-                  },
-                  items: ['en', 'fr'].map((String value) {
-                    return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value.toUpperCase(),
-                        ));
-                  }).toList(),
+                      fetch();
+                    },
+                    items: ['en', 'fr'].map((String value) {
+                      return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value.toUpperCase(),
+                          ));
+                    }).toList(),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -217,10 +228,6 @@ class _TopicPageState extends State<TopicPage> {
     if (isLoading || appTopicsColors.topicsColors.length == 0) {
       return loadingView();
     }
-
-    // if (!isLoading && hasErrors) {
-    //   return errorView();
-    // }
 
     if (quotes.length == 0) {
       return emptyView();
@@ -295,22 +302,25 @@ class _TopicPageState extends State<TopicPage> {
       builder: (context) {
         final isConnected = userState.isUserConnected;
 
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final quote = quotes.elementAt(index);
+        return SliverPadding(
+          padding: const EdgeInsets.only(top: 40.0),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final quote = quotes.elementAt(index);
 
-              return QuoteRowWithActions(
-                quote: quote,
-                quoteId: quote.id,
-                color: stateColors.appBackground,
-                isConnected: isConnected,
-                padding: EdgeInsets.symmetric(
-                  horizontal: horPadding,
-                ),
-              );
-            },
-            childCount: quotes.length,
+                return QuoteRowWithActions(
+                  quote: quote,
+                  quoteId: quote.id,
+                  color: stateColors.appBackground,
+                  isConnected: isConnected,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horPadding,
+                  ),
+                );
+              },
+              childCount: quotes.length,
+            ),
           ),
         );
       },
@@ -476,7 +486,10 @@ class _TopicPageState extends State<TopicPage> {
           ),
           Expanded(
             flex: 3,
-            child: mainContent(),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: mainContent(),
+            ),
           ),
         ],
       ),
