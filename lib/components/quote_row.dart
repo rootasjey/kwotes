@@ -284,7 +284,7 @@ class _QuoteRowState extends State<QuoteRow> {
           onTap: onQuoteTap,
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? 2.0 : 0.0;
+              elevation = isHover ? getHoverElevation() : getElevation();
               iconColor = isHover ? iconHoverColor : null;
             });
           },
