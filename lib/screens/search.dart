@@ -96,40 +96,47 @@ class _SearchState extends State<Search> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: RefreshIndicator(
-          onRefresh: () async {
-            await search();
-            return null;
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollNotif) {
-              // FAB visibility
-              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-                setState(() {
-                  isFabVisible = false;
-                });
-              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-                setState(() {
-                  isFabVisible = true;
-                });
-              }
+      body: Overlay(
+        initialEntries: [
+          OverlayEntry(builder: (context) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await search();
+                return null;
+              },
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollNotif) {
+                  // FAB visibility
+                  if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                    setState(() {
+                      isFabVisible = false;
+                    });
+                  } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                    setState(() {
+                      isFabVisible = true;
+                    });
+                  }
 
-              // Load more scenario
-              if (scrollNotif.metrics.pixels <
-                  scrollNotif.metrics.maxScrollExtent) {
-                return false;
-              }
+                  // Load more scenario
+                  if (scrollNotif.metrics.pixels <
+                      scrollNotif.metrics.maxScrollExtent) {
+                    return false;
+                  }
 
-              return false;
-            },
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                appBar(),
-                body(),
-              ],
-            ),
-          )),
+                  return false;
+                },
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: <Widget>[
+                    appBar(),
+                    body(),
+                  ],
+                ),
+              ),
+            );
+          })
+        ],
+      ),
     );
   }
 
