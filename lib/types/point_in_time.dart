@@ -16,11 +16,11 @@ class PointInTime {
   factory PointInTime.fromJSON(Map<String, dynamic> json) {
     DateTime date;
 
-    if (json['date'] != null && json['date']['_seconds'] != null) {
+    if (json['date'].runtimeType == Timestamp) {
+      date = (json['date'] as Timestamp)?.toDate();
+    } else if (json['date'] != null && json['date']['_seconds'] != null) {
       date =
           DateTime.fromMillisecondsSinceEpoch(json['date']['_seconds'] * 1000);
-    } else {
-      date = (json['date'] as Timestamp)?.toDate();
     }
 
     return PointInTime(
