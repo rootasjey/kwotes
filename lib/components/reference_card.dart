@@ -1,3 +1,4 @@
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -105,15 +106,7 @@ class _ReferenceCardState extends State<ReferenceCard> {
         ),
         Positioned.fill(
           child: InkWell(
-            onTap: () {
-              showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) => ReferencePage(
-                  id: widget.id,
-                  scrollController: scrollController,
-                ),
-              );
-            },
+            onTap: onTap,
             onHover: (isHover) {
               if (isHover) {
                 opacity = 0.0;
@@ -196,6 +189,46 @@ class _ReferenceCardState extends State<ReferenceCard> {
       ),
       onSelected: widget.onSelected,
       itemBuilder: widget.itemBuilder,
+    );
+  }
+
+  Future onTap() {
+    if (MediaQuery.of(context).size.width > 600.0) {
+      return showFlash(
+        context: context,
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: ReferencePage(
+                  id: widget.id,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context, scrollController) => ReferencePage(
+        id: widget.id,
+        scrollController: scrollController,
+      ),
     );
   }
 }
