@@ -114,37 +114,40 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget appBar() {
-    return PageAppBar(
-      textTitle: 'Published',
-      textSubTitle: 'Quotes published by you',
-      expandedHeight: 120.0,
-      onTitlePressed: () {
-        scrollController.animateTo(
-          0,
-          duration: 250.milliseconds,
-          curve: Curves.easeIn,
-        );
-      },
-      lang: lang,
-      onLangChanged: (String newLang) {
-        lang = newLang;
-        fetch();
-      },
-      itemsLayout: itemsLayout,
-      onItemsLayoutSelected: (selectedLayout) {
-        if (selectedLayout == itemsLayout) {
-          return;
-        }
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: PageAppBar(
+        textTitle: 'Published',
+        textSubTitle: 'Quotes published by you',
+        expandedHeight: 120.0,
+        onTitlePressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
+        lang: lang,
+        onLangChanged: (String newLang) {
+          lang = newLang;
+          fetch();
+        },
+        itemsLayout: itemsLayout,
+        onItemsLayoutSelected: (selectedLayout) {
+          if (selectedLayout == itemsLayout) {
+            return;
+          }
 
-        setState(() {
-          itemsLayout = selectedLayout;
-        });
+          setState(() {
+            itemsLayout = selectedLayout;
+          });
 
-        appLocalStorage.saveItemsStyle(
-          pageRoute: pageRoute,
-          style: selectedLayout,
-        );
-      },
+          appLocalStorage.saveItemsStyle(
+            pageRoute: pageRoute,
+            style: selectedLayout,
+          );
+        },
+      ),
     );
   }
 

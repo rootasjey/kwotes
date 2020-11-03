@@ -117,7 +117,10 @@ class _DashboardState extends State<Dashboard> {
       collapsedHeight: 70.0,
       expandedHeight: 90.0,
       title: Padding(
-        padding: const EdgeInsets.only(left: 16.0),
+        padding: const EdgeInsets.only(
+          top: 24.0,
+          left: 16.0,
+        ),
         child: TextButton.icon(
           onPressed: () {
             scrollController.animateTo(

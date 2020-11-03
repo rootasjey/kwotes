@@ -85,56 +85,59 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   Widget appBar() {
-    return PageAppBar(
-      textTitle: 'All in validation',
-      textSubTitle: 'Quotes in validation from all users',
-      onTitlePressed: () {
-        scrollController.animateTo(
-          0,
-          duration: 250.milliseconds,
-          curve: Curves.easeIn,
-        );
-      },
-      descending: descending,
-      onDescendingChanged: (newDescending) {
-        if (descending == newDescending) {
-          return;
-        }
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: PageAppBar(
+        textTitle: 'All in validation',
+        textSubTitle: 'Quotes in validation from all users',
+        onTitlePressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
+        descending: descending,
+        onDescendingChanged: (newDescending) {
+          if (descending == newDescending) {
+            return;
+          }
 
-        descending = newDescending;
-        fetch();
+          descending = newDescending;
+          fetch();
 
-        appLocalStorage.setPageOrder(
-          descending: newDescending,
-          pageRoute: pageRoute,
-        );
-      },
-      lang: lang,
-      onLangChanged: (String newLang) {
-        lang = newLang;
+          appLocalStorage.setPageOrder(
+            descending: newDescending,
+            pageRoute: pageRoute,
+          );
+        },
+        lang: lang,
+        onLangChanged: (String newLang) {
+          lang = newLang;
 
-        appLocalStorage.setPageLang(
-          pageRoute: pageRoute,
-          lang: lang,
-        );
+          appLocalStorage.setPageLang(
+            pageRoute: pageRoute,
+            lang: lang,
+          );
 
-        fetch();
-      },
-      itemsLayout: itemsLayout,
-      onItemsLayoutSelected: (selectedLayout) {
-        if (selectedLayout == itemsLayout) {
-          return;
-        }
+          fetch();
+        },
+        itemsLayout: itemsLayout,
+        onItemsLayoutSelected: (selectedLayout) {
+          if (selectedLayout == itemsLayout) {
+            return;
+          }
 
-        setState(() {
-          itemsLayout = selectedLayout;
-        });
+          setState(() {
+            itemsLayout = selectedLayout;
+          });
 
-        appLocalStorage.saveItemsStyle(
-          pageRoute: pageRoute,
-          style: selectedLayout,
-        );
-      },
+          appLocalStorage.saveItemsStyle(
+            pageRoute: pageRoute,
+            style: selectedLayout,
+          );
+        },
+      ),
     );
   }
 
@@ -197,8 +200,10 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   Widget gridView() {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20.0,
+      padding: const EdgeInsets.only(
+        top: 24.0,
+        left: 20.0,
+        right: 20.0,
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -270,65 +275,68 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final tempQuote = tempQuotes.elementAt(index);
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final tempQuote = tempQuotes.elementAt(index);
 
-          return TempQuoteRowWithActions(
-            tempQuote: tempQuote,
-            canManage: true,
-            padding: EdgeInsets.symmetric(
-              horizontal: horPadding,
-            ),
-            onBeforeDelete: () {
-              setState(() {
-                tempQuotes.removeAt(index);
-              });
-            },
-            onAfterDelete: (success) {
-              if (success) {
-                return;
-              }
+            return TempQuoteRowWithActions(
+              tempQuote: tempQuote,
+              canManage: true,
+              padding: EdgeInsets.symmetric(
+                horizontal: horPadding,
+              ),
+              onBeforeDelete: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterDelete: (success) {
+                if (success) {
+                  return;
+                }
 
-              setState(() {
-                tempQuotes.insert(index, tempQuote);
-              });
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
 
-              showSnack(
-                context: context,
-                message: "Couldn't delete the temporary quote",
-                type: SnackType.error,
-              );
-            },
-            onBeforeValidate: () {
-              setState(() {
-                tempQuotes.removeAt(index);
-              });
-            },
-            onAfterValidate: (success) {
-              if (success) {
-                return;
-              }
+                showSnack(
+                  context: context,
+                  message: "Couldn't delete the temporary quote",
+                  type: SnackType.error,
+                );
+              },
+              onBeforeValidate: () {
+                setState(() {
+                  tempQuotes.removeAt(index);
+                });
+              },
+              onAfterValidate: (success) {
+                if (success) {
+                  return;
+                }
 
-              setState(() {
-                tempQuotes.insert(index, tempQuote);
-              });
+                setState(() {
+                  tempQuotes.insert(index, tempQuote);
+                });
 
-              showSnack(
-                context: context,
-                message: "Couldn't validate your temporary quote.",
-                type: SnackType.error,
-              );
-            },
-            onNavBack: () {
-              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                fetch();
-              });
-            },
-          );
-        },
-        childCount: tempQuotes.length,
+                showSnack(
+                  context: context,
+                  message: "Couldn't validate your temporary quote.",
+                  type: SnackType.error,
+                );
+              },
+              onNavBack: () {
+                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                  fetch();
+                });
+              },
+            );
+          },
+          childCount: tempQuotes.length,
+        ),
       ),
     );
   }

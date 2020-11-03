@@ -93,31 +93,34 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget appBar() {
-    return PageAppBar(
-      textTitle: 'Lists',
-      textSubTitle: 'Thematic lists created by you',
-      expandedHeight: 100.0,
-      onTitlePressed: () {
-        scrollController.animateTo(
-          0,
-          duration: 250.milliseconds,
-          curve: Curves.easeIn,
-        );
-      },
-      descending: descending,
-      onDescendingChanged: (newDescending) {
-        if (descending == newDescending) {
-          return;
-        }
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: PageAppBar(
+        textTitle: 'Lists',
+        textSubTitle: 'Thematic lists created by you',
+        expandedHeight: 100.0,
+        onTitlePressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
+        descending: descending,
+        onDescendingChanged: (newDescending) {
+          if (descending == newDescending) {
+            return;
+          }
 
-        descending = newDescending;
-        fetch();
+          descending = newDescending;
+          fetch();
 
-        appLocalStorage.setPageOrder(
-          descending: newDescending,
-          pageRoute: pageRoute,
-        );
-      },
+          appLocalStorage.setPageOrder(
+            descending: newDescending,
+            pageRoute: pageRoute,
+          );
+        },
+      ),
     );
   }
 

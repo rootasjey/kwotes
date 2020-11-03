@@ -108,22 +108,25 @@ class _TopicsState extends State<Topics> {
   Widget appBar() {
     if (MediaQuery.of(context).size.width < 700.0) {
       return PageAppBar(
-        title: TextButton.icon(
-          onPressed: () {
-            scrollController.animateTo(
-              0,
-              duration: 250.milliseconds,
-              curve: Curves.easeIn,
-            );
-          },
-          icon: AppIcon(
-            padding: EdgeInsets.zero,
-            size: 30.0,
-          ),
-          label: Text(
-            'Topics',
-            style: TextStyle(
-              fontSize: 22.0,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 24.0),
+          child: TextButton.icon(
+            onPressed: () {
+              scrollController.animateTo(
+                0,
+                duration: 250.milliseconds,
+                curve: Curves.easeIn,
+              );
+            },
+            icon: AppIcon(
+              padding: EdgeInsets.zero,
+              size: 30.0,
+            ),
+            label: Text(
+              'Topics',
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
             ),
           ),
         ),

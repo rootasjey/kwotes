@@ -92,69 +92,72 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
-      expandedHeight: 110.0,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 0.0, top: 0.0),
-        child: Row(
-          children: [
-            CircleButton(
-                onTap: () => Navigator.of(context).pop(),
-                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-            AppIcon(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              size: 30.0,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    quotesList == null ? 'List' : quotesList.name,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w300,
-                      color: stateColors.foreground,
-                    ),
-                  ),
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      quotesList == null ? '' : quotesList.description,
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: BasePageAppBar(
+        expandedHeight: 110.0,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 0.0, top: 0.0),
+          child: Row(
+            children: [
+              CircleButton(
+                  onTap: () => Navigator.of(context).pop(),
+                  icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+              AppIcon(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                size: 30.0,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      quotesList == null ? 'List' : quotesList.name,
                       style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w300,
                         color: stateColors.foreground,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottom: Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Wrap(
-            spacing: 20.0,
-            children: <Widget>[
-              OutlinedButton.icon(
-                onPressed: () => showEditListDialog(),
-                icon: Icon(Icons.edit),
-                label: Text('Edit'),
-              ),
-              OutlinedButton.icon(
-                onPressed: () => showDeleteListDialog(),
-                icon: Icon(Icons.delete),
-                label: Text('Delete'),
-                style: OutlinedButton.styleFrom(
-                  primary: Colors.red,
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        quotesList == null ? '' : quotesList.description,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w400,
+                          color: stateColors.foreground,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
+          ),
+        ),
+        bottom: Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Wrap(
+              spacing: 20.0,
+              children: <Widget>[
+                OutlinedButton.icon(
+                  onPressed: () => showEditListDialog(),
+                  icon: Icon(Icons.edit),
+                  label: Text('Edit'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () => showDeleteListDialog(),
+                  icon: Icon(Icons.delete),
+                  label: Text('Delete'),
+                  style: OutlinedButton.styleFrom(
+                    primary: Colors.red,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -114,46 +114,49 @@ class _FavouritesState extends State<Favourites> {
   }
 
   Widget appBar() {
-    return PageAppBar(
-      textTitle: 'Favourites',
-      textSubTitle: 'Quotes you loved the most',
-      onTitlePressed: () {
-        scrollController.animateTo(
-          0,
-          duration: 250.milliseconds,
-          curve: Curves.easeIn,
-        );
-      },
-      onIconPressed: () => Navigator.of(context).pop(),
-      descending: descending,
-      onDescendingChanged: (newDescending) {
-        if (descending == newDescending) {
-          return;
-        }
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: PageAppBar(
+        textTitle: 'Favourites',
+        textSubTitle: 'Quotes you loved the most',
+        onTitlePressed: () {
+          scrollController.animateTo(
+            0,
+            duration: 250.milliseconds,
+            curve: Curves.easeIn,
+          );
+        },
+        onIconPressed: () => Navigator.of(context).pop(),
+        descending: descending,
+        onDescendingChanged: (newDescending) {
+          if (descending == newDescending) {
+            return;
+          }
 
-        descending = newDescending;
-        fetch();
+          descending = newDescending;
+          fetch();
 
-        appLocalStorage.setPageOrder(
-          descending: newDescending,
-          pageRoute: pageRoute,
-        );
-      },
-      itemsLayout: itemsLayout,
-      onItemsLayoutSelected: (selectedLayout) {
-        if (selectedLayout == itemsLayout) {
-          return;
-        }
+          appLocalStorage.setPageOrder(
+            descending: newDescending,
+            pageRoute: pageRoute,
+          );
+        },
+        itemsLayout: itemsLayout,
+        onItemsLayoutSelected: (selectedLayout) {
+          if (selectedLayout == itemsLayout) {
+            return;
+          }
 
-        setState(() {
-          itemsLayout = selectedLayout;
-        });
+          setState(() {
+            itemsLayout = selectedLayout;
+          });
 
-        appLocalStorage.saveItemsStyle(
-          pageRoute: pageRoute,
-          style: selectedLayout,
-        );
-      },
+          appLocalStorage.saveItemsStyle(
+            pageRoute: pageRoute,
+            style: selectedLayout,
+          );
+        },
+      ),
     );
   }
 

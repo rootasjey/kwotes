@@ -255,23 +255,26 @@ class RecentQuotesState extends State<RecentQuotes> {
     return Observer(builder: (context) {
       final isConnected = userState.isUserConnected;
 
-      return SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final quote = quotes.elementAt(index);
+      return SliverPadding(
+        padding: const EdgeInsets.only(top: 30.0),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final quote = quotes.elementAt(index);
 
-            return QuoteRowWithActions(
-              quote: quote,
-              canManage: canManage,
-              isConnected: isConnected,
-              color: stateColors.appBackground,
-              padding: EdgeInsets.symmetric(
-                horizontal: horPadding,
-              ),
-              quotePageType: QuotePageType.published,
-            );
-          },
-          childCount: quotes.length,
+              return QuoteRowWithActions(
+                quote: quote,
+                canManage: canManage,
+                isConnected: isConnected,
+                color: stateColors.appBackground,
+                padding: EdgeInsets.symmetric(
+                  horizontal: horPadding,
+                ),
+                quotePageType: QuotePageType.published,
+              );
+            },
+            childCount: quotes.length,
+          ),
         ),
       );
     });
