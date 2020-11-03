@@ -41,9 +41,12 @@ class TempQuoteRow extends StatefulWidget {
 }
 
 class _TempQuoteRowState extends State<TempQuoteRow> {
-  double elevation = 0.0;
+  bool elevationSpecified = false;
+
   Color iconColor;
   Color iconHoverColor;
+
+  double elevation = 0.0;
 
   @override
   initState() {
@@ -58,6 +61,8 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
 
     setState(() {
       iconHoverColor = color;
+      elevation = widget.elevation ?? 0.0;
+      elevationSpecified = widget.elevation != null;
     });
   }
 
@@ -83,7 +88,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
           onTap: widget.onTap,
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? 2.0 : 0.0;
+              elevation = isHover ? getHoverElevation() : getElevation();
               iconColor = isHover ? iconHoverColor : null;
             });
           },
@@ -216,7 +221,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
           onTap: widget.onTap,
           onHover: (isHover) {
             setState(() {
-              elevation = isHover ? 2.0 : 0.0;
+              elevation = isHover ? getHoverElevation() : getElevation();
               iconColor = isHover ? iconHoverColor : null;
             });
           },
@@ -285,5 +290,13 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
         ),
       ),
     );
+  }
+
+  double getHoverElevation() {
+    return elevationSpecified ? widget.elevation * 2.0 : 2.0;
+  }
+
+  double getElevation() {
+    return elevationSpecified ? widget.elevation : 0.0;
   }
 }
