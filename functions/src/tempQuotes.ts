@@ -21,7 +21,7 @@ export const onTempQuoteAdded = functions
     const userData = user.data();
     if (!userData) { return; }
 
-    let userTempQuotes: number = userData.stats.tempQuotes ?? 0;
+    const userTempQuotes: number = userData.stats.tempQuotes ?? 0;
     
     return await user.ref
       .update('stats.tempQuotes', userTempQuotes + 1);
@@ -45,7 +45,7 @@ export const onTempQuoteDeleted = functions
     const userData = user.data();
     if (!userData) { return; }
 
-    let userTempQuotes: number = userData.stats.tempQuotes ?? 0;
+    const userTempQuotes: number = userData.stats.tempQuotes ?? 0;
     
     return await user.ref
       .update('stats.tempQuotes', Math.max(0, userTempQuotes - 1));

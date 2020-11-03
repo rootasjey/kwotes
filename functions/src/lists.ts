@@ -7,7 +7,7 @@ export const onListAdded = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}/lists/{listId}')
-  .onCreate(async (snapshot, context) => {
+  .onCreate(async ({}, context) => {
     const user = await firestore
       .collection('users')
       .doc(context.params.userId)
@@ -18,7 +18,7 @@ export const onListAdded = functions
     const userData = user.data();
     if (!userData) { return; }
 
-    let userLists: number = userData.stats.lists ?? 0;
+    const userLists: number = userData.stats.lists ?? 0;
     
     return await user.ref
       .update('stats.lists', userLists + 1);
@@ -28,7 +28,7 @@ export const onListDeleted = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}/lists/{listId}')
-  .onDelete(async (snapshot, context) => {
+  .onDelete(async ({}, context) => {
     const user = await firestore
       .collection('users')
       .doc(context.params.userId)
@@ -39,7 +39,7 @@ export const onListDeleted = functions
     const userData = user.data();
     if (!userData) { return; }
 
-    let userLists: number = userData.stats.lists ?? 0;
+    const userLists: number = userData.stats.lists ?? 0;
 
     return await user.ref
       .update('stats.lists', Math.max(0, userLists - 1));

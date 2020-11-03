@@ -8,7 +8,7 @@ const firestore = adminApp.firestore();
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
-  .onCall(async (data, context) => {
+  .onCall(async (data) => {
     const email: string = data.email;
 
     if (!(typeof email === 'string') || email.length === 0) {
@@ -36,7 +36,7 @@ export const checkEmailAvailability = functions
 export const checkNameAvailability = functions
   .region('europe-west3')
   .https
-  .onCall(async (data, context) => {
+  .onCall(async (data) => {
     const name: string = data.name;
 
     if (!(typeof name === 'string') || name.length === 0) {
@@ -232,7 +232,7 @@ export const newAccountCheck = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}')
-  .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot) => {
     const data = snapshot.data();
     let payload: any = {};
 
@@ -341,7 +341,7 @@ export const updateUserCheck = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}')
-  .onUpdate(async (change, context) => {
+  .onUpdate(async (change) => {
     const beforeData = change.before.data();
     const afterData = change.after.data();
 

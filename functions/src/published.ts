@@ -21,7 +21,7 @@ export const onQuoteAdded = functions
     const userData = user.data();
     if (!userData) { return; }
 
-    let userPub: number = userData.stats.published ?? 0;
+    const userPub: number = userData.stats.published ?? 0;
     
     return await user.ref
       .update('stats.published', userPub + 1);
@@ -45,7 +45,7 @@ export const onQuoteDeleted = functions
     const userData = user.data();
     if (!userData) { return; }
 
-    let userPub: number = userData.stats.published ?? 0;
+    const userPub: number = userData.stats.published ?? 0;
     
     return await user.ref
       .update('stats.published', Math.max(0, userPub - 1));
