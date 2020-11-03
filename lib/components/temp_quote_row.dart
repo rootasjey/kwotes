@@ -100,7 +100,6 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                           : tempQuote.name,
                       style: TextStyle(
                         fontSize: 18.0,
-                        // fontSize: FontSize.gridItem(widget.title),
                       ),
                     ),
                   ],
