@@ -31,7 +31,7 @@ export const onFavAdded = functions
         userFav = userData.stats.likes ?? 0;
       }
 
-      user.ref.update('stats.fav', userFav + 1);
+      await user.ref.update('stats.fav', userFav + 1);
     }
       
     return await snapshot.ref
@@ -66,9 +66,10 @@ export const onFavDeleted = functions
         userFav = userData.stats.likes ?? 0;
       }
 
-      user.ref.update('stats.fav', userFav - 1);
+      await user.ref
+        .update('stats.fav', Math.max(0, userFav - 1));
     }
 
     return await snapshot.ref
-      .update('stats.fav', quoteFav - 1);
+      .update('stats.fav', Math.max(0, quoteFav - 1));
   });
