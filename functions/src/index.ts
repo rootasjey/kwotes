@@ -1,5 +1,6 @@
 import * as favouritesFunc  from './favourites';
 import * as imagesFunc      from './images';
+import * as publishedFunc   from './published';
 import * as quotidiansFunc  from './quotidians';
 import * as searchFunc      from './search';
 import * as tempQuotesFunc  from './tempQuotes';
@@ -7,6 +8,7 @@ import * as usersFunc       from './users';
 
 export const favourites = favouritesFunc;
 export const images     = imagesFunc;
+export const published  = publishedFunc;
 export const quotidians = quotidiansFunc;
 export const search     = searchFunc;
 export const tempQuotes = tempQuotesFunc;
