@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/quotes.dart';
@@ -220,6 +221,7 @@ class RecentQuotesState extends State<RecentQuotes> {
                 quote: quote,
                 canManage: canManage,
                 isConnected: isConnected,
+                elevation: Constants.cardElevation,
                 componentType: ItemComponentType.card,
                 onBeforeDeletePubQuote: () {
                   setState(() {

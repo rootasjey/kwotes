@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -243,6 +244,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             return TempQuoteRowWithActions(
               componentType: ItemComponentType.card,
               tempQuote: tempQuote,
+              elevation: Constants.cardElevation,
               onBeforeDelete: () {
                 setState(() {
                   tempQuotes.removeAt(index);

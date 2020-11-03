@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/drafts.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -214,6 +215,7 @@ class _DraftsState extends State<Drafts> {
             return TempQuoteRowWithActions(
               componentType: ItemComponentType.card,
               isDraft: true,
+              elevation: Constants.cardElevation,
               onTap: () => editDraft(draft),
               tempQuote: draft,
             );

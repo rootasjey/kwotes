@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -202,9 +203,8 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   Widget gridView() {
     return SliverPadding(
-      padding: const EdgeInsets.only(
-        left: 20.0,
-        right: 20.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -220,6 +220,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
               componentType: ItemComponentType.card,
               canManage: true,
               tempQuote: tempQuote,
+              elevation: Constants.cardElevation,
               onBeforeDelete: () {
                 setState(() {
                   tempQuotes.removeAt(index);

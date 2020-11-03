@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -225,6 +226,7 @@ class _FavouritesState extends State<Favourites> {
               componentType: ItemComponentType.card,
               quotePageType: QuotePageType.favourites,
               padding: EdgeInsets.zero,
+              elevation: Constants.cardElevation,
               onBeforeRemoveFromFavourites: () {
                 setState(() {
                   // optimistic

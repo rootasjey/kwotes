@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -242,6 +243,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
               quote: quote,
               canManage: canManage,
               isConnected: isConnected,
+              elevation: Constants.cardElevation,
               componentType: ItemComponentType.card,
             );
           },
