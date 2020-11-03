@@ -121,7 +121,7 @@ class _QuoteRowState extends State<QuoteRow> {
                       maxLines: 6,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 22.0,
+                        fontSize: 18.0,
                       ),
                     ),
                   ],
