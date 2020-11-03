@@ -169,11 +169,13 @@ class _FavouritesState extends State<Favourites> {
       return emptyView();
     }
 
-    if (itemsLayout == ItemsLayout.list) {
-      return listView();
-    }
+    final Widget sliver =
+        itemsLayout == ItemsLayout.list ? listView() : gridView();
 
-    return gridView();
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: sliver,
+    );
   }
 
   Widget emptyView() {

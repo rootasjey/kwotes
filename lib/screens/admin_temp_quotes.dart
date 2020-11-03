@@ -154,11 +154,13 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       return emptyView();
     }
 
-    if (itemsLayout == ItemsLayout.grid) {
-      return gridView();
-    }
+    final Widget sliver =
+        itemsLayout == ItemsLayout.list ? listView() : gridView();
 
-    return listView();
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: sliver,
+    );
   }
 
   Widget emptyView() {
@@ -201,7 +203,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   Widget gridView() {
     return SliverPadding(
       padding: const EdgeInsets.only(
-        top: 24.0,
         left: 20.0,
         right: 20.0,
       ),
@@ -275,68 +276,65 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 24.0),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final tempQuote = tempQuotes.elementAt(index);
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final tempQuote = tempQuotes.elementAt(index);
 
-            return TempQuoteRowWithActions(
-              tempQuote: tempQuote,
-              canManage: true,
-              padding: EdgeInsets.symmetric(
-                horizontal: horPadding,
-              ),
-              onBeforeDelete: () {
-                setState(() {
-                  tempQuotes.removeAt(index);
-                });
-              },
-              onAfterDelete: (success) {
-                if (success) {
-                  return;
-                }
+          return TempQuoteRowWithActions(
+            tempQuote: tempQuote,
+            canManage: true,
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+            ),
+            onBeforeDelete: () {
+              setState(() {
+                tempQuotes.removeAt(index);
+              });
+            },
+            onAfterDelete: (success) {
+              if (success) {
+                return;
+              }
 
-                setState(() {
-                  tempQuotes.insert(index, tempQuote);
-                });
+              setState(() {
+                tempQuotes.insert(index, tempQuote);
+              });
 
-                showSnack(
-                  context: context,
-                  message: "Couldn't delete the temporary quote",
-                  type: SnackType.error,
-                );
-              },
-              onBeforeValidate: () {
-                setState(() {
-                  tempQuotes.removeAt(index);
-                });
-              },
-              onAfterValidate: (success) {
-                if (success) {
-                  return;
-                }
+              showSnack(
+                context: context,
+                message: "Couldn't delete the temporary quote",
+                type: SnackType.error,
+              );
+            },
+            onBeforeValidate: () {
+              setState(() {
+                tempQuotes.removeAt(index);
+              });
+            },
+            onAfterValidate: (success) {
+              if (success) {
+                return;
+              }
 
-                setState(() {
-                  tempQuotes.insert(index, tempQuote);
-                });
+              setState(() {
+                tempQuotes.insert(index, tempQuote);
+              });
 
-                showSnack(
-                  context: context,
-                  message: "Couldn't validate your temporary quote.",
-                  type: SnackType.error,
-                );
-              },
-              onNavBack: () {
-                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                  fetch();
-                });
-              },
-            );
-          },
-          childCount: tempQuotes.length,
-        ),
+              showSnack(
+                context: context,
+                message: "Couldn't validate your temporary quote.",
+                type: SnackType.error,
+              );
+            },
+            onNavBack: () {
+              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                fetch();
+              });
+            },
+          );
+        },
+        childCount: tempQuotes.length,
       ),
     );
   }

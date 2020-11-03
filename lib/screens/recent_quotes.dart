@@ -152,11 +152,13 @@ class RecentQuotesState extends State<RecentQuotes> {
       return emptyView();
     }
 
-    if (itemsLayout == ItemsLayout.list) {
-      return listView();
-    }
+    final Widget sliver =
+        itemsLayout == ItemsLayout.list ? listView() : gridView();
 
-    return gridView();
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 24.0),
+      sliver: sliver,
+    );
   }
 
   Widget emptyView() {
@@ -255,26 +257,23 @@ class RecentQuotesState extends State<RecentQuotes> {
     return Observer(builder: (context) {
       final isConnected = userState.isUserConnected;
 
-      return SliverPadding(
-        padding: const EdgeInsets.only(top: 30.0),
-        sliver: SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final quote = quotes.elementAt(index);
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final quote = quotes.elementAt(index);
 
-              return QuoteRowWithActions(
-                quote: quote,
-                canManage: canManage,
-                isConnected: isConnected,
-                color: stateColors.appBackground,
-                padding: EdgeInsets.symmetric(
-                  horizontal: horPadding,
-                ),
-                quotePageType: QuotePageType.published,
-              );
-            },
-            childCount: quotes.length,
-          ),
+            return QuoteRowWithActions(
+              quote: quote,
+              canManage: canManage,
+              isConnected: isConnected,
+              color: stateColors.appBackground,
+              padding: EdgeInsets.symmetric(
+                horizontal: horPadding,
+              ),
+              quotePageType: QuotePageType.published,
+            );
+          },
+          childCount: quotes.length,
         ),
       );
     });
