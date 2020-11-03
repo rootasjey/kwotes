@@ -8,21 +8,34 @@ export const onFavAdded = functions
   .firestore
   .document('users/{userId}/favourites/{quoteId}')
   .onCreate(async (snapshot, context) => {
-    const quoteSnap = await firestore
-      .collection('quotes')
-      .doc(snapshot.id)
+    const quoteData = snapshot.data();
+    if (!quoteData) { return; }
+
+    let quoteFav: number = quoteData.stats.fav ?? 0;
+
+    if (!quoteData.stats.fav) { // TODO: Remove after some months
+      quoteFav = quoteData.stats.likes ?? 0;
+    }
+
+    const user = await firestore
+      .collection('users')
+      .doc(context.params.userId)
       .get();
 
-    if (!quoteSnap.exists) { return; }
+    const userData = user.data();
 
-    const data = quoteSnap.data();
-    if (!data) { return; }
+    if (userData) {
+      let userFav: number = userData.stats.likes ?? 0;
+      
+      if (!userData.stats.fav) { // TODO: Remove after some months
+        userFav = userData.stats.likes ?? 0;
+      }
 
-    const favCount: number = data.stats.likes;
-    return await quoteSnap.ref
-      .update({
-        'stats.likes': favCount + 1,
-      });
+      user.ref.update('stats.fav', userFav + 1);
+    }
+      
+    return await snapshot.ref
+      .update('stats.fav', quoteFav + 1);
   });
 
 export const onFavDeleted = functions
@@ -30,21 +43,32 @@ export const onFavDeleted = functions
   .firestore
   .document('users/{userId}/favourites/{quoteId}')
   .onDelete(async (snapshot, context) => {
-    const quoteSnap = await firestore
-      .collection('quotes')
-      .doc(snapshot.id)
+    const quoteData = snapshot.data();
+    if (!quoteData) { return; }
+
+    let quoteFav: number = quoteData.stats.fav ?? 0;
+
+    if (!quoteData.stats.fav) { // TODO: Remove after some months
+      quoteFav = quoteData.stats.likes ?? 0;
+    }
+
+    const user = await firestore
+      .collection('users')
+      .doc(context.params.userId)
       .get();
 
-    if (!quoteSnap.exists) { return; }
+    const userData = user.data();
 
-    const data = quoteSnap.data();
-    if (!data) { return; }
+    if (userData) {
+      let userFav: number = userData.stats.fav ?? 0;
+      
+      if (!userData.stats.fav) { // TODO: Remove after some months
+        userFav = userData.stats.likes ?? 0;
+      }
 
-    const favCount: number = data.stats.likes;
-    if (favCount === 0) { return; }
+      user.ref.update('stats.fav', userFav - 1);
+    }
 
-    return await quoteSnap.ref
-      .update({
-        'stats.likes': favCount - 1,
-      });
+    return await snapshot.ref
+      .update('stats.fav', quoteFav - 1);
   });
