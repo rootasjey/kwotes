@@ -170,16 +170,19 @@ class _PageAppBarState extends State<PageAppBar> {
       return widget.title;
     }
 
-    return TextButton.icon(
-      onPressed: widget.onTitlePressed,
-      icon: AppIcon(
-        padding: EdgeInsets.zero,
-        size: 30.0,
-      ),
-      label: Text(
-        widget.textTitle,
-        style: TextStyle(
-          fontSize: 22.0,
+    return Padding(
+      padding: const EdgeInsets.only(top: 24.0),
+      child: TextButton.icon(
+        onPressed: widget.onTitlePressed,
+        icon: AppIcon(
+          padding: EdgeInsets.zero,
+          size: 30.0,
+        ),
+        label: Text(
+          widget.textTitle,
+          style: TextStyle(
+            fontSize: 22.0,
+          ),
         ),
       ),
     );
@@ -229,48 +232,51 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget twoLinesTitle() {
-    return Row(
-      children: [
-        CircleButton(
-            onTap: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-        AppIcon(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          size: 30.0,
-          onTap: widget.onIconPressed,
-        ),
-        Expanded(
-          child: InkWell(
-            onTap: widget.onTitlePressed,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                widget.title != null
-                    ? widget.title
-                    : Text(
-                        widget.textTitle,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: stateColors.foreground,
-                          fontWeight: FontWeight.w600,
+    return Padding(
+      padding: const EdgeInsets.only(top: 24.0),
+      child: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIcon(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+            onTap: widget.onIconPressed,
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: widget.onTitlePressed,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.title != null
+                      ? widget.title
+                      : Text(
+                          widget.textTitle,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: stateColors.foreground,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      widget.textSubTitle,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: stateColors.foreground,
+                        fontWeight: FontWeight.w400,
                       ),
-                Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    widget.textSubTitle,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: stateColors.foreground,
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
