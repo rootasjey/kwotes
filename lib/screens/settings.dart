@@ -18,7 +18,6 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_localstorage.dart';
 import 'package:figstyle/utils/language.dart';
-import 'package:figstyle/utils/push_notifications.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -959,22 +958,22 @@ class _SettingsState extends State<Settings> {
   }
 
   void toggleBackgroundTask(bool isActive) async {
-    final lang = appLocalStorage.getLang();
+    // final lang = appLocalStorage.getLang();
 
-    final success = isActive
-        ? await PushNotifications.subMobileQuotidians(lang: lang)
-        : await PushNotifications.unsubMobileQuotidians(lang: lang);
+    // final success = isActive
+    //     ? await PushNotifications.subMobileQuotidians(lang: lang)
+    //     : await PushNotifications.unsubMobileQuotidians(lang: lang);
 
-    if (!success) {
-      userState.setQuotidianNotifState(!userState.isQuotidianNotifActive);
+    // if (!success) {
+    //   userState.setQuotidianNotifState(!userState.isQuotidianNotifActive);
 
-      showSnack(
-        context: context,
-        message:
-            'Sorry, there was an issue while updating your preferences. Try again in a moment.',
-        type: SnackType.error,
-      );
-    }
+    //   showSnack(
+    //     context: context,
+    //     message:
+    //         'Sorry, there was an issue while updating your preferences. Try again in a moment.',
+    //     type: SnackType.error,
+    //   );
+    // }
   }
 
   Future checkAuth() async {
@@ -1166,8 +1165,8 @@ class _SettingsState extends State<Settings> {
     Language.setLang(lang);
 
     if (userState.isQuotidianNotifActive) {
-      final lang = appLocalStorage.getLang();
-      await PushNotifications.updateQuotidiansSubLang(lang: lang);
+      // final lang = appLocalStorage.getLang();
+      // await PushNotifications.updateQuotidiansSubLang(lang: lang);
     }
 
     setState(() {

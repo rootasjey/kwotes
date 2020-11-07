@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await PushNotifications.init();
 
   return runApp(App());
 }
@@ -43,6 +45,7 @@ class AppState extends State<App> {
       userState.setLang(savedLang);
 
       autoLogin();
+      PushNotifications.initDefaultTag();
 
       setState(() {
         isReady = true;

@@ -12,7 +12,6 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_localstorage.dart';
-import 'package:figstyle/utils/push_notifications.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class DeleteAccount extends StatefulWidget {
@@ -433,7 +432,6 @@ class DeleteAccountState extends State<DeleteAccount> {
       );
 
       await userAuth.reauthenticateWithCredential(credentials);
-      await PushNotifications.unsubMobileQuotidians(lang: userState.lang);
 
       await FirebaseFirestore.instance
           .collection('users')

@@ -16,8 +16,6 @@ import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:figstyle/utils/animation.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
-import 'package:figstyle/utils/push_notifications.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -39,7 +37,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
   void initState() {
     super.initState();
     fetchQuotidian();
-    initNotifications();
   }
 
   @override
@@ -402,18 +399,6 @@ class _FullPageQuotidianState extends State<FullPageQuotidian> {
         isLoading = false;
       });
     }
-  }
-
-  /// ?NOTE: This method is localted here
-  /// because it needs a context containing a Navigator
-  /// for notifications navigation.
-  void initNotifications() {
-    final userUid = appLocalStorage.getUserUid();
-
-    PushNotifications.initialize(
-      context: context,
-      userUid: userUid,
-    );
   }
 
   void removeQuoteFromFav() async {
