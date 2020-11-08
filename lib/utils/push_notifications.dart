@@ -1,13 +1,14 @@
+import 'package:figstyle/utils/api_keys.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class PushNotifications {
   PushNotifications();
 
   static Future init() async {
-    //Remove this method to stop OneSignal Debugging
+    // Remove this method to stop OneSignal Debugging
     // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
-    OneSignal.shared.init("", iOSSettings: {
+    OneSignal.shared.init(ONESIGNAL_APPID, iOSSettings: {
       OSiOSSettings.autoPrompt: false,
       OSiOSSettings.inAppLaunchUrl: false,
     });
@@ -32,7 +33,7 @@ class PushNotifications {
     OneSignal.shared
         .setNotificationReceivedHandler((OSNotification notification) {
       // will be called whenever a notification is received
-      // print(notification.payload.body);
+      print(notification.payload.body);
     });
   }
 
