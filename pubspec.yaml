@@ -46,6 +46,7 @@ dependencies:
   font_awesome_flutter: 8.10.0
   google_fonts: 1.1.0
   hive: 1.4.4+1
+  hive_flutter: 0.3.1
   mobx: 1.0.2
   mobx_codegen: 1.0.2
   modal_bottom_sheet: 0.2.2
@@ -62,6 +63,7 @@ dev_dependencies:
   flutter_rename_app: 1.0.0
   flutter_test:
     sdk: flutter
+  hive_generator: 0.8.2
 
 flutter_icons:
   android: "launcher_icon"
