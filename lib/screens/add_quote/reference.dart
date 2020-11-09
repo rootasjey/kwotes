@@ -98,6 +98,64 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
+  Widget actionsInput({
+    VoidCallback onClearInput,
+    String clearInputText = 'Clear input',
+  }) {
+    double left = 40.0;
+    double spacing = 20.0;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      spacing = 5.0;
+      left = 0.0;
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 20.0,
+        left: left,
+      ),
+      child: Wrap(
+        spacing: spacing,
+        runSpacing: spacing,
+        children: [
+          OutlinedButton.icon(
+            onPressed: onClearInput,
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.clear),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                clearInputText,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.check),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Save',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget avatar() {
     return Padding(
       padding: EdgeInsets.only(
@@ -176,58 +234,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         child: Text(
           'Clear all inputs',
         ),
-      ),
-    );
-  }
-
-  Widget inputActions() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 20.0,
-        left: 40.0,
-        bottom: 40.0,
-      ),
-      child: Wrap(
-        spacing: 20.0,
-        runSpacing: 20.0,
-        children: [
-          OutlinedButton.icon(
-            onPressed: () {
-              DataQuoteInputs.reference.name = '';
-              nameController.clear();
-              nameFocusNode.requestFocus();
-            },
-            icon: Opacity(
-              opacity: 0.6,
-              child: Icon(Icons.clear),
-            ),
-            label: Opacity(
-              opacity: 0.8,
-              child: Text(
-                'Clear input',
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: stateColors.foreground,
-            ),
-          ),
-          OutlinedButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Opacity(
-              opacity: 0.6,
-              child: Icon(Icons.check),
-            ),
-            label: Opacity(
-              opacity: 0.8,
-              child: Text(
-                'Save',
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: stateColors.foreground,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -627,7 +633,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           padding: const EdgeInsets.only(left: 40.0),
                           child: LinearProgressIndicator(),
                         ),
-                      inputActions(),
+                      actionsInput(
+                        onClearInput: () {
+                          DataQuoteInputs.reference.name = '';
+                          nameController.clear();
+                          nameFocusNode.requestFocus();
+                        },
+                      ),
                       suggestions(),
                     ],
                   );
@@ -726,7 +738,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             child: Opacity(
                               opacity: 0.6,
                               child: Text(
-                                "Primaey type",
+                                "Primary type",
                                 style: TextStyle(
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.w500,
@@ -759,7 +771,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
-                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -768,53 +779,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          DataQuoteInputs.reference.type.primary = '';
-                          primaryTypeController.clear();
-                          primaryTypeFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Clear input',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
+                actionsInput(
+                  onClearInput: () {
+                    DataQuoteInputs.reference.type.primary = '';
+                    primaryTypeController.clear();
+                    primaryTypeFocusNode.requestFocus();
+                  },
                 ),
               ],
             ),
@@ -991,7 +961,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       alignLabelWithHint: true,
                     ),
                     minLines: 1,
-                    maxLines: null,
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -1000,53 +969,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          DataQuoteInputs.reference.type.secondary = '';
-                          secondaryTypeController.clear();
-                          secondaryTypeFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Clear input',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
+                actionsInput(
+                  onClearInput: () {
+                    DataQuoteInputs.reference.type.secondary = '';
+                    secondaryTypeController.clear();
+                    secondaryTypeFocusNode.requestFocus();
+                  },
                 ),
               ],
             ),
@@ -1186,7 +1114,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             ),
                           ),
                           Text(
-                            "Write a short summary about this reference. It can be the first Wikipedia paragraph.",
+                            "It can be the first Wikipedia paragraph.",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
@@ -1219,54 +1147,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          DataQuoteInputs.reference.summary = '';
-                          summaryController.clear();
-                          summaryFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Clear input',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                actionsInput(onClearInput: () {
+                  DataQuoteInputs.reference.summary = '';
+                  summaryController.clear();
+                  summaryFocusNode.requestFocus();
+                }),
               ],
             ),
           ),

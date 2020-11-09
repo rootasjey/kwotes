@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/fade_in_x.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author_suggestion.dart';
@@ -101,16 +100,66 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           jobCardInput(),
           clearButton(),
           bornAndDeathCards(),
-          FadeInY(
-            delay: 0.6,
-            beginY: beginY,
-            child: summaryCardInput(),
-          ),
+          summaryCardInput(),
           fictionalCharacterBox(),
-          FadeInY(
-            delay: 0.8,
-            beginY: beginY,
-            child: links(),
+          links(),
+        ],
+      ),
+    );
+  }
+
+  Widget actionsInput({
+    VoidCallback onClearInput,
+    String clearInputText = 'Clear input',
+  }) {
+    double left = 40.0;
+    double spacing = 20.0;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      spacing = 5.0;
+      left = 0.0;
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 20.0,
+        left: left,
+      ),
+      child: Wrap(
+        spacing: spacing,
+        runSpacing: spacing,
+        children: [
+          OutlinedButton.icon(
+            onPressed: onClearInput,
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.clear),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                clearInputText,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.check),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Save',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
           ),
         ],
       ),
@@ -400,57 +449,17 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          DataQuoteInputs.author.born.city = '';
-                          DataQuoteInputs.author.born.country = '';
-                          DataQuoteInputs.author.born.date = null;
+                actionsInput(
+                  clearInputText: 'Clear inputs',
+                  onClearInput: () {
+                    DataQuoteInputs.author.born.city = '';
+                    DataQuoteInputs.author.born.country = '';
+                    DataQuoteInputs.author.born.date = null;
 
-                          bornCityController.clear();
-                          bornCountryController.clear();
-                          bornCityFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.delete_sweep),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Clear inputs',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
+                    bornCityController.clear();
+                    bornCountryController.clear();
+                    bornCityFocusNode.requestFocus();
+                  },
                 ),
               ],
             ),
@@ -635,57 +644,17 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          DataQuoteInputs.author.death.city = '';
-                          DataQuoteInputs.author.death.country = '';
-                          DataQuoteInputs.author.death.date = null;
+                actionsInput(
+                  clearInputText: 'Clear inputs',
+                  onClearInput: () {
+                    DataQuoteInputs.author.death.city = '';
+                    DataQuoteInputs.author.death.country = '';
+                    DataQuoteInputs.author.death.date = null;
 
-                          deathCityController.clear();
-                          deathCountryController.clear();
-                          deathCityFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.delete_sweep),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Clear inputs',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.8,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
+                    deathCityController.clear();
+                    deathCountryController.clear();
+                    deathCityFocusNode.requestFocus();
+                  },
                 ),
               ],
             ),
@@ -839,53 +808,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20.0,
-                  left: 40.0,
-                ),
-                child: Wrap(
-                  spacing: 20.0,
-                  runSpacing: 20.0,
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        DataQuoteInputs.author.job = '';
-                        jobController.clear();
-                        jobFocusNode.requestFocus();
-                      },
-                      icon: Opacity(
-                        opacity: 0.6,
-                        child: Icon(Icons.clear),
-                      ),
-                      label: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          'Clear input',
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        primary: stateColors.foreground,
-                      ),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Opacity(
-                        opacity: 0.6,
-                        child: Icon(Icons.check),
-                      ),
-                      label: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          'Save',
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        primary: stateColors.foreground,
-                      ),
-                    ),
-                  ],
-                ),
+              actionsInput(
+                onClearInput: () {
+                  DataQuoteInputs.author.job = '';
+                  jobController.clear();
+                  jobFocusNode.requestFocus();
+                },
               ),
             ]),
           ),
@@ -1237,7 +1165,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           padding: const EdgeInsets.only(left: 40.0),
                           child: LinearProgressIndicator(),
                         ),
-                      inputActions(),
+                      actionsInput(
+                        onClearInput: () {
+                          DataQuoteInputs.author.name = '';
+                          nameController.clear();
+                          nameFocusNode.requestFocus();
+                        },
+                      ),
                       suggestions(),
                     ],
                   );
@@ -1285,58 +1219,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ),
         );
       }).toList(),
-    );
-  }
-
-  Widget inputActions() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 20.0,
-        left: 40.0,
-        bottom: 40.0,
-      ),
-      child: Wrap(
-        spacing: 20.0,
-        runSpacing: 20.0,
-        children: [
-          OutlinedButton.icon(
-            onPressed: () {
-              DataQuoteInputs.author.name = '';
-              nameController.clear();
-              nameFocusNode.requestFocus();
-            },
-            icon: Opacity(
-              opacity: 0.6,
-              child: Icon(Icons.clear),
-            ),
-            label: Opacity(
-              opacity: 0.8,
-              child: Text(
-                'Clear input',
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: stateColors.foreground,
-            ),
-          ),
-          OutlinedButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Opacity(
-              opacity: 0.6,
-              child: Icon(Icons.check),
-            ),
-            label: Opacity(
-              opacity: 0.8,
-              child: Text(
-                'Save',
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: stateColors.foreground,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -1435,7 +1317,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             ),
                           ),
                           Text(
-                            "Write a short summary about this author. It can be the first Wikipedia paragraph.",
+                            "It can be the first Wikipedia paragraph.",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
@@ -1468,54 +1350,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 40.0,
-                  ),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          DataQuoteInputs.author.summary = '';
-                          summaryController.clear();
-                          summaryFocusNode.requestFocus();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Clear input',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                actionsInput(onClearInput: () {
+                  DataQuoteInputs.author.summary = '';
+                  summaryController.clear();
+                  summaryFocusNode.requestFocus();
+                })
               ],
             ),
           ),

@@ -29,6 +29,64 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
     );
   }
 
+  Widget actionsInput({
+    VoidCallback onClearInput,
+    String clearInputText = 'Clear input',
+  }) {
+    double left = 40.0;
+    double spacing = 20.0;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      spacing = 5.0;
+      left = 0.0;
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 20.0,
+        left: left,
+      ),
+      child: Wrap(
+        spacing: spacing,
+        runSpacing: spacing,
+        children: [
+          OutlinedButton.icon(
+            onPressed: onClearInput,
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.clear),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                clearInputText,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.check),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Save',
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: stateColors.foreground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget commentCardInput() {
     final comment = DataQuoteInputs.comment;
 
@@ -151,53 +209,12 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20.0,
-              left: 40.0,
-            ),
-            child: Wrap(
-              spacing: 20.0,
-              runSpacing: 20.0,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () {
-                    DataQuoteInputs.comment = '';
-                    commentController.clear();
-                    commentFocusNode.requestFocus();
-                  },
-                  icon: Opacity(
-                    opacity: 0.6,
-                    child: Icon(Icons.clear),
-                  ),
-                  label: Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      'Clear input',
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    primary: stateColors.foreground,
-                  ),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Opacity(
-                    opacity: 0.6,
-                    child: Icon(Icons.check),
-                  ),
-                  label: Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      'Save',
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    primary: stateColors.foreground,
-                  ),
-                ),
-              ],
-            ),
+          actionsInput(
+            onClearInput: () {
+              DataQuoteInputs.comment = '';
+              commentController.clear();
+              commentFocusNode.requestFocus();
+            },
           ),
         ],
       ),
