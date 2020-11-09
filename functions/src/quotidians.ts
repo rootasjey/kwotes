@@ -1,23 +1,25 @@
-import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-
 import { adminApp } from './adminApp';
 
+const env = functions.config();
 const firestore = adminApp.firestore();
-const fcm = adminApp.messaging();
 
-export const quotidiansMobileEN = functions
+export const notificationEN = functions
   .region('europe-west3')
   .pubsub
-  .schedule('every day 08:00')
+  .schedule('every day 00:01')
   .onRun(async (context) => {
     const date = new Date(context.timestamp);
+    const sendAfter = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+    date.setDate(date.getDate() + 1); // -> get next day
 
     const monthNumber = date.getMonth() + 1;
 
     const month = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
+    // Get next day quotidian.
     const dateId = `${date.getFullYear()}:${month}:${day}:en`;
 
     console.log(`quotidians EN - ${dateId}`);
@@ -29,37 +31,58 @@ export const quotidiansMobileEN = functions
 
     if (!quotidian.exists) { return; }
 
-    const data = quotidian.data();
-    if (!data) { return; }
+    const qData = quotidian.data();
+    if (!qData) { return; }
 
-    const quoteName = data['quote']['name'];
+    const quoteName = qData['quote']['name'];
+    const authorName = qData['quote']['author']['name'];
 
-    const payload: admin.messaging.MessagingPayload = {
+    let contents = quoteName;
+
+    if (authorName) {
+      contents += `― ${authorName}`;
+    }
+
+    sendNotification({
+      adm_group: 'quotidians', // Amazon notification grouping
+      android_group: 'quotidians', // Android notification grouping
+      app_id: env.onesignal.appid,
+      contents: { en: contents },
       data: {
-        path: `/quote/${data['quote']['id']}`,
+        quote: {
+          id: qData['quote']['id'],
+        },
       },
-      notification: {
-        title: 'Quotidian',
-        body: quoteName,
-        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
-      }
-    };
+      delayed_option: 'timezone',
+      delivery_time_of_day: '8:00AM',
+      send_after: sendAfter,
+      filters: [{ field: "tag", key: "quotidian", relation: "=", value: "en" }],
+      ios_attachments: { id1: '' },
+      big_picture: '',
+      ios_badgeType: "Increase",
+      ios_badgeCount: 1,
+      thread_id: 'quotidians', // iOS 12+ notification grouping
+    });
 
-    return await fcm.sendToTopic('quotidians-mobile-en', payload);
+    return true;
   });
 
-export const quotidiansMobileFR = functions
+export const notificationFR = functions
   .region('europe-west3')
   .pubsub
-  .schedule('every day 08:00')
+  .schedule('every day 00:01')
   .onRun(async (context) => {
     const date = new Date(context.timestamp);
+    const sendAfter = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+    date.setDate(date.getDate() + 1); // -> get next day
 
     const monthNumber = date.getMonth() + 1;
 
     const month = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
+    // Get next day quotidian.
     const dateId = `${date.getFullYear()}:${month}:${day}:fr`;
 
     console.log(`quotidians FR - ${dateId}`);
@@ -71,21 +94,74 @@ export const quotidiansMobileFR = functions
 
     if (!quotidian.exists) { return; }
 
-    const data = quotidian.data();
-    if (!data) { return; }
+    const qData = quotidian.data();
+    if (!qData) { return; }
 
-    const quoteName = data['quote']['name'];
+    const quoteName = qData['quote']['name'];
+    const authorName = qData['quote']['author']['name'];
 
-    const payload: admin.messaging.MessagingPayload = {
+    let contents = quoteName;
+
+    if (authorName) {
+      contents += `― ${authorName}`;
+    }
+
+    sendNotification({
+      adm_group: 'quotidians', // Amazon notification grouping
+      android_group: 'quotidians', // Android notification grouping
+      app_id: env.onesignal.appid,
+      contents: { en: contents, fr: contents },
       data: {
-        path: `/quote/${data['quote']['id']}`,
+        quote: {
+          id: qData['quote']['id'],
+        },
       },
-      notification: {
-        title: 'Quotidian',
-        body: quoteName,
-        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
-      },
-    };
+      delayed_option: 'timezone',
+      delivery_time_of_day: '8:00AM',
+      send_after: sendAfter,
+      filters: [{ field: "tag", key: "quotidian", relation: "=", value: "fr" }],
+      ios_attachments: { id1: '' },
+      big_picture: '',
+      ios_badgeType: "Increase",
+      ios_badgeCount: 1,
+      thread_id: 'quotidians', // iOS 12+ notification grouping
+    });
 
-    return await fcm.sendToTopic('quotidians-mobile-fr', payload);
+    return true;
   });
+
+// ------
+// Utils
+// ------
+function sendNotification(notificationData: any) {
+  const headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    Authorization: `Basic ${env.onesignal.apikey}`,
+  };
+
+  const options = {
+    host: "onesignal.com",
+    port: 443,
+    path: "/api/v1/notifications",
+    method: "POST",
+    headers: headers,
+  };
+
+  const https = require("https");
+  const req = https.request(options, (res: any) => {
+    // console.log("statusCode:", res.statusCode);
+    // console.log("headers:", res.headers);
+    res.on("data", (respData: any) => {
+      // console.log("Response:");
+      console.log(JSON.parse(respData));
+    });
+  });
+
+  req.on("error", (e: Error) => {
+    console.log("ERROR:");
+    console.log(e);
+  });
+
+  req.write(JSON.stringify(notificationData));
+  req.end();
+}
