@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
@@ -573,48 +573,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Name",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Suggestions will show when you'll start typing",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Name",
+                  subTitle: "Suggestions will show when you'll start typing",
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
                   return Column(
@@ -728,48 +689,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Primary type",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Main category",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Primary type",
+                  subTitle: "Main category",
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 60.0),
@@ -918,48 +840,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Secondary type",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Sub-category bringing more precision",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Secondary type",
+                  subTitle: "Sub-category bringing more precision",
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 60.0),
@@ -1095,48 +978,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Summary",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "It can be the first Wikipedia paragraph.",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Summary",
+                  subTitle: "It can be the first Wikipedia paragraph",
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 60.0),
@@ -1220,54 +1064,20 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             controller: scrollController,
             children: [
               Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: const EdgeInsets.only(
+                  left: 40.0,
+                  right: 40.0,
+                  top: 40.0,
+                  bottom: 20.0,
+                ),
                 child: SizedBox(
                   width: 250.0,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          CircleButton(
-                            onTap: () => Navigator.of(context).pop(),
-                            icon: Icon(
-                              Icons.close,
-                              size: 20.0,
-                              color: stateColors.primary,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Opacity(
-                                    opacity: 0.6,
-                                    child: Text(
-                                      "Reference illustration",
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "You can either provide an online link or upload a new picture.",
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      SheetHeader(
+                        title: "Reference illustration",
+                        subTitle: "Enter a http link",
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 40.0),
@@ -1291,22 +1101,40 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                child: Wrap(
+                  spacing: 10.0,
+                  alignment: WrapAlignment.end,
                   children: [
-                    TextButton(
-                      child: Text(
-                        'CANCEL',
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        primary: stateColors.foreground,
+                      ),
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(Icons.clear),
+                      ),
+                      label: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          'Cancel',
+                        ),
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    TextButton(
-                      child: Text(
-                        'SAVE',
-                        style: TextStyle(
-                          color: Colors.green,
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        primary: stateColors.foreground,
+                      ),
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(Icons.check),
+                      ),
+                      label: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          'Save',
                         ),
                       ),
                       onPressed: () {
@@ -1346,48 +1174,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 0.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Link",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Enter a http link",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: SheetHeader(
+                  title: "Link",
+                  subTitle: "Enter a http link",
                 ),
               ),
               SizedBox(

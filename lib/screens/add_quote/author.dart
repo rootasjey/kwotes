@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
@@ -343,48 +343,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Born",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "When and where this author was born?",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Born",
+                  subTitle: "When and where this author was born?",
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
                   var selectedDate = DataQuoteInputs.author.born.date;
@@ -539,48 +500,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Death",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "When and where this author died?",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Death",
+                  subTitle: "When and where this author died?",
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
                   final selectedDate = DataQuoteInputs.author.death.date;
@@ -763,48 +685,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             padding: const EdgeInsets.all(40.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CircleButton(
-                    onTap: () => Navigator.of(context).pop(),
-                    icon: Icon(
-                      Icons.close,
-                      size: 20.0,
-                      color: stateColors.primary,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              "Job",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          "Job or role in real life or in the artistic material",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              SheetHeader(
+                title: "Job",
+                subTitle:
+                    "Job or role in real life or in the artistic material",
               ),
               Padding(
                 padding: EdgeInsets.only(top: 60.0),
@@ -1112,48 +996,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Name",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Suggestions will show when you'll start typing",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Name",
+                  subTitle: "Suggestions will show when you'll start typing",
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
                   return Column(
@@ -1305,48 +1150,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Summary",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "It can be the first Wikipedia paragraph",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  title: "Summary",
+                  subTitle: "It can be the first Wikipedia paragraph",
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 60.0),
@@ -1472,55 +1278,20 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               controller: scrollController,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(40.0),
+                  padding: const EdgeInsets.only(
+                    left: 40.0,
+                    right: 40.0,
+                    top: 40.0,
+                    bottom: 20.0,
+                  ),
                   child: SizedBox(
                     width: 250.0,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CircleButton(
-                              onTap: () => Navigator.of(context).pop(),
-                              icon: Icon(
-                                Icons.close,
-                                size: 20.0,
-                                color: stateColors.primary,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Opacity(
-                                      opacity: 0.6,
-                                      child: Text(
-                                        "Author illustration",
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    "You can either provide an online link or upload a new picture.",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        SheetHeader(
+                          title: "Author illustration",
+                          subTitle: "Enter a http link",
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 40.0),
@@ -1544,22 +1315,40 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  child: Wrap(
+                    spacing: 10.0,
+                    alignment: WrapAlignment.end,
                     children: [
-                      TextButton(
-                        child: Text(
-                          'CANCEL',
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Cancel',
+                          ),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
-                      TextButton(
-                        child: Text(
-                          'SAVE',
-                          style: TextStyle(
-                            color: Colors.green,
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
+                        ),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Save',
                           ),
                         ),
                         onPressed: () {
@@ -1598,48 +1387,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        size: 20.0,
-                        color: stateColors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 0.0),
-                            child: Opacity(
-                              opacity: 0.6,
-                              child: Text(
-                                "Link",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Enter a http link",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: SheetHeader(
+                  title: "Link",
+                  subTitle: "Enter a http link",
                 ),
               ),
               SizedBox(

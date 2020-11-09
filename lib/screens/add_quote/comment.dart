@@ -1,5 +1,5 @@
+import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -143,48 +143,9 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              CircleButton(
-                onTap: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.close,
-                  size: 20.0,
-                  color: stateColors.primary,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          "Comment",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "Useful information or context",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          SheetHeader(
+            title: "Comment",
+            subTitle: "Useful information or context",
           ),
           Padding(
             padding: EdgeInsets.only(
