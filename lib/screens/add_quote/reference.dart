@@ -605,7 +605,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             ),
                           ),
                           Text(
-                            "Suggestions will show when you'll start typing.",
+                            "Suggestions will show when you'll start typing",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
@@ -760,7 +760,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             ),
                           ),
                           Text(
-                            "The primary type can be a Book, a Film, a Song for example.",
+                            "Main category",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
@@ -937,7 +937,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
+                            padding: const EdgeInsets.only(bottom: 5.0),
                             child: Opacity(
                               opacity: 0.6,
                               child: Text(
@@ -950,7 +950,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             ),
                           ),
                           Text(
-                            "The secondary type is the sub-category. Thriller, Drama, Fiction, Horror are example.",
+                            "Sub-category bringing more precision",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,

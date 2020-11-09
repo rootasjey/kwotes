@@ -175,7 +175,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
                       ),
                     ),
                     Text(
-                      "If you want to add an useful information or context about the quote.",
+                      "Useful information or context",
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -199,7 +199,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 icon: Icon(Icons.edit),
-                labelText: 'e.g. Another meaning for this quote is...',
+                labelText: 'e.g. This quote means...',
               ),
               style: TextStyle(
                 fontSize: 20.0,

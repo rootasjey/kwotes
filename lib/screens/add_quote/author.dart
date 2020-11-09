@@ -795,7 +795,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           ),
                         ),
                         Text(
-                          "This author job or role in real life or in the artistic material (film, book, ...).",
+                          "Job or role in real life or in the artistic material",
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
@@ -1144,7 +1144,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             ),
                           ),
                           Text(
-                            "Suggestions will show when you'll start typing.",
+                            "Suggestions will show when you'll start typing",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
@@ -1337,7 +1337,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             ),
                           ),
                           Text(
-                            "It can be the first Wikipedia paragraph.",
+                            "It can be the first Wikipedia paragraph",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,

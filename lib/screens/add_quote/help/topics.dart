@@ -18,7 +18,7 @@ class HelpTopics extends StatelessWidget {
                   text: 'Topics are used to categorize the quote.',
                 ),
                 TextBlock(
-                  text: 'You can select one or more topics.',
+                  text: 'You must select one or more topics.',
                 ),
               ],
             ),
