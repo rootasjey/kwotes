@@ -215,16 +215,27 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     final born = DataQuoteInputs.author.born;
     final death = DataQuoteInputs.author.death;
 
+    double spacing = 20.0;
+    double width = 150.0;
+
+    String tapToEditLocalStr = tapToEditStr;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      spacing = 0.0;
+      width = 120.0;
+      tapToEditLocalStr = 'Edit';
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Wrap(
-        spacing: 20.0,
-        runSpacing: 20.0,
+        spacing: spacing,
+        runSpacing: spacing,
         children: [
           SizedBox(
-            width: 150.0,
+            width: width,
             child: Card(
-              elevation: 0.0,
+              elevation: 1.0,
               child: InkWell(
                 onTap: prefilledInputs
                     ? showPrefilledAlert
@@ -257,7 +268,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           Text(
                             born != null && born.date != null
                                 ? born.date.toLocal().toString().split(' ')[0]
-                                : tapToEditStr,
+                                : tapToEditLocalStr,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -269,9 +281,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             ),
           ),
           SizedBox(
-            width: 150.0,
+            width: width,
             child: Card(
-              elevation: 0.0,
+              elevation: 1.0,
               child: InkWell(
                 onTap: prefilledInputs
                     ? showPrefilledAlert
@@ -303,7 +315,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           Text(
                             death != null && death.date != null
                                 ? death.date.toLocal().toString().split(' ')[0]
-                                : tapToEditStr,
+                                : tapToEditLocalStr,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
