@@ -110,6 +110,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget actionsInput({
     VoidCallback onClearInput,
+    VoidCallback onSaveInput,
     String clearInputText = 'Clear input',
   }) {
     double left = 40.0;
@@ -146,7 +147,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             ),
           ),
           OutlinedButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              if (onSaveInput != null) {
+                onSaveInput();
+              }
+
+              Navigator.of(context).pop();
+            },
             icon: Opacity(
               opacity: 0.6,
               child: Icon(Icons.check),
@@ -832,7 +839,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 1.0,
             name: 'Website',
-            active: DataQuoteInputs.author.urls.website.isNotEmpty,
+            active: DataQuoteInputs.author.urls.website?.isNotEmpty,
             imageUrl: 'assets/images/world-globe.png',
             onTap: () {
               showLinkInputSheet(
@@ -1006,7 +1013,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     Function onTap,
   }) {
     return FadeInX(
-      beginX: 50.0,
+      beginX: 10.0,
       delay: delay,
       child: Tooltip(
         message: name,
@@ -1014,7 +1021,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           elevation: active ? 4.0 : 0.0,
           shape: CircleBorder(),
           clipBehavior: Clip.hardEdge,
-          color: Colors.black12,
+          color: stateColors.softBackground,
           child: InkWell(
             onTap: prefilledInputs ? showPrefilledAlert : onTap,
             child: Padding(
@@ -1564,57 +1571,96 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     String initialValue = '',
     Function onSave,
   }) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        String inputUrl;
-        linkInputController.text = initialValue;
+    linkInputController.clear();
 
-        return Container(
-          height: 100,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: 250.0,
-                child: TextField(
-                  autofocus: true,
-                  controller: linkInputController,
-                  keyboardType: TextInputType.url,
-                  decoration: InputDecoration(
-                    labelText: labelText,
-                    icon: Icon(Icons.link),
-                  ),
-                  onChanged: (newValue) {
-                    inputUrl = newValue;
-                  },
-                ),
-              ),
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context, scrollController) {
+        if (linkInputController.text.isEmpty) {
+          linkInputController.text = initialValue;
+        }
+
+        return Scaffold(
+          body: Column(
+            children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 40.0,
-                  right: 10.0,
-                ),
-                child: RaisedButton(
-                  onPressed: onSave != null
-                      ? () {
-                          Navigator.pop(context);
-                          onSave(inputUrl);
-                        }
-                      : null,
-                  color: stateColors.primary,
-                  child: Text(
-                    'Save',
-                    style: TextStyle(
-                      color: Colors.white,
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: stateColors.primary,
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 0.0),
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                "Link",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Enter a http link",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Cancel'),
-              )
+              SizedBox(
+                height: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 300.0,
+                      child: TextField(
+                        autofocus: true,
+                        controller: linkInputController,
+                        keyboardType: TextInputType.url,
+                        decoration: InputDecoration(
+                          labelText: labelText,
+                          icon: Icon(Icons.link),
+                        ),
+                        onChanged: (newValue) {
+                          initialValue = newValue;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actionsInput(
+                onClearInput: () {
+                  linkInputController.clear();
+                  initialValue = '';
+                },
+                onSaveInput: () {
+                  onSave(initialValue);
+                },
+              ),
             ],
           ),
         );
