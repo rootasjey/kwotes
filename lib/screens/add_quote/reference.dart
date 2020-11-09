@@ -288,11 +288,17 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget links() {
+    double spacing = 20.0;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      spacing = 5.0;
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 80.0),
       child: Wrap(
-        spacing: 20.0,
-        runSpacing: 20.0,
+        spacing: spacing,
+        runSpacing: spacing,
         children: <Widget>[
           linkSquareButton(
             delay: 1.0,
