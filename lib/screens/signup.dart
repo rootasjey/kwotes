@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
@@ -612,6 +613,8 @@ class _SignupState extends State<Signup> {
 
       isSigningUp = false;
       isCompleted = true;
+
+      PushNotifications.linkAuthUser(user.uid);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
     } catch (error) {

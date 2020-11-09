@@ -1,4 +1,5 @@
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
@@ -390,6 +391,8 @@ class _SigninState extends State<Signin> {
       isCompleted = true;
 
       await userGetAndSetAvatarUrl(authResult);
+
+      PushNotifications.linkAuthUser(authResult.user.uid);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
     } catch (error) {

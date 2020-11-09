@@ -105,6 +105,7 @@ class AppState extends State<App> {
 
       appLocalStorage.setUserName(authResult.user.displayName);
       await userGetAndSetAvatarUrl(authResult);
+      PushNotifications.linkAuthUser(authResult.user.uid);
 
       userState.setUserConnected();
       userState.setUserName(authResult.user.displayName);

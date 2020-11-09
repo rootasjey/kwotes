@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -64,6 +65,8 @@ void userSignOut({
   await FirebaseAuth.instance.signOut();
   userState.setUserDisconnected();
   userState.signOut();
+
+  PushNotifications.unlinkAuthUser();
 
   if (autoNavigateAfter) {
     Navigator.of(context).push(

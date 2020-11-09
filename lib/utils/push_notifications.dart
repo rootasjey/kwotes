@@ -60,6 +60,10 @@ class PushNotifications {
     }
   }
 
+  static Future linkAuthUser(String id) async {
+    await OneSignal.shared.setExternalUserId(id);
+  }
+
   static Future onQuoteTap(
       {@required BuildContext context, @required String quoteId}) {
     if (MediaQuery.of(context).size.width > 600.0) {
@@ -101,6 +105,10 @@ class PushNotifications {
         scrollController: scrollController,
       ),
     );
+  }
+
+  static Future unlinkAuthUser() async {
+    await OneSignal.shared.removeExternalUserId();
   }
 
   static void updateLangNotification(String lang) {
