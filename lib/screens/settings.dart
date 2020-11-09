@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/push_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -247,44 +248,57 @@ class _SettingsState extends State<Settings> {
       width: 400.0,
       child: Column(
         children: <Widget>[
-          FadeInY(
-            delay: 5.0,
-            beginY: 50.0,
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
-                  child: Text(
-                    'Notifications',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
+                child: Text(
+                  'Notifications',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Observer(
             builder: (context) {
-              return FadeInY(
-                delay: 6.0,
-                beginY: 50.0,
-                child: SwitchListTile(
-                  onChanged: (bool value) {
-                    userState.setQuotidianNotifState(value);
+              return Column(
+                children: [
+                  SwitchListTile(
+                    onChanged: (bool value) {
+                      userState.setQuotidianNotifState(value);
 
-                    timer?.cancel();
-                    timer = Timer(Duration(seconds: 1),
-                        () => toggleBackgroundTask(value));
-                  },
-                  value: userState.isQuotidianNotifActive,
-                  title: Text('Daily quote'),
-                  secondary: userState.isQuotidianNotifActive
-                      ? Icon(Icons.notifications_active)
-                      : Icon(Icons.notifications_off),
-                ),
+                      timer?.cancel();
+                      timer = Timer(Duration(seconds: 1),
+                          () => toggleQuotidianNotifications(value));
+                    },
+                    value: userState.isQuotidianNotifActive,
+                    title: Text('Daily quote'),
+                    secondary: userState.isQuotidianNotifActive
+                        ? Icon(Icons.notifications_active)
+                        : Icon(Icons.notifications_off),
+                  ),
+                  if (userState.isQuotidianNotifActive)
+                    DropdownButton<String>(
+                      elevation: 2,
+                      isDense: true,
+                      value: userState.lang,
+                      underline: Container(),
+                      icon: Container(),
+                      items: Language.available().map((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            Language.frontend(value),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {},
+                    ),
+                ],
               );
             },
           ),
@@ -957,23 +971,13 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void toggleBackgroundTask(bool isActive) async {
-    // final lang = appLocalStorage.getLang();
+  void toggleQuotidianNotifications(bool isActive) async {
+    if (isActive) {
+      PushNotifications.activate();
+      return;
+    }
 
-    // final success = isActive
-    //     ? await PushNotifications.subMobileQuotidians(lang: lang)
-    //     : await PushNotifications.unsubMobileQuotidians(lang: lang);
-
-    // if (!success) {
-    //   userState.setQuotidianNotifState(!userState.isQuotidianNotifActive);
-
-    //   showSnack(
-    //     context: context,
-    //     message:
-    //         'Sorry, there was an issue while updating your preferences. Try again in a moment.',
-    //     type: SnackType.error,
-    //   );
-    // }
+    PushNotifications.deactivate();
   }
 
   Future checkAuth() async {

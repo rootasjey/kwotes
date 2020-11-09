@@ -22,7 +22,6 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await PushNotifications.init();
 
   return runApp(App());
 }
@@ -39,6 +38,8 @@ class AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+
+    PushNotifications.init(context);
 
     appLocalStorage.initialize().then((value) {
       final savedLang = appLocalStorage.getLang();
