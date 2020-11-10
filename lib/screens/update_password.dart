@@ -1,3 +1,4 @@
+import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   bool isCompleted = false;
   bool isUpdating = false;
 
-  double beginY = 30.0;
+  double beginY = 10.0;
 
   final newPasswordNode = FocusNode();
 
@@ -126,7 +127,10 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       child: Card(
         child: ListTile(
           contentPadding: const EdgeInsets.all(16.0),
-          leading: Icon(Icons.help_outline),
+          leading: Icon(
+            Icons.help_outline,
+            color: stateColors.secondary,
+          ),
           title: Opacity(
             opacity: .6,
             child: Text(
@@ -276,7 +280,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            CircularProgressIndicator(),
+            AnimatedAppIcon(),
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
               child: Text(
