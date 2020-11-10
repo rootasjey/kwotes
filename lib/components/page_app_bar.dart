@@ -50,7 +50,7 @@ class PageAppBar extends StatefulWidget {
     this.onItemsLayoutSelected,
     this.onLangChanged,
     this.onTitlePressed,
-    this.showNavBackIcon = true,
+    this.showNavBackIcon = false,
     this.textTitle,
     this.textSubTitle,
     this.title,
