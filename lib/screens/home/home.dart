@@ -14,7 +14,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 600.0) {
+        if (constraints.maxWidth < 700.0) {
           return HomeMobile();
         }
 
