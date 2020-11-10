@@ -60,6 +60,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.w300,
+                          color: stateColors.foreground,
                         ),
                       ),
                       Opacity(
@@ -69,6 +70,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.w400,
+                            color: stateColors.foreground,
                           ),
                         ),
                       ),
@@ -278,7 +280,7 @@ class DeleteAccountState extends State<DeleteAccount> {
         primary: Colors.red,
       ),
       child: SizedBox(
-        width: 240.0,
+        width: 260.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -303,8 +305,6 @@ class DeleteAccountState extends State<DeleteAccount> {
       width: 500.0,
       padding: EdgeInsets.only(
         top: 60.0,
-        left: 25.0,
-        right: 25.0,
         bottom: 40.0,
       ),
       child: Card(
