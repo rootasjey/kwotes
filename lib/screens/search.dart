@@ -440,40 +440,54 @@ class _SearchState extends State<Search> {
   Widget searchActions() {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0),
-      child: Wrap(spacing: 20.0, runSpacing: 20.0, children: [
-        OutlinedButton.icon(
-          onPressed: () {
-            _searchInputValue = '';
-            searchInputController.clear();
-            searchFocusNode.requestFocus();
+      child: Wrap(
+        spacing: 10.0,
+        runSpacing: 0.0,
+        children: [
+          OutlinedButton.icon(
+            onPressed: () {
+              _searchInputValue = '';
+              searchInputController.clear();
+              searchFocusNode.requestFocus();
 
-            setState(() {});
-          },
-          icon: Opacity(opacity: 0.6, child: Icon(Icons.delete_sweep)),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Clear input',
+              setState(() {});
+            },
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.delete_sweep),
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Clear input',
+              ),
             ),
           ),
-        ),
-        OutlinedButton.icon(
-          onPressed: () {
-            launch('https://www.algolia.com/');
-          },
-          icon: Image.network(
-            'https://res.cloudinary.com/hilnmyskv/image/upload/q_auto/v1604064568/Algolia_com_Website_assets/images/shared/algolia_logo/algolia-blue-mark.png',
-            width: 20.0,
-            height: 20.0,
-          ),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Search by Algolia',
+          OutlinedButton.icon(
+              onPressed: () => FocusScope.of(context).unfocus(),
+              label: Text(''),
+              icon: Opacity(
+                opacity: 0.6,
+                child: Icon(Icons.keyboard_hide),
+              )),
+          OutlinedButton.icon(
+            onPressed: () {
+              launch('https://www.algolia.com/');
+            },
+            icon: Image.network(
+              'https://res.cloudinary.com/hilnmyskv/image/upload/q_auto/v1604064568/Algolia_com_Website_assets/images/shared/algolia_logo/algolia-blue-mark.png',
+              width: 20.0,
+              height: 20.0,
+            ),
+            label: Opacity(
+              opacity: 0.6,
+              child: Text(
+                'Search by Algolia',
+              ),
             ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
