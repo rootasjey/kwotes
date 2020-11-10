@@ -60,6 +60,11 @@ class PushNotifications {
     }
   }
 
+  static Future<bool> isActive() async {
+    final state = await OneSignal.shared.getPermissionSubscriptionState();
+    return state.subscriptionStatus.subscribed;
+  }
+
   static Future linkAuthUser(String id) async {
     await OneSignal.shared.setExternalUserId(id);
   }
