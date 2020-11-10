@@ -375,7 +375,7 @@ class _SettingsState extends State<Settings> {
               },
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: Icon(Icons.person_remove_alt_1),
+                child: Icon(Icons.delete_forever),
               ),
             ),
           ),

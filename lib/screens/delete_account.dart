@@ -319,8 +319,12 @@ class DeleteAccountState extends State<DeleteAccount> {
           ),
           title: Row(
             children: <Widget>[
-              Icon(
-                Icons.warning,
+              Opacity(
+                opacity: 0.6,
+                child: Icon(
+                  Icons.warning,
+                  color: stateColors.secondary,
+                ),
               ),
               Padding(padding: const EdgeInsets.only(left: 30.0)),
               Expanded(
