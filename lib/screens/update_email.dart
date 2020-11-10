@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
   bool isUpdating = false;
   bool isCompleted = false;
 
-  final beginY = 30.0;
+  final beginY = 10.0;
   final passwordNode = FocusNode();
 
   String currentEmail = '';
@@ -109,14 +110,15 @@ class _UpdateEmailState extends State<UpdateEmail> {
   Widget completedView() {
     return SliverList(
       delegate: SliverChildListDelegate([
-        SizedBox(
+        Container(
           width: 400.0,
+          padding: const EdgeInsets.all(40.0),
           child: Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Icon(
-                  Icons.check_circle,
+                  Icons.check_circle_outline_outlined,
                   size: 80.0,
                   color: Colors.green,
                 ),
@@ -124,7 +126,8 @@ class _UpdateEmailState extends State<UpdateEmail> {
               Padding(
                 padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
                 child: Text(
-                  'Your email has been successfuly updated.',
+                  'Your email has been successfuly updated',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -140,49 +143,13 @@ class _UpdateEmailState extends State<UpdateEmail> {
   Widget currentEmailCard() {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 60.0,
         bottom: 40.0,
       ),
       child: Card(
         elevation: 2.0,
         child: InkWell(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return SimpleDialog(
-                    title: Text(
-                      'This is your current email',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    ),
-                    children: <Widget>[
-                      Divider(
-                        color: stateColors.secondary,
-                        thickness: 1.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 25.0,
-                          right: 25.0,
-                        ),
-                        child: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            currentEmail,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          },
           child: Container(
-            width: 250.0,
+            width: 300.0,
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: <Widget>[
@@ -190,10 +157,15 @@ class _UpdateEmailState extends State<UpdateEmail> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(right: 10.0),
-                      child: Icon(Icons.alternate_email),
+                      child: Opacity(
+                          opacity: 0.6,
+                          child: Icon(
+                            Icons.alternate_email,
+                            color: stateColors.secondary,
+                          )),
                     ),
                     Opacity(
-                      opacity: .7,
+                      opacity: 0.6,
                       child: Text(
                         'Current email',
                       ),
@@ -216,14 +188,49 @@ class _UpdateEmailState extends State<UpdateEmail> {
               ],
             ),
           ),
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: Text(
+                      'This is your current email',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                      ),
+                    ),
+                    children: <Widget>[
+                      Divider(
+                        color: stateColors.secondary,
+                        thickness: 1.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25.0,
+                        ),
+                        child: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            currentEmail,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                });
+          },
         ),
       ),
     );
   }
 
   Widget emailInput() {
-    return SizedBox(
+    return Container(
       width: 350.0,
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -318,6 +325,8 @@ class _UpdateEmailState extends State<UpdateEmail> {
       padding: EdgeInsets.only(
         top: 20.0,
         bottom: 60.0,
+        left: 30.0,
+        right: 30.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,7 +361,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
           width: 400.0,
           child: Column(
             children: <Widget>[
-              CircularProgressIndicator(),
+              AnimatedAppIcon(),
               Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: Text(
@@ -370,12 +379,13 @@ class _UpdateEmailState extends State<UpdateEmail> {
   }
 
   Widget validationButton() {
-    return OutlinedButton(
+    return OutlinedButton.icon(
       onPressed: () => updateEmail(),
       style: OutlinedButton.styleFrom(
         primary: stateColors.primary,
       ),
-      child: SizedBox(
+      icon: Icon(Icons.check),
+      label: SizedBox(
         width: 240.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

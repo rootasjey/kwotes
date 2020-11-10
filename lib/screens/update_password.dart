@@ -44,7 +44,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
 
   Widget body() {
     if (isCompleted) {
-      return completedScreen();
+      return completedView();
     }
 
     if (isUpdating) {
@@ -54,7 +54,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     return idleView();
   }
 
-  Widget completedScreen() {
+  Widget completedView() {
     return SliverList(
       delegate: SliverChildListDelegate([
         Padding(
@@ -64,7 +64,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               Padding(
                 padding: const EdgeInsets.only(top: 80.0),
                 child: Icon(
-                  Icons.check_circle_outline,
+                  Icons.check_circle_outline_outlined,
                   size: 80.0,
                 ),
               ),

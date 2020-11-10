@@ -112,7 +112,7 @@ class DeleteAccountState extends State<DeleteAccount> {
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
               child: Icon(
-                Icons.check_circle_outline,
+                Icons.check_circle_outline_outlined,
                 color: Colors.green.shade300,
                 size: 80.0,
               ),
