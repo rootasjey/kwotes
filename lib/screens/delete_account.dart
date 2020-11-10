@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +25,7 @@ class DeleteAccountState extends State<DeleteAccount> {
   bool isDeleting = false;
   bool isCompleted = false;
 
-  double beginY = 30.0;
+  double beginY = 10.0;
 
   String password = '';
 
@@ -39,48 +40,51 @@ class DeleteAccountState extends State<DeleteAccount> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          BasePageAppBar(
-            expandedHeight: 90.0,
-            title: Row(
+          appBar(),
+          body(),
+        ],
+      ),
+    );
+  }
+
+  Widget appBar() {
+    return BasePageAppBar(
+      expandedHeight: 90.0,
+      title: Row(
+        children: [
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          AppIcon(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            size: 30.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleButton(
-                    onTap: () => Navigator.of(context).pop(),
-                    icon:
-                        Icon(Icons.arrow_back, color: stateColors.foreground)),
-                AppIcon(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  size: 30.0,
+                Text(
+                  'Delete accouunt',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
+                    color: stateColors.foreground,
+                  ),
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Delete accouunt',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w300,
-                          color: stateColors.foreground,
-                        ),
-                      ),
-                      Opacity(
-                        opacity: .6,
-                        child: Text(
-                          'Well, this marks the end of the adventure',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w400,
-                            color: stateColors.foreground,
-                          ),
-                        ),
-                      ),
-                    ],
+                Opacity(
+                  opacity: .6,
+                  child: Text(
+                    'Well, this marks the end of the adventure',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
+                      color: stateColors.foreground,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          body(),
         ],
       ),
     );
@@ -170,7 +174,7 @@ class DeleteAccountState extends State<DeleteAccount> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              CircularProgressIndicator(),
+              AnimatedAppIcon(),
               Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: Text(
