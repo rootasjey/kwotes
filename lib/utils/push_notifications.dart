@@ -69,8 +69,10 @@ class PushNotifications {
     await OneSignal.shared.setExternalUserId(id);
   }
 
-  static Future onQuoteTap(
-      {@required BuildContext context, @required String quoteId}) {
+  static Future onQuoteTap({
+    @required BuildContext context,
+    @required String quoteId,
+  }) {
     if (MediaQuery.of(context).size.width > 600.0) {
       return showFlash(
         context: context,
