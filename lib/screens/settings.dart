@@ -46,6 +46,7 @@ class _SettingsState extends State<Settings> {
   String imageUrl = '';
   String nameErrorMessage = '';
   String newUserName = '';
+  String notifLang = 'en';
   String selectedLang = 'English';
 
   Timer nameTimer;
@@ -108,39 +109,39 @@ class _SettingsState extends State<Settings> {
               ),
               Column(
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      FadeInY(
-                        delay: 0.2,
-                        beginY: 50.0,
-                        child: updateNameButton(isUserConnected),
-                      ),
-                      Padding(padding: const EdgeInsets.only(top: 20.0)),
-                      FadeInY(
-                        delay: 0.3,
-                        beginY: 50.0,
-                        child: emailButton(),
-                      ),
-                      FadeInY(
-                        delay: 0.4,
-                        beginY: 50.0,
-                        child: langSelect(),
-                      ),
-                    ],
+                  FadeInY(
+                    delay: 0.2,
+                    beginY: 50.0,
+                    child: updateNameButton(isUserConnected),
                   ),
+                  Padding(padding: const EdgeInsets.only(top: 20.0)),
+                  FadeInY(
+                    delay: 0.3,
+                    beginY: 50.0,
+                    child: emailButton(),
+                  ),
+                  // FadeInY(
+                  //   delay: 0.4,
+                  //   beginY: 50.0,
+                  //   child: langSelect(),
+                  // ),
                 ],
               ),
             ],
           );
         }
 
-        return FadeInY(
-          delay: 1.0,
-          beginY: beginY,
-          child: Center(
-            child: langSelect(isAlone: true),
-          ),
+        return Column(
+          children: [
+            // SizedBox(
+            //   width: 450.0,
+            //   child: FadeInY(
+            //     delay: 1.0,
+            //     beginY: beginY,
+            //     child: langSelect(),
+            //   ),
+            // ),
+          ],
         );
       },
     );
@@ -178,7 +179,7 @@ class _SettingsState extends State<Settings> {
             ),
             child: themeSwitcher(),
           ),
-          backgroundTasks(),
+          notificationSection(),
           Padding(
               padding: const EdgeInsets.only(
             bottom: 100.0,
@@ -243,7 +244,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget backgroundTasks() {
+  Widget notificationSection() {
     return SizedBox(
       width: 400.0,
       child: Column(
@@ -277,26 +278,42 @@ class _SettingsState extends State<Settings> {
                     },
                     value: userState.isQuotidianNotifActive,
                     title: Text('Daily quote'),
+                    subtitle: Text(
+                        "If this is active, you will receive a quote at 8:00am everyday"),
                     secondary: userState.isQuotidianNotifActive
                         ? Icon(Icons.notifications_active)
                         : Icon(Icons.notifications_off),
                   ),
                   if (userState.isQuotidianNotifActive)
-                    DropdownButton<String>(
-                      elevation: 2,
-                      isDense: true,
-                      value: userState.lang,
-                      underline: Container(),
-                      icon: Container(),
-                      items: Language.available().map((String value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            Language.frontend(value),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {},
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: ListTile(
+                        leading: Icon(Icons.language),
+                        title: DropdownButton<String>(
+                          elevation: 2,
+                          isDense: true,
+                          value: notifLang,
+                          underline: Container(),
+                          icon: Container(),
+                          items: Language.available().map((String value) {
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Text(
+                                Language.frontend(value),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              notifLang = newValue;
+                            });
+
+                            PushNotifications.updateLangNotification(newValue);
+                          },
+                        ),
+                        subtitle: Text(
+                            "Your daily quote will be in the selected language"),
+                      ),
                     ),
                 ],
               );
@@ -687,78 +704,40 @@ class _SettingsState extends State<Settings> {
         });
   }
 
-  Widget langSelect({bool isAlone = false}) {
-    final child = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Icon(Icons.language),
-            ),
-            Opacity(
-              opacity: .7,
-              child: Text(
-                'Language',
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 35.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButton<String>(
-                elevation: 3,
-                value: selectedLang,
-                isDense: true,
-                style: TextStyle(
-                  color: stateColors.foreground,
-                  fontFamily: GoogleFonts.raleway().fontFamily,
-                  fontWeight: FontWeight.bold,
-                ),
-                onChanged: (String newValue) {
-                  setState(() {
-                    selectedLang = newValue;
-                  });
-
-                  updateLang();
-                },
-                items: ['English', 'Français'].map((String value) {
-                  return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        value,
-                      ));
-                }).toList(),
-              ),
-            ],
+  Widget langSelect() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: ListTile(
+        leading: Icon(Icons.language),
+        subtitle: Text("This will select the app's language"),
+        title: DropdownButton<String>(
+          elevation: 3,
+          value: selectedLang,
+          isDense: true,
+          icon: Container(),
+          underline: Container(),
+          style: TextStyle(
+            color: stateColors.foreground,
+            fontFamily: GoogleFonts.raleway().fontFamily,
+            fontWeight: FontWeight.bold,
           ),
-        ),
-      ],
-    );
+          onChanged: (String newValue) {
+            setState(() {
+              selectedLang = newValue;
+            });
 
-    return isAlone
-        ? Padding(
-            padding: const EdgeInsets.only(
-              left: 60.0,
-            ),
-            child: Row(
-              children: [
-                child,
-              ],
-            ),
-          )
-        : SizedBox(
-            width: 250.0,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: child,
-            ),
-          );
+            updateLang();
+          },
+          items: ['English', 'Français'].map((String value) {
+            return DropdownMenuItem(
+                value: value,
+                child: Text(
+                  value,
+                ));
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   Widget themeSwitcher() {
@@ -769,7 +748,7 @@ class _SettingsState extends State<Settings> {
         children: <Widget>[
           FadeInY(
             delay: 2.0,
-            beginY: 50.0,
+            beginY: 10.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
@@ -787,7 +766,7 @@ class _SettingsState extends State<Settings> {
           ),
           FadeInY(
             delay: 3.0,
-            beginY: 50.0,
+            beginY: 10.0,
             child: Padding(
               padding: const EdgeInsets.only(
                 left: 15.0,
@@ -808,7 +787,7 @@ class _SettingsState extends State<Settings> {
           ),
           FadeInY(
             delay: 4.0,
-            beginY: 50.0,
+            beginY: 10.0,
             child: SwitchListTile(
               title: Text('Automatic theme'),
               secondary: const Icon(Icons.autorenew),
@@ -834,8 +813,8 @@ class _SettingsState extends State<Settings> {
           ),
           if (!isThemeAuto)
             FadeInY(
-              delay: 5.0,
-              beginY: 50.0,
+              delay: 0,
+              beginY: 10.0,
               child: SwitchListTile(
                 title: Text('Lights'),
                 secondary: const Icon(Icons.lightbulb_outline),
