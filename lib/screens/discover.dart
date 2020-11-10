@@ -279,6 +279,12 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget gridViewAuthors() {
+    double childAspectRatio = 0.47;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      childAspectRatio = 0.67;
+    }
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -286,7 +292,7 @@ class _DiscoverState extends State<Discover> {
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200.0,
-          childAspectRatio: 0.47,
+          childAspectRatio: childAspectRatio,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,
         ),
@@ -303,6 +309,12 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget gridViewReferences() {
+    double childAspectRatio = 0.47;
+
+    if (MediaQuery.of(context).size.width < 600.0) {
+      childAspectRatio = 0.57;
+    }
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -310,7 +322,7 @@ class _DiscoverState extends State<Discover> {
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200.0,
-          childAspectRatio: 0.47,
+          childAspectRatio: childAspectRatio,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,
         ),
