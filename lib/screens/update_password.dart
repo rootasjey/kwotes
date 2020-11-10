@@ -85,7 +85,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   }
 
   Widget currentPasswordInput() {
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       width: 400.0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +118,6 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   Widget helpCard() {
     return Container(
       padding: EdgeInsets.only(
-        top: 60.0,
         left: 25.0,
         right: 25.0,
         bottom: 40.0,
@@ -127,6 +127,22 @@ class _UpdatePasswordState extends State<UpdatePassword> {
         child: ListTile(
           contentPadding: const EdgeInsets.all(16.0),
           leading: Icon(Icons.help_outline),
+          title: Opacity(
+            opacity: .6,
+            child: Text(
+              'Choosing a good password',
+            ),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              "Resist against brute-force attacks",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14.0,
+              ),
+            ),
+          ),
           onTap: () {
             showDialog(
                 context: context,
@@ -170,22 +186,6 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   );
                 });
           },
-          title: Opacity(
-            opacity: .6,
-            child: Text(
-              'Choosing a good password',
-            ),
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              "Resist against over brute-force attacks",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -231,6 +231,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       padding: const EdgeInsets.only(
         top: 20.0,
         bottom: 60.0,
+        left: 40.0,
+        right: 40.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,14 +293,13 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   }
 
   Widget validationButton() {
-    return OutlinedButton(
-      onPressed: () {
-        updatePassword();
-      },
+    return OutlinedButton.icon(
+      onPressed: updatePassword,
       style: OutlinedButton.styleFrom(
         primary: stateColors.primary,
       ),
-      child: SizedBox(
+      icon: Icon(Icons.check),
+      label: SizedBox(
         width: 240.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
