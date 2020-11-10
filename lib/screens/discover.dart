@@ -312,7 +312,7 @@ class _DiscoverState extends State<Discover> {
     double childAspectRatio = 0.47;
 
     if (MediaQuery.of(context).size.width < 600.0) {
-      childAspectRatio = 0.57;
+      childAspectRatio = 0.54;
     }
 
     return SliverPadding(
