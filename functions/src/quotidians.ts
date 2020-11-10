@@ -10,12 +10,16 @@ export const notificationEN = functions
   .schedule('every day 00:01')
   .onRun(async (context) => {
     const date = new Date(context.timestamp);
-    const sendAfter = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-
     date.setDate(date.getDate() + 1); // -> get next day
 
-    const monthNumber = date.getMonth() + 1;
+    const afterDate = new Date(context.timestamp);
+    afterDate.setDate(afterDate.getDate() + 1);
+    afterDate.setHours(0, 0, 0, 0);
+    afterDate.setSeconds(-1);
 
+    const sendAfter = afterDate.toUTCString();
+
+    const monthNumber = date.getMonth() + 1;
     const month = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
@@ -73,12 +77,16 @@ export const notificationFR = functions
   .schedule('every day 00:01')
   .onRun(async (context) => {
     const date = new Date(context.timestamp);
-    const sendAfter = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-
     date.setDate(date.getDate() + 1); // -> get next day
 
-    const monthNumber = date.getMonth() + 1;
+    const afterDate = new Date(context.timestamp);
+    afterDate.setDate(afterDate.getDate() + 1);
+    afterDate.setHours(0, 0, 0, 0);
+    afterDate.setSeconds(-1);
 
+    const sendAfter = afterDate.toUTCString();
+
+    const monthNumber = date.getMonth() + 1;
     const month = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
