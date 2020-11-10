@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:flutter/material.dart';
@@ -77,14 +78,27 @@ class _SettingsState extends State<Settings> {
             child: CustomScrollView(
               controller: _scrollController,
               slivers: <Widget>[
-                DesktopAppBar(
-                  title: "Settings",
-                  automaticallyImplyLeading: true,
-                ),
+                appBar(),
                 body(),
               ],
             ),
           )),
+    );
+  }
+
+  Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+
+    if (width < 700.0) {
+      return PageAppBar(
+        textTitle: "Settings",
+        showNavBackIcon: true,
+      );
+    }
+
+    return DesktopAppBar(
+      title: "Settings",
+      automaticallyImplyLeading: true,
     );
   }
 
