@@ -562,13 +562,6 @@ class _QuotePageState extends State<QuotePage> {
       );
     }
 
-    showCupertinoModalBottomSheet(
-        context: context,
-        builder: (_, scrollController) => AuthorPage(
-              id: id,
-              scrollController: scrollController,
-            ));
-
     return showCupertinoModalBottomSheet(
         context: context,
         builder: (_, scrollController) => ReferencePage(
