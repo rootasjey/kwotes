@@ -11,7 +11,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/auth.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
@@ -48,9 +48,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   }
 
   void initProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -107,7 +107,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           descending = newDescending;
           fetch();
 
-          appLocalStorage.setPageOrder(
+          appStorage.setPageOrder(
             descending: newDescending,
             pageRoute: pageRoute,
           );
@@ -116,7 +116,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         onLangChanged: (String newLang) {
           lang = newLang;
 
-          appLocalStorage.setPageLang(
+          appStorage.setPageLang(
             pageRoute: pageRoute,
             lang: lang,
           );
@@ -133,7 +133,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             itemsLayout = selectedLayout;
           });
 
-          appLocalStorage.saveItemsStyle(
+          appStorage.saveItemsStyle(
             pageRoute: pageRoute,
             style: selectedLayout,
           );

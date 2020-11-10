@@ -13,7 +13,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quotidian.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/auth.dart';
 import 'package:figstyle/utils/converter.dart';
 import 'package:sticky_headers/sticky_headers.dart';
@@ -50,9 +50,9 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   void initProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -110,7 +110,7 @@ class QuotidiansState extends State<Quotidians> {
           descending = newDescending;
           fetch();
 
-          appLocalStorage.setPageOrder(
+          appStorage.setPageOrder(
             descending: newDescending,
             pageRoute: pageRoute,
           );
@@ -130,7 +130,7 @@ class QuotidiansState extends State<Quotidians> {
             itemsLayout = selectedLayout;
           });
 
-          appLocalStorage.saveItemsStyle(
+          appStorage.saveItemsStyle(
             pageRoute: pageRoute,
             style: selectedLayout,
           );

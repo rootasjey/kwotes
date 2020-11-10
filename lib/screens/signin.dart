@@ -12,7 +12,7 @@ import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class Signin extends StatefulWidget {
@@ -380,7 +380,7 @@ class _SigninState extends State<Signin> {
         return;
       }
 
-      appLocalStorage.setCredentials(
+      appStorage.setCredentials(
         email: email,
         password: password,
       );

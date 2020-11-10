@@ -12,7 +12,7 @@ import 'package:figstyle/main_app.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 
 void main() async {
   LicenseRegistry.addLicense(() async* {
@@ -41,8 +41,8 @@ class AppState extends State<App> {
 
     PushNotifications.init(context);
 
-    appLocalStorage.initialize().then((value) {
-      final savedLang = appLocalStorage.getLang();
+    appStorage.initialize().then((value) {
+      final savedLang = appStorage.getLang();
       userState.setLang(savedLang);
 
       autoLogin();
@@ -82,7 +82,7 @@ class AppState extends State<App> {
 
   void autoLogin() async {
     try {
-      final credentials = appLocalStorage.getCredentials();
+      final credentials = appStorage.getCredentials();
 
       if (credentials == null) {
         return;
@@ -103,7 +103,7 @@ class AppState extends State<App> {
         return;
       }
 
-      appLocalStorage.setUserName(authResult.user.displayName);
+      appStorage.setUserName(authResult.user.displayName);
       await userGetAndSetAvatarUrl(authResult);
       PushNotifications.linkAuthUser(authResult.user.uid);
 

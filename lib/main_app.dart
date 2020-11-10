@@ -1,6 +1,6 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
@@ -45,10 +45,10 @@ class MainAppState extends State<MainApp> {
   }
 
   void loadBrightness() {
-    final autoBrightness = appLocalStorage.getAutoBrightness();
+    final autoBrightness = appStorage.getAutoBrightness();
 
     if (!autoBrightness) {
-      final brightness = appLocalStorage.getBrightness();
+      final brightness = appStorage.getBrightness();
 
       setBrightness(
         brightness: brightness,

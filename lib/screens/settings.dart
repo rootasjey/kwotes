@@ -18,7 +18,7 @@ import 'package:figstyle/screens/update_email.dart';
 import 'package:figstyle/screens/update_password.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
@@ -35,6 +35,7 @@ class _SettingsState extends State<Settings> {
   bool isLoadingImageURL = false;
   bool isNameAvailable = false;
   bool isThemeAuto = true;
+  bool notificationsON = false;
 
   Brightness brightness;
   Brightness currentBrightness;
@@ -61,8 +62,9 @@ class _SettingsState extends State<Settings> {
 
     getLocalLang();
     checkAuth();
+    initNotifState();
 
-    isThemeAuto = appLocalStorage.getAutoBrightness();
+    isThemeAuto = appStorage.getAutoBrightness();
     currentBrightness = DynamicTheme.of(context).brightness;
   }
 
@@ -290,15 +292,15 @@ class _SettingsState extends State<Settings> {
                       timer = Timer(Duration(seconds: 1),
                           () => toggleQuotidianNotifications(value));
                     },
-                    value: userState.isQuotidianNotifActive,
+                    value: notificationsON,
                     title: Text('Daily quote'),
                     subtitle: Text(
                         "If this is active, you will receive a quote at 8:00am everyday"),
-                    secondary: userState.isQuotidianNotifActive
+                    secondary: notificationsON
                         ? Icon(Icons.notifications_active)
                         : Icon(Icons.notifications_off),
                   ),
-                  if (userState.isQuotidianNotifActive)
+                  if (notificationsON)
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: ListTile(
@@ -808,12 +810,12 @@ class _SettingsState extends State<Settings> {
               value: isThemeAuto,
               onChanged: (newValue) {
                 if (!newValue) {
-                  currentBrightness = appLocalStorage.getBrightness();
+                  currentBrightness = appStorage.getBrightness();
                   DynamicTheme.of(context).setBrightness(currentBrightness);
                   stateColors.refreshTheme(currentBrightness);
                 }
 
-                appLocalStorage.setAutoBrightness(newValue);
+                appStorage.setAutoBrightness(newValue);
 
                 if (newValue) {
                   setAutoBrightness();
@@ -840,7 +842,7 @@ class _SettingsState extends State<Settings> {
                   DynamicTheme.of(context).setBrightness(currentBrightness);
                   stateColors.refreshTheme(currentBrightness);
 
-                  appLocalStorage.setBrightness(currentBrightness);
+                  appStorage.setBrightness(currentBrightness);
 
                   setState(() {});
                 },
@@ -1026,7 +1028,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void getLocalLang() {
-    final lang = appLocalStorage.getLang();
+    final lang = appStorage.getLang();
 
     setState(() {
       selectedLang = Language.frontend(lang);
@@ -1161,11 +1163,6 @@ class _SettingsState extends State<Settings> {
 
     Language.setLang(lang);
 
-    if (userState.isQuotidianNotifActive) {
-      // final lang = appLocalStorage.getLang();
-      // await PushNotifications.updateQuotidiansSubLang(lang: lang);
-    }
-
     setState(() {
       isLoadingLang = false;
     });
@@ -1175,5 +1172,10 @@ class _SettingsState extends State<Settings> {
       message: 'Your language has been successfully updated.',
       type: SnackType.success,
     );
+  }
+
+  void initNotifState() async {
+    notificationsON = await PushNotifications.isActive();
+    setState(() {});
   }
 }

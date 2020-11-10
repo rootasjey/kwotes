@@ -15,7 +15,7 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -52,8 +52,8 @@ class _DraftsState extends State<Drafts> {
   }
 
   void initProps() {
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -110,7 +110,7 @@ class _DraftsState extends State<Drafts> {
           descending = newDescending;
           fetch();
 
-          appLocalStorage.setPageOrder(
+          appStorage.setPageOrder(
             descending: newDescending,
             pageRoute: pageRoute,
           );
@@ -125,7 +125,7 @@ class _DraftsState extends State<Drafts> {
             itemsLayout = selectedLayout;
           });
 
-          appLocalStorage.saveItemsStyle(
+          appStorage.saveItemsStyle(
             pageRoute: pageRoute,
             style: selectedLayout,
           );

@@ -16,7 +16,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
 
 class References extends StatefulWidget {
@@ -74,8 +74,8 @@ class _ReferencesState extends State<References> {
   }
 
   void initProps() {
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -118,7 +118,7 @@ class _ReferencesState extends State<References> {
         descending = newDescending;
         fetch();
 
-        appLocalStorage.setPageOrder(
+        appStorage.setPageOrder(
           descending: newDescending,
           pageRoute: pageRoute,
         );
@@ -133,7 +133,7 @@ class _ReferencesState extends State<References> {
           itemsLayout = selectedLayout;
         });
 
-        appLocalStorage.saveItemsStyle(
+        appStorage.saveItemsStyle(
           pageRoute: pageRoute,
           style: selectedLayout,
         );

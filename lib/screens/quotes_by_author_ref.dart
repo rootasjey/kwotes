@@ -15,7 +15,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 
 enum SubjectType {
   author,
@@ -156,7 +156,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
                   lang = newLang;
                   fetch();
 
-                  appLocalStorage.setPageLang(
+                  appStorage.setPageLang(
                     lang: newLang,
                     pageRoute: pageRoute,
                   );
@@ -444,7 +444,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
   }
 
   void getSavedProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
   }
 }

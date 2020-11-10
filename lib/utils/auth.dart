@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
 
 void checkConnectedOrNavSignin({BuildContext context}) async {
@@ -43,7 +43,7 @@ Future<User> tryGetUserAuth() async {
   }
 
   // 2nd try
-  final credentialsMap = appLocalStorage.getCredentials();
+  final credentialsMap = appStorage.getCredentials();
 
   final email = credentialsMap['email'];
   final password = credentialsMap['password'];

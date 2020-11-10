@@ -18,7 +18,7 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/types/topic_color.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:mobx/mobx.dart';
 
 class TopicPage extends StatefulWidget {
@@ -86,8 +86,8 @@ class _TopicPageState extends State<TopicPage> {
 
     final storageKey = '$pageRoute?lang';
 
-    lang = appLocalStorage.containsKey(storageKey)
-        ? appLocalStorage.getPageLang(pageRoute: pageRoute)
+    lang = appStorage.containsKey(storageKey)
+        ? appStorage.getPageLang(pageRoute: pageRoute)
         : userState.lang;
   }
 
@@ -205,7 +205,7 @@ class _TopicPageState extends State<TopicPage> {
                     ),
                     onChanged: (String newLang) {
                       lang = newLang;
-                      appLocalStorage.setPageLang(
+                      appStorage.setPageLang(
                         lang: lang,
                         pageRoute: pageRoute,
                       );

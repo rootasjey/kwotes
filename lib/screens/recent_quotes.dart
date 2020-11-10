@@ -15,7 +15,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -56,9 +56,9 @@ class RecentQuotesState extends State<RecentQuotes> {
   }
 
   void initProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -112,7 +112,7 @@ class RecentQuotesState extends State<RecentQuotes> {
         descending = newDescending;
         fetch();
 
-        appLocalStorage.setPageOrder(
+        appStorage.setPageOrder(
           descending: newDescending,
           pageRoute: pageRoute,
         );
@@ -132,7 +132,7 @@ class RecentQuotesState extends State<RecentQuotes> {
           itemsLayout = selectedLayout;
         });
 
-        appLocalStorage.saveItemsStyle(
+        appStorage.saveItemsStyle(
           pageRoute: pageRoute,
           style: selectedLayout,
         );

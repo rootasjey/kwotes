@@ -15,7 +15,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:share/share.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,8 +75,8 @@ class _AuthorsState extends State<Authors> {
   }
 
   void initProps() {
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -128,7 +128,7 @@ class _AuthorsState extends State<Authors> {
                 descending = false;
                 fetch();
 
-                appLocalStorage.setPageOrder(
+                appStorage.setPageOrder(
                   descending: descending,
                   pageRoute: pageRoute,
                 );
@@ -156,7 +156,7 @@ class _AuthorsState extends State<Authors> {
                 descending = true;
                 fetch();
 
-                appLocalStorage.setPageOrder(
+                appStorage.setPageOrder(
                   descending: descending,
                   pageRoute: pageRoute,
                 );
@@ -192,7 +192,7 @@ class _AuthorsState extends State<Authors> {
                   itemsLayout = ItemsLayout.list;
                 });
 
-                appLocalStorage.saveItemsStyle(
+                appStorage.saveItemsStyle(
                   pageRoute: pageRoute,
                   style: ItemsLayout.list,
                 );
@@ -216,7 +216,7 @@ class _AuthorsState extends State<Authors> {
                   itemsLayout = ItemsLayout.grid;
                 });
 
-                appLocalStorage.saveItemsStyle(
+                appStorage.saveItemsStyle(
                   pageRoute: pageRoute,
                   style: ItemsLayout.grid,
                 );

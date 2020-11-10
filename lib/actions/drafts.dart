@@ -8,11 +8,11 @@ import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 
 void clearOfflineDrafts() {
-  appLocalStorage.clearDrafts();
+  appStorage.clearDrafts();
 }
 
 Future<bool> deleteDraft({
@@ -46,14 +46,14 @@ Future<bool> deleteDraft({
 }
 
 bool deleteOfflineDraft({String createdAt}) {
-  final drafts = appLocalStorage.getDrafts();
+  final drafts = appStorage.getDrafts();
 
   drafts.removeWhere((draftStr) {
     final draft = jsonDecode(draftStr) as Map<String, dynamic>;
     return draft['createdAt'] == createdAt;
   });
 
-  appLocalStorage.setDrafts(drafts);
+  appStorage.setDrafts(drafts);
 
   return true;
 }
@@ -221,7 +221,7 @@ Future<bool> saveOfflineDraft({
     };
 
     final draftString = jsonEncode(draft);
-    appLocalStorage.saveDraft(draftString: draftString);
+    appStorage.saveDraft(draftString: draftString);
 
     return true;
   } catch (error) {
@@ -232,7 +232,7 @@ Future<bool> saveOfflineDraft({
 
 List<TempQuote> getOfflineDrafts() {
   final drafts = List<TempQuote>();
-  final savedStringDrafts = appLocalStorage.getDrafts();
+  final savedStringDrafts = appStorage.getDrafts();
 
   if (savedStringDrafts == null) {
     return drafts;

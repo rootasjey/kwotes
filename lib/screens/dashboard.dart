@@ -21,7 +21,7 @@ import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
@@ -276,7 +276,7 @@ class _DashboardState extends State<Dashboard> {
       iconData: Icons.exit_to_app,
       textTitle: 'Sign out',
       onTap: () async {
-        await appLocalStorage.clearUserAuthData();
+        await appStorage.clearUserAuthData();
         await FirebaseAuth.instance.signOut();
         userState.signOut();
 

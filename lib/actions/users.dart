@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 
 Future<bool> checkEmailAvailability(String email) async {
   try {
@@ -61,7 +61,7 @@ void userSignOut({
   BuildContext context,
   bool autoNavigateAfter = true,
 }) async {
-  await appLocalStorage.clearUserAuthData();
+  await appStorage.clearUserAuthData();
   await FirebaseAuth.instance.signOut();
   userState.setUserDisconnected();
   userState.signOut();

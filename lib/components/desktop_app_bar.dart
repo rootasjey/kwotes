@@ -1,6 +1,6 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/screens/search.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -230,10 +230,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   /// Switch from dark to light and vice-versa.
   Widget brightnessButton() {
     IconData iconBrightness = Icons.brightness_auto;
-    final autoBrightness = appLocalStorage.getAutoBrightness();
+    final autoBrightness = appStorage.getAutoBrightness();
 
     if (!autoBrightness) {
-      final currentBrightness = appLocalStorage.getBrightness();
+      final currentBrightness = appStorage.getBrightness();
 
       iconBrightness = currentBrightness == Brightness.dark
           ? Icons.brightness_2

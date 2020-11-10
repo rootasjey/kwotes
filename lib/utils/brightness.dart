@@ -1,6 +1,6 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:flutter/material.dart';
 
 /// Refresh current theme with auto brightness.
@@ -20,7 +20,7 @@ void setAutoBrightness({
     try {
       DynamicTheme.of(context).setBrightness(brightness);
       stateColors.refreshTheme(brightness);
-      appLocalStorage.setAutoBrightness(true);
+      appStorage.setAutoBrightness(true);
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -38,7 +38,7 @@ void setBrightness({
   Future.delayed(duration, () {
     DynamicTheme.of(context).setBrightness(brightness);
 
-    appLocalStorage.setAutoBrightness(false);
-    appLocalStorage.setBrightness(brightness);
+    appStorage.setAutoBrightness(false);
+    appStorage.setBrightness(brightness);
   });
 }

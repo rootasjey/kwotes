@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_state.g.dart';
@@ -64,7 +64,7 @@ abstract class UserStateBase with Store {
   @action
   void setQuotidianNotifState(bool active) {
     isQuotidianNotifActive = active;
-    appLocalStorage.setQuotidianNotif(active);
+    appStorage.setQuotidianNotif(active);
   }
 
   @action
@@ -85,7 +85,7 @@ abstract class UserStateBase with Store {
   /// Signin user with credentials if FirebaseAuth is null.
   Future _signin() async {
     try {
-      final credentialsMap = appLocalStorage.getCredentials();
+      final credentialsMap = appStorage.getCredentials();
 
       final email = credentialsMap['email'];
       final password = credentialsMap['password'];
@@ -103,7 +103,7 @@ abstract class UserStateBase with Store {
       _userAuth = auth.user;
       isUserConnected = true;
     } catch (error) {
-      appLocalStorage.clearUserAuthData();
+      appStorage.clearUserAuthData();
     }
   }
 

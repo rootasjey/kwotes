@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 
 class Language {
   /// Current application's language.
@@ -42,7 +42,7 @@ class Language {
   /// Fetch user's lang from database.
   static Future<String> fetch(User userAuth) async {
     if (userAuth == null) {
-      String savedLang = appLocalStorage.getLang();
+      String savedLang = appStorage.getLang();
       return savedLang ?? 'en';
     }
 
@@ -65,6 +65,6 @@ class Language {
 
   static void setLang(String lang) {
     userState.setLang(lang);
-    appLocalStorage.setLang(lang);
+    appStorage.setLang(lang);
   }
 }

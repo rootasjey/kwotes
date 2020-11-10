@@ -12,7 +12,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
 
 import 'signin.dart';
@@ -52,8 +52,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   void initProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
   }
 
   @override
@@ -143,7 +143,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
             itemsLayout = selectedLayout;
           });
 
-          appLocalStorage.saveItemsStyle(
+          appStorage.saveItemsStyle(
             pageRoute: pageRoute,
             style: selectedLayout,
           );

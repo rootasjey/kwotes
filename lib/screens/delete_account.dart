@@ -13,7 +13,7 @@ import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class DeleteAccount extends StatefulWidget {
@@ -451,7 +451,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
       userState.signOut();
       userState.setUserName('');
-      appLocalStorage.clearUserAuthData();
+      appStorage.clearUserAuthData();
 
       PushNotifications.unlinkAuthUser();
 

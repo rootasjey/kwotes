@@ -15,7 +15,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Discover extends StatefulWidget {
@@ -63,10 +63,10 @@ class _DiscoverState extends State<Discover> {
   }
 
   void initProps() {
-    lang = appLocalStorage.getPageLang(pageRoute: pageRoute);
-    descending = appLocalStorage.getPageOrder(pageRoute: pageRoute);
-    itemsLayout = appLocalStorage.getItemsStyle(pageRoute);
-    discoverType = appLocalStorage.getDiscoverType();
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+    descending = appStorage.getPageOrder(pageRoute: pageRoute);
+    itemsLayout = appStorage.getItemsStyle(pageRoute);
+    discoverType = appStorage.getDiscoverType();
   }
 
   @override
@@ -121,7 +121,7 @@ class _DiscoverState extends State<Discover> {
         descending = newDescending;
         fetch();
 
-        appLocalStorage.setPageOrder(
+        appStorage.setPageOrder(
           descending: newDescending,
           pageRoute: pageRoute,
         );
@@ -136,7 +136,7 @@ class _DiscoverState extends State<Discover> {
           itemsLayout = selectedLayout;
         });
 
-        appLocalStorage.saveItemsStyle(
+        appStorage.saveItemsStyle(
           pageRoute: pageRoute,
           style: selectedLayout,
         );
@@ -162,7 +162,7 @@ class _DiscoverState extends State<Discover> {
               opacity: isReferencesSelected ? 1.0 : 0.5,
               child: TextButton(
                 onPressed: () {
-                  appLocalStorage.saveDiscoverType(DiscoverType.references);
+                  appStorage.saveDiscoverType(DiscoverType.references);
                   setState(() => discoverType = DiscoverType.references);
                   fetch();
                 },
@@ -186,7 +186,7 @@ class _DiscoverState extends State<Discover> {
               opacity: !isReferencesSelected ? 1.0 : 0.5,
               child: TextButton(
                 onPressed: () {
-                  appLocalStorage.saveDiscoverType(DiscoverType.authors);
+                  appStorage.saveDiscoverType(DiscoverType.authors);
                   setState(() => discoverType = DiscoverType.authors);
                   fetch();
                 },

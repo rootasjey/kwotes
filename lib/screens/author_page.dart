@@ -15,7 +15,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -347,7 +347,7 @@ class _AuthorPageState extends State<AuthorPage> {
         onChanged: (String newLang) {
           lang = newLang;
           fetchQuotes();
-          appLocalStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
         },
         items: ['en', 'fr'].map((String value) {
           return DropdownMenuItem(

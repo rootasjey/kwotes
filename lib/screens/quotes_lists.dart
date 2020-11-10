@@ -12,7 +12,7 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
-import 'package:figstyle/utils/app_localstorage.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -115,7 +115,7 @@ class _QuotesListsState extends State<QuotesLists> {
           descending = newDescending;
           fetch();
 
-          appLocalStorage.setPageOrder(
+          appStorage.setPageOrder(
             descending: newDescending,
             pageRoute: pageRoute,
           );
