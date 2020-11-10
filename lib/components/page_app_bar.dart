@@ -174,6 +174,39 @@ class _PageAppBarState extends State<PageAppBar> {
       return widget.title;
     }
 
+    if (widget.showNavBackIcon) {
+      return Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CircleButton(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              backgroundColor: stateColors.primary,
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          TextButton.icon(
+            onPressed: widget.onTitlePressed,
+            icon: AppIcon(
+              padding: EdgeInsets.zero,
+              size: 30.0,
+            ),
+            label: Text(
+              widget.textTitle,
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: TextButton.icon(
