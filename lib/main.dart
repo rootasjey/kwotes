@@ -39,14 +39,15 @@ class AppState extends State<App> {
   void initState() {
     super.initState();
 
-    PushNotifications.init(context);
+    if (!kIsWeb) {
+      PushNotifications.init(context);
+    }
 
     appStorage.initialize().then((value) {
       final savedLang = appStorage.getLang();
       userState.setLang(savedLang);
 
       autoLogin();
-      PushNotifications.initDefaultTag();
 
       setState(() {
         isReady = true;
