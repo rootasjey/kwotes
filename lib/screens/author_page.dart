@@ -530,6 +530,7 @@ class _AuthorPageState extends State<AuthorPage> {
                     child: QuoteRowWithActions(
                       quote: quote,
                       quoteId: quote.id,
+                      quoteFontSize: 18.0,
                       isConnected: isConnected,
                       color: stateColors.appBackground,
                       padding: EdgeInsets.symmetric(
