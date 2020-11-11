@@ -44,6 +44,8 @@ class PushNotifications {
       return;
     }
 
+    initDefaultTag();
+
     OneSignal.shared.setNotificationOpenedHandler((openedResult) {
       final notification = openedResult.notification;
       final quoteId = notification.payload.additionalData['quote']['id'];
