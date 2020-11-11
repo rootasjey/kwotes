@@ -280,60 +280,56 @@ class _SettingsState extends State<Settings> {
               ),
             ],
           ),
-          Observer(
-            builder: (context) {
-              return Column(
-                children: [
-                  SwitchListTile(
-                    onChanged: (bool value) {
-                      userState.setQuotidianNotifState(value);
+          Column(
+            children: [
+              SwitchListTile(
+                onChanged: (bool value) {
+                  notificationsON = value;
 
-                      timer?.cancel();
-                      timer = Timer(Duration(seconds: 1),
-                          () => toggleQuotidianNotifications(value));
-                    },
-                    value: notificationsON,
-                    title: Text('Daily quote'),
-                    subtitle: Text(
-                        "If this is active, you will receive a quote at 8:00am everyday"),
-                    secondary: notificationsON
-                        ? Icon(Icons.notifications_active)
-                        : Icon(Icons.notifications_off),
-                  ),
-                  if (notificationsON)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: ListTile(
-                        leading: Icon(Icons.language),
-                        title: DropdownButton<String>(
-                          elevation: 2,
-                          isDense: true,
-                          value: notifLang,
-                          underline: Container(),
-                          icon: Container(),
-                          items: Language.available().map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(
-                                Language.frontend(value),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              notifLang = newValue;
-                            });
+                  timer?.cancel();
+                  timer = Timer(Duration(seconds: 1),
+                      () => toggleQuotidianNotifications());
+                },
+                value: notificationsON,
+                title: Text('Daily quote'),
+                subtitle: Text(
+                    "If this is active, you will receive a quote at 8:00am everyday"),
+                secondary: notificationsON
+                    ? Icon(Icons.notifications_active)
+                    : Icon(Icons.notifications_off),
+              ),
+              if (notificationsON)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: ListTile(
+                    leading: Icon(Icons.language),
+                    title: DropdownButton<String>(
+                      elevation: 2,
+                      isDense: true,
+                      value: notifLang,
+                      underline: Container(),
+                      icon: Container(),
+                      items: Language.available().map((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            Language.frontend(value),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          notifLang = newValue;
+                        });
 
-                            PushNotifications.updateLangNotification(newValue);
-                          },
-                        ),
-                        subtitle: Text(
-                            "Your daily quote will be in the selected language"),
-                      ),
+                        PushNotifications.updateLangNotification(newValue);
+                      },
                     ),
-                ],
-              );
-            },
+                    subtitle: Text(
+                        "Your daily quote will be in the selected language"),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -966,8 +962,8 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void toggleQuotidianNotifications(bool isActive) async {
-    if (isActive) {
+  void toggleQuotidianNotifications() async {
+    if (notificationsON) {
       PushNotifications.activate();
       return;
     }
