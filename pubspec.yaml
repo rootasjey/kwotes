@@ -102,6 +102,7 @@ flutter:
     - assets/images/employee-dark.png
     - assets/images/employee-light.png
     - assets/images/facebook.png
+    - assets/images/fig.style_logo.png
     - assets/images/instagram.png
     - assets/images/lady-light.png
     - assets/images/lady-dark.png
@@ -118,6 +119,10 @@ flutter:
     - assets/images/reference.png
     - assets/images/twitch.png
     - assets/images/twitter.png
+    - assets/images/undraw_inbox.png
+    - assets/images/undraw_preferences.png
+    - assets/images/undraw_setup.png
+    - assets/images/undraw_smiley.png
     - assets/images/user-m.png
     - assets/images/user-dark.png
     - assets/images/user-light.png

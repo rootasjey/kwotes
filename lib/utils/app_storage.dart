@@ -18,6 +18,17 @@ class AppStorage {
     _localStorage = await LocalStorage.getInstance();
   }
 
+  // / -----------------/
+  // /   First launch   /
+  // / -----------------/
+  bool isFirstLanch() {
+    return _localStorage.getBool(StorageKeys.firstLaunch) ?? true;
+  }
+
+  void setFirstLaunch() {
+    _localStorage.setBool(StorageKeys.firstLaunch, false);
+  }
+
   // / --------------/
   // /     Drafts    /
   // /---------------/

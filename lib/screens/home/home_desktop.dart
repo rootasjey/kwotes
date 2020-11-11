@@ -17,36 +17,30 @@ class _HomeDesktopState extends State<HomeDesktop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Overlay(
-        initialEntries: [
-          OverlayEntry(builder: (_) {
-            return CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                DesktopAppBar(
-                  title: "fig.style",
-                  padding: const EdgeInsets.only(left: 65.0),
-                  onTapIconHeader: () {
-                    scrollController.animateTo(
-                      0,
-                      duration: 250.milliseconds,
-                      curve: Curves.decelerate,
-                    );
-                  },
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    RecentHero(),
-                    DiscoverDesktop(),
-                    Topics(),
-                    Footer(
-                      pageScrollController: scrollController,
-                    ),
-                  ]),
-                ),
-              ],
-            );
-          })
+      body: CustomScrollView(
+        controller: scrollController,
+        slivers: <Widget>[
+          DesktopAppBar(
+            title: "fig.style",
+            padding: const EdgeInsets.only(left: 65.0),
+            onTapIconHeader: () {
+              scrollController.animateTo(
+                0,
+                duration: 250.milliseconds,
+                curve: Curves.decelerate,
+              );
+            },
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              RecentHero(),
+              DiscoverDesktop(),
+              Topics(),
+              Footer(
+                pageScrollController: scrollController,
+              ),
+            ]),
+          ),
         ],
       ),
     );
