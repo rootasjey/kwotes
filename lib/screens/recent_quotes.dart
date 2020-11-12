@@ -268,6 +268,7 @@ class RecentQuotesState extends State<RecentQuotes> {
               quote: quote,
               canManage: canManage,
               isConnected: isConnected,
+              quoteFontSize: 18.0,
               color: stateColors.appBackground,
               padding: EdgeInsets.symmetric(
                 horizontal: horPadding,
