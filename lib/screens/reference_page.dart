@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/image_hero.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
@@ -152,30 +152,12 @@ class ReferencePageState extends State<ReferencePage> {
         );
       },
       openBuilder: (context, callback) {
-        return Container(
-          height: 800.0,
-          width: 600.0,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              InkWell(
-                onTap: () => Navigator.of(context).pop(),
-                child: Image(
-                  image: isImageUrlOk
-                      ? NetworkImage(reference.urls.image)
-                      : AssetImage('assets/images/reference.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: 40.0,
-                right: 20.0,
-                child: CircleButton(
-                    icon: Icon(Icons.close, color: stateColors.secondary),
-                    onTap: () => Navigator.of(context).pop()),
-              ),
-            ],
-          ),
+        return ImageHero(
+          imageProvider: isImageUrlOk
+              ? NetworkImage(
+                  reference.urls.image,
+                )
+              : AssetImage('assets/images/reference.png'),
         );
       },
     );
