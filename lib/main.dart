@@ -39,10 +39,6 @@ class AppState extends State<App> {
   void initState() {
     super.initState();
 
-    if (!kIsWeb) {
-      PushNotifications.init(context);
-    }
-
     appStorage.initialize().then((value) {
       final savedLang = appStorage.getLang();
       userState.setLang(savedLang);
@@ -52,6 +48,10 @@ class AppState extends State<App> {
       setState(() {
         isReady = true;
       });
+
+      if (!kIsWeb) {
+        PushNotifications.init(context);
+      }
     });
 
     appTopicsColors.fetchTopicsColors();
