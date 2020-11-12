@@ -25,7 +25,12 @@ class AppStorage {
     return _localStorage.getBool(StorageKeys.firstLaunch) ?? true;
   }
 
-  void setFirstLaunch() {
+  void setFirstLaunch({bool overrideValue}) {
+    if (overrideValue != null) {
+      _localStorage.setBool(StorageKeys.firstLaunch, overrideValue);
+      return;
+    }
+
     _localStorage.setBool(StorageKeys.firstLaunch, false);
   }
 

@@ -43,24 +43,21 @@ mixin _$UserState on UserStateBase, Store {
     }, _$langAtom, name: '${_$langAtom.name}_set');
   }
 
-  final _$isQuotidianNotifActiveAtom =
-      Atom(name: 'UserStateBase.isQuotidianNotifActive');
+  final _$isFirstLaunchAtom = Atom(name: 'UserStateBase.isFirstLaunch');
 
   @override
-  bool get isQuotidianNotifActive {
-    _$isQuotidianNotifActiveAtom.context
-        .enforceReadPolicy(_$isQuotidianNotifActiveAtom);
-    _$isQuotidianNotifActiveAtom.reportObserved();
-    return super.isQuotidianNotifActive;
+  bool get isFirstLaunch {
+    _$isFirstLaunchAtom.context.enforceReadPolicy(_$isFirstLaunchAtom);
+    _$isFirstLaunchAtom.reportObserved();
+    return super.isFirstLaunch;
   }
 
   @override
-  set isQuotidianNotifActive(bool value) {
-    _$isQuotidianNotifActiveAtom.context.conditionallyRunInAction(() {
-      super.isQuotidianNotifActive = value;
-      _$isQuotidianNotifActiveAtom.reportChanged();
-    }, _$isQuotidianNotifActiveAtom,
-        name: '${_$isQuotidianNotifActiveAtom.name}_set');
+  set isFirstLaunch(bool value) {
+    _$isFirstLaunchAtom.context.conditionallyRunInAction(() {
+      super.isFirstLaunch = value;
+      _$isFirstLaunchAtom.reportChanged();
+    }, _$isFirstLaunchAtom, name: '${_$isFirstLaunchAtom.name}_set');
   }
 
   final _$isUserConnectedAtom = Atom(name: 'UserStateBase.isUserConnected');
@@ -128,20 +125,20 @@ mixin _$UserState on UserStateBase, Store {
   }
 
   @override
-  void setLang(String newLang) {
+  void setFirstLaunch(bool value) {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
-      return super.setLang(newLang);
+      return super.setFirstLaunch(value);
     } finally {
       _$UserStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void setQuotidianNotifState(bool active) {
+  void setLang(String newLang) {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
-      return super.setQuotidianNotifState(active);
+      return super.setLang(newLang);
     } finally {
       _$UserStateBaseActionController.endAction(_$actionInfo);
     }
@@ -200,7 +197,7 @@ mixin _$UserState on UserStateBase, Store {
   @override
   String toString() {
     final string =
-        'avatarUrl: ${avatarUrl.toString()},lang: ${lang.toString()},isQuotidianNotifActive: ${isQuotidianNotifActive.toString()},isUserConnected: ${isUserConnected.toString()},username: ${username.toString()},updatedFavAt: ${updatedFavAt.toString()}';
+        'avatarUrl: ${avatarUrl.toString()},lang: ${lang.toString()},isFirstLaunch: ${isFirstLaunch.toString()},isUserConnected: ${isUserConnected.toString()},username: ${username.toString()},updatedFavAt: ${updatedFavAt.toString()}';
     return '{$string}';
   }
 }

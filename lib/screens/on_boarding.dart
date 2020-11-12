@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:figstyle/screens/home/home_mobile.dart';
+import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signin.dart';
+import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -55,8 +57,13 @@ class _OnBoardingState extends State<OnBoarding> {
           title: "Welcome",
           bodyWidget: Opacity(
             opacity: bodyOpacity,
-            child: Text(
-              "fig.style is your daily quote app. Let's do an overview of the features.",
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 500.0,
+              ),
+              child: Text(
+                "fig.style is your daily quote app. Let's do an overview of the features.",
+              ),
             ),
           ),
           image: Center(
@@ -114,6 +121,9 @@ class _OnBoardingState extends State<OnBoarding> {
         accountPVModel(),
       ],
       onDone: () {
+        appStorage.setFirstLaunch();
+        userState.setFirstLaunch(false);
+
         if (widget.isDesktop) {
           return Navigator.of(context).pop();
         }
@@ -121,7 +131,7 @@ class _OnBoardingState extends State<OnBoarding> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return HomeMobile();
+              return Home();
             },
           ),
         );
@@ -289,8 +299,8 @@ class _OnBoardingState extends State<OnBoarding> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return HomeMobile(
-                        initialIndex: 4,
+                      return Home(
+                        mobileInitialIndex: 4,
                       );
                     },
                   ),

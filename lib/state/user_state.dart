@@ -16,7 +16,7 @@ abstract class UserStateBase with Store {
   String lang = 'en';
 
   @observable
-  bool isQuotidianNotifActive = true;
+  bool isFirstLaunch = false;
 
   @observable
   bool isUserConnected = false;
@@ -57,14 +57,13 @@ abstract class UserStateBase with Store {
   }
 
   @action
-  void setLang(String newLang) {
-    lang = newLang;
+  void setFirstLaunch(bool value) {
+    isFirstLaunch = value;
   }
 
   @action
-  void setQuotidianNotifState(bool active) {
-    isQuotidianNotifActive = active;
-    appStorage.setQuotidianNotif(active);
+  void setLang(String newLang) {
+    lang = newLang;
   }
 
   @action
