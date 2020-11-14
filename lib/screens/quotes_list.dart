@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/users.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
@@ -17,6 +18,7 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class QuotesList extends StatefulWidget {
   final String id;
@@ -30,6 +32,7 @@ class QuotesList extends StatefulWidget {
 }
 
 class _QuotesListState extends State<QuotesList> {
+  bool canManage = false;
   bool descending = true;
   bool hasErrors = false;
   bool hasNext = true;
@@ -56,7 +59,13 @@ class _QuotesListState extends State<QuotesList> {
   @override
   initState() {
     super.initState();
+    initProps();
     fetch();
+  }
+
+  void initProps() async {
+    canManage = await canUserManage();
+    setState(() {});
   }
 
   @override
@@ -294,28 +303,36 @@ class _QuotesListState extends State<QuotesList> {
   Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 20.0),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final quote = quotes.elementAt(index);
+    return Observer(builder: (context) {
+      final isConnected = userState.isUserConnected;
 
-            return QuoteRowWithActions(
-              quote: quote,
-              quoteId: quote.quoteId,
-              color: stateColors.appBackground,
-              quotePageType: QuotePageType.list,
-              onRemoveFromList: () => removeQuote(quote),
-              padding: EdgeInsets.symmetric(
-                horizontal: horPadding,
-              ),
-            );
-          },
-          childCount: quotes.length,
+      return SliverPadding(
+        padding: const EdgeInsets.only(top: 20.0),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final quote = quotes.elementAt(index);
+
+              return QuoteRowWithActions(
+                quote: quote,
+                quoteId: quote.quoteId,
+                color: stateColors.appBackground,
+                canManage: canManage,
+                isConnected: isConnected,
+                key: ObjectKey(index),
+                useSwipeActions: true,
+                quotePageType: QuotePageType.list,
+                onRemoveFromList: () => removeQuote(quote),
+                padding: EdgeInsets.symmetric(
+                  horizontal: horPadding,
+                ),
+              );
+            },
+            childCount: quotes.length,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future fetch() async {
