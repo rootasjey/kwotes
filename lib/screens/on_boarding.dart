@@ -216,12 +216,15 @@ class _OnBoardingState extends State<OnBoarding> {
     return PageViewModel(
       titleWidget: Column(
         children: [
-          Center(
-            child: Image.asset(
-              'assets/images/undraw_inbox.png',
-              semanticLabel: 'Notifications illustration',
-              width: 200.0,
-              height: 200.0,
+          Padding(
+            padding: const EdgeInsets.only(top: 100.0),
+            child: Center(
+              child: Image.asset(
+                'assets/images/undraw_inbox.png',
+                semanticLabel: 'Notifications illustration',
+                width: 200.0,
+                height: 200.0,
+              ),
             ),
           ),
           Padding(
