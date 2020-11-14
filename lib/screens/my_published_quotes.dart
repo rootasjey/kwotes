@@ -266,6 +266,8 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
             quoteId: quote.id,
             canManage: canManage,
             isConnected: isConnected,
+            key: ObjectKey(index),
+            useSwipeActions: true,
             color: stateColors.appBackground,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
