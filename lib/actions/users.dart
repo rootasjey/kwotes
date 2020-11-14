@@ -57,6 +57,31 @@ bool checkUsernameFormat(String username) {
   return username == str;
 }
 
+Future<bool> canUserManage() async {
+  try {
+    final userAuth = await userState.userAuth;
+
+    if (userAuth == null) {
+      return false;
+    }
+
+    final user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userAuth.uid)
+        .get();
+
+    if (user == null) {
+      return false;
+    }
+
+    final bool canManage = user.data()['rights']['user:managequotidian'];
+    return canManage;
+  } catch (error) {
+    debugPrint(error.toString());
+    return false;
+  }
+}
+
 void userSignOut({
   BuildContext context,
   bool autoNavigateAfter = true,
