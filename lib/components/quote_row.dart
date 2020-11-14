@@ -7,12 +7,14 @@ import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuoteRow extends StatefulWidget {
   /// Specify this only when componentType = ComponentType.Card.
   /// If true, author will be displayed on card.
   final bool showAuthor;
+  final bool useSwipeActions;
 
   final Color color;
 
@@ -21,11 +23,22 @@ class QuoteRow extends StatefulWidget {
   final double quoteFontSize;
 
   final EdgeInsets padding;
+
   final Function itemBuilder;
   final Function onSelected;
 
   final ItemComponentType componentType;
+
+  final Key key;
+
+  /// Widget to display on card item.
   final List<Widget> stackChildren;
+
+  /// Swipe trailing actions.
+  final List<SwipeAction> trailingActions;
+
+  /// Swipe leadling actions.
+  final List<SwipeAction> leadingActions;
 
   final Quote quote;
 
@@ -45,6 +58,7 @@ class QuoteRow extends StatefulWidget {
     this.quote,
     this.quoteId,
     this.itemBuilder,
+    this.key,
     this.componentType = ItemComponentType.row,
     this.onSelected,
     this.padding = const EdgeInsets.symmetric(
@@ -55,6 +69,9 @@ class QuoteRow extends StatefulWidget {
     this.showAuthor = false,
     this.stackChildren = const [],
     this.leading,
+    this.leadingActions = defaultActions,
+    this.trailingActions = defaultActions,
+    this.useSwipeActions,
   });
 
   @override
@@ -132,7 +149,7 @@ class _QuoteRowState extends State<QuoteRow> {
                   right: 0,
                   child: PopupMenuButton<String>(
                     icon: Opacity(
-                      opacity: .6,
+                      opacity: 0.6,
                       child: iconColor != null
                           ? Icon(
                               Icons.more_vert,
@@ -275,7 +292,7 @@ class _QuoteRowState extends State<QuoteRow> {
   }
 
   Widget rowLayout() {
-    return Container(
+    final childRow = Container(
       padding: widget.padding,
       child: Card(
         elevation: elevation,
@@ -308,34 +325,47 @@ class _QuoteRowState extends State<QuoteRow> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 50.0,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        PopupMenuButton<String>(
-                          icon: Opacity(
-                            opacity: 0.6,
-                            child: iconColor != null
-                                ? Icon(
-                                    Icons.more_vert,
-                                    color: iconColor,
-                                  )
-                                : Icon(Icons.more_vert),
+                  if (widget.itemBuilder != null)
+                    SizedBox(
+                      width: 50.0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          PopupMenuButton<String>(
+                            icon: Opacity(
+                              opacity: 0.6,
+                              child: iconColor != null
+                                  ? Icon(
+                                      Icons.more_vert,
+                                      color: iconColor,
+                                    )
+                                  : Icon(Icons.more_vert),
+                            ),
+                            onSelected: widget.onSelected,
+                            itemBuilder: widget.itemBuilder,
                           ),
-                          onSelected: widget.onSelected,
-                          itemBuilder: widget.itemBuilder,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+
+    if (!widget.useSwipeActions) {
+      return childRow;
+    }
+
+    return SwipeActionCell(
+      key: widget.key,
+      performsFirstActionWithFullSwipe: true,
+      child: childRow,
+      trailingActions: widget.trailingActions,
+      leadingActions: widget.leadingActions,
     );
   }
 
