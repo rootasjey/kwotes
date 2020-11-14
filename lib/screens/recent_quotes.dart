@@ -268,6 +268,8 @@ class RecentQuotesState extends State<RecentQuotes> {
               quote: quote,
               canManage: canManage,
               isConnected: isConnected,
+              key: ObjectKey(index),
+              useSwipeActions: true,
               quoteFontSize: 18.0,
               color: stateColors.appBackground,
               padding: EdgeInsets.symmetric(
