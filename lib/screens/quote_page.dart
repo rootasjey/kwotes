@@ -110,8 +110,8 @@ class _QuotePageState extends State<QuotePage> {
             Container(
               padding: EdgeInsets.only(
                 top: 50.0,
-                left: 20.0,
-                right: 20.0,
+                left: 15.0,
+                right: 15.0,
                 bottom: 40.0,
               ),
               child: Column(
@@ -127,8 +127,7 @@ class _QuotePageState extends State<QuotePage> {
                         Expanded(
                             child: Column(children: [
                           authorName(),
-                          if (quote.mainReference.name.length > 0)
-                            referenceName(),
+                          referenceName(),
                         ])),
                         verticalAnimatedDivider(),
                       ],
@@ -288,6 +287,10 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget referenceName() {
+    if (quote.mainReference == null || quote.mainReference.name.isEmpty) {
+      return Container();
+    }
+
     return ControlledAnimation(
       delay: 1.2.seconds,
       duration: 250.milliseconds,
