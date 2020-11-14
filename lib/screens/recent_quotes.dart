@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -51,14 +52,17 @@ class RecentQuotesState extends State<RecentQuotes> {
   initState() {
     super.initState();
     initProps();
-    fetchPermissions();
     fetch();
   }
 
-  void initProps() {
+  void initProps() async {
     lang = appStorage.getPageLang(pageRoute: pageRoute);
     descending = appStorage.getPageOrder(pageRoute: pageRoute);
     itemsLayout = appStorage.getItemsStyle(pageRoute);
+
+    canManage = await canUserManage();
+
+    setState(() {});
   }
 
   @override
@@ -304,32 +308,6 @@ class RecentQuotesState extends State<RecentQuotes> {
       message: 'Sorry, an error occurred while adding the quotes to quotidian.',
       type: SnackType.error,
     );
-  }
-
-  void fetchPermissions() async {
-    try {
-      final userAuth = await userState.userAuth;
-
-      if (userAuth == null) {
-        return;
-      }
-
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .get();
-
-      if (user == null) {
-        return;
-      }
-
-      setState(() {
-        isConnected = true;
-        canManage = user.data()['rights']['user:managequotidian'];
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-    }
   }
 
   void deleteAction(Quote quote) async {
