@@ -378,6 +378,11 @@ class _QuoteRowState extends State<QuoteRow> {
   }
 
   Future onQuoteTap() {
+    final quote = widget.quote;
+    final id = quote.quoteId != null && quote.quoteId.isNotEmpty
+        ? quote.quoteId
+        : quote.id;
+
     if (MediaQuery.of(context).size.width > 600.0) {
       return showFlash(
         context: context,
@@ -401,7 +406,7 @@ class _QuoteRowState extends State<QuoteRow> {
                 child: QuotePage(
                   pinnedAppBar: false,
                   quote: widget.quote,
-                  quoteId: widget.quote.id,
+                  quoteId: id,
                 ),
               ),
             ),
@@ -415,7 +420,7 @@ class _QuoteRowState extends State<QuoteRow> {
       builder: (context, scrollController) => QuotePage(
         padding: const EdgeInsets.only(left: 10.0),
         quote: widget.quote,
-        quoteId: widget.quote.id,
+        quoteId: id,
         scrollController: scrollController,
       ),
     );
