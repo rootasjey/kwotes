@@ -849,18 +849,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     final actions = <SwipeAction>[];
 
-    actions.addAll([
-      SwipeAction(
-        title: 'Like',
-        icon: isFavourite
-            ? Icon(Icons.favorite, color: Colors.white)
-            : Icon(Icons.favorite_border, color: Colors.white),
-        color: Color(0xff6638f0),
-        onTap: (CompletionHandler handler) {
-          handler(false);
-          toggleFavourite();
-        },
-      ),
+    actions.add(
       SwipeAction(
         title: 'Add to...',
         icon: Icon(Icons.playlist_add, color: Colors.white),
@@ -870,7 +859,36 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           showBottomSheetList();
         },
       ),
-    ]);
+    );
+
+    if (widget.quotePageType == QuotePageType.favourites) {
+      actions.insert(
+        0,
+        SwipeAction(
+          title: 'Unlike',
+          icon: Icon(Icons.favorite, color: Colors.white),
+          color: Color(0xff6638f0),
+          onTap: (CompletionHandler handler) {
+            handler(false);
+            toggleFavourite();
+          },
+        ),
+      );
+    } else {
+      actions.add(
+        SwipeAction(
+          title: 'Like',
+          icon: isFavourite
+              ? Icon(Icons.favorite, color: Colors.white)
+              : Icon(Icons.favorite_border, color: Colors.white),
+          color: Color(0xff6638f0),
+          onTap: (CompletionHandler handler) {
+            handler(false);
+            toggleFavourite();
+          },
+        ),
+      );
+    }
 
     if (widget.quotePageType == QuotePageType.list) {
       actions.add(SwipeAction(

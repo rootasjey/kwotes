@@ -251,7 +251,13 @@ class _FavouritesState extends State<Favourites> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
+    double horPadding = 70.0;
+    bool useSwipeActions = false;
+
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      horPadding = 0.0;
+      useSwipeActions = true;
+    }
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -262,6 +268,9 @@ class _FavouritesState extends State<Favourites> {
             quote: quote,
             quoteId: quote.quoteId,
             color: stateColors.appBackground,
+            isConnected: true,
+            key: ObjectKey(index),
+            useSwipeActions: useSwipeActions,
             quotePageType: QuotePageType.favourites,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
