@@ -175,7 +175,7 @@ class _QuotesListsState extends State<QuotesLists> {
             child: Card(
               child: InkWell(
                 onTap: () async {
-                  final mustRefresh = await Navigator.of(context).push(
+                  await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => QuotesList(
                         id: quotesList.id,
@@ -183,13 +183,7 @@ class _QuotesListsState extends State<QuotesLists> {
                     ),
                   );
 
-                  if (mustRefresh == null) {
-                    return;
-                  }
-
-                  if (mustRefresh) {
-                    fetch();
-                  }
+                  fetch();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
