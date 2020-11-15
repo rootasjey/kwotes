@@ -3,6 +3,7 @@ import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -17,6 +18,7 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotesLists extends StatefulWidget {
@@ -163,128 +165,188 @@ class _QuotesListsState extends State<QuotesLists> {
     return sliverQuotesList();
   }
 
-  Widget cardItem({UserQuotesList quotesList}) {
+  Widget cardListItem({
+    @required int index,
+    @required UserQuotesList quotesList,
+    bool showPopupMenu = true,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,
+        vertical: 2.5,
       ),
       child: Column(
         children: <Widget>[
           SizedBox(
             width: 500.0,
-            child: Card(
-              child: InkWell(
-                onTap: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => QuotesList(
-                        id: quotesList.id,
-                      ),
-                    ),
-                  );
+            child: SwipeActionCell(
+              key: ObjectKey(index),
+              performsFirstActionWithFullSwipe: true,
+              leadingActions: [
+                SwipeAction(
+                  title: "Edit",
+                  color: Colors.green,
+                  icon: Icon(Icons.edit, color: Colors.white),
+                  onTap: (CompletionHandler handler) {
+                    handler(false);
 
-                  fetch();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          CircleAvatar(
-                            radius: 20.0,
-                            backgroundColor: Colors.black12,
-                            child: Icon(Icons.list, color: Colors.white),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 40.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    quotesList.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                    ),
-                                  ),
-                                  Opacity(
-                                    opacity: .6,
-                                    child: Text(
-                                      quotesList.description,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          PopupMenuButton<String>(
-                            icon: Icon(Icons.more_vert),
-                            onSelected: (value) {
-                              if (value == 'delete') {
-                                showDeleteListDialog(
-                                  context: context,
-                                  listName: quotesList.name,
-                                  onCancel: () => Navigator.of(context).pop(),
-                                  onConfirm: () {
-                                    Navigator.of(context).pop();
-                                    deleteCurrentList(quotesList);
-                                  },
-                                );
-                                return;
-                              }
-
-                              if (value == 'edit') {
-                                showEditListDialog(
-                                  context: context,
-                                  listDesc: quotesList.description,
-                                  listName: quotesList.name,
-                                  listIsPublic: quotesList.isPublic,
-                                  subtitle: quotesList.name,
-                                  onCancel: () => Navigator.of(context).pop(),
-                                  onConfirm: (payload) {
-                                    Navigator.of(context).pop();
-                                    updateSelectedList(quotesList, payload);
-                                  },
-                                );
-                                return;
-                              }
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                              PopupMenuItem(
-                                value: 'edit',
-                                child: ListTile(
-                                  leading: Icon(Icons.edit),
-                                  title: Text('Edit'),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 'delete',
-                                child: ListTile(
-                                  leading: Icon(Icons.delete_outline),
-                                  title: Text('Delete'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    showEditListDialog(
+                      context: context,
+                      listDesc: quotesList.description,
+                      listName: quotesList.name,
+                      listIsPublic: quotesList.isPublic,
+                      subtitle: quotesList.name,
+                      onCancel: () => Navigator.of(context).pop(),
+                      onConfirm: (payload) {
+                        Navigator.of(context).pop();
+                        updateSelectedList(quotesList, payload);
+                      },
+                    );
+                  },
                 ),
-              ),
+              ],
+              trailingActions: [
+                SwipeAction(
+                  title: "Delete",
+                  color: stateColors.deletion,
+                  icon: Icon(Icons.delete_outline, color: Colors.white),
+                  onTap: (CompletionHandler handler) {
+                    handler(false);
+
+                    showDeleteListDialog(
+                      context: context,
+                      listName: quotesList.name,
+                      onCancel: () => Navigator.of(context).pop(),
+                      onConfirm: () {
+                        Navigator.of(context).pop();
+                        deleteCurrentList(quotesList);
+                      },
+                    );
+                  },
+                ),
+              ],
+              child: cardListItemContent(quotesList, showPopupMenu),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget cardListItemContent(UserQuotesList quotesList, bool showPopupMenu) {
+    return Card(
+      elevation: 2.0,
+      child: InkWell(
+        onTap: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => QuotesList(
+                id: quotesList.id,
+              ),
+            ),
+          );
+
+          fetch();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Stack(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 20.0,
+                    backgroundColor: Colors.black12,
+                    child: Icon(Icons.list, color: Colors.white),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            quotesList.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          Opacity(
+                            opacity: .6,
+                            child: Text(
+                              quotesList.description,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (showPopupMenu) popupMenuButton(quotesList),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget popupMenuButton(UserQuotesList quotesList) {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.more_vert),
+      onSelected: (value) {
+        if (value == 'delete') {
+          showDeleteListDialog(
+            context: context,
+            listName: quotesList.name,
+            onCancel: () => Navigator.of(context).pop(),
+            onConfirm: () {
+              Navigator.of(context).pop();
+              deleteCurrentList(quotesList);
+            },
+          );
+          return;
+        }
+
+        if (value == 'edit') {
+          showEditListDialog(
+            context: context,
+            listDesc: quotesList.description,
+            listName: quotesList.name,
+            listIsPublic: quotesList.isPublic,
+            subtitle: quotesList.name,
+            onCancel: () => Navigator.of(context).pop(),
+            onConfirm: (payload) {
+              Navigator.of(context).pop();
+              updateSelectedList(quotesList, payload);
+            },
+          );
+          return;
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          value: 'edit',
+          child: ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Edit'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'delete',
+          child: ListTile(
+            leading: Icon(Icons.delete_outline),
+            title: Text('Delete'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -360,13 +422,20 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget sliverQuotesList() {
+    final showPopupMenu =
+        MediaQuery.of(context).size.width > Constants.maxMobileWidth;
+
     return SliverPadding(
       padding: const EdgeInsets.only(top: 20.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final quoteList = userQuotesLists.elementAt(index);
-            return cardItem(quotesList: quoteList);
+            return cardListItem(
+              index: index,
+              quotesList: quoteList,
+              showPopupMenu: showPopupMenu,
+            );
           },
           childCount: userQuotesLists.length,
         ),
