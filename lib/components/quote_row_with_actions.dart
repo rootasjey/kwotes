@@ -45,6 +45,7 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final ItemComponentType componentType;
 
+  /// Required if `useSwipeActions` is true.
   final Key key;
 
   final EdgeInsets padding;

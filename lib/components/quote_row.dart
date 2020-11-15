@@ -7,7 +7,7 @@ import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuoteRow extends StatefulWidget {
@@ -71,7 +71,7 @@ class QuoteRow extends StatefulWidget {
     this.leading,
     this.leadingActions = defaultActions,
     this.trailingActions = defaultActions,
-    this.useSwipeActions,
+    this.useSwipeActions = false,
   });
 
   @override
