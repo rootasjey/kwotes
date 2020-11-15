@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/sheet_header.dart';
+import 'package:figstyle/components/delete_list_dialog.dart';
+import 'package:figstyle/components/edit_list_dialog.dart';
+import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -16,7 +17,6 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotesLists extends StatefulWidget {
@@ -31,7 +31,6 @@ class _QuotesListsState extends State<QuotesLists> {
   bool isLoading = false;
   bool isLoadingMore = false;
   bool newIsPublic = false;
-  bool oldIsPublic = false;
   bool updateListIsPublic = false;
 
   final pageRoute = ListsRoute;
@@ -46,10 +45,6 @@ class _QuotesListsState extends State<QuotesLists> {
   String newListName = '';
   String newListDescription = '';
   String newListIconUrl = '';
-  String oldListName = '';
-  String oldListDescription = '';
-  String updateListDesc = '';
-  String updateListName = '';
 
   @override
   initState() {
@@ -159,7 +154,7 @@ class _QuotesListsState extends State<QuotesLists> {
     return sliverQuotesList();
   }
 
-  Widget cardItem({UserQuotesList quoteList}) {
+  Widget cardItem({UserQuotesList quotesList}) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,
@@ -171,11 +166,13 @@ class _QuotesListsState extends State<QuotesLists> {
             child: Card(
               child: InkWell(
                 onTap: () async {
-                  final mustRefresh =
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => QuotesList(
-                                id: quoteList.id,
-                              )));
+                  final mustRefresh = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => QuotesList(
+                        id: quotesList.id,
+                      ),
+                    ),
+                  );
 
                   if (mustRefresh == null) {
                     return;
@@ -205,7 +202,7 @@ class _QuotesListsState extends State<QuotesLists> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    quoteList.name,
+                                    quotesList.name,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 20.0,
@@ -214,7 +211,7 @@ class _QuotesListsState extends State<QuotesLists> {
                                   Opacity(
                                     opacity: .6,
                                     child: Text(
-                                      quoteList.description,
+                                      quotesList.description,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: 15.0,
@@ -229,12 +226,30 @@ class _QuotesListsState extends State<QuotesLists> {
                             icon: Icon(Icons.more_vert),
                             onSelected: (value) {
                               if (value == 'delete') {
-                                showDeleteListDialog(quoteList);
+                                showDeleteListDialog(
+                                  context: context,
+                                  listName: quotesList.name,
+                                  onCancel: () => Navigator.of(context).pop(),
+                                  onConfirm: () {
+                                    Navigator.of(context).pop();
+                                    deleteCurrentList(quotesList);
+                                  },
+                                );
                                 return;
                               }
 
                               if (value == 'edit') {
-                                showEditListDialog(quoteList);
+                                showEditListDialog(
+                                  context: context,
+                                  listDesc: quotesList.description,
+                                  listName: quotesList.name,
+                                  listIsPublic: quotesList.isPublic,
+                                  onCancel: () => Navigator.of(context).pop(),
+                                  onConfirm: (payload) {
+                                    Navigator.of(context).pop();
+                                    updateSelectedList(quotesList, payload);
+                                  },
+                                );
                                 return;
                               }
                             },
@@ -336,7 +351,7 @@ class _QuotesListsState extends State<QuotesLists> {
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final quoteList = userQuotesLists.elementAt(index);
-            return cardItem(quoteList: quoteList);
+            return cardItem(quotesList: quoteList);
           },
           childCount: userQuotesLists.length,
         ),
@@ -368,50 +383,30 @@ class _QuotesListsState extends State<QuotesLists> {
     });
   }
 
-  void deleteList(UserQuotesList quoteList) async {
-    int index = userQuotesLists.indexOf(quoteList);
+  void deleteCurrentList(UserQuotesList quotesList) async {
+    int index = userQuotesLists.indexOf(quotesList);
 
     setState(() {
       userQuotesLists.removeAt(index);
     });
 
-    try {
-      final userAuth = await userState.userAuth;
+    final success = await deleteList(
+      context: context,
+      id: quotesList.id,
+    );
 
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-        return;
-      }
-
-      // Add a new document containing information
-      // to delete the subcollection (in order to delete its documents).
-      await FirebaseFirestore.instance.collection('todelete').add({
-        'objectId': quoteList.id,
-        'path': 'users/<userId>/lists/<listId>/quotes',
-        'userId': userAuth.uid,
-        'target': 'list',
-        'type': 'subcollection',
-      });
-
-      // Delete the quote collection doc.
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .collection('lists')
-          .doc(quoteList.id)
-          .delete();
-    } catch (error) {
+    if (!success) {
       setState(() {
-        userQuotesLists.insert(index, quoteList);
+        userQuotesLists.insert(index, quotesList);
       });
-
-      debugPrint(error);
 
       showSnack(
         context: context,
         message: 'There was and issue while deleting the list. Try again later',
         type: SnackType.error,
       );
+
+      return;
     }
   }
 
@@ -640,266 +635,27 @@ class _QuotesListsState extends State<QuotesLists> {
         });
   }
 
-  void showDeleteListDialog(UserQuotesList quotesList) {
-    final name = quotesList.name;
-
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Delete $name list?'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      'This action is irreversible.',
-                    ),
-                  )
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Cancel',
-                  ),
-                ),
-              ),
-              RaisedButton(
-                color: Colors.red,
-                onPressed: () {
-                  deleteList(quotesList);
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          );
-        });
-  }
-
-  void showEditListDialog(UserQuotesList quotesList) async {
-    updateListName = quotesList.name;
-    updateListDesc = quotesList.description;
-    updateListIsPublic = quotesList.isPublic;
-
-    final inputSize = Size(300.0, 80);
-
-    final childContent = Material(
-      child: ListView(
-        physics: ClampingScrollPhysics(),
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SheetHeader(
-                  title: "Update name",
-                  subTitle: updateListName,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints.tight(inputSize),
-                    child: TextField(
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        labelStyle: TextStyle(color: stateColors.primary),
-                        hintText: quotesList.name,
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: stateColors.primary, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (newValue) {
-                        updateListName = newValue;
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints.tight(inputSize),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        labelStyle: TextStyle(color: stateColors.primary),
-                        hintText: quotesList.description,
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: stateColors.primary, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (newValue) {
-                        updateListDesc = newValue;
-                      },
-                    ),
-                  ),
-                ),
-                StatefulBuilder(builder: (context, childSetState) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: <Widget>[
-                        Checkbox(
-                          value: updateListIsPublic,
-                          onChanged: (newValue) {
-                            childSetState(() {
-                              updateListIsPublic = newValue;
-                            });
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Opacity(
-                            opacity: .6,
-                            child: Text('Is public?'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 20.0,
-                    left: 10.0,
-                  ),
-                  child: Wrap(
-                    spacing: 10.0,
-                    runSpacing: 10.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          updateListName = '';
-                          updateListDesc = '';
-
-                          Navigator.of(context).pop();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Cancel',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          updateSelectedList(quotesList);
-                          Navigator.of(context).pop();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Update',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.validation,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (MediaQuery.of(context).size.width < 700.0) {
-      await showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context, scrollController) {
-            return childContent;
-          });
-
-      setState(() {});
-    } else {
-      await showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: childContent,
-              ),
-            ),
-          );
-        },
-      );
-
-      setState(() {});
-    }
-  }
-
-  void updateSelectedList(UserQuotesList quotesList) async {
-    oldListDescription = quotesList.description;
-    oldListName = quotesList.name;
-    oldIsPublic = quotesList.isPublic;
+  void updateSelectedList(
+    UserQuotesList quotesList,
+    EditListPayload payload,
+  ) async {
+    final oldListDescription = quotesList.description;
+    final oldListName = quotesList.name;
+    final oldIsPublic = quotesList.isPublic;
 
     // Optimistic
     setState(() {
-      quotesList.description = updateListDesc;
-      quotesList.name = updateListName;
-      quotesList.isPublic = updateListIsPublic;
+      quotesList.name = payload.name;
+      quotesList.description = payload.description;
+      quotesList.isPublic = payload.isPublic;
     });
 
     final success = await updateList(
       context: context,
       id: quotesList.id,
-      name: updateListName,
-      description: updateListDesc,
-      isPublic: updateListIsPublic,
+      name: payload.name,
+      description: payload.description,
+      isPublic: payload.isPublic,
       iconUrl: quotesList.iconUrl,
     );
 

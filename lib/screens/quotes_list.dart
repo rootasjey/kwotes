@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/components/sheet_header.dart';
-import 'package:flash/flash.dart';
+import 'package:figstyle/components/delete_list_dialog.dart';
+import 'package:figstyle/components/edit_list_dialog.dart';
+import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
-import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
@@ -21,7 +21,6 @@ import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuotesList extends StatefulWidget {
   final String id;
@@ -53,9 +52,6 @@ class _QuotesListState extends State<QuotesList> {
   List<Quote> quotes = [];
 
   ScrollController listScrollController = ScrollController();
-
-  String updateListName = '';
-  String updateListDesc = '';
 
   UserQuotesList quotesList;
 
@@ -156,12 +152,30 @@ class _QuotesListState extends State<QuotesList> {
               spacing: 20.0,
               children: <Widget>[
                 OutlinedButton.icon(
-                  onPressed: () => showEditListDialog(),
+                  onPressed: () => showEditListDialog(
+                    context: context,
+                    listDesc: quotesList.description,
+                    listName: quotesList.name,
+                    listIsPublic: quotesList.isPublic,
+                    onCancel: () => Navigator.of(context).pop(),
+                    onConfirm: (payload) {
+                      Navigator.of(context).pop();
+                      updateCurrentList(payload);
+                    },
+                  ),
                   icon: Icon(Icons.edit),
                   label: Text('Edit'),
                 ),
                 OutlinedButton.icon(
-                  onPressed: () => showDeleteListDialog(),
+                  onPressed: () => showDeleteListDialog(
+                    context: context,
+                    listName: quotesList.name,
+                    onCancel: () => Navigator.of(context).pop(),
+                    onConfirm: () {
+                      Navigator.of(context).pop();
+                      deleteCurrentList();
+                    },
+                  ),
                   icon: Icon(Icons.delete),
                   label: Text('Delete'),
                   style: OutlinedButton.styleFrom(
@@ -276,10 +290,28 @@ class _QuotesListState extends State<QuotesList> {
       onSelected: (value) {
         switch (value) {
           case 'delete':
-            showDeleteListDialog();
+            showDeleteListDialog(
+              context: context,
+              listName: quotesList.name,
+              onCancel: () => Navigator.of(context).pop(),
+              onConfirm: () {
+                Navigator.of(context).pop();
+                deleteCurrentList();
+              },
+            );
             break;
           case 'edit':
-            showEditListDialog();
+            showEditListDialog(
+              context: context,
+              listDesc: quotesList.description,
+              listName: quotesList.name,
+              listIsPublic: quotesList.isPublic,
+              onCancel: () => Navigator.of(context).pop(),
+              onConfirm: (payload) {
+                Navigator.of(context).pop();
+                updateCurrentList(payload);
+              },
+            );
             break;
           default:
         }
@@ -475,311 +507,6 @@ class _QuotesListState extends State<QuotesList> {
     }
   }
 
-  void showEditListDialog() async {
-    updateListName = quotesList.name;
-    updateListDesc = quotesList.description;
-    updateListIsPublic = quotesList.isPublic;
-
-    final inputSize = Size(300.0, 80);
-
-    final childContent = Material(
-      child: ListView(
-        physics: ClampingScrollPhysics(),
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SheetHeader(
-                  title: "Update name",
-                  subTitle: updateListName,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints.tight(inputSize),
-                    child: TextField(
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        labelStyle: TextStyle(color: stateColors.primary),
-                        hintText: quotesList.name,
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: stateColors.primary, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (newValue) {
-                        updateListName = newValue;
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints.tight(inputSize),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        labelStyle: TextStyle(color: stateColors.primary),
-                        hintText: quotesList.description,
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: stateColors.primary, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (newValue) {
-                        updateListDesc = newValue;
-                      },
-                    ),
-                  ),
-                ),
-                StatefulBuilder(builder: (context, childSetState) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: <Widget>[
-                        Checkbox(
-                          value: updateListIsPublic,
-                          onChanged: (newValue) {
-                            childSetState(() {
-                              updateListIsPublic = newValue;
-                            });
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Opacity(
-                            opacity: .6,
-                            child: Text('Is public?'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 20.0,
-                    left: 10.0,
-                  ),
-                  child: Wrap(
-                    spacing: 10.0,
-                    runSpacing: 10.0,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          updateListName = '';
-                          updateListDesc = '';
-
-                          Navigator.of(context).pop();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Cancel',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          updateCurrentList();
-                          Navigator.of(context).pop();
-                        },
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Update',
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.validation,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (MediaQuery.of(context).size.width < 700.0) {
-      await showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context, scrollController) {
-            return childContent;
-          });
-
-      setState(() {});
-    } else {
-      await showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: childContent,
-              ),
-            ),
-          );
-        },
-      );
-
-      setState(() {});
-    }
-  }
-
-  void showDeleteListDialog() {
-    final name = quotesList.name;
-
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Delete $name?'),
-            contentPadding: EdgeInsets.zero,
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(top: 10.0)),
-                  Divider(
-                    thickness: 1.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20.0,
-                      left: 16.0,
-                      right: 16.0,
-                      bottom: 16.0,
-                    ),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'This action is irreversible.',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Cancel',
-                  ),
-                ),
-              ),
-              RaisedButton(
-                color: Colors.red,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  deleteCurrentList();
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          );
-        });
-  }
-
-  void showQuoteSheet(Quote quote) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 60.0,
-            ),
-            child: Wrap(
-              spacing: 30.0,
-              alignment: WrapAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  iconSize: 40.0,
-                  tooltip: 'Delete',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    removeQuote(quote);
-                  },
-                  icon: Opacity(
-                    opacity: .6,
-                    child: Icon(
-                      Icons.delete_outline,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  iconSize: 40.0,
-                  tooltip: 'Delete',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    shareQuote(
-                      context: context,
-                      quote: quote,
-                    );
-                  },
-                  icon: Opacity(
-                    opacity: .6,
-                    child: Icon(
-                      Icons.share,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   void deleteCurrentList() async {
     setState(() {
       isDeletingList = true;
@@ -834,13 +561,13 @@ class _QuotesListState extends State<QuotesList> {
     }
   }
 
-  void updateCurrentList() async {
+  void updateCurrentList(EditListPayload payload) async {
     final success = await updateList(
       context: context,
       id: widget.id,
-      name: updateListName,
-      description: updateListDesc,
-      isPublic: updateListIsPublic,
+      name: payload.name,
+      description: payload.description,
+      isPublic: payload.isPublic,
       iconUrl: quotesList.iconUrl,
     );
 
@@ -855,9 +582,9 @@ class _QuotesListState extends State<QuotesList> {
     }
 
     setState(() {
-      quotesList.name = updateListName;
-      quotesList.description = updateListDesc;
-      quotesList.isPublic = updateListIsPublic;
+      quotesList.name = payload.name;
+      quotesList.description = payload.description;
+      quotesList.isPublic = payload.isPublic;
     });
   }
 }
