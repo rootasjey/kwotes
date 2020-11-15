@@ -3,9 +3,14 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 class TempQuoteRow extends StatefulWidget {
   final bool isDraft;
+
+  /// If true, this will activate swipe actions
+  /// and deactivate popup menu button.
+  final bool useSwipeActions;
 
   final double cardSize;
   final double elevation;
@@ -16,7 +21,17 @@ class TempQuoteRow extends StatefulWidget {
   final Function onTap;
 
   final ItemComponentType componentType;
+
+  /// Required if `useSwipeActions` is true.
+  final Key key;
+
   final List<Widget> stackChildren;
+
+  /// Swipe trailing actions.
+  final List<SwipeAction> trailingActions;
+
+  /// Swipe leadling actions.
+  final List<SwipeAction> leadingActions;
 
   final TempQuote tempQuote;
 
@@ -34,6 +49,10 @@ class TempQuoteRow extends StatefulWidget {
       horizontal: 70.0,
       vertical: 30.0,
     ),
+    this.useSwipeActions = false,
+    this.key,
+    this.trailingActions,
+    this.leadingActions,
   });
 
   @override
@@ -212,7 +231,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
     final quote = widget.tempQuote;
     final author = quote.author;
 
-    return Container(
+    final childRow = Container(
       padding: widget.padding,
       child: Card(
         elevation: elevation,
@@ -255,28 +274,29 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: 50.0,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          PopupMenuButton<String>(
-                            icon: Opacity(
-                              opacity: .6,
-                              child: iconColor != null
-                                  ? Icon(
-                                      Icons.more_vert,
-                                      color: iconColor,
-                                    )
-                                  : Icon(Icons.more_vert),
+                    if (widget.itemBuilder != null)
+                      SizedBox(
+                        width: 50.0,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            PopupMenuButton<String>(
+                              icon: Opacity(
+                                opacity: .6,
+                                child: iconColor != null
+                                    ? Icon(
+                                        Icons.more_vert,
+                                        color: iconColor,
+                                      )
+                                    : Icon(Icons.more_vert),
+                              ),
+                              onSelected: widget.onSelected,
+                              itemBuilder: widget.itemBuilder,
                             ),
-                            onSelected: widget.onSelected,
-                            itemBuilder: widget.itemBuilder,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 if (widget.isDraft)
@@ -289,6 +309,18 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
           ),
         ),
       ),
+    );
+
+    if (!widget.useSwipeActions) {
+      return childRow;
+    }
+
+    return SwipeActionCell(
+      key: widget.key,
+      performsFirstActionWithFullSwipe: true,
+      child: childRow,
+      trailingActions: widget.trailingActions,
+      leadingActions: widget.leadingActions,
     );
   }
 
