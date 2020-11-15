@@ -26,7 +26,7 @@ abstract class StateColorsBase with Store {
   /// Secondary application's color.
   Color secondary = Colors.orange.shade600;
   Color deletion = Color(0xfff55c5c);
-  Color validation = Color(0xff4af2a1);
+  Color validation = Color(0xff38d589);
 
   @observable
   Color softBackground = Color(0xFFEEEEEE);
