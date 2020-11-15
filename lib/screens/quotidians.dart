@@ -8,7 +8,6 @@ import 'package:figstyle/components/quotidian_row.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
@@ -365,21 +364,26 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   Widget itemGrid(Quotidian quotidian) {
-    final quote = quotidian.quote;
-
-    return QuoteRowWithActions(
+    return QuotidianRow(
+      quotidian: quotidian,
+      padding: EdgeInsets.zero,
+      elevation: 2.0,
       componentType: ItemComponentType.card,
-      quoteId: quotidian.quote.id,
-      quote: quote,
-      stackChildren: <Widget>[
-        Positioned(
-          bottom: 15.0,
-          right: 60.0,
-          child: Text(
-            quotidian.date.day.toString(),
-          ),
-        ),
-      ],
+      onBeforeDelete: () {
+        setState(() {
+          quotidians.removeWhere((qItem) => qItem.id == quotidian.id);
+        });
+      },
+      onAfterDelete: (bool success) {
+        if (!success) {
+          final index =
+              quotidians.indexWhere((qItem) => qItem.id == quotidian.id);
+
+          setState(() {
+            quotidians.insert(index, quotidian);
+          });
+        }
+      },
     );
   }
 
@@ -390,21 +394,22 @@ class QuotidiansState extends State<Quotidians> {
       return QuotidianRow(
         quotidian: quotidian,
         padding: EdgeInsets.zero,
-        itemBuilder: (context) => <PopupMenuEntry<String>>[
-          PopupMenuItem(
-            value: 'delete',
-            child: ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Delete'),
-            ),
-          ),
-        ],
-        onSelected: (value) {
-          switch (value) {
-            case 'delete':
-              deleteAction(quotidian);
-              break;
-            default:
+        useSwipeActions: true,
+        key: ObjectKey(quotidian.id),
+        componentType: ItemComponentType.row,
+        onBeforeDelete: () {
+          setState(() {
+            quotidians.removeWhere((qItem) => qItem.id == quotidian.id);
+          });
+        },
+        onAfterDelete: (bool success) {
+          if (!success) {
+            final index =
+                quotidians.indexWhere((qItem) => qItem.id == quotidian.id);
+
+            setState(() {
+              quotidians.insert(index, quotidian);
+            });
           }
         },
       );
@@ -420,30 +425,6 @@ class QuotidiansState extends State<Quotidians> {
         ),
       ]),
     );
-  }
-
-  void deleteAction(Quotidian quotidian) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('quotidians')
-          .doc(quotidian.id)
-          .delete();
-
-      setState(() {
-        quotidians.removeWhere((element) => element.id == quotidian.id);
-      });
-
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('The quotidian has been successfully deleted.'),
-      ));
-    } catch (error) {
-      debugPrint(error.toString());
-
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('Sorry, an error occurred while deleting the quotidian.'),
-      ));
-    }
   }
 
   void deleteMonth(List<Quotidian> group) async {
@@ -660,7 +641,7 @@ class QuotidiansState extends State<Quotidians> {
                       tooltip: 'Delete',
                       onPressed: () {
                         Navigator.of(context).pop();
-                        deleteAction(quotidian);
+                        // deleteAction(quotidian);
                       },
                       icon: Opacity(
                         opacity: .6,
