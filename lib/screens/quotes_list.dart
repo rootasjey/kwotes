@@ -157,6 +157,7 @@ class _QuotesListState extends State<QuotesList> {
                     listDesc: quotesList.description,
                     listName: quotesList.name,
                     listIsPublic: quotesList.isPublic,
+                    subtitle: quotesList.name,
                     onCancel: () => Navigator.of(context).pop(),
                     onConfirm: (payload) {
                       Navigator.of(context).pop();
@@ -306,6 +307,7 @@ class _QuotesListState extends State<QuotesList> {
               listDesc: quotesList.description,
               listName: quotesList.name,
               listIsPublic: quotesList.isPublic,
+              subtitle: quotesList.name,
               onCancel: () => Navigator.of(context).pop(),
               onConfirm: (payload) {
                 Navigator.of(context).pop();
