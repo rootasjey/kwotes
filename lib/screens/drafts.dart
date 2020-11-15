@@ -246,9 +246,7 @@ class _DraftsState extends State<Drafts> {
             key: ObjectKey(index),
             useSwipeActions: useSwipeActions,
             onTap: () => editDraft(draft),
-            padding: EdgeInsets.symmetric(
-              horizontal: horPadding,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: horPadding),
           );
         },
         childCount: drafts.length,
