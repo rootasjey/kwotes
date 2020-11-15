@@ -310,55 +310,59 @@ class QuotidiansState extends State<Quotidians> {
     return Material(
       elevation: 2.0,
       color: stateColors.softBackground,
-      child: Stack(
-        children: <Widget>[
-          FlatButton(
-            onPressed: () {
-              final renderObject = headerKey.currentContext.findRenderObject();
-              renderObject.showOnScreen(duration: 1.seconds);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 35.0,
-                bottom: 10.0,
-              ),
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      '$month $year',
-                    ),
-                    SizedBox(
-                      width: 100.0,
-                      child: Divider(
-                        thickness: 2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 0.0,
-            child: FlatButton(
+      child: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: <Widget>[
+            FlatButton(
               onPressed: () {
-                deleteMonthDialog(
-                  yearMonth,
-                  group,
-                );
+                final renderObject =
+                    headerKey.currentContext.findRenderObject();
+                renderObject.showOnScreen(duration: 1.seconds);
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 25.0,
+                padding: const EdgeInsets.only(
+                  top: 35.0,
+                  bottom: 10.0,
                 ),
-                child: Icon(
-                  Icons.delete,
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        '$month $year',
+                      ),
+                      SizedBox(
+                        width: 100.0,
+                        child: Divider(
+                          thickness: 2,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              right: 0.0,
+              child: FlatButton(
+                onPressed: () {
+                  deleteMonthDialog(
+                    yearMonth,
+                    group,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 25.0,
+                  ),
+                  child: Icon(
+                    Icons.delete,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
