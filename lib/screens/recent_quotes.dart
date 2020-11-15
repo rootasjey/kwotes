@@ -3,8 +3,6 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/actions/quotes.dart';
-import 'package:figstyle/actions/quotidians.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
@@ -288,48 +286,6 @@ class RecentQuotesState extends State<RecentQuotes> {
     });
   }
 
-  void addQuotidianAction(Quote quote) async {
-    final success = await addToQuotidians(
-      quote: quote,
-      lang: lang,
-    );
-
-    if (success) {
-      showSnack(
-        context: context,
-        message: 'Quote successfully added.',
-        type: SnackType.success,
-      );
-      return;
-    }
-
-    showSnack(
-      context: context,
-      message: 'Sorry, an error occurred while adding the quotes to quotidian.',
-      type: SnackType.error,
-    );
-  }
-
-  void deleteAction(Quote quote) async {
-    int index = quotes.indexOf(quote);
-
-    setState(() {
-      quotes.removeAt(index);
-    });
-
-    final success = await deleteQuote(quote: quote);
-
-    if (!success) {
-      quotes.insert(index, quote);
-
-      showSnack(
-        context: context,
-        message: "Couldn't delete the temporary quote.",
-        type: SnackType.error,
-      );
-    }
-  }
-
   Future fetch() async {
     setState(() {
       isLoading = true;
@@ -419,77 +375,5 @@ class RecentQuotesState extends State<RecentQuotes> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void showDeleteDialog(Quote quote) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Text(
-              'Confirm deletion?',
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 40.0,
-            ),
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(3.0),
-                      ),
-                    ),
-                    color: stateColors.softBackground,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 15.0,
-                      ),
-                      child: Text(
-                        'NO',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(padding: const EdgeInsets.only(left: 15.0)),
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      deleteAction(quote);
-                    },
-                    color: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(3.0),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 15.0,
-                      ),
-                      child: Text(
-                        'YES',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        });
   }
 }
