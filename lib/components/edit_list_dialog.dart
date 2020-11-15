@@ -19,6 +19,12 @@ Future showEditListDialog({
   final initialListName = listName;
   final initialListDesc = listDesc;
 
+  final nameController = TextEditingController();
+  final descController = TextEditingController();
+
+  nameController.text = initialListName;
+  descController.text = initialListDesc;
+
   final inputSize = Size(300.0, 80);
 
   final childContent = Material(
@@ -43,6 +49,7 @@ Future showEditListDialog({
                   constraints: BoxConstraints.tight(inputSize),
                   child: TextField(
                     autofocus: true,
+                    controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       labelStyle: TextStyle(color: stateColors.primary),
@@ -66,6 +73,7 @@ Future showEditListDialog({
                 child: ConstrainedBox(
                   constraints: BoxConstraints.tight(inputSize),
                   child: TextField(
+                    controller: descController,
                     decoration: InputDecoration(
                       labelText: 'Description',
                       labelStyle: TextStyle(color: stateColors.primary),
