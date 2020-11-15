@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -783,7 +784,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         SwipeAction(
           title: 'Delete',
           icon: Icon(Icons.delete_outline, color: Colors.white),
-          color: Color(0xfff55c5c),
+          color: stateColors.deletion,
           onTap: (CompletionHandler handler) {
             handler(false);
 
