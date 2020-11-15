@@ -12,6 +12,9 @@ Future showEditListDialog({
   @required bool listIsPublic,
   @required VoidCallback onCancel,
   @required Function(EditListPayload) onConfirm,
+  String textButtonConfirmation = 'Update',
+  String title = 'Update name',
+  String subtitle = '',
 }) async {
   final initialListName = listName;
   final initialListDesc = listDesc;
@@ -28,8 +31,8 @@ Future showEditListDialog({
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SheetHeader(
-                title: "Update name",
-                subTitle: listName,
+                title: title,
+                subTitle: subtitle,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -128,11 +131,13 @@ Future showEditListDialog({
                       ),
                     ),
                     OutlinedButton.icon(
-                      onPressed: () => onConfirm(EditListPayload(
-                        listName,
-                        listDesc,
-                        listIsPublic,
-                      )),
+                      onPressed: () => onConfirm(
+                        EditListPayload(
+                          listName,
+                          listDesc,
+                          listIsPublic,
+                        ),
+                      ),
                       icon: Opacity(
                         opacity: 0.6,
                         child: Icon(Icons.check),
@@ -140,7 +145,7 @@ Future showEditListDialog({
                       label: Opacity(
                         opacity: 0.6,
                         child: Text(
-                          'Update',
+                          textButtonConfirmation,
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
