@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/components/sheet_header.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
@@ -19,6 +21,7 @@ import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuotesList extends StatefulWidget {
   final String id;
@@ -472,130 +475,194 @@ class _QuotesListState extends State<QuotesList> {
     }
   }
 
-  void showEditListDialog() {
+  void showEditListDialog() async {
     updateListName = quotesList.name;
     updateListDesc = quotesList.description;
     updateListIsPublic = quotesList.isPublic;
 
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, childSetState) {
-            return SimpleDialog(
-              title: Text(
-                'Edit ${quotesList.name}',
-                overflow: TextOverflow.ellipsis,
-              ),
-              children: <Widget>[
-                Divider(
-                  thickness: 1.0,
+    final inputSize = Size(300.0, 80);
+
+    final childContent = Material(
+      child: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SheetHeader(
+                  title: "Update name",
+                  subTitle: updateListName,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
                     vertical: 10.0,
                   ),
-                  child: TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      labelStyle: TextStyle(color: stateColors.primary),
-                      hintText: quotesList.name,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: stateColors.primary, width: 2.0),
-                      ),
-                    ),
-                    onChanged: (newValue) {
-                      updateListName = newValue;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                      labelStyle: TextStyle(color: stateColors.primary),
-                      hintText: quotesList.description,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: stateColors.primary, width: 2.0),
-                      ),
-                    ),
-                    onChanged: (newValue) {
-                      updateListDesc = newValue;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: <Widget>[
-                      Checkbox(
-                        value: updateListIsPublic,
-                        onChanged: (newValue) {
-                          childSetState(() {
-                            updateListIsPublic = newValue;
-                          });
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Opacity(
-                          opacity: .6,
-                          child: Text('Is public?'),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.tight(inputSize),
+                    child: TextField(
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        labelStyle: TextStyle(color: stateColors.primary),
+                        hintText: quotesList.name,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: stateColors.primary, width: 2.0),
                         ),
                       ),
-                    ],
+                      onChanged: (newValue) {
+                        updateListName = newValue;
+                      },
+                    ),
                   ),
-                ),
-                Divider(
-                  height: 15.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
+                    horizontal: 25.0,
                     vertical: 10.0,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      FlatButton(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.tight(inputSize),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        labelStyle: TextStyle(color: stateColors.primary),
+                        hintText: quotesList.description,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: stateColors.primary, width: 2.0),
+                        ),
+                      ),
+                      onChanged: (newValue) {
+                        updateListDesc = newValue;
+                      },
+                    ),
+                  ),
+                ),
+                StatefulBuilder(builder: (context, childSetState) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Checkbox(
+                          value: updateListIsPublic,
+                          onChanged: (newValue) {
+                            childSetState(() {
+                              updateListIsPublic = newValue;
+                            });
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Opacity(
+                            opacity: .6,
+                            child: Text('Is public?'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 20.0,
+                    left: 10.0,
+                  ),
+                  child: Wrap(
+                    spacing: 10.0,
+                    runSpacing: 10.0,
+                    children: [
+                      OutlinedButton.icon(
                         onPressed: () {
                           updateListName = '';
                           updateListDesc = '';
+
                           Navigator.of(context).pop();
                         },
-                        child: Text(
-                          'Cancel',
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.clear),
+                        ),
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Cancel',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.foreground,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15.0),
-                      ),
-                      RaisedButton(
-                        color: stateColors.primary,
+                      OutlinedButton.icon(
                         onPressed: () {
-                          update();
+                          updateCurrentList();
                           Navigator.of(context).pop();
                         },
-                        child: Text(
-                          'Update',
-                          style: TextStyle(color: Colors.white),
+                        icon: Opacity(
+                          opacity: 0.6,
+                          child: Icon(Icons.check),
                         ),
-                      )
+                        label: Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            'Update',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          primary: stateColors.validation,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
-            );
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (MediaQuery.of(context).size.width < 700.0) {
+      await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context, scrollController) {
+            return childContent;
           });
-        });
+
+      setState(() {});
+    } else {
+      await showFlash(
+        context: context,
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: childContent,
+              ),
+            ),
+          );
+        },
+      );
+
+      setState(() {});
+    }
   }
 
   void showDeleteListDialog() {
@@ -648,7 +715,7 @@ class _QuotesListState extends State<QuotesList> {
                 color: Colors.red,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  delete();
+                  deleteCurrentList();
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -713,7 +780,7 @@ class _QuotesListState extends State<QuotesList> {
         });
   }
 
-  void delete() async {
+  void deleteCurrentList() async {
     setState(() {
       isDeletingList = true;
     });
@@ -767,7 +834,7 @@ class _QuotesListState extends State<QuotesList> {
     }
   }
 
-  void update() async {
+  void updateCurrentList() async {
     final success = await updateList(
       context: context,
       id: widget.id,
@@ -780,7 +847,7 @@ class _QuotesListState extends State<QuotesList> {
     if (!success) {
       showSnack(
         context: context,
-        message: "Sorry, could not update your list. Please try again later.",
+        message: "Sorry, we couldn't update your list. Please try again later.",
         type: SnackType.error,
       );
 
