@@ -42,10 +42,6 @@ class _QuotesListsState extends State<QuotesLists> {
 
   DocumentSnapshot lastDoc;
 
-  String newListName = '';
-  String newListDescription = '';
-  String newListIconUrl = '';
-
   @override
   initState() {
     super.initState();
@@ -56,7 +52,20 @@ class _QuotesListsState extends State<QuotesLists> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showCreateListDialog(),
+        onPressed: () => showEditListDialog(
+          context: context,
+          listDesc: '',
+          listName: '',
+          listIsPublic: false,
+          textButtonConfirmation: "Create",
+          title: "You'll be able to change these properties later",
+          subtitle: 'Create a new list',
+          onCancel: () => Navigator.of(context).pop(),
+          onConfirm: (payload) {
+            Navigator.of(context).pop();
+            createNewList(payload);
+          },
+        ),
         child: Icon(Icons.add),
         backgroundColor: stateColors.primary,
         foregroundColor: Colors.white,
@@ -244,6 +253,7 @@ class _QuotesListsState extends State<QuotesLists> {
                                   listDesc: quotesList.description,
                                   listName: quotesList.name,
                                   listIsPublic: quotesList.isPublic,
+                                  subtitle: quotesList.name,
                                   onCancel: () => Navigator.of(context).pop(),
                                   onConfirm: (payload) {
                                     Navigator.of(context).pop();
@@ -329,9 +339,20 @@ class _QuotesListsState extends State<QuotesLists> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    showCreateListDialog();
-                  },
+                  onPressed: () => showEditListDialog(
+                    context: context,
+                    listDesc: '',
+                    listName: '',
+                    listIsPublic: false,
+                    textButtonConfirmation: 'Create',
+                    title: "You'll be able to change these properties later",
+                    subtitle: 'Create a new list',
+                    onCancel: () => Navigator.of(context).pop(),
+                    onConfirm: (payload) {
+                      Navigator.of(context).pop();
+                      createNewList(payload);
+                    },
+                  ),
                   icon: Icon(
                     Icons.add,
                   ),
@@ -359,13 +380,12 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
-  void create() async {
+  void createNewList(EditListPayload payload) async {
     final quotesList = await createList(
       context: context,
-      name: newListName,
-      description: newListDescription,
-      iconUrl: newListIconUrl,
-      isPublic: newIsPublic,
+      name: payload.name,
+      description: payload.description,
+      isPublic: payload.isPublic,
     );
 
     if (quotesList == null) {
@@ -517,122 +537,6 @@ class _QuotesListsState extends State<QuotesLists> {
         isLoadingMore = false;
       });
     }
-  }
-
-  void showCreateListDialog() {
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, childSetState) {
-            return SimpleDialog(
-              title: Text('Create a new list'),
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      labelStyle: TextStyle(color: stateColors.primary),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: stateColors.primary, width: 2.0),
-                      ),
-                    ),
-                    onChanged: (newValue) {
-                      newListName = newValue;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                      labelStyle: TextStyle(color: stateColors.primary),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: stateColors.primary, width: 2.0),
-                      ),
-                    ),
-                    onChanged: (newValue) {
-                      newListDescription = newValue;
-                    },
-                    onSubmitted: (_) {
-                      create();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: <Widget>[
-                      Checkbox(
-                        value: newIsPublic,
-                        onChanged: (newValue) {
-                          childSetState(() {
-                            newIsPublic = newValue;
-                          });
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Opacity(
-                          opacity: .6,
-                          child: Text('Is public?'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 15.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 10.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          'Cancel',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15.0),
-                      ),
-                      RaisedButton(
-                        color: stateColors.primary,
-                        onPressed: () {
-                          create();
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          'Create',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            );
-          });
-        });
   }
 
   void updateSelectedList(
