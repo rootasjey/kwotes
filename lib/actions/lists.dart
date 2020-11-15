@@ -7,7 +7,7 @@ import 'package:figstyle/types/user_quotes_list.dart';
 import '../screens/signin.dart';
 
 Future<UserQuotesList> createList({
-  BuildContext context,
+  @required BuildContext context,
   String name = '',
   String description = '',
   String iconUrl = '',
@@ -49,8 +49,8 @@ Future<UserQuotesList> createList({
 }
 
 Future<bool> deleteList({
-  BuildContext context,
-  String id,
+  @required BuildContext context,
+  @required String id,
 }) async {
   try {
     final userAuth = await userState.userAuth;
@@ -88,9 +88,9 @@ Future<bool> deleteList({
 }
 
 Future<bool> removeFromList({
-  BuildContext context,
-  String id,
-  Quote quote,
+  @required BuildContext context,
+  @required String id,
+  @required Quote quote,
 }) async {
   try {
     final userAuth = await userState.userAuth;
@@ -119,7 +119,7 @@ Future<bool> removeFromList({
 }
 
 Future<bool> updateList({
-  BuildContext context,
+  @required BuildContext context,
   String id = '',
   String iconUrl = '',
   String name = '',
