@@ -117,7 +117,8 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget appBar() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
+    final width = MediaQuery.of(context).size.width;
+    final horPadding = width < Constants.maxMobileWidth ? 0.0 : 70.0;
 
     return BasePageAppBar(
       expandedHeight: 100.0,
@@ -174,56 +175,51 @@ class _TopicPageState extends State<TopicPage> {
           child: Padding(
             padding: const EdgeInsets.only(
               left: 16.0,
+              bottom: 10.0,
             ),
             child: Wrap(
               spacing: 15.0,
               children: <Widget>[
                 if (smallViewVisible)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: InkWell(
-                        onTap: () {
-                          _innerDrawerKey.currentState.toggle();
-                        },
-                        child: Icon(Icons.menu),
-                      ),
+                  Opacity(
+                    opacity: 0.6,
+                    child: InkWell(
+                      onTap: () {
+                        _innerDrawerKey.currentState.toggle();
+                      },
+                      child: Icon(Icons.menu),
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: DropdownButton<String>(
-                    elevation: 2,
-                    value: lang,
-                    isDense: true,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    style: TextStyle(
-                      color: stateColors.foreground.withOpacity(0.6),
-                      fontFamily: GoogleFonts.raleway().fontFamily,
-                      fontSize: 20.0,
-                    ),
-                    onChanged: (String newLang) {
-                      lang = newLang;
-                      appStorage.setPageLang(
-                        lang: lang,
-                        pageRoute: pageRoute,
-                      );
+                DropdownButton<String>(
+                  elevation: 2,
+                  value: lang,
+                  isDense: true,
+                  underline: Container(
+                    height: 0,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  style: TextStyle(
+                    color: stateColors.foreground.withOpacity(0.6),
+                    fontFamily: GoogleFonts.raleway().fontFamily,
+                    fontSize: 20.0,
+                  ),
+                  onChanged: (String newLang) {
+                    lang = newLang;
+                    appStorage.setPageLang(
+                      lang: lang,
+                      pageRoute: pageRoute,
+                    );
 
-                      fetch();
-                    },
-                    items: ['en', 'fr'].map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                          ));
-                    }).toList(),
-                  ),
+                    fetch();
+                  },
+                  items: ['en', 'fr'].map((String value) {
+                    return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value.toUpperCase(),
+                        ));
+                  }).toList(),
                 ),
               ],
             ),
