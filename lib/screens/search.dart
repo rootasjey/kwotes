@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/author_suggestion.dart';
 import 'package:figstyle/types/reference_suggestion.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  bool canManage = false;
   bool hasNext = true;
   bool hasErrors = false;
   bool isFabVisible = false;
@@ -64,6 +67,7 @@ class _SearchState extends State<Search> {
     searchFocusNode = FocusNode();
     searchInputController = TextEditingController();
     scrollController = ScrollController();
+    fetchPermissions();
 
     if (_searchInputValue != null && _searchInputValue.isNotEmpty) {
       searchInputController.text = _searchInputValue;
@@ -301,12 +305,17 @@ class _SearchState extends State<Search> {
   }
 
   Widget quotesListView() {
+    final width = MediaQuery.of(context).size.width;
+    int index = -1;
+
     return Observer(builder: (context) {
       final isConnected = userState.isUserConnected;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: quotesSuggestions.map((quote) {
+          index++;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -317,9 +326,12 @@ class _SearchState extends State<Search> {
                 child: QuoteRowWithActions(
                   quote: quote,
                   quoteId: quote.id,
+                  canManage: canManage,
+                  isConnected: isConnected,
+                  key: ObjectKey(index),
+                  useSwipeActions: width < Constants.maxMobileWidth,
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   color: stateColors.appBackground,
-                  isConnected: isConnected,
                 ),
               ),
             ],
@@ -614,6 +626,10 @@ class _SearchState extends State<Search> {
     searchAuthors();
     searchQuotes();
     searchReferences();
+  }
+
+  void fetchPermissions() async {
+    canManage = await canUserManage();
   }
 
   void searchAuthors() async {

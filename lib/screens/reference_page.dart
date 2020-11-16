@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/image_hero.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -467,7 +468,8 @@ class ReferencePageState extends State<ReferencePage> {
       );
     }
 
-    final horPadding = MediaQuery.of(context).size.width < 400.0 ? 10.0 : 20.0;
+    final width = MediaQuery.of(context).size.width;
+    final horPadding = width < 400.0 ? 10.0 : 20.0;
 
     return Observer(
       builder: (context) {
@@ -489,6 +491,8 @@ class ReferencePageState extends State<ReferencePage> {
                       quoteId: quote.id,
                       quoteFontSize: 18.0,
                       isConnected: isConnected,
+                      key: ObjectKey(index),
+                      useSwipeActions: width < Constants.maxMobileWidth,
                       color: stateColors.appBackground,
                       padding: EdgeInsets.symmetric(
                         horizontal: horPadding,

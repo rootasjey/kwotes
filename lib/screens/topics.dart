@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -249,6 +250,8 @@ class _TopicsState extends State<Topics> {
                         quoteFontSize: quoteFontSize,
                         color: stateColors.appBackground,
                         isConnected: isConnected,
+                        key: ObjectKey(quote.id),
+                        useSwipeActions: width < Constants.maxMobileWidth,
                         leading: Container(
                           width: 15.0,
                           padding: const EdgeInsets.only(right: 10.0),
