@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/persistent_header.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/author_row.dart';
-import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_author.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -17,6 +17,7 @@ import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Discover extends StatefulWidget {
@@ -30,6 +31,8 @@ class _DiscoverState extends State<Discover> {
   bool hasErrors = false;
   bool isLoading = false;
   bool isLoadingMore = false;
+
+  Color persistentHeaderColor;
 
   DiscoverType discoverType = DiscoverType.references;
 
@@ -46,6 +49,8 @@ class _DiscoverState extends State<Discover> {
   List<Reference> references = [];
 
   String lang = 'en';
+
+  ReactionDisposer reactionDisposer;
 
   @override
   void initState() {
@@ -68,6 +73,18 @@ class _DiscoverState extends State<Discover> {
     descending = appStorage.getPageOrder(pageRoute: pageRoute);
     itemsLayout = appStorage.getItemsStyle(pageRoute);
     discoverType = appStorage.getDiscoverType();
+
+    persistentHeaderColor = stateColors.softBackground;
+
+    reactionDisposer = autorun((_) {
+      persistentHeaderColor = stateColors.softBackground;
+    });
+  }
+
+  @override
+  dispose() {
+    reactionDisposer?.reaction?.dispose();
+    super.dispose();
   }
 
   @override
@@ -91,13 +108,15 @@ class _DiscoverState extends State<Discover> {
 
               return false;
             },
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                appBar(),
-                appBarType(),
-                body(),
-              ],
+            child: SafeArea(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: <Widget>[
+                  appBar(),
+                  appBarType(),
+                  body(),
+                ],
+              ),
             ),
           )),
     );
@@ -148,66 +167,65 @@ class _DiscoverState extends State<Discover> {
   Widget appBarType() {
     final isReferencesSelected = discoverType == DiscoverType.references;
 
-    return BasePageAppBar(
+    return SliverPersistentHeader(
       pinned: true,
-      toolbarHeight: 60.0,
-      collapsedHeight: 70.0,
-      expandedHeight: 70.0,
-      showNavBackIcon: false,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 4.0),
-        child: Wrap(
-          spacing: 10.0,
-          children: [
-            Opacity(
-              opacity: isReferencesSelected ? 1.0 : 0.5,
-              child: TextButton(
-                onPressed: () {
-                  appStorage.saveDiscoverType(DiscoverType.references);
-                  setState(() => discoverType = DiscoverType.references);
-                  fetch();
-                },
-                style: TextButton.styleFrom(
-                  primary: isReferencesSelected
-                      ? stateColors.secondary
-                      : stateColors.foreground,
-                ),
-                child: Text(
-                  'References',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: isReferencesSelected
-                        ? FontWeight.w600
-                        : FontWeight.w400,
+      delegate: PersistentHeader(
+        color: persistentHeaderColor,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Wrap(
+            spacing: 10.0,
+            children: [
+              Opacity(
+                opacity: isReferencesSelected ? 1.0 : 0.5,
+                child: TextButton(
+                  onPressed: () {
+                    appStorage.saveDiscoverType(DiscoverType.references);
+                    setState(() => discoverType = DiscoverType.references);
+                    fetch();
+                  },
+                  style: TextButton.styleFrom(
+                    primary: isReferencesSelected
+                        ? stateColors.secondary
+                        : stateColors.foreground,
+                  ),
+                  child: Text(
+                    'References',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: isReferencesSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Opacity(
-              opacity: !isReferencesSelected ? 1.0 : 0.5,
-              child: TextButton(
-                onPressed: () {
-                  appStorage.saveDiscoverType(DiscoverType.authors);
-                  setState(() => discoverType = DiscoverType.authors);
-                  fetch();
-                },
-                style: TextButton.styleFrom(
-                  primary: !isReferencesSelected
-                      ? stateColors.secondary
-                      : stateColors.foreground,
-                ),
-                child: Text(
-                  'Authors',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: !isReferencesSelected
-                        ? FontWeight.w600
-                        : FontWeight.w400,
+              Opacity(
+                opacity: !isReferencesSelected ? 1.0 : 0.5,
+                child: TextButton(
+                  onPressed: () {
+                    appStorage.saveDiscoverType(DiscoverType.authors);
+                    setState(() => discoverType = DiscoverType.authors);
+                    fetch();
+                  },
+                  style: TextButton.styleFrom(
+                    primary: !isReferencesSelected
+                        ? stateColors.secondary
+                        : stateColors.foreground,
+                  ),
+                  child: Text(
+                    'Authors',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: !isReferencesSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
