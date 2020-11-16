@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -236,7 +237,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     }
   }
 
-  Widget newListButton() {
+  Widget createListButton() {
     return ListTile(
       onTap: () async {
         final res = await showCreateListDialog(context);
@@ -249,14 +250,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Opacity(
-            opacity: .6,
+            opacity: 0.6,
             child: Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Icon(Icons.add),
             ),
           ),
           Text(
-            'New list',
+            'Create list',
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: 20.0,
@@ -517,68 +518,13 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       return;
     }
 
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setSheetState) {
-              List<Widget> tiles = [];
-
-              if (hasErrors) {
-                tiles.add(errorTileList(onPressed: () async {
-                  await fetchLists();
-                  setSheetState(() {
-                    isLoaded = true;
-                  });
-                }));
-              }
-
-              if (userQuotesLists.length == 0 && !isLoading && !isLoaded) {
-                tiles.add(LinearProgressIndicator());
-
-                fetchLists().then((_) {
-                  setSheetState(() {
-                    isLoaded = true;
-                  });
-                });
-              }
-
-              if (userQuotesLists.length > 0) {
-                for (var list in userQuotesLists) {
-                  tiles.add(tileList(list));
-                }
-              }
-
-              return NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification scrollNotif) {
-                  if (scrollNotif.metrics.pixels <
-                      scrollNotif.metrics.maxScrollExtent) {
-                    return false;
-                  }
-
-                  if (hasNext && !isLoadingMore) {
-                    fetchListsMore().then((_) {
-                      setSheetState(() {
-                        isLoadingMore = false;
-                      });
-                    });
-                  }
-
-                  return false;
-                },
-                child: ListView(
-                  children: <Widget>[
-                    newListButton(),
-                    Divider(
-                      thickness: 2.0,
-                    ),
-                    ...tiles
-                  ],
-                ),
-              );
-            },
-          );
-        });
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context, scrollController) => UserLists(
+        scrollController: scrollController,
+        quote: widget.quote,
+      ),
+    );
   }
 
   Future<bool> showCreateListDialog(BuildContext context) {

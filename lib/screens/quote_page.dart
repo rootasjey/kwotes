@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
 import 'package:figstyle/actions/share.dart';
-import 'package:figstyle/components/add_to_list_button.dart';
 import 'package:figstyle/components/full_page_error.dart';
 import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
@@ -146,9 +146,16 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget addToListButton() {
     if (userState.isUserConnected) {
-      return AddToListButton(
-        quote: quote,
-        isDisabled: !userState.isUserConnected,
+      return IconButton(
+        tooltip: "Add to list...",
+        onPressed: () => showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context, scrollController) => UserLists(
+            scrollController: scrollController,
+            quote: widget.quote,
+          ),
+        ),
+        icon: Icon(Icons.playlist_add),
       );
     }
 

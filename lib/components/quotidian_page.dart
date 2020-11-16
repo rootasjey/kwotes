@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/user_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/favourites.dart';
 import 'package:figstyle/actions/share.dart';
-import 'package:figstyle/components/add_to_list_button.dart';
 import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
@@ -13,6 +13,7 @@ import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:mobx/mobx.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -234,8 +235,16 @@ class _QuotidianPageState extends State<QuotidianPage> {
               icon: Icon(Icons.share),
             ),
           ),
-          AddToListButton(
-            quote: quotidian.quote,
+          IconButton(
+            tooltip: "Add to list...",
+            onPressed: () => showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context, scrollController) => UserLists(
+                scrollController: scrollController,
+                quote: quotidian.quote,
+              ),
+            ),
+            icon: Icon(Icons.playlist_add),
           ),
         ],
       );
