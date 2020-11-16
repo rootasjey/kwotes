@@ -1,7 +1,9 @@
+import 'package:figstyle/actions/share.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AuthorRow extends StatefulWidget {
@@ -9,20 +11,24 @@ class AuthorRow extends StatefulWidget {
 
   final bool isNarrow;
 
-  final Function itemBuilder;
-  final Function onSelected;
+  /// If true, this will activate swipe actions
+  /// and deactivate popup menu button.
+  final bool useSwipeActions;
 
   final EdgeInsets padding;
+
+  /// Required if `useSwipeActions` is true.
+  final Key key;
 
   AuthorRow({
     this.author,
     this.isNarrow = false,
-    this.itemBuilder,
-    this.onSelected,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
       vertical: 30.0,
     ),
+    this.useSwipeActions,
+    this.key,
   });
 
   @override
@@ -47,7 +53,19 @@ class _AuthorRowState extends State<AuthorRow> {
   Widget build(BuildContext context) {
     final author = widget.author;
 
-    return Container(
+    List<PopupMenuEntry<String>> popupItems;
+    Function itemBuilder;
+
+    List<SwipeAction> trailingActions = defaultActions;
+
+    if (widget.useSwipeActions) {
+      trailingActions = getTrailingActions();
+    } else {
+      popupItems = getPopupItems();
+      itemBuilder = (BuildContext context) => popupItems;
+    }
+
+    final childRow = Padding(
       padding: widget.padding,
       child: Card(
         elevation: elevation,
@@ -74,16 +92,32 @@ class _AuthorRowState extends State<AuthorRow> {
               children: <Widget>[
                 avatar(author),
                 title(author),
-                actions(),
+                actions(popupItems, itemBuilder),
               ],
             ),
           ),
         ),
       ),
     );
+
+    if (!widget.useSwipeActions) {
+      return childRow;
+    }
+
+    return SwipeActionCell(
+      key: widget.key,
+      performsFirstActionWithFullSwipe: true,
+      child: childRow,
+      trailingActions: trailingActions,
+    );
   }
 
-  Widget actions() {
+  Widget actions(
+      List<PopupMenuEntry<String>> popupItems, Function itemBuilder) {
+    if (itemBuilder == null) {
+      return Container();
+    }
+
     return SizedBox(
       width: 50.0,
       child: Column(
@@ -100,8 +134,8 @@ class _AuthorRowState extends State<AuthorRow> {
                     )
                   : Icon(Icons.more_vert),
             ),
-            onSelected: widget.onSelected,
-            itemBuilder: widget.itemBuilder,
+            onSelected: onSelected,
+            itemBuilder: itemBuilder,
           ),
         ],
       ),
@@ -171,5 +205,41 @@ class _AuthorRowState extends State<AuthorRow> {
         ],
       ),
     );
+  }
+
+  List<PopupMenuEntry<String>> getPopupItems() {
+    return <PopupMenuEntry<String>>[
+      PopupMenuItem(
+          value: 'share',
+          child: ListTile(
+            leading: Icon(Icons.share),
+            title: Text('Share'),
+          )),
+    ];
+  }
+
+  List<SwipeAction> getTrailingActions() {
+    final actions = <SwipeAction>[];
+
+    actions.add(
+      SwipeAction(
+        title: 'Share',
+        icon: Icon(Icons.ios_share, color: Colors.white),
+        color: Colors.blue,
+        onTap: (CompletionHandler handler) {
+          handler(false);
+          shareAuthor(context: context, author: widget.author);
+        },
+      ),
+    );
+
+    return actions;
+  }
+
+  void onSelected(value) {
+    if (value == 'share') {
+      shareAuthor(context: context, author: widget.author);
+      return;
+    }
   }
 }
