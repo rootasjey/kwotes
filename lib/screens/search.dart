@@ -622,14 +622,14 @@ class _SearchState extends State<Search> {
     );
   }
 
+  void fetchPermissions() async {
+    canManage = await canUserManage();
+  }
+
   Future search() async {
     searchAuthors();
     searchQuotes();
     searchReferences();
-  }
-
-  void fetchPermissions() async {
-    canManage = await canUserManage();
   }
 
   void searchAuthors() async {
