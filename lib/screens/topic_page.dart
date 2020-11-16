@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
@@ -37,6 +39,7 @@ class _TopicPageState extends State<TopicPage> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey =
       GlobalKey<InnerDrawerState>();
 
+  bool canManage = true;
   bool descending = true;
   bool hasNext = true;
   bool isFabVisible = false;
@@ -73,6 +76,7 @@ class _TopicPageState extends State<TopicPage> {
 
     initProps();
     fetchColor();
+    fetchPermissions();
     fetch();
   }
 
@@ -301,7 +305,14 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget listView() {
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
+    final width = MediaQuery.of(context).size.width;
+    double horPadding = 70.0;
+    bool useSwipeActions = false;
+
+    if (width < Constants.maxMobileWidth) {
+      horPadding = 0.0;
+      useSwipeActions = true;
+    }
 
     return Observer(
       builder: (context) {
@@ -324,8 +335,11 @@ class _TopicPageState extends State<TopicPage> {
                       child: QuoteRowWithActions(
                         quote: quote,
                         quoteId: quote.id,
-                        color: stateColors.appBackground,
                         isConnected: isConnected,
+                        canManage: canManage,
+                        key: ObjectKey(index),
+                        useSwipeActions: useSwipeActions,
+                        color: stateColors.appBackground,
                         padding: EdgeInsets.symmetric(
                           horizontal: horPadding,
                           vertical: 10.0,
@@ -515,6 +529,10 @@ class _TopicPageState extends State<TopicPage> {
         ],
       ),
     );
+  }
+
+  void fetchPermissions() async {
+    canManage = await canUserManage();
   }
 
   Future<bool> fetchIsFav(String quoteId) async {
