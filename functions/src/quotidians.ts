@@ -53,9 +53,7 @@ export const notificationEN = functions
       app_id: env.onesignal.appid,
       contents: { en: contents },
       data: {
-        quote: {
-          id: qData['quote']['id'],
-        },
+        quoteid: qData['quote']['id'],
       },
       delayed_option: 'timezone',
       delivery_time_of_day: '8:00AM',
@@ -120,9 +118,7 @@ export const notificationFR = functions
       app_id: env.onesignal.appid,
       contents: { en: contents, fr: contents },
       data: {
-        quote: {
-          id: qData['quote']['id'],
-        },
+        quoteid: qData['quote']['id'],
       },
       delayed_option: 'timezone',
       delivery_time_of_day: '8:00AM',
