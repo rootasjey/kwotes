@@ -27,7 +27,8 @@ class _OnBoardingState extends State<OnBoarding> {
   bool notificationsON = false;
   bool isAuth = false;
 
-  double bodyOpacity = 0.6;
+  final double bodyOpacity = 0.6;
+  final double fontSizeDesc = 18.0;
   double horizontalPadding = 20.0;
 
   Timer timer;
@@ -55,14 +56,16 @@ class _OnBoardingState extends State<OnBoarding> {
       pages: [
         PageViewModel(
           title: "Welcome",
-          bodyWidget: Opacity(
-            opacity: bodyOpacity,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: 500.0,
-              ),
+          bodyWidget: Container(
+            width: 400.0,
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Opacity(
+              opacity: bodyOpacity,
               child: Text(
                 "fig.style is your daily quote app. Let's do an overview of the features.",
+                style: TextStyle(
+                  fontSize: fontSizeDesc,
+                ),
               ),
             ),
           ),
@@ -76,14 +79,16 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
         PageViewModel(
           title: "A lot of Features",
-          bodyWidget: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-            ),
+          bodyWidget: Container(
+            width: 400.0,
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Opacity(
               opacity: bodyOpacity,
               child: Text(
-                "You can search for quotes, authors, references. You can share a quote as an image. You can create quotes lists, and more.",
+                "You can search for quotes, authors, references. You can share a quote as an image. You can create lists, and more.",
+                style: TextStyle(
+                  fontSize: fontSizeDesc,
+                ),
               ),
             ),
           ),
@@ -99,14 +104,16 @@ class _OnBoardingState extends State<OnBoarding> {
         notificationsPVModel(),
         PageViewModel(
           title: "Community",
-          bodyWidget: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-            ),
+          bodyWidget: Container(
+            width: 400.0,
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Opacity(
                 opacity: bodyOpacity,
                 child: Text(
                   "You can contribute by adding new quotes to the database, giving your feedback, or fixing wrong information.",
+                  style: TextStyle(
+                    fontSize: fontSizeDesc,
+                  ),
                 )),
           ),
           image: Center(
@@ -176,7 +183,12 @@ class _OnBoardingState extends State<OnBoarding> {
             Timer(Duration(seconds: 1), () => toggleQuotidianNotifications());
       },
       value: notificationsON,
-      title: Text('Daily quote'),
+      title: Text(
+        'Daily quote',
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+        ),
+      ),
       subtitle:
           Text("If this is active, you will receive a daily notification"),
       secondary: notificationsON
@@ -237,12 +249,19 @@ class _OnBoardingState extends State<OnBoarding> {
         ],
       ),
       bodyWidget: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding,
+        padding: EdgeInsets.only(
+          left: horizontalPadding,
+          right: horizontalPadding,
+          bottom: 20.0,
         ),
         child: Opacity(
           opacity: bodyOpacity,
-          child: Text(body),
+          child: Text(
+            body,
+            style: TextStyle(
+              fontSize: fontSizeDesc,
+            ),
+          ),
         ),
       ),
       footer: footer,
@@ -275,7 +294,10 @@ class _OnBoardingState extends State<OnBoarding> {
         child: Opacity(
             opacity: bodyOpacity,
             child: Text(
-              "With your account and you'll be part of the community. You'll also be able to save your most loved quotes.",
+              "With an account and you'll be part of the community. You'll also be able to save your most loved quotes.",
+              style: TextStyle(
+                fontSize: fontSizeDesc,
+              ),
             )),
       ),
       image: Center(
@@ -290,6 +312,9 @@ class _OnBoardingState extends State<OnBoarding> {
           ? Container()
           : ElevatedButton(
               onPressed: () {
+                appStorage.setFirstLaunch();
+                userState.setFirstLaunch(false);
+
                 if (widget.isDesktop) {
                   Navigator.of(context).pop();
 
@@ -302,9 +327,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return Home(
-                        mobileInitialIndex: 4,
-                      );
+                      return Signin();
                     },
                   ),
                 );
