@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/author_row.dart';
@@ -367,12 +368,11 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget listViewAuthors() {
-    double horPadding = MediaQuery.of(context).size.width < 700.0 ? 0.0 : 70.0;
-
-    final screenWidth = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
+    double horPadding = width < 700.0 ? 0.0 : 70.0;
     bool isNarrow = false;
 
-    if (screenWidth < narrowWidthLimit) {
+    if (width < narrowWidthLimit) {
       isNarrow = true;
       horPadding = 0.0;
     }
@@ -385,23 +385,11 @@ class _DiscoverState extends State<Discover> {
           return AuthorRow(
             author: author,
             isNarrow: isNarrow,
+            key: ObjectKey(index),
+            useSwipeActions: width < Constants.maxMobileWidth,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'share') {
-                shareAuthor(context: context, author: author);
-                return;
-              }
-            },
           );
         },
         childCount: authors.length,
@@ -410,12 +398,12 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget listViewReferences() {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
 
-    double horPadding = screenWidth < 700.0 ? 0.0 : 70.0;
+    double horPadding = width < 700.0 ? 0.0 : 70.0;
     bool isNarrow = false;
 
-    if (screenWidth < narrowWidthLimit) {
+    if (width < narrowWidthLimit) {
       isNarrow = true;
       horPadding = 0.0;
     }
@@ -428,23 +416,11 @@ class _DiscoverState extends State<Discover> {
           return ReferenceRow(
             reference: reference,
             isNarrow: isNarrow,
+            key: ObjectKey(index),
+            useSwipeActions: width < Constants.maxMobileWidth,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'share') {
-                shareReference(context: context, reference: reference);
-                return;
-              }
-            },
           );
         },
         childCount: references.length,

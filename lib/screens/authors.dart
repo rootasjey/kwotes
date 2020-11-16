@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/author_row.dart';
@@ -527,6 +528,8 @@ class _AuthorsState extends State<Authors> {
   }
 
   Widget sliverList(List<Author> authors) {
+    final width = MediaQuery.of(context).size.width;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -534,20 +537,8 @@ class _AuthorsState extends State<Authors> {
 
           return AuthorRow(
             author: author,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'share') {
-                shareAuthor(author);
-                return;
-              }
-            },
+            key: ObjectKey(index),
+            useSwipeActions: width < Constants.maxMobileWidth,
           );
         },
         childCount: authors.length,

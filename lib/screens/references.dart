@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/share.dart';
@@ -442,6 +443,8 @@ class _ReferencesState extends State<References> {
   }
 
   Widget sliverList(List<Reference> references) {
+    final width = MediaQuery.of(context).size.width;
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -449,20 +452,8 @@ class _ReferencesState extends State<References> {
 
           return ReferenceRow(
             reference: reference,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share'),
-                  )),
-            ],
-            onSelected: (value) {
-              if (value == 'share') {
-                shareReference(context: context, reference: reference);
-                return;
-              }
-            },
+            key: ObjectKey(index),
+            useSwipeActions: width < Constants.maxMobileWidth,
           );
         },
         childCount: references.length,
