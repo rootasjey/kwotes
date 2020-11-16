@@ -876,7 +876,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         ),
       );
     } else {
-      actions.add(
+      actions.insert(
+        0,
         SwipeAction(
           title: 'Like',
           icon: isFavourite
