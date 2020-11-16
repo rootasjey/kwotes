@@ -14,6 +14,9 @@ class QuoteRow extends StatefulWidget {
   /// Specify this only when componentType = ComponentType.Card.
   /// If true, author will be displayed on card.
   final bool showAuthor;
+
+  /// If true, this will activate swipe actions
+  /// and deactivate popup menu button.
   final bool useSwipeActions;
 
   final Color color;
@@ -29,6 +32,7 @@ class QuoteRow extends StatefulWidget {
 
   final ItemComponentType componentType;
 
+  /// Required if `useSwipeActions` is true.
   final Key key;
 
   /// Widget to display on card item.
