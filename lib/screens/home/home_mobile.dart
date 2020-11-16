@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:figstyle/screens/quote_page.dart';
+import 'package:figstyle/utils/app_storage.dart';
+import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/utils/icons_more_icons.dart';
 import 'package:figstyle/screens/dashboard.dart';
@@ -6,6 +11,7 @@ import 'package:figstyle/screens/recent_quotes.dart';
 import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/topics.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomeMobile extends StatefulWidget {
   final int initialIndex;
@@ -38,6 +44,8 @@ class _HomeMobileState extends State<HomeMobile> {
     setState(() {
       selectedIndex = widget.initialIndex;
     });
+
+    openQuoteIfNotification();
   }
 
   void _onItemTapped(int index) {
@@ -91,5 +99,27 @@ class _HomeMobileState extends State<HomeMobile> {
         unselectedItemColor: stateColors.foreground,
       ),
     );
+  }
+
+  void openQuoteIfNotification() {
+    final val = appStorage.getString(StorageKeys.quoteIdNotification) ?? '';
+
+    if (val.isNotEmpty) {
+      Timer(
+        Duration(seconds: 2), // Error if fired too fast
+        () {
+          appStorage.setString(StorageKeys.quoteIdNotification, '');
+
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context, scrollController) => QuotePage(
+              padding: const EdgeInsets.only(left: 10.0),
+              quoteId: val,
+              scrollController: scrollController,
+            ),
+          );
+        },
+      );
+    }
   }
 }

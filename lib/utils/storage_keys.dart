@@ -10,6 +10,7 @@ class StorageKeys {
   static const itemsLayoutList = 'ItemsLayout.list';
   static const lang = 'lang';
   static const notificationsActivated = 'notifications_activated';
+  static const quoteIdNotification = 'quote_id_notification';
   static const password = 'password';
   static const username = 'username';
   static const userUid = 'user_uid';

@@ -173,6 +173,14 @@ class AppStorage {
     _localStorage.setString('items_style_$pageRoute', style.toString());
   }
 
+  String getString(String key) {
+    return _localStorage.getString(key);
+  }
+
+  void setString(String key, String value) {
+    _localStorage.setString(key, value);
+  }
+
   void setPageLang({String lang, String pageRoute}) {
     final key = '$pageRoute?lang';
     _localStorage.setString(key, lang);

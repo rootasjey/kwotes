@@ -39,20 +39,22 @@ class AppState extends State<App> {
   void initState() {
     super.initState();
 
-    appStorage.initialize().then((value) {
-      final savedLang = appStorage.getLang();
-      userState.setLang(savedLang);
+    appStorage.initialize().then(
+      (value) {
+        final savedLang = appStorage.getLang();
+        userState.setLang(savedLang);
 
-      autoLogin();
+        autoLogin();
 
-      setState(() {
-        isReady = true;
-      });
+        setState(() {
+          isReady = true;
+        });
 
-      if (!kIsWeb) {
-        PushNotifications.init(context);
-      }
-    });
+        if (!kIsWeb) {
+          PushNotifications.init();
+        }
+      },
+    );
 
     appTopicsColors.fetchTopicsColors();
   }
