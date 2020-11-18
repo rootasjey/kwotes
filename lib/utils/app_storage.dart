@@ -136,6 +136,15 @@ class AppStorage {
     return drafts;
   }
 
+  ImageShareColor getImageShareColor() {
+    final index = _localStorage.getInt(StorageKeys.imageShareColor) ?? 0;
+    return ImageShareColor.values.elementAt(index);
+  }
+
+  void setImageShareColor(ImageShareColor imageShareColor) {
+    _localStorage.setInt(StorageKeys.imageShareColor, imageShareColor.index);
+  }
+
   ItemsLayout getItemsStyle(String pageRoute) {
     final itemsStyle =
         _localStorage.getString('${StorageKeys.itemsStyle}$pageRoute');

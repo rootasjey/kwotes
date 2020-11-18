@@ -5,6 +5,7 @@ class StorageKeys {
   static const drafts = 'drafts';
   static const email = 'email';
   static const firstLaunch = 'first_launch';
+  static const imageShareColor = 'image_share_color';
   static const itemsStyle = 'items_style_';
   static const itemsLayoutGrid = 'ItemsLayout.grid';
   static const itemsLayoutList = 'ItemsLayout.list';
