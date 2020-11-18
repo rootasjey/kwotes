@@ -58,6 +58,12 @@
 @import share;
 #endif
 
+#if __has_include(<share_files_and_screenshot_widgets/ShareFilesAndScreenshotWidgetsPlugin.h>)
+#import <share_files_and_screenshot_widgets/ShareFilesAndScreenshotWidgetsPlugin.h>
+#else
+@import share_files_and_screenshot_widgets;
+#endif
+
 #if __has_include(<shared_preferences/FLTSharedPreferencesPlugin.h>)
 #import <shared_preferences/FLTSharedPreferencesPlugin.h>
 #else
@@ -82,6 +88,7 @@
   [OneSignalPlugin registerWithRegistrar:[registry registrarForPlugin:@"OneSignalPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTSharePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharePlugin"]];
+  [ShareFilesAndScreenshotWidgetsPlugin registerWithRegistrar:[registry registrarForPlugin:@"ShareFilesAndScreenshotWidgetsPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
 }
