@@ -11,7 +11,6 @@ import 'package:figstyle/components/quote_row.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -101,30 +100,14 @@ class QuoteRowWithActions extends StatefulWidget {
 }
 
 class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
-  List<UserQuotesList> userQuotesLists = [];
-
-  String newListName = '';
-  String newListDescription = '';
-
-  int order = -1;
-  int limit = 10;
-
-  bool hasNext = true;
-
-  bool isFavourite = false;
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool isLoaded = false;
-
-  bool hasErrors = false;
-  Error error;
-
-  var lastDoc;
+  @override
+  initState() {
+    super.initState();
+    fetchIsFav();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final quote = widget.quote;
-
     List<PopupMenuEntry<String>> popupItems;
     Function itemBuilder;
 
@@ -140,7 +123,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     }
 
     return QuoteRow(
-      quote: quote,
+      quote: widget.quote,
       quoteId: widget.quoteId,
       color: widget.color,
       key: widget.key,
@@ -159,103 +142,6 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     );
   }
 
-  void onSelected(value) async {
-    final quote = widget.quote;
-
-    switch (value) {
-      case 'addtofavourites':
-        if (widget.onBeforeAddToFavourites != null) {
-          widget.onBeforeAddToFavourites();
-        }
-
-        final success = await addToFavourites(
-          context: context,
-          quote: quote,
-        );
-
-        if (widget.onAfterAddToFavourites != null) {
-          widget.onAfterAddToFavourites(success);
-        }
-
-        break;
-      case 'addtolist':
-        showBottomSheetList();
-        break;
-      case 'removefromfavourites':
-        if (widget.onBeforeRemoveFromFavourites != null) {
-          widget.onBeforeRemoveFromFavourites();
-        }
-
-        final success = await removeFromFavourites(
-          context: context,
-          quote: quote,
-        );
-
-        if (widget.onAfterRemoveFromFavourites != null) {
-          widget.onAfterRemoveFromFavourites(success);
-        }
-
-        break;
-      case 'removefromlist':
-        widget.onRemoveFromList(quote);
-        break;
-      case 'share':
-        shareQuote(context: context, quote: quote);
-        break;
-      case 'addquotidian':
-        await addToQuotidians(
-          quote: quote,
-          lang: quote.lang,
-        );
-
-        break;
-      case 'deletequote':
-        FlashHelper.simpleDialog(
-          context,
-          title: 'Confirm deletion?',
-          message:
-              'The published quote will be deleted. This action is irreversible.',
-          negativeAction: (context, controller, setState) {
-            return FlatButton(
-              child: Text('NO'),
-              onPressed: () => controller.dismiss(),
-            );
-          },
-          positiveAction: (context, controller, setState) {
-            return FlatButton(
-              child: Text('DELETE'),
-              onPressed: () {
-                controller.dismiss();
-                deletePubQuote();
-              },
-            );
-          },
-        );
-        break;
-      default:
-    }
-  }
-
-  void showBottomSheetList() {
-    if (!userState.isUserConnected) {
-      showSnack(
-        context: context,
-        message: "You must sign in to add this quote to a list.",
-        type: SnackType.error,
-      );
-
-      return;
-    }
-
-    showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context, scrollController) => UserLists(
-        scrollController: scrollController,
-        quote: widget.quote,
-      ),
-    );
-  }
-
   void deletePubQuote() async {
     if (widget.onBeforeDeletePubQuote != null) {
       widget.onBeforeDeletePubQuote();
@@ -266,6 +152,20 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     if (widget.onAfterDeletePubQuote != null) {
       widget.onAfterDeletePubQuote(success);
     }
+  }
+
+  Future fetchIsFav() async {
+    if (!userState.isUserConnected) {
+      return;
+    }
+
+    final isFav = await isFavourite(
+      quoteId: widget.quote.id,
+    );
+
+    setState(() {
+      widget.quote.starred = isFav;
+    });
   }
 
   List<PopupMenuEntry<String>> getPopupItems() {
@@ -478,8 +378,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       actions.insert(
         0,
         SwipeAction(
-          title: 'Like',
-          icon: isFavourite
+          title: widget.quote.starred ? 'Unlike' : 'Like',
+          icon: widget.quote.starred
               ? Icon(Icons.favorite, color: Colors.white)
               : Icon(Icons.favorite_border, color: Colors.white),
           color: Color(0xff6638f0),
@@ -506,23 +406,91 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return actions;
   }
 
+  void onSelected(value) async {
+    final quote = widget.quote;
+
+    switch (value) {
+      case 'addtofavourites':
+        if (widget.onBeforeAddToFavourites != null) {
+          widget.onBeforeAddToFavourites();
+        }
+
+        final success = await addToFavourites(
+          context: context,
+          quote: quote,
+        );
+
+        if (widget.onAfterAddToFavourites != null) {
+          widget.onAfterAddToFavourites(success);
+        }
+
+        break;
+      case 'addtolist':
+        showBottomSheetList();
+        break;
+      case 'removefromfavourites':
+        if (widget.onBeforeRemoveFromFavourites != null) {
+          widget.onBeforeRemoveFromFavourites();
+        }
+
+        final success = await removeFromFavourites(
+          context: context,
+          quote: quote,
+        );
+
+        if (widget.onAfterRemoveFromFavourites != null) {
+          widget.onAfterRemoveFromFavourites(success);
+        }
+
+        break;
+      case 'removefromlist':
+        widget.onRemoveFromList(quote);
+        break;
+      case 'share':
+        shareQuote(context: context, quote: quote);
+        break;
+      case 'addquotidian':
+        await addToQuotidians(
+          quote: quote,
+          lang: quote.lang,
+        );
+
+        break;
+      case 'deletequote':
+        FlashHelper.simpleDialog(
+          context,
+          title: 'Confirm deletion?',
+          message:
+              'The published quote will be deleted. This action is irreversible.',
+          negativeAction: (context, controller, setState) {
+            return FlatButton(
+              child: Text('NO'),
+              onPressed: () => controller.dismiss(),
+            );
+          },
+          positiveAction: (context, controller, setState) {
+            return FlatButton(
+              child: Text('DELETE'),
+              onPressed: () {
+                controller.dismiss();
+                deletePubQuote();
+              },
+            );
+          },
+        );
+        break;
+      default:
+    }
+  }
+
   Future toggleFavourite() async {
     final quote = widget.quote;
 
-    if (isFavourite) {
-      if (widget.onBeforeAddToFavourites != null) {
-        widget.onBeforeAddToFavourites();
-      }
+    if (widget.quote.starred) {
+      setState(() {
+        widget.quote.starred = false;
+      });
 
-      final success = await addToFavourites(
-        context: context,
-        quote: quote,
-      );
-
-      if (widget.onAfterAddToFavourites != null) {
-        widget.onAfterAddToFavourites(success);
-      }
-    } else {
       if (widget.onBeforeRemoveFromFavourites != null) {
         widget.onBeforeRemoveFromFavourites();
       }
@@ -532,9 +500,58 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         quote: quote,
       );
 
+      if (!success) {
+        setState(() {
+          widget.quote.starred = true;
+        });
+      }
+
       if (widget.onAfterRemoveFromFavourites != null) {
         widget.onAfterRemoveFromFavourites(success);
       }
+    } else {
+      setState(() {
+        widget.quote.starred = true;
+      });
+
+      if (widget.onBeforeAddToFavourites != null) {
+        widget.onBeforeAddToFavourites();
+      }
+
+      final success = await addToFavourites(
+        context: context,
+        quote: quote,
+      );
+
+      if (!success) {
+        setState(() {
+          widget.quote.starred = false;
+        });
+      }
+
+      if (widget.onAfterAddToFavourites != null) {
+        widget.onAfterAddToFavourites(success);
+      }
     }
+  }
+
+  void showBottomSheetList() {
+    if (!userState.isUserConnected) {
+      showSnack(
+        context: context,
+        message: "You must sign in to add this quote to a list.",
+        type: SnackType.error,
+      );
+
+      return;
+    }
+
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context, scrollController) => UserLists(
+        scrollController: scrollController,
+        quote: widget.quote,
+      ),
+    );
   }
 }
