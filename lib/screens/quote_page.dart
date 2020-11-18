@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:flash/flash.dart';
@@ -118,21 +119,9 @@ class _QuotePageState extends State<QuotePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   quoteName(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                            child: Column(children: [
-                          authorName(),
-                          referenceName(),
-                        ])),
-                        verticalAnimatedDivider(),
-                      ],
-                    ),
-                  ),
+                  divider(),
+                  authorName(),
+                  referenceName(),
                 ],
               ),
             ),
@@ -228,14 +217,29 @@ class _QuotePageState extends State<QuotePage> {
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Align(
-          alignment: Alignment.topRight,
-          child: Opacity(
-            opacity: value,
-            child: child,
-          ),
+        return Opacity(
+          opacity: value,
+          child: child,
         );
       },
+    );
+  }
+
+  Widget divider() {
+    return FadeInY(
+      beginY: 10.0,
+      delay: 3,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 60.0, bottom: 20.0),
+        child: Container(
+          width: 60.0,
+          height: 5.0,
+          decoration: BoxDecoration(
+            color: accentColor,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
     );
   }
 
@@ -314,8 +318,8 @@ class _QuotePageState extends State<QuotePage> {
         ),
       ),
       builderWithChild: (context, child, value) {
-        return Align(
-          alignment: Alignment.topRight,
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0),
           child: Opacity(
             opacity: value,
             child: child,
@@ -365,7 +369,8 @@ class _QuotePageState extends State<QuotePage> {
                   color: Color(topicColor.decimal),
                   name: topicColor.name,
                   style: TextStyle(
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
                   ),
                 );
               }).toList(),
@@ -387,27 +392,6 @@ class _QuotePageState extends State<QuotePage> {
           addToListButton(),
         ],
       ),
-    );
-  }
-
-  Widget verticalAnimatedDivider() {
-    return ControlledAnimation(
-      delay: 1.seconds,
-      duration: 250.milliseconds,
-      tween: Tween(begin: 0.0, end: 60.0),
-      builder: (context, value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 10.0, left: 8.0),
-          child: Container(
-            width: 3.0,
-            height: value,
-            decoration: BoxDecoration(
-              color: accentColor,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
-        );
-      },
     );
   }
 
