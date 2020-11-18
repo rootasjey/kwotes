@@ -35,3 +35,9 @@ enum SnackType {
   info,
   success,
 }
+
+enum ImageShareColor {
+  dark,
+  light,
+  colored,
+}
