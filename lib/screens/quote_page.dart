@@ -252,7 +252,7 @@ class _QuotePageState extends State<QuotePage> {
             return;
           }
 
-          addQuoteToFav();
+          likeQuote();
         },
         icon:
             quote.starred ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
@@ -395,9 +395,8 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
-  void addQuoteToFav() async {
+  void likeQuote() async {
     setState(() {
-      // Optimistic result
       quote.starred = true;
     });
 
