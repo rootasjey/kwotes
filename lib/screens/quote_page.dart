@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
-import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/full_page_error.dart';
 import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';

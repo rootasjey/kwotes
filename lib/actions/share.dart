@@ -1,8 +1,10 @@
+import 'package:figstyle/screens/image_share.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/reference.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,8 +17,10 @@ void shareAuthor({@required BuildContext context, @required Author author}) {
   shareAuthorMobile(context: context, author: author);
 }
 
-void shareAuthorMobile(
-    {@required BuildContext context, @required Author author}) {
+void shareAuthorMobile({
+  @required BuildContext context,
+  @required Author author,
+}) {
   final RenderBox box = context.findRenderObject();
   String sharingText = author.name;
   final urlReference = 'https://outofcontext.app/#/reference/${author.id}';
@@ -59,6 +63,58 @@ void shareQuote({@required BuildContext context, @required Quote quote}) {
 }
 
 void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
+  showCustomModalBottomSheet(
+    context: context,
+    builder: (context, controller) {
+      return Material(
+        child: SafeArea(
+          top: false,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            ListTile(
+              title: Text('Text'),
+              trailing: Icon(
+                Icons.text_fields_rounded,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                shareTextMobile(context: context, quote: quote);
+              },
+            ),
+            ListTile(
+              title: Text('Image'),
+              trailing: Icon(Icons.image_outlined),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context, scrollController) => ImageShare(
+                    quote: quote,
+                    scrollController: scrollController,
+                  ),
+                );
+              },
+            ),
+          ]),
+        ),
+      );
+    },
+    containerWidget: (context, animation, child) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Material(
+            clipBehavior: Clip.antiAlias,
+            borderRadius: BorderRadius.circular(12.0),
+            child: child,
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void shareTextMobile({@required BuildContext context, @required Quote quote}) {
   final RenderBox box = context.findRenderObject();
   final quoteName = quote.name;
   final authorName = quote.author?.name ?? '';
