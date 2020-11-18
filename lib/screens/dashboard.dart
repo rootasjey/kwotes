@@ -52,7 +52,15 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       floatingActionButton: isConnected
           ? FloatingActionButton.extended(
-              label: Text("Add quote"),
+              backgroundColor: stateColors.secondary,
+              foregroundColor: Colors.white,
+              label: Text(
+                "Add quote",
+                style: TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               icon: Icon(Icons.add),
               onPressed: () {
                 DataQuoteInputs.clearAll();
