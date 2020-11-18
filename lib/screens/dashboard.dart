@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
-import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +164,6 @@ class _DashboardState extends State<Dashboard> {
           settingsButton(),
           signOutButton(),
           aboutButton(),
-          tosButton(),
         ],
       ),
     ];
@@ -273,7 +271,6 @@ class _DashboardState extends State<Dashboard> {
         children: [
           settingsButton(),
           aboutButton(),
-          tosButton(),
         ],
       ),
     ];
@@ -435,15 +432,6 @@ class _DashboardState extends State<Dashboard> {
         style: TextStyle(fontSize: 20.0),
       ),
       onTap: onTap,
-    );
-  }
-
-  Widget tosButton() {
-    return tileButton(
-      iconData: Icons.privacy_tip,
-      textTitle: 'Terms of service',
-      onTap: () =>
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => Tos())),
     );
   }
 

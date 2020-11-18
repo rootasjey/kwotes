@@ -2,7 +2,10 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:figstyle/components/circle_button.dart';
+import 'package:figstyle/screens/changelog.dart';
+import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/footer.dart';
@@ -24,6 +27,8 @@ class About extends StatelessWidget {
   final paragraphOpacity = 0.6;
   final captionOpacity = 0.6;
 
+  final maxWidth = 600.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +49,10 @@ class About extends StatelessWidget {
               delegate: SliverChildListDelegate([
                 Column(
                   children: <Widget>[
+                    appIconImage(context),
+                    otherLinks(context),
                     whatIs(context),
-                    differences(),
+                    features(),
                     whoIs(context),
                     whoIs2(context),
                     creditsSection(),
@@ -56,18 +63,90 @@ class About extends StatelessWidget {
           ),
           if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
             SliverList(
-              delegate: SliverChildListDelegate([
-                Footer(),
-              ]),
+              delegate: SliverChildListDelegate(
+                [
+                  Footer(),
+                ],
+              ),
             ),
         ],
       ),
     );
   }
 
-  Widget differences() {
+  Widget appIconImage(BuildContext context) {
+    final size = MediaQuery.of(context).size.width < 500.0 ? 280.0 : 380.0;
+
+    return Container(
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        bottom: 40.0,
+      ),
+      width: maxWidth,
+      child: Column(
+        children: [
+          Center(
+            child: OpenContainer(
+              closedColor: Colors.transparent,
+              closedElevation: 0.0,
+              closedBuilder: (context, openContainer) {
+                return Container(
+                  width: size,
+                  height: size,
+                  child: Ink.image(
+                    height: size,
+                    width: size,
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/app-icon-512.png'),
+                    child: InkWell(
+                      onTap: openContainer,
+                    ),
+                  ),
+                );
+              },
+              openBuilder: (context, callback) {
+                return Container(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Image(
+                          image: AssetImage('assets/images/app-icon-512.png'),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Positioned(
+                        top: 40.0,
+                        right: 20.0,
+                        child: CircleButton(
+                            icon:
+                                Icon(Icons.close, color: stateColors.secondary),
+                            onTap: () => Navigator.of(context).pop()),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          Center(
+            child: FlatButton(
+              onPressed: null,
+              child: Opacity(
+                opacity: captionOpacity,
+                child: Text('App text icon'),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget features() {
     return SizedBox(
-      width: 600.0,
+      width: maxWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -84,7 +163,7 @@ class About extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 25.0),
             child: Opacity(
-              opacity: paragraphOpacity,
+              opacity: 1.0,
               child: Text(
                 '👇 Available now:',
                 style: paragraphStyle,
@@ -104,7 +183,7 @@ class About extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 35.0),
             child: Opacity(
-              opacity: paragraphOpacity,
+              opacity: 1.0,
               child: Text(
                 '🚀 Future development:',
                 style: paragraphStyle,
@@ -158,7 +237,7 @@ class About extends StatelessWidget {
 
   Widget creditsSection() {
     return SizedBox(
-      width: 600.0,
+      width: maxWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -203,73 +282,49 @@ class About extends StatelessWidget {
     );
   }
 
-  Widget whatIs(BuildContext context) {
-    final size = MediaQuery.of(context).size.width < 500.0 ? 280.0 : 380.0;
+  Widget otherLinks(context) {
+    return SizedBox(
+      width: maxWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            child: ListTile(
+              title: Text('Changelog'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Changelog())),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: Text('Terms of service'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Tos())),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: Text('GitHub'),
+              trailing: Icon(Icons.open_in_new),
+              onTap: () => launch(Constants.appGithubUrl),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget whatIs(BuildContext context) {
     return Container(
-      width: 600.0,
+      width: maxWidth,
       padding: const EdgeInsets.only(
         top: 40.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Center(
-            child: OpenContainer(
-              closedColor: Colors.transparent,
-              closedElevation: 0.0,
-              closedBuilder: (context, openContainer) {
-                return Container(
-                  width: size,
-                  height: size,
-                  child: Ink.image(
-                    height: size,
-                    width: size,
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/images/app-icon-512.png'),
-                    child: InkWell(
-                      onTap: openContainer,
-                    ),
-                  ),
-                );
-              },
-              openBuilder: (context, callback) {
-                return Container(
-                  // height: 800.0,
-                  // width: 600.0,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      InkWell(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Image(
-                          image: AssetImage('assets/images/app-icon-512.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Positioned(
-                        top: 40.0,
-                        right: 20.0,
-                        child: CircleButton(
-                            icon:
-                                Icon(Icons.close, color: stateColors.secondary),
-                            onTap: () => Navigator.of(context).pop()),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          Center(
-            child: FlatButton(
-              onPressed: null,
-              child: Opacity(
-                opacity: captionOpacity,
-                child: Text('App text icon'),
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 80.0),
             child: Opacity(
@@ -297,7 +352,7 @@ class About extends StatelessWidget {
 
   Widget whoIs(BuildContext context) {
     return SizedBox(
-      width: 600.0,
+      width: maxWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -445,7 +500,7 @@ class About extends StatelessWidget {
 
   Widget whoIs2(BuildContext context) {
     return SizedBox(
-      width: 600.0,
+      width: maxWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -476,7 +531,7 @@ class About extends StatelessWidget {
                     openBuilder: (context, callback) {
                       return Container(
                         height: 800.0,
-                        width: 600.0,
+                        width: maxWidth,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [

@@ -1,4 +1,5 @@
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
@@ -8,37 +9,50 @@ import 'package:url_launcher/url_launcher.dart';
 class Tos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final horPadding = MediaQuery.of(context).size.width < 700.0 ? 20.0 : 80.0;
+    final width = MediaQuery.of(context).size.width;
+
+    bool showUserMenu = true;
+    double horPadding = 80.0;
+
+    if (width < Constants.maxMobileWidth) {
+      showUserMenu = false;
+      horPadding = 20.0;
+    }
 
     return Scaffold(
-        body: CustomScrollView(
-      slivers: [
-        DesktopAppBar(
-          title: "Privacy Terms",
-          automaticallyImplyLeading: true,
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: horPadding, vertical: 60.0),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate.fixed([
-              SizedBox(
-                width: 600.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    termsBlock(),
-                    cookiesBlock(),
-                    analyticsBlock(),
-                    advertisingBlock(),
-                    inAppPurchasesBlock(),
-                  ],
-                ),
-              ),
-            ]),
+      body: CustomScrollView(
+        slivers: [
+          DesktopAppBar(
+            title: "Privacy Terms",
+            automaticallyImplyLeading: true,
+            showUserMenu: showUserMenu,
           ),
-        ),
-      ],
-    ));
+          SliverPadding(
+            padding: EdgeInsets.symmetric(
+              horizontal: horPadding,
+              vertical: 60.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                SizedBox(
+                  width: 600.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      termsBlock(),
+                      cookiesBlock(),
+                      analyticsBlock(),
+                      advertisingBlock(),
+                      inAppPurchasesBlock(),
+                    ],
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget cookiesBlock() {
@@ -106,7 +120,7 @@ class Tos extends StatelessWidget {
         children: [
           textSuperBlock(
             text:
-                "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, http://www.outofcontext.app, and other sites we own and operate including mobile apps.",
+                "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, fig.style, and other sites we own and operate including mobile apps.",
           ),
           textSuperBlock(
             text:
