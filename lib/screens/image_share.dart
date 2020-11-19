@@ -77,12 +77,19 @@ class _ImageShareState extends State<ImageShare> {
         slivers: [
           SliverAppBar(
             pinned: true,
+            backgroundColor: stateColors.background,
             automaticallyImplyLeading: false,
-            title: Text('Share image'),
+            title: Text(
+              'Share image',
+              style: TextStyle(
+                color: stateColors.foreground,
+              ),
+            ),
             actions: [
               IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                color: stateColors.foreground,
                 icon: Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           ),
