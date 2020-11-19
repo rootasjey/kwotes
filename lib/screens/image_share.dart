@@ -19,20 +19,30 @@ class ImageShare extends StatefulWidget {
 }
 
 class _ImageShareState extends State<ImageShare> {
-  ImageShareColor imageShareColor;
   Color accentColor = Colors.blue;
+
+  final gradientColors = <Color>[];
+
   GlobalKey previewContainer = new GlobalKey();
+
+  ImageShareColor imageShareColor;
 
   @override
   void initState() {
     super.initState();
 
     initProps();
+    initColors();
+  }
+
+  void initColors() {
+    widget.quote.topics.forEach((topic) {
+      final topicColor = appTopicsColors.find(topic);
+      gradientColors.add(Color(topicColor.decimal));
+    });
 
     setState(() {
-      final topicColor = appTopicsColors.find(widget.quote.topics.first);
-      accentColor =
-          topicColor != null ? Color(topicColor.decimal) : accentColor;
+      accentColor = gradientColors.first;
     });
   }
 
@@ -42,8 +52,6 @@ class _ImageShareState extends State<ImageShare> {
 
   @override
   Widget build(BuildContext context) {
-    // print("getBackgroundColor: ${getBackgroundColor()}");
-    // print("getForegroundColor: ${getForegroundColor()}");
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -96,11 +104,13 @@ class _ImageShareState extends State<ImageShare> {
           child: Center(
             child: Container(
               width: size,
-              // height: size,
               child: Card(
                 color: getBackgroundColor(),
                 elevation: 2.0,
-                child: Padding(
+                child: Container(
+                  decoration: imageShareColor == ImageShareColor.gradient
+                      ? BoxDecoration(gradient: getGradientColor())
+                      : BoxDecoration(),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                     vertical: 30.0,
@@ -203,6 +213,21 @@ class _ImageShareState extends State<ImageShare> {
                 color: accentColor,
                 title: "Colored",
               ),
+              if (gradientColors.length > 1)
+                colorCard(
+                  onTap: () {
+                    setState(() {
+                      imageShareColor = ImageShareColor.gradient;
+                    });
+                  },
+                  title: "Gradient",
+                  color: Colors.transparent,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
+                ),
             ],
           ),
         ]),
@@ -212,6 +237,7 @@ class _ImageShareState extends State<ImageShare> {
 
   Widget colorCard({
     @required Color color,
+    Gradient gradient,
     @required String title,
     @required VoidCallback onTap,
   }) {
@@ -223,11 +249,17 @@ class _ImageShareState extends State<ImageShare> {
           child: Card(
             color: color,
             elevation: 4.0,
-            child: InkWell(
-              onTap: () {
-                onTap();
-                appStorage.setImageShareColor(imageShareColor);
-              },
+            clipBehavior: Clip.hardEdge,
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: gradient,
+              ),
+              child: InkWell(
+                onTap: () {
+                  onTap();
+                  appStorage.setImageShareColor(imageShareColor);
+                },
+              ),
             ),
           ),
         ),
@@ -257,11 +289,27 @@ class _ImageShareState extends State<ImageShare> {
       return accentColor;
     }
 
+    if (imageShareColor == ImageShareColor.gradient) {
+      return Colors.transparent;
+    }
+
     return stateColors.dark;
+  }
+
+  Gradient getGradientColor() {
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: gradientColors,
+    );
   }
 
   Color getDividerColor() {
     if (imageShareColor == ImageShareColor.colored) {
+      return Colors.white;
+    }
+
+    if (imageShareColor == ImageShareColor.gradient) {
       return Colors.white;
     }
 
@@ -278,6 +326,10 @@ class _ImageShareState extends State<ImageShare> {
     }
 
     if (imageShareColor == ImageShareColor.colored) {
+      return Colors.white;
+    }
+
+    if (imageShareColor == ImageShareColor.gradient) {
       return Colors.white;
     }
 

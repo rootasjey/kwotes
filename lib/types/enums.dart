@@ -40,4 +40,5 @@ enum ImageShareColor {
   dark,
   light,
   colored,
+  gradient,
 }
