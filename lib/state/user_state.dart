@@ -24,6 +24,11 @@ abstract class UserStateBase with Store {
   @observable
   String username = '';
 
+  /// Used to sync fav. status between views,
+  /// e.g. re-fetch on nav. back from quote page -> quotes list.
+  /// _NOTE: Should be set to false after status sync (usually on quotes list)_.
+  bool mustUpdateFav = false;
+
   /// Last time the favourites has been updated.
   @observable
   DateTime updatedFavAt = DateTime.now();

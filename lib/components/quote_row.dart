@@ -1,4 +1,5 @@
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user_state.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/author_page.dart';
@@ -29,6 +30,7 @@ class QuoteRow extends StatefulWidget {
 
   final Function itemBuilder;
   final Function onSelected;
+  final Function fetchIsFav;
 
   final ItemComponentType componentType;
 
@@ -59,6 +61,7 @@ class QuoteRow extends StatefulWidget {
     this.cardSize = 250.0,
     this.color,
     this.elevation,
+    this.fetchIsFav,
     this.quote,
     this.quoteId,
     this.itemBuilder,
@@ -381,14 +384,14 @@ class _QuoteRowState extends State<QuoteRow> {
     return elevationSpecified ? widget.elevation : 0.0;
   }
 
-  Future onQuoteTap() {
+  Future onQuoteTap() async {
     final quote = widget.quote;
     final id = quote.quoteId != null && quote.quoteId.isNotEmpty
         ? quote.quoteId
         : quote.id;
 
     if (MediaQuery.of(context).size.width > 600.0) {
-      return showFlash(
+      await showFlash(
         context: context,
         persistent: false,
         builder: (context, controller) {
@@ -417,16 +420,24 @@ class _QuoteRowState extends State<QuoteRow> {
           );
         },
       );
+    } else {
+      await showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context, scrollController) => QuotePage(
+          padding: const EdgeInsets.only(left: 10.0),
+          quote: widget.quote,
+          quoteId: id,
+          scrollController: scrollController,
+        ),
+      );
     }
 
-    return showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context, scrollController) => QuotePage(
-        padding: const EdgeInsets.only(left: 10.0),
-        quote: widget.quote,
-        quoteId: id,
-        scrollController: scrollController,
-      ),
-    );
+    if (userState.mustUpdateFav) {
+      userState.mustUpdateFav = false;
+
+      if (widget.fetchIsFav != null) {
+        widget.fetchIsFav();
+      }
+    }
   }
 }

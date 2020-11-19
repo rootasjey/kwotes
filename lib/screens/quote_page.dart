@@ -247,6 +247,8 @@ class _QuotePageState extends State<QuotePage> {
     if (userState.isUserConnected) {
       return IconButton(
         onPressed: () async {
+          userState.mustUpdateFav = true;
+
           if (quote.starred) {
             removeQuoteFromFav();
             return;

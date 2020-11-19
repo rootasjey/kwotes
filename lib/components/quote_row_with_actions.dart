@@ -126,6 +126,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       quote: widget.quote,
       quoteId: widget.quoteId,
       color: widget.color,
+      fetchIsFav: fetchIsFav,
       key: widget.key,
       quoteFontSize: widget.quoteFontSize,
       elevation: widget.elevation,
