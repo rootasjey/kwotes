@@ -27,6 +27,8 @@ class _ImageShareState extends State<ImageShare> {
 
   ImageShareColor imageShareColor;
 
+  ImageShareTextColor imageShareTextColor;
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +50,7 @@ class _ImageShareState extends State<ImageShare> {
 
   void initProps() {
     imageShareColor = appStorage.getImageShareColor();
+    imageShareTextColor = appStorage.getImageShareTextColors();
   }
 
   @override
@@ -189,6 +192,38 @@ class _ImageShareState extends State<ImageShare> {
       padding: const EdgeInsets.only(top: 60.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
+          backgroundControls(),
+          textControls(),
+        ]),
+      ),
+    );
+  }
+
+  Widget backgroundControls() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: Icon(Icons.image_outlined),
+                ),
+                Expanded(
+                  child: Text(
+                    "Background",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Wrap(
             spacing: 20.0,
             alignment: WrapAlignment.center,
@@ -237,7 +272,79 @@ class _ImageShareState extends State<ImageShare> {
                 ),
             ],
           ),
-        ]),
+        ],
+      ),
+    );
+  }
+
+  Widget textControls() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 24.0,
+        top: 60.0,
+        bottom: 60.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: Icon(Icons.text_fields),
+                ),
+                Expanded(
+                  child: Text(
+                    "Text",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Wrap(
+            spacing: 20.0,
+            alignment: WrapAlignment.center,
+            children: [
+              textColorCard(
+                onTap: () {
+                  setState(() {
+                    imageShareTextColor = ImageShareTextColor.auto;
+                  });
+                },
+                color: Colors.transparent,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.white, Colors.black],
+                ),
+                title: "Auto",
+              ),
+              textColorCard(
+                onTap: () {
+                  setState(() {
+                    imageShareTextColor = ImageShareTextColor.light;
+                  });
+                },
+                color: Color(0xffeeeeee),
+                title: "Light",
+              ),
+              textColorCard(
+                onTap: () {
+                  setState(() {
+                    imageShareTextColor = ImageShareTextColor.dark;
+                  });
+                },
+                color: Color(0xff101010),
+                title: "Dark",
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -265,6 +372,47 @@ class _ImageShareState extends State<ImageShare> {
                 onTap: () {
                   onTap();
                   appStorage.setImageShareColor(imageShareColor);
+                },
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget textColorCard({
+    @required Color color,
+    Gradient gradient,
+    @required String title,
+    @required VoidCallback onTap,
+  }) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 80.0,
+          height: 80.0,
+          child: Card(
+            color: color,
+            elevation: 4.0,
+            clipBehavior: Clip.hardEdge,
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: gradient,
+              ),
+              child: InkWell(
+                onTap: () {
+                  onTap();
+                  appStorage.setImageShareTextColor(imageShareTextColor);
                 },
               ),
             ),
@@ -324,6 +472,18 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   Color getForegroundColor() {
+    if (imageShareTextColor == ImageShareTextColor.dark) {
+      return Colors.black;
+    }
+
+    if (imageShareTextColor == ImageShareTextColor.light) {
+      return Colors.white;
+    }
+
+    return getAutoForegroundColor();
+  }
+
+  Color getAutoForegroundColor() {
     if (imageShareColor == ImageShareColor.dark) {
       return Colors.white;
     }

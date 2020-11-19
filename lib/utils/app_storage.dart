@@ -11,11 +11,19 @@ class AppStorage {
   // / --------------- /
   bool containsKey(String key) => _localStorage.containsKey(key);
 
+  String getString(String key) {
+    return _localStorage.getString(key);
+  }
+
   Future initialize() async {
     if (_localStorage != null) {
       return;
     }
     _localStorage = await LocalStorage.getInstance();
+  }
+
+  void setString(String key, String value) {
+    _localStorage.setString(key, value);
   }
 
   // / -----------------/
@@ -141,8 +149,9 @@ class AppStorage {
     return ImageShareColor.values.elementAt(index);
   }
 
-  void setImageShareColor(ImageShareColor imageShareColor) {
-    _localStorage.setInt(StorageKeys.imageShareColor, imageShareColor.index);
+  ImageShareTextColor getImageShareTextColors() {
+    final index = _localStorage.getInt(StorageKeys.imageShareTextColor) ?? 0;
+    return ImageShareTextColor.values.elementAt(index);
   }
 
   ItemsLayout getItemsStyle(String pageRoute) {
@@ -182,12 +191,13 @@ class AppStorage {
     _localStorage.setString('items_style_$pageRoute', style.toString());
   }
 
-  String getString(String key) {
-    return _localStorage.getString(key);
+  void setImageShareColor(ImageShareColor imageShareColor) {
+    _localStorage.setInt(StorageKeys.imageShareColor, imageShareColor.index);
   }
 
-  void setString(String key, String value) {
-    _localStorage.setString(key, value);
+  void setImageShareTextColor(ImageShareTextColor imageShareTextColor) {
+    _localStorage.setInt(
+        StorageKeys.imageShareTextColor, imageShareTextColor.index);
   }
 
   void setPageLang({String lang, String pageRoute}) {
