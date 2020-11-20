@@ -81,7 +81,7 @@ class _ImageShareState extends State<ImageShare> {
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: stateColors.background,
+            backgroundColor: stateColors.softBackground,
             automaticallyImplyLeading: false,
             title: Text(
               'Share image',
@@ -105,7 +105,10 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   Widget imagePreview() {
-    final size = 480.0;
+    final screenSize = MediaQuery.of(context).size;
+    final width = screenSize.width;
+    final height = screenSize.height;
+    final size = width < height ? width : height;
     final quote = widget.quote;
 
     return SliverList(
