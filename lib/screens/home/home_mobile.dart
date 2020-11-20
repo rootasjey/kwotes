@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:figstyle/screens/add_quote/steps.dart';
+import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/utils/icons_more_icons.dart';
@@ -12,6 +15,7 @@ import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/topics.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 class HomeMobile extends StatefulWidget {
   final int initialIndex;
@@ -45,7 +49,58 @@ class _HomeMobileState extends State<HomeMobile> {
       selectedIndex = widget.initialIndex;
     });
 
+    initQuickActions();
     openQuoteIfNotification();
+  }
+
+  void initQuickActions() {
+    final quickActions = QuickActions();
+
+    quickActions.initialize((String startRoute) {
+      if (startRoute == 'action_search') {
+        setState(() {
+          selectedIndex = 1;
+        });
+
+        return;
+      }
+
+      if (startRoute == 'action_add_quote') {
+        NavigationHelper.navigateNextFrame(
+          MaterialPageRoute(builder: (_) => AddQuoteSteps()),
+          context,
+        );
+
+        return;
+      }
+
+      if (startRoute == 'action_favourites') {
+        NavigationHelper.navigateNextFrame(
+          MaterialPageRoute(builder: (_) => Favourites()),
+          context,
+        );
+
+        return;
+      }
+    });
+
+    quickActions.setShortcutItems([
+      ShortcutItem(
+        type: 'action_add_quote',
+        localizedTitle: 'New quote',
+        icon: 'ic_shortcut_add',
+      ),
+      ShortcutItem(
+        type: 'action_search',
+        localizedTitle: 'Search',
+        icon: 'ic_shortcut_search',
+      ),
+      ShortcutItem(
+        type: 'action_favourites',
+        localizedTitle: 'Favourites',
+        icon: 'ic_shortcut_favorite',
+      ),
+    ]);
   }
 
   void _onItemTapped(int index) {
