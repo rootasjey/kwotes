@@ -33,6 +33,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   bool hasNext = true;
   bool hasErrors = false;
   bool isConnected = false;
+  bool isFabVisible = false;
   bool isLoading = false;
   bool isLoadingMore = false;
 
@@ -43,7 +44,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   String lang = 'en';
 
   var itemsLayout = ItemsLayout.list;
-  var lastDoc;
+  DocumentSnapshot lastDoc;
   var scrollController = ScrollController();
 
   @override
@@ -66,6 +67,20 @@ class RecentQuotesState extends State<RecentQuotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: RefreshIndicator(
           onRefresh: () async {
             await fetch();
@@ -73,6 +88,17 @@ class RecentQuotesState extends State<RecentQuotes> {
           },
           child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollNotif) {
+              // FAB visibility
+              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                setState(() {
+                  isFabVisible = false;
+                });
+              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                setState(() {
+                  isFabVisible = true;
+                });
+              }
+
               if (scrollNotif.metrics.pixels <
                   scrollNotif.metrics.maxScrollExtent) {
                 return false;
