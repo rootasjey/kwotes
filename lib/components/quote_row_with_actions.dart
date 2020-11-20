@@ -164,6 +164,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       quoteId: widget.quote.id,
     );
 
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
       widget.quote.starred = isFav;
     });
