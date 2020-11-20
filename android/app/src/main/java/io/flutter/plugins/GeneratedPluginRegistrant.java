@@ -23,6 +23,7 @@ public final class GeneratedPluginRegistrant {
     flutterEngine.getPlugins().add(new io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin());
       com.onesignal.flutter.OneSignalPlugin.registerWith(shimPluginRegistry.registrarFor("com.onesignal.flutter.OneSignalPlugin"));
     flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
+    flutterEngine.getPlugins().add(new io.flutter.plugins.quickactions.QuickActionsPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.share.SharePlugin());
       com.twwm.share_files_and_screenshot_widgets.ShareFilesAndScreenshotWidgetsPlugin.registerWith(shimPluginRegistry.registrarFor("com.twwm.share_files_and_screenshot_widgets.ShareFilesAndScreenshotWidgetsPlugin"));
     flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());

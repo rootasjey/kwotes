@@ -52,6 +52,7 @@ dependencies:
   modal_bottom_sheet: 0.2.2
   onesignal_flutter: 2.6.1
   photo_view: 0.10.2
+  quick_actions: 0.4.0+10
   share: 0.6.3+5
   share_files_and_screenshot_widgets: 1.0.3
   simple_animations: 1.3.9
