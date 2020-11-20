@@ -69,9 +69,10 @@ class _ImageShareState extends State<ImageShare> {
             text: "fig.style - quote",
           );
         },
+        backgroundColor: accentColor,
+        foregroundColor: Colors.white,
         child: Icon(
           Icons.ios_share,
-          color: Colors.white,
         ),
       ),
       body: CustomScrollView(
