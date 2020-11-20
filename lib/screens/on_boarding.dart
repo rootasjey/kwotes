@@ -177,7 +177,10 @@ class _OnBoardingState extends State<OnBoarding> {
 
     Widget footer = SwitchListTile(
       onChanged: (bool value) {
-        notificationsON = value;
+        setState(() {
+          notificationsON = value;
+        });
+
         timer?.cancel();
         timer =
             Timer(Duration(seconds: 1), () => toggleQuotidianNotifications());
