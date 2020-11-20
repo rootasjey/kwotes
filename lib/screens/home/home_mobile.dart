@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/quote_page.dart';
@@ -14,6 +12,7 @@ import 'package:figstyle/screens/recent_quotes.dart';
 import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/topics.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -160,21 +159,18 @@ class _HomeMobileState extends State<HomeMobile> {
     final val = appStorage.getString(StorageKeys.quoteIdNotification) ?? '';
 
     if (val.isNotEmpty) {
-      Timer(
-        Duration(seconds: 2), // Error if fired too fast
-        () {
-          appStorage.setString(StorageKeys.quoteIdNotification, '');
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        appStorage.setString(StorageKeys.quoteIdNotification, '');
 
-          showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context, scrollController) => QuotePage(
-              padding: const EdgeInsets.only(left: 10.0),
-              quoteId: val,
-              scrollController: scrollController,
-            ),
-          );
-        },
-      );
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context, scrollController) => QuotePage(
+            padding: const EdgeInsets.only(left: 10.0),
+            quoteId: val,
+            scrollController: scrollController,
+          ),
+        );
+      });
     }
   }
 }
