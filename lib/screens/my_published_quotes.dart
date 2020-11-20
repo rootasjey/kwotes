@@ -300,7 +300,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           .where('user.id', isEqualTo: userAuth.uid)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
-          .limit(30)
+          .limit(limit)
           .get();
 
       if (snapshot.docs.isEmpty) {
@@ -338,9 +338,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       return;
     }
 
-    setState(() {
-      isLoadingMore = true;
-    });
+    isLoadingMore = true;
 
     try {
       final userAuth = await userState.userAuth;
@@ -356,13 +354,11 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
-          .limit(30)
+          .limit(limit)
           .get();
 
       if (snapshot.docs.isEmpty) {
-        setState(() {
-          isLoadingMore = false;
-        });
+        isLoadingMore = false;
 
         return;
       }
@@ -372,12 +368,10 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         data['id'] = doc.id;
 
         final quote = Quote.fromJSON(data);
-        quotes.insert(quotes.length - 1, quote);
+        quotes.add(quote);
       });
 
-      setState(() {
-        isLoadingMore = false;
-      });
+      isLoadingMore = false;
     } catch (error) {
       debugPrint(error.toString());
 
