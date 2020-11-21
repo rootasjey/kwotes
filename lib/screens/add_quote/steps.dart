@@ -474,7 +474,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         if (userAuth == null) {
           setState(() => isCheckingAuth = false);
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => Signin()));
+              .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
           return;
         }
 
@@ -496,7 +496,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       } catch (error) {
         debugPrint(error.toString());
         isCheckingAuth = false;
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
       }
     });
   }
