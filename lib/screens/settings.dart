@@ -111,38 +111,46 @@ class _SettingsState extends State<Settings> {
         final isUserConnected = userState.isUserConnected;
 
         if (isUserConnected) {
-          return Wrap(
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              Column(
+          return Column(
+            children: [
+              Wrap(
+                alignment: WrapAlignment.center,
                 children: <Widget>[
-                  FadeInY(
-                    delay: 0.0,
-                    beginY: 50.0,
-                    child: avatar(isUserConnected),
+                  Column(
+                    children: <Widget>[
+                      FadeInY(
+                        delay: 0.0,
+                        beginY: 50.0,
+                        child: avatar(isUserConnected),
+                      ),
+                      accountActions(isUserConnected),
+                    ],
                   ),
-                  accountActions(isUserConnected),
+                  Column(
+                    children: <Widget>[
+                      FadeInY(
+                        delay: 0.2,
+                        beginY: 50.0,
+                        child: updateNameButton(isUserConnected),
+                      ),
+                      Padding(padding: const EdgeInsets.only(top: 20.0)),
+                      FadeInY(
+                        delay: 0.3,
+                        beginY: 50.0,
+                        child: emailButton(),
+                      ),
+                      // FadeInY(
+                      //   delay: 0.4,
+                      //   beginY: 50.0,
+                      //   child: langSelect(),
+                      // ),
+                    ],
+                  ),
                 ],
               ),
-              Column(
-                children: <Widget>[
-                  FadeInY(
-                    delay: 0.2,
-                    beginY: 50.0,
-                    child: updateNameButton(isUserConnected),
-                  ),
-                  Padding(padding: const EdgeInsets.only(top: 20.0)),
-                  FadeInY(
-                    delay: 0.3,
-                    beginY: 50.0,
-                    child: emailButton(),
-                  ),
-                  // FadeInY(
-                  //   delay: 0.4,
-                  //   beginY: 50.0,
-                  //   child: langSelect(),
-                  // ),
-                ],
+              Divider(
+                thickness: 1.0,
+                height: 50.0,
               ),
             ],
           );
@@ -190,12 +198,7 @@ class _SettingsState extends State<Settings> {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 50.0,
-            ),
-            child: themeSwitcher(),
-          ),
+          themeSwitcher(),
           notificationSection(),
           Padding(
               padding: const EdgeInsets.only(
@@ -268,14 +271,19 @@ class _SettingsState extends State<Settings> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
-                child: Text(
-                  'Notifications',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+              FadeInY(
+                delay: 1.6,
+                beginY: 10.0,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 20.0, left: 20.0),
+                  child: Text(
+                    'Notifications',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: stateColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -283,21 +291,25 @@ class _SettingsState extends State<Settings> {
           ),
           Column(
             children: [
-              SwitchListTile(
-                onChanged: (bool value) {
-                  notificationsON = value;
+              FadeInY(
+                delay: 1.9,
+                beginY: 10.0,
+                child: SwitchListTile(
+                  onChanged: (bool value) {
+                    notificationsON = value;
 
-                  timer?.cancel();
-                  timer = Timer(Duration(seconds: 1),
-                      () => toggleQuotidianNotifications());
-                },
-                value: notificationsON,
-                title: Text('Daily quote'),
-                subtitle: Text(
-                    "If this is active, you will receive a quote at 8:00am everyday"),
-                secondary: notificationsON
-                    ? Icon(Icons.notifications_active)
-                    : Icon(Icons.notifications_off),
+                    timer?.cancel();
+                    timer = Timer(Duration(seconds: 1),
+                        () => toggleQuotidianNotifications());
+                  },
+                  value: notificationsON,
+                  title: Text('Daily quote'),
+                  subtitle: Text(
+                      "If this is active, you will receive a quote at 8:00am everyday"),
+                  secondary: notificationsON
+                      ? Icon(Icons.notifications_active)
+                      : Icon(Icons.notifications_off),
+                ),
               ),
               if (notificationsON)
                 Padding(
@@ -339,14 +351,10 @@ class _SettingsState extends State<Settings> {
 
   Widget body() {
     return SliverPadding(
-      padding: const EdgeInsets.only(top: 60.0),
+      padding: const EdgeInsets.only(top: 20.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           accountSettings(),
-          Divider(
-            thickness: 1.0,
-            height: 50.0,
-          ),
           appSettings(),
         ]),
       ),
@@ -754,13 +762,14 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget themeSwitcher() {
-    return SizedBox(
+    return Container(
       width: 400.0,
+      padding: const EdgeInsets.only(bottom: 60.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           FadeInY(
-            delay: 2.0,
+            delay: 0.6,
             beginY: 10.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -771,6 +780,7 @@ class _SettingsState extends State<Settings> {
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
+                      color: stateColors.primary,
                     ),
                   ),
                 ],
@@ -778,17 +788,12 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           FadeInY(
-            delay: 3.0,
+            delay: 0.8,
             beginY: 10.0,
             child: Padding(
-              padding: const EdgeInsets.only(
-                left: 15.0,
-                right: 15.0,
-                top: 15.0,
-                bottom: 30.0,
-              ),
+              padding: const EdgeInsets.all(15.0),
               child: Opacity(
-                opacity: .6,
+                opacity: 0.6,
                 child: Text(
                   themeDescription(),
                   style: TextStyle(
@@ -799,7 +804,7 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           FadeInY(
-            delay: 4.0,
+            delay: 1.4,
             beginY: 10.0,
             child: SwitchListTile(
               title: Text('Automatic theme'),
