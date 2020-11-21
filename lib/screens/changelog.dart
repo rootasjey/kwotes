@@ -25,6 +25,7 @@ class _ChangelogState extends State<Changelog> {
         date: DateTime(2020, 12, 01),
         children: [
           descriptionRow("• Re-design add quote experience"),
+          descriptionRow("• Re-design icon assets"),
           descriptionRow("• Fix push notifications"),
           descriptionRow("• Add share image quote"),
           descriptionRow("• Update quote page & other pages layout"),

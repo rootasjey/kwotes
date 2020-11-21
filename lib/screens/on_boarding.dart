@@ -30,6 +30,7 @@ class _OnBoardingState extends State<OnBoarding> {
   final double bodyOpacity = 0.6;
   final double fontSizeDesc = 18.0;
   double horizontalPadding = 20.0;
+  final double illusSize = 300.0;
 
   Timer timer;
 
@@ -55,37 +56,43 @@ class _OnBoardingState extends State<OnBoarding> {
     return IntroductionScreen(
       pages: [
         PageViewModel(
-          title: "Welcome",
+          title: "Welcome!",
           bodyWidget: Container(
             width: 400.0,
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Opacity(
               opacity: bodyOpacity,
               child: Text(
-                "fig.style is your daily quote app. Let's do an overview of the features.",
+                "fig.style is your daily quote app. Let's see what you can do with it.",
                 style: TextStyle(
                   fontSize: fontSizeDesc,
                 ),
               ),
             ),
           ),
-          image: Center(
-            child: Image.asset(
-              "assets/images/fig.style_logo.png",
-              height: 90.0,
-              width: 90.0,
+          image: Padding(
+            padding: const EdgeInsets.only(top: 60.0),
+            child: Center(
+              child: Image.asset(
+                "assets/images/app-icon-512.png",
+                height: 500.0,
+                width: 500.0,
+              ),
             ),
           ),
         ),
         PageViewModel(
-          title: "A lot of Features",
+          title: "Discover & Share",
           bodyWidget: Container(
             width: 400.0,
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Opacity(
               opacity: bodyOpacity,
               child: Text(
-                "You can search for quotes, authors, references. You can share a quote as an image. You can create lists, and more.",
+                "You can discover new quotes by authors and references, "
+                "or search for keywords. When you've found the perfect quote, "
+                "you can share it with others, like it or add it to a list. "
+                "And there's more.",
                 style: TextStyle(
                   fontSize: fontSizeDesc,
                 ),
@@ -94,10 +101,10 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
           image: Center(
             child: Image.asset(
-              'assets/images/undraw_setup.png',
+              'assets/images/illus_features.png',
               semanticLabel: 'Features illustration',
-              width: 200.0,
-              height: 200.0,
+              width: illusSize,
+              height: illusSize,
             ),
           ),
         ),
@@ -110,7 +117,8 @@ class _OnBoardingState extends State<OnBoarding> {
             child: Opacity(
                 opacity: bodyOpacity,
                 child: Text(
-                  "You can contribute by adding new quotes to the database, giving your feedback, or fixing wrong information.",
+                  "You can contribute by adding new quotes to the database, "
+                  "giving your feedback, or fixing wrong information.",
                   style: TextStyle(
                     fontSize: fontSizeDesc,
                   ),
@@ -118,10 +126,10 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
           image: Center(
             child: Image.asset(
-              'assets/images/undraw_smiley.png',
+              'assets/images/illus_community.png',
               semanticLabel: 'Community illustration',
-              width: 200.0,
-              height: 200.0,
+              width: illusSize,
+              height: illusSize,
             ),
           ),
         ),
@@ -172,8 +180,8 @@ class _OnBoardingState extends State<OnBoarding> {
   }
 
   PageViewModel notificationsPVModel() {
-    String body =
-        "You don't have to open the app to be inspired. One quote will be delivered to you everyday around 8:00 am.";
+    String body = "You don't have to open the app to be inspired. "
+        "One quote will be delivered to you everyday around 8:00 am.";
 
     Widget footer = SwitchListTile(
       onChanged: (bool value) {
@@ -200,8 +208,9 @@ class _OnBoardingState extends State<OnBoarding> {
     );
 
     if (kIsWeb) {
-      body =
-          "You don't have to open your mobile app to be inspired. Get the Android or iOS app now, and one quote will be delivered to you everyday around 8:00 am.";
+      body = "You don't have to open your mobile app to be inspired. "
+          "Get the Android or iOS app now, "
+          "and one quote will be delivered to you everyday around 8:00 am.";
 
       footer = Wrap(
         spacing: 20.0,
@@ -235,17 +244,17 @@ class _OnBoardingState extends State<OnBoarding> {
             padding: const EdgeInsets.only(top: 100.0),
             child: Center(
               child: Image.asset(
-                'assets/images/undraw_inbox.png',
+                'assets/images/illus_notifications.png',
                 semanticLabel: 'Notifications illustration',
-                width: 200.0,
-                height: 200.0,
+                width: illusSize,
+                height: illusSize,
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Text(
-              "Notification",
+              "Notifications",
               style: TextStyle(fontSize: 20.0),
             ),
           ),
@@ -297,7 +306,9 @@ class _OnBoardingState extends State<OnBoarding> {
         child: Opacity(
             opacity: bodyOpacity,
             child: Text(
-              "With an account and you'll be part of the community. You'll also be able to save your most loved quotes.",
+              "Create an account and you will be part of the community. "
+              "Also, you will need it to propose new quotes "
+              "and to save your most loved ones.",
               style: TextStyle(
                 fontSize: fontSizeDesc,
               ),
@@ -305,10 +316,10 @@ class _OnBoardingState extends State<OnBoarding> {
       ),
       image: Center(
         child: Image.asset(
-          'assets/images/undraw_preferences.png',
+          'assets/images/illus_signin.png',
           semanticLabel: 'Account illustration',
-          width: 200.0,
-          height: 200.0,
+          width: illusSize,
+          height: illusSize,
         ),
       ),
       footer: isAuth

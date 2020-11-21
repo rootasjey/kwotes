@@ -135,7 +135,7 @@ class About extends StatelessWidget {
               onPressed: null,
               child: Opacity(
                 opacity: captionOpacity,
-                child: Text('App text icon'),
+                child: Text('App large icon'),
               ),
             ),
           ),
@@ -271,6 +271,11 @@ class About extends StatelessWidget {
             onPressed: () =>
                 launch('https://www.flaticon.com/authors/pixel-perfect'),
             leading: Text('💄'),
+          ),
+          creditItem(
+            textTitle: 'Illustrations by Natasha Remarchuk from Icons8',
+            onPressed: () => launch('https://icons8.com/'),
+            leading: Text('🖼️'),
           ),
           creditItem(
             textTitle: 'Mobile app screenshots created with Previewed',
