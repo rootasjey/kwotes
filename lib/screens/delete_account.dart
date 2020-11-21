@@ -252,6 +252,7 @@ class DeleteAccountState extends State<DeleteAccount> {
             onChanged: (value) {
               password = value;
             },
+            onFieldSubmitted: (value) => deleteAccount(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password login cannot be empty';

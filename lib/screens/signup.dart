@@ -58,7 +58,9 @@ class _SignupState extends State<Signup> {
   @override
   void dispose() {
     super.dispose();
+    usernameNode.dispose();
     passwordNode.dispose();
+    confirmPasswordNode.dispose();
   }
 
   @override
@@ -102,13 +104,13 @@ class _SignupState extends State<Signup> {
 
   Widget emailInput() {
     return FadeInY(
-      delay: .5,
+      delay: 0.5,
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(top: 60.0),
         child: TextFormField(
           autofocus: true,
-          onFieldSubmitted: (_) => usernameNode.nextFocus(),
+          textInputAction: TextInputAction.next,
           decoration: InputDecoration(
             icon: Icon(Icons.email),
             labelText: 'Email',
@@ -154,6 +156,7 @@ class _SignupState extends State<Signup> {
               });
             });
           },
+          onFieldSubmitted: (_) => usernameNode.requestFocus(),
           validator: (value) {
             if (value.isEmpty) {
               return 'Email cannot be empty';
@@ -214,7 +217,7 @@ class _SignupState extends State<Signup> {
               ),
             ),
             FadeInY(
-              delay: .3,
+              delay: 0.3,
               beginY: 50.0,
               child: Opacity(
                 opacity: .6,
@@ -315,7 +318,7 @@ class _SignupState extends State<Signup> {
                   });
                 });
               },
-              onFieldSubmitted: (_) => passwordNode.nextFocus(),
+              onFieldSubmitted: (_) => passwordNode.requestFocus(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'name cannot be empty';
@@ -363,6 +366,7 @@ class _SignupState extends State<Signup> {
           children: <Widget>[
             TextFormField(
               focusNode: passwordNode,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 icon: Icon(Icons.lock_outline),
                 labelText: 'Password',
@@ -374,6 +378,7 @@ class _SignupState extends State<Signup> {
                 }
                 password = value;
               },
+              onFieldSubmitted: (_) => confirmPasswordNode.requestFocus(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Password cannot be empty';
@@ -410,6 +415,7 @@ class _SignupState extends State<Signup> {
                 }
                 confirmPassword = value;
               },
+              onFieldSubmitted: (value) => createAccount(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Confirm password cannot be empty';

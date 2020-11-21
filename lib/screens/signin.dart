@@ -96,7 +96,7 @@ class _SigninState extends State<Signin> {
 
   Widget emailInput() {
     return FadeInY(
-      delay: .5,
+      delay: 0.5,
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(
@@ -108,6 +108,7 @@ class _SigninState extends State<Signin> {
           children: <Widget>[
             TextFormField(
               autofocus: true,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 icon: Icon(Icons.email),
                 labelText: 'Email',
@@ -116,6 +117,7 @@ class _SigninState extends State<Signin> {
               onChanged: (value) {
                 email = value;
               },
+              onFieldSubmitted: (value) => passwordNode.requestFocus(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Email login cannot be empty';
@@ -192,7 +194,7 @@ class _SigninState extends State<Signin> {
               ),
             ),
             FadeInY(
-              delay: .3,
+              delay: 0.3,
               beginY: 50.0,
               child: Opacity(
                 opacity: .6,
@@ -253,6 +255,7 @@ class _SigninState extends State<Signin> {
               onChanged: (value) {
                 password = value;
               },
+              onFieldSubmitted: (value) => signIn(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Password login cannot be empty';
@@ -269,7 +272,7 @@ class _SigninState extends State<Signin> {
 
   Widget validationButton() {
     return FadeInY(
-      delay: 2,
+      delay: 2.0,
       beginY: 50.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),

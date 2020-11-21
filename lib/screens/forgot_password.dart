@@ -1,3 +1,4 @@
+import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       body: CustomScrollView(
         slivers: <Widget>[
           DesktopAppBar(
-            title: "Forgot password",
+            title: "Recover account",
             automaticallyImplyLeading: true,
           ),
           SliverList(
@@ -34,7 +35,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 300.0),
+                    padding: const EdgeInsets.only(top: 60.0, bottom: 300.0),
                     child: SizedBox(
                       width: 320,
                       child: body(),
@@ -154,6 +155,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               onChanged: (value) {
                 email = value;
               },
+              onFieldSubmitted: (value) => sendResetLink(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Email login cannot be empty';
@@ -234,7 +236,34 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
+  bool inputValuesOk() {
+    if (email.isEmpty) {
+      showSnack(
+        context: context,
+        message: "Email field can't be empty. Please enter your email.",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    if (!checkEmailFormat(email)) {
+      showSnack(
+        context: context,
+        message: "The value specified is not a valid email",
+        type: SnackType.error,
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
   void sendResetLink() async {
+    if (!inputValuesOk()) {
+      return;
+    }
     try {
       setState(() {
         isLoading = true;
@@ -255,9 +284,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       });
 
       showSnack(
-          context: context,
-          type: SnackType.error,
-          message: "Sorry, this email doesn't exist.");
+        context: context,
+        type: SnackType.error,
+        message: "Sorry, this email doesn't exist.",
+      );
     }
   }
 }

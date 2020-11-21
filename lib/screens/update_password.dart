@@ -26,6 +26,12 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   String newPassword = '';
 
   @override
+  void dispose() {
+    newPasswordNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
@@ -94,6 +100,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
         children: <Widget>[
           TextFormField(
             autofocus: true,
+            textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               icon: Icon(Icons.lock_open),
               labelText: 'Current password',
@@ -251,6 +258,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
             onChanged: (value) {
               newPassword = value;
             },
+            onFieldSubmitted: (value) => updatePassword(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'New password cannot be empty';

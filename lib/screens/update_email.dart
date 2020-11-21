@@ -43,6 +43,12 @@ class _UpdateEmailState extends State<UpdateEmail> {
   }
 
   @override
+  void dispose() {
+    passwordNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
@@ -236,6 +242,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         children: <Widget>[
           TextFormField(
             autofocus: true,
+            textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => passwordNode.requestFocus(),
             decoration: InputDecoration(
               icon: Icon(Icons.email),
@@ -341,6 +348,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
             onChanged: (value) {
               password = value;
             },
+            onFieldSubmitted: (value) => updateEmail(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password login cannot be empty';
