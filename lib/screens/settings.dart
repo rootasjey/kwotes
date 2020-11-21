@@ -94,7 +94,8 @@ class _SettingsState extends State<Settings> {
     if (width < 700.0) {
       return PageAppBar(
         textTitle: "Settings",
-        showNavBackIcon: true,
+        textSubTitle: "You can change your preferences here",
+        expandedHeight: 90.0,
       );
     }
 
