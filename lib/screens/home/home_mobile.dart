@@ -3,6 +3,7 @@ import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:figstyle/utils/storage_keys.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:supercharged/supercharged.dart';
 
 class HomeMobile extends StatefulWidget {
   final int initialIndex;
@@ -67,7 +69,14 @@ class _HomeMobileState extends State<HomeMobile> {
   }
 
   void initColors() {
-    final tColor = appTopicsColors.shuffle(max: 1)?.first;
+    final tColor = appTopicsColors.shuffle(max: 1).firstOrElse(
+          () => TopicColor.fromJSON(
+            {
+              'name': 'blue',
+              'color': Colors.blue.value,
+            },
+          ),
+        );
 
     setState(() {
       accentColor = Color(tColor.decimal) ?? accentColor;
