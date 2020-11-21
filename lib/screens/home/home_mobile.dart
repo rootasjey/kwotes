@@ -1,6 +1,7 @@
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/quote_page.dart';
+import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:figstyle/utils/storage_keys.dart';
@@ -13,6 +14,7 @@ import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/topics.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -29,6 +31,7 @@ class HomeMobile extends StatefulWidget {
 
 class _HomeMobileState extends State<HomeMobile> {
   int selectedIndex = 0;
+  Color accentColor = stateColors.secondary;
 
   static List<Widget> _listScreens = <Widget>[
     RecentQuotes(
@@ -48,8 +51,17 @@ class _HomeMobileState extends State<HomeMobile> {
       selectedIndex = widget.initialIndex;
     });
 
+    initColors();
     initQuickActions();
     openQuoteIfNotification();
+  }
+
+  void initColors() {
+    final tColor = appTopicsColors.shuffle(max: 1)?.first;
+
+    setState(() {
+      accentColor = Color(tColor.decimal) ?? accentColor;
+    });
   }
 
   void initQuickActions() {
@@ -114,7 +126,12 @@ class _HomeMobileState extends State<HomeMobile> {
       body: Container(
         child: _listScreens.elementAt(selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: SnakeNavigationBar.color(
+        currentIndex: selectedIndex,
+        onTap: _onItemTapped,
+        snakeViewColor: accentColor,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: accentColor,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
@@ -147,10 +164,6 @@ class _HomeMobileState extends State<HomeMobile> {
             label: 'Account',
           ),
         ],
-        currentIndex: selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: stateColors.primary,
-        unselectedItemColor: stateColors.foreground,
       ),
     );
   }
