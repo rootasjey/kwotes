@@ -34,7 +34,6 @@ class _DashboardState extends State<Dashboard> {
   bool canManage = false;
   bool prevIsAuthenticated = false;
   bool isAccountAdvVisible = false;
-  bool isConnected = false;
 
   double beginY = 20.0;
 
@@ -49,26 +48,30 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isConnected
-          ? FloatingActionButton.extended(
-              backgroundColor: stateColors.secondary,
-              foregroundColor: Colors.white,
-              label: Text(
-                "Add quote",
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w600,
-                ),
+      floatingActionButton: Observer(builder: (context) {
+        if (userState.isUserConnected) {
+          return FloatingActionButton.extended(
+            backgroundColor: stateColors.secondary,
+            foregroundColor: Colors.white,
+            label: Text(
+              "Add quote",
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.w600,
               ),
-              icon: Icon(Icons.add),
-              onPressed: () {
-                DataQuoteInputs.clearAll();
-                DataQuoteInputs.navigatedFromPath = 'dashboard';
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-              },
-            )
-          : Padding(padding: EdgeInsets.zero),
+            ),
+            icon: Icon(Icons.add),
+            onPressed: () {
+              DataQuoteInputs.clearAll();
+              DataQuoteInputs.navigatedFromPath = 'dashboard';
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+            },
+          );
+        }
+
+        return Container();
+      }),
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
@@ -173,9 +176,7 @@ class _DashboardState extends State<Dashboard> {
     return Observer(builder: (context) {
       List<Widget> children = [];
 
-      isConnected = userState.isUserConnected;
-
-      if (isConnected) {
+      if (userState.isUserConnected) {
         children.addAll(authWidgets(context));
 
         if (canManage) {
