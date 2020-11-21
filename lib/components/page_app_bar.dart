@@ -180,14 +180,8 @@ class _PageAppBarState extends State<PageAppBar> {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: CircleButton(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              backgroundColor: stateColors.primary,
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground),
             ),
           ),
           TextButton.icon(
