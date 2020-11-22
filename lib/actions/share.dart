@@ -49,7 +49,7 @@ void shareAuthorWeb({@required Author author}) async {
   final hashtags = '&hashtags=outofcontext';
 
   await launch(
-    'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags&url=$urlReference',
+    'https://twitter.com/intent/tweet?via=fig_style&text=$sharingText$hashtags&url=$urlReference',
   );
 }
 
@@ -178,7 +178,7 @@ Future shareQuoteWeb({@required Quote quote}) async {
   final hashtags = '&hashtags=outofcontext';
 
   final url =
-      'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags';
+      'https://twitter.com/intent/tweet?via=fig_style&text=$sharingText$hashtags';
   await launch(url);
 }
 
@@ -204,7 +204,7 @@ void shareReferenceWeb(
   final hashtags = '&hashtags=outofcontext';
 
   await launch(
-    'https://twitter.com/intent/tweet?via=outofcontextapp&text=$sharingText$hashtags&url=$urlReference',
+    'https://twitter.com/intent/tweet?via=fig_style&text=$sharingText$hashtags&url=$urlReference',
   );
 }
 
