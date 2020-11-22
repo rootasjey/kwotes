@@ -332,6 +332,7 @@ class _DiscoverState extends State<Discover> {
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
+        vertical: 40.0,
         horizontal: 20.0,
       ),
       sliver: SliverGrid(
@@ -362,6 +363,7 @@ class _DiscoverState extends State<Discover> {
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
+        vertical: 40.0,
         horizontal: 20.0,
       ),
       sliver: SliverGrid(
