@@ -292,13 +292,19 @@ class RecentQuotesState extends State<RecentQuotes> {
           (context, index) {
             final quote = quotes.elementAt(index);
 
+            double quoteFontSize = 18.0;
+
+            if (index == 0) {
+              quoteFontSize = 42.0;
+            }
+
             return QuoteRowWithActions(
               quote: quote,
               canManage: canManage,
               isConnected: isConnected,
               key: ObjectKey(index),
               useSwipeActions: true,
-              quoteFontSize: 18.0,
+              quoteFontSize: quoteFontSize,
               color: stateColors.appBackground,
               padding: EdgeInsets.symmetric(
                 horizontal: horPadding,
