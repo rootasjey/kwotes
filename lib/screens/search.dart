@@ -259,12 +259,15 @@ class _SearchState extends State<Search> {
   }
 
   Widget emptyView(String subject) {
-    return Opacity(
-      opacity: 0.6,
-      child: Text(
-        'No $subject found for "$_searchInputValue"',
-        style: TextStyle(
-          fontSize: 18.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          'No $subject found for "$_searchInputValue"',
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
         ),
       ),
     );
@@ -423,7 +426,7 @@ class _SearchState extends State<Search> {
     }
 
     final dataView = referencesSuggestions.isEmpty
-        ? emptyView('quotes')
+        ? emptyView('references')
         : referencesListView();
 
     final length = referencesSuggestions.length;
