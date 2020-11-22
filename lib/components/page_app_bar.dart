@@ -93,7 +93,7 @@ class _PageAppBarState extends State<PageAppBar> {
       bottom: Align(
         alignment: Alignment.topLeft,
         child: Padding(
-          padding: const EdgeInsets.only(left: 24.0),
+          padding: const EdgeInsets.only(left: 24.0, bottom: 10.0),
           child: Wrap(
             spacing: 10.0,
             alignment: WrapAlignment.start,
