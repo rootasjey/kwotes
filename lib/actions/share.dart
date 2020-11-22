@@ -23,7 +23,7 @@ void shareAuthorMobile({
 }) {
   final RenderBox box = context.findRenderObject();
   String sharingText = author.name;
-  final urlReference = 'https://outofcontext.app/#/reference/${author.id}';
+  final urlReference = 'https://fig.style/#/author/${author.id}';
 
   if (author.job != null && author.job.isNotEmpty) {
     sharingText += ' (${author.job})';
@@ -40,7 +40,7 @@ void shareAuthorMobile({
 
 void shareAuthorWeb({@required Author author}) async {
   String sharingText = author.name;
-  final urlReference = 'https://outofcontext.app/#/reference/${author.id}';
+  final urlReference = 'https://fig.style/#/author/${author.id}';
 
   if (author.job != null && author.job.isNotEmpty) {
     sharingText += ' (${author.job})';
@@ -195,7 +195,7 @@ void shareReference(
 void shareReferenceWeb(
     {@required BuildContext context, @required Reference reference}) async {
   String sharingText = reference.name;
-  final urlReference = 'https://outofcontext.app/#/reference/${reference.id}';
+  final urlReference = 'https://fig.style/#/reference/${reference.id}';
 
   if (reference.type.primary.isNotEmpty) {
     sharingText += ' (${reference.type.primary})';
@@ -212,7 +212,7 @@ void shareReferenceMobile(
     {@required BuildContext context, @required Reference reference}) {
   final RenderBox box = context.findRenderObject();
   String sharingText = reference.name;
-  final urlReference = 'https://outofcontext.app/#/reference/${reference.id}';
+  final urlReference = 'https://fig.style/#/reference/${reference.id}';
 
   if (reference.type.primary.isNotEmpty) {
     sharingText += ' (${reference.type.primary})';
