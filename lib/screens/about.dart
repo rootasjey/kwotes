@@ -485,8 +485,8 @@ class About extends StatelessWidget {
                           width: 230.0,
                           height: 400.0,
                           fit: BoxFit.cover,
-                          image: NetworkImage(
-                            'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
+                          image: AssetImage(
+                            'assets/images/citations365_lockscreen.png',
                           ),
                           child: InkWell(
                             onTap: openContainer,
@@ -496,8 +496,8 @@ class About extends StatelessWidget {
                     },
                     openBuilder: (context, callback) {
                       return ImageHero(
-                        imageProvider: NetworkImage(
-                          'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
+                        imageProvider: AssetImage(
+                          'assets/images/citations365_lockscreen.png',
                         ),
                       );
                     },

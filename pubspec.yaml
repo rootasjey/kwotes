@@ -102,6 +102,7 @@ flutter:
     - assets/images/app-icon-animation.gif
     - assets/images/boy-dark.png
     - assets/images/boy-light.png
+    - assets/images/citations365_lockscreen.png
     - assets/images/delete-user-dark.png
     - assets/images/delete-user-light.png
     - assets/images/employee-dark.png
