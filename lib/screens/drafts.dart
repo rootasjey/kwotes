@@ -215,6 +215,7 @@ class _DraftsState extends State<Drafts> {
             return TempQuoteRowWithActions(
               componentType: ItemComponentType.card,
               isDraft: true,
+              padding: const EdgeInsets.all(20.0),
               elevation: Constants.cardElevation,
               onTap: () => editDraft(draft),
               tempQuote: draft,

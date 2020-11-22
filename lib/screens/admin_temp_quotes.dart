@@ -203,8 +203,11 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   Widget gridView() {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20.0,
+      padding: const EdgeInsets.only(
+        left: 20.0,
+        right: 20.0,
+        top: 20.0,
+        bottom: 100.0,
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -220,6 +223,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
               componentType: ItemComponentType.card,
               canManage: true,
               tempQuote: tempQuote,
+              padding: const EdgeInsets.all(20.0),
               elevation: Constants.cardElevation,
               onBeforeDelete: () {
                 setState(() {

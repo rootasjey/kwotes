@@ -225,7 +225,7 @@ class _FavouritesState extends State<Favourites> {
               quoteId: quote.quoteId,
               componentType: ItemComponentType.card,
               quotePageType: QuotePageType.favourites,
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.all(20.0),
               elevation: Constants.cardElevation,
               onBeforeRemoveFromFavourites: () {
                 setState(() {

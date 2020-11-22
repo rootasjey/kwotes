@@ -250,6 +250,7 @@ class RecentQuotesState extends State<RecentQuotes> {
                 canManage: canManage,
                 isConnected: isConnected,
                 elevation: Constants.cardElevation,
+                padding: const EdgeInsets.all(20.0),
                 componentType: ItemComponentType.card,
                 onBeforeDeletePubQuote: () {
                   setState(() {

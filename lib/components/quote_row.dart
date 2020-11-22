@@ -140,7 +140,7 @@ class _QuoteRowState extends State<QuoteRow> {
           child: Stack(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: widget.padding,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -150,6 +150,7 @@ class _QuoteRowState extends State<QuoteRow> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],

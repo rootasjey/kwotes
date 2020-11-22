@@ -114,16 +114,17 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
           child: Stack(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: widget.padding,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      tempQuote.name.length > 60
-                          ? '${tempQuote.name.substring(0, 60)}...'
-                          : tempQuote.name,
+                      tempQuote.name,
+                      maxLines: 6,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -138,10 +139,10 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                       opacity: .6,
                       child: iconColor != null
                           ? Icon(
-                              Icons.more_vert,
+                              Icons.more_horiz,
                               color: iconColor,
                             )
-                          : Icon(Icons.more_vert),
+                          : Icon(Icons.more_horiz),
                     ),
                     onSelected: widget.onSelected,
                     itemBuilder: widget.itemBuilder,
@@ -150,8 +151,8 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
               if (widget.stackChildren.length > 0) ...widget.stackChildren,
               if (widget.isDraft)
                 Positioned(
-                  left: 20,
-                  top: 20.0,
+                  right: 0.0,
+                  top: 15.0,
                   child: chipDraftInfo(),
                 ),
             ],

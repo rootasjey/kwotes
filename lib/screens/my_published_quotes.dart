@@ -243,6 +243,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
               quote: quote,
               canManage: canManage,
               isConnected: isConnected,
+              padding: const EdgeInsets.all(20.0),
               elevation: Constants.cardElevation,
               componentType: ItemComponentType.card,
             );
