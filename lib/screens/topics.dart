@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/app_icon.dart';
+import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class _TopicsState extends State<Topics> {
 
   final limit = 3;
   final quotesByTopicsList = <List<Quote>>[];
+  final pageRoute = TopicsRoute;
 
   ReactionDisposer topicsDisposer;
 
@@ -43,6 +45,7 @@ class _TopicsState extends State<Topics> {
   @override
   initState() {
     super.initState();
+    initProps();
 
     topicsDisposer = autorun((reaction) {
       if (_topicsList.length == 0) {
@@ -51,6 +54,12 @@ class _TopicsState extends State<Topics> {
 
       fetch();
     });
+  }
+
+  void initProps() async {
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
+
+    setState(() {});
   }
 
   @override
@@ -107,44 +116,22 @@ class _TopicsState extends State<Topics> {
   }
 
   Widget appBar() {
-    if (MediaQuery.of(context).size.width < 700.0) {
-      return PageAppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(top: 24.0),
-          child: TextButton.icon(
-            onPressed: () {
-              scrollController.animateTo(
-                0,
-                duration: 250.milliseconds,
-                curve: Curves.easeIn,
-              );
-            },
-            icon: AppIcon(
-              padding: EdgeInsets.zero,
-              size: 30.0,
-            ),
-            label: Text(
-              'Topics',
-              style: TextStyle(
-                fontSize: 22.0,
-              ),
-            ),
-          ),
-        ),
-        expandedHeight: 80.0,
-        showNavBackIcon: false,
-        onTitlePressed: () {
-          scrollController.animateTo(
-            0,
-            duration: 250.milliseconds,
-            curve: Curves.easeIn,
-          );
-        },
-      );
-    }
-
-    return SliverPadding(
-      padding: EdgeInsets.zero,
+    return PageAppBar(
+      textTitle: "Topics",
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+        fetch();
+      },
+      showNavBackIcon: false,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
     );
   }
 
