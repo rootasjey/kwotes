@@ -28,9 +28,10 @@ class QuoteRow extends StatefulWidget {
 
   final EdgeInsets padding;
 
-  final Function itemBuilder;
-  final Function onSelected;
   final Function fetchIsFav;
+  final Function itemBuilder;
+  final Function onLongPress;
+  final Function onSelected;
 
   final ItemComponentType componentType;
 
@@ -60,23 +61,24 @@ class QuoteRow extends StatefulWidget {
   QuoteRow({
     this.cardSize = 250.0,
     this.color,
+    this.componentType = ItemComponentType.row,
     this.elevation,
     this.fetchIsFav,
-    this.quote,
-    this.quoteId,
     this.itemBuilder,
     this.key,
-    this.componentType = ItemComponentType.row,
+    this.leading,
+    this.leadingActions = defaultActions,
+    this.onLongPress,
     this.onSelected,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
       vertical: 30.0,
     ),
+    this.quote,
+    this.quoteId,
     this.quoteFontSize = 24.0,
     this.showAuthor = false,
     this.stackChildren = const [],
-    this.leading,
-    this.leadingActions = defaultActions,
     this.trailingActions = defaultActions,
     this.useSwipeActions = false,
   });
@@ -127,6 +129,7 @@ class _QuoteRowState extends State<QuoteRow> {
         margin: EdgeInsets.zero,
         child: InkWell(
           onTap: onQuoteTap,
+          onLongPress: widget.onLongPress,
           onHover: (isHover) {
             setState(() {
               elevation = isHover ? getHoverElevation() : getElevation();
@@ -306,6 +309,7 @@ class _QuoteRowState extends State<QuoteRow> {
         color: widget.color,
         child: InkWell(
           onTap: onQuoteTap,
+          onLongPress: widget.onLongPress,
           onHover: (isHover) {
             setState(() {
               elevation = isHover ? getHoverElevation() : getElevation();

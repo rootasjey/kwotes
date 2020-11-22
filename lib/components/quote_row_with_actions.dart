@@ -123,23 +123,24 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     }
 
     return QuoteRow(
-      quote: widget.quote,
-      quoteId: widget.quoteId,
-      color: widget.color,
-      fetchIsFav: fetchIsFav,
-      key: widget.key,
-      quoteFontSize: widget.quoteFontSize,
-      elevation: widget.elevation,
-      padding: widget.padding,
-      itemBuilder: itemBuilder,
-      onSelected: onSelected,
       componentType: widget.componentType,
+      quote: widget.quote,
+      color: widget.color,
+      elevation: widget.elevation,
+      fetchIsFav: fetchIsFav,
+      itemBuilder: itemBuilder,
+      key: widget.key,
+      leading: widget.leading,
+      leadingActions: leadingActions,
+      onLongPress: onLongPress,
+      onSelected: onSelected,
+      padding: widget.padding,
+      quoteId: widget.quoteId,
+      quoteFontSize: widget.quoteFontSize,
       showAuthor: widget.showAuthor,
       stackChildren: widget.stackChildren,
-      leading: widget.leading,
-      useSwipeActions: widget.useSwipeActions,
-      leadingActions: leadingActions,
       trailingActions: trailingActions,
+      useSwipeActions: widget.useSwipeActions,
     );
   }
 
@@ -411,6 +412,99 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     return actions;
   }
 
+  void onLongPress() {
+    final children = [
+      ListTile(
+        title: Text('Share'),
+        trailing: Icon(
+          Icons.ios_share,
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+          shareQuote(context: context, quote: widget.quote);
+        },
+      ),
+    ];
+
+    if (widget.isConnected) {
+      children.addAll([
+        ListTile(
+          title: Text('Add to...'),
+          trailing: Icon(
+            Icons.playlist_add,
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            showBottomSheetList();
+          },
+        ),
+        ListTile(
+          title: widget.quote.starred ? Text('Unlike') : Text('Like'),
+          trailing: widget.quote.starred
+              ? Icon(Icons.favorite)
+              : Icon(Icons.favorite_border),
+          onTap: () {
+            Navigator.of(context).pop();
+            toggleFavourite();
+          },
+        ),
+      ]);
+    }
+
+    if (widget.canManage) {
+      children.addAll([
+        ListTile(
+          title: Text('Delete'),
+          trailing: Icon(
+            Icons.delete_outline,
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            deletePubQuote();
+          },
+        ),
+        ListTile(
+          title: Text('Next quotidian'),
+          trailing: Icon(Icons.wb_sunny),
+          onTap: () {
+            Navigator.of(context).pop();
+            addToQuotidians(
+              quote: widget.quote,
+              lang: widget.quote.lang,
+            );
+          },
+        ),
+      ]);
+    }
+
+    showCustomModalBottomSheet(
+      context: context,
+      builder: (context, controller) {
+        return Material(
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
+          ),
+        );
+      },
+      containerWidget: (context, animation, child) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.circular(12.0),
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void onSelected(value) async {
     final quote = widget.quote;
 
@@ -455,7 +549,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         shareQuote(context: context, quote: quote);
         break;
       case 'addquotidian':
-        await addToQuotidians(
+        addToQuotidians(
           quote: quote,
           lang: quote.lang,
         );
