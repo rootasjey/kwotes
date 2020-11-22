@@ -81,6 +81,16 @@ void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
               },
             ),
             ListTile(
+              title: Text('Link'),
+              trailing: Icon(
+                Icons.link,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                shareLinkMobile(context: context, quote: quote);
+              },
+            ),
+            ListTile(
               title: Text('Image'),
               trailing: Icon(Icons.image_outlined),
               onTap: () {
@@ -129,6 +139,18 @@ void shareTextMobile({@required BuildContext context, @required Quote quote}) {
   if (referenceName != null && referenceName.length > 0) {
     sharingText += ' — $referenceName';
   }
+
+  Share.share(
+    sharingText,
+    subject: 'fig.style',
+    sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+  );
+}
+
+void shareLinkMobile({@required BuildContext context, @required Quote quote}) {
+  final RenderBox box = context.findRenderObject();
+
+  String sharingText = "https://fig.style/quote/${quote.id}";
 
   Share.share(
     sharingText,
