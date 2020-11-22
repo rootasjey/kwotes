@@ -117,6 +117,7 @@ class QuotidiansState extends State<Quotidians> {
         lang: lang,
         onLangChanged: (String newLang) {
           lang = newLang;
+          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
           fetch();
         },
         itemsLayout: itemsLayout,

@@ -131,6 +131,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         lang: lang,
         onLangChanged: (String newLang) {
           lang = newLang;
+          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
           fetch();
         },
         itemsLayout: itemsLayout,
