@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/screens/update_username.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
@@ -21,7 +22,7 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:supercharged/supercharged.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -29,9 +30,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool isCheckingName = false;
   bool isLoadingLang = false;
-  bool isLoadingName = false;
   bool isLoadingImageURL = false;
   bool isNameAvailable = false;
   bool isThemeAuto = true;
@@ -46,8 +45,6 @@ class _SettingsState extends State<Settings> {
   String currentUserName = '';
   String email = '';
   String imageUrl = '';
-  String nameErrorMessage = '';
-  String newUserName = '';
   String notifLang = 'en';
   String selectedLang = 'English';
 
@@ -402,9 +399,11 @@ class _SettingsState extends State<Settings> {
 
   Widget emailButton() {
     return FlatButton(
-      onPressed: () {
-        Navigator.of(context)
+      onPressed: () async {
+        await Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => UpdateEmail()));
+
+        checkAuth();
       },
       onLongPress: () {
         showDialog(
@@ -503,22 +502,6 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget updateNameButton(bool isUserConnected) {
-    if (isLoadingName) {
-      return SizedBox(
-        height: 200.0,
-        width: 300.0,
-        child: Column(
-          children: <Widget>[
-            CircularProgressIndicator(),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: Text('Updating your display name...'),
-            )
-          ],
-        ),
-      );
-    }
-
     return FlatButton(
       onPressed: () {
         showUpdateNameDialog();
@@ -561,168 +544,43 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Future showUpdateNameDialog() {
-    return showDialog(
+  Future showUpdateNameDialog() async {
+    if (MediaQuery.of(context).size.width > 600.0) {
+      await showFlash(
         context: context,
-        builder: (context) {
-          return StatefulBuilder(
-            builder: (context, childSetState) {
-              return AlertDialog(
-                title: Text(
-                  'Update username',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 20.0,
-                ),
-                actionsPadding: const EdgeInsets.all(10.0),
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Divider(
-                        color: stateColors.secondary,
-                        thickness: 1.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.person_outline),
-                                labelText: currentUserName.isEmpty
-                                    ? 'Display name'
-                                    : currentUserName,
-                              ),
-                              keyboardType: TextInputType.text,
-                              onChanged: (value) async {
-                                childSetState(() {
-                                  newUserName = value;
-                                  isCheckingName = true;
-                                });
-
-                                final isWellFormatted =
-                                    checkUsernameFormat(newUserName);
-
-                                if (!isWellFormatted) {
-                                  childSetState(() {
-                                    isCheckingName = false;
-                                    nameErrorMessage = newUserName.length < 3
-                                        ? 'Please use at least 3 characters'
-                                        : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
-                                  });
-
-                                  return;
-                                }
-
-                                if (nameTimer != null) {
-                                  nameTimer.cancel();
-                                  nameTimer = null;
-                                }
-
-                                nameTimer = Timer(1.seconds, () async {
-                                  isNameAvailable =
-                                      await checkNameAvailability(newUserName);
-
-                                  if (!isNameAvailable) {
-                                    childSetState(() {
-                                      isCheckingName = false;
-                                      nameErrorMessage =
-                                          'This name is not available';
-                                    });
-
-                                    return;
-                                  }
-
-                                  childSetState(() {
-                                    isCheckingName = false;
-                                    nameErrorMessage = '';
-                                  });
-                                });
-                              },
-                            ),
-                            if (isCheckingName)
-                              Container(
-                                width: 230.0,
-                                padding: const EdgeInsets.only(left: 40.0),
-                                child: LinearProgressIndicator(),
-                              ),
-                            if (nameErrorMessage.isNotEmpty)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 40.0, top: 5.0),
-                                child: Text(
-                                  nameErrorMessage,
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 15.0,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      childSetState(() {
-                        isCheckingName = false;
-                        nameErrorMessage = '';
-                      });
-
-                      Navigator.of(context).pop();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                      child: Text(
-                        'CANCEL',
-                        style: TextStyle(
-                          color: stateColors.foreground.withOpacity(.6),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: isNameAvailable
-                        ? () {
-                            Navigator.of(context).pop();
-                            updateUsername();
-                          }
-                        : null,
-                    color: stateColors.primary,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                      child: Text(
-                        'UPDATE',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: UpdateUsername(),
+              ),
+            ),
           );
-        });
+        },
+      );
+    } else {
+      await showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context, scrollController) => UpdateUsername(
+          scrollController: scrollController,
+        ),
+      );
+    }
+
+    checkAuth();
   }
 
   Widget langSelect() {
@@ -980,7 +838,6 @@ class _SettingsState extends State<Settings> {
   Future checkAuth() async {
     setState(() {
       isLoadingImageURL = true;
-      isLoadingName = true;
       isLoadingLang = true;
     });
 
@@ -992,7 +849,6 @@ class _SettingsState extends State<Settings> {
 
         setState(() {
           isLoadingImageURL = false;
-          isLoadingName = false;
           isLoadingLang = false;
         });
 
@@ -1015,7 +871,6 @@ class _SettingsState extends State<Settings> {
         email = userAuth.email ?? '';
 
         isLoadingImageURL = false;
-        isLoadingName = false;
         isLoadingLang = false;
       });
     } catch (error) {
@@ -1023,7 +878,6 @@ class _SettingsState extends State<Settings> {
 
       setState(() {
         isLoadingImageURL = false;
-        isLoadingName = false;
         isLoadingLang = false;
       });
     }
@@ -1054,66 +908,6 @@ class _SettingsState extends State<Settings> {
     return isThemeAuto
         ? 'It will be chosen accordingly to the time of the day'
         : 'Choose your theme manually';
-  }
-
-  void updateUsername() async {
-    setState(() {
-      isLoadingName = true;
-    });
-
-    try {
-      isNameAvailable = await checkNameAvailability(newUserName);
-
-      if (!isNameAvailable) {
-        setState(() {
-          isLoadingName = false;
-        });
-
-        showSnack(
-          context: context,
-          message: "The name $newUserName is not available",
-          type: SnackType.error,
-        );
-
-        return;
-      }
-
-      final userAuth = await userState.userAuth;
-      if (userAuth == null) {
-        throw Error();
-      }
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .update({'name': newUserName});
-
-      setState(() {
-        isLoadingName = false;
-        currentUserName = newUserName;
-        newUserName = '';
-      });
-
-      userState.setUserName(currentUserName);
-
-      showSnack(
-        context: context,
-        message: 'Your display name has been successfully updated.',
-        type: SnackType.success,
-      );
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        isLoadingName = false;
-      });
-
-      showSnack(
-        context: context,
-        message: 'Oops, there was an error: ${error.toString()}',
-        type: SnackType.error,
-      );
-    }
   }
 
   void updateImageUrl({String imageName}) async {
