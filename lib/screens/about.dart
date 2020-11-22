@@ -1,10 +1,9 @@
 import 'dart:ui';
 
 import 'package:animations/animations.dart';
-import 'package:figstyle/components/circle_button.dart';
+import 'package:figstyle/components/image_hero.dart';
 import 'package:figstyle/screens/changelog.dart';
 import 'package:figstyle/screens/tos.dart';
-import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -105,27 +104,8 @@ class About extends StatelessWidget {
                 );
               },
               openBuilder: (context, callback) {
-                return Container(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      InkWell(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Image(
-                          image: AssetImage('assets/images/app-icon-512.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Positioned(
-                        top: 40.0,
-                        right: 20.0,
-                        child: CircleButton(
-                            icon:
-                                Icon(Icons.close, color: stateColors.secondary),
-                            onTap: () => Navigator.of(context).pop()),
-                      ),
-                    ],
-                  ),
+                return ImageHero(
+                  imageProvider: AssetImage('assets/images/app-icon-512.png'),
                 );
               },
             ),
@@ -395,27 +375,8 @@ class About extends StatelessWidget {
                   );
                 },
                 openBuilder: (context, callback) {
-                  return Container(
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        InkWell(
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Image(
-                            image: AssetImage('assets/images/jeje-profile.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: 40.0,
-                          right: 20.0,
-                          child: CircleButton(
-                              icon: Icon(Icons.close,
-                                  color: stateColors.secondary),
-                              onTap: () => Navigator.of(context).pop()),
-                        ),
-                      ],
-                    ),
+                  return ImageHero(
+                    imageProvider: AssetImage('assets/images/jeje-profile.jpg'),
                   );
                 },
               ),
@@ -534,30 +495,9 @@ class About extends StatelessWidget {
                       );
                     },
                     openBuilder: (context, callback) {
-                      return Container(
-                        height: 800.0,
-                        width: maxWidth,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: Image(
-                                image: NetworkImage(
-                                  'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              top: 40.0,
-                              right: 20.0,
-                              child: CircleButton(
-                                  icon: Icon(Icons.close,
-                                      color: stateColors.secondary),
-                                  onTap: () => Navigator.of(context).pop()),
-                            ),
-                          ],
+                      return ImageHero(
+                        imageProvider: NetworkImage(
+                          'https://raw.githubusercontent.com/rootasjey/citations365/master/lockscreen.png',
                         ),
                       );
                     },
@@ -631,29 +571,9 @@ class About extends StatelessWidget {
                       );
                     },
                     openBuilder: (context, callback) {
-                      return Container(
-                        height: 380.0,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: Image(
-                                image: NetworkImage(
-                                  'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              top: 40.0,
-                              right: 20.0,
-                              child: CircleButton(
-                                  icon: Icon(Icons.close,
-                                      color: stateColors.secondary),
-                                  onTap: () => Navigator.of(context).pop()),
-                            ),
-                          ],
+                      return ImageHero(
+                        imageProvider: NetworkImage(
+                          'https://raw.githubusercontent.com/rootasjey/citations365-8/master/citations.windows.jpg',
                         ),
                       );
                     },
