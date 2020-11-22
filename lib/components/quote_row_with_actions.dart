@@ -144,6 +144,55 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     );
   }
 
+  void confirmAndDeletePubQuote() async {
+    showCustomModalBottomSheet(
+      context: context,
+      builder: (context, controller) {
+        return Material(
+          child: SafeArea(
+            top: false,
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              ListTile(
+                title: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.check,
+                  color: Colors.white,
+                ),
+                tileColor: Color(0xfff55c5c),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  deletePubQuote();
+                },
+              ),
+              ListTile(
+                title: Text('Cancel'),
+                trailing: Icon(Icons.close),
+                onTap: () => Navigator.of(context).pop(),
+              ),
+            ]),
+          ),
+        );
+      },
+      containerWidget: (context, animation, child) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.circular(12.0),
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void deletePubQuote() async {
     if (widget.onBeforeDeletePubQuote != null) {
       widget.onBeforeDeletePubQuote();
@@ -293,53 +342,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           color: stateColors.deletion,
           onTap: (CompletionHandler handler) {
             handler(false);
-
-            showCustomModalBottomSheet(
-              context: context,
-              builder: (context, controller) {
-                return Material(
-                  child: SafeArea(
-                    top: false,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      ListTile(
-                        title: Text(
-                          'Confirm',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
-                        tileColor: Color(0xfff55c5c),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          deletePubQuote();
-                        },
-                      ),
-                      ListTile(
-                        title: Text('Cancel'),
-                        trailing: Icon(Icons.close),
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                    ]),
-                  ),
-                );
-              },
-              containerWidget: (context, animation, child) {
-                return SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      borderRadius: BorderRadius.circular(12.0),
-                      child: child,
-                    ),
-                  ),
-                );
-              },
-            );
+            confirmAndDeletePubQuote();
           },
         ),
       ]);
@@ -460,7 +463,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           ),
           onTap: () {
             Navigator.of(context).pop();
-            deletePubQuote();
+            confirmAndDeletePubQuote();
           },
         ),
         ListTile(
@@ -556,6 +559,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
         break;
       case 'deletequote':
+        // Dialog for large screens layout.
         FlashHelper.simpleDialog(
           context,
           title: 'Confirm deletion?',
