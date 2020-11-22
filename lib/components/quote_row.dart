@@ -1,5 +1,6 @@
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/author_page.dart';
@@ -394,7 +395,10 @@ class _QuoteRowState extends State<QuoteRow> {
         ? quote.quoteId
         : quote.id;
 
-    if (MediaQuery.of(context).size.width > 600.0) {
+    final size = MediaQuery.of(context).size;
+
+    if (size.width > Constants.maxMobileWidth &&
+        size.height > Constants.maxMobileWidth) {
       await showFlash(
         context: context,
         persistent: false,

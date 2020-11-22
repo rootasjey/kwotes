@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:figstyle/screens/on_boarding.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home_desktop.dart';
@@ -52,7 +53,7 @@ class _HomeState extends State<Home> {
             if (mustShowOnBoardingDesktop(constraints.maxWidth)) {
               isPopupVisible = true;
               showDesktopDialog(context);
-              return homeView(constraints.maxWidth);
+              return homeView(constraints);
             }
 
             if (mustShowOnBoardingMobile(constraints.maxWidth)) {
@@ -64,15 +65,16 @@ class _HomeState extends State<Home> {
               return OnBoarding();
             }
 
-            return homeView(constraints.maxWidth);
+            return homeView(constraints);
           });
         }),
       ],
     );
   }
 
-  Widget homeView(double maxWidth) {
-    if (maxWidth < 700.0) {
+  Widget homeView(BoxConstraints constraints) {
+    if (constraints.maxWidth < Constants.maxMobileWidth ||
+        constraints.maxHeight < Constants.maxMobileWidth) {
       return HomeMobile(
         initialIndex: widget.mobileInitialIndex,
       );

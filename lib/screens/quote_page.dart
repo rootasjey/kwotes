@@ -291,11 +291,13 @@ class _QuotePageState extends State<QuotePage> {
   Widget quoteName() {
     final size = MediaQuery.of(context).size;
 
-    return createHeroQuoteAnimation(
-      quote: quote,
-      isMobile: size.width < 700.0,
-      screenWidth: size.width,
-      screenHeight: size.height,
+    return SafeArea(
+      child: createHeroQuoteAnimation(
+        quote: quote,
+        isMobile: size.width < 700.0,
+        screenWidth: size.width,
+        screenHeight: size.height,
+      ),
     );
   }
 
