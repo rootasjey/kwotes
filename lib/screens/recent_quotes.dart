@@ -114,6 +114,7 @@ class RecentQuotesState extends State<RecentQuotes> {
               controller: scrollController,
               slivers: <Widget>[
                 appBar(),
+                gridHeroCard(),
                 body(),
               ],
             ),
@@ -224,6 +225,71 @@ class RecentQuotesState extends State<RecentQuotes> {
           ),
         ),
       ]),
+    );
+  }
+
+  Widget sliverContiner() {
+    return SliverPadding(padding: EdgeInsets.zero);
+  }
+
+  Widget gridHeroCard() {
+    if (itemsLayout == ItemsLayout.list) {
+      return sliverContiner();
+    }
+
+    if (!isLoading && hasErrors) {
+      return sliverContiner();
+    }
+
+    if (quotes.isEmpty) {
+      return sliverContiner();
+    }
+
+    final quote = quotes.first;
+    final index = 0;
+
+    return Observer(
+      builder: (context) {
+        return SliverPadding(
+          padding: const EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+            top: 20.0,
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate.fixed([
+              QuoteRowWithActions(
+                quote: quote,
+                isConnected: userState.isUserConnected,
+                canManage: canManage,
+                quoteFontSize: 42.0,
+                cardWidth: 250.0,
+                maxLines: null,
+                overflow: TextOverflow.visible,
+                componentType: ItemComponentType.card,
+                elevation: Constants.cardElevation,
+                padding: const EdgeInsets.all(25.0),
+                onBeforeDeletePubQuote: () {
+                  setState(() {
+                    quotes.removeAt(index);
+                  });
+                },
+                onAfterDeletePubQuote: (bool success) {
+                  if (!success) {
+                    quotes.insert(index, quote);
+
+                    showSnack(
+                      context: context,
+                      message: "Couldn't delete the temporary quote.",
+                      type: SnackType.error,
+                    );
+                  }
+                },
+              ),
+            ]),
+          ),
+        );
+      },
     );
   }
 
