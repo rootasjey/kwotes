@@ -29,6 +29,8 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final Color color;
 
+  final double cardWidth;
+  final double cardHeight;
   final double elevation;
   final double quoteFontSize;
 
@@ -42,12 +44,16 @@ class QuoteRowWithActions extends StatefulWidget {
   final Function onBeforeRemoveFromList;
   final Function onRemoveFromList;
 
+  final EdgeInsets padding;
+
   final ItemComponentType componentType;
+
+  final int maxLines;
 
   /// Required if `useSwipeActions` is true.
   final Key key;
 
-  final EdgeInsets padding;
+  final List<Widget> stackChildren;
 
   final Quote quote;
   final QuotePageType quotePageType;
@@ -58,7 +64,7 @@ class QuoteRowWithActions extends StatefulWidget {
   final String quoteId;
   final String pageRoute;
 
-  final List<Widget> stackChildren;
+  final TextOverflow overflow;
 
   /// A widget positioned before the main content (quote's content).
   /// Typcally an Icon or a small Container.
@@ -66,11 +72,14 @@ class QuoteRowWithActions extends StatefulWidget {
 
   QuoteRowWithActions({
     this.canManage = false,
+    this.cardWidth,
+    this.cardHeight,
     this.color,
-    this.isConnected = false,
-    this.elevation,
     this.componentType = ItemComponentType.row,
+    this.elevation,
+    this.isConnected = false,
     this.key,
+    this.maxLines = 6,
     this.onAfterAddToFavourites,
     this.onAfterDeletePubQuote,
     this.onAfterRemoveFromFavourites,
@@ -80,6 +89,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.onBeforeRemoveFromFavourites,
     this.onBeforeRemoveFromList,
     this.onRemoveFromList,
+    this.overflow = TextOverflow.ellipsis,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
       vertical: 30.0,
@@ -123,6 +133,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     }
 
     return QuoteRow(
+      cardHeight: widget.cardHeight,
+      cardWidth: widget.cardWidth,
       componentType: widget.componentType,
       quote: widget.quote,
       color: widget.color,
@@ -132,8 +144,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       key: widget.key,
       leading: widget.leading,
       leadingActions: leadingActions,
+      maxLines: widget.maxLines,
       onLongPress: onLongPress,
       onSelected: onSelected,
+      overflow: widget.overflow,
       padding: widget.padding,
       quoteId: widget.quoteId,
       quoteFontSize: widget.quoteFontSize,
@@ -292,7 +306,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         PopupMenuItem(
             value: 'addquotidian',
             child: ListTile(
-              leading: Icon(Icons.add),
+              leading: Icon(Icons.wb_sunny),
               title: Text('Add to quotidians'),
             )),
         PopupMenuItem(

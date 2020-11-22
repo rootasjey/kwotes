@@ -23,7 +23,8 @@ class QuoteRow extends StatefulWidget {
 
   final Color color;
 
-  final double cardSize;
+  final double cardWidth;
+  final double cardHeight;
   final double elevation;
   final double quoteFontSize;
 
@@ -35,6 +36,8 @@ class QuoteRow extends StatefulWidget {
   final Function onSelected;
 
   final ItemComponentType componentType;
+
+  final int maxLines;
 
   /// Required if `useSwipeActions` is true.
   final Key key;
@@ -55,12 +58,15 @@ class QuoteRow extends StatefulWidget {
   /// the favourite's id and no the quote.
   final String quoteId;
 
+  final TextOverflow overflow;
+
   /// A widget positioned before the main content (quote's content).
   /// Typcally an Icon or a small Container.
   final Widget leading;
 
   QuoteRow({
-    this.cardSize = 250.0,
+    this.cardWidth,
+    this.cardHeight,
     this.color,
     this.componentType = ItemComponentType.row,
     this.elevation,
@@ -69,8 +75,10 @@ class QuoteRow extends StatefulWidget {
     this.key,
     this.leading,
     this.leadingActions = defaultActions,
+    this.maxLines = 6,
     this.onLongPress,
     this.onSelected,
+    this.overflow = TextOverflow.ellipsis,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
       vertical: 30.0,
@@ -123,8 +131,8 @@ class _QuoteRowState extends State<QuoteRow> {
 
   Widget cardLayout() {
     return Container(
-      width: widget.cardSize,
-      height: widget.cardSize,
+      width: widget.cardWidth,
+      height: widget.cardHeight,
       child: Card(
         elevation: elevation,
         margin: EdgeInsets.zero,
@@ -146,10 +154,10 @@ class _QuoteRowState extends State<QuoteRow> {
                   children: <Widget>[
                     Text(
                       widget.quote.name,
-                      maxLines: 6,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: widget.maxLines,
+                      overflow: widget.overflow,
                       style: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: widget.quoteFontSize,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -158,7 +166,8 @@ class _QuoteRowState extends State<QuoteRow> {
               ),
               if (widget.itemBuilder != null)
                 Positioned(
-                  right: 0,
+                  right: 0.0,
+                  bottom: 0.0,
                   child: PopupMenuButton<String>(
                     icon: Opacity(
                       opacity: 0.6,
@@ -167,7 +176,7 @@ class _QuoteRowState extends State<QuoteRow> {
                               Icons.more_vert,
                               color: iconColor,
                             )
-                          : Icon(Icons.more_vert),
+                          : Icon(Icons.more_vert, color: iconHoverColor),
                     ),
                     onSelected: widget.onSelected,
                     itemBuilder: widget.itemBuilder,
