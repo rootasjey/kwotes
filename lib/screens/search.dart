@@ -100,46 +100,40 @@ class _SearchState extends State<Search> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: Overlay(
-        initialEntries: [
-          OverlayEntry(builder: (context) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                await search();
-                return null;
-              },
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification scrollNotif) {
-                  // FAB visibility
-                  if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-                    setState(() {
-                      isFabVisible = false;
-                    });
-                  } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-                    setState(() {
-                      isFabVisible = true;
-                    });
-                  }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await search();
+          return null;
+        },
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
 
-                  // Load more scenario
-                  if (scrollNotif.metrics.pixels <
-                      scrollNotif.metrics.maxScrollExtent) {
-                    return false;
-                  }
+            // Load more scenario
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
+              return false;
+            }
 
-                  return false;
-                },
-                child: CustomScrollView(
-                  controller: scrollController,
-                  slivers: <Widget>[
-                    appBar(),
-                    body(),
-                  ],
-                ),
-              ),
-            );
-          })
-        ],
+            return false;
+          },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              appBar(),
+              body(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -170,8 +164,8 @@ class _SearchState extends State<Search> {
   Widget authorsListView() {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 20.0,
-        top: 10.0,
+        left: 30.0,
+        top: 30.0,
       ),
       child: Wrap(
         spacing: 40.0,
@@ -179,7 +173,7 @@ class _SearchState extends State<Search> {
         alignment: isNarrow ? WrapAlignment.center : WrapAlignment.start,
         children: authorsSuggestions.map((suggestion) {
           return CircleAuthor(
-            size: isNarrow ? 100.0 : 150.0,
+            size: 150.0,
             author: suggestion.author,
             itemBuilder: (_) => <PopupMenuEntry<String>>[
               PopupMenuItem(
@@ -375,11 +369,6 @@ class _SearchState extends State<Search> {
   Widget referencesListView() {
     double height = 230.0;
     double width = 170.0;
-
-    if (isNarrow) {
-      height = 180.0;
-      width = 120.0;
-    }
 
     return Padding(
       padding: const EdgeInsets.only(
