@@ -5,6 +5,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/screens/update_username.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -669,21 +670,15 @@ class _SettingsState extends State<Settings> {
               secondary: const Icon(Icons.autorenew),
               value: isThemeAuto,
               onChanged: (newValue) {
-                if (!newValue) {
-                  currentBrightness = appStorage.getBrightness();
-                  DynamicTheme.of(context).setBrightness(currentBrightness);
-                  stateColors.refreshTheme(currentBrightness);
-                }
-
-                appStorage.setAutoBrightness(newValue);
+                setState(() => isThemeAuto = newValue);
 
                 if (newValue) {
-                  setAutoBrightness();
+                  setAutoBrightness(context);
+                  return;
                 }
 
-                setState(() {
-                  isThemeAuto = newValue;
-                });
+                currentBrightness = appStorage.getBrightness();
+                setBrightness(context, currentBrightness);
               },
             ),
           ),
@@ -699,11 +694,7 @@ class _SettingsState extends State<Settings> {
                   currentBrightness =
                       newValue ? Brightness.light : Brightness.dark;
 
-                  DynamicTheme.of(context).setBrightness(currentBrightness);
-                  stateColors.refreshTheme(currentBrightness);
-
-                  appStorage.setBrightness(currentBrightness);
-
+                  setBrightness(context, currentBrightness);
                   setState(() {});
                 },
               ),
@@ -889,19 +880,6 @@ class _SettingsState extends State<Settings> {
     setState(() {
       selectedLang = Language.frontend(lang);
     });
-  }
-
-  void setAutoBrightness() {
-    final now = DateTime.now();
-
-    Brightness brightness = Brightness.light;
-
-    if (now.hour < 6 || now.hour > 17) {
-      brightness = Brightness.dark;
-    }
-
-    DynamicTheme.of(context).setBrightness(brightness);
-    stateColors.refreshTheme(brightness);
   }
 
   String themeDescription() {

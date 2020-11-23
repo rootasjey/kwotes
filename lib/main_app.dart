@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:supercharged/supercharged.dart';
 
 /// Executed from main.dart
 class MainApp extends StatefulWidget {
@@ -50,18 +49,11 @@ class MainAppState extends State<MainApp> {
     if (!autoBrightness) {
       final brightness = appStorage.getBrightness();
 
-      setBrightness(
-        brightness: brightness,
-        context: context,
-        duration: 500.milliseconds,
-      );
+      setBrightness(context, brightness);
 
       return;
     }
 
-    setAutoBrightness(
-      context: context,
-      duration: 500.milliseconds,
-    );
+    setAutoBrightness(context);
   }
 }
