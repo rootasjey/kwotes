@@ -1,22 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class ValidationComment {
+  /// Comment content.
   final String name;
-  final DateTime updatedAt;
+
+  /// Moderator user's id.
+  final String moderatorId;
 
   ValidationComment({
     this.name,
-    this.updatedAt,
+    this.moderatorId,
   });
 
   factory ValidationComment.fromJSON(Map<String, dynamic> json) {
-    final updatedAt = json['updatedAt'].runtimeType == String ?
-      DateTime.parse(json['updatedAt']) :
-      (json['updatedAt'] as Timestamp).toDate();
-
     return ValidationComment(
       name: json['name'],
-      updatedAt: updatedAt,
+      moderatorId: json['moderatorid'] != null ? json['moderatorid'] : '',
     );
   }
 }
