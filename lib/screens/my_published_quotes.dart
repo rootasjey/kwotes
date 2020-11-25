@@ -121,6 +121,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         textTitle: 'Published',
         textSubTitle: 'Quotes published by you',
         expandedHeight: 120.0,
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,
