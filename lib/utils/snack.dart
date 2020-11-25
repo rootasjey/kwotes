@@ -3,9 +3,9 @@ import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/material.dart';
 
 Future showSnack({
-  BuildContext context,
-  String message,
-  SnackType type,
+  @required BuildContext context,
+  @required String message,
+  SnackType type = SnackType.info,
 }) {
   if (type == SnackType.error) {
     return FlashHelper.errorBar(context, message: message);
