@@ -19,11 +19,9 @@ class EmptyContent extends StatelessWidget {
       padding: const EdgeInsets.all(40.0),
       child: Column(
         children: <Widget>[
-          if (icon != null)
-            icon,
-
+          if (icon != null) icon,
           Opacity(
-            opacity: .8,
+            opacity: 0.8,
             child: Padding(
               padding: const EdgeInsets.only(top: 60.0),
               child: Text(
@@ -35,12 +33,11 @@ class EmptyContent extends StatelessWidget {
               ),
             ),
           ),
-
           if (subtitle != null)
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 10.0),
               child: Opacity(
-                opacity: .5,
+                opacity: 0.6,
                 child: Text(
                   subtitle,
                   textAlign: TextAlign.center,
@@ -50,7 +47,6 @@ class EmptyContent extends StatelessWidget {
                 ),
               ),
             ),
-
           if (onRefresh != null)
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
