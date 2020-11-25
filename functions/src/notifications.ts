@@ -31,14 +31,14 @@ export const notifyQuoteInValidation = functions
     const subject: string = notifData.subject;
 
     if (subject == 'tempquotes') {
-      return handleTempQuoteValidation({ userData, notifSnapshot });
+      return handleTempQuoteValidation({ userId, userData, notifSnapshot });
     }
 
     return true;
   });
 
 function handleTempQuoteValidation(params: NotifFuncParams) {
-  const { userData, notifSnapshot } = params;
+  const { userId, userData, notifSnapshot } = params;
   const notifData = notifSnapshot.data();
 
   const sendPushNotification: boolean = userData
@@ -47,7 +47,6 @@ function handleTempQuoteValidation(params: NotifFuncParams) {
   if (!sendPushNotification) {
     return false;
   }
-
 
   sendNotification({
     adm_group: 'tempquotes', // Amazon notification grouping
@@ -58,7 +57,7 @@ function handleTempQuoteValidation(params: NotifFuncParams) {
       notificationid: notifSnapshot.id,
       type: 'tempquotes',
     },
-    filters: [{ field: "tag", key: "quotidian", relation: "=", value: "en" }],
+    include_external_user_ids: [userId],
     ios_attachments: { id1: '' },
     big_picture: '',
     ios_badgeType: "Increase",
