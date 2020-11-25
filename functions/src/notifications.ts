@@ -6,6 +6,26 @@ import { sendNotification } from './utils';
 const env = functions.config();
 const firestore = adminApp.firestore();
 
+export const addUserStatsProp = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (req, res) => {
+    const snapshot = firestore
+      .collection('users')
+      .limit(100)
+      .get();
+    (await snapshot).docs.forEach(async (userDoc) => {
+      await userDoc.ref.update({
+        "stats.notifications": {
+          "total": 0,
+          "unread": 0,
+        },
+      });
+    });
+
+    res.status(200).send('done');
+  });
+
 export const notifyQuoteInValidation = functions
   .region('europe-west3')
   .firestore
