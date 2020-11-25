@@ -13,6 +13,11 @@ class PageAppBar extends StatefulWidget {
   final bool descending;
   final bool showNavBackIcon;
 
+  /// If true, add a close button on the right.
+  /// This property will override `showNavBackIcon` as its not conventional
+  /// to show a navigation back button and a close button.
+  final bool showCloseButton;
+
   final double expandedHeight;
   final double collapsedHeight;
   final double toolbarHeight;
@@ -50,6 +55,7 @@ class PageAppBar extends StatefulWidget {
     this.onItemsLayoutSelected,
     this.onLangChanged,
     this.onTitlePressed,
+    this.showCloseButton = false,
     this.showNavBackIcon = false,
     this.textTitle,
     this.textSubTitle,
@@ -174,30 +180,69 @@ class _PageAppBarState extends State<PageAppBar> {
       return widget.title;
     }
 
-    if (widget.showNavBackIcon) {
-      return Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground),
-            ),
-          ),
-          TextButton.icon(
-            onPressed: widget.onTitlePressed,
-            icon: AppIcon(
-              padding: EdgeInsets.zero,
-              size: 30.0,
-            ),
-            label: Text(
-              widget.textTitle,
-              style: TextStyle(
-                fontSize: 22.0,
+    if (widget.showCloseButton) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                  onPressed: widget.onTitlePressed,
+                  icon: AppIcon(
+                    padding: EdgeInsets.zero,
+                    size: 30.0,
+                  ),
+                  label: Text(
+                    widget.textTitle,
+                    style: TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                color: stateColors.foreground,
+                icon: Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (widget.showNavBackIcon) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: CircleButton(
+                onTap: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back, color: stateColors.foreground),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: widget.onTitlePressed,
+              icon: AppIcon(
+                padding: EdgeInsets.zero,
+                size: 30.0,
+              ),
+              label: Text(
+                widget.textTitle,
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -265,9 +310,10 @@ class _PageAppBarState extends State<PageAppBar> {
   Widget twoLinesTitle() {
     return Row(
       children: [
-        CircleButton(
-            onTap: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+        if (widget.showNavBackIcon)
+          CircleButton(
+              onTap: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
         AppIcon(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           size: 30.0,
@@ -304,6 +350,15 @@ class _PageAppBarState extends State<PageAppBar> {
             ),
           ),
         ),
+        if (widget.showCloseButton)
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: IconButton(
+              color: stateColors.foreground,
+              icon: Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
       ],
     );
   }
