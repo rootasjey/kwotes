@@ -5,3 +5,8 @@ interface DataUpdateParams {
   payload: any;
   docId: string;
 }
+
+interface NotifFuncParams {
+  userData: any;
+  notifSnapshot: FirebaseFirestore.QueryDocumentSnapshot;
+}
