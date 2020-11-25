@@ -120,6 +120,7 @@ class _FavouritesState extends State<Favourites> {
       sliver: PageAppBar(
         textTitle: 'Favourites',
         textSubTitle: 'Quotes you loved the most',
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

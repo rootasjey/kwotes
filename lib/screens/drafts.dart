@@ -94,6 +94,7 @@ class _DraftsState extends State<Drafts> {
       sliver: PageAppBar(
         textTitle: 'Drafts',
         textSubTitle: 'They are only visible to you',
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

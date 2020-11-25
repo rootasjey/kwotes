@@ -122,6 +122,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       sliver: PageAppBar(
         textTitle: 'In validation',
         textSubTitle: 'Your quotes waiting to be validated',
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

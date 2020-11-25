@@ -91,6 +91,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       sliver: PageAppBar(
         textTitle: 'All in validation',
         textSubTitle: 'Quotes in validation from all users',
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

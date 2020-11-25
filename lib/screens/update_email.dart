@@ -57,6 +57,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
             textTitle: 'Update email',
             textSubTitle: 'If your email is outdated',
             expandedHeight: 170.0,
+            showNavBackIcon: true,
           ),
           body(),
         ],

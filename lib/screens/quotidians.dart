@@ -93,6 +93,7 @@ class QuotidiansState extends State<Quotidians> {
       sliver: PageAppBar(
         textTitle: 'Quotidians',
         textSubTitle: 'Scheduled quotes for the coming days',
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

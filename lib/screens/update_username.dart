@@ -59,10 +59,14 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       body: CustomScrollView(
         controller: widget.scrollController,
         slivers: <Widget>[
-          PageAppBar(
-            textTitle: 'Update name',
-            textSubTitle: 'Want a more personalized name?',
-            expandedHeight: 170.0,
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 10.0),
+            sliver: PageAppBar(
+              textTitle: 'Update name',
+              textSubTitle: 'Want a more personalized name?',
+              expandedHeight: 170.0,
+              showCloseButton: true,
+            ),
           ),
           body(),
         ],

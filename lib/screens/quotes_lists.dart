@@ -108,6 +108,7 @@ class _QuotesListsState extends State<QuotesLists> {
         textTitle: 'Lists',
         textSubTitle: 'Thematic lists created by you',
         expandedHeight: 100.0,
+        showNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

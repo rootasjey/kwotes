@@ -94,6 +94,7 @@ class _SettingsState extends State<Settings> {
         textTitle: "Settings",
         textSubTitle: "You can change your preferences here",
         expandedHeight: 90.0,
+        showNavBackIcon: true,
       );
     }
 
