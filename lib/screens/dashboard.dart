@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
+import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
@@ -22,6 +25,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -131,24 +135,81 @@ class _DashboardState extends State<Dashboard> {
           top: 24.0,
           left: 16.0,
         ),
-        child: TextButton.icon(
-          onPressed: () {
-            scrollController.animateTo(
-              0,
-              duration: 250.milliseconds,
-              curve: Curves.easeIn,
-            );
-          },
-          icon: AppIcon(
-            padding: EdgeInsets.zero,
-            size: 30.0,
-          ),
-          label: Text(
-            'Account',
-            style: TextStyle(
-              fontSize: 22.0,
+        child: Row(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                  onPressed: () {
+                    scrollController.animateTo(
+                      0,
+                      duration: 250.milliseconds,
+                      curve: Curves.easeIn,
+                    );
+                  },
+                  icon: AppIcon(
+                    padding: EdgeInsets.zero,
+                    size: 30.0,
+                  ),
+                  label: Text(
+                    'Account',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
+            Opacity(
+              opacity: 0.6,
+              child: IconButton(
+                onPressed: () async {
+                  final size = MediaQuery.of(context).size;
+
+                  if (size.width > Constants.maxMobileWidth &&
+                      size.height > Constants.maxMobileWidth) {
+                    await showFlash(
+                      context: context,
+                      persistent: false,
+                      builder: (context, controller) {
+                        return Flash.dialog(
+                          controller: controller,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          enableDrag: true,
+                          margin: const EdgeInsets.only(
+                            left: 120.0,
+                            right: 120.0,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                          child: FlashBar(
+                            message: Container(
+                              height:
+                                  MediaQuery.of(context).size.height - 100.0,
+                              padding: const EdgeInsets.all(60.0),
+                              child: NotificationsCenter(),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    await showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) =>
+                          NotificationsCenter(),
+                    );
+                  }
+                },
+                color: stateColors.foreground,
+                tooltip: "My notifications",
+                icon: Icon(Icons.notifications),
+              ),
+            ),
+          ],
         ),
       ),
       showNavBackIcon: false,
