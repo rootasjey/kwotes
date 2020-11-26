@@ -1,4 +1,7 @@
+import 'package:figstyle/screens/reject_temp_quote.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/utils/constants.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
@@ -9,6 +12,7 @@ import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class TempQuoteRowWithActions extends StatefulWidget {
   final bool canManage;
@@ -115,7 +119,6 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     switch (value) {
       case 'deletetempquote':
         deleteAction(tempQuote);
-
         break;
       case 'edit':
         editAction(tempQuote);
@@ -125,7 +128,9 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         break;
       case 'validate':
         validateAction(tempQuote);
-
+        break;
+      case 'reject':
+        rejectAction(tempQuote);
         break;
       default:
         break;
@@ -157,11 +162,19 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     if (widget.canManage) {
       popupItems.addAll([
         PopupMenuItem(
-            value: 'validate',
-            child: ListTile(
-              leading: Icon(Icons.check),
-              title: Text('Validate'),
-            )),
+          value: 'validate',
+          child: ListTile(
+            leading: Icon(Icons.check),
+            title: Text('Validate'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'reject',
+          child: ListTile(
+            leading: Icon(Icons.close),
+            title: Text('Reject'),
+          ),
+        ),
       ]);
     }
 
@@ -173,7 +186,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       widget.onBeforeDelete();
     }
 
-    bool success;
+    bool success = false;
 
     if (widget.canManage) {
       success = await deleteTempQuoteAdmin(
@@ -212,6 +225,47 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
   }
 
+  void rejectAction(TempQuote tempQuote) async {
+    final size = MediaQuery.of(context).size;
+
+    if (size.width > Constants.maxMobileWidth &&
+        size.height > Constants.maxMobileWidth) {
+      await showFlash(
+        context: context,
+        persistent: false,
+        builder: (context, controller) {
+          return Flash.dialog(
+            controller: controller,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            enableDrag: true,
+            margin: const EdgeInsets.only(
+              left: 120.0,
+              right: 120.0,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            child: FlashBar(
+              message: Container(
+                height: MediaQuery.of(context).size.height - 100.0,
+                padding: const EdgeInsets.all(60.0),
+                child: RejectTempQuote(tempQuote: tempQuote),
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      await showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context, scrollController) => RejectTempQuote(
+          scrollController: scrollController,
+          tempQuote: tempQuote,
+        ),
+      );
+    }
+  }
+
   void validateAction(TempQuote tempQuote) async {
     if (widget.onBeforeValidate != null) {
       widget.onBeforeValidate();
@@ -233,7 +287,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     final actions = <SwipeAction>[];
 
     if (widget.canManage) {
-      actions.add(
+      actions.addAll([
         SwipeAction(
           title: 'Validate',
           icon: Icon(Icons.check, color: Colors.white),
@@ -243,7 +297,16 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
             validateAction(widget.tempQuote);
           },
         ),
-      );
+        SwipeAction(
+          title: 'Reject',
+          icon: Icon(Icons.cancel, color: Colors.white),
+          color: stateColors.secondary,
+          onTap: (CompletionHandler handler) {
+            handler(false);
+            rejectAction(widget.tempQuote);
+          },
+        ),
+      ]);
     }
 
     actions.add(
@@ -286,6 +349,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         },
       ),
     ]);
+
     return actions;
   }
 }
