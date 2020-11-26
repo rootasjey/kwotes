@@ -210,45 +210,58 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
           child: InkWell(
             onTap: () => onTap(notif, index),
             onLongPress: () => onLongPress(notif, index),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (notif.title != null && notif.title.isNotEmpty)
-                    Text(
-                      notif.title,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: stateColors.primary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: Opacity(
-                      opacity: 0.7,
-                      child: Text(
-                        notif.body,
-                        style: TextStyle(
-                          fontSize: 18.0,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (notif.title != null && notif.title.isNotEmpty)
+                        Text(
+                          notif.title,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: notif.isRead ? null : stateColors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Text(
+                            notif.body,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      Jiffy(notif.createdAt).fromNow(),
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: stateColors.secondary,
-                        fontWeight: FontWeight.w700,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Text(
+                          Jiffy(notif.createdAt).fromNow(),
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: notif.isRead ? null : stateColors.secondary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+                if (!notif.isRead)
+                  Positioned(
+                    top: 20.0,
+                    right: 20.0,
+                    child: CircleAvatar(
+                      radius: 5.0,
+                      backgroundColor: stateColors.secondary,
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
         ),
@@ -517,19 +530,28 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     try {
       final userAuth = FirebaseAuth.instance.currentUser;
 
-      final snapshot = await FirebaseFirestore.instance
+      final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userAuth.uid)
           .get();
 
-      if (!snapshot.exists) {
+      if (!userSnapshot.exists) {
         return;
       }
 
-      final data = snapshot.data();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userAuth.uid)
+          .collection('notifications')
+          .doc(notif.id)
+          .update({
+        'isRead': true,
+      });
 
-      int unread = data['stats']['notifications']['unread'];
-      unread = max(unread, 0);
+      final userData = userSnapshot.data();
+
+      int unread = userData['stats']['notifications']['unread'];
+      unread = max(unread - 1, 0);
 
       await FirebaseFirestore.instance
           .collection('users')

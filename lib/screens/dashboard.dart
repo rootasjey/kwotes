@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/types/enums.dart';
@@ -38,10 +39,13 @@ class _DashboardState extends State<Dashboard> {
   bool canManage = false;
   bool prevIsAuthenticated = false;
   bool isAccountAdvVisible = false;
+  bool showNotifiBadge = false;
 
   double beginY = 20.0;
 
   final scrollController = ScrollController();
+
+  int unreadNotifiCount = 0;
 
   @override
   void initState() {
@@ -161,54 +165,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            Opacity(
-              opacity: 0.6,
-              child: IconButton(
-                onPressed: () async {
-                  final size = MediaQuery.of(context).size;
-
-                  if (size.width > Constants.maxMobileWidth &&
-                      size.height > Constants.maxMobileWidth) {
-                    await showFlash(
-                      context: context,
-                      persistent: false,
-                      builder: (context, controller) {
-                        return Flash.dialog(
-                          controller: controller,
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                          enableDrag: true,
-                          margin: const EdgeInsets.only(
-                            left: 120.0,
-                            right: 120.0,
-                          ),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          child: FlashBar(
-                            message: Container(
-                              height:
-                                  MediaQuery.of(context).size.height - 100.0,
-                              padding: const EdgeInsets.all(60.0),
-                              child: NotificationsCenter(),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context, scrollController) =>
-                          NotificationsCenter(),
-                    );
-                  }
-                },
-                color: stateColors.foreground,
-                tooltip: "My notifications",
-                icon: Icon(Icons.notifications),
-              ),
-            ),
+            notificationsIconButton(),
           ],
         ),
       ),
@@ -366,6 +323,63 @@ class _DashboardState extends State<Dashboard> {
       textTitle: 'Lists',
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => QuotesLists())),
+    );
+  }
+
+  Widget notificationsIconButton() {
+    return Opacity(
+      opacity: 0.6,
+      child: Badge(
+        badgeContent: Text(
+          "$unreadNotifiCount",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        showBadge: showNotifiBadge,
+        child: IconButton(
+          onPressed: () async {
+            final size = MediaQuery.of(context).size;
+
+            if (size.width > Constants.maxMobileWidth &&
+                size.height > Constants.maxMobileWidth) {
+              await showFlash(
+                context: context,
+                persistent: false,
+                builder: (context, controller) {
+                  return Flash.dialog(
+                    controller: controller,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    enableDrag: true,
+                    margin: const EdgeInsets.only(
+                      left: 120.0,
+                      right: 120.0,
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
+                    child: FlashBar(
+                      message: Container(
+                        height: MediaQuery.of(context).size.height - 100.0,
+                        padding: const EdgeInsets.all(60.0),
+                        child: NotificationsCenter(),
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) => NotificationsCenter(),
+              );
+            }
+          },
+          color: stateColors.foreground,
+          tooltip: "My notifications",
+          icon: Icon(Icons.notifications),
+        ),
+      ),
     );
   }
 
@@ -552,10 +566,12 @@ class _DashboardState extends State<Dashboard> {
           .doc(userAuth.uid)
           .get();
 
-      final data = user.data;
+      final data = user.data();
 
       setState(() {
-        canManage = data()['rights']['user:managequote'] ?? false;
+        canManage = data['rights']['user:managequote'] ?? false;
+        unreadNotifiCount = data['stats']['notifications']['unread'];
+        showNotifiBadge = unreadNotifiCount > 0;
       });
     } on Exception catch (error) {
       debugPrint(error.toString());
