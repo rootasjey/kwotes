@@ -95,10 +95,10 @@ function handleTempQuoteValidation(params: NotifFuncParams) {
   const { userId, userData, notifSnapshot } = params;
   const notifData = notifSnapshot.data();
 
-  const sendPushNotification: boolean = userData
+  const userPushNotifiActivated: boolean = userData
     .settings?.notifications?.push?.tempquotes;
 
-  if (!sendPushNotification) {
+  if (!userPushNotifiActivated || !notifData.sendPushNotification) {
     return false;
   }
 
