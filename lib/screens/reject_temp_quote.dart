@@ -4,7 +4,9 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:figstyle/utils/storage_keys.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +36,7 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetchUser();
   }
 
@@ -42,6 +45,11 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
     reasonController.dispose();
     reasonFocusNode.dispose();
     super.dispose();
+  }
+
+  void initProps() {
+    sendPushNotification =
+        appStorage.getBool(StorageKeys.sendPushOnNewNotification) ?? false;
   }
 
   @override
@@ -166,6 +174,8 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
           setState(() {
             sendPushNotification = newValue;
           });
+
+          appStorage.setBool(StorageKeys.sendPushOnNewNotification, newValue);
         },
       ),
     );
