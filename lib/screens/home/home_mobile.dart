@@ -1,12 +1,15 @@
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/favourites.dart';
+import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:figstyle/utils/storage_keys.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/utils/icons_more_icons.dart';
 import 'package:figstyle/screens/dashboard.dart';
@@ -59,7 +62,8 @@ class _HomeMobileState extends State<HomeMobile> {
 
     initColors();
     initQuickActions();
-    openQuoteIfNotification();
+    mayOpenQuote();
+    mayOpenNotificationsCenter();
   }
 
   @override
@@ -199,7 +203,7 @@ class _HomeMobileState extends State<HomeMobile> {
     );
   }
 
-  void openQuoteIfNotification() {
+  void mayOpenQuote() {
     final val = appStorage.getString(StorageKeys.quoteIdNotification) ?? '';
 
     if (val.isNotEmpty) {
@@ -214,6 +218,53 @@ class _HomeMobileState extends State<HomeMobile> {
             scrollController: scrollController,
           ),
         );
+      });
+    }
+  }
+
+  void mayOpenNotificationsCenter() {
+    final notifiPath =
+        appStorage.getString(StorageKeys.onOpenNotificationPath) ?? '';
+
+    if (notifiPath.isNotEmpty) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        appStorage.setString(StorageKeys.onOpenNotificationPath, '');
+
+        final size = MediaQuery.of(context).size;
+
+        if (size.width > Constants.maxMobileWidth &&
+            size.height > Constants.maxMobileWidth) {
+          showFlash(
+            context: context,
+            persistent: false,
+            builder: (context, controller) {
+              return Flash.dialog(
+                controller: controller,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                enableDrag: true,
+                margin: const EdgeInsets.only(
+                  left: 120.0,
+                  right: 120.0,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                child: FlashBar(
+                  message: Container(
+                    height: MediaQuery.of(context).size.height - 100.0,
+                    padding: const EdgeInsets.all(60.0),
+                    child: NotificationsCenter(),
+                  ),
+                ),
+              );
+            },
+          );
+        } else {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context, scrollController) => NotificationsCenter(),
+          );
+        }
       });
     }
   }

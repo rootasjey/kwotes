@@ -47,8 +47,15 @@ class PushNotifications {
 
     OneSignal.shared.setNotificationOpenedHandler((openedResult) {
       final notification = openedResult.notification;
-      final quoteId = notification.payload.additionalData['quoteid'];
-      appStorage.setString(StorageKeys.quoteIdNotification, quoteId);
+      final additionalData = notification.payload.additionalData;
+
+      if (additionalData != null && additionalData['quoteid'] != null) {
+        final quoteId = notification.payload.additionalData['quoteid'];
+        appStorage.setString(StorageKeys.quoteIdNotification, quoteId);
+      } else {
+        appStorage.setString(
+            StorageKeys.onOpenNotificationPath, 'notifications_center');
+      }
     });
   }
 
