@@ -597,14 +597,6 @@ class _DashboardState extends State<Dashboard> {
           }
         },
       );
-
-      // final data = userSnapshot.data();
-
-      // setState(() {
-      //   canManage = data['rights']['user:managequote'] ?? false;
-      //   unreadNotifiCount = data['stats']['notifications']['unread'];
-      //   showNotifiBadge = unreadNotifiCount > 0;
-      // });
     } on Exception catch (error) {
       debugPrint(error.toString());
     }
