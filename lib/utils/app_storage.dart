@@ -11,9 +11,9 @@ class AppStorage {
   // / --------------- /
   bool containsKey(String key) => _localStorage.containsKey(key);
 
-  String getString(String key) {
-    return _localStorage.getString(key);
-  }
+  String getString(String key) => _localStorage.getString(key);
+
+  bool getBool(String key) => _localStorage.getBool(key);
 
   Future initialize() async {
     if (_localStorage != null) {
@@ -22,9 +22,11 @@ class AppStorage {
     _localStorage = await LocalStorage.getInstance();
   }
 
-  void setString(String key, String value) {
-    _localStorage.setString(key, value);
-  }
+  Future<bool> setBool(String key, bool value) =>
+      _localStorage.setBool(key, value);
+
+  Future<bool> setString(String key, String value) =>
+      _localStorage.setString(key, value);
 
   // / -----------------/
   // /   First launch   /
