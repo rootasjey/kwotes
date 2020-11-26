@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:figstyle/screens/notifications_center.dart';
@@ -46,11 +48,18 @@ class _DashboardState extends State<Dashboard> {
   final scrollController = ScrollController();
 
   int unreadNotifiCount = 0;
+  StreamSubscription<DocumentSnapshot> userSubscription;
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    userSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -327,58 +336,55 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget notificationsIconButton() {
-    return Opacity(
-      opacity: 0.6,
-      child: Badge(
-        badgeContent: Text(
-          "$unreadNotifiCount",
-          style: TextStyle(
-            color: Colors.white,
-          ),
+    return Badge(
+      badgeContent: Text(
+        "$unreadNotifiCount",
+        style: TextStyle(
+          color: Colors.white,
         ),
-        showBadge: showNotifiBadge,
-        child: IconButton(
-          onPressed: () async {
-            final size = MediaQuery.of(context).size;
+      ),
+      showBadge: showNotifiBadge,
+      child: IconButton(
+        onPressed: () async {
+          final size = MediaQuery.of(context).size;
 
-            if (size.width > Constants.maxMobileWidth &&
-                size.height > Constants.maxMobileWidth) {
-              await showFlash(
-                context: context,
-                persistent: false,
-                builder: (context, controller) {
-                  return Flash.dialog(
-                    controller: controller,
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    enableDrag: true,
-                    margin: const EdgeInsets.only(
-                      left: 120.0,
-                      right: 120.0,
+          if (size.width > Constants.maxMobileWidth &&
+              size.height > Constants.maxMobileWidth) {
+            await showFlash(
+              context: context,
+              persistent: false,
+              builder: (context, controller) {
+                return Flash.dialog(
+                  controller: controller,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  enableDrag: true,
+                  margin: const EdgeInsets.only(
+                    left: 120.0,
+                    right: 120.0,
+                  ),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                  child: FlashBar(
+                    message: Container(
+                      height: MediaQuery.of(context).size.height - 100.0,
+                      padding: const EdgeInsets.all(60.0),
+                      child: NotificationsCenter(),
                     ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(8.0),
-                    ),
-                    child: FlashBar(
-                      message: Container(
-                        height: MediaQuery.of(context).size.height - 100.0,
-                        padding: const EdgeInsets.all(60.0),
-                        child: NotificationsCenter(),
-                      ),
-                    ),
-                  );
-                },
-              );
-            } else {
-              await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context, scrollController) => NotificationsCenter(),
-              );
-            }
-          },
-          color: stateColors.foreground,
-          tooltip: "My notifications",
-          icon: Icon(Icons.notifications),
-        ),
+                  ),
+                );
+              },
+            );
+          } else {
+            await showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context, scrollController) => NotificationsCenter(),
+            );
+          }
+        },
+        color: stateColors.foreground,
+        tooltip: "My notifications",
+        icon: Icon(Icons.notifications),
       ),
     );
   }
@@ -561,18 +567,44 @@ class _DashboardState extends State<Dashboard> {
         return;
       }
 
-      final user = await FirebaseFirestore.instance
+      final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userAuth.uid)
           .get();
 
-      final data = user.data();
+      if (!userSnapshot.exists) {
+        debugPrint("The user with the id ${userAuth.uid}"
+            " doesn't exist anymore.");
 
-      setState(() {
-        canManage = data['rights']['user:managequote'] ?? false;
-        unreadNotifiCount = data['stats']['notifications']['unread'];
-        showNotifiBadge = unreadNotifiCount > 0;
-      });
+        return;
+      }
+
+      userSubscription = userSnapshot.reference.snapshots().listen(
+        (documentSnapshot) {
+          final data = documentSnapshot.data();
+
+          setState(() {
+            canManage = data['rights']['user:managequote'] ?? false;
+            unreadNotifiCount = data['stats']['notifications']['unread'];
+            showNotifiBadge = unreadNotifiCount > 0;
+          });
+        },
+        onError: (error, stacktrace) {
+          debugPrint(error.toString());
+
+          if (stacktrace != null) {
+            debugPrint(stacktrace.toString());
+          }
+        },
+      );
+
+      // final data = userSnapshot.data();
+
+      // setState(() {
+      //   canManage = data['rights']['user:managequote'] ?? false;
+      //   unreadNotifiCount = data['stats']['notifications']['unread'];
+      //   showNotifiBadge = unreadNotifiCount > 0;
+      // });
     } on Exception catch (error) {
       debugPrint(error.toString());
     }

@@ -195,7 +195,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
       trailingActions: [
         SwipeAction(
           title: "Delete",
-          icon: Icon(Icons.delete_outline),
+          icon: Icon(Icons.delete_outline, color: Colors.white),
           color: stateColors.deletion,
           onTap: (CompletionHandler handler) {
             handler(false);
