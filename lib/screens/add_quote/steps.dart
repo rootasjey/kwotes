@@ -496,8 +496,12 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       } catch (error) {
         debugPrint(error.toString());
         isCheckingAuth = false;
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => Signin(),
+          ),
+        );
       }
     });
   }
@@ -559,6 +563,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         );
       }
 
+      fabIcon = Icon(Icons.send);
       return;
     }
 
@@ -566,7 +571,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     if (DataQuoteInputs.draft != null) {
       setState(() {
         actionResult = AddQuoteType.draft;
+        isFabVisible = true;
         isSubmitting = false;
+        fabIcon = Icon(Icons.send);
       });
 
       return;
@@ -580,6 +587,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       setState(() {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
+        isFabVisible = true;
+        fabIcon = Icon(Icons.send);
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
@@ -592,7 +601,13 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     }
 
     await saveOfflineDraft(context: context);
-    actionResult = AddQuoteType.offline;
+
+    setState(() {
+      actionResult = AddQuoteType.offline;
+      fabIcon = Icon(Icons.send);
+      isSubmitting = false;
+      isFabVisible = true;
+    });
   }
 
   void saveQuoteDraft() async {
