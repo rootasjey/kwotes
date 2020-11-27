@@ -22,6 +22,10 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 class NotificationsCenter extends StatefulWidget {
+  final ScrollController scrollController;
+
+  NotificationsCenter({this.scrollController});
+
   @override
   _NotificationsCenterState createState() => _NotificationsCenterState();
 }
@@ -40,8 +44,6 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
 
   List<AppNotification> notificationsList = [];
 
-  var scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -54,7 +56,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
       floatingActionButton: isFabVisible
           ? FloatingActionButton(
               onPressed: () {
-                scrollController.animateTo(
+                widget.scrollController.animateTo(
                   0.0,
                   duration: Duration(seconds: 1),
                   curve: Curves.easeOut,
@@ -65,41 +67,36 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          return await fetch();
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
 
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
+          if (scrollNotif.metrics.pixels <
+              scrollNotif.metrics.maxScrollExtent) {
             return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              appBar(),
-              body(),
-            ],
-          ),
+          }
+
+          if (hasNext && !isLoadingMore) {
+            fetchMore();
+          }
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: widget.scrollController,
+          slivers: [
+            appBar(),
+            body(),
+          ],
         ),
       ),
     );
@@ -110,7 +107,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
       textTitle: "Notifications",
       showCloseButton: true,
       onTitlePressed: () {
-        scrollController.animateTo(
+        widget.scrollController.animateTo(
           0,
           duration: 250.milliseconds,
           curve: Curves.easeIn,
@@ -285,8 +282,11 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
           isLoading = false;
         });
 
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => Signin(),
+          ),
+        );
 
         return;
       }
