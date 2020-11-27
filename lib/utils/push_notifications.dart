@@ -31,13 +31,12 @@ class PushNotifications {
 
     // The promptForPushNotificationsWithUserResponse function will show
     // the iOS push notification prompt.
-    // We recommend removing the following code
-    // and instead using an In-App Message to prompt
-    // for notification permission.
+    // We recommend removing the following code and instead using
+    // an In-App Message to prompt for notification permission.
     final allowed = await OneSignal.shared
             .promptUserForPushNotificationPermission(
                 fallbackToSettings: true) ??
-        true;
+        true; // android automatically allow notifications
 
     if (!allowed) {
       return;
@@ -50,13 +49,25 @@ class PushNotifications {
       final additionalData = notification.payload.additionalData;
 
       if (additionalData != null && additionalData['quoteid'] != null) {
-        final quoteId = notification.payload.additionalData['quoteid'];
-        appStorage.setString(StorageKeys.quoteIdNotification, quoteId);
-      } else {
-        appStorage.setString(
-            StorageKeys.onOpenNotificationPath, 'notifications_center');
+        handleQuotidian(notification);
+        return;
       }
+
+      handleOtherNotifications();
     });
+  }
+
+  static void handleOtherNotifications() async {
+    appStorage.setString(
+        StorageKeys.onOpenNotificationPath, 'notifications_center');
+  }
+
+  static void handleQuotidian(
+    OSNotification notification,
+  ) async {
+    final quoteId = notification.payload.additionalData['quoteid'];
+    appStorage.setString(StorageKeys.onOpenNotificationPath, 'quote_page');
+    appStorage.setString(StorageKeys.quoteIdNotification, quoteId);
   }
 
   static Future initDefaultTag() async {

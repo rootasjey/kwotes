@@ -36,7 +36,7 @@ class HomeMobile extends StatefulWidget {
   _HomeMobileState createState() => _HomeMobileState();
 }
 
-class _HomeMobileState extends State<HomeMobile> {
+class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
   int selectedIndex = 0;
   Color accentColor = stateColors.secondary;
 
@@ -55,6 +55,7 @@ class _HomeMobileState extends State<HomeMobile> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     setState(() {
       selectedIndex = widget.initialIndex;
@@ -62,14 +63,22 @@ class _HomeMobileState extends State<HomeMobile> {
 
     initColors();
     initQuickActions();
-    mayOpenQuote();
-    mayOpenNotificationsCenter();
+    mayOpenNotification();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     reactionDisposer?.reaction?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      mayOpenNotification();
+    }
   }
 
   void initColors() {
@@ -203,10 +212,27 @@ class _HomeMobileState extends State<HomeMobile> {
     );
   }
 
-  void mayOpenQuote() {
-    final val = appStorage.getString(StorageKeys.quoteIdNotification) ?? '';
+  void mayOpenNotification() {
+    final notifiPath =
+        appStorage.getString(StorageKeys.onOpenNotificationPath) ?? '';
 
-    if (val.isNotEmpty) {
+    if (notifiPath.isEmpty) {
+      return;
+    }
+
+    NavigationHelper.clearSavedNotifiData();
+
+    if (notifiPath == 'notifications_center') {
+      mayOpenNotificationsCenter();
+    } else if (notifiPath == 'quote_page') {
+      mayOpenQuote();
+    }
+  }
+
+  void mayOpenQuote() {
+    final quoteId = appStorage.getString(StorageKeys.quoteIdNotification) ?? '';
+
+    if (quoteId.isNotEmpty) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         appStorage.setString(StorageKeys.quoteIdNotification, '');
 
@@ -214,7 +240,7 @@ class _HomeMobileState extends State<HomeMobile> {
           context: context,
           builder: (context, scrollController) => QuotePage(
             padding: const EdgeInsets.only(left: 10.0),
-            quoteId: val,
+            quoteId: quoteId,
             scrollController: scrollController,
           ),
         );
@@ -223,49 +249,46 @@ class _HomeMobileState extends State<HomeMobile> {
   }
 
   void mayOpenNotificationsCenter() {
-    final notifiPath =
-        appStorage.getString(StorageKeys.onOpenNotificationPath) ?? '';
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      appStorage.setString(StorageKeys.onOpenNotificationPath, '');
 
-    if (notifiPath.isNotEmpty) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        appStorage.setString(StorageKeys.onOpenNotificationPath, '');
+      final size = MediaQuery.of(context).size;
 
-        final size = MediaQuery.of(context).size;
-
-        if (size.width > Constants.maxMobileWidth &&
-            size.height > Constants.maxMobileWidth) {
-          showFlash(
-            context: context,
-            persistent: false,
-            builder: (context, controller) {
-              return Flash.dialog(
-                controller: controller,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                enableDrag: true,
-                margin: const EdgeInsets.only(
-                  left: 120.0,
-                  right: 120.0,
+      if (size.width > Constants.maxMobileWidth &&
+          size.height > Constants.maxMobileWidth) {
+        showFlash(
+          context: context,
+          persistent: false,
+          builder: (context, controller) {
+            return Flash.dialog(
+              controller: controller,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              enableDrag: true,
+              margin: const EdgeInsets.only(
+                left: 120.0,
+                right: 120.0,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(8.0),
+              ),
+              child: FlashBar(
+                message: Container(
+                  height: MediaQuery.of(context).size.height - 100.0,
+                  padding: const EdgeInsets.all(60.0),
+                  child: NotificationsCenter(),
                 ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(8.0),
-                ),
-                child: FlashBar(
-                  message: Container(
-                    height: MediaQuery.of(context).size.height - 100.0,
-                    padding: const EdgeInsets.all(60.0),
-                    child: NotificationsCenter(),
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context, scrollController) => NotificationsCenter(),
-          );
-        }
-      });
-    }
+              ),
+            );
+          },
+        );
+      } else {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context, scrollController) => NotificationsCenter(
+            scrollController: scrollController,
+          ),
+        );
+      }
+    });
   }
 }

@@ -2,6 +2,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/brightness.dart';
+import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
@@ -16,6 +17,8 @@ class MainApp extends StatefulWidget {
 class MainAppState extends State<MainApp> {
   @override
   void initState() {
+    NavigationHelper.navigatorKey = GlobalKey<NavigatorState>();
+
     super.initState();
     // checkConnection();
     loadBrightness();
@@ -27,6 +30,7 @@ class MainAppState extends State<MainApp> {
       title: 'fig.style',
       theme: stateColors.themeData,
       debugShowCheckedModeBanner: false,
+      navigatorKey: NavigationHelper.navigatorKey,
       home: Home(),
     );
   }
@@ -48,9 +52,7 @@ class MainAppState extends State<MainApp> {
 
     if (!autoBrightness) {
       final brightness = appStorage.getBrightness();
-
       setBrightness(context, brightness);
-
       return;
     }
 
