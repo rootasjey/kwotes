@@ -15,13 +15,9 @@ void setAutoBrightness(BuildContext context) {
   }
 
   SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-    try {
-      DynamicTheme.of(context).setBrightness(brightness);
-      stateColors.refreshTheme(brightness);
-      appStorage.setAutoBrightness(true);
-    } catch (error) {
-      debugPrint(error.toString());
-    }
+    DynamicTheme.of(context).setBrightness(brightness);
+    stateColors.refreshTheme(brightness);
+    appStorage.setAutoBrightness(true);
   });
 }
 
