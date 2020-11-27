@@ -106,6 +106,7 @@ function handleTempQuoteValidation(params: NotifFuncParams) {
     adm_group: 'tempquotes', // Amazon notification grouping
     android_group: 'tempquotes', // Android notification grouping
     app_id: env.onesignal.appid,
+    headings: { en: 'In validation', fr: 'In validation' },
     contents: { en: notifData.body },
     data: {
       notificationid: notifSnapshot.id,

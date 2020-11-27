@@ -52,9 +52,11 @@ export const notificationEN = functions
       adm_group: 'quotidians', // Amazon notification grouping
       android_group: 'quotidians', // Android notification grouping
       app_id: env.onesignal.appid,
+      headings: { en: 'Quotidian', fr: 'Quotidian' },
       contents: { en: contents },
       data: {
         quoteid: qData['quote']['id'],
+        type: 'quotidians',
       },
       delayed_option: 'timezone',
       delivery_time_of_day: '8:00AM',
@@ -117,6 +119,7 @@ export const notificationFR = functions
       adm_group: 'quotidians', // Amazon notification grouping
       android_group: 'quotidians', // Android notification grouping
       app_id: env.onesignal.appid,
+      headings: { en: 'Quotidian', fr: 'Quotidian' },
       contents: { en: contents, fr: contents },
       data: {
         quoteid: qData['quote']['id'],
