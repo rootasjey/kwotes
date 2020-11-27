@@ -66,28 +66,28 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Observer(builder: (context) {
-        if (userState.isUserConnected) {
-          return FloatingActionButton.extended(
-            backgroundColor: stateColors.secondary,
-            foregroundColor: Colors.white,
-            label: Text(
-              "Add quote",
-              style: TextStyle(
-                fontSize: 17.0,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            icon: Icon(Icons.add),
-            onPressed: () {
-              DataQuoteInputs.clearAll();
-              DataQuoteInputs.navigatedFromPath = 'dashboard';
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-            },
-          );
+        if (!userState.isUserConnected) {
+          return Container();
         }
 
-        return Container();
+        return FloatingActionButton.extended(
+          backgroundColor: stateColors.secondary,
+          foregroundColor: Colors.white,
+          label: Text(
+            "Add quote",
+            style: TextStyle(
+              fontSize: 17.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          icon: Icon(Icons.add),
+          onPressed: () {
+            DataQuoteInputs.clearAll();
+            DataQuoteInputs.navigatedFromPath = 'dashboard';
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+          },
+        );
       }),
       body: CustomScrollView(
         controller: scrollController,
@@ -336,56 +336,67 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget notificationsIconButton() {
-    return Badge(
-      badgeContent: Text(
-        "$unreadNotifiCount",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      showBadge: showNotifiBadge,
-      child: IconButton(
-        onPressed: () async {
-          final size = MediaQuery.of(context).size;
+    return Observer(
+      builder: (context) {
+        if (!userState.isUserConnected) {
+          return Container();
+        }
 
-          if (size.width > Constants.maxMobileWidth &&
-              size.height > Constants.maxMobileWidth) {
-            await showFlash(
-              context: context,
-              persistent: false,
-              builder: (context, controller) {
-                return Flash.dialog(
-                  controller: controller,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  enableDrag: true,
-                  margin: const EdgeInsets.only(
-                    left: 120.0,
-                    right: 120.0,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                  child: FlashBar(
-                    message: Container(
-                      height: MediaQuery.of(context).size.height - 100.0,
-                      padding: const EdgeInsets.all(60.0),
-                      child: NotificationsCenter(),
-                    ),
+        return Badge(
+          badgeContent: Text(
+            "$unreadNotifiCount",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          showBadge: showNotifiBadge,
+          child: IconButton(
+            onPressed: () async {
+              final size = MediaQuery.of(context).size;
+
+              if (size.width > Constants.maxMobileWidth &&
+                  size.height > Constants.maxMobileWidth) {
+                await showFlash(
+                  context: context,
+                  persistent: false,
+                  builder: (context, controller) {
+                    return Flash.dialog(
+                      controller: controller,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      enableDrag: true,
+                      margin: const EdgeInsets.only(
+                        left: 120.0,
+                        right: 120.0,
+                      ),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(8.0),
+                      ),
+                      child: FlashBar(
+                        message: Container(
+                          height: MediaQuery.of(context).size.height - 100.0,
+                          padding: const EdgeInsets.all(60.0),
+                          child: NotificationsCenter(),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (_, scrollController) => NotificationsCenter(
+                    scrollController: scrollController,
                   ),
                 );
-              },
-            );
-          } else {
-            await showCupertinoModalBottomSheet(
-              context: context,
-              builder: (context, scrollController) => NotificationsCenter(),
-            );
-          }
-        },
-        color: stateColors.foreground,
-        tooltip: "My notifications",
-        icon: Icon(Icons.notifications),
-      ),
+              }
+            },
+            color: stateColors.foreground,
+            tooltip: "My notifications",
+            icon: Icon(Icons.notifications),
+          ),
+        );
+      },
     );
   }
 
