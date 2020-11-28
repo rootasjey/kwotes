@@ -622,7 +622,8 @@ class _SignupState extends State<Signup> {
 
       PushNotifications.linkAuthUser(user.uid);
 
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => Home()));
     } catch (error) {
       debugPrint(error.toString());
 
