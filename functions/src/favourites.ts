@@ -21,8 +21,7 @@ export const onFavAdded = functions
     const userData = user.data();
 
     if (userData) {
-      let userFav: number = userData.stats.likes ?? 0;
-
+      const userFav: number = userData.stats.likes ?? 0;
       await user.ref.update('stats.fav', userFav + 1);
     }
       
@@ -49,9 +48,7 @@ export const onFavDeleted = functions
 
     if (userData) {
       const userFav: number = userData.stats.fav ?? 0;
-      
-      await user.ref
-        .update('stats.fav', Math.max(0, userFav - 1));
+      await user.ref.update('stats.fav', Math.max(0, userFav - 1));
     }
 
     return await snapshot.ref
