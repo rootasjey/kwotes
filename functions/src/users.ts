@@ -20,15 +20,34 @@ export const checkEmailAvailability = functions
         'a valid email address.');
     }
 
+    let isAvailable = true;
+
     const emailSnap = await firestore
       .collection('users')
       .where('email', '==', email)
       .limit(1)
       .get();
 
+    isAvailable = emailSnap.empty;
+
+    try {
+      const userRecord = await adminApp
+        .auth()
+        .getUserByEmail(email);
+
+      if (userRecord) {
+        isAvailable = false;
+      }
+
+      isAvailable = true;
+
+    } catch (error) {
+      isAvailable = true;
+    }
+
     return {
       email,
-      isAvailable: emailSnap.empty,
+      isAvailable,
     };
   });
 
