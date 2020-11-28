@@ -17,13 +17,9 @@ export const updateProp = functions
       }
 
       for await (const doc of snapshot.docs) {
-        const data = doc.data();
-        const fav = data.stats.favourites || data.stats.fav;
-
         await doc.ref
           .update({
-            'stats.fav': fav,
-            'stats.favourites': adminApp.firestore.FieldValue.delete(),
+            'flag': adminApp.firestore.FieldValue.delete(),
           });
       }
 
