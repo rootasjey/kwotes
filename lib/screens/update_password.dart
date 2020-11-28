@@ -349,7 +349,12 @@ class _UpdatePasswordState extends State<UpdatePassword> {
           isUpdating = false;
         });
 
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => Signin(),
+          ),
+        );
+
         return;
       }
 
