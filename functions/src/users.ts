@@ -5,6 +5,51 @@ import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
+export const updateScheme = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (req, res) => {
+    const snapshot = await firestore
+      .collection('users')
+      .get();
+
+    for await (const userDoc of snapshot.docs) {
+      userDoc
+        .ref
+        .update({
+          notifications: {
+            email: {
+              quotidians: false,
+              tempQuotes: false,
+            },
+            push: {
+              quotidians: true,
+              tempQuotes: true,
+            },
+          }
+        });
+
+      const userData = userDoc.data();
+      if (!userData) {
+        continue;
+      }
+
+      if (!userData.tempQuotes) {
+        await userDoc.ref.update({
+          "stats.tempQuotes": 0,
+        });
+      }
+
+      if (!userData.published) {
+        await userDoc.ref.update({
+          "stats.published": 0,
+        });
+      }
+    }
+
+    res.status(200).send("done!");
+  });
+
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
@@ -250,21 +295,21 @@ export const createAccount = functions
         settings: {
           notifications: {
             email: {
-              tempquotes: true,
+              tempQuotes: true,
               quotidians: false,
             },
             push: {
               quotidians: true,
-              tempquotes: true,
+              tempQuotes: true,
             }
           },
         },
         stats: {
-          favourites: 0,
+          fav: 0,
           lists: 0,
           proposed: 0,
           published: 0,
-          tempquotes: 0,
+          tempQuotes: 0,
           notifications: {
             total: 0,
             unread: 0,
@@ -342,17 +387,53 @@ export const deleteAccount = functions
 
     await checkUserIsSignedIn(context);
 
-    // Add delete entry
+    const userSnapshot = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
+
+
+    const userData = userSnapshot.data();
+    
+    if (!userSnapshot.exists || !userData) {
+      return {
+        success: false,
+        error: {
+          message: "This user document doesn't exist anymore.",
+        },
+        uid: userAuth.uid,
+      };
+    }
+
+    const stats = userData.stats;
+    let totalItemsCount = stats.fav + stats.lists + 
+      stats.tempQuotes + stats.notifications.total;
+
+    // Add delete entry.
     // Eventually set the quote.author.id field to anonymous's id.
     await firestore
       .collection('todelete')
       .doc(userAuth.uid)
       .set({
-        done: false,
-        objectId: userAuth.uid,
-        userId: userAuth.uid,
-        type: 'user',
+        doc: {
+          id: userAuth.uid,
+          conceptualType: 'user',
+          dataType: 'document',
+          hasChildren: true,
+        },
         path: `users/${userAuth.uid}`,
+        task: {
+          createdAt: Date.now(),
+          done: false,
+          items: {
+            deleted: 0,
+            total: totalItemsCount ?? 0,
+          },
+          updatedAt: Date.now(),
+        },
+        user: {
+          id: userAuth.uid,
+        },
       });
 
     // Delete user auth
