@@ -17,3 +17,8 @@ interface NotifFuncParams {
   userData: any;
   notifSnapshot: FirebaseFirestore.QueryDocumentSnapshot;
 }
+
+interface UpdateEmailParams {
+  newEmail: string;
+  password: string;
+}

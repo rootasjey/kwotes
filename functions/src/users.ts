@@ -357,6 +357,33 @@ export const incrementQuota = functions
       });
   });
 
+async function isUserByEmailExists(email: string) {
+  const emailSnapshot = await firestore
+    .collection('users')
+    .where('email', '==', email)
+    .limit(1)
+    .get();
+
+  if (!emailSnapshot.empty) {
+    return true;
+  }
+
+  try {
+    const userRecord = await adminApp
+      .auth()
+      .getUserByEmail(email);
+
+    if (userRecord) {
+      return true;
+    }
+
+    return false;
+
+  } catch (error) {
+    return false;
+  }
+}
+
 // Check that the new created doc is well-formatted.
 export const newAccountCheck = functions
   .region('europe-west3')
@@ -463,6 +490,68 @@ function populateUserNameIfEmpty(
     }
   };
 }
+
+/**
+ * Update an user's email in Firebase auth and in Firestore.
+ * Several security checks are made (email format, password, email unicity)
+ * before validating the new email.
+ */
+export const updateEmail = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data: UpdateEmailParams, context) => {
+    const userAuth = context.auth;
+
+    if (!userAuth) {
+      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
+        'an authenticated user.');
+    }
+    
+    const { newEmail, password } = data;
+      
+    if (!newEmail) {
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+          'a valid email value representing your new email.');
+      }
+      
+    if (!password) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+      'a valid password value.');
+    }
+    
+    const isFormatOk = validateEmailFormat(newEmail);
+      
+    if (!isFormatOk) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'a valid email. The value you specified is not in a correct email format.');
+    }
+
+    const isEmailAvailable = await isUserByEmailExists(newEmail);
+
+    if (!isEmailAvailable) {
+      throw new functions.https.HttpsError('invalid-argument', 'The email specified ' +
+        'is not available. Try with a new one.');
+    }
+
+    await adminApp
+    .auth()
+    .updateUser(userAuth.uid, {
+      email: newEmail,
+      emailVerified: false,
+    });
+
+    await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .update({
+        email: newEmail,
+      });
+
+    return {
+      success: true,
+      uid: userAuth.uid,
+    };
+  });
 
 // Prevent user's rights update
 // and user name conflicts.
