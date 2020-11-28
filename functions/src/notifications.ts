@@ -44,7 +44,7 @@ export const incrementStatsAndSendPush = functions
     const notifData = notifSnapshot.data();
     const subject: string = notifData.subject;
 
-    if (subject == 'tempQuotes') {
+    if (subject === 'tempQuotes') {
       return handleTempQuoteValidation({ userId, userData, notifSnapshot });
     }
 

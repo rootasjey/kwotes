@@ -350,7 +350,7 @@ export const createAccount = functions
   });
 
 function checkCreateAccountData(data: any) {
-  if (Object.keys(data).length != 3) {
+  if (Object.keys(data).length !== 3) {
     return false;
   }
 
@@ -406,7 +406,7 @@ export const deleteAccount = functions
     }
 
     const stats = userData.stats;
-    let totalItemsCount = stats.fav + stats.lists + 
+    const totalItemsCount = stats.fav + stats.lists + 
       stats.tempQuotes + stats.notifications.total;
 
     // Add delete entry.

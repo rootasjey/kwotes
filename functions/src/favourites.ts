@@ -11,7 +11,7 @@ export const onFavAdded = functions
     const quoteData = snapshot.data();
     if (!quoteData) { return; }
 
-    let quoteFav: number = quoteData.stats.fav ?? 0;
+    const quoteFav: number = quoteData.stats.fav ?? 0;
 
     const user = await firestore
       .collection('users')
@@ -38,7 +38,7 @@ export const onFavDeleted = functions
     const quoteData = snapshot.data();
     if (!quoteData) { return; }
 
-    let quoteFav: number = quoteData.stats.fav ?? 0;
+    const quoteFav: number = quoteData.stats.fav ?? 0;
 
     const user = await firestore
       .collection('users')
@@ -48,7 +48,7 @@ export const onFavDeleted = functions
     const userData = user.data();
 
     if (userData) {
-      let userFav: number = userData.stats.fav ?? 0;
+      const userFav: number = userData.stats.fav ?? 0;
       
       await user.ref
         .update('stats.fav', Math.max(0, userFav - 1));
