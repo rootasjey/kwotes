@@ -403,6 +403,20 @@ async function isUserByEmailExists(email: string) {
   }
 }
 
+async function isUserByUsernameExists(nameLowerCase: string) {
+  const nameSnapshot = await firestore
+    .collection('users')
+    .where('nameLowerCase', '==', nameLowerCase)
+    .limit(1)
+    .get();
+
+  if (nameSnapshot.empty) {
+    return false;
+  }
+
+  return true;
+}
+
 // Check that the new created doc is well-formatted.
 export const newAccountCheck = functions
   .region('europe-west3')
@@ -571,6 +585,79 @@ export const updateEmail = functions
       uid: userAuth.uid,
     };
   });
+
+
+/**
+ * Update a new username in Firebase auth and in Firestore.
+ * Several security checks are made (name format & unicity, password)
+ * before validating the new username.
+ */
+export const updateUsername = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data: UpdateUsernameParams, context) => {
+    const userAuth = context.auth;
+    const instanceIdToken = context.instanceIdToken;
+
+    if (!userAuth || !instanceIdToken) {
+      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
+        'an authenticated user.');
+    }
+
+    let isTokenValid = false;
+
+    try {
+      await adminApp
+        .auth()
+        .verifyIdToken(instanceIdToken, true);
+
+      isTokenValid = true;
+      
+    } catch (error) {
+      isTokenValid = false;
+    }
+
+
+    if (!isTokenValid) {
+      throw new functions.https.HttpsError('unauthenticated', 'Your session has expired. ' +
+        'Please (sign out and) sign in again.');
+    }
+
+    const newUsername = data.newUsername;
+    const isFormatOk = validateNameFormat(newUsername);
+
+    if (!newUsername || !isFormatOk) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'a valid "newUsername". The value you specified is not in a correct format.');
+    }
+
+    const isUsernameTaken = await isUserByUsernameExists(newUsername.toLowerCase());
+
+    if (isUsernameTaken) {
+      throw new functions.https.HttpsError('invalid-argument', 'The name specified ' +
+        'is not available. Please try with a new one.');
+    }
+
+    await adminApp
+      .auth()
+      .updateUser(userAuth.uid, {
+        displayName: newUsername,
+      });
+
+    await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .update({
+        name: newUsername,
+        nameLowerCase: newUsername.toLowerCase(),
+      });
+
+    return {
+      success: true,
+      uid: userAuth.uid,
+    };
+  });
+
 
 // Prevent user's rights update
 // and user name conflicts.

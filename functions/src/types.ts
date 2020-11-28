@@ -22,3 +22,7 @@ interface UpdateEmailParams {
   newEmail: string;
   password: string;
 }
+
+interface UpdateUsernameParams {
+  newUsername: string;
+}
