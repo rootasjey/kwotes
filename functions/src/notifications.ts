@@ -44,7 +44,7 @@ export const incrementStatsAndSendPush = functions
     const notifData = notifSnapshot.data();
     const subject: string = notifData.subject;
 
-    if (subject == 'tempquotes') {
+    if (subject == 'tempQuotes') {
       return handleTempQuoteValidation({ userId, userData, notifSnapshot });
     }
 
@@ -96,28 +96,28 @@ function handleTempQuoteValidation(params: NotifFuncParams) {
   const notifData = notifSnapshot.data();
 
   const userPushNotifiActivated: boolean = userData
-    .settings?.notifications?.push?.tempquotes;
+    .settings?.notifications?.push?.tempQuotes;
 
   if (!userPushNotifiActivated || !notifData.sendPushNotification) {
     return false;
   }
 
   sendNotification({
-    adm_group: 'tempquotes', // Amazon notification grouping
-    android_group: 'tempquotes', // Android notification grouping
+    adm_group: 'tempQuotes', // Amazon notification grouping
+    android_group: 'tempQuotes', // Android notification grouping
     app_id: env.onesignal.appid,
     headings: { en: 'In validation', fr: 'In validation' },
     contents: { en: notifData.body },
     data: {
       notificationid: notifSnapshot.id,
-      type: 'tempquotes',
+      type: 'tempQuotes',
     },
     include_external_user_ids: [userId],
     ios_attachments: { id1: '' },
     big_picture: '',
     ios_badgeType: "Increase",
     ios_badgeCount: 1,
-    thread_id: 'tempquotes', // iOS 12+ notification grouping
+    thread_id: 'tempQuotes', // iOS 12+ notification grouping
   });
 
   return true;
