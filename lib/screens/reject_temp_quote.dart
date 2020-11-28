@@ -255,7 +255,7 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
           .add({
         "body": notifBody,
         "title": notifTitle,
-        "subject": "tempquotes",
+        "subject": "tempQuotes",
         "path": "/edit/tempquote/${tempQuote.id}",
         "isRead": false,
         "sendPushNotification": sendPushNotification,
