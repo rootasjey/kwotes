@@ -3,29 +3,6 @@ import { adminApp } from './adminApp';
 
 const firestore = adminApp.firestore();
 
-// Replace `user.stats.favourite` -> `user.stats.fav`
-export const updateProp = functions
-  .region('europe-west3')
-  .https
-  .onRequest(async (request, response) => {
-    const snapshot = await firestore
-      .collection('users')
-      .get();
-
-      if (snapshot.empty) {
-        return;
-      }
-
-      for await (const doc of snapshot.docs) {
-        await doc.ref
-          .update({
-            'flag': adminApp.firestore.FieldValue.delete(),
-          });
-      }
-
-      response.status(200).send('done');
-  });
-
 export const onFavAdded = functions
   .region('europe-west3')
   .firestore
@@ -36,10 +13,6 @@ export const onFavAdded = functions
 
     let quoteFav: number = quoteData.stats.fav ?? 0;
 
-    if (!quoteData.stats.fav) { // TODO: Remove after some months
-      quoteFav = quoteData.stats.likes ?? 0;
-    }
-
     const user = await firestore
       .collection('users')
       .doc(context.params.userId)
@@ -49,10 +22,6 @@ export const onFavAdded = functions
 
     if (userData) {
       let userFav: number = userData.stats.likes ?? 0;
-      
-      if (!userData.stats.fav) { // TODO: Remove after some months
-        userFav = userData.stats.likes ?? 0;
-      }
 
       await user.ref.update('stats.fav', userFav + 1);
     }
@@ -71,10 +40,6 @@ export const onFavDeleted = functions
 
     let quoteFav: number = quoteData.stats.fav ?? 0;
 
-    if (!quoteData.stats.fav) { // TODO: Remove after some months
-      quoteFav = quoteData.stats.likes ?? 0;
-    }
-
     const user = await firestore
       .collection('users')
       .doc(context.params.userId)
@@ -85,10 +50,6 @@ export const onFavDeleted = functions
     if (userData) {
       let userFav: number = userData.stats.fav ?? 0;
       
-      if (!userData.stats.fav) { // TODO: Remove after some months
-        userFav = userData.stats.likes ?? 0;
-      }
-
       await user.ref
         .update('stats.fav', Math.max(0, userFav - 1));
     }
