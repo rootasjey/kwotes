@@ -97,6 +97,9 @@ export const deleteList = functions
     }
   });
 
+/**
+ * Increment user's list count on create list.
+ */
 export const onListAdded = functions
   .region('europe-west3')
   .firestore
@@ -118,6 +121,9 @@ export const onListAdded = functions
       .update('stats.lists', userLists + 1);
   });
 
+/**
+ * Decrement user's list count on create list.
+ */
 export const onListDeleted = functions
   .region('europe-west3')
   .firestore
@@ -138,3 +144,68 @@ export const onListDeleted = functions
     return await user.ref
       .update('stats.lists', Math.max(0, userLists - 1));
   });
+
+/**
+ * Increment user's list `itemsCount` when a new quote is added.
+ */
+export const onQuoteAdded = functions
+  .region('europe-west3')
+  .firestore
+  .document('users/{userId}/lists/{listId}/quotes/{quoteId}')
+  .onCreate(async (snapshot, context) => {
+    const { userId, listId } = context.params;
+
+    const listSnapshot = await firestore
+      .collection('users')
+      .doc(userId)
+      .collection('lists')
+      .doc(listId)
+      .get();
+
+    const listData = listSnapshot.data();
+
+    if (!listSnapshot.exists || !listData) {
+      return;
+    }
+
+    const itemsCount = listData.itemsCount ?? 0;
+
+    await listSnapshot
+      .ref
+      .update({
+        itemsCount: itemsCount + 1,
+      })
+  });
+
+/**
+ * Decrement user's list `itemsCount` when a new quote is added.
+ */
+export const onQuoteDeleted = functions
+  .region('europe-west3')
+  .firestore
+  .document('users/{userId}/lists/{listId}/quotes/{quoteId}')
+  .onDelete(async (snapshot, context) => {
+    const { userId, listId } = context.params;
+
+    const listSnapshot = await firestore
+      .collection('users')
+      .doc(userId)
+      .collection('lists')
+      .doc(listId)
+      .get();
+
+    const listData = listSnapshot.data();
+
+    if (!listSnapshot.exists || !listData) {
+      return;
+    }
+
+    const itemsCount = listData.itemsCount ?? 0;
+
+    await listSnapshot
+      .ref
+      .update({
+        itemsCount: itemsCount - 1,
+      })
+  });
+  
