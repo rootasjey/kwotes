@@ -5,51 +5,6 @@ import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
-export const updateScheme = functions
-  .region('europe-west3')
-  .https
-  .onRequest(async (req, res) => {
-    const snapshot = await firestore
-      .collection('users')
-      .get();
-
-    for await (const userDoc of snapshot.docs) {
-      userDoc
-        .ref
-        .update({
-          notifications: {
-            email: {
-              quotidians: false,
-              tempQuotes: false,
-            },
-            push: {
-              quotidians: true,
-              tempQuotes: true,
-            },
-          }
-        });
-
-      const userData = userDoc.data();
-      if (!userData) {
-        continue;
-      }
-
-      if (!userData.tempQuotes) {
-        await userDoc.ref.update({
-          "stats.tempQuotes": 0,
-        });
-      }
-
-      if (!userData.published) {
-        await userDoc.ref.update({
-          "stats.published": 0,
-        });
-      }
-    }
-
-    res.status(200).send("done!");
-  });
-
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
