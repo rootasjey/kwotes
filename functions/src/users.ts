@@ -183,7 +183,7 @@ async function checkUserName(
  * Create an user with Firebase auth then with Firestore.
  * Check user's provided arguments and exit if wrong.
  */
-export const createUserAccount = functions
+export const createAccount = functions
   .region('europe-west3')
   .https
   .onCall(async (data: CreateUserAccountParams) => {
