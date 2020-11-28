@@ -3,6 +3,33 @@ import { adminApp } from './adminApp';
 
 const firestore = adminApp.firestore();
 
+// Replace `user.stats.favourite` -> `user.stats.fav`
+export const updateProp = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (request, response) => {
+    const snapshot = await firestore
+      .collection('users')
+      .get();
+
+      if (snapshot.empty) {
+        return;
+      }
+
+      for await (const doc of snapshot.docs) {
+        const data = doc.data();
+        const fav = data.stats.favourites || data.stats.fav;
+
+        await doc.ref
+          .update({
+            'stats.fav': fav,
+            'stats.favourites': adminApp.firestore.FieldValue.delete(),
+          });
+      }
+
+      response.status(200).send('done');
+  });
+
 export const onFavAdded = functions
   .region('europe-west3')
   .firestore
