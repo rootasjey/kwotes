@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
-
-import '../screens/signin.dart';
 
 Future<UserQuotesList> createList({
   @required BuildContext context,
@@ -32,6 +31,7 @@ Future<UserQuotesList> createList({
       'createdAt': DateTime.now(),
       'description': description,
       'name': name,
+      'itemsCount': 0,
       'iconUrl': iconUrl,
       'isPublic': isPublic,
       'updatedAt': DateTime.now(),
