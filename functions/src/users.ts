@@ -152,53 +152,6 @@ function checkRights(params: DataUpdateParams) {
   return { ...payload, ...{ 'rights': beforeData.rights } };
 }
 
-export const incrementQuoteQuota = functions
-  .region('europe-west3')
-  .firestore
-  .document('tempquotes/{tempquoteId}')
-  .onCreate(async (snapshot, context) => {
-    const snapshotData = snapshot.data();
-    if (!snapshotData) { return; }
-
-    const userUid = snapshotData.user.id;
-    if (!userUid) { return; }
-
-    const userDoc = await firestore
-      .collection('users')
-      .doc(userUid)
-      .get();
-
-    if (!userDoc.exists) { return; }
-
-    const data = userDoc.data();
-    if (!data) { return; }
-
-    const serverDate = new Date(context.timestamp);
-    const quota = data.quota;
-
-    let date = quota.date !== null && typeof quota.date !== 'undefined' ?
-      quota.date.toDate() :
-      new Date('January 1');
-
-    let current: number = quota['current'];
-
-    if (date.getDate() !== serverDate.getDate() ||
-      date.getMonth() !== serverDate.getMonth() ||
-      date.getFullYear() !== serverDate.getFullYear()) {
-
-      current = 0;
-      date = serverDate;
-    }
-
-    current += 1;
-
-    return await userDoc.ref
-      .update({
-        'quota.date': adminApp.firestore.Timestamp.fromDate(date),
-        'quota.current': current,
-      });
-  });
-
 async function checkUserName(
   data: FirebaseFirestore.DocumentData,
   payload: any,
@@ -351,6 +304,58 @@ function checkCreateAccountData(data: any) {
 
   return true;
 }
+
+/**
+ * Increment user's quote proposition quota.
+ * All users have a daily quota limit except moderators or special users.
+ * The quota resets everyday at midnight +1 second.
+ */
+export const incrementQuota = functions
+  .region('europe-west3')
+  .firestore
+  .document('tempquotes/{tempquoteId}')
+  .onCreate(async (snapshot, context) => {
+    const snapshotData = snapshot.data();
+    if (!snapshotData) { return; }
+
+    const userUid = snapshotData.user.id;
+    if (!userUid) { return; }
+
+    const userDoc = await firestore
+      .collection('users')
+      .doc(userUid)
+      .get();
+
+    if (!userDoc.exists) { return; }
+
+    const data = userDoc.data();
+    if (!data) { return; }
+
+    const serverDate = new Date(context.timestamp);
+    const quota = data.quota;
+
+    let date = quota.date !== null && typeof quota.date !== 'undefined' ?
+      quota.date.toDate() :
+      new Date('January 1');
+
+    let current: number = quota['current'];
+
+    if (date.getDate() !== serverDate.getDate() ||
+      date.getMonth() !== serverDate.getMonth() ||
+      date.getFullYear() !== serverDate.getFullYear()) {
+
+      current = 0;
+      date = serverDate;
+    }
+
+    current += 1;
+
+    return await userDoc.ref
+      .update({
+        'quota.date': adminApp.firestore.Timestamp.fromDate(date),
+        'quota.current': current,
+      });
+  });
 
 // Check that the new created doc is well-formatted.
 export const newAccountCheck = functions
