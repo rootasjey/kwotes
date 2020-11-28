@@ -228,7 +228,6 @@ export const createAccount = functions
       .doc(userRecord.uid)
       .set({
         email: email,
-        flag: '',
         lang: 'en',
         name: username,
         nameLowerCase: username.toLowerCase(),
@@ -344,6 +343,7 @@ export const deleteAccount = functions
     await checkUserIsSignedIn(context);
 
     // Add delete entry
+    // Eventually set the quote.author.id field to anonymous's id.
     await firestore
       .collection('todelete')
       .doc(userAuth.uid)
