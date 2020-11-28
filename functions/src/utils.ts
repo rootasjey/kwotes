@@ -1,6 +1,35 @@
 import * as functions from 'firebase-functions';
+import { adminApp } from './adminApp';
 
 const env = functions.config();
+
+export async function checkUserIsSignedIn(context: functions.https.CallableContext) {
+  const userAuth = context.auth;
+  const instanceIdToken = context.instanceIdToken;
+
+  if (!userAuth || !instanceIdToken) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
+      'an authenticated user.');
+  }
+
+  let isTokenValid = false;
+
+  try {
+    await adminApp
+      .auth()
+      .verifyIdToken(instanceIdToken, true);
+
+    isTokenValid = true;
+
+  } catch (error) {
+    isTokenValid = false;
+  }
+
+  if (!isTokenValid) {
+    throw new functions.https.HttpsError('unauthenticated', 'Your session has expired. ' +
+      'Please (sign out and) sign in again.');
+  }
+}
 
 export function sendNotification(notificationData: any) {
   const headers = {

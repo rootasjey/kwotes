@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 
 import { adminApp } from './adminApp';
+import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
@@ -539,31 +540,22 @@ export const updateEmail = functions
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
         'an authenticated user.');
     }
-    
-    const { newEmail, password } = data;
-      
-    if (!newEmail) {
-        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-          'a valid email value representing your new email.');
-      }
-      
-    if (!password) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-      'a valid password value.');
-    }
-    
+
+    await checkUserIsSignedIn(context);
+
+    const { newEmail } = data;
     const isFormatOk = validateEmailFormat(newEmail);
       
-    if (!isFormatOk) {
+    if (!newEmail || !isFormatOk) {
       throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'a valid email. The value you specified is not in a correct email format.');
+        'a valid "newEmail" argument. The value you specified is not in a correct email format.');
     }
 
-    const isEmailAvailable = await isUserByEmailExists(newEmail);
+    const isEmailTaken = await isUserByEmailExists(newEmail);
 
-    if (!isEmailAvailable) {
+    if (isEmailTaken) {
       throw new functions.https.HttpsError('invalid-argument', 'The email specified ' +
-        'is not available. Try with a new one.');
+        'is not available. Try specify a new one in the "newEmail" argument.');
     }
 
     await adminApp
@@ -597,33 +589,15 @@ export const updateUsername = functions
   .https
   .onCall(async (data: UpdateUsernameParams, context) => {
     const userAuth = context.auth;
-    const instanceIdToken = context.instanceIdToken;
-
-    if (!userAuth || !instanceIdToken) {
+    
+    if (!userAuth) {
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-        'an authenticated user.');
+      'an authenticated user.');
     }
 
-    let isTokenValid = false;
+    await checkUserIsSignedIn(context);
 
-    try {
-      await adminApp
-        .auth()
-        .verifyIdToken(instanceIdToken, true);
-
-      isTokenValid = true;
-      
-    } catch (error) {
-      isTokenValid = false;
-    }
-
-
-    if (!isTokenValid) {
-      throw new functions.https.HttpsError('unauthenticated', 'Your session has expired. ' +
-        'Please (sign out and) sign in again.');
-    }
-
-    const newUsername = data.newUsername;
+    const { newUsername } = data;
     const isFormatOk = validateNameFormat(newUsername);
 
     if (!newUsername || !isFormatOk) {
