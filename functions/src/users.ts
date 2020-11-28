@@ -1,5 +1,4 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 
 import { adminApp } from './adminApp';
 
@@ -195,7 +194,7 @@ export const incrementQuoteQuota = functions
 
     return await userDoc.ref
       .update({
-        'quota.date': admin.firestore.Timestamp.fromDate(date),
+        'quota.date': adminApp.firestore.Timestamp.fromDate(date),
         'quota.current': current,
       });
   });
@@ -225,6 +224,132 @@ async function checkUserName(
     name: `${payload.name}-${suffix}`,
     nameLowerCase: `${payload.name}-${suffix}`
   } };
+}
+
+/**
+ * Create an user with Firebase auth then with Firestore.
+ * Check user's provided arguments and exit if wrong.
+ */
+export const createUserAccount = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data: CreateUserAccountParams) => {
+    if (!checkCreateAccountData(data)) {
+      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        '3 string arguments "username", "email" and "password".');
+    }
+
+    const { username, password, email } = data;
+
+    try {
+      const userRecord = await adminApp.auth()
+      .createUser({
+        displayName: username,
+        password: password,
+        email: email,
+        emailVerified: false,
+      });
+
+      await adminApp.firestore()
+      .collection('users')
+      .doc(userRecord.uid)
+      .set({
+        email: email,
+        flag: '',
+        lang: 'en',
+        name: username,
+        nameLowerCase: username.toLowerCase(),
+        pricing: 'free',
+        quota: {
+          current: 0,
+          date: Date.now(),
+          limit: 1,
+        },
+        rights: {
+          'user:managedata'     : false,
+          'user:manageauthor'   : false,
+          'user:managequote'    : false,
+          'user:managequotidian': false,
+          'user:managereference': false,
+          'user:proposequote'   : true,
+          'user:readquote'      : true,
+          'user:validatequote'  : false,
+        },
+        settings: {
+          notifications: {
+            email: {
+              tempquotes: true,
+              quotidians: false,
+            },
+            push: {
+              quotidians: true,
+              tempquotes: true,
+            }
+          },
+        },
+        stats: {
+          favourites: 0,
+          lists: 0,
+          proposed: 0,
+          published: 0,
+          tempquotes: 0,
+          notifications: {
+            total: 0,
+            unread: 0,
+          }
+        },
+        urls: {
+          image: '',
+          twitter: '',
+          facebook: '',
+          instagram: '',
+          twitch: '',
+          website: '',
+          wikipedia: '',
+          youtube: '',
+        },
+        uid: userRecord.uid,
+      });
+
+      return {
+        user: data,
+        success: true,
+        error: {
+          body: "",
+          type: "",
+        }
+      };
+
+    } catch (error) {
+      return {
+        user: data,
+        success: false,
+        error: {
+          body: "Couldn't create a new user record. Try again later or contact someone at contact@fig.style",
+          type: "account_creation",
+        }
+      };
+    }
+  });
+
+function checkCreateAccountData(data: any) {
+  if (Object.keys(data).length != 3) {
+    return false;
+  }
+
+  const keys = Object.keys(data);
+
+  if (keys.indexOf('username') < 0 
+    || keys.indexOf('email') < 0 
+    || keys.indexOf('password') < 0) {
+    return false;
+  }
+
+  if (!data['username'] || !data['email'] || !data['password']) {
+    return false;
+  }
+
+  return true;
 }
 
 // Check that the new created doc is well-formatted.
@@ -273,7 +398,7 @@ export const newAccountCheck = functions
 
 // Add all missing props.
 async function populateUserData(snapshot: functions.firestore.DocumentSnapshot) {
-  const user = await admin.auth().getUser(snapshot.id);
+  const user = await adminApp.auth().getUser(snapshot.id);
   const email = typeof user !== 'undefined' ?
     user.email : '';
 
@@ -365,7 +490,7 @@ export const updateUserCheck = functions
     if (payload.nameLowerCase) { // auto-update auth user
       const displayName = payload.name ?? afterData.name;
 
-      await admin
+      await adminApp
       .auth()
       .updateUser(change.after.id, {
         displayName: displayName,

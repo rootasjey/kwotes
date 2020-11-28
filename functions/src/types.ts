@@ -1,4 +1,10 @@
 
+interface CreateUserAccountParams {
+  email: string;
+  password: string;
+  username: string;
+}
+
 interface DataUpdateParams {
   beforeData: FirebaseFirestore.DocumentData;
   afterData: FirebaseFirestore.DocumentData;
