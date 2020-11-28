@@ -326,6 +326,53 @@ function checkCreateAccountData(data: any) {
 }
 
 /**
+ * Delete user's entry from Firebase auth and from Firestore.
+ * Add a new document to the `todelete` collection to clear user's data
+ * as `notifications`, `drafts`, `lists`, `favourites` sub-collection.
+ */
+export const deleteAccount = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data, context) => {
+    const userAuth = context.auth;
+
+    if (!userAuth) {
+      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
+        'an authenticated user.');
+    }
+
+    await checkUserIsSignedIn(context);
+
+    // Add delete entry
+    await firestore
+      .collection('todelete')
+      .doc(userAuth.uid)
+      .set({
+        done: false,
+        objectId: userAuth.uid,
+        userId: userAuth.uid,
+        type: 'user',
+        path: `users/${userAuth.uid}`,
+      });
+
+    // Delete user auth
+    await adminApp
+      .auth()
+      .deleteUser(userAuth.uid);
+
+    // Delete Firestore document
+    await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .delete();
+
+    return {
+      success: true,
+      uid: userAuth.uid,
+    };
+  });
+
+/**
  * Increment user's quote proposition quota.
  * All users have a daily quota limit except moderators or special users.
  * The quota resets everyday at midnight +1 second.
