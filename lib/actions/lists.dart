@@ -17,9 +17,10 @@ Future<UserQuotesList> createList({
     final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => Signin()),
       );
+
       return null;
     }
 
@@ -56,9 +57,10 @@ Future<bool> deleteList({
     final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => Signin()),
       );
+
       return false;
     }
 
@@ -96,9 +98,10 @@ Future<bool> removeFromList({
     final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => Signin()),
       );
+
       return false;
     }
 
@@ -130,9 +133,10 @@ Future<bool> updateList({
     final userAuth = await userState.userAuth;
 
     if (userAuth == null) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => Signin()),
       );
+
       return false;
     }
 
