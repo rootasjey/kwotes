@@ -87,8 +87,9 @@ export const deleteList = functions
       .delete();
 
     return {
-      success: true,
-      uid: userAuth.uid,
+      user: {
+        id: userAuth.uid,
+      },
       target: {
         type: 'list',
         id: listId,
