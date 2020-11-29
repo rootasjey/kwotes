@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/drafts.dart';
@@ -57,6 +58,10 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   String errorMessage = '';
   String fabText = 'Submit quote';
+
+  /// True if the new step's index is less than the previous one.
+  /// This property is used to reverse the shared axis transition.
+  bool sharedAxisReverse = false;
 
   @override
   void initState() {
@@ -218,31 +223,44 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     return StepState.indexed;
   }
 
-  Widget dynamicStepContent({@required num}) {
-    if (currentStep != num) {
-      return Padding(
+  Widget dynamicStepContent({@required int index}) {
+    Widget stepChild;
+
+    if (currentStep != index) {
+      stepChild = Padding(
         padding: EdgeInsets.zero,
       );
+    } else {
+      switch (index) {
+        case 0:
+          stepChild = AddQuoteContent(
+            onSaveDraft: () => saveQuoteDraft(),
+          );
+          break;
+        case 1:
+          stepChild = AddQuoteTopics();
+          break;
+        case 2:
+          stepChild = AddQuoteAuthor();
+          break;
+        case 3:
+          stepChild = AddQuoteReference();
+          break;
+        case 4:
+          stepChild = AddQuoteComment();
+          break;
+        default:
+          stepChild = Padding(
+            padding: EdgeInsets.zero,
+          );
+          break;
+      }
     }
 
-    switch (num) {
-      case 0:
-        return AddQuoteContent(
-          onSaveDraft: () => saveQuoteDraft(),
-        );
-      case 1:
-        return AddQuoteTopics();
-      case 2:
-        return AddQuoteAuthor();
-      case 3:
-        return AddQuoteReference();
-      case 4:
-        return AddQuoteComment();
-      default:
-        return Padding(
-          padding: EdgeInsets.zero,
-        );
-    }
+    return sharedAxisTransition(
+      child: stepChild,
+      reverse: sharedAxisReverse,
+    );
   }
 
   Widget horizontalActions() {
@@ -296,6 +314,28 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     );
   }
 
+  Widget sharedAxisTransition({
+    @required Widget child,
+    bool reverse = false,
+  }) {
+    return PageTransitionSwitcher(
+      child: child,
+      reverse: reverse,
+      transitionBuilder: (
+        Widget child,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
+        return SharedAxisTransition(
+          child: child,
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.vertical,
+        );
+      },
+    );
+  }
+
   Widget stepperSections() {
     return Stepper(
       currentStep: currentStep,
@@ -306,7 +346,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         Step(
           title: Text('Content'),
           subtitle: Text('Required'),
-          content: dynamicStepContent(num: 0),
+          content: dynamicStepContent(index: 0),
           state: computeStepState(
               stepIndex: 0,
               compute: () {
@@ -318,7 +358,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         Step(
           title: const Text('Topics'),
           subtitle: Text('Required'),
-          content: dynamicStepContent(num: 1),
+          content: dynamicStepContent(index: 1),
           state: computeStepState(
               stepIndex: 1,
               compute: () {
@@ -336,7 +376,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         Step(
           subtitle: Text('Optional'),
           title: const Text('Author'),
-          content: dynamicStepContent(num: 2),
+          content: dynamicStepContent(index: 2),
           state: computeStepState(
               stepIndex: 2,
               compute: () {
@@ -348,7 +388,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         Step(
           subtitle: Text('Optional'),
           title: const Text('Reference'),
-          content: dynamicStepContent(num: 3),
+          content: dynamicStepContent(index: 3),
           state: computeStepState(
               stepIndex: 3,
               compute: () {
@@ -360,7 +400,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         Step(
           subtitle: Text('Optional'),
           title: const Text('Comments'),
-          content: dynamicStepContent(num: 4),
+          content: dynamicStepContent(index: 4),
           state: computeStepState(
               stepIndex: 2,
               compute: () {
@@ -454,6 +494,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   void cancel() {
     if (currentStep > 0) {
+      sharedAxisReverse = true;
       goTo(currentStep - 1);
       return;
     }
@@ -508,10 +549,12 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   void goTo(int step) {
     stepChanged = true;
+    sharedAxisReverse = currentStep < step;
     setState(() => currentStep = step);
   }
 
   void next() {
+    sharedAxisReverse = false;
     currentStep + 1 < 5 // (steps.length + 1) // + 1 dynamic step
         ? goTo(currentStep + 1)
         : propose();
