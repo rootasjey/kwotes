@@ -215,7 +215,8 @@ export const createAccount = functions
     const { username, password, email } = data;
 
     try {
-      const userRecord = await adminApp.auth()
+      const userRecord = await adminApp
+      .auth()
       .createUser({
         displayName: username,
         password: password,
@@ -284,23 +285,15 @@ export const createAccount = functions
       });
 
       return {
-        user: data,
-        success: true,
-        error: {
-          body: "",
-          type: "",
-        }
+        user: {
+          id: userRecord.uid, 
+          email,
+        },
       };
 
     } catch (error) {
-      return {
-        user: data,
-        success: false,
-        error: {
-          body: "Couldn't create a new user record. Try again later or contact someone at contact@fig.style",
-          type: "account_creation",
-        }
-      };
+      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
+        'while creating your account. Please try again or contact us if the problem persists".');
     }
   });
 
@@ -342,70 +335,77 @@ export const deleteAccount = functions
 
     await checkUserIsSignedIn(context);
 
-    const userSnapshot = await firestore
-      .collection('users')
-      .doc(userAuth.uid)
-      .get();
+    try {
+      const userSnapshot = await firestore
+        .collection('users')
+        .doc(userAuth.uid)
+        .get();
 
 
-    const userData = userSnapshot.data();
-    
-    if (!userSnapshot.exists || !userData) {
-      return {
-        success: false,
-        error: {
-          message: "This user document doesn't exist anymore.",
-        },
-        uid: userAuth.uid,
-      };
-    }
+      const userData = userSnapshot.data();
 
-    const stats = userData.stats;
-    const totalItemsCount = stats.fav + stats.lists + 
-      stats.tempQuotes + stats.notifications.total;
-
-    // Add delete entry.
-    // Eventually set the quote.author.id field to anonymous's id.
-    await firestore
-      .collection('todelete')
-      .doc(userAuth.uid)
-      .set({
-        doc: {
-          id: userAuth.uid,
-          conceptualType: 'user',
-          dataType: 'document',
-          hasChildren: true,
-        },
-        path: `users/${userAuth.uid}`,
-        task: {
-          createdAt: Date.now(),
-          done: false,
-          items: {
-            deleted: 0,
-            total: totalItemsCount ?? 0,
+      if (!userSnapshot.exists || !userData) {
+        return {
+          success: false,
+          error: {
+            message: "This user document doesn't exist anymore.",
           },
-          updatedAt: Date.now(),
-        },
+          uid: userAuth.uid,
+        };
+      }
+
+      const stats = userData.stats;
+      const totalItemsCount = stats.fav + stats.lists +
+        stats.tempQuotes + stats.notifications.total;
+
+      // Add delete entry.
+      // Eventually set the quote.author.id field to anonymous's id.
+      await firestore
+        .collection('todelete')
+        .doc(userAuth.uid)
+        .set({
+          doc: {
+            id: userAuth.uid,
+            conceptualType: 'user',
+            dataType: 'document',
+            hasChildren: true,
+          },
+          path: `users/${userAuth.uid}`,
+          task: {
+            createdAt: Date.now(),
+            done: false,
+            items: {
+              deleted: 0,
+              total: totalItemsCount ?? 0,
+            },
+            updatedAt: Date.now(),
+          },
+          user: {
+            id: userAuth.uid,
+          },
+        });
+
+      // Delete user auth
+      await adminApp
+        .auth()
+        .deleteUser(userAuth.uid);
+
+      // Delete Firestore document
+      await firestore
+        .collection('users')
+        .doc(userAuth.uid)
+        .delete();
+
+      return {
         user: {
           id: userAuth.uid,
         },
-      });
+      };
 
-    // Delete user auth
-    await adminApp
-      .auth()
-      .deleteUser(userAuth.uid);
-
-    // Delete Firestore document
-    await firestore
-      .collection('users')
-      .doc(userAuth.uid)
-      .delete();
-
-    return {
-      success: true,
-      uid: userAuth.uid,
-    };
+    } catch (error) {
+      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
+        'while creating your account. Please try again or contact us if the problem persists".');
+    }
   });
 
 /**
@@ -626,9 +626,10 @@ export const updateEmail = functions
 
     await checkUserIsSignedIn(context);
 
+
     const { newEmail } = data;
     const isFormatOk = validateEmailFormat(newEmail);
-      
+
     if (!newEmail || !isFormatOk) {
       throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
         'a valid "newEmail" argument. The value you specified is not in a correct email format.');
@@ -641,24 +642,32 @@ export const updateEmail = functions
         'is not available. Try specify a new one in the "newEmail" argument.');
     }
 
-    await adminApp
-    .auth()
-    .updateUser(userAuth.uid, {
-      email: newEmail,
-      emailVerified: false,
-    });
 
-    await firestore
-      .collection('users')
-      .doc(userAuth.uid)
-      .update({
-        email: newEmail,
-      });
+    try {
 
-    return {
-      success: true,
-      uid: userAuth.uid,
-    };
+      await adminApp
+        .auth()
+        .updateUser(userAuth.uid, {
+          email: newEmail,
+          emailVerified: false,
+        });
+
+      await firestore
+        .collection('users')
+        .doc(userAuth.uid)
+        .update({
+          email: newEmail,
+        });
+
+      return {
+        success: true,
+        uid: userAuth.uid,
+      };
+
+    } catch (error) {
+      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
+        'while creating your account. Please try again or contact us if the problem persists".');
+    }
   });
 
 
@@ -695,24 +704,29 @@ export const updateUsername = functions
         'is not available. Please try with a new one.');
     }
 
-    await adminApp
-      .auth()
-      .updateUser(userAuth.uid, {
-        displayName: newUsername,
-      });
+    try {
+      await adminApp
+        .auth()
+        .updateUser(userAuth.uid, {
+          displayName: newUsername,
+        });
 
-    await firestore
-      .collection('users')
-      .doc(userAuth.uid)
-      .update({
-        name: newUsername,
-        nameLowerCase: newUsername.toLowerCase(),
-      });
+      await firestore
+        .collection('users')
+        .doc(userAuth.uid)
+        .update({
+          name: newUsername,
+          nameLowerCase: newUsername.toLowerCase(),
+        });
 
-    return {
-      success: true,
-      uid: userAuth.uid,
-    };
+      return {
+        success: true,
+        uid: userAuth.uid,
+      };
+    } catch (error) {
+      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
+        'while creating your account. Please try again or contact us if the problem persists".');
+    }
   });
 
 
