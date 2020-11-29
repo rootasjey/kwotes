@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/notifications_center.dart';
@@ -167,7 +168,18 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: PageTransitionSwitcher(
+        transitionBuilder: (
+          Widget child,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
         child: _listScreens.elementAt(selectedIndex),
       ),
       bottomNavigationBar: SnakeNavigationBar.color(
