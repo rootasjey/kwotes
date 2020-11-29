@@ -153,7 +153,7 @@ export const onQuoteAdded = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}/lists/{listId}/quotes/{quoteId}')
-  .onCreate(async (snapshot, context) => {
+  .onCreate(async ({}, context) => {
     const { userId, listId } = context.params;
 
     const listSnapshot = await firestore
@@ -185,7 +185,7 @@ export const onQuoteDeleted = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}/lists/{listId}/quotes/{quoteId}')
-  .onDelete(async (snapshot, context) => {
+  .onDelete(async ({}, context) => {
     const { userId, listId } = context.params;
 
     const listSnapshot = await firestore

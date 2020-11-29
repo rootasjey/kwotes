@@ -325,7 +325,7 @@ function checkCreateAccountData(data: any) {
 export const deleteAccount = functions
   .region('europe-west3')
   .https
-  .onCall(async (data, context) => {
+  .onCall(async ({}, context) => {
     const userAuth = context.auth;
 
     if (!userAuth) {
