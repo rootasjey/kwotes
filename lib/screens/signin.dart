@@ -255,7 +255,7 @@ class _SigninState extends State<Signin> {
               onChanged: (value) {
                 password = value;
               },
-              onFieldSubmitted: (value) => signIn(),
+              onFieldSubmitted: (value) => signInProcess(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Password login cannot be empty';
@@ -277,7 +277,7 @@ class _SigninState extends State<Signin> {
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: RaisedButton(
-          onPressed: () => signIn(),
+          onPressed: () => signInProcess(),
           color: stateColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -319,7 +319,7 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = FirebaseAuth.instance.currentUser;
 
       setState(() {
         isCheckingAuth = false;
@@ -360,7 +360,7 @@ class _SigninState extends State<Signin> {
     return true;
   }
 
-  void signIn() async {
+  void signInProcess() async {
     if (!inputValuesOk()) {
       return;
     }
@@ -370,8 +370,10 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final authResult = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      final authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       if (authResult.user == null) {
         showSnack(
