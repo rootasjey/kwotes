@@ -21,30 +21,8 @@ export const checkEmailAvailability = functions
         'a valid email address.');
     }
 
-    let isAvailable = true;
-
-    const emailSnap = await firestore
-      .collection('users')
-      .where('email', '==', email)
-      .limit(1)
-      .get();
-
-    isAvailable = emailSnap.empty;
-
-    try {
-      const userRecord = await adminApp
-        .auth()
-        .getUserByEmail(email);
-
-      if (userRecord) {
-        isAvailable = false;
-      }
-
-      isAvailable = true;
-
-    } catch (error) {
-      isAvailable = true;
-    }
+    const exists = await isUserByEmailExists(email);
+    const isAvailable = !exists;
 
     return {
       email,
@@ -116,7 +94,7 @@ export const createAccount = functions
         pricing: 'free',
         quota: {
           current: 0,
-          date: Date.now(),
+          date: new Date(),
           limit: 1,
         },
         rights: {
@@ -206,15 +184,16 @@ function checkCreateAccountData(data: any) {
 export const deleteAccount = functions
   .region('europe-west3')
   .https
-  .onCall(async ({}, context) => {
+  .onCall(async (data: DeleteAccountParams, context) => {
     const userAuth = context.auth;
+    const { idToken } = data;
 
     if (!userAuth) {
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
         'an authenticated user.');
     }
 
-    await checkUserIsSignedIn(context);
+    await checkUserIsSignedIn(context, idToken);
 
     try {
       const userSnapshot = await firestore
@@ -392,16 +371,16 @@ export const updateEmail = functions
   .https
   .onCall(async (data: UpdateEmailParams, context) => {
     const userAuth = context.auth;
+    const { idToken, newEmail } = data;
 
     if (!userAuth) {
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
         'an authenticated user.');
     }
 
-    await checkUserIsSignedIn(context);
+    await checkUserIsSignedIn(context, idToken);
 
 
-    const { newEmail } = data;
     const isFormatOk = validateEmailFormat(newEmail);
 
     if (!newEmail || !isFormatOk) {
@@ -418,7 +397,6 @@ export const updateEmail = functions
 
 
     try {
-
       await adminApp
         .auth()
         .updateUser(userAuth.uid, {
@@ -435,7 +413,7 @@ export const updateEmail = functions
 
       return {
         success: true,
-        uid: userAuth.uid,
+        user: { id: userAuth.uid },
       };
 
     } catch (error) {
@@ -459,8 +437,6 @@ export const updateUsername = functions
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
       'an authenticated user.');
     }
-
-    await checkUserIsSignedIn(context);
 
     const { newUsername } = data;
     const isFormatOk = validateNameFormat(newUsername);
@@ -494,7 +470,7 @@ export const updateUsername = functions
 
       return {
         success: true,
-        uid: userAuth.uid,
+        user: { id: userAuth.uid },
       };
     } catch (error) {
       throw new functions.https.HttpsError('internal', 'There was an internal error ' +

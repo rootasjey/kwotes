@@ -12,6 +12,15 @@ interface DataUpdateParams {
   docId: string;
 }
 
+interface DeleteAccountParams {
+  idToken: string;
+}
+
+interface DeleteListParams {
+  listId: string;
+  idToken: string;
+}
+
 interface NotifFuncParams {
   userId: string;
   userData: any;
@@ -20,6 +29,7 @@ interface NotifFuncParams {
 
 interface UpdateEmailParams {
   newEmail: string;
+  idToken: string;
 }
 
 interface UpdateUsernameParams {

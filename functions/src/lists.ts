@@ -12,17 +12,17 @@ const firestore = adminApp.firestore();
 export const deleteList = functions
   .region('europe-west3')
   .https
-  .onCall(async (data, context) => {
+  .onCall(async (data: DeleteListParams, context) => {
     const userAuth = context.auth;
+    const { listId, idToken } = data;
 
     if (!userAuth) {
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
         'an authenticated user.');
     }
 
-    await checkUserIsSignedIn(context);
-    
-    const listId: string = data.listId;
+    await checkUserIsSignedIn(context, idToken);
+  
 
     if (!listId) {
       throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +

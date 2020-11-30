@@ -3,7 +3,10 @@ import { adminApp } from './adminApp';
 
 const env = functions.config();
 
-export async function checkUserIsSignedIn(context: functions.https.CallableContext) {
+export async function checkUserIsSignedIn(
+  context: functions.https.CallableContext, 
+  idToken: string,
+) {
   const userAuth = context.auth;
   const instanceIdToken = context.instanceIdToken;
 
@@ -17,7 +20,7 @@ export async function checkUserIsSignedIn(context: functions.https.CallableConte
   try {
     await adminApp
       .auth()
-      .verifyIdToken(instanceIdToken, true);
+      .verifyIdToken(idToken, true);
 
     isTokenValid = true;
 
