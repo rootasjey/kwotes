@@ -1,6 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/utils/push_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -85,36 +84,15 @@ class AppState extends State<App> {
 
   void autoLogin() async {
     try {
-      final credentials = appStorage.getCredentials();
+      final userCred = await userSignin();
 
-      if (credentials == null) {
-        return;
+      if (userCred == null) {
+        userSignOut(context: context, autoNavigateAfter: false);
+        PushNotifications.unlinkAuthUser();
       }
-
-      final email = credentials['email'];
-      final password = credentials['password'];
-
-      if ((email == null || email.isEmpty) ||
-          (password == null || password.isEmpty)) {
-        return;
-      }
-
-      final authResult = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-
-      if (authResult.user == null) {
-        return;
-      }
-
-      appStorage.setUserName(authResult.user.displayName);
-      await userGetAndSetAvatarUrl(authResult);
-      PushNotifications.linkAuthUser(authResult.user.uid);
-
-      userState.setUserConnected();
-      userState.setUserName(authResult.user.displayName);
     } catch (error) {
       debugPrint(error.toString());
-      userSignOut(context: context);
+      userSignOut(context: context, autoNavigateAfter: false);
       PushNotifications.unlinkAuthUser();
     }
   }

@@ -170,6 +170,9 @@ Future<UpdateEmailResp> updateEmail(String email, String idToken) async {
       'idToken': idToken,
     });
 
+    appStorage.setEmail(email);
+    await userSignin();
+
     return UpdateEmailResp.fromJSON(response.data);
   } on PlatformException catch (exception) {
     debugPrint(exception.toString());
@@ -228,6 +231,36 @@ Future<UpdateEmailResp> updateUsername(String newUsername) async {
       ),
     );
   }
+}
+
+Future<UserCredential> userSignin({String email, String password}) async {
+  final credentials = appStorage.getCredentials();
+
+  email = email == null ? credentials['email'] : email;
+  password = password == null ? credentials['password'] : password;
+
+  if ((email == null || email.isEmpty) ||
+      (password == null || password.isEmpty)) {
+    return null;
+  }
+
+  final userCred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: email,
+    password: password,
+  );
+
+  if (userCred.user == null) {
+    return null;
+  }
+
+  appStorage.setUserName(userCred.user.displayName);
+  await userGetAndSetAvatarUrl(userCred);
+  PushNotifications.linkAuthUser(userCred.user.uid);
+
+  userState.setUserConnected();
+  userState.setUserName(userCred.user.displayName);
+
+  return userCred;
 }
 
 void userSignOut({

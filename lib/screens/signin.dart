@@ -1,5 +1,4 @@
 import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
@@ -376,12 +375,9 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final userCred = await userSignin(email: email, password: password);
 
-      if (authResult.user == null) {
+      if (userCred == null) {
         showSnack(
           context: context,
           type: SnackType.error,
@@ -396,14 +392,8 @@ class _SigninState extends State<Signin> {
         password: password,
       );
 
-      userState.setUserConnected();
-
       isSigningIn = false;
       isCompleted = true;
-
-      await userGetAndSetAvatarUrl(authResult);
-
-      PushNotifications.linkAuthUser(authResult.user.uid);
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
