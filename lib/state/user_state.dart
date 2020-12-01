@@ -112,9 +112,10 @@ abstract class UserStateBase with Store {
   }
 
   @action
-  void signOut() {
+  Future signOut() async {
     _userAuth = null;
-    isUserConnected = false;
+    await FirebaseAuth.instance.signOut();
+    setUserDisconnected();
   }
 
   @action

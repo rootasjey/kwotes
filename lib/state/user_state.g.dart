@@ -111,6 +111,13 @@ mixin _$UserState on UserStateBase, Store {
     }, _$updatedFavAtAtom, name: '${_$updatedFavAtAtom.name}_set');
   }
 
+  final _$signOutAsyncAction = AsyncAction('signOut');
+
+  @override
+  Future<dynamic> signOut() {
+    return _$signOutAsyncAction.run(() => super.signOut());
+  }
+
   final _$UserStateBaseActionController =
       ActionController(name: 'UserStateBase');
 
@@ -169,16 +176,6 @@ mixin _$UserState on UserStateBase, Store {
     final _$actionInfo = _$UserStateBaseActionController.startAction();
     try {
       return super.setUserName(name);
-    } finally {
-      _$UserStateBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void signOut() {
-    final _$actionInfo = _$UserStateBaseActionController.startAction();
-    try {
-      return super.signOut();
     } finally {
       _$UserStateBaseActionController.endAction(_$actionInfo);
     }
