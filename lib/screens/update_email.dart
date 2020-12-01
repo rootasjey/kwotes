@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +27,8 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
   final beginY = 10.0;
   final passwordNode = FocusNode();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   String currentEmail = '';
   String email = '';
@@ -243,6 +244,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         children: <Widget>[
           TextFormField(
             autofocus: true,
+            controller: emailController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => passwordNode.requestFocus(),
             decoration: InputDecoration(
@@ -341,6 +343,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         children: <Widget>[
           TextFormField(
             focusNode: passwordNode,
+            controller: passwordController,
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline),
               labelText: 'Password',
@@ -349,7 +352,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
             onChanged: (value) {
               password = value;
             },
-            onFieldSubmitted: (value) => updateEmail(),
+            onFieldSubmitted: (value) => updateEmailProcess(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password login cannot be empty';
@@ -389,7 +392,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
   Widget validationButton() {
     return OutlinedButton.icon(
-      onPressed: () => updateEmail(),
+      onPressed: () => updateEmailProcess(),
       style: OutlinedButton.styleFrom(
         primary: stateColors.primary,
       ),
@@ -439,7 +442,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     }
   }
 
-  void updateEmail() async {
+  void updateEmailProcess() async {
     if (!inputValuesOk()) {
       return;
     }
@@ -484,17 +487,26 @@ class _UpdateEmailState extends State<UpdateEmail> {
         password: password,
       );
 
-      final authResult =
-          await userAuth.reauthenticateWithCredential(credentials);
+      await userAuth.reauthenticateWithCredential(credentials);
+      final idToken = await userAuth.getIdToken();
 
-      await authResult.user.updateEmail(email);
+      final respUpdateEmail = await updateEmail(email, idToken);
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(authResult.user.uid)
-          .update({
-        'email': email,
-      });
+      if (!respUpdateEmail.success) {
+        final exception = respUpdateEmail.error;
+
+        setState(() {
+          isUpdating = false;
+        });
+
+        showSnack(
+          context: context,
+          message: "[code: ${exception.code}] - ${exception.message}",
+          type: SnackType.error,
+        );
+
+        return;
+      }
 
       userState.clearAuthCache();
 
@@ -509,11 +521,12 @@ class _UpdateEmailState extends State<UpdateEmail> {
         isUpdating = false;
       });
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(
-            'Error while updating your email. Please try again or contact us.'),
-      ));
+      showSnack(
+        context: context,
+        message:
+            "Error while updating your email. Please try again later or contact us.",
+        type: SnackType.error,
+      );
     }
   }
 
