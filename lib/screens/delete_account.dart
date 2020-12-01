@@ -112,7 +112,7 @@ class DeleteAccountState extends State<DeleteAccount> {
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
               child: Icon(
-                Icons.check_circle_outline_outlined,
+                Icons.check,
                 color: Colors.green.shade300,
                 size: 80.0,
               ),
@@ -147,7 +147,7 @@ class DeleteAccountState extends State<DeleteAccount> {
               padding: const EdgeInsets.only(
                 top: 45.0,
               ),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => Home()));
@@ -463,7 +463,7 @@ class DeleteAccountState extends State<DeleteAccount> {
         return;
       }
 
-      userState.signOut();
+      await userState.signOut();
       userState.setUserName('');
       appStorage.clearUserAuthData();
 
