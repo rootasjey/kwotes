@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -415,7 +414,7 @@ class _SignupState extends State<Signup> {
                 }
                 confirmPassword = value;
               },
-              onFieldSubmitted: (value) => createAccount(),
+              onFieldSubmitted: (value) => signUpProcess(),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Confirm password cannot be empty';
@@ -442,7 +441,7 @@ class _SignupState extends State<Signup> {
         child: Padding(
           padding: const EdgeInsets.only(top: 60.0),
           child: RaisedButton(
-            onPressed: () => createAccount(),
+            onPressed: () => signUpProcess(),
             color: stateColors.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -524,7 +523,7 @@ class _SignupState extends State<Signup> {
     }
   }
 
-  void createAccount() async {
+  void signUpProcess() async {
     if (!inputValuesOk()) {
       return;
     }
@@ -547,68 +546,40 @@ class _SignupState extends State<Signup> {
       return;
     }
 
+    // ?NOTE: Triming because of TAB key on Desktop insert blank spaces.
+    email = email.trim();
+    password = password.trim();
+
     try {
-      // ?NOTE: Triming because of TAB key on Desktop.
-      final result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
+      final respCreateAcc = await createAccount(
+        email: email,
+        username: username,
+        password: password,
       );
 
-      final user = result.user;
+      if (!respCreateAcc.success) {
+        final exception = respCreateAcc.error;
 
-      if (user == null) {
         setState(() {
           isSigningUp = false;
         });
 
         showSnack(
           context: context,
-          message:
-              'An occurred while creating your account. Please try again or contact us if the problem persists.',
+          message: "[code: ${exception.code}] - ${exception.message}",
           type: SnackType.error,
         );
 
         return;
       }
 
-      final name = username.isNotEmpty
-          ? username
-          : email.substring(0, email.indexOf('@'));
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      await user.updateProfile(displayName: name);
-
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'email': user.email,
-        'flag': '',
-        'lang': 'en',
-        'name': name,
-        'nameLowerCase': name,
-        'pricing': 'free',
-        'quota': {
-          'current': 0,
-          'date': DateTime.now(),
-          'limit': 1,
-        },
-        'rights': {
-          'user:managedata': false,
-          'user:manageauthor': false,
-          'user:managequote': false,
-          'user:managequotidian': false,
-          'user:managereference': false,
-          'user:proposequote': true,
-          'user:readquote': true,
-          'user:validatequote': false,
-        },
-        'stats': {
-          'favourites': 0,
-          'lists': 0,
-          'proposed': 0,
-        },
-        'urls': {
-          'image': 'local:user',
-        },
-        'uid': user.uid,
-      });
+      isSigningUp = false;
+      isCompleted = true;
 
       appStorage.setCredentials(
         email: email,
@@ -616,14 +587,13 @@ class _SignupState extends State<Signup> {
       );
 
       userState.setUserConnected();
+      PushNotifications.linkAuthUser(respCreateAcc.user.id);
 
-      isSigningUp = false;
-      isCompleted = true;
-
-      PushNotifications.linkAuthUser(user.uid);
-
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => Home()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => Home(),
+        ),
+      );
     } catch (error) {
       debugPrint(error.toString());
 
@@ -633,8 +603,8 @@ class _SignupState extends State<Signup> {
 
       showSnack(
         context: context,
-        message:
-            'An occurred while creating your account. Please try again or contact us if the problem persists.',
+        message: "An occurred while creating your account. " +
+            "Please try again or contact us if the problem persists.",
         type: SnackType.error,
       );
     }
