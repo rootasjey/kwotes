@@ -6,6 +6,7 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/screens/update_username.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/brightness.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/screens/delete_account.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/update_email.dart';
 import 'package:figstyle/screens/update_password.dart';
 import 'package:figstyle/state/colors.dart';
@@ -89,7 +89,7 @@ class _SettingsState extends State<Settings> {
   Widget appBar() {
     final width = MediaQuery.of(context).size.width;
 
-    if (width < 700.0) {
+    if (width < Constants.maxMobileWidth) {
       return PageAppBar(
         textTitle: "Settings",
         textSubTitle: "You can change your preferences here",
@@ -370,18 +370,12 @@ class _SettingsState extends State<Settings> {
           child: Card(
             elevation: 4.0,
             child: InkWell(
-              onTap: () async {
-                await Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => DeleteAccount()));
-
-                if (!userState.isUserConnected) {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => Signin()));
-                }
-              },
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => DeleteAccount()),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: Icon(Icons.delete_forever),
+                child: Icon(Icons.delete_outline),
               ),
             ),
           ),
