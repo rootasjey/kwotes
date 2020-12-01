@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 /// Executed from main.dart
 class MainApp extends StatefulWidget {
@@ -52,10 +55,16 @@ class MainAppState extends State<MainApp> {
 
     if (!autoBrightness) {
       final brightness = appStorage.getBrightness();
-      setBrightness(context, brightness);
+      Timer(
+        250.milliseconds,
+        () => setBrightness(context, brightness),
+      );
       return;
     }
 
-    setAutoBrightness(context);
+    Timer(
+      250.milliseconds,
+      () => setAutoBrightness(context),
+    );
   }
 }
