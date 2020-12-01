@@ -40,8 +40,10 @@ class _SigninState extends State<Signin> {
 
   @override
   void dispose() {
-    super.dispose();
+    passwordController.dispose();
+    emailController.dispose();
     passwordNode.dispose();
+    super.dispose();
   }
 
   @override

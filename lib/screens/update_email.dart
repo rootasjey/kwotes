@@ -46,6 +46,8 @@ class _UpdateEmailState extends State<UpdateEmail> {
   @override
   void dispose() {
     passwordNode.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
