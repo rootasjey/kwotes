@@ -210,6 +210,7 @@ class _DashboardState extends State<Dashboard> {
           children.addAll(adminWidgets(context));
         }
       } else {
+        userSubscription?.cancel();
         children.add(whyAccountBlock());
         children.addAll(guestWidgets(context));
       }
@@ -310,8 +311,7 @@ class _DashboardState extends State<Dashboard> {
       textTitle: 'Sign out',
       onTap: () async {
         await appStorage.clearUserAuthData();
-        await FirebaseAuth.instance.signOut();
-        userState.signOut();
+        await userState.signOut();
 
         setState(() {
           canManage = false;
@@ -572,7 +572,7 @@ class _DashboardState extends State<Dashboard> {
 
   Future fetchUserData() async {
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = FirebaseAuth.instance.currentUser;
 
       if (userAuth == null) {
         return;
@@ -593,6 +593,10 @@ class _DashboardState extends State<Dashboard> {
       userSubscription = userSnapshot.reference.snapshots().listen(
         (documentSnapshot) {
           final data = documentSnapshot.data();
+          if (data == null) {
+            userSubscription.cancel();
+            return;
+          }
 
           setState(() {
             canManage = data['rights']['user:managequote'] ?? false;
