@@ -136,6 +136,7 @@ Future<UpdateEmailResp> deleteAccount(String idToken) async {
     return UpdateEmailResp.fromJSON(response.data);
   } on PlatformException catch (exception) {
     debugPrint(exception.toString());
+
     return UpdateEmailResp(
       success: false,
       error: CloudFuncError(
@@ -268,9 +269,7 @@ void userSignOut({
   bool autoNavigateAfter = true,
 }) async {
   await appStorage.clearUserAuthData();
-  await FirebaseAuth.instance.signOut();
-  userState.setUserDisconnected();
-  userState.signOut();
+  await userState.signOut();
 
   PushNotifications.unlinkAuthUser();
 
