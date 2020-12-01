@@ -128,7 +128,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Icon(
-                  Icons.check_circle_outline_outlined,
+                  Icons.check,
                   size: 80.0,
                   color: Colors.green,
                 ),
