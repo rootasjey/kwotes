@@ -29,6 +29,8 @@ class _SigninState extends State<Signin> {
   bool isSigningIn = false;
 
   final passwordNode = FocusNode();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -108,6 +110,7 @@ class _SigninState extends State<Signin> {
           children: <Widget>[
             TextFormField(
               autofocus: true,
+              controller: emailController,
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 icon: Icon(Icons.email),
@@ -142,7 +145,7 @@ class _SigninState extends State<Signin> {
                 .push(MaterialPageRoute(builder: (_) => ForgotPassword()));
           },
           child: Opacity(
-            opacity: .6,
+            opacity: 0.6,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -247,6 +250,7 @@ class _SigninState extends State<Signin> {
           children: <Widget>[
             TextFormField(
               focusNode: passwordNode,
+              controller: passwordController,
               decoration: InputDecoration(
                 icon: Icon(Icons.lock_outline),
                 labelText: 'Password',
@@ -414,6 +418,8 @@ class _SigninState extends State<Signin> {
       );
 
       setState(() {
+        emailController.text = email;
+        passwordController.text = password;
         isSigningIn = false;
       });
     }
