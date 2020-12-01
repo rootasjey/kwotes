@@ -1,5 +1,6 @@
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -70,7 +71,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               Padding(
                 padding: const EdgeInsets.only(top: 80.0),
                 child: Icon(
-                  Icons.check_circle_outline_outlined,
+                  Icons.check,
+                  color: stateColors.validation,
                   size: 80.0,
                 ),
               ),
@@ -367,6 +369,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
           await userAuth.reauthenticateWithCredential(credentials);
 
       await authResult.user.updatePassword(newPassword);
+      appStorage.setPassword(newPassword);
 
       setState(() {
         isUpdating = false;
