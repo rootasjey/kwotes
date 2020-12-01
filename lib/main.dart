@@ -114,7 +114,8 @@ class AppState extends State<App> {
       userState.setUserName(authResult.user.displayName);
     } catch (error) {
       debugPrint(error.toString());
-      appStorage.clearUserAuthData();
+      userSignOut(context: context);
+      PushNotifications.unlinkAuthUser();
     }
   }
 }
