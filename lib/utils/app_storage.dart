@@ -97,6 +97,10 @@ class AppStorage {
     _localStorage.setString(StorageKeys.password, password);
   }
 
+  void setEmail(String email) {
+    _localStorage.setString(StorageKeys.email, email);
+  }
+
   void setLang(String lang) => _localStorage.setString('lang', lang);
 
   void setQuotidianNotif(bool active) {
