@@ -31,11 +31,11 @@ class _UpdateUsernameState extends State<UpdateUsername> {
 
   final beginY = 10.0;
   final passwordNode = FocusNode();
+  final usernameController = TextEditingController();
 
   String currentUsername = '';
   String nameErrorMessage = '';
   String newUserName = '';
-  String password = '';
 
   Timer nameTimer;
 
@@ -49,6 +49,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
 
   @override
   void dispose() {
+    usernameController.dispose();
     passwordNode.dispose();
     super.dispose();
   }
@@ -271,6 +272,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         children: <Widget>[
           TextFormField(
             autofocus: true,
+            controller: usernameController,
             decoration: InputDecoration(
               icon: Icon(Icons.person_outline),
               labelText: "New username",
@@ -343,7 +345,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
 
   Widget validationButton() {
     return OutlinedButton.icon(
-      onPressed: () => updateUsername(),
+      onPressed: () => updateUsernameProcess(),
       style: OutlinedButton.styleFrom(
         primary: stateColors.primary,
       ),
@@ -405,12 +407,15 @@ class _UpdateUsernameState extends State<UpdateUsername> {
   }
 
   bool inputValuesOk() {
-    if (password.isEmpty) {
-      showSnack(
-        context: context,
-        message: "Username input cannot be empty.",
-        type: SnackType.error,
-      );
+    final isWellFormatted = checkUsernameFormat(newUserName);
+
+    if (!isWellFormatted) {
+      setState(() {
+        isCheckingName = false;
+        nameErrorMessage = newUserName.length < 3
+            ? 'Please use at least 3 characters'
+            : 'Please use alpha-numerical (A-Z, 0-9) characters and underscore (_)';
+      });
 
       return false;
     }
@@ -418,7 +423,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
     return true;
   }
 
-  void updateUsername() async {
+  void updateUsernameProcess() async {
     if (!inputValuesOk()) {
       return;
     }
@@ -445,14 +450,32 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       }
 
       final userAuth = await userState.userAuth;
+
       if (userAuth == null) {
-        throw Error();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => Signin()),
+        );
+
+        return;
       }
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .update({'name': newUserName});
+      final usernameUpdateResp = await updateUsername(newUserName);
+
+      if (!usernameUpdateResp.success) {
+        final exception = usernameUpdateResp.error;
+
+        setState(() {
+          isLoadingName = false;
+        });
+
+        showSnack(
+          context: context,
+          message: "[code: ${exception.code}] - ${exception.message}",
+          type: SnackType.error,
+        );
+
+        return;
+      }
 
       setState(() {
         isLoadingName = false;
@@ -467,12 +490,12 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         message: 'Your username has been successfully updated.',
         type: SnackType.success,
       );
+
+      Navigator.of(context).pop();
     } catch (error) {
       debugPrint(error.toString());
 
-      setState(() {
-        isLoadingName = false;
-      });
+      setState(() => isLoadingName = false);
 
       showSnack(
         context: context,
