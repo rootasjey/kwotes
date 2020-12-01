@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
@@ -252,7 +252,7 @@ class DeleteAccountState extends State<DeleteAccount> {
             onChanged: (value) {
               password = value;
             },
-            onFieldSubmitted: (value) => deleteAccount(),
+            onFieldSubmitted: (value) => deleteAccountProcess(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password login cannot be empty';
@@ -280,7 +280,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   Widget validationButton() {
     return OutlinedButton(
-      onPressed: () => deleteAccount(),
+      onPressed: () => deleteAccountProcess(),
       style: OutlinedButton.styleFrom(
         primary: Colors.red,
       ),
@@ -415,22 +415,18 @@ class DeleteAccountState extends State<DeleteAccount> {
     }
   }
 
-  void deleteAccount() async {
+  void deleteAccountProcess() async {
     if (!inputValuesOk()) {
       return;
     }
 
-    setState(() {
-      isDeleting = true;
-    });
+    setState(() => isDeleting = true);
 
     try {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
-        setState(() {
-          isDeleting = false;
-        });
+        setState(() => isDeleting = false);
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -447,13 +443,25 @@ class DeleteAccountState extends State<DeleteAccount> {
       );
 
       await userAuth.reauthenticateWithCredential(credentials);
+      final idToken = await userAuth.getIdToken();
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .update({'flag': 'delete'});
+      final respDelAcc = await deleteAccount(idToken);
 
-      await userAuth.delete();
+      if (!respDelAcc.success) {
+        final exception = respDelAcc.error;
+
+        setState(() {
+          isDeleting = false;
+        });
+
+        showSnack(
+          context: context,
+          message: "[code: ${exception.code}] - ${exception.message}",
+          type: SnackType.error,
+        );
+
+        return;
+      }
 
       userState.signOut();
       userState.setUserName('');
