@@ -418,8 +418,6 @@ class _SigninState extends State<Signin> {
       );
 
       setState(() {
-        emailController.text = email;
-        passwordController.text = password;
         isSigningIn = false;
       });
     }
