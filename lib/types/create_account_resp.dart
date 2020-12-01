@@ -14,11 +14,15 @@ class CreateAccountResp {
     this.user,
   });
 
-  factory CreateAccountResp.fromJSON(Map<String, dynamic> data) {
+  factory CreateAccountResp.fromJSON(Map<dynamic, dynamic> data) {
     return CreateAccountResp(
-      success: data['success'],
-      user: data['user'],
-      error: CloudFuncError.fromJSON(data['error']),
+      success: data['success'] ?? true,
+      user: data['user'] != null
+          ? PartialUser.fromJSON(data['user'])
+          : PartialUser(),
+      error: data['error'] != null
+          ? CloudFuncError.fromJSON(data['error'])
+          : CloudFuncError(),
     );
   }
 }

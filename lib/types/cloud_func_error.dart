@@ -9,7 +9,7 @@ class CloudFuncError {
     this.details = '',
   });
 
-  factory CloudFuncError.fromJSON(Map<String, dynamic> data) {
+  factory CloudFuncError.fromJSON(Map<dynamic, dynamic> data) {
     return CloudFuncError(
       message: data['message'],
       code: data['code'],
