@@ -59,7 +59,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
           PageAppBar(
             textTitle: 'Update email',
             textSubTitle: 'If your email is outdated',
-            expandedHeight: 170.0,
+            expandedHeight: 90.0,
             showNavBackIcon: true,
           ),
           body(),
@@ -81,39 +81,42 @@ class _UpdateEmailState extends State<UpdateEmail> {
   }
 
   Widget idleView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        SizedBox(
-          width: 400.0,
-          child: Column(
-            children: <Widget>[
-              FadeInY(
-                delay: 0.0,
-                beginY: beginY,
-                child: currentEmailCard(),
-              ),
-              FadeInY(
-                delay: 0.1,
-                beginY: beginY,
-                child: emailInput(),
-              ),
-              FadeInY(
-                delay: 0.2,
-                beginY: beginY,
-                child: passwordInput(),
-              ),
-              FadeInY(
-                delay: 0.3,
-                beginY: beginY,
-                child: validationButton(),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 200.0),
-              ),
-            ],
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 60.0),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          SizedBox(
+            width: 400.0,
+            child: Column(
+              children: <Widget>[
+                FadeInY(
+                  delay: 0.0,
+                  beginY: beginY,
+                  child: currentEmailCard(),
+                ),
+                FadeInY(
+                  delay: 0.1,
+                  beginY: beginY,
+                  child: emailInput(),
+                ),
+                FadeInY(
+                  delay: 0.2,
+                  beginY: beginY,
+                  child: passwordInput(),
+                ),
+                FadeInY(
+                  delay: 0.3,
+                  beginY: beginY,
+                  child: validationButton(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 200.0),
+                ),
+              ],
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 
