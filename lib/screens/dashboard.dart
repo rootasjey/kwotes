@@ -83,7 +83,6 @@ class _DashboardState extends State<Dashboard> {
           icon: Icon(Icons.add),
           onPressed: () {
             DataQuoteInputs.clearAll();
-            DataQuoteInputs.navigatedFromPath = 'dashboard';
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
           },

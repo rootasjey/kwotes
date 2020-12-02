@@ -188,7 +188,6 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
             child: RaisedButton(
               onPressed: () {
                 DataQuoteInputs.clearAll();
-                DataQuoteInputs.navigatedFromPath = 'dashboard';
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
               },

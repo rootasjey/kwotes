@@ -17,10 +17,6 @@ class DataQuoteInputs {
   /// True if the quote which is being is edited
   static bool isOfflineDraft = false;
 
-  /// Navigated to new quote page
-  /// from Dashboard or Admin temp quote?
-  static String navigatedFromPath = '';
-
   /// Quote's id is not empty if this is an edit.
   static Quote quote = Quote.empty();
 

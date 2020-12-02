@@ -151,7 +151,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       tooltip: "New quote",
       onPressed: () {
         DataQuoteInputs.clearAll();
-        DataQuoteInputs.navigatedFromPath = 'dashboard';
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
       },

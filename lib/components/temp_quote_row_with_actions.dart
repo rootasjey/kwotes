@@ -206,7 +206,6 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   }
 
   void editAction(TempQuote tempQuote) async {
-    DataQuoteInputs.navigatedFromPath = 'admintempquotes';
     DataQuoteInputs.populateWithTempQuote(tempQuote);
 
     await Navigator.of(context)
@@ -218,7 +217,6 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   }
 
   void copyFromAction(TempQuote tempQuote) async {
-    DataQuoteInputs.navigatedFromPath = 'admintempquotes';
     DataQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
 
     Navigator.of(context)
