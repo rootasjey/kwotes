@@ -17,6 +17,7 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/animation.dart';
+import 'package:like_button/like_button.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
@@ -245,19 +246,24 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget favIconButton() {
     if (userState.isUserConnected) {
-      return IconButton(
-        onPressed: () async {
+      return LikeButton(
+        isLiked: quote.starred,
+        likeBuilder: (bool isLiked) {
+          return Icon(
+            isLiked ? Icons.favorite : Icons.favorite_border,
+          );
+        },
+        onTap: (bool isLiked) async {
           userState.mustUpdateFav = true;
 
           if (quote.starred) {
-            removeQuoteFromFav();
-            return;
+            final success = await unlikeQuote();
+            return success ? !isLiked : null;
           }
 
-          likeQuote();
+          final success = await likeQuote();
+          return success ? !isLiked : null;
         },
-        icon:
-            quote.starred ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
       );
     }
 
@@ -399,23 +405,6 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
-  void likeQuote() async {
-    setState(() {
-      quote.starred = true;
-    });
-
-    final result = await addToFavourites(
-      context: context,
-      quote: quote,
-    );
-
-    if (!result) {
-      setState(() {
-        quote.starred = false;
-      });
-    }
-  }
-
   void fetchTopics() async {
     final _topicsColors = <TopicColor>[];
 
@@ -483,6 +472,15 @@ class _QuotePageState extends State<QuotePage> {
 
       quote.starred = isFav;
     }
+  }
+
+  Future<bool> likeQuote() async {
+    final success = await addToFavourites(
+      context: context,
+      quote: quote,
+    );
+
+    return success;
   }
 
   Future onTapAuthor() {
@@ -567,21 +565,12 @@ class _QuotePageState extends State<QuotePage> {
             ));
   }
 
-  void removeQuoteFromFav() async {
-    setState(() {
-      // Optimistic result
-      quote.starred = false;
-    });
-
-    final result = await removeFromFavourites(
+  Future<bool> unlikeQuote() async {
+    final success = await removeFromFavourites(
       context: context,
       quote: quote,
     );
 
-    if (!result) {
-      setState(() {
-        quote.starred = true;
-      });
-    }
+    return success;
   }
 }
