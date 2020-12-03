@@ -1,5 +1,5 @@
 <p align="middle">
-  <img src="./assets/images/app-icon-512.png" title="fig.style icon" width="200"/>
+  <img src="./assets/images/app-icon-512.png" title="fig.style icon" width="400"/>
 </p>
 
 <p align="middle">5 seconds of emotion</p>
@@ -10,11 +10,11 @@
 
 # Status
 
-![Website](https://img.shields.io/website?down_color=lightgrey&down_message=offline&style=for-the-badge&up_color=blue&up_message=online&url=https%3A%2F%2Fwww.outofcontext.app)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/outofcontextapp/app?style=for-the-badge)
-![GitHub Release Date](https://img.shields.io/github/release-date/outofcontextapp/app?style=for-the-badge)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/outofcontextapp/app/latest?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/outofcontextapp/app?style=for-the-badge)
+![Website](https://img.shields.io/website?down_color=lightgrey&down_message=offline&style=for-the-badge&up_color=blue&up_message=online&url=https%3A%2F%2Ffig.style)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/rootasjey/fig.style?style=for-the-badge)
+![GitHub Release Date](https://img.shields.io/github/release-date/rootasjey/fig.style?style=for-the-badge)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/rootasjey/fig.style/latest?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/rootasjey/fig.style?style=for-the-badge)
 
 # Download
 
@@ -31,7 +31,7 @@
 </span>
 
 <span>
-  <a href="https://www.outofcontext.app">
+  <a href="https://fig.style">
     <img src="./screenshots/web_badge.png" title="Web" width="200"/>
   </a>
 </span>
