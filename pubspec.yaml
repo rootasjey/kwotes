@@ -50,6 +50,7 @@ dependencies:
   google_fonts: 1.1.0
   introduction_screen: 1.0.9
   jiffy: 3.0.1
+  like_button: 1.0.4
   mobx: 1.0.2
   mobx_codegen: 1.0.2
   modal_bottom_sheet: 0.2.2
