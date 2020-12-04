@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:figstyle/screens/on_boarding.dart';
 import 'package:figstyle/state/user_state.dart';
@@ -75,6 +76,13 @@ class _HomeState extends State<Home> {
   Widget homeView(BoxConstraints constraints) {
     if (constraints.maxWidth < Constants.maxMobileWidth ||
         constraints.maxHeight < Constants.maxMobileWidth) {
+      return HomeMobile(
+        initialIndex: widget.mobileInitialIndex,
+      );
+    }
+
+    // Mostly for iPad
+    if (Platform.isIOS) {
       return HomeMobile(
         initialIndex: widget.mobileInitialIndex,
       );

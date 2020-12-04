@@ -84,9 +84,10 @@ class _QuotePageState extends State<QuotePage> {
             showUserMenu: false,
           ),
           SliverList(
-              delegate: SliverChildListDelegate.fixed([
-            body(),
-          ])),
+            delegate: SliverChildListDelegate.fixed([
+              body(),
+            ]),
+          ),
         ],
       ),
     );

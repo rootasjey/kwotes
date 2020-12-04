@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -62,16 +63,30 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         slivers: <Widget>[
           SliverPadding(
             padding: const EdgeInsets.only(top: 10.0),
-            sliver: PageAppBar(
-              textTitle: 'Update name',
-              textSubTitle: 'Want a more personalized name?',
-              expandedHeight: 170.0,
-              showCloseButton: true,
-            ),
+            sliver: appBar(),
           ),
           body(),
         ],
       ),
+    );
+  }
+
+  Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+    }
+
+    return PageAppBar(
+      textTitle: 'Update username',
+      textSubTitle: 'Want a more personalized name?',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
+      ),
+      expandedHeight: 90.0,
+      showCloseButton: true,
     );
   }
 
@@ -137,6 +152,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
   Widget currentUsernameCard() {
     return Padding(
       padding: const EdgeInsets.only(
+        top: 80.0,
         bottom: 40.0,
       ),
       child: Card(

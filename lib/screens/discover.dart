@@ -106,51 +106,69 @@ class _DiscoverState extends State<Discover> {
             )
           : null,
       body: RefreshIndicator(
-          onRefresh: () async {
-            await fetch();
-            return null;
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollNotif) {
-              // FAB visibility
-              if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-                setState(() {
-                  isFabVisible = false;
-                });
-              } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-                setState(() {
-                  isFabVisible = true;
-                });
-              }
+        onRefresh: () async {
+          await fetch();
+          return null;
+        },
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollNotif) {
+            // FAB visibility
+            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+              setState(() {
+                isFabVisible = false;
+              });
+            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+              setState(() {
+                isFabVisible = true;
+              });
+            }
 
-              if (scrollNotif.metrics.pixels <
-                  scrollNotif.metrics.maxScrollExtent) {
-                return false;
-              }
-
-              if (hasNext && !isLoadingMore) {
-                fetchMore();
-              }
-
+            if (scrollNotif.metrics.pixels <
+                scrollNotif.metrics.maxScrollExtent) {
               return false;
-            },
-            child: SafeArea(
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: <Widget>[
-                  appBar(),
-                  appBarType(),
-                  body(),
-                ],
-              ),
+            }
+
+            if (hasNext && !isLoadingMore) {
+              fetchMore();
+            }
+
+            return false;
+          },
+          child: SafeArea(
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                appBar(),
+                appBarType(),
+                body(),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
   Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
+
     return PageAppBar(
       textTitle: 'Discover',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
+        top: 24.0,
+      ),
+      bottomPadding: EdgeInsets.only(
+        left: bottomContentLeftPadding,
+        bottom: 10.0,
+      ),
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -192,13 +210,15 @@ class _DiscoverState extends State<Discover> {
 
   Widget appBarType() {
     final isReferencesSelected = discoverType == DiscoverType.references;
+    final width = MediaQuery.of(context).size.width;
+    double left = width < Constants.maxMobileWidth ? 16.0 : 86.0;
 
     return SliverPersistentHeader(
       pinned: true,
       delegate: PersistentHeader(
         color: persistentHeaderColor,
         child: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
+          padding: EdgeInsets.only(left: left),
           child: Wrap(
             spacing: 10.0,
             children: [
@@ -324,10 +344,13 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget gridViewAuthors() {
-    double childAspectRatio = 0.47;
+    final width = MediaQuery.of(context).size.width;
+    double childAspectRatio = 0.77;
+    double maxCrossAxisExtent = 250.0;
 
-    if (MediaQuery.of(context).size.width < 600.0) {
+    if (width < Constants.maxMobileWidth) {
       childAspectRatio = 0.67;
+      maxCrossAxisExtent = 200.0;
     }
 
     return SliverPadding(
@@ -337,7 +360,7 @@ class _DiscoverState extends State<Discover> {
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
+          maxCrossAxisExtent: maxCrossAxisExtent,
           childAspectRatio: childAspectRatio,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,
@@ -355,20 +378,32 @@ class _DiscoverState extends State<Discover> {
   }
 
   Widget gridViewReferences() {
-    double childAspectRatio = 0.47;
+    final width = MediaQuery.of(context).size.width;
+    double childAspectRatio = 0.76;
+    double maxCrossAxisExtent = 300.0;
 
-    if (MediaQuery.of(context).size.width < 600.0) {
+    double refCardHeight = 260.0;
+    double refCardWidth = 200.0;
+    double vertical = 100.0;
+    double horizontal = 40.0;
+
+    if (width < Constants.maxMobileWidth) {
+      vertical = 20.0;
+      horizontal = 20.0;
       childAspectRatio = 0.54;
+      maxCrossAxisExtent = 200.0;
+      refCardHeight = 200.0;
+      refCardWidth = 200.0;
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 40.0,
-        horizontal: 20.0,
+      padding: EdgeInsets.symmetric(
+        vertical: vertical,
+        horizontal: horizontal,
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
+          maxCrossAxisExtent: maxCrossAxisExtent,
           childAspectRatio: childAspectRatio,
           mainAxisSpacing: 20.0,
           crossAxisSpacing: 20.0,
@@ -378,8 +413,8 @@ class _DiscoverState extends State<Discover> {
             final reference = references[index];
 
             return ReferenceCard(
-              height: 200.0,
-              width: 140.0,
+              height: refCardHeight,
+              width: refCardWidth,
               id: reference.id,
               imageUrl: reference.urls.image,
               name: reference.name,

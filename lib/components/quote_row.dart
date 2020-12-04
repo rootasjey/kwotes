@@ -417,9 +417,8 @@ class _QuoteRowState extends State<QuoteRow> {
             controller: controller,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 120.0,
             ),
             borderRadius: const BorderRadius.all(
               Radius.circular(8.0),

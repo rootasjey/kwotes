@@ -102,35 +102,48 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget appBar() {
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 24.0),
-      sliver: PageAppBar(
-        textTitle: 'Lists',
-        textSubTitle: 'Thematic lists created by you',
-        expandedHeight: 100.0,
-        showNavBackIcon: true,
-        onTitlePressed: () {
-          scrollController.animateTo(
-            0,
-            duration: 250.milliseconds,
-            curve: Curves.easeIn,
-          );
-        },
-        descending: descending,
-        onDescendingChanged: (newDescending) {
-          if (descending == newDescending) {
-            return;
-          }
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
 
-          descending = newDescending;
-          fetch();
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
 
-          appStorage.setPageOrder(
-            descending: newDescending,
-            pageRoute: pageRoute,
-          );
-        },
+    return PageAppBar(
+      textTitle: 'Lists',
+      textSubTitle: 'Thematic lists created by you',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
       ),
+      bottomPadding: EdgeInsets.only(
+        left: bottomContentLeftPadding,
+        bottom: 10.0,
+      ),
+      expandedHeight: 100.0,
+      showNavBackIcon: true,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
+
+        descending = newDescending;
+        fetch();
+
+        appStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
     );
   }
 

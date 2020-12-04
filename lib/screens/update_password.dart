@@ -1,6 +1,7 @@
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -37,15 +38,31 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          PageAppBar(
-            textTitle: 'Update password',
-            textSubTitle: 'If your password is old or compromised',
-            expandedHeight: 170.0,
-            showNavBackIcon: true,
-          ),
+          appBar(),
           body(),
         ],
       ),
+    );
+  }
+
+  Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+    }
+
+    return PageAppBar(
+      textTitle: 'Update password',
+      textSubTitle: 'If your password is old or compromised',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
+      ),
+      bottomPadding: EdgeInsets.only(
+        bottom: 10.0,
+      ),
+      showNavBackIcon: true,
     );
   }
 
@@ -129,6 +146,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     return Container(
       padding: EdgeInsets.only(
         left: 25.0,
+        top: 80.0,
         right: 25.0,
         bottom: 40.0,
       ),

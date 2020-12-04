@@ -115,42 +115,55 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget appBar() {
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 24.0),
-      sliver: PageAppBar(
-        textTitle: 'Published',
-        textSubTitle: 'Quotes published by you',
-        expandedHeight: 120.0,
-        showNavBackIcon: true,
-        onTitlePressed: () {
-          scrollController.animateTo(
-            0,
-            duration: 250.milliseconds,
-            curve: Curves.easeIn,
-          );
-        },
-        lang: lang,
-        onLangChanged: (String newLang) {
-          lang = newLang;
-          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
-          fetch();
-        },
-        itemsLayout: itemsLayout,
-        onItemsLayoutSelected: (selectedLayout) {
-          if (selectedLayout == itemsLayout) {
-            return;
-          }
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
 
-          setState(() {
-            itemsLayout = selectedLayout;
-          });
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
 
-          appStorage.saveItemsStyle(
-            pageRoute: pageRoute,
-            style: selectedLayout,
-          );
-        },
+    return PageAppBar(
+      textTitle: 'Published',
+      textSubTitle: 'Quotes published by you',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
       ),
+      bottomPadding: EdgeInsets.only(
+        left: bottomContentLeftPadding,
+        bottom: 10.0,
+      ),
+      expandedHeight: 120.0,
+      showNavBackIcon: true,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+        fetch();
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
+
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
+
+        appStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 

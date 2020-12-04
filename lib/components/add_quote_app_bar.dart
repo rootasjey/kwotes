@@ -94,6 +94,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
               body: SingleChildScrollView(
                 controller: scrollController,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.all(padding),

@@ -27,6 +27,9 @@ class QuoteRowWithActions extends StatefulWidget {
   /// and deactivate popup menu button.
   final bool useSwipeActions;
 
+  /// If true, the popup menu will be displayed whatever [useSwipeActions] value.
+  final bool showPopupMenuButton;
+
   final Color color;
 
   final double cardWidth;
@@ -100,6 +103,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.quoteId,
     this.quotePageType = QuotePageType.published,
     this.showAuthor = false,
+    this.showPopupMenuButton = false,
     this.stackChildren = const [],
     this.leading,
     this.useSwipeActions = false,
@@ -128,6 +132,11 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       leadingActions = getLeadingActions();
       trailingActions = getTrailingActions();
     } else {
+      popupItems = getPopupItems();
+      itemBuilder = (BuildContext context) => popupItems;
+    }
+
+    if (widget.showPopupMenuButton && popupItems == null) {
       popupItems = getPopupItems();
       itemBuilder = (BuildContext context) => popupItems;
     }

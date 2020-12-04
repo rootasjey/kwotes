@@ -3,6 +3,7 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
@@ -100,91 +101,99 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget appBar() {
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 24.0),
-      sliver: BasePageAppBar(
-        expandedHeight: 110.0,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 0.0, top: 0.0),
-          child: Row(
-            children: [
-              CircleButton(
-                  onTap: () => Navigator.of(context).pop(),
-                  icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
-              AppIcon(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                size: 30.0,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      quotesList == null ? 'List' : quotesList.name,
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
+
+    return BasePageAppBar(
+      expandedHeight: 110.0,
+      title: Padding(
+        padding: EdgeInsets.only(
+          left: titleLeftPadding,
+        ),
+        child: Row(
+          children: [
+            CircleButton(
+                onTap: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+            AppIcon(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              size: 30.0,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    quotesList == null ? 'List' : quotesList.name,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w300,
+                      color: stateColors.foreground,
+                    ),
+                  ),
+                  Opacity(
+                    opacity: 0.6,
+                    child: Text(
+                      quotesList == null ? '' : quotesList.description,
                       style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w300,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w400,
                         color: stateColors.foreground,
                       ),
                     ),
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        quotesList == null ? '' : quotesList.description,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w400,
-                          color: stateColors.foreground,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottom: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: bottomContentLeftPadding),
+          child: Wrap(
+            spacing: 20.0,
+            children: <Widget>[
+              OutlinedButton.icon(
+                onPressed: () => showEditListDialog(
+                  context: context,
+                  listDesc: quotesList.description,
+                  listName: quotesList.name,
+                  listIsPublic: quotesList.isPublic,
+                  subtitle: quotesList.name,
+                  onCancel: () => Navigator.of(context).pop(),
+                  onConfirm: (payload) {
+                    Navigator.of(context).pop();
+                    updateCurrentList(payload);
+                  },
+                ),
+                icon: Icon(Icons.edit),
+                label: Text('Edit'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => showDeleteListDialog(
+                  context: context,
+                  listName: quotesList.name,
+                  onCancel: () => Navigator.of(context).pop(),
+                  onConfirm: () {
+                    Navigator.of(context).pop();
+                    deleteCurrentList();
+                  },
+                ),
+                icon: Icon(Icons.delete),
+                label: Text('Delete'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.red,
                 ),
               ),
             ],
-          ),
-        ),
-        bottom: Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Wrap(
-              spacing: 20.0,
-              children: <Widget>[
-                OutlinedButton.icon(
-                  onPressed: () => showEditListDialog(
-                    context: context,
-                    listDesc: quotesList.description,
-                    listName: quotesList.name,
-                    listIsPublic: quotesList.isPublic,
-                    subtitle: quotesList.name,
-                    onCancel: () => Navigator.of(context).pop(),
-                    onConfirm: (payload) {
-                      Navigator.of(context).pop();
-                      updateCurrentList(payload);
-                    },
-                  ),
-                  icon: Icon(Icons.edit),
-                  label: Text('Edit'),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => showDeleteListDialog(
-                    context: context,
-                    listName: quotesList.name,
-                    onCancel: () => Navigator.of(context).pop(),
-                    onConfirm: () {
-                      Navigator.of(context).pop();
-                      deleteCurrentList();
-                    },
-                  ),
-                  icon: Icon(Icons.delete),
-                  label: Text('Delete'),
-                  style: OutlinedButton.styleFrom(
-                    primary: Colors.red,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

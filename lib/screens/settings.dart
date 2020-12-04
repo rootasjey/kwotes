@@ -8,7 +8,6 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -112,40 +111,22 @@ class _SettingsState extends State<Settings> {
         if (isUserConnected) {
           return Column(
             children: [
-              Wrap(
-                alignment: WrapAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      FadeInY(
-                        delay: 0.0,
-                        beginY: 50.0,
-                        child: avatar(isUserConnected),
-                      ),
-                      accountActions(isUserConnected),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      FadeInY(
-                        delay: 0.2,
-                        beginY: 50.0,
-                        child: updateNameButton(isUserConnected),
-                      ),
-                      Padding(padding: const EdgeInsets.only(top: 20.0)),
-                      FadeInY(
-                        delay: 0.3,
-                        beginY: 50.0,
-                        child: emailButton(),
-                      ),
-                      // FadeInY(
-                      //   delay: 0.4,
-                      //   beginY: 50.0,
-                      //   child: langSelect(),
-                      // ),
-                    ],
-                  ),
-                ],
+              FadeInY(
+                delay: 0.0,
+                beginY: 50.0,
+                child: avatar(isUserConnected),
+              ),
+              accountActions(isUserConnected),
+              FadeInY(
+                delay: 0.2,
+                beginY: 50.0,
+                child: updateUsernameButton(isUserConnected),
+              ),
+              Padding(padding: const EdgeInsets.only(top: 20.0)),
+              FadeInY(
+                delay: 0.3,
+                beginY: 50.0,
+                child: emailButton(),
               ),
               Divider(
                 thickness: 1.0,
@@ -497,11 +478,9 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget updateNameButton(bool isUserConnected) {
+  Widget updateUsernameButton(bool isUserConnected) {
     return FlatButton(
-      onPressed: () {
-        showUpdateNameDialog();
-      },
+      onPressed: () => showUpdateNameDialog(),
       child: Container(
         width: 250.0,
         padding: const EdgeInsets.all(5.0),
@@ -541,40 +520,12 @@ class _SettingsState extends State<Settings> {
   }
 
   Future showUpdateNameDialog() async {
-    if (MediaQuery.of(context).size.width > 600.0) {
-      await showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: UpdateUsername(),
-              ),
-            ),
-          );
-        },
-      );
-    } else {
-      await showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context, scrollController) => UpdateUsername(
-          scrollController: scrollController,
-        ),
-      );
-    }
+    await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context, scrollController) => UpdateUsername(
+        scrollController: scrollController,
+      ),
+    );
 
     checkAuth();
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
@@ -56,15 +57,29 @@ class _UpdateEmailState extends State<UpdateEmail> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          PageAppBar(
-            textTitle: 'Update email',
-            textSubTitle: 'If your email is outdated',
-            expandedHeight: 90.0,
-            showNavBackIcon: true,
-          ),
+          appBar(),
           body(),
         ],
       ),
+    );
+  }
+
+  Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+    }
+
+    return PageAppBar(
+      textTitle: 'Update email',
+      textSubTitle: 'If your email is outdated',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
+      ),
+      expandedHeight: 90.0,
+      showNavBackIcon: true,
     );
   }
 

@@ -123,8 +123,25 @@ class RecentQuotesState extends State<RecentQuotes> {
   }
 
   Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
+
     return PageAppBar(
       textTitle: 'Recent',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
+        top: 24.0,
+      ),
+      bottomPadding: EdgeInsets.only(
+        left: bottomContentLeftPadding,
+        bottom: 10.0,
+      ),
       onTitlePressed: () {
         scrollController.animateTo(
           0,
@@ -346,10 +363,14 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   Widget listView() {
     final width = MediaQuery.of(context).size.width;
-    double horPadding = width < 700.00 ? 0.0 : 70.0;
+    double horizontal = 0.0;
+    double heroQuoteFontSize = 42.0;
+    double normalQuoteFontSize = 18.0;
 
-    if (width < 390.0) {
-      horPadding = 0.0;
+    if (width > Constants.maxMobileWidth) {
+      heroQuoteFontSize = 92.0;
+      horizontal = 70.0;
+      normalQuoteFontSize = 26.0;
     }
 
     return Observer(builder: (context) {
@@ -360,10 +381,10 @@ class RecentQuotesState extends State<RecentQuotes> {
           (context, index) {
             final quote = quotes.elementAt(index);
 
-            double quoteFontSize = 18.0;
+            double quoteFontSize = normalQuoteFontSize;
 
             if (index == 0) {
-              quoteFontSize = 42.0;
+              quoteFontSize = heroQuoteFontSize;
             }
 
             return QuoteRowWithActions(
@@ -375,7 +396,7 @@ class RecentQuotesState extends State<RecentQuotes> {
               quoteFontSize: quoteFontSize,
               color: stateColors.appBackground,
               padding: EdgeInsets.symmetric(
-                horizontal: horPadding,
+                horizontal: horizontal,
               ),
               quotePageType: QuotePageType.published,
             );

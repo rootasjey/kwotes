@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/users.dart';
@@ -139,9 +140,26 @@ class _SearchState extends State<Search> {
   }
 
   Widget appBar() {
-    if (MediaQuery.of(context).size.width < 700.0) {
+    if (MediaQuery.of(context).size.width < 700.0 || Platform.isIOS) {
+      final width = MediaQuery.of(context).size.width;
+      double titleLeftPadding = 70.0;
+      double bottomContentLeftPadding = 94.0;
+
+      if (width < Constants.maxMobileWidth) {
+        titleLeftPadding = 0.0;
+        bottomContentLeftPadding = 24.0;
+      }
+
       return PageAppBar(
         textTitle: 'Search',
+        titlePadding: EdgeInsets.only(
+          left: titleLeftPadding,
+          top: 24.0,
+        ),
+        bottomPadding: EdgeInsets.only(
+          left: bottomContentLeftPadding,
+          bottom: 10.0,
+        ),
         expandedHeight: 60.0,
         showNavBackIcon: false,
         onTitlePressed: () {

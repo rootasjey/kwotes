@@ -1,6 +1,7 @@
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,13 +49,23 @@ class DeleteAccountState extends State<DeleteAccount> {
   }
 
   Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+    }
+
     return BasePageAppBar(
       expandedHeight: 90.0,
       title: Row(
         children: [
-          CircleButton(
-              onTap: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          Padding(
+            padding: EdgeInsets.only(left: titleLeftPadding),
+            child: CircleButton(
+                onTap: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+          ),
           AppIcon(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             size: 30.0,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -88,55 +89,68 @@ class QuotidiansState extends State<Quotidians> {
   }
 
   Widget appBar() {
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 24.0),
-      sliver: PageAppBar(
-        textTitle: 'Quotidians',
-        textSubTitle: 'Scheduled quotes for the coming days',
-        showNavBackIcon: true,
-        onTitlePressed: () {
-          scrollController.animateTo(
-            0,
-            duration: 250.milliseconds,
-            curve: Curves.easeIn,
-          );
-        },
-        descending: descending,
-        onDescendingChanged: (newDescending) {
-          if (descending == newDescending) {
-            return;
-          }
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
 
-          descending = newDescending;
-          fetch();
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
 
-          appStorage.setPageOrder(
-            descending: newDescending,
-            pageRoute: pageRoute,
-          );
-        },
-        lang: lang,
-        onLangChanged: (String newLang) {
-          lang = newLang;
-          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
-          fetch();
-        },
-        itemsLayout: itemsLayout,
-        onItemsLayoutSelected: (selectedLayout) {
-          if (selectedLayout == itemsLayout) {
-            return;
-          }
-
-          setState(() {
-            itemsLayout = selectedLayout;
-          });
-
-          appStorage.saveItemsStyle(
-            pageRoute: pageRoute,
-            style: selectedLayout,
-          );
-        },
+    return PageAppBar(
+      textTitle: 'Quotidians',
+      textSubTitle: 'Scheduled quotes for the coming days',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
       ),
+      bottomPadding: EdgeInsets.only(
+        left: bottomContentLeftPadding,
+        bottom: 10.0,
+      ),
+      showNavBackIcon: true,
+      onTitlePressed: () {
+        scrollController.animateTo(
+          0,
+          duration: 250.milliseconds,
+          curve: Curves.easeIn,
+        );
+      },
+      descending: descending,
+      onDescendingChanged: (newDescending) {
+        if (descending == newDescending) {
+          return;
+        }
+
+        descending = newDescending;
+        fetch();
+
+        appStorage.setPageOrder(
+          descending: newDescending,
+          pageRoute: pageRoute,
+        );
+      },
+      lang: lang,
+      onLangChanged: (String newLang) {
+        lang = newLang;
+        appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+        fetch();
+      },
+      itemsLayout: itemsLayout,
+      onItemsLayoutSelected: (selectedLayout) {
+        if (selectedLayout == itemsLayout) {
+          return;
+        }
+
+        setState(() {
+          itemsLayout = selectedLayout;
+        });
+
+        appStorage.saveItemsStyle(
+          pageRoute: pageRoute,
+          style: selectedLayout,
+        );
+      },
     );
   }
 
@@ -395,11 +409,14 @@ class QuotidiansState extends State<Quotidians> {
 
   /// Contains multiple children in a Column.
   Widget itemList(List<Quotidian> group) {
+    final width = MediaQuery.of(context).size.width;
+    double horizontal = width < Constants.maxMobileWidth ? 0.0 : 70.0;
+
     return Column(
         children: group.map((quotidian) {
       return QuotidianRow(
         quotidian: quotidian,
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.symmetric(horizontal: horizontal),
         useSwipeActions: true,
         key: ObjectKey(quotidian.id),
         componentType: ItemComponentType.row,

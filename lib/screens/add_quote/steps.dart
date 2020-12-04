@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/drafts.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
@@ -77,11 +78,15 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isNarrow = width < Constants.maxMobileWidth;
+    final horizontal = isNarrow ? 0.0 : 70.0;
+
     return Scaffold(
       appBar: PreferredSize(
         child: AddQuoteAppBar(
           title: 'Add quote',
-          isNarrow: true,
+          isNarrow: isNarrow,
           help: helpSteps[currentStep],
         ),
         preferredSize: Size.fromHeight(80.0),
@@ -96,10 +101,13 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
                 fabText,
               ),
             )
-          : Padding(
-              padding: EdgeInsets.zero,
-            ),
-      body: body(),
+          : Container(),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal,
+        ),
+        child: body(),
+      ),
     );
   }
 

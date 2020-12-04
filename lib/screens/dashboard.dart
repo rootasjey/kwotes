@@ -138,46 +138,52 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget appBar() {
-    return BasePageAppBar(
-      pinned: true,
-      collapsedHeight: 70.0,
-      expandedHeight: 90.0,
-      title: Padding(
-        padding: const EdgeInsets.only(
-          top: 24.0,
-          left: 16.0,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    scrollController.animateTo(
-                      0,
-                      duration: 250.milliseconds,
-                      curve: Curves.easeIn,
-                    );
-                  },
-                  icon: AppIcon(
-                    padding: EdgeInsets.zero,
-                    size: 30.0,
-                  ),
-                  label: Text(
-                    'Account',
-                    style: TextStyle(
-                      fontSize: 22.0,
+    final width = MediaQuery.of(context).size.width;
+    double horizontal = width < Constants.maxMobileWidth ? 0.0 : 70.0;
+
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: horizontal),
+      sliver: BasePageAppBar(
+        pinned: true,
+        collapsedHeight: 70.0,
+        expandedHeight: 90.0,
+        title: Padding(
+          padding: const EdgeInsets.only(
+            top: 24.0,
+            left: 16.0,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      scrollController.animateTo(
+                        0,
+                        duration: 250.milliseconds,
+                        curve: Curves.easeIn,
+                      );
+                    },
+                    icon: AppIcon(
+                      padding: EdgeInsets.zero,
+                      size: 30.0,
+                    ),
+                    label: Text(
+                      'Account',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            notificationsIconButton(),
-          ],
+              notificationsIconButton(),
+            ],
+          ),
         ),
+        showNavBackIcon: false,
       ),
-      showNavBackIcon: false,
     );
   }
 
@@ -199,35 +205,41 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget body() {
-    return Observer(builder: (context) {
-      List<Widget> children = [];
+    final width = MediaQuery.of(context).size.width;
+    double horizontal = width < Constants.maxMobileWidth ? 0.0 : 70.0;
 
-      if (userState.isUserConnected) {
-        children.addAll(authWidgets(context));
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: horizontal),
+      sliver: Observer(builder: (context) {
+        List<Widget> children = [];
 
-        if (canManage) {
-          children.addAll(adminWidgets(context));
+        if (userState.isUserConnected) {
+          children.addAll(authWidgets(context));
+
+          if (canManage) {
+            children.addAll(adminWidgets(context));
+          }
+        } else {
+          userSubscription?.cancel();
+          children.add(whyAccountBlock());
+          children.addAll(guestWidgets(context));
         }
-      } else {
-        userSubscription?.cancel();
-        children.add(whyAccountBlock());
-        children.addAll(guestWidgets(context));
-      }
 
-      return SliverPadding(
-        padding: const EdgeInsets.only(
-          bottom: 150.0,
-        ),
-        sliver: SliverList(
-          delegate: SliverChildListDelegate.fixed([
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: children,
-            )
-          ]),
-        ),
-      );
-    });
+        return SliverPadding(
+          padding: const EdgeInsets.only(
+            bottom: 150.0,
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate.fixed([
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children,
+              )
+            ]),
+          ),
+        );
+      }),
+    );
   }
 
   Widget bulletPoint({String text}) {

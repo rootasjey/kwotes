@@ -116,8 +116,25 @@ class _TopicsState extends State<Topics> {
   }
 
   Widget appBar() {
+    final width = MediaQuery.of(context).size.width;
+    double titleLeftPadding = 70.0;
+    double bottomContentLeftPadding = 94.0;
+
+    if (width < Constants.maxMobileWidth) {
+      titleLeftPadding = 0.0;
+      bottomContentLeftPadding = 24.0;
+    }
+
     return PageAppBar(
-      textTitle: "Topics",
+      textTitle: 'Topics',
+      titlePadding: EdgeInsets.only(
+        left: titleLeftPadding,
+        top: 24.0,
+      ),
+      bottomPadding: EdgeInsets.only(
+        left: bottomContentLeftPadding,
+        bottom: 20.0,
+      ),
       lang: lang,
       onLangChanged: (String newLang) {
         lang = newLang;
@@ -136,22 +153,36 @@ class _TopicsState extends State<Topics> {
   }
 
   Widget body() {
+    final width = MediaQuery.of(context).size.width;
+    double horizontal = width < Constants.maxMobileWidth ? 0.0 : 70.0;
+
     if (isLoading) {
       return SliverLoadingView();
     }
 
     if (quotesByTopicsList.isEmpty) {
-      return SliverList(
-          delegate: SliverChildListDelegate.fixed([
-        EmptyView(
-          title: 'No quotes',
-          description: 'No quotes found. Please try to refresh the page.',
-          onRefresh: () => fetch(),
+      return SliverPadding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal,
         ),
-      ]));
+        sliver: SliverList(
+          delegate: SliverChildListDelegate.fixed([
+            EmptyView(
+              title: 'No quotes',
+              description: 'No quotes found. Please try to refresh the page.',
+              onRefresh: () => fetch(),
+            ),
+          ]),
+        ),
+      );
     }
 
-    return topicsAndQuotes();
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontal,
+      ),
+      sliver: topicsAndQuotes(),
+    );
   }
 
   Widget moreTopicsButton() {
@@ -198,12 +229,18 @@ class _TopicsState extends State<Topics> {
       final isConnected = userState.isUserConnected;
       final width = MediaQuery.of(context).size.width;
 
+      bool showPopupMenuButton = false;
       double horizontal = 10.0;
       double quoteFontSize = 20.0;
 
       if (width < 390) {
         horizontal = 0.0;
         quoteFontSize = 16.0;
+      }
+
+      if (width > Constants.maxMobileWidth) {
+        showPopupMenuButton = true;
+        quoteFontSize = 26.0;
       }
 
       return SliverList(
@@ -238,7 +275,8 @@ class _TopicsState extends State<Topics> {
                         color: stateColors.appBackground,
                         isConnected: isConnected,
                         key: ObjectKey(quote.id),
-                        useSwipeActions: width < Constants.maxMobileWidth,
+                        useSwipeActions: true,
+                        showPopupMenuButton: showPopupMenuButton,
                         leading: Container(
                           width: 15.0,
                           padding: const EdgeInsets.only(right: 10.0),
