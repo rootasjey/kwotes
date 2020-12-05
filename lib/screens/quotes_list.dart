@@ -89,11 +89,17 @@ class _QuotesListState extends State<QuotesList> {
 
               return false;
             },
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                appBar(),
-                body(),
+            child: Overlay(
+              initialEntries: [
+                OverlayEntry(builder: (_) {
+                  return CustomScrollView(
+                    controller: scrollController,
+                    slivers: <Widget>[
+                      appBar(),
+                      body(),
+                    ],
+                  );
+                })
               ],
             ),
           )),
