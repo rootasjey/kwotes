@@ -49,26 +49,28 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Overlay(
       initialEntries: [
-        OverlayEntry(builder: (_) {
-          return LayoutBuilder(builder: (context, constraints) {
-            if (mustShowOnBoardingDesktop(constraints.maxWidth)) {
-              isPopupVisible = true;
-              showDesktopDialog(context);
-              return homeView(constraints);
-            }
-
-            if (mustShowOnBoardingMobile(constraints.maxWidth)) {
-              if (mustHidePopup()) {
-                isPopupVisible = false;
-                popupController.dismiss();
+        OverlayEntry(
+          builder: (_) => LayoutBuilder(
+            builder: (context, constraints) {
+              if (mustShowOnBoardingDesktop(constraints.maxWidth)) {
+                isPopupVisible = true;
+                showDesktopDialog(context);
+                return homeView(constraints);
               }
 
-              return OnBoarding();
-            }
+              if (mustShowOnBoardingMobile(constraints.maxWidth)) {
+                if (mustHidePopup()) {
+                  isPopupVisible = false;
+                  popupController.dismiss();
+                }
 
-            return homeView(constraints);
-          });
-        }),
+                return OnBoarding();
+              }
+
+              return homeView(constraints);
+            },
+          ),
+        ),
       ],
     );
   }
