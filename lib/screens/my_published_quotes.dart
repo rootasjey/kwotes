@@ -103,11 +103,17 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
               return false;
             },
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                appBar(),
-                body(),
+            child: Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  builder: (_) => CustomScrollView(
+                    controller: scrollController,
+                    slivers: <Widget>[
+                      appBar(),
+                      body(),
+                    ],
+                  ),
+                )
               ],
             ),
           )),

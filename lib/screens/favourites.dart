@@ -98,13 +98,19 @@ class _FavouritesState extends State<Favourites> {
 
               return false;
             },
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                appBar(),
-                body(screenWidth: screenWidth),
-                SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 200.0),
+            child: Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  builder: (_) => CustomScrollView(
+                    controller: scrollController,
+                    slivers: <Widget>[
+                      appBar(),
+                      body(screenWidth: screenWidth),
+                      SliverPadding(
+                        padding: const EdgeInsets.only(bottom: 200.0),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),

@@ -76,12 +76,18 @@ class QuotidiansState extends State<Quotidians> {
 
             return false;
           },
-          child: LayoutBuilder(
-            builder: (context, constrains) {
-              return body(
-                maxWidth: constrains.maxWidth,
-              );
-            },
+          child: Overlay(
+            initialEntries: [
+              OverlayEntry(
+                builder: (_) => LayoutBuilder(
+                  builder: (context, constrains) {
+                    return body(
+                      maxWidth: constrains.maxWidth,
+                    );
+                  },
+                ),
+              )
+            ],
           ),
         ),
       ),
