@@ -9,6 +9,9 @@ class StateColors = StateColorsBase with _$StateColors;
 
 abstract class StateColorsBase with Store {
   @observable
+  Color accentColor = Color(0xFF796AD2);
+
+  @observable
   Color appBackground = Color(0xFAFAFA);
 
   @observable
@@ -36,6 +39,11 @@ abstract class StateColorsBase with Store {
   Color softBackground = Color(0xFFEEEEEE);
 
   ThemeData themeData;
+
+  @action
+  void setAccentColor(Color color) {
+    accentColor = color;
+  }
 
   @action
   void refreshTheme(Brightness brightness) {
