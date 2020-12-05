@@ -222,8 +222,8 @@ class _QuotidianRowState extends State<QuotidianRow> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (_) =>
-                                    AuthorPage(id: quote.author.id)),
+                              builder: (_) => AuthorPage(id: quote.author.id),
+                            ),
                           );
                         },
                         child: Opacity(
@@ -278,6 +278,7 @@ class _QuotidianRowState extends State<QuotidianRow> {
                           child: Text(
                             widget.quotidian.date.day.toString(),
                           ),
+                          foregroundColor: stateColors.foreground,
                           backgroundColor: Colors.black12,
                           radius: 20.0,
                         ),
