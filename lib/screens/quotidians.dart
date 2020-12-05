@@ -79,13 +79,7 @@ class QuotidiansState extends State<Quotidians> {
           child: Overlay(
             initialEntries: [
               OverlayEntry(
-                builder: (_) => LayoutBuilder(
-                  builder: (context, constrains) {
-                    return body(
-                      maxWidth: constrains.maxWidth,
-                    );
-                  },
-                ),
+                builder: (_) => body(),
               )
             ],
           ),
@@ -160,7 +154,7 @@ class QuotidiansState extends State<Quotidians> {
     );
   }
 
-  Widget body({double maxWidth}) {
+  Widget body() {
     return CustomScrollView(
       controller: scrollController,
       slivers: <Widget>[
