@@ -3,9 +3,7 @@ import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/screens/quote_page.dart';
-import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
-import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
@@ -24,7 +22,6 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quick_actions/quick_actions.dart';
-import 'package:supercharged/supercharged.dart';
 
 class HomeMobile extends StatefulWidget {
   final int initialIndex;
@@ -39,7 +36,6 @@ class HomeMobile extends StatefulWidget {
 
 class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
   int selectedIndex = 0;
-  Color accentColor = stateColors.secondary;
 
   static List<Widget> _listScreens = <Widget>[
     RecentQuotes(
@@ -62,7 +58,6 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       selectedIndex = widget.initialIndex;
     });
 
-    initColors();
     initQuickActions();
     mayOpenNotification();
   }
@@ -80,21 +75,6 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       mayOpenNotification();
     }
-  }
-
-  void initColors() {
-    final tColor = appTopicsColors.shuffle(max: 1).firstOrElse(
-          () => TopicColor.fromJSON(
-            {
-              'name': 'blue',
-              'color': Colors.blue.value,
-            },
-          ),
-        );
-
-    setState(() {
-      accentColor = Color(tColor.decimal) ?? accentColor;
-    });
   }
 
   void initQuickActions() {
@@ -185,9 +165,9 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       bottomNavigationBar: SnakeNavigationBar.color(
         currentIndex: selectedIndex,
         onTap: _onItemTapped,
-        snakeViewColor: accentColor,
+        snakeViewColor: stateColors.accent,
         selectedItemColor: Colors.white,
-        unselectedItemColor: accentColor,
+        unselectedItemColor: stateColors.accent,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
