@@ -76,7 +76,7 @@ class RecentQuotesState extends State<RecentQuotes> {
                   curve: Curves.easeOut,
                 );
               },
-              backgroundColor: stateColors.primary,
+              backgroundColor: stateColors.accent,
               foregroundColor: Colors.white,
               child: Icon(Icons.arrow_upward),
             )

@@ -71,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
         }
 
         return FloatingActionButton.extended(
-          backgroundColor: stateColors.secondary,
+          backgroundColor: stateColors.accent,
           foregroundColor: Colors.white,
           label: Text(
             "Add quote",
