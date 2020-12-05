@@ -9,21 +9,21 @@ part of 'colors.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StateColors on StateColorsBase, Store {
-  final _$accentColorAtom = Atom(name: 'StateColorsBase.accentColor');
+  final _$accentAtom = Atom(name: 'StateColorsBase.accent');
 
   @override
-  Color get accentColor {
-    _$accentColorAtom.context.enforceReadPolicy(_$accentColorAtom);
-    _$accentColorAtom.reportObserved();
-    return super.accentColor;
+  Color get accent {
+    _$accentAtom.context.enforceReadPolicy(_$accentAtom);
+    _$accentAtom.reportObserved();
+    return super.accent;
   }
 
   @override
-  set accentColor(Color value) {
-    _$accentColorAtom.context.conditionallyRunInAction(() {
-      super.accentColor = value;
-      _$accentColorAtom.reportChanged();
-    }, _$accentColorAtom, name: '${_$accentColorAtom.name}_set');
+  set accent(Color value) {
+    _$accentAtom.context.conditionallyRunInAction(() {
+      super.accent = value;
+      _$accentAtom.reportChanged();
+    }, _$accentAtom, name: '${_$accentAtom.name}_set');
   }
 
   final _$appBackgroundAtom = Atom(name: 'StateColorsBase.appBackground');
@@ -137,7 +137,7 @@ mixin _$StateColors on StateColorsBase, Store {
   @override
   String toString() {
     final string =
-        'accentColor: ${accentColor.toString()},appBackground: ${appBackground.toString()},background: ${background.toString()},foreground: ${foreground.toString()},iconExt: ${iconExt.toString()},softBackground: ${softBackground.toString()}';
+        'accent: ${accent.toString()},appBackground: ${appBackground.toString()},background: ${background.toString()},foreground: ${foreground.toString()},iconExt: ${iconExt.toString()},softBackground: ${softBackground.toString()}';
     return '{$string}';
   }
 }
