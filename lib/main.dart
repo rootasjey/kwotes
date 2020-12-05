@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +13,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:supercharged/supercharged.dart';
 
 void main() async {
   LicenseRegistry.addLicense(() async* {
@@ -37,25 +39,7 @@ class AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
-    appStorage.initialize().then(
-      (value) {
-        final savedLang = appStorage.getLang();
-        userState.setLang(savedLang);
-
-        autoLogin();
-
-        setState(() {
-          isReady = true;
-        });
-
-        if (!kIsWeb) {
-          PushNotifications.init();
-        }
-      },
-    );
-
-    appTopicsColors.fetchTopicsColors();
+    initAsync();
   }
 
   @override
@@ -82,7 +66,7 @@ class AppState extends State<App> {
     );
   }
 
-  void autoLogin() async {
+  Future autoLogin() async {
     try {
       final userCred = await userSignin();
 
@@ -95,5 +79,37 @@ class AppState extends State<App> {
       userSignOut(context: context, autoNavigateAfter: false);
       PushNotifications.unlinkAuthUser();
     }
+  }
+
+  void initAsync() async {
+    await Future.wait([initStorage(), initColors()]);
+    await autoLogin(); // must wait storage init
+
+    setState(() => isReady = true);
+
+    if (!kIsWeb) {
+      PushNotifications.init();
+    }
+  }
+
+  Future initColors() async {
+    await appTopicsColors.fetchTopicsColors();
+
+    final color = appTopicsColors.shuffle(max: 1).firstOrElse(
+          () => TopicColor(
+            name: 'blue',
+            decimal: Colors.blue.value,
+            hex: Colors.blue.value.toRadixString(16),
+          ),
+        );
+
+    stateColors.setAccentColor(Color(color.decimal));
+  }
+
+  Future initStorage() async {
+    await appStorage.initialize();
+
+    final savedLang = appStorage.getLang();
+    userState.setLang(savedLang);
   }
 }
