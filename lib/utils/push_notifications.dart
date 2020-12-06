@@ -3,6 +3,7 @@ import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -18,6 +19,10 @@ class PushNotifications {
   }
 
   static Future init() async {
+    if (kIsWeb) {
+      return;
+    }
+
     // Remove this method to stop OneSignal Debugging
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
@@ -84,10 +89,18 @@ class PushNotifications {
   }
 
   static Future linkAuthUser(String id) async {
+    if (kIsWeb) {
+      return;
+    }
+
     await OneSignal.shared.setExternalUserId(id);
   }
 
   static Future unlinkAuthUser() async {
+    if (kIsWeb) {
+      return;
+    }
+
     await OneSignal.shared.removeExternalUserId();
   }
 

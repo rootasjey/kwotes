@@ -121,9 +121,7 @@ class AppState extends State<App> {
 
     setState(() => isReady = true);
 
-    if (!kIsWeb) {
-      PushNotifications.init();
-    }
+    PushNotifications.init();
   }
 
   Future initColors() async {
