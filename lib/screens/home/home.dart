@@ -6,6 +6,7 @@ import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home_desktop.dart';
 import 'package:figstyle/screens/home/home_mobile.dart';
@@ -84,7 +85,7 @@ class _HomeState extends State<Home> {
     }
 
     // Mostly for iPad
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       return HomeMobile(
         initialIndex: widget.mobileInitialIndex,
       );
