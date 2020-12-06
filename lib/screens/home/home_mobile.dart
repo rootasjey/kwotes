@@ -9,6 +9,7 @@ import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flash/flash.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/utils/icons_more_icons.dart';
 import 'package:figstyle/screens/dashboard.dart';
@@ -78,6 +79,10 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
   }
 
   void initQuickActions() {
+    if (kIsWeb) {
+      return;
+    }
+
     final quickActions = QuickActions();
 
     quickActions.initialize((String startRoute) {
