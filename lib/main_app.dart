@@ -1,10 +1,7 @@
-import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/utils/snack.dart';
 
 /// Executed from main.dart
 class MainApp extends StatefulWidget {
@@ -18,7 +15,6 @@ class MainAppState extends State<MainApp> {
     NavigationHelper.navigatorKey = GlobalKey<NavigatorState>();
 
     super.initState();
-    checkConnection();
   }
 
   @override
@@ -30,17 +26,5 @@ class MainAppState extends State<MainApp> {
       navigatorKey: NavigationHelper.navigatorKey,
       home: Home(),
     );
-  }
-
-  void checkConnection() async {
-    final hasConnection = await DataConnectionChecker().hasConnection;
-
-    if (!hasConnection) {
-      showSnack(
-        context: context,
-        message: "It seems that you're offline",
-        type: SnackType.error,
-      );
-    }
   }
 }
