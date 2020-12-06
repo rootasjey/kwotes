@@ -61,6 +61,9 @@ class AppState extends State<App> {
       );
     }
 
+    // On the web, if an user accesses an auth route (w/o going first to home),
+    // they will be redirected to the Sign in screen before the app auth them.
+    // This waiting screen solves this issue.
     return DynamicTheme(
       defaultBrightness: brightness,
       data: (brightness) => ThemeData(
