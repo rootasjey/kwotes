@@ -23,7 +23,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  await appStorage.initialize();
   return runApp(App());
 }
 
@@ -44,9 +44,12 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = getBrightness();
+    stateColors.refreshTheme(brightness);
+
     if (isReady) {
       return DynamicTheme(
-        defaultBrightness: Brightness.light,
+        defaultBrightness: brightness,
         data: (brightness) => ThemeData(
           fontFamily: GoogleFonts.raleway().fontFamily,
           brightness: brightness,
@@ -58,12 +61,41 @@ class AppState extends State<App> {
       );
     }
 
-    return MaterialApp(
-      title: 'fig.style',
-      home: Scaffold(
-        body: FullPageLoading(),
+    return DynamicTheme(
+      defaultBrightness: brightness,
+      data: (brightness) => ThemeData(
+        fontFamily: GoogleFonts.raleway().fontFamily,
+        brightness: brightness,
       ),
+      themedWidgetBuilder: (_, theme) {
+        stateColors.themeData = theme;
+        return MaterialApp(
+          title: 'fig.style',
+          theme: stateColors.themeData,
+          debugShowCheckedModeBanner: true,
+          home: Scaffold(
+            body: FullPageLoading(),
+          ),
+        );
+      },
     );
+  }
+
+  Brightness getBrightness() {
+    final autoBrightness = appStorage.getAutoBrightness();
+
+    if (!autoBrightness) {
+      return appStorage.getBrightness();
+    }
+
+    Brightness brightness = Brightness.light;
+    final now = DateTime.now();
+
+    if (now.hour < 6 || now.hour > 17) {
+      brightness = Brightness.dark;
+    }
+
+    return brightness;
   }
 
   Future autoLogin() async {
@@ -82,8 +114,7 @@ class AppState extends State<App> {
   }
 
   void initAsync() async {
-    await Future.wait([initStorage(), initColors()]);
-    await autoLogin(); // must wait storage init
+    await Future.wait([autoLogin(), initColors()]);
 
     setState(() => isReady = true);
 
