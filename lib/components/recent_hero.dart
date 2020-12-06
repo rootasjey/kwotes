@@ -279,6 +279,9 @@ class _RecentHeroState extends State<RecentHero> {
                     quote: quote,
                     elevation: 4.0,
                     showAuthor: true,
+                    cardHeight: 250.0,
+                    cardWidth: 250.0,
+                    padding: const EdgeInsets.all(20.0),
                     isConnected: isConnected,
                     componentType: ItemComponentType.card,
                   );
