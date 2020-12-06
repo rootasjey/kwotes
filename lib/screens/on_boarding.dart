@@ -180,6 +180,8 @@ class _OnBoardingState extends State<OnBoarding> {
   }
 
   PageViewModel notificationsPVModel() {
+    double paddingTop = 100.0;
+
     String body = "You don't have to open the app to be inspired. "
         "One quote will be delivered to you everyday around 8:00 am.";
 
@@ -208,6 +210,7 @@ class _OnBoardingState extends State<OnBoarding> {
     );
 
     if (kIsWeb) {
+      paddingTop = 0.0;
       body = "You don't have to open your mobile app to be inspired. "
           "Get the Android or iOS app now, "
           "and one quote will be delivered to you everyday around 8:00 am.";
@@ -217,7 +220,7 @@ class _OnBoardingState extends State<OnBoarding> {
         children: [
           storeCard(
             icon: Icon(
-              Icons.android,
+              FontAwesomeIcons.googlePlay,
               size: 40.0,
               color: Colors.green,
             ),
@@ -241,7 +244,7 @@ class _OnBoardingState extends State<OnBoarding> {
       titleWidget: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 100.0),
+            padding: EdgeInsets.only(top: paddingTop),
             child: Center(
               child: Image.asset(
                 'assets/images/illus_notifications.png',
