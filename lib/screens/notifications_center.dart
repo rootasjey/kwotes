@@ -466,7 +466,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     );
   }
 
-  onTap(AppNotification notif, int index) async {
+  void onTap(AppNotification notif, int index) async {
     markRead(notif);
 
     if (notif.subject != 'tempQuotes') {
