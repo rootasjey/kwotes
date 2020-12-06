@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -14,8 +16,6 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
-
-import 'signin.dart';
 
 class MyPublishedQuotes extends StatefulWidget {
   @override
@@ -304,16 +304,20 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   Future fetch() async {
     setState(() {
       isLoading = true;
+      lastDoc = null;
+      quotes.clear();
     });
 
-    lastDoc = null;
-    quotes.clear();
-
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = FirebaseAuth.instance.currentUser;
 
       if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => Signin(),
+          ),
+        );
+
         return;
       }
 
@@ -328,6 +332,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
       if (snapshot.docs.isEmpty) {
         setState(() {
           isLoading = false;
+          hasNext = false;
         });
 
         return;
@@ -341,16 +346,18 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
-
       setState(() {
         isLoading = false;
+        hasNext = limit == snapshot.size;
+        lastDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());
 
       setState(() {
         isLoading = false;
+        hasNext = false;
+        lastDoc = null;
       });
     }
   }
@@ -363,10 +370,15 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     isLoadingMore = true;
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = FirebaseAuth.instance.currentUser;
 
       if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => Signin(),
+          ),
+        );
+
         return;
       }
 
@@ -380,7 +392,10 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
           .get();
 
       if (snapshot.docs.isEmpty) {
-        isLoadingMore = false;
+        setState(() {
+          isLoadingMore = false;
+          hasNext = false;
+        });
 
         return;
       }
@@ -393,19 +408,24 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         quotes.add(quote);
       });
 
-      isLoadingMore = false;
+      setState(() {
+        isLoadingMore = false;
+        hasNext = limit == snapshot.size;
+        lastDoc = snapshot.docs.last;
+      });
     } catch (error) {
       debugPrint(error.toString());
 
       setState(() {
         isLoadingMore = false;
+        hasNext = false;
       });
     }
   }
 
   void fetchPermissions() async {
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = FirebaseAuth.instance.currentUser;
 
       if (userAuth == null) {
         return;
