@@ -6,6 +6,35 @@ import { sendNotification } from './utils';
 const env = functions.config();
 const firestore = adminApp.firestore();
 
+export const addUserSettingsProp = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (req, res) => {
+    const snapshot = firestore
+      .collection('users')
+      .limit(100)
+      .get();
+
+    (await snapshot).docs.forEach(async (userDoc) => {
+      await userDoc.ref.update({
+        notifications: adminApp.firestore.FieldValue.delete(),
+        settings: {
+          notifications: {
+            email: {
+              quotidians: false,
+              tempQuotes: false,
+            },
+            push: {
+              quotidians: true,
+              tempQuotes: true,
+            },
+          },
+        },
+      });
+    });
+    res.status(200).send('done');
+  });
+
 export const incrementStatsAndSendPush = functions
   .region('europe-west3')
   .firestore
@@ -45,6 +74,7 @@ export const incrementStatsAndSendPush = functions
     const subject: string = notifData.subject;
 
     if (subject === 'tempQuotes') {
+      console.log('notification subject is tempQuotes');
       return handleTempQuoteValidation({ userId, userData, notifSnapshot });
     }
 
@@ -97,6 +127,10 @@ function handleTempQuoteValidation(params: NotifFuncParams) {
 
   const userPushNotifiActivated: boolean = userData
     .settings?.notifications?.push?.tempQuotes;
+
+  console.log(`userPushNotifiActivated: ${userPushNotifiActivated} `);
+  console.log(`notifData.sendPushNotification: ${notifData.sendPushNotification} `);
+  console.log(`userId: ${userId} `);
 
   if (!userPushNotifiActivated || !notifData.sendPushNotification) {
     return false;
