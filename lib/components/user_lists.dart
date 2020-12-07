@@ -184,14 +184,14 @@ class _UserListsState extends State<UserLists> {
           .collection('lists')
           .doc(listId)
           .collection('quotes')
-          .add({
+          .doc(quote.id)
+          .set({
         'author': {
           'id': quote.author.id,
           'name': quote.author.name,
         },
         'createdAt': DateTime.now(),
         'name': quote.name,
-        'quoteId': quote.id,
         'topics': quote.topics,
       });
     } catch (err) {
