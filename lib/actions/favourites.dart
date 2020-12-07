@@ -66,7 +66,6 @@ Future<bool> addToFavourites({
         'name': mainReferenceName,
       },
       'name': quote.name,
-      'quoteId': quote.id,
       'topics': quote.topics,
     });
 
