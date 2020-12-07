@@ -5,6 +5,58 @@ import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
+/**
+ * Update list.quote doc to use same id
+ * Must be used after app updates (mobile & web).
+ */
+export const updateUserLists = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (req, res) => {
+    // The app has very few users right now (less than 20).
+    const userSnapshot = firestore
+      .collection('users')
+      .limit(100)
+      .get();
+
+    // For each user
+    (await userSnapshot).docs.forEach(async (userDoc) => {
+      // Get all lists
+      const listsSnapshot = await firestore
+        .collection(`users/${userDoc.id}/lists`)
+        .get();
+
+      // For each list
+      for await (const listDoc of listsSnapshot.docs) {
+        // Get all quotes
+        const quotesSnap = await firestore
+          .collection(`users/${userDoc.id}/lists/${listDoc.id}/quotes`)
+          .get();
+
+        // For each quote
+        for await (const quoteDoc of quotesSnap.docs) {
+          const quoteData = quoteDoc.data();
+          
+          // Check if the quote has the `quoteId` prop.
+          // If this prop. exists, it uses the old data model 
+          // so it must be updated.
+          if (quoteData.quoteId) {
+            // Add a new quote doc with the right id and the same data.
+            await firestore
+              .collection(`users/${userDoc.id}/lists/${listDoc.id}/quotes`)
+              .doc(quoteDoc.id)
+              .set(quoteDoc.data());
+  
+            // Delete the old quote doc.
+            await quoteDoc.ref.delete();
+          }
+        }
+      }
+    });
+
+    res.status(200).send('done');
+  });
+
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
