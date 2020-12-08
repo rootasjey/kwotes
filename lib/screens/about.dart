@@ -96,7 +96,7 @@ class About extends StatelessWidget {
                     height: size,
                     width: size,
                     fit: BoxFit.cover,
-                    image: AssetImage('assets/images/app-icon-512.png'),
+                    image: AssetImage('assets/images/app-icon-512-alt.png'),
                     child: InkWell(
                       onTap: openContainer,
                     ),
@@ -105,7 +105,8 @@ class About extends StatelessWidget {
               },
               openBuilder: (context, callback) {
                 return ImageHero(
-                  imageProvider: AssetImage('assets/images/app-icon-512.png'),
+                  imageProvider:
+                      AssetImage('assets/images/app-icon-512-alt.png'),
                 );
               },
             ),

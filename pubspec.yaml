@@ -101,6 +101,7 @@ flutter:
     - assets/images/app-icon-64.png
     - assets/images/app-icon-90.png
     - assets/images/app-icon-512.png
+    - assets/images/app-icon-512-alt.png
     - assets/images/app-icon-animation.gif
     - assets/images/boy-dark.png
     - assets/images/boy-light.png
