@@ -84,8 +84,8 @@ class _HomeState extends State<Home> {
       );
     }
 
-    // Mostly for iPad
-    if (!kIsWeb && Platform.isIOS) {
+    // Mostly for tablets: iPad, Android tablet
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
       return HomeMobile(
         initialIndex: widget.mobileInitialIndex,
       );
