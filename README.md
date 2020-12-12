@@ -15,6 +15,7 @@
 ![GitHub Release Date](https://img.shields.io/github/release-date/rootasjey/fig.style?style=for-the-badge)
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/rootasjey/fig.style/latest?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rootasjey/fig.style?style=for-the-badge)
+[![Codemagic build status](https://api.codemagic.io/apps/5fd420c277de1a00167ebea4/5fd420c277de1a00167ebea3/status_badge.svg)](https://codemagic.io/apps/5fd420c277de1a00167ebea4/5fd420c277de1a00167ebea3/latest_build)
 
 # Download
 
@@ -137,7 +138,7 @@ On the contrary, a short list of usual rejections:
 
 If you still have doubts, you can always open an issue here or send us an email through the app.
 
-> Whenever you're down, look up. It'll make your realize just how big and beautiful the world is. — **Emma Green** — Away
+> Whenever you're down, look up. It'll make your realize just how big and beautiful the world is.<br/> — **Emma Green** — Away
 
 # Sustainability
 
@@ -213,8 +214,6 @@ The following screenshots was taken on the mobile application.<br/>
 Clicking on an author's name will show you their information.
 <br/><br/><br/>
 
-<img src="./screenshots/mobile_author.png" title="fig.style mobile" width="300" />
-
-<img src="./screenshots/mobile_search.png" title="fig.style mobile" width="300" />
-
-<img src="./screenshots/mobile_topics.png" title="fig.style mobile" width="300" />
+| Author | Search | Topics |
+| ------ | ------ | ------ |
+| <img src="./screenshots/mobile_author.png" title="fig.style mobile" width="300" /> | <img src="./screenshots/mobile_search.png" title="fig.style mobile" width="300" /> | <img src="./screenshots/mobile_topics.png" title="fig.style mobile" width="300" /> |
