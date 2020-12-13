@@ -26,6 +26,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user_state.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:flutter/services.dart';
 
 class AddQuoteSteps extends StatefulWidget {
   @override
@@ -44,6 +45,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   bool stepChanged = false;
 
   Color fabBackgroundColor = stateColors.primary;
+
+  FocusNode keyboardFocusNode = FocusNode();
 
   Icon fabIcon = Icon(Icons.send);
 
@@ -82,31 +85,52 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     final isNarrow = width < Constants.maxMobileWidth;
     final horizontal = isNarrow ? 0.0 : 70.0;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        child: AddQuoteAppBar(
-          title: 'Add quote',
-          isNarrow: isNarrow,
-          help: helpSteps[currentStep],
+    return RawKeyboardListener(
+      onKey: (keyEvent) {
+        // ?NOTE: Keys combinations must stay on top
+        // or other single matching key events will override it.
+
+        // <-- Previous step
+        if (keyEvent.isShiftPressed &&
+            keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+          cancel();
+          return;
+        }
+
+        // Next step -->
+        if (keyEvent.isShiftPressed &&
+            keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+          next();
+          return;
+        }
+      },
+      focusNode: keyboardFocusNode,
+      child: Scaffold(
+        appBar: PreferredSize(
+          child: AddQuoteAppBar(
+            title: 'Add quote',
+            isNarrow: isNarrow,
+            help: helpSteps[currentStep],
+          ),
+          preferredSize: Size.fromHeight(80.0),
         ),
-        preferredSize: Size.fromHeight(80.0),
-      ),
-      floatingActionButton: isFabVisible
-          ? FloatingActionButton.extended(
-              onPressed: () => propose(),
-              backgroundColor: fabBackgroundColor,
-              foregroundColor: Colors.white,
-              icon: fabIcon,
-              label: Text(
-                fabText,
-              ),
-            )
-          : Container(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontal,
+        floatingActionButton: isFabVisible
+            ? FloatingActionButton.extended(
+                onPressed: () => propose(),
+                backgroundColor: fabBackgroundColor,
+                foregroundColor: Colors.white,
+                icon: fabIcon,
+                label: Text(
+                  fabText,
+                ),
+              )
+            : Container(),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontal,
+          ),
+          child: body(),
         ),
-        child: body(),
       ),
     );
   }
@@ -563,9 +587,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   void next() {
     sharedAxisReverse = false;
-    currentStep + 1 < 5 // (steps.length + 1) // + 1 dynamic step
-        ? goTo(currentStep + 1)
-        : propose();
+    currentStep + 1 < 5 ? goTo(currentStep + 1) : propose();
   }
 
   void propose() async {
