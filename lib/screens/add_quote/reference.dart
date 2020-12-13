@@ -314,13 +314,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             imageUrl: 'assets/images/world-globe.png',
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Website',
-                  initialValue: DataQuoteInputs.reference.urls.website,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.website = inputUrl;
-                    });
+                labelText: 'Website',
+                initialValue: DataQuoteInputs.reference.urls.website,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.website = inputUrl;
                   });
+                },
+              );
             },
           ),
           Observer(
@@ -332,13 +333,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
                 onTap: () {
                   showLinkInputSheet(
-                      labelText: 'Wikipedia',
-                      initialValue: DataQuoteInputs.reference.urls.wikipedia,
-                      onSave: (String inputUrl) {
-                        setState(() {
-                          DataQuoteInputs.reference.urls.wikipedia = inputUrl;
-                        });
+                    labelText: 'Wikipedia',
+                    initialValue: DataQuoteInputs.reference.urls.wikipedia,
+                    onSave: (String inputUrl) {
+                      setState(() {
+                        DataQuoteInputs.reference.urls.wikipedia = inputUrl;
                       });
+                    },
+                  );
                 },
               );
             },
@@ -350,13 +352,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.amazon.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Amazon',
-                  initialValue: DataQuoteInputs.reference.urls.amazon,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.amazon = inputUrl;
-                    });
+                labelText: 'Amazon',
+                initialValue: DataQuoteInputs.reference.urls.amazon,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.amazon = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -366,13 +369,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.facebook.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Facebook',
-                  initialValue: DataQuoteInputs.reference.urls.facebook,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.facebook = inputUrl;
-                    });
+                labelText: 'Facebook',
+                initialValue: DataQuoteInputs.reference.urls.facebook,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.facebook = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -382,13 +386,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.instagram.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Instagram',
-                  initialValue: DataQuoteInputs.reference.urls.instagram,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.instagram = inputUrl;
-                    });
+                labelText: 'Instagram',
+                initialValue: DataQuoteInputs.reference.urls.instagram,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.instagram = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -398,13 +403,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.netflix.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Netflix',
-                  initialValue: DataQuoteInputs.reference.urls.netflix,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.netflix = inputUrl;
-                    });
+                labelText: 'Netflix',
+                initialValue: DataQuoteInputs.reference.urls.netflix,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.netflix = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -414,13 +420,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.primeVideo.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Prime Video',
-                  initialValue: DataQuoteInputs.reference.urls.primeVideo,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.primeVideo = inputUrl;
-                    });
+                labelText: 'Prime Video',
+                initialValue: DataQuoteInputs.reference.urls.primeVideo,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.primeVideo = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -430,13 +437,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.twitch.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Twitch',
-                  initialValue: DataQuoteInputs.reference.urls.twitch,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.twitch = inputUrl;
-                    });
+                labelText: 'Twitch',
+                initialValue: DataQuoteInputs.reference.urls.twitch,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.twitch = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -446,13 +454,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.twitter.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'Twitter',
-                  initialValue: DataQuoteInputs.reference.urls.twitter,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.twitter = inputUrl;
-                    });
+                labelText: 'Twitter',
+                initialValue: DataQuoteInputs.reference.urls.twitter,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.twitter = inputUrl;
                   });
+                },
+              );
             },
           ),
           linkSquareButton(
@@ -462,13 +471,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             active: DataQuoteInputs.reference.urls.youtube.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
-                  labelText: 'YouTube',
-                  initialValue: DataQuoteInputs.reference.urls.youtube,
-                  onSave: (String inputUrl) {
-                    setState(() {
-                      DataQuoteInputs.reference.urls.youtube = inputUrl;
-                    });
+                labelText: 'YouTube',
+                initialValue: DataQuoteInputs.reference.urls.youtube,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.youtube = inputUrl;
                   });
+                },
+              );
             },
           ),
         ],
@@ -1170,48 +1180,41 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         }
 
         return Scaffold(
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: SheetHeader(
+          body: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SheetHeader(
                   title: "Link",
                   subTitle: "Enter a http link",
                 ),
-              ),
-              SizedBox(
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300.0,
-                      child: TextField(
-                        autofocus: true,
-                        controller: linkInputController,
-                        keyboardType: TextInputType.url,
-                        decoration: InputDecoration(
-                          labelText: labelText,
-                          icon: Icon(Icons.link),
-                        ),
-                        onChanged: (newValue) {
-                          initialValue = newValue;
-                        },
-                      ),
+                Padding(
+                  padding: EdgeInsets.only(top: 60.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: linkInputController,
+                    keyboardType: TextInputType.url,
+                    decoration: InputDecoration(
+                      labelText: labelText,
+                      icon: Icon(Icons.link),
                     ),
-                  ],
+                    onChanged: (newValue) {
+                      initialValue = newValue;
+                    },
+                  ),
                 ),
-              ),
-              actionsInput(
-                onClearInput: () {
-                  linkInputController.clear();
-                  initialValue = '';
-                },
-                onSaveInput: () {
-                  onSave(initialValue);
-                },
-              ),
-            ],
+                actionsInput(
+                  onClearInput: () {
+                    linkInputController.clear();
+                    initialValue = '';
+                  },
+                  onSaveInput: () {
+                    onSave(initialValue);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
