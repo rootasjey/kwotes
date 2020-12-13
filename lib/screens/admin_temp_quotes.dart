@@ -294,11 +294,11 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   Widget listView() {
     double horPadding = 70.0;
-    bool useSwipeActions = false;
+    bool showPopupMenuButton = true;
 
     if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
       horPadding = 0.0;
-      useSwipeActions = true;
+      showPopupMenuButton = false;
     }
 
     return SliverList(
@@ -311,7 +311,8 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             canManage: true,
             padding: EdgeInsets.symmetric(horizontal: horPadding),
             key: ObjectKey(index),
-            useSwipeActions: useSwipeActions,
+            showPopupMenuButton: showPopupMenuButton,
+            useSwipeActions: true,
             onBeforeDelete: () {
               setState(() {
                 tempQuotes.removeAt(index);
