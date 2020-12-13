@@ -92,8 +92,8 @@ class _SettingsState extends State<Settings> {
       return PageAppBar(
         textTitle: "Settings",
         textSubTitle: "You can change your preferences here",
-        expandedHeight: 90.0,
         showNavBackIcon: true,
+        titlePadding: const EdgeInsets.only(top: 8.0),
       );
     }
 
