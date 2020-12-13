@@ -136,6 +136,8 @@ class DataQuoteInputs {
 
     if (tempQuote.comments.length > 0) {
       comment = tempQuote.comments.first;
+    } else {
+      comment = '';
     }
 
     region = tempQuote.region;
