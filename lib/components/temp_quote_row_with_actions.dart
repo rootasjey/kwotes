@@ -208,8 +208,11 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void editAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote);
 
-    await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AddQuoteSteps(),
+      ),
+    );
 
     if (widget.onNavBack != null) {
       widget.onNavBack();

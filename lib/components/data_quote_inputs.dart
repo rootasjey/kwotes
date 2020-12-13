@@ -68,66 +68,70 @@ class DataQuoteInputs {
     }
 
     quote = Quote(
-      id: id,
-      name: tempQuote.name,
-      lang: tempQuote.lang,
+      id    : id,
+      name  : tempQuote.name,
+      lang  : tempQuote.lang,
       topics: tempQuote.topics,
     );
 
-    final born = tempQuote.author.born;
+    final born  = tempQuote.author.born;
     final death = tempQuote.author.death;
 
+    final tAuthor     = tempQuote.author;
+    final tAuthorUrls = tempQuote.author.urls;
+
     author = Author(
-      born: born ?? PointInTime(),
-      death: death ?? PointInTime(),
-      id: tempQuote.author.id,
-      isFictional: tempQuote.author.isFictional ?? false,
-      job: tempQuote.author.job,
-      name: tempQuote.author.name,
-      summary: tempQuote.author.summary,
-      urls: Urls(
-        affiliate: tempQuote.author.urls.affiliate,
-        amazon: tempQuote.author.urls.amazon,
-        facebook: tempQuote.author.urls.facebook,
-        image: tempQuote.author.urls.image,
-        instagram: tempQuote.author.urls.instagram,
-        netflix: tempQuote.author.urls.netflix,
-        primeVideo: tempQuote.author.urls.primeVideo,
-        twitch: tempQuote.author.urls.twitch,
-        twitter: tempQuote.author.urls.twitter,
-        website: tempQuote.author.urls.website,
-        wikipedia: tempQuote.author.urls.wikipedia,
-        youtube: tempQuote.author.urls.youtube,
+      born        : born ?? PointInTime(),
+      death       : death ?? PointInTime(),
+      id          : tAuthor.id,
+      isFictional : tAuthor.isFictional ?? false,
+      job         : tAuthor.job,
+      name        : tAuthor.name,
+      summary     : tAuthor.summary,
+      urls        : Urls(
+        affiliate : tAuthorUrls.affiliate,
+        amazon    : tAuthorUrls.amazon,
+        facebook  : tAuthorUrls.facebook,
+        image     : tAuthorUrls.image,
+        instagram : tAuthorUrls.instagram,
+        netflix   : tAuthorUrls.netflix,
+        primeVideo: tAuthorUrls.primeVideo,
+        twitch    : tAuthorUrls.twitch,
+        twitter   : tAuthorUrls.twitter,
+        website   : tAuthorUrls.website,
+        wikipedia : tAuthorUrls.wikipedia,
+        youtube   : tAuthorUrls.youtube,
       ),
     );
 
     if (tempQuote.references.length > 0) {
-      final ref = tempQuote.references.first;
-      final release = ref.release ?? Release();
+      final tRef      = tempQuote.references.first;
+      final release   = tRef.release ?? Release();
+      final tRefUrls  = tRef.urls;
 
       reference = Reference(
-        id: ref.id,
-        lang: ref.lang,
-        name: ref.name,
-        release: release,
-        summary: ref.summary,
-        type: ReferenceType(
-          primary: ref.type.primary,
-          secondary: ref.type.secondary,
+        id          : tRef.id,
+        lang        : tRef.lang,
+        name        : tRef.name,
+        release     : release,
+        summary     : tRef.summary,
+        type        : ReferenceType(
+          primary   : tRef.type.primary,
+          secondary : tRef.type.secondary,
         ),
-        urls: Urls(
-          affiliate: ref.urls.affiliate,
-          amazon: ref.urls.amazon,
-          facebook: ref.urls.facebook,
-          image: ref.urls.image,
-          instagram: ref.urls.instagram,
-          netflix: ref.urls.netflix,
-          primeVideo: ref.urls.primeVideo,
-          twitch: ref.urls.twitch,
-          twitter: ref.urls.twitter,
-          website: ref.urls.website,
-          wikipedia: ref.urls.wikipedia,
-          youtube: ref.urls.youtube,
+        urls        : Urls(
+          affiliate : tRefUrls.affiliate,
+          amazon    : tRefUrls.amazon,
+          facebook  : tRefUrls.facebook,
+          image     : tRefUrls.image,
+          instagram : tRefUrls.instagram,
+          netflix   : tRefUrls.netflix,
+          primeVideo: tRefUrls.primeVideo,
+          twitch    : tRefUrls.twitch,
+          twitter   : tRefUrls.twitter,
+          website   : tRefUrls.website,
+          wikipedia : tRefUrls.wikipedia,
+          youtube   : tRefUrls.youtube,
         ),
       );
     } else {
