@@ -25,6 +25,9 @@ class TempQuoteRowWithActions extends StatefulWidget {
   /// and deactivate popup menu button.
   final bool useSwipeActions;
 
+  /// If true, the popup menu will be displayed whatever [useSwipeActions] value.
+  final bool showPopupMenuButton;
+
   final EdgeInsets padding;
 
   final Function itemBuilder;
@@ -68,6 +71,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
     ),
     @required this.tempQuote,
     this.quotePageType = QuotePageType.published,
+    this.showPopupMenuButton = false,
     this.stackChildren = const [],
     this.useSwipeActions = false,
   });
@@ -96,6 +100,11 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       itemBuilder = (BuildContext context) => popupItems;
     }
 
+    if (widget.showPopupMenuButton && popupItems == null) {
+      popupItems = getPopupItems();
+      itemBuilder = (BuildContext context) => popupItems;
+    }
+
     return TempQuoteRow(
       key: widget.key,
       elevation: widget.elevation,
@@ -105,6 +114,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       isDraft: widget.isDraft,
       itemBuilder: itemBuilder,
       onSelected: onSelected,
+      onLongPress: onLongPress,
       onTap: widget.onTap ?? () => editAction(quote),
       tempQuote: quote,
       useSwipeActions: widget.useSwipeActions,
@@ -140,23 +150,26 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   List<PopupMenuEntry<String>> getPopupItems() {
     final popupItems = <PopupMenuEntry<String>>[
       PopupMenuItem(
-          value: 'edit',
-          child: ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Edit'),
-          )),
+        value: 'edit',
+        child: ListTile(
+          leading: Icon(Icons.edit),
+          title: Text('Edit'),
+        ),
+      ),
       PopupMenuItem(
-          value: 'copy',
-          child: ListTile(
-            leading: Icon(Icons.copy),
-            title: Text('Copy from...'),
-          )),
+        value: 'copy',
+        child: ListTile(
+          leading: Icon(Icons.copy),
+          title: Text('Copy from...'),
+        ),
+      ),
       PopupMenuItem(
-          value: 'deletetempquote',
-          child: ListTile(
-            leading: Icon(Icons.delete_forever),
-            title: Text('Delete'),
-          )),
+        value: 'deletetempquote',
+        child: ListTile(
+          leading: Icon(Icons.delete_forever),
+          title: Text('Delete'),
+        ),
+      ),
     ];
 
     if (widget.canManage) {
@@ -222,8 +235,98 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void copyFromAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
 
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AddQuoteSteps(),
+      ),
+    );
+  }
+
+  void onLongPress() {
+    final children = [
+      ListTile(
+        title: Text('Edit'),
+        trailing: Icon(
+          Icons.edit,
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+          editAction(widget.tempQuote);
+        },
+      ),
+      ListTile(
+        title: Text('Copy from'),
+        trailing: Icon(
+          Icons.copy,
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+          copyFromAction(widget.tempQuote);
+        },
+      ),
+      ListTile(
+        title: Text('Delete'),
+        trailing: Icon(
+          Icons.delete_forever,
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+          deleteAction(widget.tempQuote);
+        },
+      ),
+    ];
+
+    if (widget.canManage) {
+      children.addAll([
+        ListTile(
+          title: Text('Validate'),
+          trailing: Icon(
+            Icons.check,
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            validateAction(widget.tempQuote);
+          },
+        ),
+        ListTile(
+          title: Text('Reject'),
+          trailing: Icon(
+            Icons.close,
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            rejectAction(widget.tempQuote);
+          },
+        ),
+      ]);
+    }
+
+    showCustomModalBottomSheet(
+      context: context,
+      builder: (context, controller) {
+        return Material(
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
+          ),
+        );
+      },
+      containerWidget: (context, animation, child) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.circular(12.0),
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void rejectAction(TempQuote tempQuote) async {

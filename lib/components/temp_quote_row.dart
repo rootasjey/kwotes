@@ -16,7 +16,9 @@ class TempQuoteRow extends StatefulWidget {
   final double elevation;
 
   final EdgeInsets padding;
+
   final Function itemBuilder;
+  final Function onLongPress;
   final Function onSelected;
   final Function onTap;
 
@@ -43,6 +45,7 @@ class TempQuoteRow extends StatefulWidget {
     this.isDraft = false,
     this.componentType = ItemComponentType.row,
     this.onSelected,
+    this.onLongPress,
     this.onTap,
     this.stackChildren = const [],
     this.padding = const EdgeInsets.symmetric(
@@ -104,6 +107,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
         elevation: elevation,
         margin: EdgeInsets.zero,
         child: InkWell(
+          onLongPress: widget.onLongPress,
           onTap: widget.onTap,
           onHover: (isHover) {
             setState(() {
@@ -238,6 +242,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
         elevation: elevation,
         color: stateColors.appBackground,
         child: InkWell(
+          onLongPress: widget.onLongPress,
           onTap: widget.onTap,
           onHover: (isHover) {
             setState(() {
