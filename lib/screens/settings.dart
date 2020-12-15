@@ -377,8 +377,11 @@ class _SettingsState extends State<Settings> {
   Widget emailButton() {
     return FlatButton(
       onPressed: () async {
-        await Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => UpdateEmail()));
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => UpdateEmail(),
+          ),
+        );
 
         checkAuth();
       },
