@@ -40,8 +40,6 @@ class _UpdateUsernameState extends State<UpdateUsername> {
 
   Timer nameTimer;
 
-  bool isLoadingName;
-
   @override
   void initState() {
     super.initState();
@@ -133,14 +131,18 @@ class _UpdateUsernameState extends State<UpdateUsername> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
+                padding: const EdgeInsets.only(top: 30.0, bottom: 40.0),
                 child: Text(
-                  'Your email has been successfuly updated',
+                  'Your username has been successfuly updated',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
                 ),
+              ),
+              OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Go back"),
               ),
             ],
           ),
@@ -445,7 +447,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
     }
 
     setState(() {
-      isLoadingName = true;
+      isUpdating = true;
     });
 
     try {
@@ -453,7 +455,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
 
       if (!isNameAvailable) {
         setState(() {
-          isLoadingName = false;
+          isCompleted = false;
+          isUpdating = false;
         });
 
         showSnack(
@@ -468,6 +471,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       final userAuth = await userState.userAuth;
 
       if (userAuth == null) {
+        isCompleted = false;
+        isUpdating = false;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => Signin()),
         );
@@ -481,7 +486,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         final exception = usernameUpdateResp.error;
 
         setState(() {
-          isLoadingName = false;
+          isCompleted = false;
+          isUpdating = false;
         });
 
         showSnack(
@@ -494,7 +500,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       }
 
       setState(() {
-        isLoadingName = false;
+        isCompleted = true;
+        isUpdating = false;
         currentUsername = newUserName;
         newUserName = '';
       });
@@ -507,11 +514,14 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         type: SnackType.success,
       );
 
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
     } catch (error) {
       debugPrint(error.toString());
 
-      setState(() => isLoadingName = false);
+      setState(() {
+        isCompleted = false;
+        isUpdating = false;
+      });
 
       showSnack(
         context: context,
