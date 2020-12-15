@@ -152,7 +152,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 0.0),
+                padding: const EdgeInsets.only(top: 30.0, bottom: 40.0),
                 child: Text(
                   'Your email has been successfuly updated',
                   textAlign: TextAlign.center,
@@ -160,6 +160,10 @@ class _UpdateEmailState extends State<UpdateEmail> {
                     fontSize: 20.0,
                   ),
                 ),
+              ),
+              OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Go back"),
               ),
             ],
           ),
@@ -297,6 +301,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
               emailTimer = Timer(1.seconds, () async {
                 final isAvailable = await checkEmailAvailability(email);
+
                 if (!isAvailable) {
                   setState(() {
                     isCheckingEmail = false;
