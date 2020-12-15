@@ -26,6 +26,9 @@ Future<bool> checkEmailAvailability(String email) async {
     final resp = await callable.call({'email': email});
     final isOk = resp.data['isAvailable'] as bool;
     return isOk;
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+    return false;
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -52,15 +55,21 @@ Future<CreateAccountResp> createAccount({
     });
 
     return CreateAccountResp.fromJSON(response.data);
-  } catch (error) {
-    final exception = error as CloudFunctionsException;
+  } on CloudFunctionsException catch (exception) {
     debugPrint("[code: ${exception.code}] - ${exception.message}");
-
     return CreateAccountResp(
       success: false,
       error: CloudFuncError(
         code: exception.code,
         message: exception.message,
+      ),
+    );
+  } catch (error) {
+    return CreateAccountResp(
+      success: false,
+      error: CloudFuncError(
+        code: '',
+        message: error.toString(),
       ),
     );
   }
@@ -84,6 +93,9 @@ Future<bool> checkNameAvailability(String username) async {
     final resp = await callable.call({'name': username});
     final isOk = resp.data['isAvailable'] as bool;
     return isOk;
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+    return false;
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -114,6 +126,9 @@ Future<bool> canUserManage() async {
 
     final bool canManage = user.data()['rights']['user:managequotidian'];
     return canManage;
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+    return false;
   } catch (error) {
     debugPrint(error.toString());
     return false;
@@ -134,6 +149,16 @@ Future<UpdateEmailResp> deleteAccount(String idToken) async {
     });
 
     return UpdateEmailResp.fromJSON(response.data);
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+
+    return UpdateEmailResp(
+      success: false,
+      error: CloudFuncError(
+        code: exception.details['code'],
+        message: exception.details['message'],
+      ),
+    );
   } on PlatformException catch (exception) {
     debugPrint(exception.toString());
 
@@ -175,6 +200,15 @@ Future<UpdateEmailResp> updateEmail(String email, String idToken) async {
     await userSignin();
 
     return UpdateEmailResp.fromJSON(response.data);
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+    return UpdateEmailResp(
+      success: false,
+      error: CloudFuncError(
+        code: exception.details['code'],
+        message: exception.details['message'],
+      ),
+    );
   } on PlatformException catch (exception) {
     debugPrint(exception.toString());
     return UpdateEmailResp(
@@ -211,6 +245,15 @@ Future<UpdateEmailResp> updateUsername(String newUsername) async {
     });
 
     return UpdateEmailResp.fromJSON(response.data);
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+    return UpdateEmailResp(
+      success: false,
+      error: CloudFuncError(
+        code: exception.details['code'],
+        message: exception.details['message'],
+      ),
+    );
   } on PlatformException catch (exception) {
     debugPrint(exception.toString());
 
