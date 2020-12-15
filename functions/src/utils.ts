@@ -8,11 +8,10 @@ export async function checkUserIsSignedIn(
   idToken: string,
 ) {
   const userAuth = context.auth;
-  const instanceIdToken = context.instanceIdToken;
 
-  if (!userAuth || !instanceIdToken) {
+  if (!userAuth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-      'an authenticated user.');
+      'an authenticated user (2).');
   }
 
   let isTokenValid = false;

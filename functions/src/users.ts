@@ -427,11 +427,10 @@ export const updateEmail = functions
 
     if (!userAuth) {
       throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-        'an authenticated user.');
+        'an authenticated user (1).');
     }
 
     await checkUserIsSignedIn(context, idToken);
-
 
     const isFormatOk = validateEmailFormat(newEmail);
 
@@ -446,7 +445,6 @@ export const updateEmail = functions
       throw new functions.https.HttpsError('invalid-argument', 'The email specified ' +
         'is not available. Try specify a new one in the "newEmail" argument.');
     }
-
 
     try {
       await adminApp
