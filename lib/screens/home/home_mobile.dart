@@ -3,7 +3,7 @@ import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/screens/quote_page.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
@@ -114,7 +114,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
     });
 
     reactionDisposer = autorun((_) {
-      if (userState.isUserConnected) {
+      if (stateUser.isUserConnected) {
         quickActions.setShortcutItems([
           ShortcutItem(
             type: 'action_add_quote',

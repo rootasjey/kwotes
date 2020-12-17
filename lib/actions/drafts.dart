@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -19,7 +19,7 @@ Future<bool> deleteDraft({
   BuildContext context,
   TempQuote draft,
 }) async {
-  final userAuth = await userState.userAuth;
+  final userAuth = await stateUser.userAuth;
 
   if (userAuth == null) {
     Navigator.of(context).push(
@@ -86,7 +86,7 @@ Future<bool> saveDraft({
   });
 
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       return false;
@@ -169,7 +169,7 @@ Future<bool> saveOfflineDraft({
   });
 
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     Map<String, dynamic> draft = {
       'author': {

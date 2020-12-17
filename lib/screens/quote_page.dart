@@ -13,7 +13,7 @@ import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/reference_page.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/animation.dart';
@@ -136,7 +136,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget addToListButton() {
-    if (userState.isUserConnected) {
+    if (stateUser.isUserConnected) {
       return IconButton(
         tooltip: "Add to list...",
         onPressed: () => showCupertinoModalBottomSheet(
@@ -246,7 +246,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget favIconButton() {
-    if (userState.isUserConnected) {
+    if (stateUser.isUserConnected) {
       return LikeButton(
         isLiked: quote.starred,
         likeBuilder: (bool isLiked) {
@@ -255,7 +255,7 @@ class _QuotePageState extends State<QuotePage> {
           );
         },
         onTap: (bool isLiked) async {
-          userState.mustUpdateFav = true;
+          stateUser.mustUpdateFav = true;
 
           if (quote.starred) {
             final success = await unlikeQuote();
@@ -466,7 +466,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Future fetchIsFav() async {
-    if (userState.isUserConnected) {
+    if (stateUser.isUserConnected) {
       final isFav = await isFavourite(
         quoteId: quote.id,
       );

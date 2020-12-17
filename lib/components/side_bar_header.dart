@@ -5,7 +5,7 @@ import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 
 class SideBarHeader extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _SideBarHeaderState extends State<SideBarHeader> {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      return userState.isUserConnected ? authenticatedView() : guestView();
+      return stateUser.isUserConnected ? authenticatedView() : guestView();
     });
   }
 
@@ -24,8 +24,8 @@ class _SideBarHeaderState extends State<SideBarHeader> {
     return ListTile(
       leading: Observer(
         builder: (context) {
-          if (userState.avatarUrl.isEmpty) {
-            final arrStr = userState.username.split(' ');
+          if (stateUser.avatarUrl.isEmpty) {
+            final arrStr = stateUser.username.split(' ');
             String initials = '';
 
             if (arrStr.length > 0) {
@@ -59,7 +59,7 @@ class _SideBarHeaderState extends State<SideBarHeader> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Image.asset(
-                  userState.avatarUrl,
+                  stateUser.avatarUrl,
                   width: 50.0,
                 ),
               ),
@@ -68,9 +68,9 @@ class _SideBarHeaderState extends State<SideBarHeader> {
         },
       ),
       title: Tooltip(
-        message: userState.username,
+        message: stateUser.username,
         child: Text(
-          userState.username,
+          stateUser.username,
           overflow: TextOverflow.ellipsis,
         ),
       ),

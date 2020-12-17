@@ -5,7 +5,7 @@ import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/quotidian.dart';
@@ -255,7 +255,7 @@ class _RecentHeroState extends State<RecentHero> {
 
   Widget gridView() {
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

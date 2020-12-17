@@ -13,7 +13,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 
@@ -415,7 +415,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   void checkAuth() async {
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
@@ -434,7 +434,7 @@ class DeleteAccountState extends State<DeleteAccount> {
     setState(() => isDeleting = true);
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() => isDeleting = false);
@@ -474,8 +474,8 @@ class DeleteAccountState extends State<DeleteAccount> {
         return;
       }
 
-      await userState.signOut();
-      userState.setUserName('');
+      await stateUser.signOut();
+      stateUser.setUserName('');
       appStorage.clearUserAuthData();
 
       PushNotifications.unlinkAuthUser();

@@ -25,7 +25,7 @@ import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -66,7 +66,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Observer(builder: (context) {
-        if (!userState.isUserConnected) {
+        if (!stateUser.isUserConnected) {
           return Container();
         }
 
@@ -213,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
       sliver: Observer(builder: (context) {
         List<Widget> children = [];
 
-        if (userState.isUserConnected) {
+        if (stateUser.isUserConnected) {
           children.addAll(authWidgets(context));
 
           if (canManage) {
@@ -322,7 +322,7 @@ class _DashboardState extends State<Dashboard> {
       textTitle: 'Sign out',
       onTap: () async {
         await appStorage.clearUserAuthData();
-        await userState.signOut();
+        await stateUser.signOut();
 
         setState(() {
           canManage = false;
@@ -349,7 +349,7 @@ class _DashboardState extends State<Dashboard> {
   Widget notificationsIconButton() {
     return Observer(
       builder: (context) {
-        if (!userState.isUserConnected) {
+        if (!stateUser.isUserConnected) {
           return Container();
         }
 

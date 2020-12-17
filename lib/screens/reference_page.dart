@@ -13,7 +13,7 @@ import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -473,7 +473,7 @@ class ReferencePageState extends State<ReferencePage> {
 
     return Observer(
       builder: (context) {
-        final isConnected = userState.isUserConnected;
+        final isConnected = stateUser.isUserConnected;
 
         return SliverList(
           delegate: SliverChildBuilderDelegate(

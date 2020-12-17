@@ -8,7 +8,7 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class UpdatePassword extends StatefulWidget {
@@ -362,7 +362,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {

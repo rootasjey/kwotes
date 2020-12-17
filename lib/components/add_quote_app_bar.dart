@@ -7,7 +7,7 @@ import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddQuoteAppBar extends StatefulWidget {
@@ -191,7 +191,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
   }
 
   Widget userAvatar({bool isNarrow = true}) {
-    final arrStr = userState.username.split(' ');
+    final arrStr = stateUser.username.split(' ');
     String initials = '';
 
     if (arrStr.length > 0) {
@@ -304,7 +304,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
 
   Widget userMenu(bool isNarrow) {
     return Observer(builder: (context) {
-      if (userState.isUserConnected) {
+      if (stateUser.isUserConnected) {
         return userAvatar(isNarrow: isNarrow);
       }
 

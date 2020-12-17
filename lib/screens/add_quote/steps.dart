@@ -23,7 +23,7 @@ import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/services.dart';
@@ -542,7 +542,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
-        final userAuth = await userState.userAuth;
+        final userAuth = await stateUser.userAuth;
 
         if (userAuth == null) {
           setState(() => isCheckingAuth = false);

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
@@ -172,7 +172,7 @@ class _UserListsState extends State<UserLists> {
     final quote = widget.quote;
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         return;
@@ -207,7 +207,7 @@ class _UserListsState extends State<UserLists> {
 
   Future<String> createList() async {
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         return null;
@@ -257,7 +257,7 @@ class _UserListsState extends State<UserLists> {
 
     try {
       userQuotesLists.clear();
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         return;
@@ -314,7 +314,7 @@ class _UserListsState extends State<UserLists> {
     isLoadingMore = true;
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         return;

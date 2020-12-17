@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:figstyle/screens/on_boarding.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
@@ -33,10 +33,10 @@ class _HomeState extends State<Home> {
   initState() {
     super.initState();
 
-    userState.setFirstLaunch(appStorage.isFirstLanch());
+    stateUser.setFirstLaunch(appStorage.isFirstLanch());
 
     reactionDisposer = autorun((reaction) {
-      isFirstLaunch = userState.isFirstLaunch;
+      isFirstLaunch = stateUser.isFirstLaunch;
     });
   }
 
@@ -103,7 +103,7 @@ class _HomeState extends State<Home> {
           persistent: false,
           onWillPop: () {
             appStorage.setFirstLaunch();
-            userState.setFirstLaunch(false);
+            stateUser.setFirstLaunch(false);
             return Future.value(false);
           },
           builder: (context, controller) {

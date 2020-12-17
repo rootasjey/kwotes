@@ -11,7 +11,7 @@ import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -404,7 +404,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     tempQuotes.clear();
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();
@@ -462,7 +462,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         hasErrors = true;
       });
 
-      if (!userState.isUserConnected) {
+      if (!stateUser.isUserConnected) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
       }
     }
@@ -478,7 +478,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();

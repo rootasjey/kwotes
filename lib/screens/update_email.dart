@@ -10,7 +10,7 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -449,7 +449,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -491,7 +491,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         return;
       }
 
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -533,7 +533,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         return;
       }
 
-      userState.clearAuthCache();
+      stateUser.clearAuthCache();
 
       setState(() {
         isUpdating = false;

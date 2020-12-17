@@ -7,7 +7,7 @@ import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
 import 'package:figstyle/components/temp_quote_row.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
@@ -375,7 +375,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       widget.onBeforeValidate();
     }
 
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     final success = await validateTempQuote(
       tempQuote: tempQuote,

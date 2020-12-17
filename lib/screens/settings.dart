@@ -18,7 +18,7 @@ import 'package:figstyle/screens/delete_account.dart';
 import 'package:figstyle/screens/update_email.dart';
 import 'package:figstyle/screens/update_password.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -106,7 +106,7 @@ class _SettingsState extends State<Settings> {
   Widget accountSettings() {
     return Observer(
       builder: (_) {
-        final isUserConnected = userState.isUserConnected;
+        final isUserConnected = stateUser.isUserConnected;
 
         if (isUserConnected) {
           return Column(
@@ -782,10 +782,10 @@ class _SettingsState extends State<Settings> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
-        userState.setUserDisconnected();
+        stateUser.setUserDisconnected();
 
         setState(() {
           isLoadingImageURL = false;
@@ -805,7 +805,7 @@ class _SettingsState extends State<Settings> {
       avatarUrl = data['urls']['image'];
       currentUserName = data['name'] ?? '';
 
-      userState.setUserName(currentUserName);
+      stateUser.setUserName(currentUserName);
 
       setState(() {
         email = userAuth.email ?? '';
@@ -843,7 +843,7 @@ class _SettingsState extends State<Settings> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       await FirebaseFirestore.instance
           .collection('users')

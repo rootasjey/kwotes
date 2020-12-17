@@ -11,7 +11,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
@@ -328,7 +328,7 @@ class _DraftsState extends State<Drafts> {
     try {
       fetchOffline();
 
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();
@@ -382,7 +382,7 @@ class _DraftsState extends State<Drafts> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();

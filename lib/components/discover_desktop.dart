@@ -6,7 +6,7 @@ import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
@@ -40,7 +40,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   initState() {
     super.initState();
 
-    lang = userState.lang;
+    lang = stateUser.lang;
 
     if (_referencesMap.length > 0 || _authorsMap.length > 0) {
       return;

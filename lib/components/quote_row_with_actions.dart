@@ -8,7 +8,7 @@ import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/quotidians.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/quote_row.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -229,7 +229,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   }
 
   Future fetchIsFav() async {
-    if (!userState.isUserConnected) {
+    if (!stateUser.isUserConnected) {
       return;
     }
 
@@ -662,7 +662,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   }
 
   void showBottomSheetList() {
-    if (!userState.isUserConnected) {
+    if (!stateUser.isUserConnected) {
       showSnack(
         context: context,
         message: "You must sign in to add this quote to a list.",

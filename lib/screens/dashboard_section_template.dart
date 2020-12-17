@@ -7,7 +7,7 @@ import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 
 import 'add_quote/steps.dart';
 
@@ -254,7 +254,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
 
   void checkAdmin() async {
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       final user = await FirebaseFirestore.instance
           .collection('users')

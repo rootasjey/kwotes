@@ -12,7 +12,7 @@ import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
@@ -507,7 +507,7 @@ class _SignupState extends State<Signup> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -586,7 +586,7 @@ class _SignupState extends State<Signup> {
         password: password,
       );
 
-      userState.setUserConnected();
+      stateUser.setUserConnected();
       PushNotifications.linkAuthUser(respCreateAcc.user.id);
 
       Navigator.of(context).pushReplacement(

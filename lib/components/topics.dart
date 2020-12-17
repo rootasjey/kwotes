@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/topic_card_color.dart';
@@ -117,7 +117,7 @@ class _TopicsState extends State<Topics> {
 
   Widget topicsAndQuotes() {
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
       final width = MediaQuery.of(context).size.width;
 
       double horizontal = 10.0;

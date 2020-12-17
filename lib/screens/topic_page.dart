@@ -16,7 +16,7 @@ import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/components/side_bar_header.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/types/topic_color.dart';
@@ -92,7 +92,7 @@ class _TopicPageState extends State<TopicPage> {
 
     lang = appStorage.containsKey(storageKey)
         ? appStorage.getPageLang(pageRoute: pageRoute)
-        : userState.lang;
+        : stateUser.lang;
   }
 
   @override
@@ -312,7 +312,7 @@ class _TopicPageState extends State<TopicPage> {
 
     return Observer(
       builder: (context) {
-        final isConnected = userState.isUserConnected;
+        final isConnected = stateUser.isUserConnected;
 
         return SliverPadding(
           padding: const EdgeInsets.only(top: 40.0),

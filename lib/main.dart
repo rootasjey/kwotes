@@ -11,7 +11,7 @@ import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/main_app.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -142,6 +142,6 @@ class AppState extends State<App> {
     await appStorage.initialize();
 
     final savedLang = appStorage.getLang();
-    userState.setLang(savedLang);
+    stateUser.setLang(savedLang);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 
@@ -13,7 +13,7 @@ Future<UserQuotesList> createList({
   bool isPublic = false,
 }) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(
@@ -54,7 +54,7 @@ Future<bool> deleteList({
   @required String id,
 }) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(
@@ -95,7 +95,7 @@ Future<bool> removeFromList({
   @required Quote quote,
 }) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(
@@ -130,7 +130,7 @@ Future<bool> updateList({
   bool isPublic = false,
 }) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(

@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:supercharged/supercharged.dart';
 
 void checkConnectedOrNavSignin({BuildContext context}) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context)

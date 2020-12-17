@@ -11,7 +11,7 @@ import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -278,7 +278,7 @@ class RecentQuotesState extends State<RecentQuotes> {
             delegate: SliverChildListDelegate.fixed([
               QuoteRowWithActions(
                 quote: quote,
-                isConnected: userState.isUserConnected,
+                isConnected: stateUser.isUserConnected,
                 canManage: canManage,
                 quoteFontSize: 42.0,
                 cardWidth: 250.0,
@@ -313,7 +313,7 @@ class RecentQuotesState extends State<RecentQuotes> {
 
   Widget gridView() {
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
 
       return SliverPadding(
         padding: const EdgeInsets.symmetric(
@@ -374,7 +374,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     }
 
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
 
       return SliverList(
         delegate: SliverChildBuilderDelegate(

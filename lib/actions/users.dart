@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:flutter/services.dart';
 
@@ -109,7 +109,7 @@ bool checkUsernameFormat(String username) {
 
 Future<bool> canUserManage() async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       return false;
@@ -301,8 +301,8 @@ Future<UserCredential> userSignin({String email, String password}) async {
   await userGetAndSetAvatarUrl(userCred);
   PushNotifications.linkAuthUser(userCred.user.uid);
 
-  userState.setUserConnected();
-  userState.setUserName(userCred.user.displayName);
+  stateUser.setUserConnected();
+  stateUser.setUserName(userCred.user.displayName);
 
   return userCred;
 }
@@ -312,7 +312,7 @@ void userSignOut({
   bool autoNavigateAfter = true,
 }) async {
   await appStorage.clearUserAuthData();
-  await userState.signOut();
+  await stateUser.signOut();
 
   PushNotifications.unlinkAuthUser();
 
@@ -335,5 +335,5 @@ Future userGetAndSetAvatarUrl(UserCredential authResult) async {
   String imageName = avatarUrl.replaceFirst('local:', '');
   String path = 'assets/images/$imageName-${stateColors.iconExt}.png';
 
-  userState.setAvatarUrl(path);
+  stateUser.setAvatarUrl(path);
 }

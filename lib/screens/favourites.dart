@@ -9,7 +9,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/router/route_names.dart';
@@ -260,7 +260,7 @@ class _FavouritesState extends State<Favourites> {
                   });
                 }
 
-                userState.updateFavDate();
+                stateUser.updateFavDate();
               },
             );
           },
@@ -308,7 +308,7 @@ class _FavouritesState extends State<Favourites> {
                 });
               }
 
-              userState.updateFavDate();
+              stateUser.updateFavDate();
             },
           );
         },
@@ -338,7 +338,7 @@ class _FavouritesState extends State<Favourites> {
     quotes.clear();
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -398,7 +398,7 @@ class _FavouritesState extends State<Favourites> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
@@ -464,7 +464,7 @@ class _FavouritesState extends State<Favourites> {
         });
       }
 
-      userState.updateFavDate();
+      stateUser.updateFavDate();
     } catch (error) {
       debugPrint(error.toString());
 

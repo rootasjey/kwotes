@@ -11,7 +11,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -244,7 +244,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget gridView() {
-    final isConnected = userState.isUserConnected;
+    final isConnected = stateUser.isUserConnected;
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
@@ -276,7 +276,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   }
 
   Widget listView() {
-    final isConnected = userState.isUserConnected;
+    final isConnected = stateUser.isUserConnected;
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return SliverList(

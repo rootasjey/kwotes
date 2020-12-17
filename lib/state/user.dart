@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:mobx/mobx.dart';
 
-part 'user_state.g.dart';
+part 'user.g.dart';
 
-class UserState = UserStateBase with _$UserState;
+class StateUser = StateUserBase with _$StateUser;
 
-abstract class UserStateBase with Store {
+abstract class StateUserBase with Store {
   User _userAuth;
 
   @observable
@@ -124,4 +124,4 @@ abstract class UserStateBase with Store {
   }
 }
 
-final userState = UserState();
+final stateUser = StateUser();

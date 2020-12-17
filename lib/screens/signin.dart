@@ -10,7 +10,7 @@ import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 
@@ -220,7 +220,7 @@ class _SigninState extends State<Signin> {
             await Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => Signup()));
 
-            if (userState.isUserConnected) {
+            if (stateUser.isUserConnected) {
               await Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => Home()));
             }
@@ -331,7 +331,7 @@ class _SigninState extends State<Signin> {
       });
 
       if (userAuth != null) {
-        userState.setUserConnected();
+        stateUser.setUserConnected();
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
       }
     } catch (error) {

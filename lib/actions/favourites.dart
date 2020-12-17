@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -14,7 +14,7 @@ Future<bool> addToFavourites({
   Quote quote,
 }) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       showSnack(
@@ -88,7 +88,7 @@ Future<bool> addToFavourites({
 Future<bool> isFavourite({
   String quoteId,
 }) async {
-  final userAuth = await userState.userAuth;
+  final userAuth = await stateUser.userAuth;
 
   try {
     final doc = await FirebaseFirestore.instance
@@ -113,7 +113,7 @@ Future<bool> removeFromFavourites({
   Quote quote,
 }) async {
   try {
-    final userAuth = await userState.userAuth;
+    final userAuth = await stateUser.userAuth;
 
     if (userAuth == null) {
       showSnack(

@@ -14,7 +14,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/quotes_list.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -515,7 +515,7 @@ class _QuotesListsState extends State<QuotesLists> {
     try {
       userQuotesLists.clear();
 
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
@@ -568,7 +568,7 @@ class _QuotesListsState extends State<QuotesLists> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));

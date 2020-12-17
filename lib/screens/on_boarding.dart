@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -137,7 +137,7 @@ class _OnBoardingState extends State<OnBoarding> {
       ],
       onDone: () {
         appStorage.setFirstLaunch();
-        userState.setFirstLaunch(false);
+        stateUser.setFirstLaunch(false);
 
         if (widget.isDesktop) {
           return Navigator.of(context).pop();
@@ -330,7 +330,7 @@ class _OnBoardingState extends State<OnBoarding> {
           : ElevatedButton(
               onPressed: () {
                 appStorage.setFirstLaunch();
-                userState.setFirstLaunch(false);
+                stateUser.setFirstLaunch(false);
 
                 if (widget.isDesktop) {
                   Navigator.of(context).pop();

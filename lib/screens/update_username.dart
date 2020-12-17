@@ -10,7 +10,7 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -395,7 +395,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -468,7 +468,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         return;
       }
 
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         isCompleted = false;
@@ -506,7 +506,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         newUserName = '';
       });
 
-      userState.setUserName(currentUsername);
+      stateUser.setUserName(currentUsername);
 
       showSnack(
         context: context,

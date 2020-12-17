@@ -16,7 +16,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
@@ -356,7 +356,7 @@ class _QuotesListState extends State<QuotesList> {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
 
       return SliverPadding(
         padding: const EdgeInsets.only(top: 20.0),
@@ -395,7 +395,7 @@ class _QuotesListState extends State<QuotesList> {
     try {
       quotes.clear();
 
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -474,7 +474,7 @@ class _QuotesListState extends State<QuotesList> {
     });
 
     try {
-      final userAuth = await userState.userAuth;
+      final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {

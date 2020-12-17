@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -11,7 +11,7 @@ Future addNewTempQuote({
   List<Map<String, dynamic>> references,
   Map<String, bool> topics,
 }) async {
-  final userAuth = await userState.userAuth;
+  final userAuth = await stateUser.userAuth;
 
   await FirebaseFirestore.instance.collection('tempquotes').add({
     'author': {
@@ -274,7 +274,7 @@ Future saveExistingTempQuote({
   List<Map<String, dynamic>> references,
   Map<String, bool> topics,
 }) async {
-  final userAuth = await userState.userAuth;
+  final userAuth = await stateUser.userAuth;
 
   await FirebaseFirestore.instance
       .collection('tempquotes')

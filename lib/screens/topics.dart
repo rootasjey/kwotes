@@ -14,7 +14,7 @@ import 'package:figstyle/components/sliver_loading_view.dart';
 import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:mobx/mobx.dart';
@@ -226,7 +226,7 @@ class _TopicsState extends State<Topics> {
 
   Widget topicsAndQuotes() {
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
       final width = MediaQuery.of(context).size.width;
 
       bool showPopupMenuButton = false;

@@ -6,7 +6,7 @@ import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/tos.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -273,7 +273,7 @@ class _FooterState extends State<Footer> {
           .collection('users')
           .doc(userAuth.uid)
           .update({
-        'lang': userState.lang,
+        'lang': stateUser.lang,
       });
 
       notifyLangSuccess();

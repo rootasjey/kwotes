@@ -13,7 +13,7 @@ import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 
 class DesktopAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
@@ -58,7 +58,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           builder: (_) {
             final userSectionWidgets = List<Widget>();
 
-            if (userState.isUserConnected) {
+            if (stateUser.isUserConnected) {
               isNarrow
                   ? userSectionWidgets.add(userAvatar(isNarrow: isNarrow))
                   : userSectionWidgets.addAll([
@@ -287,7 +287,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   }
 
   Widget userAvatar({bool isNarrow = true}) {
-    final arrStr = userState.username.split(' ');
+    final arrStr = stateUser.username.split(' ');
     String initials = '';
 
     if (arrStr.length > 0) {
@@ -424,7 +424,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     return Observer(builder: (context) {
       final children = List<Widget>();
 
-      if (userState.isUserConnected) {
+      if (stateUser.isUserConnected) {
         isNarrow
             ? children.add(userAvatar(isNarrow: isNarrow))
             : children.addAll([

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author_suggestion.dart';
 import 'package:figstyle/types/reference_suggestion.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -324,7 +324,7 @@ class _SearchState extends State<Search> {
     int index = -1;
 
     return Observer(builder: (context) {
-      final isConnected = userState.isUserConnected;
+      final isConnected = stateUser.isUserConnected;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

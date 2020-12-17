@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 
 class Language {
@@ -64,7 +64,7 @@ class Language {
   }
 
   static void setLang(String lang) {
-    userState.setLang(lang);
+    stateUser.setLang(lang);
     appStorage.setLang(lang);
   }
 }

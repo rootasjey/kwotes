@@ -1,5 +1,5 @@
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -449,8 +449,8 @@ class _QuoteRowState extends State<QuoteRow> {
       );
     }
 
-    if (userState.mustUpdateFav) {
-      userState.mustUpdateFav = false;
+    if (stateUser.mustUpdateFav) {
+      stateUser.mustUpdateFav = false;
 
       if (widget.fetchIsFav != null) {
         widget.fetchIsFav();

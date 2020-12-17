@@ -6,7 +6,7 @@ import 'package:figstyle/actions/favourites.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/state/user_state.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:figstyle/utils/animation.dart';
 import 'package:figstyle/screens/author_page.dart';
@@ -48,16 +48,16 @@ class _QuotidianPageState extends State<QuotidianPage> {
     super.initState();
 
     disposeLang = autorun((_) {
-      if (quotidian != null && _prevLang == userState.lang) {
+      if (quotidian != null && _prevLang == stateUser.lang) {
         return;
       }
 
-      _prevLang = userState.lang;
+      _prevLang = stateUser.lang;
       fetch();
     });
 
     disposeFav = autorun((_) {
-      final updatedAt = userState.updatedFavAt;
+      final updatedAt = stateUser.updatedFavAt;
       fetchIsFav(updatedAt: updatedAt);
     });
   }
@@ -206,7 +206,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
 
   Widget quoteActions() {
     return Observer(builder: (context) {
-      if (!userState.isUserConnected) {
+      if (!stateUser.isUserConnected) {
         return Padding(
           padding: EdgeInsets.zero,
         );
