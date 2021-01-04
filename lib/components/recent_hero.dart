@@ -32,7 +32,7 @@ class _RecentHeroState extends State<RecentHero> {
   List<Quote> quotes = [];
   Quotidian quotidian;
 
-  String lang = 'en';
+  String lang = Language.en;
   String textTitle = 'Recent';
 
   @override
