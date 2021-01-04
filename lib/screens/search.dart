@@ -140,7 +140,7 @@ class _SearchState extends State<Search> {
   }
 
   Widget appBar() {
-    if (MediaQuery.of(context).size.width < 700.0 || Platform.isIOS) {
+    if (MediaQuery.of(context).size.width < 700.0 || !kIsWeb) {
       final width = MediaQuery.of(context).size.width;
       double titleLeftPadding = 70.0;
       double bottomContentLeftPadding = 94.0;
