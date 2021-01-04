@@ -73,7 +73,7 @@ export const checkEmailAvailability = functions
         'a valid email address.');
     }
 
-    const exists = await isUserByEmailExists(email);
+    const exists = await isUserExistsByEmail(email);
     const isAvailable = !exists;
 
     return {
@@ -82,7 +82,7 @@ export const checkEmailAvailability = functions
     };
   });
 
-export const checkNameAvailability = functions
+export const checkUsernameAvailability = functions
   .region('europe-west3')
   .https
   .onCall(async (data) => {
@@ -372,7 +372,7 @@ export const incrementQuota = functions
       });
   });
 
-async function isUserByEmailExists(email: string) {
+async function isUserExistsByEmail(email: string) {
   const emailSnapshot = await firestore
     .collection('users')
     .where('email', '==', email)
@@ -399,7 +399,7 @@ async function isUserByEmailExists(email: string) {
   }
 }
 
-async function isUserByUsernameExists(nameLowerCase: string) {
+async function isUserExistsByUsername(nameLowerCase: string) {
   const nameSnapshot = await firestore
     .collection('users')
     .where('nameLowerCase', '==', nameLowerCase)
@@ -439,7 +439,7 @@ export const updateEmail = functions
         'a valid "newEmail" argument. The value you specified is not in a correct email format.');
     }
 
-    const isEmailTaken = await isUserByEmailExists(newEmail);
+    const isEmailTaken = await isUserExistsByEmail(newEmail);
 
     if (isEmailTaken) {
       throw new functions.https.HttpsError('invalid-argument', 'The email specified ' +
@@ -496,7 +496,7 @@ export const updateUsername = functions
         'a valid "newUsername". The value you specified is not in a correct format.');
     }
 
-    const isUsernameTaken = await isUserByUsernameExists(newUsername.toLowerCase());
+    const isUsernameTaken = await isUserExistsByUsername(newUsername.toLowerCase());
 
     if (isUsernameTaken) {
       throw new functions.https.HttpsError('invalid-argument', 'The name specified ' +
