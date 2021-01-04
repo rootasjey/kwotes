@@ -117,7 +117,7 @@ class AppState extends State<App> {
   }
 
   void initAsync() async {
-    await Future.wait([autoLogin(), initColors()]);
+    await Future.wait([autoLogin(), initColors(), initLang()]);
 
     setState(() => isReady = true);
 
@@ -138,9 +138,7 @@ class AppState extends State<App> {
     stateColors.setAccentColor(Color(color.decimal));
   }
 
-  Future initStorage() async {
-    await appStorage.initialize();
-
+  Future initLang() async {
     final savedLang = appStorage.getLang();
     stateUser.setLang(savedLang);
   }
