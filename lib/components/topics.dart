@@ -3,6 +3,7 @@ import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/screens/topic_page.dart';
@@ -27,11 +28,12 @@ class _TopicsState extends State<Topics> {
 
   ReactionDisposer topicsDisposer;
 
-  String lang = 'en';
+  String lang = Language.en;
 
   @override
   initState() {
     super.initState();
+    initProps();
 
     topicsDisposer = autorun((reaction) {
       if (_topicsList.length == 0) {
@@ -40,6 +42,10 @@ class _TopicsState extends State<Topics> {
 
       fetch();
     });
+  }
+
+  void initProps() {
+    lang = stateUser.lang;
   }
 
   @override
