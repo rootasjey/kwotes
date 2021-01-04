@@ -71,9 +71,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               isNarrow
                   ? userSectionWidgets.add(userSigninMenu())
                   : userSectionWidgets.addAll([
+                      searchButton(),
                       brightnessButton(),
                       Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
+                        padding: const EdgeInsets.only(right: 60.0),
                         child: IconButton(
                           onPressed: () => Navigator.push(
                             context,
@@ -83,10 +84,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                           tooltip: 'Sign in',
                           icon: Icon(Icons.login),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 60.0),
-                        child: searchButton(),
                       ),
                     ]);
             }
