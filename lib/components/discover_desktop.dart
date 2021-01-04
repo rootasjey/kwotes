@@ -27,7 +27,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   bool isLoading = false;
 
   final cardWidth = 600.0;
-  final limit = 3;
+  final limit = 6;
   final paddingRightAvatar = 24.0;
 
   String lang = 'en';
@@ -86,6 +86,11 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
                 spacing: 20.0,
                 children: [
                   roundedButton(
+                    icon: Icons.refresh,
+                    textValue: 'Refresh',
+                    onPressed: fetch,
+                  ),
+                  roundedButton(
                     textValue: 'All references',
                     onPressed: () {
                       Navigator.of(context).push(
@@ -115,6 +120,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   Widget roundedButton({
     @required String textValue,
     @required VoidCallback onPressed,
+    IconData icon = Icons.list,
   }) {
     return ElevatedButton.icon(
       onPressed: onPressed,
@@ -129,7 +135,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
       icon: Opacity(
           opacity: 0.6,
           child: Icon(
-            Icons.list,
+            icon,
             color: stateColors.foreground,
           )),
       label: Text(
@@ -304,6 +310,9 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
 
   void fetch() async {
     setState(() {
+      _authorsMap.clear();
+      _referencesMap.clear();
+      currentDiscoverItems = 0;
       isLoading = true;
     });
 
