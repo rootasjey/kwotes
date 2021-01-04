@@ -9,10 +9,12 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/quotidian.dart';
+import 'package:figstyle/utils/language.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RecentHero extends StatefulWidget {
   @override
@@ -36,8 +38,13 @@ class _RecentHeroState extends State<RecentHero> {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
     fetchQuotidian();
+  }
+
+  void initProps() {
+    lang = stateUser.lang;
   }
 
   @override
@@ -110,6 +117,33 @@ class _RecentHeroState extends State<RecentHero> {
               },
               icon: Icon(Icons.restore),
               label: Text(''),
+            ),
+          ),
+          OutlinedButton(
+            onPressed: () {},
+            child: DropdownButton<String>(
+              elevation: 2,
+              value: lang,
+              isDense: true,
+              underline: Container(),
+              icon: Icon(Icons.language),
+              style: TextStyle(
+                color: stateColors.foreground.withOpacity(0.6),
+                fontSize: 20.0,
+                fontFamily: GoogleFonts.raleway().fontFamily,
+              ),
+              onChanged: (value) {
+                lang = value;
+                fetch();
+                // setState(() {});
+              },
+              items: Language.available().map((String value) {
+                return DropdownMenuItem(
+                    value: value,
+                    child: Text(
+                      value.toUpperCase(),
+                    ));
+              }).toList(),
             ),
           ),
         ],
