@@ -300,7 +300,7 @@ class _SignupState extends State<Signup> {
                 }
 
                 nameTimer = Timer(1.seconds, () async {
-                  final isAvailable = await checkNameAvailability(username);
+                  final isAvailable = await checkUsernameAvailability(username);
 
                   if (!isAvailable) {
                     setState(() {
@@ -612,7 +612,7 @@ class _SignupState extends State<Signup> {
 
   Future<bool> valuesAvailabilityCheck() async {
     final isEmailOk = await checkEmailAvailability(email);
-    final isNameOk = await checkNameAvailability(username);
+    final isNameOk = await checkUsernameAvailability(username);
 
     return isEmailOk && isNameOk;
   }

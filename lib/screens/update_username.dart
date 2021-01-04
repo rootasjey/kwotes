@@ -321,7 +321,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
               }
 
               nameTimer = Timer(1.seconds, () async {
-                isNameAvailable = await checkNameAvailability(newUserName);
+                isNameAvailable = await checkUsernameAvailability(newUserName);
 
                 if (!isNameAvailable) {
                   setState(() {
@@ -451,7 +451,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
     });
 
     try {
-      isNameAvailable = await checkNameAvailability(newUserName);
+      isNameAvailable = await checkUsernameAvailability(newUserName);
 
       if (!isNameAvailable) {
         setState(() {

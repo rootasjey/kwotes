@@ -81,13 +81,13 @@ bool checkEmailFormat(String email) {
       .hasMatch(email);
 }
 
-Future<bool> checkNameAvailability(String username) async {
+Future<bool> checkUsernameAvailability(String username) async {
   try {
     final callable = CloudFunctions(
       app: Firebase.app(),
       region: 'europe-west3',
     ).getHttpsCallable(
-      functionName: 'users-checkNameAvailability',
+      functionName: 'users-checkUsernameAvailability',
     );
 
     final resp = await callable.call({'name': username});
