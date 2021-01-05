@@ -14,6 +14,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/types/reference.dart';
+import 'package:mobx/mobx.dart';
 
 Map<Reference, Quote> _referencesMap = {};
 Map<Author, Quote> _authorsMap = {};
@@ -36,17 +37,30 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   int currentDiscoverItems = 0;
   int maxDiscoverItems = 3;
 
+  ReactionDisposer langReaction;
+
   @override
   initState() {
     super.initState();
+    initProps();
 
-    lang = stateUser.lang;
-
-    if (_referencesMap.length > 0 || _authorsMap.length > 0) {
-      return;
+    if (_referencesMap.length == 0 || _authorsMap.length == 0) {
+      lang = stateUser.lang;
+      fetch();
     }
+  }
 
-    fetch();
+  void initProps() {
+    langReaction = reaction((_) => stateUser.lang, (newLang) {
+      lang = newLang;
+      fetch();
+    });
+  }
+
+  @override
+  void dispose() {
+    langReaction?.reaction?.dispose();
+    super.dispose();
   }
 
   @override

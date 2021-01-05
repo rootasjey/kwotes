@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobx/mobx.dart';
 
 class RecentHero extends StatefulWidget {
   @override
@@ -32,6 +33,8 @@ class _RecentHeroState extends State<RecentHero> {
   List<Quote> quotes = [];
   Quotidian quotidian;
 
+  ReactionDisposer langReaction;
+
   String lang = Language.en;
   String textTitle = 'Recent';
 
@@ -39,12 +42,20 @@ class _RecentHeroState extends State<RecentHero> {
   void initState() {
     super.initState();
     initProps();
-    fetch();
-    fetchQuotidian();
   }
 
   void initProps() {
-    lang = stateUser.lang;
+    langReaction = autorun((reaction) {
+      lang = stateUser.lang;
+      fetch();
+      fetchQuotidian();
+    });
+  }
+
+  @override
+  dispose() {
+    langReaction?.reaction?.dispose();
+    super.dispose();
   }
 
   @override

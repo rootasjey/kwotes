@@ -34,18 +34,17 @@ class _TopicsState extends State<Topics> {
   initState() {
     super.initState();
     initProps();
+  }
 
+  void initProps() {
     topicsDisposer = autorun((reaction) {
       if (_topicsList.length == 0) {
         _topicsList = appTopicsColors.shuffle(max: limit);
       }
 
+      lang = stateUser.lang;
       fetch();
     });
-  }
-
-  void initProps() {
-    lang = stateUser.lang;
   }
 
   @override
@@ -201,13 +200,15 @@ class _TopicsState extends State<Topics> {
     if (!this.mounted) {
       return;
     }
-
     setState(() => isLoading = true);
 
     for (var i = 0; i < limit; i++) {
       await fetchTopicQuotes(i);
     }
 
+    if (!this.mounted) {
+      return;
+    }
     setState(() => isLoading = false);
   }
 
@@ -223,9 +224,11 @@ class _TopicsState extends State<Topics> {
           .get();
 
       if (snapshot.docs.isEmpty) {
-        setState(() {
-          isLoading = false;
-        });
+        if (!this.mounted) {
+          return;
+        }
+
+        setState(() => isLoading = false);
         return;
       }
 
