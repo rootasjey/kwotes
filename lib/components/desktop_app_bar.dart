@@ -1,9 +1,12 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/authors.dart';
+import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/settings.dart';
 import 'package:figstyle/screens/topic_page.dart';
+import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -22,6 +25,7 @@ import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DesktopAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
@@ -107,6 +111,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: discoverButton(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: developersButton(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: resourcesButton(),
                     ),
                     // if (widget.title.isNotEmpty)
                     //   Expanded(
@@ -217,6 +229,45 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
+  Widget developersButton() {
+    return PopupMenuButton(
+      child: Opacity(
+        opacity: 0.6,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'developers',
+                style: TextStyle(
+                  color: stateColors.foreground,
+                  fontSize: 16.0,
+                ),
+              ),
+              Icon(Icons.keyboard_arrow_down),
+            ],
+          ),
+        ),
+      ),
+      itemBuilder: (_) => <PopupMenuEntry<AppBarDevelopers>>[
+        developerEntry(
+          value: AppBarDevelopers.github,
+          icon: FaIcon(FontAwesomeIcons.github),
+          textData: 'GitHub',
+        ),
+      ],
+      onSelected: (value) {
+        switch (value) {
+          case AppBarDevelopers.github:
+            launch('https://github.com/outofcontextapp/app');
+            break;
+          default:
+        }
+      },
+    );
+  }
+
   Widget discoverButton() {
     return PopupMenuButton(
       child: Opacity(
@@ -281,6 +332,81 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
+  Widget resourcesButton() {
+    return PopupMenuButton(
+      child: Opacity(
+        opacity: 0.6,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'resources',
+                style: TextStyle(
+                  color: stateColors.foreground,
+                  fontSize: 16.0,
+                ),
+              ),
+              Icon(Icons.keyboard_arrow_down),
+            ],
+          ),
+        ),
+      ),
+      itemBuilder: (_) => <PopupMenuEntry<AppBarResources>>[
+        resourcesEntry(
+          value: AppBarResources.about,
+          icon: Icon(Icons.help),
+          textData: 'about',
+        ),
+        resourcesEntry(
+          value: AppBarResources.contact,
+          icon: Icon(Icons.sms),
+          textData: 'contact',
+        ),
+        resourcesEntry(
+          value: AppBarResources.tos,
+          icon: Icon(Icons.privacy_tip_outlined),
+          textData: 'Privacy Terms',
+        ),
+      ],
+      onSelected: (value) {
+        switch (value) {
+          case AppBarResources.about:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => About()));
+            break;
+          case AppBarResources.contact:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => Contact()));
+            break;
+          case AppBarResources.tos:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => Tos()));
+            break;
+          default:
+        }
+      },
+    );
+  }
+
+  Widget developerEntry({
+    @required Widget icon,
+    @required AppBarDevelopers value,
+    @required String textData,
+  }) {
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          icon,
+          Padding(padding: const EdgeInsets.only(left: 12.0)),
+          Text(textData),
+        ],
+      ),
+    );
+  }
+
   Widget discoverEntry({
     @required Widget icon,
     @required AppBarDiscover value,
@@ -301,6 +427,23 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   Widget quotesByEntry({
     @required Widget icon,
     @required AppBarQuotesBy value,
+    @required String textData,
+  }) {
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          icon,
+          Padding(padding: const EdgeInsets.only(left: 12.0)),
+          Text(textData),
+        ],
+      ),
+    );
+  }
+
+  Widget resourcesEntry({
+    @required Widget icon,
+    @required AppBarResources value,
     @required String textData,
   }) {
     return PopupMenuItem(

@@ -13,10 +13,24 @@ enum AniProps {
   width,
 }
 
+enum AppBarDevelopers {
+  apiReference,
+  apiStatus,
+  documentation,
+  github,
+  portal,
+}
+
 enum AppBarDiscover {
   authors,
   references,
   random,
+}
+
+enum AppBarResources {
+  about,
+  contact,
+  tos,
 }
 
 enum AppBarQuotesBy {
