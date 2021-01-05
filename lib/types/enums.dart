@@ -27,6 +27,16 @@ enum AppBarDiscover {
   random,
 }
 
+enum AppBarGroupedSectionItems {
+  github,
+  authors,
+  references,
+  random,
+  about,
+  contact,
+  tos,
+}
+
 enum AppBarResources {
   about,
   contact,
