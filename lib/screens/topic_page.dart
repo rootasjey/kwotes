@@ -22,6 +22,7 @@ import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:mobx/mobx.dart';
+import 'package:supercharged/supercharged.dart';
 
 class TopicPage extends StatefulWidget {
   final String name;
@@ -245,7 +246,7 @@ class _TopicPageState extends State<TopicPage> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 200.milliseconds,
           beginY: beginY,
           child: Padding(
             padding: const EdgeInsets.only(top: 40.0),

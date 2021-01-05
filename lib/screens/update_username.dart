@@ -105,9 +105,20 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       delegate: SliverChildListDelegate([
         Column(
           children: [
-            FadeInY(beginY: 10.0, child: currentUsernameCard()),
-            FadeInY(beginY: 10.0, delay: 0.4, child: usernameInput()),
-            FadeInY(beginY: 10.0, delay: 0.8, child: validationButton()),
+            FadeInY(
+              beginY: 10.0,
+              child: currentUsernameCard(),
+            ),
+            FadeInY(
+              beginY: 10.0,
+              delay: 100.milliseconds,
+              child: usernameInput(),
+            ),
+            FadeInY(
+              beginY: 10.0,
+              delay: 200.milliseconds,
+              child: validationButton(),
+            ),
           ],
         ),
       ]),

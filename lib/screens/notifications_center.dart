@@ -151,7 +151,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 0.0,
+          delay: 0.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(

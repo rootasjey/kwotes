@@ -7,6 +7,7 @@ import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -135,7 +136,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   Widget emailInput() {
     return FadeInY(
-      delay: 1.5,
+      delay: 100.milliseconds,
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(
@@ -207,7 +208,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   Widget validationButton() {
     return FadeInY(
-      delay: 2,
+      delay: 200.milliseconds,
       beginY: 50.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),

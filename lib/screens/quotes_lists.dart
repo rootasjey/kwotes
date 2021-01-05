@@ -368,7 +368,7 @@ class _QuotesListsState extends State<QuotesLists> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 200.milliseconds,
           beginY: 50.0,
           child: Container(
             padding: const EdgeInsets.all(40.0),

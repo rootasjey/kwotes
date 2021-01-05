@@ -6,6 +6,7 @@ import 'package:figstyle/screens/add_quote/author.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
+import 'package:supercharged/supercharged.dart';
 
 class AddQuoteTopics extends StatefulWidget {
   @override
@@ -65,7 +66,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
       children: <Widget>[
         FadeInY(
           beginY: 10.0,
-          delay: 0,
+          delay: 0.milliseconds,
           child: Opacity(
             opacity: .6,
             child: Text(
@@ -79,7 +80,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
         ),
         FadeInY(
           beginY: 10.0,
-          delay: 0.5,
+          delay: 100.milliseconds,
           child: clearButton(),
         ),
         Observer(builder: (context) {

@@ -10,6 +10,7 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class UpdatePassword extends StatefulWidget {
   @override
@@ -228,22 +229,22 @@ class _UpdatePasswordState extends State<UpdatePassword> {
         Column(
           children: <Widget>[
             FadeInY(
-              delay: 0.0,
+              delay: 0.milliseconds,
               beginY: beginY,
               child: helpCard(),
             ),
             FadeInY(
-              delay: 0.1,
+              delay: 100.milliseconds,
               beginY: beginY,
               child: currentPasswordInput(),
             ),
             FadeInY(
-              delay: 0.2,
+              delay: 200.milliseconds,
               beginY: beginY,
               child: newPasswordInput(),
             ),
             FadeInY(
-              delay: 0.3,
+              delay: 300.milliseconds,
               beginY: beginY,
               child: validationButton(),
             ),

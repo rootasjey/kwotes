@@ -22,6 +22,7 @@ import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:supercharged/supercharged.dart';
 
 class QuotesList extends StatefulWidget {
   final String id;
@@ -226,7 +227,7 @@ class _QuotesListState extends State<QuotesList> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 0.2,
+          delay: 200.milliseconds,
           beginY: 50.0,
           child: Container(
             padding: const EdgeInsets.all(40.0),

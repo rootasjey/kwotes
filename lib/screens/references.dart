@@ -142,7 +142,7 @@ class _ReferencesState extends State<References> {
       additionalIconButtons: [
         FadeInY(
           beginY: 10.0,
-          delay: 3.0,
+          delay: 300.milliseconds,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 10.0,
@@ -158,7 +158,7 @@ class _ReferencesState extends State<References> {
         ),
         FadeInY(
           beginY: 10.0,
-          delay: 3.5,
+          delay: 400.milliseconds,
           child: IconButton(
             onPressed: () {
               setState(() {
@@ -255,7 +255,7 @@ class _ReferencesState extends State<References> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 200.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(

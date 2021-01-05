@@ -29,7 +29,7 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Dashboard extends StatefulWidget {
@@ -109,16 +109,17 @@ class _DashboardState extends State<Dashboard> {
 
   List<Widget> adminWidgets(BuildContext context) {
     return [
-      ControlledAnimation(
+      CustomAnimation(
         duration: 250.milliseconds,
         tween: Tween(begin: 0.0, end: MediaQuery.of(context).size.width),
-        builder: (_, value) {
+        child: Divider(
+          thickness: 1.0,
+          height: 30.0,
+        ),
+        builder: (_, child, value) {
           return SizedBox(
             width: value,
-            child: Divider(
-              thickness: 1.0,
-              height: 30.0,
-            ),
+            child: child,
           );
         },
       ),

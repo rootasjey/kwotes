@@ -182,7 +182,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 200.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(

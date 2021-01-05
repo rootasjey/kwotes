@@ -734,7 +734,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         runSpacing: 20.0,
         children: <Widget>[
           linkCircleButton(
-            delay: 1.0,
+            delay: 100,
             name: 'Website',
             active: DataQuoteInputs.author.urls.website?.isNotEmpty,
             imageUrl: 'assets/images/world-globe.png',
@@ -753,7 +753,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           Observer(
             builder: (_) {
               return linkCircleButton(
-                delay: 1.2,
+                delay: 200,
                 name: 'Wikipedia',
                 active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
                 imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
@@ -772,7 +772,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 1.4,
+            delay: 300,
             name: 'Amazon',
             imageUrl: 'assets/images/amazon.png',
             active: DataQuoteInputs.author.urls.amazon.isNotEmpty,
@@ -789,7 +789,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 1.6,
+            delay: 400,
             name: 'Facebook',
             imageUrl: 'assets/images/facebook.png',
             active: DataQuoteInputs.author.urls.facebook.isNotEmpty,
@@ -806,7 +806,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 1.7,
+            delay: 500,
             name: 'Instagram',
             imageUrl: 'assets/images/instagram.png',
             active: DataQuoteInputs.author.urls.instagram.isNotEmpty,
@@ -823,7 +823,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 1.8,
+            delay: 600,
             name: 'Netflix',
             imageUrl: 'assets/images/netflix.png',
             active: DataQuoteInputs.author.urls.netflix.isNotEmpty,
@@ -840,7 +840,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 2.0,
+            delay: 700,
             name: 'Prime Video',
             imageUrl: 'assets/images/prime-video.png',
             active: DataQuoteInputs.author.urls.primeVideo.isNotEmpty,
@@ -857,7 +857,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 2.2,
+            delay: 800,
             name: 'Twitch',
             imageUrl: 'assets/images/twitch.png',
             active: DataQuoteInputs.author.urls.twitch.isNotEmpty,
@@ -874,7 +874,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 2.4,
+            delay: 900,
             name: 'Twitter',
             imageUrl: 'assets/images/twitter.png',
             active: DataQuoteInputs.author.urls.twitter.isNotEmpty,
@@ -891,7 +891,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 2.6,
+            delay: 1000,
             name: 'YouTube',
             imageUrl: 'assets/images/youtube.png',
             active: DataQuoteInputs.author.urls.youtube.isNotEmpty,
@@ -914,14 +914,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget linkCircleButton({
     bool active = false,
-    double delay = 0.0,
+    int delay = 0,
     String imageUrl,
     String name,
     Function onTap,
   }) {
     return FadeInX(
       beginX: 10.0,
-      delay: delay,
+      delay: Duration(milliseconds: delay),
       child: Tooltip(
         message: name,
         child: Material(

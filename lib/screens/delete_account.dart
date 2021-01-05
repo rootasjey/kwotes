@@ -16,6 +16,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class DeleteAccount extends StatefulWidget {
   @override
@@ -210,17 +211,17 @@ class DeleteAccountState extends State<DeleteAccount> {
           child: Column(
             children: <Widget>[
               FadeInY(
-                delay: 0.0,
+                delay: 0.milliseconds,
                 beginY: beginY,
                 child: warningCard(),
               ),
               FadeInY(
-                delay: 0.1,
+                delay: 100.milliseconds,
                 beginY: beginY,
                 child: passwordInput(),
               ),
               FadeInY(
-                delay: 0.2,
+                delay: 200.milliseconds,
                 beginY: beginY,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60.0),

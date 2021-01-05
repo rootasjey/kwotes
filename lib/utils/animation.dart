@@ -71,18 +71,16 @@ Widget createHeroQuoteAnimation({
     );
   }
 
-  return ControlledAnimation(
+  return CustomAnimation(
     duration: Duration(seconds: 1),
     tween: Tween(begin: 0.0, end: 1.0),
-    builder: (context, value) {
-      return Opacity(
-        opacity: value,
-        child: Text(
-          quote.name,
-          style: style,
-        ),
-      );
+    builder: (context, child, value) {
+      return Opacity(opacity: value, child: child);
     },
+    child: Text(
+      quote.name,
+      style: style,
+    ),
   );
 }
 
@@ -132,7 +130,7 @@ Widget createPunctuationAnimation({
     return FadeInY(
       endY: 0.0,
       beginY: 10.0,
-      delay: delayFactor * 2.0,
+      delay: Duration(milliseconds: delayFactor * 100),
       child: Text(
         word,
         style: style,
@@ -170,7 +168,7 @@ Widget createLengthAnimation(
     return FadeInY(
       endY: 0.0,
       beginY: 10.0,
-      delay: delayFactor * 2.0,
+      delay: Duration(milliseconds: delayFactor * 100),
       child: Text(
         word,
         style: style,

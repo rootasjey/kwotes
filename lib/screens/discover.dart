@@ -302,7 +302,7 @@ class _DiscoverState extends State<Discover> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 100.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(
@@ -511,11 +511,11 @@ class _DiscoverState extends State<Discover> {
 
   List<Widget> cardsList() {
     List<Widget> cards = [];
-    double index = 0;
+    int index = 0;
 
     for (var reference in references) {
       cards.add(FadeInY(
-        delay: index,
+        delay: Duration(milliseconds: index * 100),
         beginY: 100.0,
         child: ReferenceCard(
           elevation: 5.0,
@@ -529,7 +529,7 @@ class _DiscoverState extends State<Discover> {
         ),
       ));
 
-      index += 1.0;
+      index++;
     }
 
     return cards;

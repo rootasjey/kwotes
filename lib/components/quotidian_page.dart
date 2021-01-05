@@ -133,7 +133,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
     final topicColor = appTopicsColors.find(quotidian.quote.topics.first);
     final color = topicColor != null ? Color(topicColor.decimal) : Colors.white;
 
-    return ControlledAnimation(
+    return CustomAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
@@ -141,7 +141,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
         color: color,
         thickness: 2.0,
       ),
-      builderWithChild: (context, child, value) {
+      builder: (context, child, value) {
         return SizedBox(
           width: value,
           child: child,
@@ -151,32 +151,32 @@ class _QuotidianPageState extends State<QuotidianPage> {
   }
 
   Widget authorName() {
-    return ControlledAnimation(
+    return CustomAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 0.8),
-      builder: (context, value) {
+      builder: (context, child, value) {
         return Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Opacity(
-                opacity: value,
-                child: GestureDetector(
-                  onTap: () {
-                    final id = quotidian.quote.author.id;
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => AuthorPage(
-                              id: id,
-                            )));
-                  },
-                  child: Text(
-                    quotidian.quote.author.name,
-                    style: TextStyle(
-                      fontSize: 25.0,
-                    ),
-                  ),
-                )));
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Opacity(opacity: value, child: child),
+        );
       },
+      child: GestureDetector(
+        onTap: () {
+          final id = quotidian.quote.author.id;
+
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => AuthorPage(
+                    id: id,
+                  )));
+        },
+        child: Text(
+          quotidian.quote.author.name,
+          style: TextStyle(
+            fontSize: 25.0,
+          ),
+        ),
+      ),
     );
   }
 
@@ -268,7 +268,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
   }
 
   Widget referenceName() {
-    return ControlledAnimation(
+    return CustomAnimation(
       delay: 2.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 0.6),
@@ -286,7 +286,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
           ),
         ),
       ),
-      builderWithChild: (context, child, value) {
+      builder: (context, child, value) {
         return Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: Opacity(

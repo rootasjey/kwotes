@@ -105,22 +105,22 @@ class _UpdateEmailState extends State<UpdateEmail> {
             child: Column(
               children: <Widget>[
                 FadeInY(
-                  delay: 0.0,
+                  delay: 0.milliseconds,
                   beginY: beginY,
                   child: currentEmailCard(),
                 ),
                 FadeInY(
-                  delay: 0.1,
+                  delay: 100.milliseconds,
                   beginY: beginY,
                   child: emailInput(),
                 ),
                 FadeInY(
-                  delay: 0.2,
+                  delay: 200.milliseconds,
                   beginY: beginY,
                   child: passwordInput(),
                 ),
                 FadeInY(
-                  delay: 0.3,
+                  delay: 300.milliseconds,
                   beginY: beginY,
                   child: validationButton(),
                 ),

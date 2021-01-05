@@ -189,12 +189,12 @@ class ReferencePageState extends State<ReferencePage> {
         children: <Widget>[
           FadeInY(
             beginY: beginY,
-            delay: 1.0,
+            delay: 100.milliseconds,
             child: avatar(),
           ),
           FadeInY(
             beginY: beginY,
-            delay: 1.2,
+            delay: 200.milliseconds,
             child: types(),
           ),
           Padding(
@@ -320,14 +320,14 @@ class ReferencePageState extends State<ReferencePage> {
         ),
         if (urls.website.isNotEmpty)
           linkSquareButton(
-            delay: 0.0,
+            delay: 0,
             name: 'Website',
             url: urls.website,
             imageUrl: 'assets/images/world-globe.png',
           ),
         if (urls.wikipedia.isNotEmpty)
           linkSquareButton(
-            delay: 0.1,
+            delay: 100,
             name: 'Wikipedia',
             url: urls.wikipedia,
             // icon: FaIcon(FontAwesomeIcons.wikipediaW),
@@ -335,56 +335,56 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         if (urls.amazon.isNotEmpty)
           linkSquareButton(
-            delay: 0.2,
+            delay: 200,
             name: 'Amazon',
             url: urls.amazon,
             imageUrl: 'assets/images/amazon.png',
           ),
         if (urls.facebook.isNotEmpty)
           linkSquareButton(
-            delay: 0.3,
+            delay: 300,
             name: 'Facebook',
             url: urls.facebook,
             imageUrl: 'assets/images/facebook.png',
           ),
         if (urls.instagram.isNotEmpty)
           linkSquareButton(
-            delay: 0.4,
+            delay: 400,
             name: 'Instagram',
             url: urls.instagram,
             imageUrl: 'assets/images/instagram.png',
           ),
         if (urls.netflix.isNotEmpty)
           linkSquareButton(
-            delay: 0.5,
+            delay: 500,
             name: 'Netflix',
             url: urls.netflix,
             imageUrl: 'assets/images/netflix.png',
           ),
         if (urls.primeVideo.isNotEmpty)
           linkSquareButton(
-            delay: 0.6,
+            delay: 006,
             name: 'Prime Video',
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
           ),
         if (urls.twitch.isNotEmpty)
           linkSquareButton(
-            delay: 0.7,
+            delay: 700,
             name: 'Twitch',
             url: urls.twitch,
             imageUrl: 'assets/images/twitch.png',
           ),
         if (urls.twitter.isNotEmpty)
           linkSquareButton(
-            delay: 0.8,
+            delay: 800,
             name: 'Twitter',
             url: urls.twitter,
             imageUrl: 'assets/images/twitter.png',
           ),
         if (urls.youtube.isNotEmpty)
           linkSquareButton(
-            delay: 0.9,
+            delay: 900,
             name: 'Youtube',
             url: urls.youtube,
             imageUrl: 'assets/images/youtube.png',
@@ -394,7 +394,7 @@ class ReferencePageState extends State<ReferencePage> {
   }
 
   Widget linkSquareButton({
-    double delay = 0.0,
+    int delay = 0,
     String name,
     String url,
     String imageUrl,
@@ -402,7 +402,7 @@ class ReferencePageState extends State<ReferencePage> {
   }) {
     return FadeInX(
       beginX: 10.0,
-      delay: delay,
+      delay: Duration(milliseconds: delay),
       child: Tooltip(
         message: name,
         child: SizedBox(

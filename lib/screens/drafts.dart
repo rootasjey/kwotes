@@ -174,7 +174,7 @@ class _DraftsState extends State<Drafts> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 100.milliseconds,
           beginY: 50.0,
           child: Padding(
             padding: const EdgeInsets.only(top: 60.0),

@@ -199,7 +199,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 100.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(

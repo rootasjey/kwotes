@@ -110,7 +110,7 @@ class _AuthorsState extends State<Authors> {
         children: <Widget>[
           FadeInY(
             beginY: 10.0,
-            delay: 2.0,
+            delay: 100.milliseconds,
             child: ChoiceChip(
               label: Text(
                 'First added',
@@ -138,7 +138,7 @@ class _AuthorsState extends State<Authors> {
           ),
           FadeInY(
             beginY: 10.0,
-            delay: 2.5,
+            delay: 300.milliseconds,
             child: ChoiceChip(
               label: Text(
                 'Last added',
@@ -166,7 +166,7 @@ class _AuthorsState extends State<Authors> {
           ),
           FadeInY(
             beginY: 10.0,
-            delay: 3.0,
+            delay: 400.milliseconds,
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 10.0,
@@ -182,7 +182,7 @@ class _AuthorsState extends State<Authors> {
           ),
           FadeInY(
             beginY: 10.0,
-            delay: 3.5,
+            delay: 500.milliseconds,
             child: IconButton(
               onPressed: () {
                 if (itemsLayout == ItemsLayout.list) {
@@ -206,7 +206,7 @@ class _AuthorsState extends State<Authors> {
           ),
           FadeInY(
             beginY: 10.0,
-            delay: 3.5,
+            delay: 600.milliseconds,
             child: IconButton(
               onPressed: () {
                 if (itemsLayout == ItemsLayout.grid) {
@@ -230,7 +230,7 @@ class _AuthorsState extends State<Authors> {
           ),
           FadeInY(
             beginY: 10.0,
-            delay: 3.0,
+            delay: 700.milliseconds,
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 10.0,
@@ -246,7 +246,7 @@ class _AuthorsState extends State<Authors> {
           ),
           FadeInY(
             beginY: 10.0,
-            delay: 3.5,
+            delay: 800.milliseconds,
             child: IconButton(
               onPressed: () {
                 setState(() {
@@ -343,7 +343,7 @@ class _AuthorsState extends State<Authors> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 100.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(

@@ -23,6 +23,7 @@ import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -112,19 +113,19 @@ class _SettingsState extends State<Settings> {
           return Column(
             children: [
               FadeInY(
-                delay: 0.0,
+                delay: 0.milliseconds,
                 beginY: 50.0,
                 child: avatar(isUserConnected),
               ),
               accountActions(isUserConnected),
               FadeInY(
-                delay: 0.2,
+                delay: 100.milliseconds,
                 beginY: 50.0,
                 child: updateUsernameButton(isUserConnected),
               ),
               Padding(padding: const EdgeInsets.only(top: 20.0)),
               FadeInY(
-                delay: 0.3,
+                delay: 200.milliseconds,
                 beginY: 50.0,
                 child: emailButton(),
               ),
@@ -159,12 +160,12 @@ class _SettingsState extends State<Settings> {
         spacing: 15.0,
         children: <Widget>[
           FadeInX(
-            delay: 0.0,
+            delay: 0.milliseconds,
             beginX: 50.0,
             child: updatePasswordButton(),
           ),
           FadeInX(
-            delay: 0.2,
+            delay: 100.milliseconds,
             beginX: 50.0,
             child: deleteAccountButton(),
           )
@@ -252,7 +253,7 @@ class _SettingsState extends State<Settings> {
           Row(
             children: <Widget>[
               FadeInY(
-                delay: 1.6,
+                delay: 100.milliseconds,
                 beginY: 10.0,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 20.0, left: 20.0),
@@ -272,7 +273,7 @@ class _SettingsState extends State<Settings> {
           Column(
             children: [
               FadeInY(
-                delay: 1.9,
+                delay: 200.milliseconds,
                 beginY: 10.0,
                 child: SwitchListTile(
                   onChanged: (bool value) {
@@ -577,7 +578,7 @@ class _SettingsState extends State<Settings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           FadeInY(
-            delay: 0.6,
+            delay: 0.milliseconds,
             beginY: 10.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -596,7 +597,7 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           FadeInY(
-            delay: 0.8,
+            delay: 100.milliseconds,
             beginY: 10.0,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -612,7 +613,7 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           FadeInY(
-            delay: 1.4,
+            delay: 200.milliseconds,
             beginY: 10.0,
             child: SwitchListTile(
               title: Text('Automatic theme'),
@@ -633,7 +634,7 @@ class _SettingsState extends State<Settings> {
           ),
           if (!isThemeAuto)
             FadeInY(
-              delay: 0,
+              delay: 0.milliseconds,
               beginY: 10.0,
               child: SwitchListTile(
                 title: Text('Lights'),
@@ -737,24 +738,24 @@ class _SettingsState extends State<Settings> {
                     child: ppCard(
                       imageName: 'boy',
                     ),
-                    delay: 1,
+                    delay: 100.milliseconds,
                     beginX: 50.0,
                   ),
                   FadeInX(
                     child: ppCard(imageName: 'employee'),
-                    delay: 1.2,
+                    delay: 200.milliseconds,
                     beginX: 50.0,
                   ),
                   FadeInX(
                     child: ppCard(imageName: 'lady'),
-                    delay: 1.3,
+                    delay: 300.milliseconds,
                     beginX: 50.0,
                   ),
                   FadeInX(
                     child: ppCard(
                       imageName: 'user',
                     ),
-                    delay: 1.4,
+                    delay: 400.milliseconds,
                     beginX: 50.0,
                   ),
                 ],

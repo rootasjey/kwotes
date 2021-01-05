@@ -13,6 +13,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:supercharged/supercharged.dart';
 
 class Signin extends StatefulWidget {
   @override
@@ -99,7 +100,7 @@ class _SigninState extends State<Signin> {
 
   Widget emailInput() {
     return FadeInY(
-      delay: 0.5,
+      delay: 100.milliseconds,
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(
@@ -138,7 +139,7 @@ class _SigninState extends State<Signin> {
 
   Widget forgotPassword() {
     return FadeInY(
-      delay: 1.5,
+      delay: 100.milliseconds,
       beginY: 50.0,
       child: FlatButton(
           onPressed: () {
@@ -167,7 +168,7 @@ class _SigninState extends State<Signin> {
       children: <Widget>[
         FadeInX(
           beginX: 10.0,
-          delay: 2.0,
+          delay: 200.milliseconds,
           child: Padding(
             padding: const EdgeInsets.only(
               right: 20.0,
@@ -198,7 +199,7 @@ class _SigninState extends State<Signin> {
               ),
             ),
             FadeInY(
-              delay: 0.3,
+              delay: 300.milliseconds,
               beginY: 50.0,
               child: Opacity(
                 opacity: .6,
@@ -213,7 +214,7 @@ class _SigninState extends State<Signin> {
 
   Widget noAccountButton() {
     return FadeInY(
-      delay: 2.5,
+      delay: 400.milliseconds,
       beginY: 50.0,
       child: FlatButton(
           onPressed: () async {
@@ -239,7 +240,7 @@ class _SigninState extends State<Signin> {
 
   Widget passwordInput() {
     return FadeInY(
-      delay: 1.0,
+      delay: 100.milliseconds,
       beginY: 50.0,
       child: Padding(
         padding: EdgeInsets.only(
@@ -277,7 +278,7 @@ class _SigninState extends State<Signin> {
 
   Widget validationButton() {
     return FadeInY(
-      delay: 2.0,
+      delay: 200.milliseconds,
       beginY: 50.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),

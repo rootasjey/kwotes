@@ -89,7 +89,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           langSelector(),
           summaryCardInput(),
           FadeInY(
-            delay: 0.0,
+            delay: 0.milliseconds,
             beginY: beginY,
             child: links(),
           ),
@@ -308,7 +308,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         runSpacing: spacing,
         children: <Widget>[
           linkSquareButton(
-            delay: 1.0,
+            delay: 100,
             name: 'Website',
             active: DataQuoteInputs.reference.urls.website.isNotEmpty,
             imageUrl: 'assets/images/world-globe.png',
@@ -327,7 +327,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           Observer(
             builder: (_) {
               return linkSquareButton(
-                delay: 1.2,
+                delay: 200,
                 name: 'Wikipedia',
                 active: DataQuoteInputs.reference.urls.wikipedia.isNotEmpty,
                 imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
@@ -346,7 +346,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 1.4,
+            delay: 300,
             name: 'Amazon',
             imageUrl: 'assets/images/amazon.png',
             active: DataQuoteInputs.reference.urls.amazon.isNotEmpty,
@@ -363,7 +363,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 1.6,
+            delay: 400,
             name: 'Facebook',
             imageUrl: 'assets/images/facebook.png',
             active: DataQuoteInputs.reference.urls.facebook.isNotEmpty,
@@ -380,7 +380,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 1.7,
+            delay: 500,
             name: 'Instagram',
             imageUrl: 'assets/images/instagram.png',
             active: DataQuoteInputs.reference.urls.instagram.isNotEmpty,
@@ -397,7 +397,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 1.8,
+            delay: 600,
             name: 'Netflix',
             imageUrl: 'assets/images/netflix.png',
             active: DataQuoteInputs.reference.urls.netflix.isNotEmpty,
@@ -414,7 +414,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 2.0,
+            delay: 700,
             name: 'Prime Video',
             imageUrl: 'assets/images/prime-video.png',
             active: DataQuoteInputs.reference.urls.primeVideo.isNotEmpty,
@@ -431,7 +431,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 2.2,
+            delay: 700,
             name: 'Twitch',
             imageUrl: 'assets/images/twitch.png',
             active: DataQuoteInputs.reference.urls.twitch.isNotEmpty,
@@ -448,7 +448,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 2.4,
+            delay: 800,
             name: 'Twitter',
             imageUrl: 'assets/images/twitter.png',
             active: DataQuoteInputs.reference.urls.twitter.isNotEmpty,
@@ -465,7 +465,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 2.6,
+            delay: 900,
             name: 'YouTube',
             imageUrl: 'assets/images/youtube.png',
             active: DataQuoteInputs.reference.urls.youtube.isNotEmpty,
@@ -488,14 +488,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget linkSquareButton({
     bool active = false,
-    double delay = 0.0,
+    int delay = 0,
     String imageUrl,
     String name,
     Function onTap,
   }) {
     return FadeInX(
       beginX: 10.0,
-      delay: delay,
+      delay: Duration(milliseconds: delay),
       child: Tooltip(
         message: name,
         child: SizedBox(

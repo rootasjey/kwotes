@@ -16,6 +16,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:supercharged/supercharged.dart';
 
 enum SubjectType {
   author,
@@ -135,7 +136,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
         children: <Widget>[
           FadeInY(
             beginY: 10.0,
-            delay: 3.5,
+            delay: 300.milliseconds,
             child: Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: DropdownButton<String>(
@@ -196,7 +197,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 200.milliseconds,
           beginY: 50.0,
           child: EmptyContent(
             icon: Opacity(

@@ -203,7 +203,7 @@ class _FavouritesState extends State<Favourites> {
     return SliverList(
       delegate: SliverChildListDelegate([
         FadeInY(
-          delay: 2.0,
+          delay: 100.milliseconds,
           beginY: 50.0,
           child: Padding(
             padding: const EdgeInsets.only(top: 40.0),

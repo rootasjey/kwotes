@@ -89,16 +89,16 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
 
   Widget cardsItems() {
     List<Widget> cards = [];
-    double count = 0;
+    int count = 0;
 
     for (var author in _authorsList) {
-      count += 0.5;
+      count += 100;
 
       cards.add(
         FadeInX(
           beginX: 130.0,
           endX: 0.0,
-          delay: count,
+          delay: Duration(milliseconds: count),
           child: CircleAuthor(
             author: author,
           ),

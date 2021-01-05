@@ -181,7 +181,7 @@ class _QuotePageState extends State<QuotePage> {
     final topicColor = appTopicsColors.find(quote.topics.first);
     final color = topicColor != null ? Color(topicColor.decimal) : Colors.white;
 
-    return ControlledAnimation(
+    return CustomAnimation(
       delay: 1.seconds,
       duration: 1.seconds,
       tween: Tween(begin: 0.0, end: 200.0),
@@ -189,7 +189,7 @@ class _QuotePageState extends State<QuotePage> {
         color: color,
         thickness: 2.0,
       ),
-      builderWithChild: (context, child, value) {
+      builder: (context, child, value) {
         return Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: SizedBox(
@@ -204,7 +204,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget authorName() {
     final fontSize = MediaQuery.of(context).size.width < 400.0 ? 18.0 : 25.0;
 
-    return ControlledAnimation(
+    return CustomAnimation(
       delay: 1.seconds,
       duration: 250.milliseconds,
       tween: Tween(begin: 0.0, end: 0.6),
@@ -218,7 +218,7 @@ class _QuotePageState extends State<QuotePage> {
           ),
         ),
       ),
-      builderWithChild: (context, child, value) {
+      builder: (context, child, value) {
         return Opacity(
           opacity: value,
           child: child,
@@ -230,7 +230,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget divider() {
     return FadeInY(
       beginY: 10.0,
-      delay: 3,
+      delay: 300.milliseconds,
       child: Padding(
         padding: const EdgeInsets.only(top: 60.0, bottom: 20.0),
         child: Container(
@@ -313,7 +313,7 @@ class _QuotePageState extends State<QuotePage> {
       return Container();
     }
 
-    return ControlledAnimation(
+    return CustomAnimation(
       delay: 1.2.seconds,
       duration: 250.milliseconds,
       tween: Tween(begin: 0.0, end: 0.5),
@@ -328,7 +328,7 @@ class _QuotePageState extends State<QuotePage> {
           ),
         ),
       ),
-      builderWithChild: (context, child, value) {
+      builder: (context, child, value) {
         return Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Opacity(
