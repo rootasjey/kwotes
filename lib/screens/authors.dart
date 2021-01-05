@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/author_row.dart';
 import 'package:figstyle/components/error_container.dart';
-import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/sliver_loading_view.dart';
 import 'package:figstyle/components/circle_author.dart';
 import 'package:figstyle/components/empty_content.dart';
@@ -17,6 +16,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share/share.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,8 +34,6 @@ class _AuthorsState extends State<Authors> {
   bool isLoading = false;
   bool isLoadingMore = false;
   bool isSearching = false;
-
-  HeaderViewType headerViewType = HeaderViewType.search;
 
   TextEditingController searchInputController;
 
@@ -97,167 +95,9 @@ class _AuthorsState extends State<Authors> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: body(),
-    );
-  }
-
-  Widget appBar() {
-    return BasePageAppBar(
-      textTitle: 'Options',
-      showNavBackIcon: true,
-      bottom: Wrap(
-        spacing: 10.0,
-        children: <Widget>[
-          FadeInY(
-            beginY: 10.0,
-            delay: 100.milliseconds,
-            child: ChoiceChip(
-              label: Text(
-                'First added',
-                style: TextStyle(
-                  color: !descending ? Colors.white : stateColors.foreground,
-                ),
-              ),
-              tooltip: 'Order by first added',
-              selected: !descending,
-              selectedColor: stateColors.primary,
-              onSelected: (selected) {
-                if (!descending) {
-                  return;
-                }
-
-                descending = false;
-                fetch();
-
-                appStorage.setPageOrder(
-                  descending: descending,
-                  pageRoute: pageRoute,
-                );
-              },
-            ),
-          ),
-          FadeInY(
-            beginY: 10.0,
-            delay: 300.milliseconds,
-            child: ChoiceChip(
-              label: Text(
-                'Last added',
-                style: TextStyle(
-                  color: descending ? Colors.white : stateColors.foreground,
-                ),
-              ),
-              tooltip: 'Order by most recently added',
-              selected: descending,
-              selectedColor: stateColors.primary,
-              onSelected: (selected) {
-                if (descending) {
-                  return;
-                }
-
-                descending = true;
-                fetch();
-
-                appStorage.setPageOrder(
-                  descending: descending,
-                  pageRoute: pageRoute,
-                );
-              },
-            ),
-          ),
-          FadeInY(
-            beginY: 10.0,
-            delay: 400.milliseconds,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-                left: 20.0,
-                right: 20.0,
-              ),
-              child: Container(
-                height: 25,
-                width: 2.0,
-                color: stateColors.foreground.withOpacity(0.5),
-              ),
-            ),
-          ),
-          FadeInY(
-            beginY: 10.0,
-            delay: 500.milliseconds,
-            child: IconButton(
-              onPressed: () {
-                if (itemsLayout == ItemsLayout.list) {
-                  return;
-                }
-
-                setState(() {
-                  itemsLayout = ItemsLayout.list;
-                });
-
-                appStorage.saveItemsStyle(
-                  pageRoute: pageRoute,
-                  style: ItemsLayout.list,
-                );
-              },
-              icon: Icon(Icons.list),
-              color: itemsLayout == ItemsLayout.list
-                  ? stateColors.primary
-                  : stateColors.foreground.withOpacity(0.5),
-            ),
-          ),
-          FadeInY(
-            beginY: 10.0,
-            delay: 600.milliseconds,
-            child: IconButton(
-              onPressed: () {
-                if (itemsLayout == ItemsLayout.grid) {
-                  return;
-                }
-
-                setState(() {
-                  itemsLayout = ItemsLayout.grid;
-                });
-
-                appStorage.saveItemsStyle(
-                  pageRoute: pageRoute,
-                  style: ItemsLayout.grid,
-                );
-              },
-              icon: Icon(Icons.grid_on),
-              color: itemsLayout == ItemsLayout.grid
-                  ? stateColors.primary
-                  : stateColors.foreground.withOpacity(0.5),
-            ),
-          ),
-          FadeInY(
-            beginY: 10.0,
-            delay: 700.milliseconds,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-                left: 20.0,
-                right: 20.0,
-              ),
-              child: Container(
-                height: 25,
-                width: 2.0,
-                color: stateColors.foreground.withOpacity(0.5),
-              ),
-            ),
-          ),
-          FadeInY(
-            beginY: 10.0,
-            delay: 800.milliseconds,
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  searchInputValue = lastSearchValue;
-                  headerViewType = HeaderViewType.search;
-                });
-              },
-              icon: Icon(Icons.search),
-              color: stateColors.foreground.withOpacity(0.5),
-            ),
-          ),
+      body: Overlay(
+        initialEntries: [
+          OverlayEntry(builder: (_) => body()),
         ],
       ),
     );
@@ -306,10 +146,7 @@ class _AuthorsState extends State<Authors> {
                 title: 'Authors',
                 automaticallyImplyLeading: true,
               ),
-              headerViewType == HeaderViewType.options
-                  ? appBar()
-                  : searchHeader(),
-              SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
+              searchHeader(),
               bodyListContent(),
               SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
             ],
@@ -379,36 +216,88 @@ class _AuthorsState extends State<Authors> {
   Widget searchActions() {
     return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
       RaisedButton.icon(
-          onPressed: () {
-            searchInputValue = '';
-            lastSearchValue = '';
-            searchInputController.clear();
-            searchFocusNode.requestFocus();
+        onPressed: () {
+          searchInputValue = '';
+          lastSearchValue = '';
+          searchInputController.clear();
+          searchFocusNode.requestFocus();
 
-            setState(() {});
-          },
-          icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Clear content',
+          setState(() {});
+        },
+        icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+        label: Opacity(
+          opacity: 0.6,
+          child: Text(
+            'Clear content',
+          ),
+        ),
+      ),
+      DropdownButton<ItemsLayout>(
+        icon: Container(),
+        underline: Container(),
+        value: itemsLayout,
+        onChanged: (selectedLayout) {
+          if (selectedLayout == itemsLayout) {
+            return;
+          }
+
+          setState(() {
+            itemsLayout = selectedLayout;
+          });
+
+          appStorage.saveItemsStyle(
+            pageRoute: pageRoute,
+            style: selectedLayout,
+          );
+        },
+        items: [
+          DropdownMenuItem(
+            value: ItemsLayout.list,
+            child: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.list),
             ),
-          )),
-      RaisedButton.icon(
-          onPressed: () {
-            setState(() {
-              lastSearchValue = searchInputValue;
-              searchInputValue = '';
-              headerViewType = HeaderViewType.options;
-            });
-          },
-          icon: Opacity(opacity: 0.6, child: Icon(Icons.swap_horiz)),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Switch to options',
+          ),
+          DropdownMenuItem(
+            value: ItemsLayout.grid,
+            child: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.grid_on),
             ),
-          )),
+          ),
+        ],
+      ),
+      DropdownButton<bool>(
+        value: descending,
+        icon: Container(),
+        underline: Container(),
+        onChanged: (newDescending) {
+          if (descending == newDescending) {
+            return;
+          }
+
+          descending = newDescending;
+          fetch();
+
+          appStorage.setPageOrder(
+            descending: newDescending,
+            pageRoute: pageRoute,
+          );
+        },
+        items: [
+          DropdownMenuItem(
+            child: Opacity(
+                opacity: 0.6,
+                child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
+            value: true,
+          ),
+          DropdownMenuItem(
+            child: Opacity(
+                opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
+            value: false,
+          ),
+        ],
+      ),
     ]);
   }
 
