@@ -95,7 +95,9 @@ class _ReferencesState extends State<References> {
               child: Icon(Icons.arrow_upward),
             )
           : null,
-      body: body(),
+      body: Overlay(initialEntries: [
+        OverlayEntry(builder: (_) => body()),
+      ]),
     );
   }
 
