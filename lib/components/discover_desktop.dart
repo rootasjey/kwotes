@@ -323,6 +323,10 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   }
 
   void fetch() async {
+    if (!this.mounted) {
+      return;
+    }
+
     setState(() {
       _authorsMap.clear();
       _referencesMap.clear();
@@ -334,6 +338,10 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
       fetchReferences(),
       fetchAuthors(),
     ]);
+
+    if (!this.mounted) {
+      return;
+    }
 
     setState(() {
       isLoading = false;
