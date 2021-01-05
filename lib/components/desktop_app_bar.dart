@@ -143,86 +143,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
-  Widget newQuoteButton() {
-    return IconButton(
-      tooltip: "New quote",
-      onPressed: () {
-        DataQuoteInputs.clearAll();
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
-      },
-      color: stateColors.foreground,
-      icon: Icon(Icons.add),
-    );
-  }
-
-  Widget searchButton() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: IconButton(
-        tooltip: 'Search',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => Search(),
-            ),
-          );
-        },
-        color: stateColors.foreground,
-        icon: Icon(Icons.search),
-      ),
-    );
-  }
-
-  Widget signupButton() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: FlatButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => Signup()));
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8.0,
-          ),
-          child: Text(
-            'SIGN UP',
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget signinButton() {
-    return RaisedButton(
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => Signin()));
-      },
-      color: stateColors.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
-        ),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'SIGN IN',
-              style: TextStyle(
-                color: Colors.white,
-                // fontSize: 13.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   /// Switch from dark to light and vice-versa.
   Widget brightnessButton() {
     IconData iconBrightness = Icons.brightness_auto;
@@ -279,6 +199,94 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget closeButton() {
+    return IconButton(
+      onPressed: () => Navigator.of(context).pop(),
+      color: Theme.of(context).iconTheme.color,
+      icon: Icon(Icons.close),
+    );
+  }
+
+  Widget newQuoteButton() {
+    return IconButton(
+      tooltip: "New quote",
+      onPressed: () {
+        DataQuoteInputs.clearAll();
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+      },
+      color: stateColors.foreground,
+      icon: Icon(Icons.add),
+    );
+  }
+
+  Widget searchButton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: IconButton(
+        tooltip: 'Search',
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => Search(),
+            ),
+          );
+        },
+        color: stateColors.foreground,
+        icon: Icon(Icons.search),
+      ),
+    );
+  }
+
+  Widget signinButton() {
+    return RaisedButton(
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => Signin()));
+      },
+      color: stateColors.primary,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(7.0),
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'SIGN IN',
+              style: TextStyle(
+                color: Colors.white,
+                // fontSize: 13.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget signupButton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: FlatButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => Signup()));
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+          ),
+          child: Text(
+            'SIGN UP',
+          ),
+        ),
       ),
     );
   }
@@ -484,14 +492,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: value,
         );
       },
-    );
-  }
-
-  Widget closeButton() {
-    return IconButton(
-      onPressed: () => Navigator.of(context).pop(),
-      color: Theme.of(context).iconTheme.color,
-      icon: Icon(Icons.close),
     );
   }
 }
