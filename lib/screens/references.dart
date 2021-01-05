@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/error_container.dart';
-import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/reference_row.dart';
 import 'package:figstyle/components/sliver_loading_view.dart';
 import 'package:figstyle/components/reference_card.dart';
@@ -18,6 +17,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supercharged/supercharged.dart';
 
 class References extends StatefulWidget {
@@ -35,7 +35,6 @@ class _ReferencesState extends State<References> {
   bool isSearching = false;
 
   DocumentSnapshot lastDoc;
-  HeaderViewType headerViewType = HeaderViewType.search;
 
   TextEditingController searchInputController;
 
@@ -100,80 +99,6 @@ class _ReferencesState extends State<References> {
     );
   }
 
-  Widget appBar() {
-    return PageAppBar(
-      textTitle: 'Options',
-      onTitlePressed: () {
-        scrollController.animateTo(
-          0,
-          duration: 250.milliseconds,
-          curve: Curves.easeIn,
-        );
-      },
-      descending: descending,
-      onDescendingChanged: (newDescending) {
-        if (descending == newDescending) {
-          return;
-        }
-
-        descending = newDescending;
-        fetch();
-
-        appStorage.setPageOrder(
-          descending: newDescending,
-          pageRoute: pageRoute,
-        );
-      },
-      itemsLayout: itemsLayout,
-      onItemsLayoutSelected: (selectedLayout) {
-        if (selectedLayout == itemsLayout) {
-          return;
-        }
-
-        setState(() {
-          itemsLayout = selectedLayout;
-        });
-
-        appStorage.saveItemsStyle(
-          pageRoute: pageRoute,
-          style: selectedLayout,
-        );
-      },
-      additionalIconButtons: [
-        FadeInY(
-          beginY: 10.0,
-          delay: 300.milliseconds,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 10.0,
-              left: 20.0,
-              right: 20.0,
-            ),
-            child: Container(
-              height: 25,
-              width: 2.0,
-              color: stateColors.foreground.withOpacity(0.5),
-            ),
-          ),
-        ),
-        FadeInY(
-          beginY: 10.0,
-          delay: 400.milliseconds,
-          child: IconButton(
-            onPressed: () {
-              setState(() {
-                searchInputValue = lastSearchValue;
-                headerViewType = HeaderViewType.search;
-              });
-            },
-            icon: Icon(Icons.search),
-            color: stateColors.foreground.withOpacity(0.5),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget body() {
     return RefreshIndicator(
         onRefresh: () async {
@@ -217,9 +142,7 @@ class _ReferencesState extends State<References> {
                 title: 'References',
                 automaticallyImplyLeading: true,
               ),
-              headerViewType == HeaderViewType.options
-                  ? appBar()
-                  : searchHeader(),
+              searchHeader(),
               SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
               bodyListContent(),
               SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
@@ -291,36 +214,88 @@ class _ReferencesState extends State<References> {
   Widget searchActions() {
     return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
       RaisedButton.icon(
-          onPressed: () {
-            searchInputValue = '';
-            lastSearchValue = '';
-            searchInputController.clear();
-            searchFocusNode.requestFocus();
+        onPressed: () {
+          searchInputValue = '';
+          lastSearchValue = '';
+          searchInputController.clear();
+          searchFocusNode.requestFocus();
 
-            setState(() {});
-          },
-          icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Clear content',
+          setState(() {});
+        },
+        icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+        label: Opacity(
+          opacity: 0.6,
+          child: Text(
+            'Clear content',
+          ),
+        ),
+      ),
+      DropdownButton<ItemsLayout>(
+        icon: Container(),
+        underline: Container(),
+        value: itemsLayout,
+        onChanged: (selectedLayout) {
+          if (selectedLayout == itemsLayout) {
+            return;
+          }
+
+          setState(() {
+            itemsLayout = selectedLayout;
+          });
+
+          appStorage.saveItemsStyle(
+            pageRoute: pageRoute,
+            style: selectedLayout,
+          );
+        },
+        items: [
+          DropdownMenuItem(
+            value: ItemsLayout.list,
+            child: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.list),
             ),
-          )),
-      RaisedButton.icon(
-          onPressed: () {
-            setState(() {
-              lastSearchValue = searchInputValue;
-              searchInputValue = '';
-              headerViewType = HeaderViewType.options;
-            });
-          },
-          icon: Opacity(opacity: 0.6, child: Icon(Icons.swap_horiz)),
-          label: Opacity(
-            opacity: 0.6,
-            child: Text(
-              'Switch to options',
+          ),
+          DropdownMenuItem(
+            value: ItemsLayout.grid,
+            child: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.grid_on),
             ),
-          )),
+          ),
+        ],
+      ),
+      DropdownButton<bool>(
+        value: descending,
+        icon: Container(),
+        underline: Container(),
+        onChanged: (newDescending) {
+          if (descending == newDescending) {
+            return;
+          }
+
+          descending = newDescending;
+          fetch();
+
+          appStorage.setPageOrder(
+            descending: newDescending,
+            pageRoute: pageRoute,
+          );
+        },
+        items: [
+          DropdownMenuItem(
+            child: Opacity(
+                opacity: 0.6,
+                child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
+            value: true,
+          ),
+          DropdownMenuItem(
+            child: Opacity(
+                opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
+            value: false,
+          ),
+        ],
+      ),
     ]);
   }
 
