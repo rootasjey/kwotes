@@ -34,18 +34,22 @@ class Tos extends StatelessWidget {
             ),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed([
-                SizedBox(
-                  width: 600.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      termsBlock(),
-                      cookiesBlock(),
-                      analyticsBlock(),
-                      advertisingBlock(),
-                      inAppPurchasesBlock(),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 600.0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          termsBlock(),
+                          cookiesBlock(),
+                          analyticsBlock(),
+                          advertisingBlock(),
+                          inAppPurchasesBlock(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ]),
             ),
@@ -118,6 +122,16 @@ class Tos extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24.0),
+            child: Text(
+              "Terms of service",
+              style: TextStyle(
+                fontSize: 50.0,
+                color: stateColors.accent,
+              ),
+            ),
+          ),
           textSuperBlock(
             text:
                 "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, fig.style, and other sites we own and operate including mobile apps.",
