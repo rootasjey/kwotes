@@ -1,7 +1,14 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/screens/authors.dart';
+import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
+import 'package:figstyle/screens/settings.dart';
+import 'package:figstyle/screens/topic_page.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/brightness.dart';
+import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/users.dart';
@@ -14,6 +21,7 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DesktopAppBar extends StatefulWidget {
   final bool automaticallyImplyLeading;
@@ -59,33 +67,9 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             final userSectionWidgets = List<Widget>();
 
             if (stateUser.isUserConnected) {
-              isNarrow
-                  ? userSectionWidgets.add(userAvatar(isNarrow: isNarrow))
-                  : userSectionWidgets.addAll([
-                      brightnessButton(),
-                      searchButton(),
-                      newQuoteButton(),
-                      userAvatar(),
-                    ]);
+              userSectionWidgets.addAll(getAuthButtons(isNarrow));
             } else {
-              isNarrow
-                  ? userSectionWidgets.add(userSigninMenu())
-                  : userSectionWidgets.addAll([
-                      searchButton(),
-                      brightnessButton(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 60.0),
-                        child: IconButton(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => Signin()),
-                          ),
-                          color: stateColors.foreground,
-                          tooltip: 'Sign in',
-                          icon: Icon(Icons.login),
-                        ),
-                      ),
-                    ]);
+              userSectionWidgets.addAll(getGuestButtons(isNarrow));
             }
 
             return SliverAppBar(
@@ -99,7 +83,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               title: Padding(
                 padding: widget.padding,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     if (widget.automaticallyImplyLeading)
@@ -116,22 +100,30 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                       padding: EdgeInsets.zero,
                       onTap: widget.onTapIconHeader,
                     ),
-                    if (widget.title.isNotEmpty)
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              widget.title,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: stateColors.foreground,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 32.0),
+                      child: quotesByDropdown(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: discoverButton(),
+                    ),
+                    // if (widget.title.isNotEmpty)
+                    //   Expanded(
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(left: 40.0),
+                    //       child: Opacity(
+                    //         opacity: 0.6,
+                    //         child: Text(
+                    //           widget.title,
+                    //           overflow: TextOverflow.ellipsis,
+                    //           style: TextStyle(
+                    //             color: stateColors.foreground,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
                     if (widget.showCloseButton) closeButton(),
                   ],
                 ),
@@ -216,11 +208,174 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       tooltip: "New quote",
       onPressed: () {
         DataQuoteInputs.clearAll();
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => AddQuoteSteps()),
+        );
       },
       color: stateColors.foreground,
       icon: Icon(Icons.add),
+    );
+  }
+
+  Widget discoverButton() {
+    return PopupMenuButton(
+      child: Opacity(
+        opacity: 0.6,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'discover',
+                style: TextStyle(
+                  color: stateColors.foreground,
+                  fontSize: 16.0,
+                ),
+              ),
+              Icon(Icons.keyboard_arrow_down),
+            ],
+          ),
+        ),
+      ),
+      itemBuilder: (_) => <PopupMenuEntry<AppBarDiscover>>[
+        discoverEntry(
+          value: AppBarDiscover.authors,
+          icon: Icon(Icons.person_outline),
+          textData: 'authors',
+        ),
+        discoverEntry(
+          value: AppBarDiscover.references,
+          icon: Icon(Icons.book),
+          textData: 'references',
+        ),
+        discoverEntry(
+          value: AppBarDiscover.random,
+          icon: FaIcon(FontAwesomeIcons.random),
+          textData: 'random quotes',
+        ),
+      ],
+      onSelected: (value) {
+        switch (value) {
+          case AppBarQuotesBy.authors:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => Authors()));
+            break;
+          case AppBarQuotesBy.references:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => References()));
+            break;
+          case AppBarQuotesBy.topics:
+            final topicName = appTopicsColors.shuffle(max: 1).first.name;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => TopicPage(
+                  name: topicName,
+                ),
+              ),
+            );
+            break;
+          default:
+        }
+      },
+    );
+  }
+
+  Widget discoverEntry({
+    @required Widget icon,
+    @required AppBarDiscover value,
+    @required String textData,
+  }) {
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          icon,
+          Padding(padding: const EdgeInsets.only(left: 12.0)),
+          Text(textData),
+        ],
+      ),
+    );
+  }
+
+  Widget quotesByEntry({
+    @required Widget icon,
+    @required AppBarQuotesBy value,
+    @required String textData,
+  }) {
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          icon,
+          Padding(padding: const EdgeInsets.only(left: 12.0)),
+          Text(textData),
+        ],
+      ),
+    );
+  }
+
+  Widget quotesByDropdown() {
+    return PopupMenuButton(
+      child: Opacity(
+        opacity: 0.6,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'quotes',
+                style: TextStyle(
+                  color: stateColors.foreground,
+                  fontSize: 16.0,
+                ),
+              ),
+              Icon(Icons.keyboard_arrow_down),
+            ],
+          ),
+        ),
+      ),
+      itemBuilder: (_) => <PopupMenuEntry<AppBarQuotesBy>>[
+        quotesByEntry(
+          value: AppBarQuotesBy.authors,
+          icon: Icon(Icons.person_outline),
+          textData: 'by authors',
+        ),
+        quotesByEntry(
+          value: AppBarQuotesBy.references,
+          icon: Icon(Icons.book),
+          textData: 'by references',
+        ),
+        quotesByEntry(
+          value: AppBarQuotesBy.topics,
+          icon: Icon(Icons.topic_outlined),
+          textData: 'by topics',
+        ),
+      ],
+      onSelected: (value) {
+        switch (value) {
+          case AppBarQuotesBy.authors:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => Authors()));
+            break;
+          case AppBarQuotesBy.references:
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => References()));
+            break;
+          case AppBarQuotesBy.topics:
+            final topicName = appTopicsColors.shuffle(max: 1).first.name;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => TopicPage(
+                  name: topicName,
+                ),
+              ),
+            );
+            break;
+          default:
+        }
+      },
     );
   }
 
@@ -492,6 +647,96 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: value,
         );
       },
+    );
+  }
+
+  List<Widget> getAuthButtons(bool isNarrow) {
+    if (isNarrow) {
+      return [userAvatar(isNarrow: isNarrow)];
+    }
+
+    return [
+      brightnessButton(),
+      searchButton(),
+      newQuoteButton(),
+      userAvatar(),
+    ];
+  }
+
+  Iterable<Widget> getGuestButtons(bool isNarrow) {
+    if (isNarrow) {
+      return [userSigninMenu()];
+    }
+
+    return [
+      Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: Center(
+          child: OutlinedButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => Signin()),
+            ),
+            child: Text('Sign in'),
+          ),
+        ),
+      ),
+      searchButton(),
+      brightnessButton(),
+      settingsButton(),
+    ];
+  }
+
+  Widget settingsButton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 60.0),
+      child: PopupMenuButton(
+        tooltip: 'Settings',
+        icon: Icon(Icons.settings),
+        itemBuilder: (_) => <PopupMenuEntry<AppBarSettings>>[
+          PopupMenuItem(
+            value: AppBarSettings.allSettings,
+            child: Text('All settings'),
+          ),
+          PopupMenuDivider(),
+          PopupMenuItem(
+            value: AppBarSettings.selectLang,
+            enabled: false,
+            child: Row(
+              children: [
+                Icon(Icons.language),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                ),
+                Text('Language'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: AppBarSettings.en,
+            child: Text('English'),
+          ),
+          PopupMenuItem(
+            value: AppBarSettings.fr,
+            child: Text('Français'),
+          ),
+        ],
+        onSelected: (value) {
+          switch (value) {
+            case AppBarSettings.allSettings:
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => Settings()),
+              );
+              break;
+            case AppBarSettings.en:
+              Language.setLang('en');
+              break;
+            case AppBarSettings.fr:
+              Language.setLang('fr');
+              break;
+            default:
+          }
+        },
+      ),
     );
   }
 }

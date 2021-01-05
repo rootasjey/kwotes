@@ -13,6 +13,25 @@ enum AniProps {
   width,
 }
 
+enum AppBarDiscover {
+  authors,
+  references,
+  random,
+}
+
+enum AppBarQuotesBy {
+  authors,
+  references,
+  topics,
+}
+
+enum AppBarSettings {
+  allSettings,
+  selectLang,
+  en,
+  fr,
+}
+
 enum DiscoverType {
   authors,
   references,
