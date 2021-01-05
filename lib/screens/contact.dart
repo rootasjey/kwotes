@@ -116,7 +116,7 @@ class _ContactState extends State<Contact> {
     return cardLink(
       onTap: () async {
         const url =
-            'mailto:feedback@outofcontext.app?subject=[Outofcontext%20Web]%20Feedback';
+            'mailto:feedback@fig.style?subject=[fig.style%20Web]%20Feedback';
         await launch(url);
       },
       icon: Padding(
@@ -130,14 +130,14 @@ class _ContactState extends State<Contact> {
       color: Color(0xFF45D09E),
       textTitle: 'Email',
       subTitle: 'We would love to hear from you',
-      socialAccount: 'feedback@outofcontext.app',
+      socialAccount: 'feedback@fig.style',
     );
   }
 
   Widget twitterBlock() {
     return cardLink(
       onTap: () async {
-        const url = 'https://twitter.com/intent/tweet?via=outofcontextapp';
+        const url = 'https://twitter.com/intent/tweet?via=fig_style';
         await launch(url);
       },
       icon: Padding(
@@ -151,7 +151,7 @@ class _ContactState extends State<Contact> {
       color: Color(0xFF64C7FF),
       textTitle: 'Twitter',
       subTitle: 'You can contact us on Twitter',
-      socialAccount: '@outofcontext',
+      socialAccount: '@fig_style',
     );
   }
 }
