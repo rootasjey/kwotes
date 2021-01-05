@@ -58,9 +58,9 @@ dependencies:
   quick_actions: 0.4.0+10
   share: 0.6.3+5
   share_files_and_screenshot_widgets: 1.0.3
-  simple_animations: 1.3.9
+  simple_animations: 2.4.2
   sticky_headers: 0.1.8+1
-  supercharged: 1.6.0
+  supercharged: 1.12.0
   url_launcher: 5.4.10
 
 dev_dependencies:
