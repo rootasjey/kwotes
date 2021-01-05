@@ -53,7 +53,7 @@ export const notificationEN = functions
       android_group: 'quotidians', // Android notification grouping
       app_id: env.onesignal.appid,
       headings: { en: 'Quotidian', fr: 'Quotidian' },
-      contents: { en: contents },
+      contents: { en: contents, fr: contents },
       data: {
         quoteid: qData['quote']['id'],
         type: 'quotidians',
