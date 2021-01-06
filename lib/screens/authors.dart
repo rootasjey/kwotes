@@ -127,8 +127,8 @@ class _AuthorsState extends State<Authors> {
             });
           }
 
-          // Load more scenario
-          if (scrollNotif.metrics.pixels <
+          // Load more scenario.
+          if ((scrollNotif.metrics.pixels + 400.0) <
               scrollNotif.metrics.maxScrollExtent) {
             return false;
           }
@@ -221,6 +221,57 @@ class _AuthorsState extends State<Authors> {
           ),
         ),
       ]),
+    );
+  }
+
+  Widget gridItem({Author author}) {
+    return CircleAuthor(
+      author: author,
+      titleFontSize: 16.0,
+      itemBuilder: (_) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          value: 'share',
+          child: ListTile(
+            leading: Icon(Icons.share),
+            title: Text('share'),
+          ),
+        ),
+      ],
+      onSelected: (value) {
+        if (value == 'share') {
+          shareAuthor(author);
+          return;
+        }
+      },
+    );
+  }
+
+  Widget listItem({
+    @required Author author,
+    @required double width,
+    @required int index,
+  }) {
+    return AuthorRow(
+      author: author,
+      key: ObjectKey(index),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 70.0,
+      ),
+      useSwipeActions: width < Constants.maxMobileWidth,
+    );
+  }
+
+  Widget recentlyAddedListView() {
+    final width = MediaQuery.of(context).size.width;
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final author = recentlyAddedAuthors.elementAt(index);
+          return listItem(author: author, width: width, index: index);
+        },
+        childCount: recentlyAddedAuthors.length,
+      ),
     );
   }
 
@@ -384,25 +435,7 @@ class _AuthorsState extends State<Authors> {
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
             final author = recentlyAddedAuthors.elementAt(index);
-
-            return CircleAuthor(
-              author: author,
-              itemBuilder: (_) => <PopupMenuEntry<String>>[
-                PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('share'),
-                  ),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 'share') {
-                  shareAuthor(author);
-                  return;
-                }
-              },
-            );
+            return gridItem(author: author);
           },
           childCount: recentlyAddedAuthors.length,
         ),
@@ -424,51 +457,11 @@ class _AuthorsState extends State<Authors> {
         ),
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            final result = authorsSearchResults.elementAt(index);
-
-            return CircleAuthor(
-              author: result.author,
-              itemBuilder: (_) => <PopupMenuEntry<String>>[
-                PopupMenuItem(
-                  value: 'share',
-                  child: ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('share'),
-                  ),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 'share') {
-                  shareAuthor(result.author);
-                  return;
-                }
-              },
-            );
+            final suggestion = authorsSearchResults.elementAt(index);
+            return gridItem(author: suggestion.author);
           },
           childCount: authorsSearchResults.length,
         ),
-      ),
-    );
-  }
-
-  Widget recentlyAddedListView() {
-    final width = MediaQuery.of(context).size.width;
-
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final author = recentlyAddedAuthors.elementAt(index);
-
-          return AuthorRow(
-            author: author,
-            key: ObjectKey(index),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 70.0,
-            ),
-            useSwipeActions: width < Constants.maxMobileWidth,
-          );
-        },
-        childCount: recentlyAddedAuthors.length,
       ),
     );
   }
@@ -479,16 +472,9 @@ class _AuthorsState extends State<Authors> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final result = authorsSearchResults.elementAt(index);
-
-          return AuthorRow(
-            author: result.author,
-            key: ObjectKey(index),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 70.0,
-            ),
-            useSwipeActions: width < Constants.maxMobileWidth,
-          );
+          final suggestion = authorsSearchResults.elementAt(index);
+          return listItem(
+              author: suggestion.author, width: width, index: index);
         },
         childCount: authorsSearchResults.length,
       ),
