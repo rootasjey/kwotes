@@ -660,8 +660,8 @@ class _AuthorsState extends State<Authors> {
         final data = hit.data;
         data['id'] = hit.objectID;
 
-        final author = AuthorSuggestion.fromJSON(data);
-        final fromReference = author.author.fromReference;
+        final suggestion = AuthorSuggestion.fromJSON(data);
+        final fromReference = suggestion.author.fromReference;
 
         if (fromReference != null &&
             fromReference.id != null &&
@@ -675,11 +675,11 @@ class _AuthorsState extends State<Authors> {
             final refData = ref.data();
             refData['id'] = ref.id;
 
-            author.parseReferenceJSON(refData);
+            suggestion.parseReferenceJSON(refData);
           } catch (error) {}
         }
 
-        authorsSearchResults.add(author);
+        authorsSearchResults.add(suggestion);
       }
 
       setState(() {
@@ -726,8 +726,8 @@ class _AuthorsState extends State<Authors> {
         final data = hit.data;
         data['id'] = hit.objectID;
 
-        final author = AuthorSuggestion.fromJSON(data);
-        final fromReference = author.author.fromReference;
+        final suggestion = AuthorSuggestion.fromJSON(data);
+        final fromReference = suggestion.author.fromReference;
 
         if (fromReference != null &&
             fromReference.id != null &&
@@ -741,11 +741,11 @@ class _AuthorsState extends State<Authors> {
             final refData = ref.data();
             refData['id'] = ref.id;
 
-            author.parseReferenceJSON(refData);
+            suggestion.parseReferenceJSON(refData);
           } catch (error) {}
         }
 
-        authorsSearchResults.add(author);
+        authorsSearchResults.add(suggestion);
       }
 
       setState(() {
