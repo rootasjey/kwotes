@@ -6,7 +6,6 @@ class Author {
   /// Useful if the author is fictional.
   final FromReference fromReference;
   final String id;
-  final String imgUrl;
 
   final PointInTime born;
   final PointInTime death;
@@ -26,7 +25,6 @@ class Author {
     this.fromReference,
     this.id = '',
     this.isFictional = false,
-    this.imgUrl = '',
     this.job = '',
     this.name = '',
     this.summary = '',
@@ -40,7 +38,6 @@ class Author {
       fromReference: FromReference(),
       id: '',
       isFictional: false,
-      imgUrl: '',
       job: '',
       name: '',
       summary: '',
@@ -69,7 +66,6 @@ class Author {
       fromReference: fromReference,
       id: json['id'] ?? '',
       isFictional: json['isFictional'] ?? false,
-      imgUrl: json['imgUrl'] ?? '',
       job: json['job'],
       name: json['name'],
       summary: json['summary'],
@@ -85,7 +81,6 @@ class Author {
     json['fromReference'] = fromReference;
     json['id'] = id;
     json['isFictional'] = isFictional;
-    json['imgUrl'] = imgUrl;
     json['job'] = job;
     json['name'] = name;
     json['summary'] = summary;
