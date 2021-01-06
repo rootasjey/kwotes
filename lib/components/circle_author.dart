@@ -9,19 +9,21 @@ import 'package:supercharged/supercharged.dart';
 /// in an circle shape. Delivered with hover animation.
 class CircleAuthor extends StatefulWidget {
   final Author author;
-  final double size;
   final double elevation;
-  final EdgeInsetsGeometry padding;
   final Function itemBuilder;
   final Function onSelected;
+  final EdgeInsetsGeometry padding;
+  final double size;
+  final double titleFontSize;
 
   CircleAuthor({
     @required this.author,
     this.elevation = 3.0,
-    this.padding = EdgeInsets.zero,
-    this.size = 150.0,
     this.itemBuilder,
     this.onSelected,
+    this.padding = EdgeInsets.zero,
+    this.size = 150.0,
+    this.titleFontSize = 18.0,
   });
 
   @override
@@ -150,7 +152,7 @@ class _CircleAuthorState extends State<CircleAuthor>
 
   Widget name() {
     return Container(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 10.0),
       width: 120.0,
       child: Opacity(
         opacity: 0.6,
@@ -160,7 +162,7 @@ class _CircleAuthorState extends State<CircleAuthor>
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: 18.0,
+            fontSize: widget.titleFontSize,
           ),
         ),
       ),
@@ -169,12 +171,12 @@ class _CircleAuthorState extends State<CircleAuthor>
 
   Widget popupMenuButton() {
     if (widget.itemBuilder == null || widget.onSelected == null) {
-      return Padding(padding: EdgeInsets.zero);
+      return Container();
     }
 
     return PopupMenuButton<String>(
       icon: Opacity(
-        opacity: .6,
+        opacity: 0.6,
         child: Icon(Icons.more_horiz),
       ),
       onSelected: widget.onSelected,
