@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/types/reference_suggestion.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/share.dart';
@@ -28,29 +30,38 @@ class References extends StatefulWidget {
 class _ReferencesState extends State<References> {
   bool descending = true;
   bool hasNext = true;
+  bool hasNextSearchResults = true;
   bool hasErrors = false;
   bool isFabVisible = false;
   bool isLoading = false;
   bool isLoadingMore = false;
   bool isSearching = false;
+  bool isSearchingMore = false;
 
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot lastFetchedDoc;
+
+  final childAspectRatio = 0.6;
+  final maxCrossAxisExtent = 300.0;
+  final mainAxisSpacing = 0.0;
+  final crossAxisSpacing = 0.0;
+
+  final recentlyAddedReferences = List<Reference>();
+  final searchResultsReferences = List<ReferenceSuggestion>();
+  final pageRoute = ReferencesRoute;
+
+  FocusNode searchFocusNode;
+
+  int limit = 30;
+  int searchResultsPageNumber = 0;
+
+  ScrollController scrollController;
+
+  String lastSearchValue = '';
+  String searchInputValue = '';
 
   TextEditingController searchInputController;
 
   Timer _searchTimer;
-
-  final referencesList = List<Reference>();
-  final searchResults = List<Reference>();
-
-  final pageRoute = ReferencesRoute;
-  FocusNode searchFocusNode;
-  ScrollController scrollController;
-
-  int limit = 30;
-
-  String searchInputValue = '';
-  String lastSearchValue = '';
 
   var itemsLayout = ItemsLayout.grid;
 
@@ -90,7 +101,7 @@ class _ReferencesState extends State<References> {
                   curve: Curves.easeOut,
                 );
               },
-              backgroundColor: stateColors.primary,
+              backgroundColor: stateColors.accent,
               foregroundColor: Colors.white,
               child: Icon(Icons.arrow_upward),
             )
@@ -103,54 +114,54 @@ class _ReferencesState extends State<References> {
 
   Widget body() {
     return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
 
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            // Don't load more search results.
-            if (searchInputValue.isNotEmpty) {
-              return false;
-            }
-
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
-
+          // Load more scenario
+          if ((scrollNotif.metrics.pixels + 400.0) <
+              scrollNotif.metrics.maxScrollExtent) {
             return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              DesktopAppBar(
-                title: 'References',
-                automaticallyImplyLeading: true,
-              ),
-              searchHeader(),
-              SliverPadding(padding: const EdgeInsets.only(top: 50.0)),
-              bodyListContent(),
-              SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
-            ],
-          ),
-        ));
+          }
+
+          // Load more search results.
+          if (searchInputValue.isNotEmpty) {
+            searchReferencesMore();
+            return false;
+          }
+
+          // Load more recent data.
+          fetchMore();
+
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            DesktopAppBar(
+              title: 'References',
+              automaticallyImplyLeading: true,
+            ),
+            searchHeader(),
+            bodyListContent(),
+            SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget bodyListContent() {
@@ -162,18 +173,23 @@ class _ReferencesState extends State<References> {
       return errorView();
     }
 
-    if (referencesList.length == 0) {
+    if (recentlyAddedReferences.length == 0) {
       return emptyView();
     }
 
-    final references =
-        searchInputValue.isEmpty ? referencesList : searchResults;
+    if (searchInputValue.isNotEmpty) {
+      if (itemsLayout == ItemsLayout.grid) {
+        return searchResultsGridView();
+      }
 
-    if (itemsLayout == ItemsLayout.grid) {
-      return sliverGrid(references);
+      return searchResultsListView();
     }
 
-    return sliverList(references);
+    if (itemsLayout == ItemsLayout.grid) {
+      return recentlyAddedGridView();
+    }
+
+    return recentlyAddedListView();
   }
 
   Widget emptyView() {
@@ -284,19 +300,22 @@ class _ReferencesState extends State<References> {
             pageRoute: pageRoute,
           );
         },
-        items: [
-          DropdownMenuItem(
-            child: Opacity(
-                opacity: 0.6,
-                child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
-            value: true,
-          ),
-          DropdownMenuItem(
-            child: Opacity(
-                opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
-            value: false,
-          ),
-        ],
+        items: searchInputValue.isNotEmpty
+            ? null
+            : [
+                DropdownMenuItem(
+                  child: Opacity(
+                      opacity: 0.6,
+                      child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
+                  value: true,
+                ),
+                DropdownMenuItem(
+                  child: Opacity(
+                      opacity: 0.6,
+                      child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
+                  value: false,
+                ),
+              ],
       ),
     ]);
   }
@@ -308,7 +327,6 @@ class _ReferencesState extends State<References> {
           delegate: SliverChildListDelegate([
         searchInput(),
         searchActions(),
-        searchResultsData(),
       ])),
     );
   }
@@ -341,7 +359,7 @@ class _ReferencesState extends State<References> {
 
           _searchTimer = Timer(
             500.milliseconds,
-            () => search(),
+            () => searchReferences(),
           );
         },
         style: TextStyle(
@@ -356,84 +374,127 @@ class _ReferencesState extends State<References> {
     );
   }
 
-  Widget searchResultsData() {
-    if (searchInputValue.isEmpty || isSearching) {
-      return Padding(padding: EdgeInsets.zero);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
-      child: Opacity(
-        opacity: 0.6,
-        child: Text(
-          '${searchResults.length} results',
-          style: TextStyle(
-            fontSize: 25.0,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget sliverGrid(List<Reference> references) {
+  Widget recentlyAddedGridView() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 250.0,
-          childAspectRatio: 0.6,
-          mainAxisSpacing: 30.0,
-          crossAxisSpacing: 30.0,
+          maxCrossAxisExtent: maxCrossAxisExtent,
+          childAspectRatio: childAspectRatio,
+          mainAxisSpacing: mainAxisSpacing,
+          crossAxisSpacing: crossAxisSpacing,
         ),
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            final reference = references.elementAt(index);
-
-            return ReferenceCard(
-              height: 260.0,
-              width: 200.0,
-              id: reference.id,
-              imageUrl: reference.urls.image,
-              name: reference.name,
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem(
-                    value: 'share',
-                    child: ListTile(
-                      leading: Icon(Icons.share),
-                      title: Text('Share'),
-                    )),
-              ],
-              onSelected: (value) {
-                if (value == 'share') {
-                  shareReference(context: context, reference: reference);
-                  return;
-                }
-              },
-            );
+            final reference = recentlyAddedReferences.elementAt(index);
+            return itemGrid(reference: reference);
           },
-          childCount: references.length,
+          childCount: recentlyAddedReferences.length,
         ),
       ),
     );
   }
 
-  Widget sliverList(List<Reference> references) {
+  Widget itemGrid({Reference reference}) {
+    return ReferenceCard(
+      height: 300.0,
+      width: 220.0,
+      id: reference.id,
+      imageUrl: reference.urls.image,
+      name: reference.name,
+      titleFontSize: 16.0,
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+            value: 'share',
+            child: ListTile(
+              leading: Icon(Icons.share),
+              title: Text('Share'),
+            )),
+      ],
+      onSelected: (value) {
+        if (value == 'share') {
+          shareReference(context: context, reference: reference);
+          return;
+        }
+      },
+    );
+  }
+
+  Widget searchResultsGridView() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: maxCrossAxisExtent,
+          childAspectRatio: childAspectRatio,
+          mainAxisSpacing: mainAxisSpacing,
+          crossAxisSpacing: crossAxisSpacing,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final suggestion = searchResultsReferences.elementAt(index);
+            final reference = suggestion.reference;
+            return itemGrid(reference: reference);
+          },
+          childCount: searchResultsReferences.length,
+        ),
+      ),
+    );
+  }
+
+  Widget searchResultsListView() {
     final width = MediaQuery.of(context).size.width;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final reference = references.elementAt(index);
+          final suggestion = searchResultsReferences.elementAt(index);
+          final reference = suggestion.reference;
 
-          return ReferenceRow(
+          return itemList(
             reference: reference,
-            key: ObjectKey(index),
-            useSwipeActions: width < Constants.maxMobileWidth,
+            width: width,
+            index: index,
           );
         },
-        childCount: references.length,
+        childCount: searchResultsReferences.length,
+      ),
+    );
+  }
+
+  Widget itemList({
+    Reference reference,
+    double width,
+    int index,
+  }) {
+    return ReferenceRow(
+      reference: reference,
+      key: ObjectKey(index),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 70.0,
+      ),
+      useSwipeActions: width < Constants.maxMobileWidth,
+    );
+  }
+
+  Widget recentlyAddedListView() {
+    final width = MediaQuery.of(context).size.width;
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final reference = recentlyAddedReferences.elementAt(index);
+          return itemList(
+            reference: reference,
+            width: width,
+            index: index,
+          );
+        },
+        childCount: recentlyAddedReferences.length,
       ),
     );
   }
@@ -441,7 +502,7 @@ class _ReferencesState extends State<References> {
   Future fetch() async {
     setState(() {
       isLoading = true;
-      referencesList.clear();
+      recentlyAddedReferences.clear();
     });
 
     try {
@@ -465,11 +526,11 @@ class _ReferencesState extends State<References> {
         data['id'] = doc.id;
 
         final reference = Reference.fromJSON(data);
-        referencesList.add(reference);
+        recentlyAddedReferences.add(reference);
       });
 
       setState(() {
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         isLoading = false;
       });
     } catch (error) {
@@ -482,7 +543,7 @@ class _ReferencesState extends State<References> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null) {
+    if (lastFetchedDoc == null || !hasNext || isLoadingMore) {
       return;
     }
 
@@ -492,7 +553,7 @@ class _ReferencesState extends State<References> {
       final snapshot = await FirebaseFirestore.instance
           .collection('references')
           .orderBy('createdAt', descending: descending)
-          .startAfterDocument(lastDoc)
+          .startAfterDocument(lastFetchedDoc)
           .limit(limit)
           .get();
 
@@ -510,13 +571,13 @@ class _ReferencesState extends State<References> {
         data['id'] = doc.id;
 
         final reference = Reference.fromJSON(data);
-        referencesList.add(reference);
+        recentlyAddedReferences.add(reference);
       });
 
       setState(() {
         isLoadingMore = false;
         hasNext = snapshot.docs.isNotEmpty;
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -527,34 +588,104 @@ class _ReferencesState extends State<References> {
     }
   }
 
-  void search() async {
-    isSearching = true;
-    searchResults.clear();
+  void searchReferences() async {
+    if (searchInputValue.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      searchResultsReferences.clear();
+      isSearching = true;
+      searchResultsPageNumber = 0;
+      hasNextSearchResults = true;
+    });
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('references')
-          .where('name', isGreaterThanOrEqualTo: searchInputValue)
-          .limit(20)
-          .get();
+      final query = algolia
+          .index('references')
+          .search(searchInputValue)
+          .setHitsPerPage(limit)
+          .setPage(searchResultsPageNumber);
 
-      if (snapshot.docs.isEmpty) {
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() {
+          isSearching = false;
+          hasNextSearchResults = false;
+        });
+
         return;
       }
 
-      snapshot.docs.forEach((element) {
-        final data = element.data();
-        data['id'] = element.id;
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
 
-        final reference = Reference.fromJSON(data);
-        searchResults.add(reference);
-      });
+        final suggestion = ReferenceSuggestion.fromJSON(data);
+
+        searchResultsReferences.add(suggestion);
+      }
 
       setState(() {
+        searchResultsPageNumber++;
         isSearching = false;
+        hasNextSearchResults = snapshot.nbHits >= (limit - 1);
       });
     } catch (error) {
       debugPrint(error.toString());
+      setState(() {
+        searchResultsPageNumber = 0;
+        isSearching = false;
+        hasNextSearchResults = true;
+      });
+    }
+  }
+
+  void searchReferencesMore() async {
+    if (!hasNextSearchResults || isSearchingMore) {
+      return;
+    }
+
+    isSearchingMore = true;
+
+    try {
+      final query = algolia
+          .index('references')
+          .search(searchInputValue)
+          .setHitsPerPage(limit)
+          .setPage(searchResultsPageNumber);
+
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() {
+          isSearchingMore = false;
+          hasNextSearchResults = false;
+        });
+
+        return;
+      }
+
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
+
+        final suggestion = ReferenceSuggestion.fromJSON(data);
+
+        searchResultsReferences.add(suggestion);
+      }
+
+      setState(() {
+        isSearchingMore = false;
+        searchResultsPageNumber++;
+        hasNextSearchResults = snapshot.nbHits >= limit;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+      setState(() {
+        isSearchingMore = false;
+      });
     }
   }
 }
