@@ -336,10 +336,34 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget body() {
+    double paddingTop = 0.0;
+    bool showBigTitle = false;
+
+    if (MediaQuery.of(context).size.width > 700.0) {
+      paddingTop = 100.0;
+      showBigTitle = true;
+    }
+
     return SliverPadding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: EdgeInsets.only(top: paddingTop),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
+          if (showBigTitle)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 80.0),
+              child: Center(
+                child: SizedBox(
+                  width: 400.0,
+                  child: Text(
+                    'Settings',
+                    style: TextStyle(
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           accountSettings(),
           appSettings(),
         ]),
@@ -578,7 +602,9 @@ class _SettingsState extends State<Settings> {
   Widget themeSwitcher() {
     return Container(
       width: 400.0,
-      padding: const EdgeInsets.only(bottom: 60.0),
+      padding: EdgeInsets.only(
+        bottom: 60.0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -904,6 +930,10 @@ class _SettingsState extends State<Settings> {
   }
 
   void initNotifState() async {
+    if (kIsWeb) {
+      return;
+    }
+
     notificationsON = await PushNotifications.isActive();
     setState(() {});
   }
