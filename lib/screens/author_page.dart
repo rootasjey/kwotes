@@ -1,6 +1,5 @@
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/image_hero.dart';
+import 'package:figstyle/components/author_avatar.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -40,10 +39,9 @@ class _AuthorPageState extends State<AuthorPage> {
   bool descending = true;
   bool isLoadingMore = false;
 
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot lastFetchedDoc;
 
   double beginY = 20.0;
-  double avatarSize = 150.0;
 
   final limit = 30;
   final pageRoute = 'author_page';
@@ -104,77 +102,22 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget avatar() {
-    final isImageUrlOk =
-        author.urls.image != null && author.urls.image.length > 0;
-
-    return OpenContainer(
-      closedColor: Colors.transparent,
-      closedElevation: 0.0,
-      closedBuilder: (_, openContainer) {
-        return Material(
-          elevation: 3.0,
-          shape: CircleBorder(),
-          clipBehavior: Clip.hardEdge,
-          color: Colors.transparent,
-          child: AnimatedContainer(
-            duration: 150.milliseconds,
-            width: avatarSize,
-            height: avatarSize,
-            child: Ink.image(
-              image: isImageUrlOk
-                  ? NetworkImage(author.urls.image)
-                  : AssetImage('assets/images/user-m.png'),
-              width: avatarSize,
-              height: avatarSize,
-              fit: BoxFit.cover,
-              child: InkWell(
-                onTap: openContainer,
-                onHover: (isHover) {
-                  if (isHover) {
-                    setState(() {
-                      avatarSize = 160.0;
-                    });
-
-                    return;
-                  }
-
-                  setState(() {
-                    avatarSize = 150.0;
-                  });
-                },
-              ),
-            ),
-          ),
-        );
-      },
-      openBuilder: (context, callback) {
-        return ImageHero(
-          imageProvider: isImageUrlOk
-              ? NetworkImage(
-                  author.urls.image,
-                )
-              : AssetImage('assets/images/reference.png'),
-        );
-      },
-    );
-  }
-
   Widget backButton() {
     return Positioned(
-        left: 40.0,
-        top: 0.0,
-        child: Material(
-          color: Colors.transparent,
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back,
-            ),
+      left: 40.0,
+      top: 0.0,
+      child: Material(
+        color: Colors.transparent,
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back,
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget infoPannel() {
@@ -195,7 +138,7 @@ class _AuthorPageState extends State<AuthorPage> {
       return SliverList(
         delegate: SliverChildListDelegate([
           ErrorContainer(
-            message: 'Oops! There was an error while loading the reference',
+            message: 'There was an error while loading the reference',
             onRefresh: () => fetch(),
           ),
         ]),
@@ -270,7 +213,7 @@ class _AuthorPageState extends State<AuthorPage> {
           FadeInY(
             beginY: beginY,
             delay: 100.milliseconds,
-            child: avatar(),
+            child: AuthorAvatar(imageUrl: author.urls.image),
           ),
           FadeInY(
             beginY: beginY,
@@ -673,7 +616,7 @@ class _AuthorPageState extends State<AuthorPage> {
       });
 
       setState(() {
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
@@ -694,7 +637,7 @@ class _AuthorPageState extends State<AuthorPage> {
           .where('author.id', isEqualTo: widget.id)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
-          .startAfterDocument(lastDoc)
+          .startAfterDocument(lastFetchedDoc)
           .limit(limit)
           .get();
 
@@ -717,7 +660,7 @@ class _AuthorPageState extends State<AuthorPage> {
 
       setState(() {
         isLoadingMore = false;
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
