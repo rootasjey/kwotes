@@ -91,7 +91,7 @@ class _AuthorsState extends State<Authors> {
               onPressed: () {
                 scrollController.animateTo(
                   0.0,
-                  duration: Duration(seconds: 1),
+                  duration: 500.milliseconds,
                   curve: Curves.easeOut,
                 );
               },
