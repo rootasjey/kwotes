@@ -28,7 +28,11 @@ class CircleAuthor extends StatefulWidget {
   _CircleAuthorState createState() => _CircleAuthorState();
 }
 
-class _CircleAuthorState extends State<CircleAuthor> {
+class _CircleAuthorState extends State<CircleAuthor>
+    with TickerProviderStateMixin {
+  Animation<double> scaleAnimation;
+  AnimationController scaleAnimationController;
+
   double size;
   double elevation;
   double opacity;
@@ -37,11 +41,29 @@ class _CircleAuthorState extends State<CircleAuthor> {
   initState() {
     super.initState();
 
+    scaleAnimationController = AnimationController(
+      lowerBound: 0.8,
+      upperBound: 1.0,
+      duration: 500.milliseconds,
+      vsync: this,
+    );
+
+    scaleAnimation = CurvedAnimation(
+      parent: scaleAnimationController,
+      curve: Curves.fastOutSlowIn,
+    );
+
     setState(() {
       size = widget.size;
       elevation = widget.elevation;
       opacity = 0.5;
     });
+  }
+
+  @override
+  dispose() {
+    scaleAnimationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,12 +112,12 @@ class _CircleAuthorState extends State<CircleAuthor> {
             onHover: (isHover) {
               if (isHover) {
                 opacity = 0.0;
-                size = widget.size + 2.5;
                 elevation = widget.elevation + 2;
+                scaleAnimationController.forward();
               } else {
                 opacity = 0.5;
-                size = widget.size;
                 elevation = widget.elevation;
+                scaleAnimationController.reverse();
               }
 
               setState(() {});
@@ -110,17 +132,18 @@ class _CircleAuthorState extends State<CircleAuthor> {
   }
 
   Widget backgroundContainer() {
-    return AnimatedContainer(
+    return SizedBox(
       height: size,
       width: size,
-      duration: 250.milliseconds,
-      curve: Curves.bounceInOut,
-      child: Material(
-        elevation: elevation,
-        shape: CircleBorder(),
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: background(),
+      child: ScaleTransition(
+        scale: scaleAnimation,
+        child: Material(
+          elevation: elevation,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          color: Colors.transparent,
+          child: background(),
+        ),
       ),
     );
   }
@@ -134,6 +157,8 @@ class _CircleAuthorState extends State<CircleAuthor> {
         child: Text(
           widget.author.name,
           textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 18.0,
           ),
