@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/types/author_suggestion.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/author_row.dart';
@@ -29,30 +31,33 @@ class Authors extends StatefulWidget {
 class _AuthorsState extends State<Authors> {
   bool descending = true;
   bool hasNext = true;
+  bool hasNextSearchResults = true;
   bool hasErrors = false;
   bool isFabVisible = false;
   bool isLoading = false;
   bool isLoadingMore = false;
   bool isSearching = false;
+  bool isSearchingMore = false;
 
-  TextEditingController searchInputController;
+  DocumentSnapshot lastDoc;
 
-  Timer _searchTimer;
-
-  final authorsList = List<Author>();
-  final searchResults = List<Author>();
+  final recentlyAddedAuthors = List<Author>();
+  final authoorsSearchResults = List<AuthorSuggestion>();
 
   final pageRoute = ReferencesRoute;
   FocusNode searchFocusNode;
   ScrollController scrollController;
 
   int limit = 30;
+  int searchResultsPageNumber = 0;
 
   String searchInputValue = '';
   String lastSearchValue = '';
 
+  TextEditingController searchInputController;
+  Timer _searchTimer;
+
   var itemsLayout = ItemsLayout.grid;
-  var lastDoc;
 
   @override
   initState() {
@@ -90,7 +95,7 @@ class _AuthorsState extends State<Authors> {
                   curve: Curves.easeOut,
                 );
               },
-              backgroundColor: stateColors.primary,
+              backgroundColor: stateColors.accent,
               foregroundColor: Colors.white,
               child: Icon(Icons.arrow_upward),
             )
@@ -130,12 +135,11 @@ class _AuthorsState extends State<Authors> {
 
             // Don't load more search results.
             if (searchInputValue.isNotEmpty) {
+              searchAuthorsMore();
               return false;
             }
 
-            if (hasNext && !isLoadingMore) {
-              fetchMore();
-            }
+            fetchMore();
 
             return false;
           },
@@ -163,17 +167,23 @@ class _AuthorsState extends State<Authors> {
       return errorView();
     }
 
-    if (authorsList.length == 0) {
+    if (recentlyAddedAuthors.length == 0) {
       return emptyView();
     }
 
-    final references = searchInputValue.isEmpty ? authorsList : searchResults;
+    if (searchInputValue.isEmpty) {
+      if (itemsLayout == ItemsLayout.grid) {
+        return recentlyAddedGridView();
+      }
 
-    if (itemsLayout == ItemsLayout.grid) {
-      return sliverGrid(references);
+      return recentlyAddedlistView();
     }
 
-    return sliverList(references);
+    if (itemsLayout == ItemsLayout.grid) {
+      return searchResultsGridView();
+    }
+
+    return searchResultsListView();
   }
 
   Widget emptyView() {
@@ -308,7 +318,6 @@ class _AuthorsState extends State<Authors> {
           delegate: SliverChildListDelegate([
         searchInput(),
         searchActions(),
-        searchResultsData(),
       ])),
     );
   }
@@ -341,7 +350,7 @@ class _AuthorsState extends State<Authors> {
 
           _searchTimer = Timer(
             500.milliseconds,
-            () => search(),
+            () => searchAuthors(),
           );
         },
         style: TextStyle(
@@ -356,26 +365,7 @@ class _AuthorsState extends State<Authors> {
     );
   }
 
-  Widget searchResultsData() {
-    if (searchInputValue.isEmpty || isSearching) {
-      return Padding(padding: EdgeInsets.zero);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
-      child: Opacity(
-        opacity: 0.6,
-        child: Text(
-          '${searchResults.length} results',
-          style: TextStyle(
-            fontSize: 25.0,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget sliverGrid(List<Author> authors) {
+  Widget recentlyAddedGridView() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -389,7 +379,7 @@ class _AuthorsState extends State<Authors> {
         ),
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            final author = authors.elementAt(index);
+            final author = recentlyAddedAuthors.elementAt(index);
 
             return CircleAuthor(
               author: author,
@@ -410,27 +400,93 @@ class _AuthorsState extends State<Authors> {
               },
             );
           },
-          childCount: authors.length,
+          childCount: recentlyAddedAuthors.length,
         ),
       ),
     );
   }
 
-  Widget sliverList(List<Author> authors) {
+  Widget searchResultsGridView() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 250.0,
+          childAspectRatio: 0.9,
+          mainAxisSpacing: 30.0,
+          crossAxisSpacing: 30.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final result = authoorsSearchResults.elementAt(index);
+
+            return CircleAuthor(
+              author: result.author,
+              itemBuilder: (_) => <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                  value: 'share',
+                  child: ListTile(
+                    leading: Icon(Icons.share),
+                    title: Text('share'),
+                  ),
+                ),
+              ],
+              onSelected: (value) {
+                if (value == 'share') {
+                  shareAuthor(result.author);
+                  return;
+                }
+              },
+            );
+          },
+          childCount: authoorsSearchResults.length,
+        ),
+      ),
+    );
+  }
+
+  Widget recentlyAddedlistView() {
     final width = MediaQuery.of(context).size.width;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final author = authors.elementAt(index);
+          final author = recentlyAddedAuthors.elementAt(index);
 
           return AuthorRow(
             author: author,
             key: ObjectKey(index),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 70.0,
+            ),
             useSwipeActions: width < Constants.maxMobileWidth,
           );
         },
-        childCount: authors.length,
+        childCount: recentlyAddedAuthors.length,
+      ),
+    );
+  }
+
+  Widget searchResultsListView() {
+    final width = MediaQuery.of(context).size.width;
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final result = authoorsSearchResults.elementAt(index);
+
+          return AuthorRow(
+            author: result.author,
+            key: ObjectKey(index),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 70.0,
+            ),
+            useSwipeActions: width < Constants.maxMobileWidth,
+          );
+        },
+        childCount: authoorsSearchResults.length,
       ),
     );
   }
@@ -438,7 +494,7 @@ class _AuthorsState extends State<Authors> {
   Future fetch() async {
     setState(() {
       isLoading = true;
-      authorsList.clear();
+      recentlyAddedAuthors.clear();
     });
 
     try {
@@ -462,7 +518,7 @@ class _AuthorsState extends State<Authors> {
         data['id'] = doc.id;
 
         final author = Author.fromJSON(data);
-        authorsList.add(author);
+        recentlyAddedAuthors.add(author);
       });
 
       lastDoc = snapshot.docs.last;
@@ -480,7 +536,7 @@ class _AuthorsState extends State<Authors> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null) {
+    if (lastDoc == null || !hasNext && isLoadingMore) {
       return;
     }
 
@@ -508,7 +564,7 @@ class _AuthorsState extends State<Authors> {
         data['id'] = doc.id;
 
         final author = Author.fromJSON(data);
-        authorsList.add(author);
+        recentlyAddedAuthors.add(author);
       });
 
       lastDoc = snapshot.docs.last;
@@ -567,34 +623,138 @@ class _AuthorsState extends State<Authors> {
     );
   }
 
-  void search() async {
-    isSearching = true;
-    searchResults.clear();
+  void searchAuthors() async {
+    if (searchInputValue.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      authoorsSearchResults.clear();
+      isSearching = true;
+      searchResultsPageNumber = 0;
+      hasNextSearchResults = true;
+    });
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('authors')
-          .where('name', isGreaterThanOrEqualTo: searchInputValue)
-          .limit(20)
-          .get();
+      final query = algolia
+          .index('authors')
+          .search(searchInputValue)
+          .setHitsPerPage(limit)
+          .setPage(searchResultsPageNumber);
 
-      if (snapshot.docs.isEmpty) {
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() {
+          isSearching = false;
+          hasNextSearchResults = false;
+        });
+
         return;
       }
 
-      snapshot.docs.forEach((element) {
-        final data = element.data();
-        data['id'] = element.id;
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
 
-        final author = Author.fromJSON(data);
-        searchResults.add(author);
-      });
+        final author = AuthorSuggestion.fromJSON(data);
+        final fromReference = author.author.fromReference;
+
+        if (fromReference != null &&
+            fromReference.id != null &&
+            fromReference.id.isNotEmpty) {
+          try {
+            final ref = await FirebaseFirestore.instance
+                .collection('references')
+                .doc(fromReference.id)
+                .get();
+
+            final refData = ref.data();
+            refData['id'] = ref.id;
+
+            author.parseReferenceJSON(refData);
+          } catch (error) {}
+        }
+
+        authoorsSearchResults.add(author);
+      }
 
       setState(() {
+        searchResultsPageNumber++;
         isSearching = false;
+        hasNextSearchResults = snapshot.nbHits >= (limit - 1);
       });
     } catch (error) {
       debugPrint(error.toString());
+      setState(() {
+        searchResultsPageNumber = 0;
+        isSearching = false;
+        hasNextSearchResults = true;
+      });
+    }
+  }
+
+  void searchAuthorsMore() async {
+    if (!hasNextSearchResults || isSearchingMore) {
+      return;
+    }
+
+    isSearchingMore = true;
+
+    try {
+      final query = algolia
+          .index('authors')
+          .search(searchInputValue)
+          .setHitsPerPage(limit)
+          .setPage(searchResultsPageNumber);
+
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() {
+          isSearchingMore = false;
+          hasNextSearchResults = false;
+        });
+
+        return;
+      }
+
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
+
+        final author = AuthorSuggestion.fromJSON(data);
+        final fromReference = author.author.fromReference;
+
+        if (fromReference != null &&
+            fromReference.id != null &&
+            fromReference.id.isNotEmpty) {
+          try {
+            final ref = await FirebaseFirestore.instance
+                .collection('references')
+                .doc(fromReference.id)
+                .get();
+
+            final refData = ref.data();
+            refData['id'] = ref.id;
+
+            author.parseReferenceJSON(refData);
+          } catch (error) {}
+        }
+
+        authoorsSearchResults.add(author);
+      }
+
+      setState(() {
+        isSearchingMore = false;
+        searchResultsPageNumber++;
+        hasNextSearchResults = snapshot.nbHits >= limit;
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+      setState(() {
+        isSearchingMore = false;
+      });
     }
   }
 }
