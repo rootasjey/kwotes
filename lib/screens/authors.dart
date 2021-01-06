@@ -177,7 +177,7 @@ class _AuthorsState extends State<Authors> {
         return recentlyAddedGridView();
       }
 
-      return recentlyAddedlistView();
+      return recentlyAddedListView();
     }
 
     if (itemsLayout == ItemsLayout.grid) {
@@ -451,7 +451,7 @@ class _AuthorsState extends State<Authors> {
     );
   }
 
-  Widget recentlyAddedlistView() {
+  Widget recentlyAddedListView() {
     final width = MediaQuery.of(context).size.width;
 
     return SliverList(
