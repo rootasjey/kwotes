@@ -42,7 +42,7 @@ class _AuthorsState extends State<Authors> {
   DocumentSnapshot lastFetchedDoc;
 
   final recentlyAddedAuthors = List<Author>();
-  final authoorsSearchResults = List<AuthorSuggestion>();
+  final authorsSearchResults = List<AuthorSuggestion>();
 
   final pageRoute = ReferencesRoute;
   FocusNode searchFocusNode;
@@ -110,51 +110,53 @@ class _AuthorsState extends State<Authors> {
 
   Widget body() {
     return RefreshIndicator(
-        onRefresh: () async {
-          await fetch();
-          return null;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotif) {
-            // FAB visibility
-            if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-              setState(() {
-                isFabVisible = false;
-              });
-            } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-              setState(() {
-                isFabVisible = true;
-              });
-            }
+      onRefresh: () async {
+        await fetch();
+        return null;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() {
+              isFabVisible = false;
+            });
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() {
+              isFabVisible = true;
+            });
+          }
 
-            // Load more scenario
-            if (scrollNotif.metrics.pixels <
-                scrollNotif.metrics.maxScrollExtent) {
-              return false;
-            }
-
-            // Don't load more search results.
-            if (searchInputValue.isNotEmpty) {
-              searchAuthorsMore();
-              return false;
-            }
-
-            fetchMore();
+          // Load more scenario
+          if (scrollNotif.metrics.pixels <
+              scrollNotif.metrics.maxScrollExtent) {
             return false;
-          },
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              DesktopAppBar(
-                title: 'Authors',
-                automaticallyImplyLeading: true,
-              ),
-              searchHeader(),
-              bodyListContent(),
-              SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
-            ],
-          ),
-        ));
+          }
+
+          // Load more search results.
+          if (searchInputValue.isNotEmpty) {
+            searchAuthorsMore();
+            return false;
+          }
+
+          // Load more recent data.
+          fetchMore();
+          return false;
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            DesktopAppBar(
+              title: 'Authors',
+              automaticallyImplyLeading: true,
+            ),
+            searchHeader(),
+            bodyListContent(),
+            SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget bodyListContent() {
@@ -422,7 +424,7 @@ class _AuthorsState extends State<Authors> {
         ),
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            final result = authoorsSearchResults.elementAt(index);
+            final result = authorsSearchResults.elementAt(index);
 
             return CircleAuthor(
               author: result.author,
@@ -443,7 +445,7 @@ class _AuthorsState extends State<Authors> {
               },
             );
           },
-          childCount: authoorsSearchResults.length,
+          childCount: authorsSearchResults.length,
         ),
       ),
     );
@@ -477,7 +479,7 @@ class _AuthorsState extends State<Authors> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final result = authoorsSearchResults.elementAt(index);
+          final result = authorsSearchResults.elementAt(index);
 
           return AuthorRow(
             author: result.author,
@@ -488,7 +490,7 @@ class _AuthorsState extends State<Authors> {
             useSwipeActions: width < Constants.maxMobileWidth,
           );
         },
-        childCount: authoorsSearchResults.length,
+        childCount: authorsSearchResults.length,
       ),
     );
   }
@@ -630,7 +632,7 @@ class _AuthorsState extends State<Authors> {
     }
 
     setState(() {
-      authoorsSearchResults.clear();
+      authorsSearchResults.clear();
       isSearching = true;
       searchResultsPageNumber = 0;
       hasNextSearchResults = true;
@@ -677,7 +679,7 @@ class _AuthorsState extends State<Authors> {
           } catch (error) {}
         }
 
-        authoorsSearchResults.add(author);
+        authorsSearchResults.add(author);
       }
 
       setState(() {
@@ -743,7 +745,7 @@ class _AuthorsState extends State<Authors> {
           } catch (error) {}
         }
 
-        authoorsSearchResults.add(author);
+        authorsSearchResults.add(author);
       }
 
       setState(() {
