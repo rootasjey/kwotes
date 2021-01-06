@@ -39,7 +39,7 @@ class _AuthorsState extends State<Authors> {
   bool isSearching = false;
   bool isSearchingMore = false;
 
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot lastFetchedDoc;
 
   final recentlyAddedAuthors = List<Author>();
   final authoorsSearchResults = List<AuthorSuggestion>();
@@ -140,7 +140,6 @@ class _AuthorsState extends State<Authors> {
             }
 
             fetchMore();
-
             return false;
           },
           child: CustomScrollView(
@@ -494,6 +493,7 @@ class _AuthorsState extends State<Authors> {
   Future fetch() async {
     setState(() {
       isLoading = true;
+      lastFetchedDoc = null;
       recentlyAddedAuthors.clear();
     });
 
@@ -521,9 +521,8 @@ class _AuthorsState extends State<Authors> {
         recentlyAddedAuthors.add(author);
       });
 
-      lastDoc = snapshot.docs.last;
-
       setState(() {
+        lastFetchedDoc = snapshot.docs.last;
         isLoading = false;
       });
     } catch (error) {
@@ -536,7 +535,7 @@ class _AuthorsState extends State<Authors> {
   }
 
   void fetchMore() async {
-    if (lastDoc == null || !hasNext && isLoadingMore) {
+    if (lastFetchedDoc == null || !hasNext || isLoadingMore) {
       return;
     }
 
@@ -546,7 +545,7 @@ class _AuthorsState extends State<Authors> {
       final snapshot = await FirebaseFirestore.instance
           .collection('authors')
           .orderBy('createdAt', descending: descending)
-          .startAfterDocument(lastDoc)
+          .startAfterDocument(lastFetchedDoc)
           .limit(30)
           .get();
 
@@ -567,9 +566,8 @@ class _AuthorsState extends State<Authors> {
         recentlyAddedAuthors.add(author);
       });
 
-      lastDoc = snapshot.docs.last;
-
       setState(() {
+        lastFetchedDoc = snapshot.docs.last;
         isLoadingMore = false;
       });
     } catch (error) {
