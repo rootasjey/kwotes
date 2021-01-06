@@ -1,6 +1,5 @@
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/image_hero.dart';
+import 'package:figstyle/components/reference_avatar.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -38,13 +37,7 @@ class ReferencePageState extends State<ReferencePage> {
   bool hasNext = true;
   bool isSummaryVisible = false;
 
-  DocumentSnapshot lastDoc;
-
-  double avatarInitHeight = 250.0;
-  double avatarInitWidth = 200.0;
-
-  double avatarHeight = 250.0;
-  double avatarWidth = 200.0;
+  DocumentSnapshot lastFetchedDoc;
 
   final limit = 30;
   final double beginY = 20.0;
@@ -109,61 +102,6 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget avatar({double scale = 1.0}) {
-    final imageUrl = reference.urls.image;
-    final isImageUrlOk = imageUrl != null && imageUrl.length > 0;
-
-    return OpenContainer(
-      closedColor: Colors.transparent,
-      closedBuilder: (context, openContainer) {
-        return AnimatedContainer(
-          width: avatarWidth * scale,
-          height: avatarHeight * scale,
-          duration: 250.milliseconds,
-          child: Ink.image(
-            height: avatarHeight * scale,
-            width: avatarWidth * scale,
-            fit: BoxFit.cover,
-            image: isImageUrlOk
-                ? NetworkImage(
-                    reference.urls.image,
-                  )
-                : AssetImage('assets/images/reference.png'),
-            child: InkWell(
-              onTap: openContainer,
-              onHover: (isHover) {
-                if (isHover) {
-                  setState(() {
-                    avatarHeight = (avatarInitHeight) + 10.0;
-                    avatarWidth = (avatarInitWidth) + 10.0;
-                  });
-
-                  return;
-                }
-
-                setState(() {
-                  avatarHeight = avatarInitHeight;
-                  avatarWidth = avatarInitWidth;
-                });
-
-                return;
-              },
-            ),
-          ),
-        );
-      },
-      openBuilder: (context, callback) {
-        return ImageHero(
-          imageProvider: isImageUrlOk
-              ? NetworkImage(
-                  reference.urls.image,
-                )
-              : AssetImage('assets/images/reference.png'),
-        );
-      },
-    );
-  }
-
   Widget backButton() {
     return Positioned(
         left: 40.0,
@@ -190,7 +128,7 @@ class ReferencePageState extends State<ReferencePage> {
           FadeInY(
             beginY: beginY,
             delay: 100.milliseconds,
-            child: avatar(),
+            child: ReferenceAvatar(imageUrl: reference.urls.image),
           ),
           FadeInY(
             beginY: beginY,
@@ -692,7 +630,7 @@ class ReferencePageState extends State<ReferencePage> {
       });
 
       setState(() {
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
@@ -713,7 +651,7 @@ class ReferencePageState extends State<ReferencePage> {
           .where('mainReference.id', isEqualTo: widget.id)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
-          .startAfterDocument(lastDoc)
+          .startAfterDocument(lastFetchedDoc)
           .limit(limit)
           .get();
 
@@ -736,7 +674,7 @@ class ReferencePageState extends State<ReferencePage> {
 
       setState(() {
         isLoadingMore = false;
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         hasNext = snapshot.docs.length == limit;
       });
     } catch (error) {
