@@ -213,13 +213,16 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
-  Widget developersButton() {
+  Widget developersDropdown() {
     return PopupMenuButton(
       tooltip: 'Developers',
       child: Opacity(
         opacity: 0.6,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 5.0,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -232,7 +235,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                         fontSize: 16.0,
                       ),
                     ),
-              Icon(Icons.keyboard_arrow_down),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: stateColors.foreground,
+              ),
             ],
           ),
         ),
@@ -240,7 +246,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<AppBarDevelopers>>[
         developerEntry(
           value: AppBarDevelopers.github,
-          icon: FaIcon(FontAwesomeIcons.github),
+          icon: FaIcon(
+            FontAwesomeIcons.github,
+            color: stateColors.foreground,
+          ),
           textData: 'GitHub',
         ),
       ],
@@ -523,7 +532,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                         fontSize: 16.0,
                       ),
                     ),
-              Icon(Icons.keyboard_arrow_down),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: stateColors.foreground,
+              ),
             ],
           ),
         ),
@@ -531,17 +543,26 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<AppBarQuotesBy>>[
         quotesByEntry(
           value: AppBarQuotesBy.authors,
-          icon: Icon(Icons.person_outline),
+          icon: Icon(
+            Icons.person_outline,
+            color: stateColors.foreground,
+          ),
           textData: 'by authors',
         ),
         quotesByEntry(
           value: AppBarQuotesBy.references,
-          icon: Icon(Icons.book),
+          icon: Icon(
+            Icons.book,
+            color: stateColors.foreground,
+          ),
           textData: 'by references',
         ),
         quotesByEntry(
           value: AppBarQuotesBy.topics,
-          icon: Icon(Icons.topic_outlined),
+          icon: Icon(
+            Icons.topic_outlined,
+            color: stateColors.foreground,
+          ),
           textData: 'by topics',
         ),
       ],
@@ -607,7 +628,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                         fontSize: 16.0,
                       ),
                     ),
-              Icon(Icons.keyboard_arrow_down),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: stateColors.foreground,
+              ),
             ],
           ),
         ),
@@ -615,17 +639,26 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<AppBarResources>>[
         resourcesEntry(
           value: AppBarResources.about,
-          icon: Icon(Icons.help),
+          icon: Icon(
+            Icons.help,
+            color: stateColors.foreground,
+          ),
           textData: 'about',
         ),
         resourcesEntry(
           value: AppBarResources.contact,
-          icon: Icon(Icons.sms),
+          icon: Icon(
+            Icons.sms,
+            color: stateColors.foreground,
+          ),
           textData: 'contact',
         ),
         resourcesEntry(
           value: AppBarResources.tos,
-          icon: Icon(Icons.privacy_tip_outlined),
+          icon: Icon(
+            Icons.privacy_tip_outlined,
+            color: stateColors.foreground,
+          ),
           textData: 'Privacy Terms',
         ),
       ],
@@ -693,7 +726,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       // ),
       Padding(
         padding: const EdgeInsets.only(left: 16.0),
-        child: developersButton(),
+        child: developersDropdown(),
       ),
       Padding(
         padding: const EdgeInsets.only(left: 16.0),
@@ -707,7 +740,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       padding: const EdgeInsets.only(right: 60.0),
       child: PopupMenuButton(
         tooltip: 'Settings',
-        icon: Icon(Icons.settings),
+        icon: Icon(
+          Icons.settings,
+          color: stateColors.foreground,
+        ),
         itemBuilder: (_) => <PopupMenuEntry<AppBarSettings>>[
           PopupMenuItem(
             value: AppBarSettings.allSettings,
@@ -719,7 +755,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             enabled: false,
             child: Row(
               children: [
-                Icon(Icons.language),
+                Icon(
+                  Icons.language,
+                  color: stateColors.foreground,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                 ),
