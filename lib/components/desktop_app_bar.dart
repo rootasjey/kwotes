@@ -426,22 +426,22 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
       ),
       itemBuilder: (_) => <PopupMenuEntry<AppBarGroupedSectionItems>>[
-        groupedSectionEntry(
-          value: AppBarGroupedSectionItems.authors,
-          icon: Icon(Icons.person_outline),
-          textData: 'authors',
-        ),
-        groupedSectionEntry(
-          value: AppBarGroupedSectionItems.references,
-          icon: Icon(Icons.book),
-          textData: 'references',
-        ),
-        groupedSectionEntry(
-          value: AppBarGroupedSectionItems.random,
-          icon: Icon(Icons.topic_outlined),
-          textData: 'random',
-        ),
-        PopupMenuDivider(),
+        // groupedSectionEntry(
+        //   value: AppBarGroupedSectionItems.authors,
+        //   icon: Icon(Icons.person_outline),
+        //   textData: 'authors',
+        // ),
+        // groupedSectionEntry(
+        //   value: AppBarGroupedSectionItems.references,
+        //   icon: Icon(Icons.book),
+        //   textData: 'references',
+        // ),
+        // groupedSectionEntry(
+        //   value: AppBarGroupedSectionItems.random,
+        //   icon: Icon(Icons.topic_outlined),
+        //   textData: 'random',
+        // ),
+        // PopupMenuDivider(),
         groupedSectionEntry(
           value: AppBarGroupedSectionItems.github,
           icon: FaIcon(FontAwesomeIcons.github),
@@ -687,10 +687,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
   List<Widget> separateDropdowns() {
     return [
-      Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: discoverButton(),
-      ),
+      // Padding(
+      //   padding: const EdgeInsets.only(left: 16.0),
+      //   child: discoverButton(),
+      // ),
       Padding(
         padding: const EdgeInsets.only(left: 16.0),
         child: developersButton(),
