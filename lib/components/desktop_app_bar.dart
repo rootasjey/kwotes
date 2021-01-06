@@ -227,7 +227,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             mainAxisSize: MainAxisSize.min,
             children: [
               useIconButton
-                  ? Icon(Icons.computer)
+                  ? Icon(Icons.computer, color: stateColors.foreground)
                   : Text(
                       'developers',
                       style: TextStyle(
@@ -428,8 +428,8 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.more_horiz),
-              Icon(Icons.keyboard_arrow_down),
+              Icon(Icons.more_horiz, color: stateColors.foreground),
+              Icon(Icons.keyboard_arrow_down, color: stateColors.foreground),
             ],
           ),
         ),
@@ -453,23 +453,23 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         // PopupMenuDivider(),
         groupedSectionEntry(
           value: AppBarGroupedSectionItems.github,
-          icon: FaIcon(FontAwesomeIcons.github),
+          icon: FaIcon(FontAwesomeIcons.github, color: stateColors.foreground),
           textData: 'github',
         ),
         PopupMenuDivider(),
         groupedSectionEntry(
           value: AppBarGroupedSectionItems.about,
-          icon: Icon(Icons.help),
+          icon: Icon(Icons.help, color: stateColors.foreground),
           textData: 'about',
         ),
         groupedSectionEntry(
           value: AppBarGroupedSectionItems.contact,
-          icon: Icon(Icons.sms),
+          icon: Icon(Icons.sms, color: stateColors.foreground),
           textData: 'contact',
         ),
         groupedSectionEntry(
           value: AppBarGroupedSectionItems.tos,
-          icon: Icon(Icons.privacy_tip_outlined),
+          icon: Icon(Icons.privacy_tip_outlined, color: stateColors.foreground),
           textData: 'Privacy Terms',
         ),
       ],
@@ -524,7 +524,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             mainAxisSize: MainAxisSize.min,
             children: [
               useIconButton
-                  ? Icon(Icons.format_quote_rounded)
+                  ? Icon(
+                      Icons.format_quote_rounded,
+                      color: stateColors.foreground,
+                    )
                   : Text(
                       'quotes',
                       style: TextStyle(
@@ -609,7 +612,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
-  Widget resourcesButton() {
+  Widget resourcesDropdown() {
     return PopupMenuButton(
       tooltip: 'Resources',
       child: Opacity(
@@ -620,7 +623,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             mainAxisSize: MainAxisSize.min,
             children: [
               useIconButton
-                  ? Icon(Icons.menu_book)
+                  ? Icon(Icons.menu_book, color: stateColors.foreground)
                   : Text(
                       'resources',
                       style: TextStyle(
@@ -730,7 +733,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       ),
       Padding(
         padding: const EdgeInsets.only(left: 16.0),
-        child: resourcesButton(),
+        child: resourcesDropdown(),
       ),
     ];
   }
