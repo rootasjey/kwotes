@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:figstyle/screens/home/home_minimal_recent.dart';
 import 'package:figstyle/screens/on_boarding.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -8,7 +9,6 @@ import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/home/home_desktop.dart';
 import 'package:figstyle/screens/home/home_mobile.dart';
 import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
       );
     }
 
-    return HomeDesktop();
+    return HomeMinimalRecent();
   }
 
   void showDesktopDialog(customContext) {
