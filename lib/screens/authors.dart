@@ -293,19 +293,22 @@ class _AuthorsState extends State<Authors> {
             pageRoute: pageRoute,
           );
         },
-        items: [
-          DropdownMenuItem(
-            child: Opacity(
-                opacity: 0.6,
-                child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
-            value: true,
-          ),
-          DropdownMenuItem(
-            child: Opacity(
-                opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
-            value: false,
-          ),
-        ],
+        items: searchInputValue.isNotEmpty
+            ? null
+            : [
+                DropdownMenuItem(
+                  child: Opacity(
+                      opacity: 0.6,
+                      child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
+                  value: true,
+                ),
+                DropdownMenuItem(
+                  child: Opacity(
+                      opacity: 0.6,
+                      child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
+                  value: false,
+                ),
+              ],
       ),
     ]);
   }
