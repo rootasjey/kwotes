@@ -73,6 +73,7 @@ enum ItemsLayout {
 
 enum ItemComponentType {
   card,
+  verticalCard,
   row,
 }
 

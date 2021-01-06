@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
+import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +14,17 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:supercharged/supercharged.dart';
 
 class QuoteRow extends StatefulWidget {
   /// Specify this only when componentType = ComponentType.Card.
   /// If true, author will be displayed on card.
   final bool showAuthor;
+
+  /// If true, this item will have a border of 2.0px
+  /// with the quote's first topic color.
+  /// Available only when [componentType] = [ItemComponentType.verticalCard].
+  final bool showBorder;
 
   /// If true, this will activate swipe actions
   /// and deactivate popup menu button.
@@ -87,6 +96,7 @@ class QuoteRow extends StatefulWidget {
     this.quoteId,
     this.quoteFontSize = 24.0,
     this.showAuthor = false,
+    this.showBorder = false,
     this.stackChildren = const [],
     this.trailingActions = defaultActions,
     this.useSwipeActions = false,
@@ -96,13 +106,21 @@ class QuoteRow extends StatefulWidget {
   _QuoteRowState createState() => _QuoteRowState();
 }
 
-class _QuoteRowState extends State<QuoteRow> {
+class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
+  Animation<double> scaleAnimation;
+  AnimationController scaleAnimationController;
+
   bool elevationSpecified = false;
 
-  Color iconColor;
-  Color iconHoverColor;
+  Color _cardBackgroundColor;
+  Color _imageBackgroundColor;
+  Color _accentColor;
+  Color _iconColor;
 
   double elevation = 0.0;
+
+  String bgCardDefaultUrl = 'assets/images/ia_portrait.jpg';
+  String bgCardImageUrl = '';
 
   @override
   initState() {
@@ -116,8 +134,39 @@ class _QuoteRowState extends State<QuoteRow> {
     setState(() {
       elevation = widget.elevation ?? 0.0;
       elevationSpecified = widget.elevation != null;
-      iconHoverColor = Color(topicColor.decimal);
+      _accentColor = Color(topicColor.decimal);
+      _iconColor = _accentColor;
+      _imageBackgroundColor = Colors.black45;
     });
+
+    if (widget.componentType == ItemComponentType.verticalCard) {
+      fetchImageBackground();
+    }
+
+    if (widget.componentType == ItemComponentType.verticalCard ||
+        widget.componentType == ItemComponentType.card) {
+      scaleAnimationController = AnimationController(
+        lowerBound: 0.8,
+        upperBound: 1.0,
+        duration: 500.milliseconds,
+        vsync: this,
+      );
+
+      scaleAnimation = CurvedAnimation(
+        parent: scaleAnimationController,
+        curve: Curves.fastOutSlowIn,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.componentType == ItemComponentType.verticalCard ||
+        widget.componentType == ItemComponentType.card) {
+      scaleAnimationController?.dispose();
+    }
+
+    super.dispose();
   }
 
   @override
@@ -126,70 +175,119 @@ class _QuoteRowState extends State<QuoteRow> {
       return rowLayout();
     }
 
+    if (widget.componentType == ItemComponentType.verticalCard) {
+      return verticalCardLayout();
+    }
+
     return cardLayout();
+  }
+
+  Widget backgroundCardImage() {
+    Widget imageWidget = Image.asset(
+      bgCardDefaultUrl,
+      fit: BoxFit.cover,
+      width: widget.cardWidth,
+      height: widget.cardHeight,
+    );
+
+    if (bgCardImageUrl != null && bgCardImageUrl.isNotEmpty) {
+      imageWidget = Image.network(
+        bgCardImageUrl,
+        fit: BoxFit.cover,
+        width: widget.cardWidth,
+        height: widget.cardHeight,
+      );
+    }
+
+    return Stack(
+      children: [
+        Opacity(
+          opacity: 0.3,
+          child: imageWidget,
+        ),
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.4,
+            child: Container(
+              color: _imageBackgroundColor,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget cardLayout() {
     return Container(
       width: widget.cardWidth,
       height: widget.cardHeight,
-      child: Card(
-        elevation: elevation,
-        margin: EdgeInsets.zero,
-        child: InkWell(
-          onTap: onQuoteTap,
-          onLongPress: widget.onLongPress,
-          onHover: (isHover) {
-            setState(() {
-              elevation = isHover ? getHoverElevation() : getElevation();
-              iconColor = isHover ? iconHoverColor : null;
-            });
-          },
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: widget.padding,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      widget.quote.name,
-                      maxLines: widget.maxLines,
-                      overflow: widget.overflow,
-                      style: TextStyle(
-                        fontSize: widget.quoteFontSize,
-                        fontWeight: FontWeight.w600,
+      child: ScaleTransition(
+        scale: scaleAnimation,
+        child: Card(
+          elevation: elevation,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(),
+          color: _cardBackgroundColor,
+          child: InkWell(
+            onTap: onQuoteTap,
+            onLongPress: widget.onLongPress,
+            onHover: (isHover) {
+              if (isHover) {
+                scaleAnimationController.forward();
+              } else {
+                scaleAnimationController.reverse();
+              }
+
+              setState(() {
+                elevation = isHover ? getHoverElevation() : getElevation();
+                _cardBackgroundColor = isHover ? _accentColor : null;
+                _iconColor = isHover ? Colors.white : _accentColor;
+              });
+            },
+            child: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: widget.padding,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        widget.quote.name,
+                        maxLines: widget.maxLines,
+                        overflow: widget.overflow,
+                        style: TextStyle(
+                          fontSize: widget.quoteFontSize,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              if (widget.itemBuilder != null)
-                Positioned(
-                  right: 0.0,
-                  bottom: 0.0,
-                  child: PopupMenuButton<String>(
-                    icon: Opacity(
-                      opacity: 0.6,
-                      child: iconColor != null
-                          ? Icon(
-                              Icons.more_vert,
-                              color: iconColor,
-                            )
-                          : Icon(Icons.more_vert, color: iconHoverColor),
-                    ),
-                    onSelected: widget.onSelected,
-                    itemBuilder: widget.itemBuilder,
+                    ],
                   ),
                 ),
-              if (widget.stackChildren.length > 0) ...widget.stackChildren,
-              if (widget.showAuthor)
-                Positioned(
-                  left: 40.0,
-                  bottom: 10.0,
-                  child: quoteAuthor(),
-                ),
-            ],
+                if (widget.itemBuilder != null)
+                  Positioned(
+                    right: 0.0,
+                    bottom: 0.0,
+                    child: PopupMenuButton<String>(
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(
+                          Icons.more_vert,
+                          color: _iconColor,
+                        ),
+                      ),
+                      onSelected: widget.onSelected,
+                      itemBuilder: widget.itemBuilder,
+                    ),
+                  ),
+                if (widget.stackChildren.length > 0) ...widget.stackChildren,
+                if (widget.showAuthor)
+                  Positioned(
+                    left: 40.0,
+                    bottom: 15.0,
+                    child: quoteAuthor(),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -324,7 +422,7 @@ class _QuoteRowState extends State<QuoteRow> {
           onHover: (isHover) {
             setState(() {
               elevation = isHover ? getHoverElevation() : getElevation();
-              iconColor = isHover ? iconHoverColor : null;
+              _cardBackgroundColor = isHover ? _accentColor : null;
             });
           },
           child: Padding(
@@ -357,10 +455,10 @@ class _QuoteRowState extends State<QuoteRow> {
                           PopupMenuButton<String>(
                             icon: Opacity(
                               opacity: 0.6,
-                              child: iconColor != null
+                              child: _cardBackgroundColor != null
                                   ? Icon(
                                       Icons.more_vert,
-                                      color: iconColor,
+                                      color: _cardBackgroundColor,
                                     )
                                   : Icon(Icons.more_vert),
                             ),
@@ -388,6 +486,85 @@ class _QuoteRowState extends State<QuoteRow> {
       child: childRow,
       trailingActions: widget.trailingActions,
       leadingActions: widget.leadingActions,
+    );
+  }
+
+  Widget verticalCardLayout() {
+    return Container(
+      width: widget.cardWidth,
+      height: widget.cardHeight,
+      child: ScaleTransition(
+        scale: scaleAnimation,
+        child: Card(
+          elevation: elevation,
+          margin: EdgeInsets.zero,
+          shape: widget.showBorder
+              ? Border(bottom: BorderSide(color: _accentColor, width: 2.0))
+              : Border(),
+          child: InkWell(
+            onTap: onQuoteTap,
+            onLongPress: widget.onLongPress,
+            onHover: (isHover) {
+              if (isHover) {
+                scaleAnimationController.forward();
+              } else {
+                scaleAnimationController.reverse();
+              }
+
+              setState(() {
+                elevation = isHover ? getHoverElevation() : getElevation();
+                _cardBackgroundColor = isHover ? _accentColor : null;
+                _imageBackgroundColor = isHover ? _accentColor : Colors.black45;
+              });
+            },
+            child: Stack(
+              children: <Widget>[
+                backgroundCardImage(),
+                Padding(
+                  padding: widget.padding,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        widget.quote.name,
+                        maxLines: widget.maxLines,
+                        overflow: widget.overflow,
+                        style: TextStyle(
+                          fontSize: widget.quoteFontSize,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (widget.itemBuilder != null)
+                  Positioned(
+                    right: 0.0,
+                    bottom: 0.0,
+                    child: PopupMenuButton<String>(
+                      icon: Opacity(
+                        opacity: 0.6,
+                        child: Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onSelected: widget.onSelected,
+                      itemBuilder: widget.itemBuilder,
+                    ),
+                  ),
+                if (widget.stackChildren.length > 0) ...widget.stackChildren,
+                if (widget.showAuthor)
+                  Positioned(
+                    left: 40.0,
+                    bottom: 16.0,
+                    child: quoteAuthor(),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -455,6 +632,60 @@ class _QuoteRowState extends State<QuoteRow> {
       if (widget.fetchIsFav != null) {
         widget.fetchIsFav();
       }
+    }
+  }
+
+  void fetchImageBackground() async {
+    String urlResult = await fetchAuthorPP();
+
+    if (urlResult == null || urlResult.isEmpty) {
+      urlResult = await fetchReferencePP();
+    }
+
+    setState(() => bgCardImageUrl = urlResult);
+  }
+
+  Future<String> fetchAuthorPP() async {
+    try {
+      final authorId = widget.quote.author.id;
+
+      final authorDoc = await FirebaseFirestore.instance
+          .collection('authors')
+          .doc(authorId)
+          .get();
+
+      if (!authorDoc.exists) {
+        return null;
+      }
+
+      final authorData = authorDoc.data();
+      final author = Author.fromJSON(authorData);
+      return author.urls.image;
+    } catch (err) {
+      debugPrint(err.toString());
+      return null;
+    }
+  }
+
+  Future<String> fetchReferencePP() async {
+    try {
+      final referenceId = widget.quote.mainReference.id;
+
+      final referenceDoc = await FirebaseFirestore.instance
+          .collection('references')
+          .doc(referenceId)
+          .get();
+
+      if (!referenceDoc.exists) {
+        return null;
+      }
+
+      final referenceData = referenceDoc.data();
+      final reference = Reference.fromJSON(referenceData);
+      return reference.urls.image;
+    } catch (err) {
+      debugPrint(err.toString());
+      return null;
     }
   }
 }

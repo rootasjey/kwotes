@@ -23,6 +23,11 @@ class QuoteRowWithActions extends StatefulWidget {
   /// If true, author will be displayed on card.
   final bool showAuthor;
 
+  /// If true, this item will have a border of 2.0px
+  /// with the quote's first topic color.
+  /// Available only when [componentType] = [ItemComponentType.verticalCard].
+  final bool showBorder;
+
   /// If true, this will activate swipe actions
   /// and deactivate popup menu button.
   final bool useSwipeActions;
@@ -103,6 +108,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.quoteId,
     this.quotePageType = QuotePageType.published,
     this.showAuthor = false,
+    this.showBorder = false,
     this.showPopupMenuButton = false,
     this.stackChildren = const [],
     this.leading,
@@ -161,6 +167,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       quoteId: widget.quoteId,
       quoteFontSize: widget.quoteFontSize,
       showAuthor: widget.showAuthor,
+      showBorder: widget.showBorder,
       stackChildren: widget.stackChildren,
       trailingActions: trailingActions,
       useSwipeActions: widget.useSwipeActions,
