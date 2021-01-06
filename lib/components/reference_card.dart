@@ -37,7 +37,11 @@ class ReferenceCard extends StatefulWidget {
   _ReferenceCardState createState() => _ReferenceCardState();
 }
 
-class _ReferenceCardState extends State<ReferenceCard> {
+class _ReferenceCardState extends State<ReferenceCard>
+    with TickerProviderStateMixin {
+  Animation<double> scaleAnimation;
+  AnimationController scaleAnimationController;
+
   double opacity;
   double width;
   double height;
@@ -48,6 +52,18 @@ class _ReferenceCardState extends State<ReferenceCard> {
   @override
   initState() {
     super.initState();
+
+    scaleAnimationController = AnimationController(
+      lowerBound: 0.8,
+      upperBound: 1.0,
+      duration: 500.milliseconds,
+      vsync: this,
+    );
+
+    scaleAnimation = CurvedAnimation(
+      parent: scaleAnimationController,
+      curve: Curves.fastOutSlowIn,
+    );
 
     setState(() {
       opacity = 0.5;
@@ -66,6 +82,12 @@ class _ReferenceCardState extends State<ReferenceCard> {
               vertical: 35.0,
             );
     });
+  }
+
+  @override
+  dispose() {
+    scaleAnimationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -110,14 +132,12 @@ class _ReferenceCardState extends State<ReferenceCard> {
             onHover: (isHover) {
               if (isHover) {
                 opacity = 0.0;
-                width = widget.width + 2.5;
-                height = widget.height + 2.5;
                 elevation = widget.elevation + 2;
+                scaleAnimationController.forward();
               } else {
                 opacity = 0.5;
-                width = widget.width;
-                height = widget.height;
                 elevation = widget.elevation;
+                scaleAnimationController.reverse();
               }
 
               setState(() {});
@@ -132,18 +152,17 @@ class _ReferenceCardState extends State<ReferenceCard> {
   }
 
   Widget backgroundContainer() {
-    return AnimatedContainer(
+    return SizedBox(
       height: height,
       width: width,
-      duration: 250.milliseconds,
-      curve: Curves.bounceInOut,
-      child: Card(
-        elevation: elevation,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
+      child: ScaleTransition(
+        scale: scaleAnimation,
+        child: Card(
+          elevation: elevation,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape: RoundedRectangleBorder(),
+          child: background(),
         ),
-        child: background(),
       ),
     );
   }
@@ -156,6 +175,7 @@ class _ReferenceCardState extends State<ReferenceCard> {
         child: Text(
           widget.name,
           textAlign: TextAlign.center,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: widget.titleFontSize,
@@ -172,7 +192,7 @@ class _ReferenceCardState extends State<ReferenceCard> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
+      padding: const EdgeInsets.only(top: 5.0),
       child: sizedBox,
     );
   }
