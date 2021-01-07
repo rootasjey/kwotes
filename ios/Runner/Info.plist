@@ -49,5 +49,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We can send you notifications based on your location (e.g. a region-specific proverb).</string>
 </dict>
 </plist>
