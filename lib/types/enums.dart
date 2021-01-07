@@ -68,6 +68,19 @@ enum HeaderViewType {
   search,
 }
 
+enum ImageShareColor {
+  dark,
+  light,
+  colored,
+  gradient,
+}
+
+enum ImageShareTextColor {
+  auto,
+  dark,
+  light,
+}
+
 enum ItemsLayout {
   list,
   grid,
@@ -89,17 +102,4 @@ enum SnackType {
   error,
   info,
   success,
-}
-
-enum ImageShareColor {
-  dark,
-  light,
-  colored,
-  gradient,
-}
-
-enum ImageShareTextColor {
-  auto,
-  dark,
-  light,
 }
