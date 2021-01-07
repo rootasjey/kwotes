@@ -664,6 +664,23 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           ),
           textData: 'Privacy Terms',
         ),
+        PopupMenuDivider(),
+        resourcesEntry(
+          value: AppBarResources.androidApp,
+          icon: FaIcon(
+            FontAwesomeIcons.googlePlay,
+            color: Colors.green,
+          ),
+          textData: 'Android app',
+        ),
+        resourcesEntry(
+          value: AppBarResources.iosApp,
+          icon: FaIcon(
+            FontAwesomeIcons.appStoreIos,
+            color: Colors.blue,
+          ),
+          textData: 'iOS app',
+        ),
       ],
       onSelected: (value) {
         switch (value) {
@@ -678,6 +695,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           case AppBarResources.tos:
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => Tos()));
+            break;
+          case AppBarResources.androidApp:
+            launch(
+                "https://play.google.com/store/apps/details?id=com.outofcontext.app");
+            break;
+          case AppBarResources.iosApp:
+            launch(
+                "https://apps.apple.com/us/app/out-of-context/id1516117110?ls=1");
             break;
           default:
         }

@@ -39,7 +39,9 @@ enum AppBarGroupedSectionItems {
 
 enum AppBarResources {
   about,
+  androidApp,
   contact,
+  iosApp,
   tos,
 }
 
