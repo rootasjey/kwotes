@@ -219,7 +219,7 @@ class _OnBoardingState extends State<OnBoarding> {
         spacing: 20.0,
         children: [
           storeCard(
-            icon: Icon(
+            icon: FaIcon(
               FontAwesomeIcons.googlePlay,
               size: 40.0,
               color: Colors.green,
@@ -228,7 +228,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 "https://play.google.com/store/apps/details?id=com.outofcontext.app",
           ),
           storeCard(
-            icon: Icon(
+            icon: FaIcon(
               FontAwesomeIcons.appStoreIos,
               size: 40.0,
               color: Colors.blue,
