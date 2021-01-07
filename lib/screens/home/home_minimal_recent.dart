@@ -25,10 +25,9 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
   bool isLoadingMore = false;
   bool hasNext = true;
 
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot lastFetchedDoc;
 
   final _scrollController = ScrollController();
-  final heroRecentLimit = 2;
   final recentLimit = 12;
 
   List<Quote> heroQuotes = [];
@@ -209,7 +208,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
                 padding: const EdgeInsets.only(left: 16.0),
                 child: IconButton(
                   icon: Icon(Icons.refresh),
-                  onPressed: fetchHeroRecent,
+                  onPressed: fetch,
                 ),
               ),
             ],
@@ -263,7 +262,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
                 padding: const EdgeInsets.only(left: 16.0),
                 child: IconButton(
                   icon: Icon(Icons.refresh),
-                  onPressed: fetchHeroRecent,
+                  onPressed: fetch,
                 ),
               ),
             ],
@@ -409,59 +408,34 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
       heroQuotes.clear();
     });
 
-    await fetchQuotidian();
-    await fetchHeroRecent();
-
+    await fetchQuotidians();
     setState(() => isLoading = false);
-
     fetchRecent();
   }
 
-  Future fetchHeroRecent() async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('quotes')
-          .where('lang', isEqualTo: lang)
-          .orderBy('createdAt', descending: true)
-          .limit(heroRecentLimit)
-          .get();
+  /// Fetch last 3 quotidians.
+  Future fetchQuotidians() async {
+    final today = DateTime.now();
+    final yesterday = today.subtract(1.days);
+    final twoDaysAgo = yesterday.subtract(1.days);
 
-      if (snapshot.docs.isEmpty) {
-        setState(() => isLoading = false);
-        return;
-      }
-
-      snapshot.docs.forEach((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-
-        final quote = Quote.fromJSON(data);
-        heroQuotes.add(quote);
-      });
-
-      lastDoc = snapshot.docs.last;
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        isLoading = false;
-      });
-    }
+    await fetchQuotidian(today);
+    await fetchQuotidian(yesterday);
+    await fetchQuotidian(twoDaysAgo);
   }
 
-  Future fetchQuotidian() async {
-    final now = DateTime.now();
-
-    String month = now.month.toString();
+  /// Fetch a single quotidian based on the date parameter.
+  Future fetchQuotidian(DateTime date) async {
+    String month = date.month.toString();
     month = month.length == 2 ? month : '0$month';
 
-    String day = now.day.toString();
+    String day = date.day.toString();
     day = day.length == 2 ? day : '0$day';
 
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotidians')
-          .doc('${now.year}:$month:$day:${lang.toLowerCase()}')
+          .doc('${date.year}:$month:$day:${lang.toLowerCase()}')
           .get();
 
       if (!snapshot.exists) {
@@ -492,7 +466,6 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
           .collection('quotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: true)
-          .startAfterDocument(lastDoc)
           .limit(recentLimit)
           .get();
 
@@ -510,7 +483,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
       });
 
       setState(() {
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         hasNext = snapshot.docs.length == recentLimit;
       });
     } catch (error) {
@@ -519,7 +492,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
   }
 
   Future fetchMoreRecent() async {
-    if (!hasNext || lastDoc == null || isLoadingMore) {
+    if (!hasNext || lastFetchedDoc == null || isLoadingMore) {
       return;
     }
 
@@ -530,7 +503,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
           .collection('quotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: true)
-          .startAfterDocument(lastDoc)
+          .startAfterDocument(lastFetchedDoc)
           .limit(recentLimit)
           .get();
 
@@ -553,7 +526,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
 
       setState(() {
         isLoadingMore = false;
-        lastDoc = snapshot.docs.last;
+        lastFetchedDoc = snapshot.docs.last;
         hasNext = snapshot.docs.length == recentLimit;
       });
     } catch (error) {
