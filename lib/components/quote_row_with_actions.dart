@@ -19,12 +19,13 @@ class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;
   final bool isConnected;
 
-  /// Specify this only when componentType = ComponentType.Card.
   /// If true, author will be displayed on card.
+  /// Specify this only when [componentType] is equels to
+  /// [ItemComponentType.card] or [ItemComponentType.verticalCard].
   final bool showAuthor;
 
-  /// If true, this item will have a border of 2.0px
-  /// with the quote's first topic color.
+  /// If true, this card will have a border of 2.0px
+  /// of the quote's first topic color.
   /// Available only when [componentType] = [ItemComponentType.verticalCard].
   final bool showBorder;
 
@@ -37,9 +38,16 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final Color color;
 
+  /// Card's width if [componentType] equals [card].
   final double cardWidth;
+
+  /// Card's height if [componentType] equals [card].
   final double cardHeight;
+
+  /// Widget's elevation. If [null], the default value is 0.
   final double elevation;
+
+  /// Quote's font size. If null, the default value is 20.0.
   final double quoteFontSize;
 
   final Function onAfterAddToFavourites;
@@ -56,6 +64,8 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final ItemComponentType componentType;
 
+  /// Maximum lines to display on the component
+  /// when [componentType] equals [card] or [verticalCard].
   final int maxLines;
 
   /// Required if `useSwipeActions` is true.
@@ -63,16 +73,18 @@ class QuoteRowWithActions extends StatefulWidget {
 
   final List<Widget> stackChildren;
 
+  final TextOverflow overflow;
+
+  final String pageRoute;
+
   final Quote quote;
-  final QuotePageType quotePageType;
 
   /// Specify explicitly the quote'is
   /// because quote's id in favourites reflect
   /// the favourite's id and no the quote.
   final String quoteId;
-  final String pageRoute;
 
-  final TextOverflow overflow;
+  final QuotePageType quotePageType;
 
   /// A widget positioned before the main content (quote's content).
   /// Typcally an Icon or a small Container.

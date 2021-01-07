@@ -44,9 +44,6 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
   void initState() {
     super.initState();
     initProps();
-
-    // final col = Color(0xFF2ed573);
-    // print(col.value);
   }
 
   void initProps() {

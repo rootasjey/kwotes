@@ -200,6 +200,7 @@ class _TopicsState extends State<Topics> {
     if (!this.mounted) {
       return;
     }
+
     setState(() => isLoading = true);
 
     for (var i = 0; i < limit; i++) {
