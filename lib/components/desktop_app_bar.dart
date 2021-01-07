@@ -2,6 +2,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
+import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/settings.dart';
@@ -248,7 +249,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarDevelopers.github,
           icon: FaIcon(
             FontAwesomeIcons.github,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'GitHub',
         ),
@@ -256,7 +257,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       onSelected: (value) {
         switch (value) {
           case AppBarDevelopers.github:
-            launch('https://github.com/outofcontextapp/app');
+            launch('https://github.com/rootasjey/fig.style');
             break;
           default:
         }
@@ -281,7 +282,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
-  Widget discoverButton() {
+  Widget discoverDropdown() {
     return PopupMenuButton(
       tooltip: 'Discover',
       child: Opacity(
@@ -292,7 +293,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             mainAxisSize: MainAxisSize.min,
             children: [
               useIconButton
-                  ? FaIcon(FontAwesomeIcons.binoculars)
+                  ? FaIcon(
+                      FontAwesomeIcons.binoculars,
+                      color: stateColors.foreground,
+                    )
                   : Text(
                       'discover',
                       style: TextStyle(
@@ -300,45 +304,33 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                         fontSize: 16.0,
                       ),
                     ),
-              Icon(Icons.keyboard_arrow_down),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: stateColors.foreground,
+              ),
             ],
           ),
         ),
       ),
       itemBuilder: (_) => <PopupMenuEntry<AppBarDiscover>>[
         discoverEntry(
-          value: AppBarDiscover.authors,
-          icon: Icon(Icons.person_outline),
-          textData: 'authors',
-        ),
-        discoverEntry(
-          value: AppBarDiscover.references,
-          icon: Icon(Icons.book),
-          textData: 'references',
-        ),
-        discoverEntry(
           value: AppBarDiscover.random,
-          icon: FaIcon(FontAwesomeIcons.random),
+          icon: Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: FaIcon(
+              FontAwesomeIcons.random,
+              color: stateColors.foreground.withOpacity(0.6),
+            ),
+          ),
           textData: 'random quotes',
         ),
       ],
       onSelected: (value) {
         switch (value) {
-          case AppBarQuotesBy.authors:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Authors()));
-            break;
-          case AppBarQuotesBy.references:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => References()));
-            break;
-          case AppBarQuotesBy.topics:
-            final topicName = appTopicsColors.shuffle(max: 1).first.name;
+          case AppBarDiscover.random:
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => TopicPage(
-                  name: topicName,
-                ),
+                builder: (_) => RandomQuotes(),
               ),
             );
             break;
@@ -435,22 +427,12 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
       ),
       itemBuilder: (_) => <PopupMenuEntry<AppBarGroupedSectionItems>>[
-        // groupedSectionEntry(
-        //   value: AppBarGroupedSectionItems.authors,
-        //   icon: Icon(Icons.person_outline),
-        //   textData: 'authors',
-        // ),
-        // groupedSectionEntry(
-        //   value: AppBarGroupedSectionItems.references,
-        //   icon: Icon(Icons.book),
-        //   textData: 'references',
-        // ),
-        // groupedSectionEntry(
-        //   value: AppBarGroupedSectionItems.random,
-        //   icon: Icon(Icons.topic_outlined),
-        //   textData: 'random',
-        // ),
-        // PopupMenuDivider(),
+        groupedSectionEntry(
+          value: AppBarGroupedSectionItems.random,
+          icon: FaIcon(FontAwesomeIcons.random),
+          textData: 'random quotes',
+        ),
+        PopupMenuDivider(),
         groupedSectionEntry(
           value: AppBarGroupedSectionItems.github,
           icon: FaIcon(FontAwesomeIcons.github, color: stateColors.foreground),
@@ -548,7 +530,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarQuotesBy.authors,
           icon: Icon(
             Icons.person_outline,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'by authors',
         ),
@@ -556,7 +538,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarQuotesBy.references,
           icon: Icon(
             Icons.book,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'by references',
         ),
@@ -564,7 +546,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarQuotesBy.topics,
           icon: Icon(
             Icons.topic_outlined,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'by topics',
         ),
@@ -644,7 +626,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarResources.about,
           icon: Icon(
             Icons.help,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'about',
         ),
@@ -652,7 +634,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarResources.contact,
           icon: Icon(
             Icons.sms,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'contact',
         ),
@@ -660,7 +642,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarResources.tos,
           icon: Icon(
             Icons.privacy_tip_outlined,
-            color: stateColors.foreground,
+            color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'Privacy Terms',
         ),
@@ -748,10 +730,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
   List<Widget> separateDropdowns() {
     return [
-      // Padding(
-      //   padding: const EdgeInsets.only(left: 16.0),
-      //   child: discoverButton(),
-      // ),
+      Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: discoverDropdown(),
+      ),
       Padding(
         padding: const EdgeInsets.only(left: 16.0),
         child: developersDropdown(),

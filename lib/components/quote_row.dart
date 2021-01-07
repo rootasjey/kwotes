@@ -21,8 +21,8 @@ class QuoteRow extends StatefulWidget {
   /// If true, author will be displayed on card.
   final bool showAuthor;
 
-  /// If true, this item will have a border of 2.0px
-  /// with the quote's first topic color.
+  /// If true, this card will have a border of 2.0px
+  /// of the quote's first topic color.
   /// Available only when [componentType] = [ItemComponentType.verticalCard].
   final bool showBorder;
 
@@ -116,6 +116,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   Color _imageBackgroundColor;
   Color _accentColor;
   Color _iconColor;
+  Color _textColor = Colors.white;
 
   double elevation = 0.0;
 
@@ -137,6 +138,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
       _accentColor = Color(topicColor.decimal);
       _iconColor = _accentColor;
       _imageBackgroundColor = Colors.black45;
+      _textColor = stateColors.foreground;
     });
 
     if (widget.componentType == ItemComponentType.verticalCard) {
@@ -226,8 +228,10 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         child: Card(
           elevation: elevation,
           margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(),
           color: _cardBackgroundColor,
+          shape: widget.showBorder
+              ? Border(bottom: BorderSide(color: _accentColor, width: 2.0))
+              : Border(),
           child: InkWell(
             onTap: onQuoteTap,
             onLongPress: widget.onLongPress,
@@ -242,25 +246,25 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                 elevation = isHover ? getHoverElevation() : getElevation();
                 _cardBackgroundColor = isHover ? _accentColor : null;
                 _iconColor = isHover ? Colors.white : _accentColor;
+                _textColor = isHover ? Colors.white : stateColors.foreground;
               });
             },
             child: Stack(
               children: <Widget>[
                 Padding(
                   padding: widget.padding,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        widget.quote.name,
-                        maxLines: widget.maxLines,
-                        overflow: widget.overflow,
-                        style: TextStyle(
-                          fontSize: widget.quoteFontSize,
-                          fontWeight: FontWeight.w600,
-                        ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.quote.name,
+                      maxLines: widget.maxLines,
+                      overflow: widget.overflow,
+                      style: TextStyle(
+                        fontSize: widget.quoteFontSize,
+                        fontWeight: FontWeight.w600,
+                        color: _textColor,
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 if (widget.itemBuilder != null)
@@ -282,9 +286,17 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                 if (widget.stackChildren.length > 0) ...widget.stackChildren,
                 if (widget.showAuthor)
                   Positioned(
-                    left: 40.0,
+                    left: 0.0,
                     bottom: 15.0,
-                    child: quoteAuthor(),
+                    child: Padding(
+                      padding: widget.padding != null
+                          ? EdgeInsets.only(
+                              left: widget.padding.left,
+                              right: widget.padding.right,
+                            )
+                          : EdgeInsets.zero,
+                      child: quoteAuthor(),
+                    ),
                   ),
               ],
             ),
@@ -339,6 +351,10 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         opacity: 0.6,
         child: Text(
           widget.quote.author.name,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: _textColor,
+          ),
         ),
       ),
     );

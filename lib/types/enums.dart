@@ -98,6 +98,11 @@ enum QuotePageType {
   published,
 }
 
+enum ScreenLayout {
+  wide,
+  small,
+}
+
 enum SnackType {
   error,
   info,
