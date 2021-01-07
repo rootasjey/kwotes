@@ -12,16 +12,24 @@
 		3FB3384E2552CF86007C1543 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB3384D2552CF86007C1543 /* NotificationService.swift */; };
 		3FB338522552CF86007C1543 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3FB3384B2552CF86007C1543 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3FC246CD2548ECFC00EF513D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3FC246CC2548ECFC00EF513D /* GoogleService-Info.plist */; };
-		4EC39A33F3485FE340E32791 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CCBE6ACDF6473F30935E458 /* Pods_Runner.framework */; };
+		3FE65A0425A7B82500D1BCC9 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CCBE6ACDF6473F30935E458 /* Pods_Runner.framework */; };
+		3FE65A0925A7B96E00D1BCC9 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0515EE7816CBF38F59CDD3 /* Pods_OneSignalNotificationServiceExtension.framework */; };
+		3FE65A0A25A7B96E00D1BCC9 /* Pods_OneSignalNotificationServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0515EE7816CBF38F59CDD3 /* Pods_OneSignalNotificationServiceExtension.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		B518851684DD0279B16CCB20 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0515EE7816CBF38F59CDD3 /* Pods_OneSignalNotificationServiceExtension.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		3FB338502552CF86007C1543 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3FB3384A2552CF86007C1543;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
+		3FE65A0725A7B92E00D1BCC9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
 			proxyType = 1;
@@ -42,12 +50,13 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
+		3FE65A0B25A7B96E00D1BCC9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3FE65A0A25A7B96E00D1BCC9 /* Pods_OneSignalNotificationServiceExtension.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,7 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B518851684DD0279B16CCB20 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
+				3FE65A0925A7B96E00D1BCC9 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EC39A33F3485FE340E32791 /* Pods_Runner.framework in Frameworks */,
+				3FE65A0425A7B82500D1BCC9 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +213,7 @@
 				3FB338472552CF86007C1543 /* Sources */,
 				3FB338482552CF86007C1543 /* Frameworks */,
 				3FB338492552CF86007C1543 /* Resources */,
+				3FE65A0B25A7B96E00D1BCC9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -223,7 +233,6 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				3DE658F30C7A169439649926 /* [CP] Embed Pods Frameworks */,
 				3FB338532552CF86007C1543 /* Embed App Extensions */,
@@ -232,6 +241,7 @@
 			);
 			dependencies = (
 				3FB338512552CF86007C1543 /* PBXTargetDependency */,
+				3FE65A0825A7B92E00D1BCC9 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -452,6 +462,11 @@
 			target = 3FB3384A2552CF86007C1543 /* OneSignalNotificationServiceExtension */;
 			targetProxy = 3FB338502552CF86007C1543 /* PBXContainerItemProxy */;
 		};
+		3FE65A0825A7B92E00D1BCC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3FB3384A2552CF86007C1543 /* OneSignalNotificationServiceExtension */;
+			targetProxy = 3FE65A0725A7B92E00D1BCC9 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -566,6 +581,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4486QZD2NN;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
@@ -595,6 +611,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4486QZD2NN;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
@@ -621,6 +638,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4486QZD2NN;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
