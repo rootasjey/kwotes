@@ -30,6 +30,25 @@
   <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-functions.js"></script>
 
+  <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      databaseURL: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+      measurementId: "",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
+
   <fig-style></fig-style>
 
   <script type="module" src="./out-tsc/src/fig-style.js"></script>
