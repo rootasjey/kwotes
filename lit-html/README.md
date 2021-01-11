@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" src="../web/icons/icon-512.png"></img>
+  <img width="200" src="../assets/images/app-icon-512.png"></img>
 </p>
 
 ## fig.style (lit-html)
