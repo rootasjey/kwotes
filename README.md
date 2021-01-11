@@ -197,7 +197,7 @@ Please [ask](mailto:github@fig.style) if you have any doubt.
 
 # Privacy Policy
 
-You can find the platform's privacy policy in this repo: [TOS.md](https://github.com/rootasjey/fig.style/blob/master/TOS)
+You can find the platform's privacy policy in this repo: [TOS.md](https://privacy.fig.style)
 
 # Screenshots
 
