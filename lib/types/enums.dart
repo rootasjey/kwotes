@@ -63,6 +63,21 @@ enum DiscoverType {
   references,
 }
 
+/// Game lifecycle.
+enum GameState {
+  /// The game hasn't started yet.
+  stopped,
+
+  /// The game is currently running.
+  running,
+
+  /// The game is paused. It can either be resumed or finished.
+  paused,
+
+  /// Te game is finished.
+  finished,
+}
+
 enum HeaderViewType {
   options,
   search,
