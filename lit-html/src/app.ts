@@ -3,8 +3,8 @@ import { LitElement, html, css, property, customElement } from 'lit-element';
 import '@kor-ui/kor/components/app-bar';
 import '@kor-ui/kor/components/page';
 
-import './hero-quote.ts';
-import './recent-quotes.ts';
+import './hero-quote';
+import './recent-quotes';
 
 @customElement('lit-app')
 export class App extends LitElement {

@@ -1,5 +1,5 @@
 import { Router } from '@vaadin/router';
-import './app.ts';
+import './app';
 
 const routes = [
   {
