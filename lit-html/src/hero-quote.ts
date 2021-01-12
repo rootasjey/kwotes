@@ -1,7 +1,11 @@
-import '@kor-ui/kor/components/card';
-import '@kor-ui/kor/components/text';
-
-import { LitElement, html, customElement, PropertyValues, property, css } from 'lit-element';
+import { 
+  LitElement, 
+  html, 
+  customElement, 
+  PropertyValues, 
+  property, 
+  css,
+ } from 'lit-element';
 
 import firebase from 'firebase/app';
 
@@ -21,10 +25,16 @@ export class HeroQuote extends LitElement {
       text-align: left;
     }
     
-    :host kor-text {
+    // :host kor-text {
+    //   overflow: hidden;
+    // }
+    :host kor-card {
+      padding: 30px;
+    }
+    
+    .quote-name {
       font-size: 1.7em;
       line-height: 1.2em;
-      overflow: hidden;
     }
   `;
 
@@ -81,8 +91,11 @@ export class HeroQuote extends LitElement {
   render() {
     return html`
       <kor-card>
-        <kor-text size="header-1">
+        <kor-text class="quote-name" size="body-1">
           ${this.quotidian.quote.name}
+        </kor-text>
+        <kor-text class="author-name" size="body-2">
+          ― ${this.quotidian.quote.author.name}
         </kor-text>
       </kor-card>
     `;

@@ -1,7 +1,17 @@
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import { 
+  LitElement, 
+  html, 
+  css, 
+  property, 
+  customElement,
+ } from 'lit-element';
 
 import '@kor-ui/kor/components/app-bar';
 import '@kor-ui/kor/components/page';
+import '@kor-ui/kor/components/card';
+import '@kor-ui/kor/components/text';
+import '@kor-ui/kor/components/button';
+import '@kor-ui/kor/components/spinner';
 
 import './hero-quote';
 import './recent-quotes';
