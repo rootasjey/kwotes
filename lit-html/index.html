@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="Description" content="5 seconds of emotion.">
+  <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
   <base href="/">
 
   <style>
@@ -12,46 +13,18 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: sans-serif;
       background-color: #ededed;
     }
   </style>
-  <title>fig-style</title>
+
+  <title>fig.style</title>
 </head>
 
-<body>
-  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
-  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-app.js"></script>
-
-  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
-  <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-functions.js"></script>
-
-  <script>
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    var firebaseConfig = {
-      apiKey: "",
-      authDomain: "",
-      databaseURL: "",
-      projectId: "",
-      storageBucket: "",
-      messagingSenderId: "",
-      appId: "",
-      measurementId: "",
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
-  </script>
-
-  <fig-style></fig-style>
-
-  <script type="module" src="./out-tsc/src/fig-style.js"></script>
+<body style="overflow-y: auto;">
+  <div id="outlet"></div>
+  <script type="module" src="./out-tsc/src/firebase-init.js"></script>
+  <link rel="stylesheet" type="text/css" href="node_modules/@kor-ui/kor/kor-styles.css" />
+  <script type="module" src="./out-tsc/src/index.js"></script>
 </body>
 
 </html>

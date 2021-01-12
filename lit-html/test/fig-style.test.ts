@@ -1,10 +1,11 @@
+// @ts-ignore
 import { html, fixture, expect } from '@open-wc/testing';
 
-import { FigStyle } from '../src/FigStyle.js';
+import { App } from '../src/app.js';
 import '../src/fig-style.js';
 
 describe('FigStyle', () => {
-  let element: FigStyle;
+  let element: App;
   beforeEach(async () => {
     element = await fixture(html`<fig-style></fig-style>`);
   });
