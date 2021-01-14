@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:animations/animations.dart';
 import 'package:figstyle/components/image_hero.dart';
 import 'package:figstyle/screens/changelog.dart';
+import 'package:figstyle/screens/on_boarding.dart';
 import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/footer.dart';
@@ -31,43 +33,49 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          DesktopAppBar(
-            title: 'About',
-            automaticallyImplyLeading: true,
-            showUserMenu: false,
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.only(
-              left: 20.0,
-              right: 20.0,
-              bottom: 200.0,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                Column(
-                  children: <Widget>[
-                    appIconImage(context),
-                    otherLinks(context),
-                    whatIs(context),
-                    features(),
-                    whoIs(context),
-                    whoIs2(context),
-                    creditsSection(),
-                  ],
+      body: Overlay(
+        initialEntries: [
+          OverlayEntry(builder: (context) {
+            return CustomScrollView(
+              slivers: <Widget>[
+                DesktopAppBar(
+                  title: 'About',
+                  automaticallyImplyLeading: true,
+                  showUserMenu: false,
                 ),
-              ]),
-            ),
-          ),
-          if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Footer(),
-                ],
-              ),
-            ),
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                    bottom: 200.0,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      Column(
+                        children: <Widget>[
+                          appIconImage(context),
+                          otherLinks(context),
+                          whatIs(context),
+                          features(),
+                          whoIs(context),
+                          whoIs2(context),
+                          creditsSection(),
+                        ],
+                      ),
+                    ]),
+                  ),
+                ),
+                if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Footer(),
+                      ],
+                    ),
+                  ),
+              ],
+            );
+          }),
         ],
       ),
     );
@@ -295,6 +303,13 @@ class About extends StatelessWidget {
               title: Text('GitHub'),
               trailing: Icon(Icons.open_in_new),
               onTap: () => launch(Constants.appGithubUrl),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: Text('On boarding'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () => showOnBoarding(context),
             ),
           ),
         ],
@@ -661,6 +676,41 @@ class About extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void showOnBoarding(BuildContext context) {
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => OnBoarding()),
+      );
+      return;
+    }
+
+    showFlash(
+      context: context,
+      persistent: false,
+      builder: (context, controller) {
+        return Flash.dialog(
+          controller: controller,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          enableDrag: true,
+          margin: const EdgeInsets.only(
+            left: 120.0,
+            right: 120.0,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          child: FlashBar(
+            message: Container(
+              height: MediaQuery.of(context).size.height - 100.0,
+              padding: const EdgeInsets.all(60.0),
+              child: OnBoarding(isDesktop: true),
+            ),
+          ),
+        );
+      },
     );
   }
 }
