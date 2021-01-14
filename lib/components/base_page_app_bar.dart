@@ -3,16 +3,19 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/state/colors.dart';
 
 class BasePageAppBar extends StatefulWidget {
-  // Appbar's expanded height.
+  /// Appbar's expanded height.
   final double expandedHeight;
-  // Appbar's collapsed height.
+
+  /// Appbar's collapsed height.
   final double collapsedHeight;
-  // Appbar's  height.
+
+  /// Appbar's  height.
   final double toolbarHeight;
 
   /// Typically open a drawer. Menu icon will be hidden if null.
   final Function onPressedMenu;
 
+  /// If true, AppBar will stayed visible while scrolling.
   final bool pinned;
 
   /// If true, the back icon will be visible.
