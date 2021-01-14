@@ -102,7 +102,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
         backgroundColor: stateColors.accent,
         foregroundColor: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
+          padding: const EdgeInsets.only(top: 4.0),
           child: FaIcon(FontAwesomeIcons.random),
         ),
       ),
