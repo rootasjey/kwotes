@@ -53,11 +53,11 @@ class _HomeState extends State<Home> {
         OverlayEntry(
           builder: (_) => LayoutBuilder(
             builder: (context, constraints) {
-              if (mustShowOnBoardingDesktop(constraints.maxWidth)) {
-                isPopupVisible = true;
-                showDesktopDialog(context);
-                return homeView(constraints);
-              }
+              // if (mustShowOnBoardingDesktop(constraints.maxWidth)) {
+              //   isPopupVisible = true;
+              //   showDesktopDialog(context);
+              //   return homeView(constraints);
+              // }
 
               if (mustShowOnBoardingMobile(constraints.maxWidth)) {
                 if (mustHidePopup()) {
