@@ -55,7 +55,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
 
   String lang = Language.en;
 
-  var quotes = List<Quote>();
+  var quotes = <Quote>[];
 
   var paddingListView = const EdgeInsets.only(
     top: 60.0,

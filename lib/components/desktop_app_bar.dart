@@ -75,7 +75,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
         return Observer(
           builder: (_) {
-            final userSectionWidgets = List<Widget>();
+            final userSectionWidgets = <Widget>[];
 
             if (stateUser.isUserConnected) {
               userSectionWidgets.addAll(getAuthButtons(isNarrow));
@@ -989,7 +989,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
   Widget userSection(bool isNarrow) {
     return Observer(builder: (context) {
-      final children = List<Widget>();
+      final children = <Widget>[];
 
       if (stateUser.isUserConnected) {
         isNarrow

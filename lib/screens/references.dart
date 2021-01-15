@@ -45,8 +45,8 @@ class _ReferencesState extends State<References> {
   final mainAxisSpacing = 0.0;
   final crossAxisSpacing = 0.0;
 
-  final recentlyAddedReferences = List<Reference>();
-  final searchResultsReferences = List<ReferenceSuggestion>();
+  final recentlyAddedReferences = <Reference>[];
+  final searchResultsReferences = <ReferenceSuggestion>[];
   final pageRoute = ReferencesRoute;
 
   FocusNode searchFocusNode;

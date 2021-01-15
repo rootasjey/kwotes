@@ -194,7 +194,7 @@ Future<bool> proposeQuote({
     return false;
   }
 
-  final comments = List<String>();
+  final comments = <String>[];
 
   if (DataQuoteInputs.comment.isNotEmpty) {
     comments.add(DataQuoteInputs.comment);
@@ -231,7 +231,7 @@ Future<bool> proposeQuote({
 }
 
 List<Map<String, dynamic>> formatReferences() {
-  final references = List<Map<String, dynamic>>();
+  final references = <Map<String, dynamic>>[];
 
   if (DataQuoteInputs.reference.name.isEmpty) {
     return references;

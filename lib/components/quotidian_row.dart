@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/colors.dart';
@@ -357,16 +358,19 @@ class _QuotidianRowState extends State<QuotidianRow> {
         widget.onAfterDelete(true);
       }
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('The quotidian has been successfully deleted.'),
-      ));
+      showSnack(
+        context: context,
+        message: "The quotidian has been successfully deleted.",
+        type: SnackType.success,
+      );
     } catch (error) {
       debugPrint(error.toString());
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('Sorry, an error occurred while deleting the quotidian.'),
-      ));
+      showSnack(
+        context: context,
+        message: "Sorry, an error occurred while deleting the quotidian.",
+        type: SnackType.error,
+      );
 
       if (widget.onAfterDelete != null) {
         widget.onAfterDelete(false);

@@ -41,8 +41,8 @@ class _AuthorsState extends State<Authors> {
 
   DocumentSnapshot lastFetchedDoc;
 
-  final recentlyAddedAuthors = List<Author>();
-  final authorsSearchResults = List<AuthorSuggestion>();
+  final recentlyAddedAuthors = <Author>[];
+  final authorsSearchResults = <AuthorSuggestion>[];
 
   final pageRoute = ReferencesRoute;
   FocusNode searchFocusNode;

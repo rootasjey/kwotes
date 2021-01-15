@@ -71,7 +71,7 @@ Future<bool> saveDraft({
     return false;
   }
 
-  final comments = List<String>();
+  final comments = <String>[];
 
   if (DataQuoteInputs.comment.isNotEmpty) {
     comments.add(DataQuoteInputs.comment);
@@ -154,7 +154,7 @@ Future<bool> saveDraft({
 Future<bool> saveOfflineDraft({
   BuildContext context,
 }) async {
-  final comments = List<String>();
+  final comments = <String>[];
 
   if (DataQuoteInputs.comment.isNotEmpty) {
     comments.add(DataQuoteInputs.comment);
@@ -231,7 +231,7 @@ Future<bool> saveOfflineDraft({
 }
 
 List<TempQuote> getOfflineDrafts() {
-  final drafts = List<TempQuote>();
+  final drafts = <TempQuote>[];
   final savedStringDrafts = appStorage.getDrafts();
 
   if (savedStringDrafts == null) {

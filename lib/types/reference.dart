@@ -42,7 +42,7 @@ class Reference {
   }
 
   factory Reference.fromJSON(Map<String, dynamic> json) {
-    final links = List<String>();
+    final links = <String>[];
 
     if (json['links'] != null) {
       for (String ref in json['links']) {
