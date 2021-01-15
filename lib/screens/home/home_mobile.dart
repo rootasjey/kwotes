@@ -235,10 +235,10 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
 
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context, scrollController) => QuotePage(
+          builder: (context) => QuotePage(
             padding: const EdgeInsets.only(left: 10.0),
             quoteId: quoteId,
-            scrollController: scrollController,
+            scrollController: ModalScrollController.of(context),
           ),
         );
       });
@@ -281,8 +281,8 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       } else {
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context, scrollController) => NotificationsCenter(
-            scrollController: scrollController,
+          builder: (context) => NotificationsCenter(
+            scrollController: ModalScrollController.of(context),
           ),
         );
       }

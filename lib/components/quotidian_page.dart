@@ -239,8 +239,8 @@ class _QuotidianPageState extends State<QuotidianPage> {
             tooltip: "Add to list...",
             onPressed: () => showCupertinoModalBottomSheet(
               context: context,
-              builder: (context, scrollController) => UserLists(
-                scrollController: scrollController,
+              builder: (context) => UserLists(
+                scrollController: ModalScrollController.of(context),
                 quote: quotidian.quote,
               ),
             ),

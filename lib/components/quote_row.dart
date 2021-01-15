@@ -351,9 +351,9 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context, scrollController) => AuthorPage(
+          builder: (context) => AuthorPage(
             id: widget.quote.author.id,
-            scrollController: scrollController,
+            scrollController: ModalScrollController.of(context),
           ),
         );
       },
@@ -421,9 +421,9 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context, scrollController) => ReferencePage(
+          builder: (context) => ReferencePage(
             id: widget.quote.mainReference.id,
-            scrollController: scrollController,
+            scrollController: ModalScrollController.of(context),
           ),
         );
       },
@@ -643,11 +643,11 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
     } else {
       await showCupertinoModalBottomSheet(
         context: context,
-        builder: (context, scrollController) => QuotePage(
+        builder: (context) => QuotePage(
           padding: const EdgeInsets.only(left: 10.0),
           quote: widget.quote,
           quoteId: id,
-          scrollController: scrollController,
+          scrollController: ModalScrollController.of(context),
         ),
       );
     }
@@ -662,13 +662,14 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   }
 
   void fetchImageBackground() async {
-    String urlResult = await fetchAuthorPP();
+    // String urlResult = await fetchAuthorPP();
 
-    if (urlResult == null || urlResult.isEmpty) {
-      urlResult = await fetchReferencePP();
-    }
+    // if (urlResult == null || urlResult.isEmpty) {
+    //   urlResult = await fetchReferencePP();
+    // }
 
-    setState(() => bgCardImageUrl = urlResult);
+    setState(() => bgCardImageUrl =
+        'https://prevention.cancer.gov/sites/default/files/uploads/news_and_event/download-icon.png');
   }
 
   Future<String> fetchAuthorPP() async {

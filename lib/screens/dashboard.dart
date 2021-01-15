@@ -397,7 +397,7 @@ class _DashboardState extends State<Dashboard> {
               } else {
                 await showCupertinoModalBottomSheet(
                   context: context,
-                  builder: (_, scrollController) => NotificationsCenter(
+                  builder: (_) => NotificationsCenter(
                     scrollController: scrollController,
                   ),
                 );

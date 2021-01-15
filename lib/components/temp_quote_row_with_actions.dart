@@ -303,7 +303,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
 
     showCustomModalBottomSheet(
       context: context,
-      builder: (context, controller) {
+      builder: (context) {
         return Material(
           child: SafeArea(
             top: false,
@@ -362,8 +362,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     } else {
       await showCupertinoModalBottomSheet(
         context: context,
-        builder: (context, scrollController) => RejectTempQuote(
-          scrollController: scrollController,
+        builder: (context) => RejectTempQuote(
+          scrollController: ModalScrollController.of(context),
           tempQuote: tempQuote,
         ),
       );

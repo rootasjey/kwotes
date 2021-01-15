@@ -13,7 +13,7 @@ Future showDeleteListDialog({
   if (MediaQuery.of(context).size.width < 700.0) {
     return await showCustomModalBottomSheet(
       context: context,
-      builder: (context, controller) {
+      builder: (context) {
         return Material(
           child: SafeArea(
             top: false,

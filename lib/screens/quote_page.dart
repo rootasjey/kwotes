@@ -141,8 +141,8 @@ class _QuotePageState extends State<QuotePage> {
         tooltip: "Add to list...",
         onPressed: () => showCupertinoModalBottomSheet(
           context: context,
-          builder: (context, scrollController) => UserLists(
-            scrollController: scrollController,
+          builder: (context) => UserLists(
+            scrollController: ModalScrollController.of(context),
             quote: widget.quote,
           ),
         ),
@@ -519,9 +519,9 @@ class _QuotePageState extends State<QuotePage> {
 
     return showCupertinoModalBottomSheet(
         context: context,
-        builder: (_, scrollController) => AuthorPage(
+        builder: (_) => AuthorPage(
               id: id,
-              scrollController: scrollController,
+              scrollController: ModalScrollController.of(context),
             ));
   }
 
@@ -559,11 +559,12 @@ class _QuotePageState extends State<QuotePage> {
     }
 
     return showCupertinoModalBottomSheet(
-        context: context,
-        builder: (_, scrollController) => ReferencePage(
-              id: id,
-              scrollController: scrollController,
-            ));
+      context: context,
+      builder: (_) => ReferencePage(
+        id: id,
+        scrollController: ModalScrollController.of(context),
+      ),
+    );
   }
 
   Future<bool> unlikeQuote() async {

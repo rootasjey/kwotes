@@ -189,7 +189,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   void confirmAndDeletePubQuote() async {
     showCustomModalBottomSheet(
       context: context,
-      builder: (context, controller) {
+      builder: (context) {
         return Material(
           child: SafeArea(
             top: false,
@@ -524,7 +524,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     showCustomModalBottomSheet(
       context: context,
-      builder: (context, controller) {
+      builder: (context) {
         return Material(
           child: SafeArea(
             top: false,
@@ -693,8 +693,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) => UserLists(
-        scrollController: scrollController,
+      builder: (context) => UserLists(
+        scrollController: ModalScrollController.of(context),
         quote: widget.quote,
       ),
     );

@@ -245,9 +245,9 @@ class _ReferenceCardState extends State<ReferenceCard>
 
     return showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) => ReferencePage(
+      builder: (context) => ReferencePage(
         id: widget.id,
-        scrollController: scrollController,
+        scrollController: ModalScrollController.of(context),
       ),
     );
   }

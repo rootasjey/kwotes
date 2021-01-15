@@ -65,7 +65,7 @@ void shareQuote({@required BuildContext context, @required Quote quote}) {
 void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
   showCustomModalBottomSheet(
     context: context,
-    builder: (context, controller) {
+    builder: (context) {
       return Material(
         child: SafeArea(
           top: false,
@@ -98,9 +98,9 @@ void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
 
                 showCupertinoModalBottomSheet(
                   context: context,
-                  builder: (context, scrollController) => ImageShare(
+                  builder: (context) => ImageShare(
                     quote: quote,
-                    scrollController: scrollController,
+                    scrollController: ModalScrollController.of(context),
                   ),
                 );
               },

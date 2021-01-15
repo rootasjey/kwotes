@@ -74,9 +74,9 @@ class _ReferenceRowState extends State<ReferenceRow> {
           onTap: () {
             showCupertinoModalBottomSheet(
                 context: context,
-                builder: (_, scrollController) => ReferencePage(
+                builder: (_) => ReferencePage(
                       id: reference.id,
-                      scrollController: scrollController,
+                      scrollController: ModalScrollController.of(context),
                     ));
           },
           onHover: (isHover) {

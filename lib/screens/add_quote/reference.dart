@@ -534,7 +534,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           onTap: () async {
             await showCupertinoModalBottomSheet(
                 context: context,
-                builder: (context, scrollController) {
+                builder: (context) {
                   return nameInput();
                 });
 
@@ -650,7 +650,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               : () async {
                   await showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context, scrollController) {
+                      builder: (context) {
                         return primaryTypeInput();
                       });
 
@@ -801,7 +801,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               : () async {
                   await showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context, scrollController) {
+                      builder: (context) {
                         return secondaryTypeInput();
                       });
 
@@ -939,7 +939,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               : () async {
                   await showMaterialModalBottomSheet(
                       context: context,
-                      builder: (context, scrollController) {
+                      builder: (context) {
                         return summaryInput();
                       });
 
@@ -1067,11 +1067,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   void showAvatarDialog() {
     showMaterialModalBottomSheet(
       context: context,
-      builder: (context, scrollController) {
+      builder: (context) {
         return Scaffold(
           body: ListView(
             physics: ClampingScrollPhysics(),
-            controller: scrollController,
+            controller: ModalScrollController.of(context),
             children: [
               Padding(
                 padding: const EdgeInsets.only(
@@ -1174,7 +1174,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
     showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) {
+      builder: (context) {
         if (linkInputController.text.isEmpty) {
           linkInputController.text = initialValue;
         }

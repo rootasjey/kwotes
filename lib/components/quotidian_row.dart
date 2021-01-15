@@ -430,10 +430,10 @@ class _QuotidianRowState extends State<QuotidianRow> {
 
     return showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) => QuotePage(
+      builder: (context) => QuotePage(
         padding: const EdgeInsets.only(left: 10.0),
         quoteId: id,
-        scrollController: scrollController,
+        scrollController: ModalScrollController.of(context),
       ),
     );
   }

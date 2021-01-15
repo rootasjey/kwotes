@@ -242,9 +242,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     : () async {
                         await showCupertinoModalBottomSheet(
                             context: context,
-                            builder: (context, scrollController) {
+                            builder: (context) {
                               return bornInput(
-                                  scrollController: scrollController);
+                                scrollController:
+                                    ModalScrollController.of(context),
+                              );
                             });
 
                         setState(() {});
@@ -290,7 +292,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     : () async {
                         await showCupertinoModalBottomSheet(
                             context: context,
-                            builder: (context, scrollController) {
+                            builder: (context) {
                               return deathInput();
                             });
 
@@ -639,7 +641,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               : () async {
                   await showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context, scrollController) {
+                      builder: (context) {
                         return jobInput();
                       });
 
@@ -957,7 +959,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           onTap: () async {
             await showCupertinoModalBottomSheet(
                 context: context,
-                builder: (context, scrollController) {
+                builder: (context) {
                   return nameInput();
                 });
 
@@ -1111,7 +1113,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               : () async {
                   await showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (context, scrollController) {
+                      builder: (context) {
                         return summaryInput();
                       });
 
@@ -1281,11 +1283,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   void showAvatarDialog() {
     showMaterialModalBottomSheet(
         context: context,
-        builder: (context, scrollController) {
+        builder: (context) {
           return Scaffold(
             body: ListView(
               physics: ClampingScrollPhysics(),
-              controller: scrollController,
+              controller: ModalScrollController.of(context),
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
@@ -1387,7 +1389,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
     showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) {
+      builder: (context) {
         if (linkInputController.text.isEmpty) {
           linkInputController.text = initialValue;
         }

@@ -217,9 +217,9 @@ class _CircleAuthorState extends State<CircleAuthor>
 
     return showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) => AuthorPage(
+      builder: (context) => AuthorPage(
         id: author.id,
-        scrollController: scrollController,
+        scrollController: ModalScrollController.of(context),
       ),
     );
   }

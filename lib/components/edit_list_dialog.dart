@@ -173,7 +173,7 @@ Future showEditListDialog({
   if (MediaQuery.of(context).size.width < 700.0) {
     return await showCupertinoModalBottomSheet(
       context: context,
-      builder: (context, scrollController) {
+      builder: (context) {
         return childContent;
       },
     );

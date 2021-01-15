@@ -430,7 +430,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
   void onLongPress(AppNotification notif, int index) {
     showCustomModalBottomSheet(
       context: context,
-      builder: (context, controller) {
+      builder: (context) {
         return Material(
           child: SafeArea(
             top: false,

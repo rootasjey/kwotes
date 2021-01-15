@@ -99,7 +99,7 @@ class _AddQuoteCommentState extends State<AddQuoteComment> {
           onTap: () async {
             await showMaterialModalBottomSheet(
                 context: context,
-                builder: (context, scrollController) {
+                builder: (context) {
                   return commentInput();
                 });
 

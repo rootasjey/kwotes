@@ -86,13 +86,13 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
         ),
         onTap: () => showCupertinoModalBottomSheet(
           context: context,
-          builder: (context, scrollController) {
+          builder: (context) {
             final padding =
                 MediaQuery.of(context).size.width < 600.0 ? 20.0 : 40.0;
 
             return Scaffold(
               body: SingleChildScrollView(
-                controller: scrollController,
+                controller: ModalScrollController.of(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

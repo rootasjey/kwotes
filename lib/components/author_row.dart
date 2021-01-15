@@ -74,9 +74,9 @@ class _AuthorRowState extends State<AuthorRow> {
           onTap: () {
             showCupertinoModalBottomSheet(
                 context: context,
-                builder: (_, scrollController) => AuthorPage(
+                builder: (_) => AuthorPage(
                       id: author.id,
-                      scrollController: scrollController,
+                      scrollController: ModalScrollController.of(context),
                     ));
           },
           onHover: (isHover) {
