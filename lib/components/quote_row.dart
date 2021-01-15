@@ -662,14 +662,13 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   }
 
   void fetchImageBackground() async {
-    // String urlResult = await fetchAuthorPP();
+    String urlResult = await fetchAuthorPP();
 
-    // if (urlResult == null || urlResult.isEmpty) {
-    //   urlResult = await fetchReferencePP();
-    // }
+    if (urlResult == null || urlResult.isEmpty) {
+      urlResult = await fetchReferencePP();
+    }
 
-    setState(() => bgCardImageUrl =
-        'https://prevention.cancer.gov/sites/default/files/uploads/news_and_event/download-icon.png');
+    setState(() => bgCardImageUrl = urlResult);
   }
 
   Future<String> fetchAuthorPP() async {
