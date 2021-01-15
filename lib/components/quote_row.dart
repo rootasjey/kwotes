@@ -13,6 +13,7 @@ import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -120,6 +121,8 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
   double elevation = 0.0;
 
+  ReactionDisposer textColorDisposer;
+
   String bgCardDefaultUrl = 'assets/images/ia_portrait.jpg';
   String bgCardImageUrl = '';
 
@@ -140,6 +143,11 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
       _imageBackgroundColor = Colors.black45;
       _textColor = stateColors.foreground;
     });
+
+    textColorDisposer = reaction(
+      (_) => stateColors.foreground,
+      (Color color) => _textColor = color,
+    );
 
     if (widget.componentType == ItemComponentType.verticalCard) {
       fetchImageBackground();
@@ -167,6 +175,8 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         widget.componentType == ItemComponentType.card) {
       scaleAnimationController?.dispose();
     }
+
+    textColorDisposer?.reaction?.dispose();
 
     super.dispose();
   }
@@ -562,7 +572,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                         opacity: 0.6,
                         child: Icon(
                           Icons.more_vert,
-                          color: Colors.white,
+                          color: _textColor,
                         ),
                       ),
                       onSelected: widget.onSelected,
