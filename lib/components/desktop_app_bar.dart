@@ -1,11 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
-import 'package:figstyle/screens/settings.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/topics_colors.dart';
@@ -788,9 +789,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         onSelected: (value) {
           switch (value) {
             case AppBarSettings.allSettings:
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => Settings()),
-              );
+              context.router.push(SettingsRoute());
               break;
             case AppBarSettings.en:
               Language.setLang('en');

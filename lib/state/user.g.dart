@@ -6,112 +6,100 @@ part of 'user.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StateUser on StateUserBase, Store {
   final _$avatarUrlAtom = Atom(name: 'StateUserBase.avatarUrl');
 
   @override
   String get avatarUrl {
-    _$avatarUrlAtom.context.enforceReadPolicy(_$avatarUrlAtom);
-    _$avatarUrlAtom.reportObserved();
+    _$avatarUrlAtom.reportRead();
     return super.avatarUrl;
   }
 
   @override
   set avatarUrl(String value) {
-    _$avatarUrlAtom.context.conditionallyRunInAction(() {
+    _$avatarUrlAtom.reportWrite(value, super.avatarUrl, () {
       super.avatarUrl = value;
-      _$avatarUrlAtom.reportChanged();
-    }, _$avatarUrlAtom, name: '${_$avatarUrlAtom.name}_set');
+    });
   }
 
   final _$langAtom = Atom(name: 'StateUserBase.lang');
 
   @override
   String get lang {
-    _$langAtom.context.enforceReadPolicy(_$langAtom);
-    _$langAtom.reportObserved();
+    _$langAtom.reportRead();
     return super.lang;
   }
 
   @override
   set lang(String value) {
-    _$langAtom.context.conditionallyRunInAction(() {
+    _$langAtom.reportWrite(value, super.lang, () {
       super.lang = value;
-      _$langAtom.reportChanged();
-    }, _$langAtom, name: '${_$langAtom.name}_set');
+    });
   }
 
   final _$isFirstLaunchAtom = Atom(name: 'StateUserBase.isFirstLaunch');
 
   @override
   bool get isFirstLaunch {
-    _$isFirstLaunchAtom.context.enforceReadPolicy(_$isFirstLaunchAtom);
-    _$isFirstLaunchAtom.reportObserved();
+    _$isFirstLaunchAtom.reportRead();
     return super.isFirstLaunch;
   }
 
   @override
   set isFirstLaunch(bool value) {
-    _$isFirstLaunchAtom.context.conditionallyRunInAction(() {
+    _$isFirstLaunchAtom.reportWrite(value, super.isFirstLaunch, () {
       super.isFirstLaunch = value;
-      _$isFirstLaunchAtom.reportChanged();
-    }, _$isFirstLaunchAtom, name: '${_$isFirstLaunchAtom.name}_set');
+    });
   }
 
   final _$isUserConnectedAtom = Atom(name: 'StateUserBase.isUserConnected');
 
   @override
   bool get isUserConnected {
-    _$isUserConnectedAtom.context.enforceReadPolicy(_$isUserConnectedAtom);
-    _$isUserConnectedAtom.reportObserved();
+    _$isUserConnectedAtom.reportRead();
     return super.isUserConnected;
   }
 
   @override
   set isUserConnected(bool value) {
-    _$isUserConnectedAtom.context.conditionallyRunInAction(() {
+    _$isUserConnectedAtom.reportWrite(value, super.isUserConnected, () {
       super.isUserConnected = value;
-      _$isUserConnectedAtom.reportChanged();
-    }, _$isUserConnectedAtom, name: '${_$isUserConnectedAtom.name}_set');
+    });
   }
 
   final _$usernameAtom = Atom(name: 'StateUserBase.username');
 
   @override
   String get username {
-    _$usernameAtom.context.enforceReadPolicy(_$usernameAtom);
-    _$usernameAtom.reportObserved();
+    _$usernameAtom.reportRead();
     return super.username;
   }
 
   @override
   set username(String value) {
-    _$usernameAtom.context.conditionallyRunInAction(() {
+    _$usernameAtom.reportWrite(value, super.username, () {
       super.username = value;
-      _$usernameAtom.reportChanged();
-    }, _$usernameAtom, name: '${_$usernameAtom.name}_set');
+    });
   }
 
   final _$updatedFavAtAtom = Atom(name: 'StateUserBase.updatedFavAt');
 
   @override
   DateTime get updatedFavAt {
-    _$updatedFavAtAtom.context.enforceReadPolicy(_$updatedFavAtAtom);
-    _$updatedFavAtAtom.reportObserved();
+    _$updatedFavAtAtom.reportRead();
     return super.updatedFavAt;
   }
 
   @override
   set updatedFavAt(DateTime value) {
-    _$updatedFavAtAtom.context.conditionallyRunInAction(() {
+    _$updatedFavAtAtom.reportWrite(value, super.updatedFavAt, () {
       super.updatedFavAt = value;
-      _$updatedFavAtAtom.reportChanged();
-    }, _$updatedFavAtAtom, name: '${_$updatedFavAtAtom.name}_set');
+    });
   }
 
-  final _$signOutAsyncAction = AsyncAction('signOut');
+  final _$signOutAsyncAction = AsyncAction('StateUserBase.signOut');
 
   @override
   Future<dynamic> signOut() {
@@ -123,7 +111,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void setAvatarUrl(String url) {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setAvatarUrl');
     try {
       return super.setAvatarUrl(url);
     } finally {
@@ -133,7 +122,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void setFirstLaunch(bool value) {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setFirstLaunch');
     try {
       return super.setFirstLaunch(value);
     } finally {
@@ -143,7 +133,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void setLang(String newLang) {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setLang');
     try {
       return super.setLang(newLang);
     } finally {
@@ -153,7 +144,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void setUserConnected() {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setUserConnected');
     try {
       return super.setUserConnected();
     } finally {
@@ -163,7 +155,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void setUserDisconnected() {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setUserDisconnected');
     try {
       return super.setUserDisconnected();
     } finally {
@@ -173,7 +166,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void setUserName(String name) {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setUserName');
     try {
       return super.setUserName(name);
     } finally {
@@ -183,7 +177,8 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   void updateFavDate() {
-    final _$actionInfo = _$StateUserBaseActionController.startAction();
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.updateFavDate');
     try {
       return super.updateFavDate();
     } finally {
@@ -193,8 +188,13 @@ mixin _$StateUser on StateUserBase, Store {
 
   @override
   String toString() {
-    final string =
-        'avatarUrl: ${avatarUrl.toString()},lang: ${lang.toString()},isFirstLaunch: ${isFirstLaunch.toString()},isUserConnected: ${isUserConnected.toString()},username: ${username.toString()},updatedFavAt: ${updatedFavAt.toString()}';
-    return '{$string}';
+    return '''
+avatarUrl: ${avatarUrl},
+lang: ${lang},
+isFirstLaunch: ${isFirstLaunch},
+isUserConnected: ${isUserConnected},
+username: ${username},
+updatedFavAt: ${updatedFavAt}
+    ''';
   }
 }

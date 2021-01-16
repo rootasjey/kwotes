@@ -1,4 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/components/full_page_loading.dart';
-import 'package:figstyle/main_app.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user.dart';
@@ -24,61 +23,41 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await appStorage.initialize();
+  PushNotifications.init();
+  await Future.wait([_autoLogin(), _initColors(), _initLang()]);
+
   return runApp(App());
 }
 
+/// Main app class.
 class App extends StatefulWidget {
   AppState createState() => AppState();
 }
 
+/// Main app class state.
 class AppState extends State<App> {
-  bool isReady = false;
-
-  AppState();
-
-  @override
-  void initState() {
-    super.initState();
-    initAsync();
-  }
+  final appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
     final brightness = getBrightness();
     stateColors.refreshTheme(brightness);
 
-    if (isReady) {
-      return DynamicTheme(
-        defaultBrightness: brightness,
-        data: (brightness) => ThemeData(
-          fontFamily: GoogleFonts.raleway().fontFamily,
-          brightness: brightness,
-        ),
-        themedWidgetBuilder: (context, theme) {
-          stateColors.themeData = theme;
-          return MainApp();
-        },
-      );
-    }
-
-    // On the web, if an user accesses an auth route (w/o going first to home),
-    // they will be redirected to the Sign in screen before the app auth them.
-    // This waiting screen solves this issue.
     return DynamicTheme(
       defaultBrightness: brightness,
       data: (brightness) => ThemeData(
         fontFamily: GoogleFonts.raleway().fontFamily,
         brightness: brightness,
       ),
-      themedWidgetBuilder: (_, theme) {
+      themedWidgetBuilder: (context, theme) {
         stateColors.themeData = theme;
-        return MaterialApp(
+
+        return MaterialApp.router(
           title: 'fig.style',
           theme: stateColors.themeData,
-          debugShowCheckedModeBanner: true,
-          home: Scaffold(
-            body: FullPageLoading(),
-          ),
+          debugShowCheckedModeBanner: false,
+          routerDelegate: appRouter.delegate(),
+          routeInformationParser: appRouter.defaultRouteParser(),
         );
       },
     );
@@ -100,46 +79,40 @@ class AppState extends State<App> {
 
     return brightness;
   }
+}
 
-  Future autoLogin() async {
-    try {
-      final userCred = await userSignin();
+// Initialization functions.
+// ------------------------
+Future _autoLogin() async {
+  try {
+    final userCred = await userSignin();
 
-      if (userCred == null) {
-        userSignOut(context: context, autoNavigateAfter: false);
-        PushNotifications.unlinkAuthUser();
-      }
-    } catch (error) {
-      debugPrint(error.toString());
-      userSignOut(context: context, autoNavigateAfter: false);
+    if (userCred == null) {
+      userSignOut(autoNavigateAfter: false);
       PushNotifications.unlinkAuthUser();
     }
+  } catch (error) {
+    debugPrint(error.toString());
+    userSignOut(autoNavigateAfter: false);
+    PushNotifications.unlinkAuthUser();
   }
+}
 
-  void initAsync() async {
-    await Future.wait([autoLogin(), initColors(), initLang()]);
+Future _initColors() async {
+  await appTopicsColors.fetchTopicsColors();
 
-    setState(() => isReady = true);
+  final color = appTopicsColors.shuffle(max: 1).firstOrElse(
+        () => TopicColor(
+          name: 'blue',
+          decimal: Colors.blue.value,
+          hex: Colors.blue.value.toRadixString(16),
+        ),
+      );
 
-    PushNotifications.init();
-  }
+  stateColors.setAccentColor(Color(color.decimal));
+}
 
-  Future initColors() async {
-    await appTopicsColors.fetchTopicsColors();
-
-    final color = appTopicsColors.shuffle(max: 1).firstOrElse(
-          () => TopicColor(
-            name: 'blue',
-            decimal: Colors.blue.value,
-            hex: Colors.blue.value.toRadixString(16),
-          ),
-        );
-
-    stateColors.setAccentColor(Color(color.decimal));
-  }
-
-  Future initLang() async {
-    final savedLang = appStorage.getLang();
-    stateUser.setLang(savedLang);
-  }
+Future _initLang() async {
+  final savedLang = appStorage.getLang();
+  stateUser.setLang(savedLang);
 }
