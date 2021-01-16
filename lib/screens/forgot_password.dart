@@ -1,4 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/components/fade_in_x.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +32,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         slivers: <Widget>[
           DesktopAppBar(
             title: "Recover account",
-            automaticallyImplyLeading: true,
+            automaticallyImplyLeading: context.router.stack.length > 1,
           ),
           SliverList(
             delegate: SliverChildListDelegate.fixed([
@@ -127,7 +130,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget idleContainer() {
     return Column(
       children: <Widget>[
-        formHeader(),
+        header(),
         emailInput(),
         validationButton(),
       ],
@@ -171,35 +174,54 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
-  Widget formHeader() {
-    return Column(
-      children: <Widget>[
-        FadeInY(
-          beginY: 50.0,
-          child: Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: Text(
-              'Forgot Password',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
+  Widget header() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (context.router.stack.length > 1)
+          FadeInX(
+            beginX: 10.0,
+            delay: 100.milliseconds,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                right: 20.0,
+              ),
+              child: IconButton(
+                onPressed: () => context.router.pop(),
+                icon: Icon(Icons.arrow_back),
               ),
             ),
           ),
-        ),
-        FadeInY(
-          beginY: 50.0,
-          child: Opacity(
-            opacity: .6,
-            child: Container(
-              width: 300.0,
-              padding: EdgeInsets.only(top: 10.0),
-              child: Text(
-                'We will send a reset link to your mail box',
-                textAlign: TextAlign.center,
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              FadeInY(
+                beginY: 50.0,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    'Forgot Password',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              FadeInY(
+                beginY: 50.0,
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'We will send a reset link to your mail box',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -213,9 +235,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: RaisedButton(
-          onPressed: () {
-            sendResetLink();
-          },
+          onPressed: sendResetLink,
+          color: stateColors.accent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5.0)),
           ),
