@@ -92,7 +92,8 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    if (widget.automaticallyImplyLeading)
+                    if (widget.automaticallyImplyLeading &&
+                        context.router.stack.length > 1)
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 10.0,

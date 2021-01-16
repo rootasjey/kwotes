@@ -32,7 +32,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         slivers: <Widget>[
           DesktopAppBar(
             title: "Recover account",
-            automaticallyImplyLeading: context.router.stack.length > 1,
+            automaticallyImplyLeading: true,
           ),
           SliverList(
             delegate: SliverChildListDelegate.fixed([

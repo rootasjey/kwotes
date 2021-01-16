@@ -52,7 +52,7 @@ class _SigninState extends State<Signin> {
       body: CustomScrollView(
         slivers: <Widget>[
           DesktopAppBar(
-            automaticallyImplyLeading: context.router.stack.length > 1,
+            automaticallyImplyLeading: true,
           ),
           SliverPadding(
             padding: const EdgeInsets.only(

@@ -69,7 +69,7 @@ class _SignupState extends State<Signup> {
       body: CustomScrollView(
         slivers: [
           DesktopAppBar(
-            automaticallyImplyLeading: context.router.stack.length > 1,
+            automaticallyImplyLeading: true,
           ),
           SliverPadding(
             padding: const EdgeInsets.only(
