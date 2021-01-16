@@ -94,16 +94,19 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                   children: <Widget>[
                     if (widget.automaticallyImplyLeading)
                       Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
+                        padding: const EdgeInsets.only(
+                          left: 10.0,
+                          right: 16.0,
+                        ),
                         child: IconButton(
                           color: stateColors.foreground,
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => context.router.pop(),
                           icon: Icon(Icons.arrow_back),
                         ),
                       ),
                     AppIcon(
                       size: 30.0,
-                      padding: EdgeInsets.zero,
+                      padding: const EdgeInsets.only(left: 10.0),
                       onTap: widget.onTapIconHeader,
                     ),
                     Padding(
