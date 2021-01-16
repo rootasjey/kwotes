@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +8,7 @@ import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
-import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -142,10 +142,7 @@ class _SigninState extends State<Signin> {
       delay: 100.milliseconds,
       beginY: 50.0,
       child: FlatButton(
-          onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => ForgotPassword()));
-          },
+          onPressed: () => context.router.push(ForgotPasswordRoute()),
           child: Opacity(
             opacity: 0.6,
             child: Row(
@@ -174,9 +171,7 @@ class _SigninState extends State<Signin> {
               right: 20.0,
             ),
             child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => context.router.pop(),
               icon: Icon(Icons.arrow_back),
             ),
           ),
@@ -218,12 +213,10 @@ class _SigninState extends State<Signin> {
       beginY: 50.0,
       child: FlatButton(
           onPressed: () async {
-            await Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Signup()));
+            await context.router.navigate(SignupRoute());
 
             if (stateUser.isUserConnected) {
-              await Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Home()));
+              context.router.navigate(HomeRoute());
             }
           },
           child: Opacity(

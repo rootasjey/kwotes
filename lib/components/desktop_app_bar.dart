@@ -1,14 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/screens/references.dart';
-import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/topic_page.dart';
-import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -20,10 +17,7 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/router/rerouter.dart';
-import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
-import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -381,9 +375,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         padding: const EdgeInsets.only(right: 16.0),
         child: Center(
           child: OutlinedButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => Signin()),
-            ),
+            onPressed: () => context.router.push(SigninRoute()),
             child: Text('Sign in'),
           ),
         ),
@@ -668,16 +660,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       onSelected: (value) {
         switch (value) {
           case AppBarResources.about:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => About()));
+            context.router.push(AboutRoute());
             break;
           case AppBarResources.contact:
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => Contact()));
             break;
           case AppBarResources.tos:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Tos()));
+            context.router.push(TosRoute());
             break;
           case AppBarResources.androidApp:
             launch(
@@ -715,14 +705,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       padding: const EdgeInsets.only(right: 16.0),
       child: IconButton(
         tooltip: 'Search',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => Search(),
-            ),
-          );
-        },
+        onPressed: () => context.router.push(SearchRoute()),
         color: stateColors.foreground,
         icon: Icon(Icons.search),
       ),
@@ -806,9 +789,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
   Widget signinButton() {
     return RaisedButton(
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => Signin()));
-      },
+      onPressed: () => context.router.push(SigninRoute()),
       color: stateColors.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -837,9 +818,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: FlatButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => Signup()));
-        },
+        onPressed: () => context.router.push(SignupRoute()),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 8.0,
@@ -897,7 +876,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           if (isNarrow)
             const PopupMenuItem(
-                value: AddQuoteContentRoute,
+                value: '/add/quote/content',
                 child: ListTile(
                   leading: Icon(Icons.add),
                   title: Text(
@@ -906,7 +885,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                   ),
                 )),
           const PopupMenuItem(
-              value: SearchRoute,
+              value: '/search',
               child: ListTile(
                 leading: Icon(Icons.search),
                 title: Text(
@@ -915,7 +894,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-              value: FavouritesRoute,
+              value: '/favourites',
               child: ListTile(
                 leading: Icon(Icons.favorite),
                 title: Text(
@@ -924,7 +903,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-              value: ListsRoute,
+              value: '/lists',
               child: ListTile(
                 leading: Icon(Icons.list),
                 title: Text(
@@ -933,7 +912,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: DraftsRoute,
+            value: '/drafts',
             child: ListTile(
               leading: Icon(Icons.edit),
               title: Text(
@@ -943,7 +922,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ),
           ),
           const PopupMenuItem(
-            value: PublishedQuotesRoute,
+            value: '/publishedquotes',
             child: ListTile(
               leading: Icon(Icons.cloud_done),
               title: Text(
@@ -953,7 +932,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ),
           ),
           const PopupMenuItem(
-              value: TempQuotesRoute,
+              value: '/tempquotes',
               child: ListTile(
                 leading: Icon(Icons.timelapse),
                 title: Text(
@@ -962,7 +941,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: AccountRoute,
+            value: '/account',
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
@@ -1026,21 +1005,21 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       icon: Icon(Icons.more_vert),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
-          value: SigninRoute,
+          value: '/signin',
           child: ListTile(
             leading: Icon(Icons.perm_identity),
             title: Text('Sign in'),
           ),
         ),
         PopupMenuItem(
-          value: SignupRoute,
+          value: 'signup',
           child: ListTile(
             leading: Icon(Icons.open_in_browser),
             title: Text('Sign up'),
           ),
         ),
         PopupMenuItem(
-          value: SearchRoute,
+          value: '/search',
           child: ListTile(
             leading: Icon(Icons.search),
             title: Text('Search'),
