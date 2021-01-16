@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -66,23 +66,28 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Column(
-            children: <Widget>[
-              AppIcon(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 60.0),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 300.0,
+      body: CustomScrollView(
+        slivers: [
+          DesktopAppBar(
+            automaticallyImplyLeading: context.router.stack.length > 1,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 100.0,
+              bottom: 300.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 300.0,
+                      child: body(),
+                    ),
+                  ],
                 ),
-                child: SizedBox(
-                  width: 300.0,
-                  child: body(),
-                ),
-              ),
-            ],
+              ]),
+            ),
           ),
         ],
       ),
@@ -184,45 +189,50 @@ class _SignupState extends State<Signup> {
 
   Widget header() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        FadeInX(
-          beginX: 10.0,
-          delay: 100.milliseconds,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 20.0,
-            ),
-            child: IconButton(
-              onPressed: () => context.router.pop(),
-              icon: Icon(Icons.arrow_back),
+        if (context.router.stack.length > 1)
+          FadeInX(
+            beginX: 10.0,
+            delay: 100.milliseconds,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                right: 20.0,
+              ),
+              child: IconButton(
+                onPressed: () => context.router.pop(),
+                icon: Icon(Icons.arrow_back),
+              ),
             ),
           ),
-        ),
-        Column(
-          children: <Widget>[
-            FadeInY(
-              beginY: 50.0,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  'Sign Up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              FadeInY(
+                beginY: 50.0,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    'Sign Up',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            FadeInY(
-              delay: 200.milliseconds,
-              beginY: 50.0,
-              child: Opacity(
-                opacity: .6,
-                child: Text('Create a new account'),
+              FadeInY(
+                delay: 200.milliseconds,
+                beginY: 50.0,
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Text('Create a new account'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -230,7 +240,6 @@ class _SignupState extends State<Signup> {
 
   Widget idleContainer() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         header(),
         emailInput(),
@@ -441,7 +450,7 @@ class _SignupState extends State<Signup> {
           padding: const EdgeInsets.only(top: 60.0),
           child: RaisedButton(
             onPressed: () => signUpProcess(),
-            color: stateColors.primary,
+            color: stateColors.accent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(7.0),
@@ -481,18 +490,20 @@ class _SignupState extends State<Signup> {
     return FadeInY(
       delay: 700.milliseconds,
       beginY: 50.0,
-      child: Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
         child: FlatButton(
-            onPressed: () => context.router.navigate(SigninRoute()),
-            child: Opacity(
-              opacity: .6,
-              child: Text(
-                "I already have an account",
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                ),
+          onPressed: () => context.router.navigate(SigninRoute()),
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              "I already have an account",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }

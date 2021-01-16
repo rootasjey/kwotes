@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -49,23 +49,28 @@ class _SigninState extends State<Signin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              AppIcon(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 60.0),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 300.0,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          DesktopAppBar(
+            automaticallyImplyLeading: context.router.stack.length > 1,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              top: 100.0,
+              bottom: 300.0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 320.0,
+                      child: body(),
+                    ),
+                  ],
                 ),
-                child: SizedBox(
-                  width: 320.0,
-                  child: body(),
-                ),
-              ),
-            ],
+              ]),
+            ),
           ),
         ],
       ),
@@ -74,11 +79,8 @@ class _SigninState extends State<Signin> {
 
   Widget body() {
     if (isSigningIn) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 80.0),
-        child: LoadingAnimation(
-          textTitle: 'Signing in...',
-        ),
+      return LoadingAnimation(
+        textTitle: 'Signing in...',
       );
     }
 
@@ -142,40 +144,43 @@ class _SigninState extends State<Signin> {
       delay: 100.milliseconds,
       beginY: 50.0,
       child: FlatButton(
-          onPressed: () => context.router.push(ForgotPasswordRoute()),
-          child: Opacity(
-            opacity: 0.6,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  "I forgot my password",
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  ),
+        onPressed: () => context.router.push(ForgotPasswordRoute()),
+        child: Opacity(
+          opacity: 0.6,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                "I forgot my password",
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
                 ),
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget header() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        FadeInX(
-          beginX: 10.0,
-          delay: 200.milliseconds,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 20.0,
-            ),
-            child: IconButton(
-              onPressed: () => context.router.pop(),
-              icon: Icon(Icons.arrow_back),
+        if (context.router.stack.length > 1)
+          FadeInX(
+            beginX: 10.0,
+            delay: 200.milliseconds,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                right: 20.0,
+              ),
+              child: IconButton(
+                onPressed: () => context.router.pop(),
+                icon: Icon(Icons.arrow_back),
+              ),
             ),
           ),
-        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -197,8 +202,11 @@ class _SigninState extends State<Signin> {
               delay: 300.milliseconds,
               beginY: 50.0,
               child: Opacity(
-                opacity: .6,
-                child: Text('Connect to your existing account'),
+                opacity: 0.6,
+                child: Text(
+                  'Connect to your existing account',
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             )
           ],
@@ -211,23 +219,26 @@ class _SigninState extends State<Signin> {
     return FadeInY(
       delay: 400.milliseconds,
       beginY: 50.0,
-      child: FlatButton(
-          onPressed: () async {
-            await context.router.navigate(SignupRoute());
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: FlatButton(
+            onPressed: () async {
+              await context.router.navigate(SignupRoute());
 
-            if (stateUser.isUserConnected) {
-              context.router.navigate(HomeRoute());
-            }
-          },
-          child: Opacity(
-            opacity: .6,
-            child: Text(
-              "I don't have an account",
-              style: TextStyle(
-                decoration: TextDecoration.underline,
+              if (stateUser.isUserConnected) {
+                context.router.navigate(HomeRoute());
+              }
+            },
+            child: Opacity(
+              opacity: 0.6,
+              child: Text(
+                "I don't have an account",
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 
@@ -277,7 +288,7 @@ class _SigninState extends State<Signin> {
         padding: const EdgeInsets.only(top: 80.0),
         child: RaisedButton(
           onPressed: () => signInProcess(),
-          color: stateColors.primary,
+          color: stateColors.accent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(7.0),
