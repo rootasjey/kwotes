@@ -237,6 +237,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         child: RaisedButton(
           onPressed: sendResetLink,
           color: stateColors.accent,
+          textColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5.0)),
           ),
