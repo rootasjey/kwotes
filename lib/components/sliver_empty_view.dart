@@ -4,15 +4,19 @@ class SliverEmptyView extends StatelessWidget {
   final String description;
   final Icon icon;
   final String title;
+  final Widget subtitle;
   final Function onRefresh;
   final Function onTapDescription;
+  final double maxWidth;
 
   SliverEmptyView({
     this.description = '',
     this.icon,
     this.onRefresh,
     this.onTapDescription,
+    this.maxWidth = 600.0,
     @required this.title,
+    this.subtitle,
   });
 
   @override
@@ -21,28 +25,32 @@ class SliverEmptyView extends StatelessWidget {
       padding: const EdgeInsets.all(40.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
-          Opacity(
-            opacity: 0.8,
-            child: Text(title,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
-                )),
-          ),
-          Opacity(
-            opacity: 0.6,
-            child: Text(description,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w300,
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: onRefresh,
+          Container(
+            width: maxWidth,
+            child: Column(
+              children: [
+                Opacity(
+                  opacity: 0.8,
+                  child: Text(title,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600,
+                      )),
+                ),
+                Opacity(
+                  opacity: 0.6,
+                  child: subtitle,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: IconButton(
+                    tooltip: "Retry",
+                    icon: Icon(Icons.refresh),
+                    onPressed: onRefresh,
+                  ),
+                ),
+              ],
+            ),
           ),
         ]),
       ),
