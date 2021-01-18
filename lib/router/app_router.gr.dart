@@ -16,8 +16,9 @@ import '../screens/signup.dart' as _i9;
 import '../screens/tos.dart' as _i10;
 import '../screens/authors.dart' as _i11;
 import '../screens/author_page.dart' as _i12;
-import '../screens/references.dart' as _i13;
-import '../screens/reference_page.dart' as _i14;
+import '../screens/topic_page.dart' as _i13;
+import '../screens/references.dart' as _i14;
+import '../screens/reference_page.dart' as _i15;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -39,6 +40,10 @@ class AppRouter extends _i1.RootStackRouter {
     },
     ContactRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i4.Contact());
+    },
+    TopicsDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
     },
     ForgotPasswordRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i5.ForgotPassword());
@@ -74,14 +79,21 @@ class AppRouter extends _i1.RootStackRouter {
               authorImageUrl: route.authorImageUrl ?? '',
               authorName: route.authorName ?? ''));
     },
+    TopicPageRoute.name: (entry) {
+      var route = entry.routeData.as<TopicPageRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i13.TopicPage(
+              topicName: route.topicName ?? '', decimal: route.decimal));
+    },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i13.References());
+      return _i1.MaterialPageX(entry: entry, child: _i14.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i14.ReferencePage(
+          child: _i15.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -109,6 +121,14 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig<ContactRoute>(ContactRoute.name,
             path: '/contact',
             routeBuilder: (match) => ContactRoute.fromMatch(match)),
+        _i1.RouteConfig<TopicsDeepRoute>(TopicsDeepRoute.name,
+            path: '/topics',
+            routeBuilder: (match) => TopicsDeepRoute.fromMatch(match),
+            children: [
+              _i1.RouteConfig<TopicPageRoute>(TopicPageRoute.name,
+                  path: ':topicName',
+                  routeBuilder: (match) => TopicPageRoute.fromMatch(match))
+            ]),
         _i1.RouteConfig<ForgotPasswordRoute>(ForgotPasswordRoute.name,
             path: '/forgotpassword',
             routeBuilder: (match) => ForgotPasswordRoute.fromMatch(match)),
@@ -175,6 +195,15 @@ class ContactRoute extends _i1.PageRouteInfo {
   ContactRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'ContactRoute';
+}
+
+class TopicsDeepRoute extends _i1.PageRouteInfo {
+  const TopicsDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: '/topics', initialChildren: children);
+
+  TopicsDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'TopicsDeepRoute';
 }
 
 class ForgotPasswordRoute extends _i1.PageRouteInfo {
@@ -260,6 +289,22 @@ class AuthorPageRoute extends _i1.PageRouteInfo {
   final String authorName;
 
   static const String name = 'AuthorPageRoute';
+}
+
+class TopicPageRoute extends _i1.PageRouteInfo {
+  TopicPageRoute({this.topicName = '', this.decimal})
+      : super(name, path: ':topicName', params: {'topicName': topicName});
+
+  TopicPageRoute.fromMatch(_i1.RouteMatch match)
+      : topicName = match.pathParams.getString('topicName', ''),
+        decimal = null,
+        super.fromMatch(match);
+
+  final String topicName;
+
+  final int decimal;
+
+  static const String name = 'TopicPageRoute';
 }
 
 class ReferencesRoute extends _i1.PageRouteInfo {

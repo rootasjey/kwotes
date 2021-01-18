@@ -12,6 +12,7 @@ import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/settings.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/signup.dart';
+import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/screens/tos.dart';
 
 export 'app_router.gr.dart';
@@ -35,7 +36,6 @@ export 'app_router.gr.dart';
       page: EmptyRouterPage,
       name: 'AuthorsDeepRoute',
       children: [
-        // RedirectRoute(path: '', redirectTo: '/'),
         MaterialRoute(path: '', page: Authors),
         MaterialRoute(path: ':authorId', page: AuthorPage),
       ],
@@ -65,22 +65,20 @@ export 'app_router.gr.dart';
     //     AutoRoute(path: 'temp', page: MyTempQuotes),
     //   ],
     // ),
-    // AutoRoute(
-    //   path: 'topics',
-    //   page: EmptyRouterPage,
-    //   name: 'TopicsDeepRoute',
-    //   children: [
-    //     RedirectRoute(path: '', redirectTo: 'all'),
-    //     AutoRoute(path: 'all', page: TopicPage),
-    //   ],
-    // ),
+    AutoRoute(
+      path: '/topics',
+      page: EmptyRouterPage,
+      name: 'TopicsDeepRoute',
+      children: [
+        MaterialRoute(path: ':topicName', page: TopicPage),
+      ],
+    ),
     MaterialRoute(path: '/forgotpassword', page: ForgotPassword),
     AutoRoute(
       path: '/references',
       page: EmptyRouterPage,
       name: 'ReferencesDeepRoute',
       children: [
-        // RedirectRoute(path: '', redirectTo: '/'),
         MaterialRoute(path: '', page: References),
         MaterialRoute(path: ':referenceId', page: ReferencePage),
       ],

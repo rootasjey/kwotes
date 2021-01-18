@@ -1,6 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -205,10 +206,15 @@ class _TopicsState extends State<Topics> {
                 return;
               }
 
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => TopicPage(
-                        name: topic.name,
-                      )));
+              context.router.push(
+                TopicsDeepRoute(
+                  children: [
+                    TopicPageRoute(
+                      topicName: topic.name,
+                    )
+                  ],
+                ),
+              );
             },
             style: OutlinedButton.styleFrom(
               primary: stateColors.secondary,

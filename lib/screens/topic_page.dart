@@ -1,5 +1,9 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/users.dart';
+import 'package:figstyle/components/desktop_app_bar.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +17,6 @@ import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/components/side_bar_header.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user.dart';
@@ -25,10 +28,15 @@ import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 class TopicPage extends StatefulWidget {
-  final String name;
+  /// Color's name.
+  final String topicName;
+
+  /// 32-bit color value.
+  final int decimal;
 
   TopicPage({
-    @required this.name,
+    @PathParam('topicName') this.topicName = '',
+    this.decimal,
   });
 
   @override
@@ -51,9 +59,9 @@ class _TopicPageState extends State<TopicPage> {
   bool isLoadingMore = false;
   bool smallViewVisible = false;
 
-  Color fabColor = Colors.amber;
+  Color topicAccentColor = Colors.amber;
 
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot lastFetchedDoc;
 
   final double beginY = 10.0;
 
@@ -72,13 +80,36 @@ class _TopicPageState extends State<TopicPage> {
   @override
   void initState() {
     super.initState();
+    initAndFetch();
+  }
 
-    topicName = widget.name.toLowerCase();
+  @override
+  void dispose() {
+    if (topicDisposer != null) {
+      topicDisposer();
+    }
+
+    super.dispose();
+  }
+
+  // Init functions
+  // --------------
+  void initAndFetch() async {
+    topicName = widget.topicName.toLowerCase();
+
+    if (topicName == null || topicName.isEmpty) {
+      topicName = await getRandomTopic();
+    }
 
     initProps();
     fetchColor();
     fetchPermissions();
     fetch();
+  }
+
+  Future<String> getRandomTopic() async {
+    final tColor = appTopicsColors.shuffle(max: 1).firstOrNull();
+    return tColor != null ? tColor.name : '';
   }
 
   void initProps() {
@@ -94,15 +125,6 @@ class _TopicPageState extends State<TopicPage> {
     lang = appStorage.containsKey(storageKey)
         ? appStorage.getPageLang(pageRoute: pageRoute)
         : stateUser.lang;
-  }
-
-  @override
-  void dispose() {
-    if (topicDisposer != null) {
-      topicDisposer();
-    }
-
-    super.dispose();
   }
 
   @override
@@ -135,7 +157,7 @@ class _TopicPageState extends State<TopicPage> {
                 Icons.arrow_back,
                 color: stateColors.foreground,
               ),
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => context.router.pop(),
             ),
             AppIcon(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -230,7 +252,7 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget bodyListContent() {
+  Widget quotesListViewContainer() {
     if (isLoading || appTopicsColors.topicsColors.length == 0) {
       return loadingView();
     }
@@ -239,7 +261,7 @@ class _TopicPageState extends State<TopicPage> {
       return emptyView();
     }
 
-    return listView();
+    return quoteListView();
   }
 
   Widget emptyView() {
@@ -301,7 +323,7 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  Widget listView() {
+  Widget quoteListView() {
     final width = MediaQuery.of(context).size.width;
     double horPadding = 70.0;
     bool useSwipeActions = false;
@@ -358,7 +380,8 @@ class _TopicPageState extends State<TopicPage> {
     return Scaffold(
       floatingActionButton: isFabVisible
           ? FloatingActionButton(
-              backgroundColor: fabColor,
+              backgroundColor: topicAccentColor,
+              foregroundColor: Colors.white,
               child: Icon(Icons.arrow_upward),
               onPressed: () {
                 scrollController.animateTo(
@@ -397,8 +420,11 @@ class _TopicPageState extends State<TopicPage> {
         child: CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 40.0),
+            ),
             appBar(),
-            bodyListContent(),
+            quotesListViewContainer(),
           ],
         ),
       ),
@@ -435,7 +461,7 @@ class _TopicPageState extends State<TopicPage> {
   Widget topicsItemsList() {
     return Observer(
       builder: (context) {
-        final items = [];
+        final items = <Widget>[];
 
         if (appTopicsColors.topicsColors.length == 0) {
           items.add(
@@ -447,20 +473,25 @@ class _TopicPageState extends State<TopicPage> {
           items.add(topicTileItem(topicColor: topicColor));
         });
 
-        return ListView(
-          children: <Widget>[
-            if (!smallViewVisible)
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 60.0,
-                  bottom: 100.0,
-                ),
-                child: SideBarHeader(),
+        return CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 25.0),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate.fixed([Container()]),
               ),
-            ...items,
-            Padding(
-              padding: const EdgeInsets.only(bottom: 100.0),
             ),
+            DesktopAppBar(
+              automaticallyImplyLeading: false,
+              showAppIcon: false,
+              leftPaddingFirstDropdown: 0.0,
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(20.0),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate.fixed(items),
+              ),
+            )
           ],
         );
       },
@@ -486,18 +517,7 @@ class _TopicPageState extends State<TopicPage> {
       trailing: topicColor.name == topicName
           ? Icon(Icons.keyboard_arrow_right)
           : null,
-      // onTap: () => navigateToSection(topicColor.name),
-      onTap: () {
-        topicName = topicColor.name;
-        initProps();
-        fetchColor();
-        fetch();
-
-        final width = MediaQuery.of(context).size.width;
-        if (width < 500.0) {
-          _innerDrawerKey.currentState.close();
-        }
-      },
+      onTap: () => navigateToSection(topicColor.name),
     );
   }
 
@@ -510,18 +530,12 @@ class _TopicPageState extends State<TopicPage> {
               foregroundDecoration: BoxDecoration(
                 color: Color.fromRGBO(0, 0, 0, 0.05),
               ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-              ),
               child: topicsItemsList(),
             ),
           ),
           Expanded(
             flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: mainContent(),
-            ),
+            child: mainContent(),
           ),
         ],
       ),
@@ -565,12 +579,11 @@ class _TopicPageState extends State<TopicPage> {
 
   void fetch() async {
     setState(() {
+      quotes.clear();
       isLoading = true;
+      lastFetchedDoc = null;
+      hasNext = true;
     });
-
-    quotes.clear();
-    lastDoc = null;
-    hasNext = true;
 
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -598,7 +611,7 @@ class _TopicPageState extends State<TopicPage> {
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastFetchedDoc = snapshot.docs.last;
 
       setState(() {
         isLoading = false;
@@ -624,9 +637,12 @@ class _TopicPageState extends State<TopicPage> {
       }
 
       setState(() {
-        fabColor = Color(snapshot.data()['color']);
+        topicAccentColor = Color(snapshot.data()['color']);
       });
-    } catch (error) {}
+    } catch (error) {
+      debugPrint("Error while fetching topic color.");
+      debugPrint(error);
+    }
   }
 
   void fetchMore() async {
@@ -638,7 +654,7 @@ class _TopicPageState extends State<TopicPage> {
           .where('topics.$topicName', isEqualTo: true)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
-          .startAfterDocument(lastDoc)
+          .startAfterDocument(lastFetchedDoc)
           .limit(10)
           .get();
 
@@ -658,7 +674,7 @@ class _TopicPageState extends State<TopicPage> {
         quotes.add(quote);
       });
 
-      lastDoc = snapshot.docs.last;
+      lastFetchedDoc = snapshot.docs.last;
 
       setState(() {
         isLoadingMore = false;
@@ -669,7 +685,12 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   void navigateToSection(String route) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => TopicPage(name: route)));
+    if (topicName == route) {
+      return;
+    }
+
+    TopicPageRoute(
+      topicName: route,
+    ).show(context);
   }
 }

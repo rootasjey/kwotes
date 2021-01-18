@@ -1,10 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/random_quotes.dart';
-import 'package:figstyle/screens/references.dart';
-import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -28,6 +25,12 @@ class DesktopAppBar extends StatefulWidget {
   final bool showCloseButton;
   final bool pinned;
 
+  /// Show appication icon if true. Hide it if false. Default tot true.
+  final bool showAppIcon;
+
+  /// Control left padding of the first dropdown. Default to 32.0;
+  final double leftPaddingFirstDropdown;
+
   final EdgeInsets padding;
 
   final Function onTapIconHeader;
@@ -39,9 +42,11 @@ class DesktopAppBar extends StatefulWidget {
     this.onTapIconHeader,
     this.padding = EdgeInsets.zero,
     this.pinned = true,
+    this.showAppIcon = true,
     this.showCloseButton = false,
     this.showUserMenu = true,
     this.title = '',
+    this.leftPaddingFirstDropdown = 32.0,
   });
 
   @override
@@ -106,13 +111,16 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                           icon: Icon(Icons.arrow_back),
                         ),
                       ),
-                    AppIcon(
-                      size: 30.0,
-                      padding: const EdgeInsets.only(left: 10.0),
-                      onTap: widget.onTapIconHeader,
-                    ),
+                    if (widget.showAppIcon)
+                      AppIcon(
+                        size: 30.0,
+                        padding: const EdgeInsets.only(left: 10.0),
+                        onTap: widget.onTapIconHeader,
+                      ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 32.0),
+                      padding: EdgeInsets.only(
+                        left: widget.leftPaddingFirstDropdown,
+                      ),
                       child: quotesByDropdown(),
                     ),
                     if (useGroupedDropdown)
@@ -440,20 +448,23 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       onSelected: (value) {
         switch (value) {
           case AppBarGroupedSectionItems.authors:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Authors()));
+            context.router.root
+                .push(AuthorsDeepRoute(children: [AuthorsRoute()]));
             break;
           case AppBarGroupedSectionItems.references:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => References()));
+            context.router.root
+                .push(ReferencesDeepRoute(children: [ReferencesRoute()]));
             break;
           case AppBarGroupedSectionItems.random:
             final topicName = appTopicsColors.shuffle(max: 1).first.name;
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => TopicPage(
-                  name: topicName,
-                ),
+
+            context.router.root.push(
+              TopicsDeepRoute(
+                children: [
+                  TopicPageRoute(
+                    topicName: topicName,
+                  )
+                ],
               ),
             );
             break;
@@ -536,19 +547,23 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       onSelected: (value) {
         switch (value) {
           case AppBarQuotesBy.authors:
-            context.router.push(AuthorsDeepRoute(children: [AuthorsRoute()]));
+            context.router.root
+                .push(AuthorsDeepRoute(children: [AuthorsRoute()]));
             break;
           case AppBarQuotesBy.references:
-            context.router
+            context.router.root
                 .push(ReferencesDeepRoute(children: [ReferencesRoute()]));
             break;
           case AppBarQuotesBy.topics:
             final topicName = appTopicsColors.shuffle(max: 1).first.name;
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => TopicPage(
-                  name: topicName,
-                ),
+
+            context.router.root.push(
+              TopicsDeepRoute(
+                children: [
+                  TopicPageRoute(
+                    topicName: topicName,
+                  )
+                ],
               ),
             );
             break;

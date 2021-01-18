@@ -1,5 +1,6 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/topic_page.dart';
 import 'package:supercharged/supercharged.dart';
 
 class TopicCardColor extends StatefulWidget {
@@ -82,8 +83,15 @@ class _TopicCardColorState extends State<TopicCardColor> {
               return;
             }
 
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => TopicPage(name: widget.name)));
+            context.router.root.push(
+              TopicsDeepRoute(
+                children: [
+                  TopicPageRoute(
+                    topicName: widget.name,
+                  )
+                ],
+              ),
+            );
           },
           onHover: (isHover) {
             if (isHover) {

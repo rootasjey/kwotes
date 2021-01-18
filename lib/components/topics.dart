@@ -1,12 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/topic_card_color.dart';
-import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -83,8 +84,16 @@ class _TopicsState extends State<Topics> {
       child: RaisedButton.icon(
         onPressed: () {
           final topicName = appTopicsColors.shuffle(max: 1).first.name;
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => TopicPage(name: topicName)));
+
+          context.router.push(
+            TopicsDeepRoute(
+              children: [
+                TopicPageRoute(
+                  topicName: topicName,
+                )
+              ],
+            ),
+          );
         },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
