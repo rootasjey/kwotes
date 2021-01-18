@@ -381,7 +381,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         padding: const EdgeInsets.only(right: 16.0),
         child: Center(
           child: OutlinedButton(
-            onPressed: () => context.router.push(SigninRoute()),
+            onPressed: () => context.router.root.push(SigninRoute()),
             child: Text('Sign in'),
           ),
         ),
@@ -665,14 +665,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       onSelected: (value) {
         switch (value) {
           case AppBarResources.about:
-            context.router.push(AboutRoute());
+            context.router.root.push(AboutRoute());
             break;
           case AppBarResources.contact:
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => Contact()));
             break;
           case AppBarResources.tos:
-            context.router.push(TosRoute());
+            context.router.root.push(TosRoute());
             break;
           case AppBarResources.androidApp:
             launch(
@@ -710,7 +710,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       padding: const EdgeInsets.only(right: 16.0),
       child: IconButton(
         tooltip: 'Search',
-        onPressed: () => context.router.push(SearchRoute()),
+        onPressed: () => context.router.root.push(SearchRoute()),
         color: stateColors.foreground,
         icon: Icon(Icons.search),
       ),
@@ -777,7 +777,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         onSelected: (value) {
           switch (value) {
             case AppBarSettings.allSettings:
-              context.router.push(SettingsRoute());
+              context.router.root.push(SettingsRoute());
               break;
             case AppBarSettings.en:
               Language.setLang('en');
@@ -794,7 +794,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
   Widget signinButton() {
     return RaisedButton(
-      onPressed: () => context.router.push(SigninRoute()),
+      onPressed: () => context.router.root.push(SigninRoute()),
       color: stateColors.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -823,7 +823,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: FlatButton(
-        onPressed: () => context.router.push(SignupRoute()),
+        onPressed: () => context.router.root.push(SignupRoute()),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 8.0,
