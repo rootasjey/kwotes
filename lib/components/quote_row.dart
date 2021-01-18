@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
@@ -321,10 +322,14 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
       onTap: () {
         final author = widget.quote.author;
 
-        AuthorPageRoute(
-          authorId: author.id,
-          authorName: author.name,
-        ).show(context);
+        context.router.push(
+          AuthorsDeepRoute(children: [
+            AuthorPageRoute(
+              authorId: author.id,
+              authorName: author.name,
+            )
+          ]),
+        );
       },
       child: Opacity(
         opacity: 0.6,
