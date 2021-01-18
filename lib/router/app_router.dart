@@ -6,6 +6,8 @@ import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
+import 'package:figstyle/screens/reference_page.dart';
+import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
 import 'package:figstyle/screens/settings.dart';
 import 'package:figstyle/screens/signin.dart';
@@ -73,6 +75,16 @@ export 'app_router.gr.dart';
     //   ],
     // ),
     MaterialRoute(path: '/forgotpassword', page: ForgotPassword),
+    AutoRoute(
+      path: '/references',
+      page: EmptyRouterPage,
+      name: 'ReferencesDeepRoute',
+      children: [
+        // RedirectRoute(path: '', redirectTo: '/'),
+        MaterialRoute(path: '', page: References),
+        MaterialRoute(path: ':referenceId', page: ReferencePage),
+      ],
+    ),
     MaterialRoute(path: '/settings', page: Settings),
     MaterialRoute(path: '/search', page: Search),
     MaterialRoute(path: '/signin', page: Signin),

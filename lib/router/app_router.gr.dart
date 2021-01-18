@@ -16,6 +16,8 @@ import '../screens/signup.dart' as _i9;
 import '../screens/tos.dart' as _i10;
 import '../screens/authors.dart' as _i11;
 import '../screens/author_page.dart' as _i12;
+import '../screens/references.dart' as _i13;
+import '../screens/reference_page.dart' as _i14;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -40,6 +42,10 @@ class AppRouter extends _i1.RootStackRouter {
     },
     ForgotPasswordRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i5.ForgotPassword());
+    },
+    ReferencesDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
     },
     SettingsRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i6.Settings());
@@ -67,6 +73,18 @@ class AppRouter extends _i1.RootStackRouter {
               authorId: route.authorId,
               authorImageUrl: route.authorImageUrl ?? '',
               authorName: route.authorName ?? ''));
+    },
+    ReferencesRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i13.References());
+    },
+    ReferencePageRoute.name: (entry) {
+      var route = entry.routeData.as<ReferencePageRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i14.ReferencePage(
+              referenceId: route.referenceId,
+              referenceName: route.referenceName,
+              referenceImageUrl: route.referenceImageUrl));
     }
   };
 
@@ -94,6 +112,17 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig<ForgotPasswordRoute>(ForgotPasswordRoute.name,
             path: '/forgotpassword',
             routeBuilder: (match) => ForgotPasswordRoute.fromMatch(match)),
+        _i1.RouteConfig<ReferencesDeepRoute>(ReferencesDeepRoute.name,
+            path: '/references',
+            routeBuilder: (match) => ReferencesDeepRoute.fromMatch(match),
+            children: [
+              _i1.RouteConfig<ReferencesRoute>(ReferencesRoute.name,
+                  path: '',
+                  routeBuilder: (match) => ReferencesRoute.fromMatch(match)),
+              _i1.RouteConfig<ReferencePageRoute>(ReferencePageRoute.name,
+                  path: ':referenceId',
+                  routeBuilder: (match) => ReferencePageRoute.fromMatch(match))
+            ]),
         _i1.RouteConfig<SettingsRoute>(SettingsRoute.name,
             path: '/settings',
             routeBuilder: (match) => SettingsRoute.fromMatch(match)),
@@ -154,6 +183,15 @@ class ForgotPasswordRoute extends _i1.PageRouteInfo {
   ForgotPasswordRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'ForgotPasswordRoute';
+}
+
+class ReferencesDeepRoute extends _i1.PageRouteInfo {
+  const ReferencesDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: '/references', initialChildren: children);
+
+  ReferencesDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'ReferencesDeepRoute';
 }
 
 class SettingsRoute extends _i1.PageRouteInfo {
@@ -222,4 +260,32 @@ class AuthorPageRoute extends _i1.PageRouteInfo {
   final String authorName;
 
   static const String name = 'AuthorPageRoute';
+}
+
+class ReferencesRoute extends _i1.PageRouteInfo {
+  const ReferencesRoute() : super(name, path: '');
+
+  ReferencesRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'ReferencesRoute';
+}
+
+class ReferencePageRoute extends _i1.PageRouteInfo {
+  ReferencePageRoute(
+      {this.referenceId, this.referenceName, this.referenceImageUrl})
+      : super(name, path: ':referenceId', params: {'referenceId': referenceId});
+
+  ReferencePageRoute.fromMatch(_i1.RouteMatch match)
+      : referenceId = match.pathParams.getString('referenceId'),
+        referenceName = null,
+        referenceImageUrl = null,
+        super.fromMatch(match);
+
+  final String referenceId;
+
+  final String referenceName;
+
+  final String referenceImageUrl;
+
+  static const String name = 'ReferencePageRoute';
 }

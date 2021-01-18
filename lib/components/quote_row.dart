@@ -8,7 +8,6 @@ import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
@@ -355,6 +354,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
   Widget quoteReference() {
     final mainReference = widget.quote.mainReference;
+
     if (mainReference == null ||
         mainReference.id == null ||
         mainReference.id.isEmpty) {
@@ -363,42 +363,13 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
     return InkWell(
       onTap: () {
-        if (MediaQuery.of(context).size.width > 600.0) {
-          return showFlash(
-            context: context,
-            persistent: false,
-            builder: (context, controller) {
-              return Flash.dialog(
-                controller: controller,
-                backgroundColor: stateColors.appBackground.withOpacity(1.0),
-                enableDrag: true,
-                margin: const EdgeInsets.only(
-                  left: 120.0,
-                  right: 120.0,
-                ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(8.0),
-                ),
-                child: FlashBar(
-                  message: Container(
-                    height: MediaQuery.of(context).size.height - 100.0,
-                    padding: const EdgeInsets.all(60.0),
-                    child: ReferencePage(
-                      id: widget.quote.mainReference.id,
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => ReferencePage(
-            id: widget.quote.mainReference.id,
-            scrollController: ModalScrollController.of(context),
-          ),
+        context.router.root.push(
+          ReferencesDeepRoute(children: [
+            ReferencePageRoute(
+              referenceId: mainReference.id,
+              referenceName: mainReference.name,
+            ),
+          ]),
         );
       },
       child: Opacity(

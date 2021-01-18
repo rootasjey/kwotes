@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/screens/author_page.dart';
+import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/quote_page.dart';
-import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author.dart';
@@ -161,7 +161,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
     );
   }
 
-  Widget authorAvatar(String imageUrl, String id) {
+  Widget authorAvatar(String imageUrl, Quote quote) {
     return Material(
       elevation: 4.0,
       shape: CircleBorder(),
@@ -172,7 +172,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
         height: 100.0,
         fit: BoxFit.cover,
         child: InkWell(
-          onTap: () => goToAuthor(id),
+          onTap: () => goToAuthor(quote),
         ),
       ),
     );
@@ -220,8 +220,8 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
               Padding(
                 padding: EdgeInsets.only(right: paddingRightAvatar),
                 child: type == DiscoverType.authors
-                    ? authorAvatar(imageUrl, quote.author.id)
-                    : referenceAvatar(imageUrl, quote.mainReference.id),
+                    ? authorAvatar(imageUrl, quote)
+                    : referenceAvatar(imageUrl, quote),
               ),
               Expanded(
                 child: Column(
@@ -247,7 +247,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
                       child: Opacity(
                         opacity: 0.6,
                         child: InkWell(
-                          onTap: () => goToAuthor(quote.author.id),
+                          onTap: () => goToAuthor(quote),
                           child: Text(
                             '― ${quote.author.name}',
                             style: TextStyle(
@@ -264,7 +264,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
                         child: Opacity(
                           opacity: 0.6,
                           child: InkWell(
-                            onTap: () => goToReference(quote.mainReference.id),
+                            onTap: () => goToReference(quote),
                             child: Text(
                               quote.mainReference.name,
                               style: TextStyle(
@@ -285,7 +285,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
     );
   }
 
-  Widget referenceAvatar(String imageUrl, String id) {
+  Widget referenceAvatar(String imageUrl, Quote quote) {
     return Card(
       elevation: 2.0,
       child: Ink.image(
@@ -294,7 +294,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
         height: 100.0,
         fit: BoxFit.cover,
         child: InkWell(
-          onTap: () => goToReference(id),
+          onTap: () => goToReference(quote),
         ),
       ),
     );
@@ -473,63 +473,40 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
     }
   }
 
-  void goToAuthor(String id) {
-    showFlash(
-      context: context,
-      persistent: false,
-      builder: (context, controller) {
-        return Flash.dialog(
-          controller: controller,
-          backgroundColor: stateColors.appBackground.withOpacity(1.0),
-          enableDrag: true,
-          margin: const EdgeInsets.only(
-            left: 120.0,
-            right: 120.0,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          child: FlashBar(
-            message: Container(
-              height: MediaQuery.of(context).size.height - 100.0,
-              padding: const EdgeInsets.all(60.0),
-              child: AuthorPage(
-                authorId: id,
-              ),
-            ),
-          ),
-        );
-      },
+  void goToAuthor(Quote quote) {
+    final author = quote.author;
+    if (author == null || author.id.isEmpty) {
+      return;
+    }
+
+    context.router.root.push(
+      AuthorsDeepRoute(children: [
+        AuthorPageRoute(
+          authorId: author.id,
+          authorName: author.name,
+          authorImageUrl: author.urls.image,
+        ),
+      ]),
     );
   }
 
-  void goToReference(String id) {
-    showFlash(
-      context: context,
-      persistent: false,
-      builder: (context, controller) {
-        return Flash.dialog(
-          controller: controller,
-          backgroundColor: stateColors.appBackground.withOpacity(1.0),
-          enableDrag: true,
-          margin: const EdgeInsets.only(
-            left: 120.0,
-            right: 120.0,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          child: FlashBar(
-            message: Container(
-              height: MediaQuery.of(context).size.height - 100.0,
-              padding: const EdgeInsets.all(60.0),
-              child: ReferencePage(
-                id: id,
-              ),
-            ),
-          ),
-        );
-      },
+  void goToReference(Quote quote) {
+    final mainReference = quote.mainReference;
+
+    if (mainReference == null ||
+        mainReference.id == null ||
+        mainReference.id.isEmpty) {
+      return;
+    }
+
+    context.router.root.push(
+      ReferencesDeepRoute(children: [
+        ReferencePageRoute(
+          referenceId: mainReference.id,
+          referenceName: mainReference.name,
+          referenceImageUrl: mainReference.urls.image,
+        ),
+      ]),
     );
   }
 

@@ -1,7 +1,6 @@
-import 'package:flash/flash.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/reference_page.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 class ReferenceCard extends StatefulWidget {
@@ -97,7 +96,7 @@ class _ReferenceCardState extends State<ReferenceCard>
       child: Column(
         children: <Widget>[
           backgroundContainer(),
-          name(),
+          textName(),
           popupMenuButton(),
         ],
       ),
@@ -167,7 +166,7 @@ class _ReferenceCardState extends State<ReferenceCard>
     );
   }
 
-  Widget name() {
+  Widget textName() {
     Widget sizedBox = SizedBox(
       width: widget.width - 30.0,
       child: Opacity(
@@ -212,43 +211,15 @@ class _ReferenceCardState extends State<ReferenceCard>
     );
   }
 
-  Future onTap() {
-    if (MediaQuery.of(context).size.width > 600.0) {
-      return showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: ReferencePage(
-                  id: widget.id,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => ReferencePage(
-        id: widget.id,
-        scrollController: ModalScrollController.of(context),
-      ),
+  void onTap() {
+    context.router.root.push(
+      ReferencesDeepRoute(children: [
+        ReferencePageRoute(
+          referenceId: widget.id,
+          referenceName: widget.name,
+          referenceImageUrl: widget.imageUrl,
+        ),
+      ]),
     );
   }
 }

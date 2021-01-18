@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/router/app_router.gr.dart';
@@ -10,7 +11,6 @@ import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:figstyle/utils/animation.dart';
-import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -274,10 +274,16 @@ class _QuotidianPageState extends State<QuotidianPage> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: GestureDetector(
         onTap: () {
-          final id = quotidian.quote.mainReference.id;
+          final reference = quotidian.quote.mainReference;
 
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => ReferencePage(id: id)));
+          context.router.push(
+            ReferencesDeepRoute(children: [
+              ReferencePageRoute(
+                referenceId: reference.id,
+                referenceName: reference.name,
+              )
+            ]),
+          );
         },
         child: Text(
           quotidian.quote.mainReference.name,

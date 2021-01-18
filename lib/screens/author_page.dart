@@ -88,7 +88,7 @@ class _AuthorPageState extends State<AuthorPage> {
               heroSection(),
               textsPanels(),
               langDropdown(),
-              authorQuotesListView(),
+              quotesListView(),
               SliverPadding(padding: const EdgeInsets.only(bottom: 200.0)),
             ],
           )),
@@ -469,7 +469,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget authorQuotesListView() {
+  Widget quotesListView() {
     if (isLoading) {
       return SliverPadding(padding: EdgeInsets.zero);
     }

@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/reference_avatar.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -21,10 +22,15 @@ import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReferencePage extends StatefulWidget {
-  final String id;
-  final ScrollController scrollController;
+  final String referenceId;
+  final String referenceName;
+  final String referenceImageUrl;
 
-  ReferencePage({@required this.id, this.scrollController});
+  ReferencePage({
+    @PathParam('referenceId') this.referenceId,
+    this.referenceName,
+    this.referenceImageUrl,
+  });
 
   @override
   ReferencePageState createState() => ReferencePageState();
@@ -42,6 +48,7 @@ class ReferencePageState extends State<ReferencePage> {
   final limit = 30;
   final double beginY = 20.0;
   final pageRoute = 'reference_page';
+  final _pageScrollController = ScrollController();
 
   List<Quote> quotes = [];
 
@@ -75,78 +82,78 @@ class ReferencePageState extends State<ReferencePage> {
           return false;
         },
         child: CustomScrollView(
-          physics: ClampingScrollPhysics(),
-          controller: widget.scrollController,
+          controller: _pageScrollController,
           slivers: <Widget>[
-            DesktopAppBar(
-              title: reference != null ? reference.name : '',
-              showCloseButton: true,
-              showUserMenu: false,
-            ),
-            infoPanel(),
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate.fixed([
-                  Center(child: langSelectButton()),
-                ]),
-              ),
-            ),
+            DesktopAppBar(),
+            heroSection(),
+            textsPanels(),
+            langDropdown(),
             quotesListView(),
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 200.0),
-            ),
+            SliverPadding(padding: const EdgeInsets.only(bottom: 200.0)),
           ],
         ),
       ),
     );
   }
 
-  Widget backButton() {
-    return Positioned(
-        left: 40.0,
-        top: 0.0,
-        child: Material(
-          color: Colors.transparent,
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back,
-            ),
-          ),
-        ));
-  }
+  /// Reference's picture profile (avatar) and name.
+  Widget heroSection() {
+    String referenceName = widget.referenceName;
+    String referenceImageUrl = widget.referenceImageUrl;
 
-  Widget heroSmall() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FadeInY(
-            beginY: beginY,
-            delay: 100.milliseconds,
-            child: ReferenceAvatar(imageUrl: reference.urls.image),
+    if (referenceName == null || referenceName.isEmpty) {
+      referenceName = reference?.name;
+    }
+
+    if (referenceImageUrl == null || referenceImageUrl.isEmpty) {
+      referenceImageUrl = reference?.urls?.image;
+    }
+
+    referenceImageUrl = referenceImageUrl ?? '';
+    referenceName = referenceName ?? '';
+
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 100.0),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate.fixed([
+          Column(
+            children: [
+              if (referenceImageUrl.isNotEmpty)
+                Hero(
+                  tag: widget.referenceId,
+                  child: ReferenceAvatar(
+                    imageUrl: referenceImageUrl,
+                  ),
+                ),
+              if (referenceName.isNotEmpty)
+                Hero(
+                  tag: '${widget.referenceId}-name',
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: Opacity(
+                        opacity: 0.8,
+                        child: Text(
+                          referenceName,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
-          FadeInY(
-            beginY: beginY,
-            delay: 200.milliseconds,
-            child: types(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 45.0,
-            ),
-            child: links(),
-          ),
-        ],
+        ]),
       ),
     );
   }
 
-  Widget infoPanel() {
+  /// Reference's job, links and summary.
+  Widget textsPanels() {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
@@ -175,48 +182,83 @@ class ReferencePageState extends State<ReferencePage> {
       delegate: SliverChildListDelegate([
         LayoutBuilder(
           builder: (context, constrains) {
-            return refPanel();
+            return Container(
+              alignment: AlignmentDirectional.center,
+              padding: const EdgeInsets.only(bottom: 60.0),
+              child: Column(
+                children: <Widget>[
+                  FadeInY(
+                    beginY: beginY,
+                    delay: 200.milliseconds,
+                    child: types(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 45.0,
+                    ),
+                    child: links(),
+                  ),
+                  if (isSummaryVisible)
+                    FadeInY(
+                      beginY: -20.0,
+                      endY: 0.0,
+                      child: summaryContainer(),
+                    ),
+                ],
+              ),
+            );
           },
         ),
       ]),
     );
   }
 
-  Widget langSelectButton() {
+  Widget langDropdown() {
+    Widget child;
+
     if (isLoading) {
-      return Padding(
+      child = Padding(
         padding: EdgeInsets.zero,
+      );
+    } else {
+      child = Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: DropdownButton<String>(
+          elevation: 2,
+          value: lang,
+          isDense: true,
+          underline: Container(
+            height: 0,
+            color: Colors.deepPurpleAccent,
+          ),
+          icon: Icon(Icons.keyboard_arrow_down),
+          style: TextStyle(
+            color: stateColors.foreground.withOpacity(0.6),
+            fontSize: 20.0,
+            fontFamily: GoogleFonts.raleway().fontFamily,
+          ),
+          onChanged: (String newLang) {
+            lang = newLang;
+            fetchQuotes();
+            appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+          },
+          items: ['en', 'fr'].map((String value) {
+            return DropdownMenuItem(
+                value: value,
+                child: Text(
+                  value.toUpperCase(),
+                ));
+          }).toList(),
+        ),
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 0.0),
-      child: DropdownButton<String>(
-        elevation: 2,
-        value: lang,
-        isDense: true,
-        underline: Container(
-          height: 0,
-          color: Colors.deepPurpleAccent,
-        ),
-        icon: Icon(Icons.keyboard_arrow_down),
-        style: TextStyle(
-          color: stateColors.foreground.withOpacity(0.6),
-          fontSize: 20.0,
-          fontFamily: GoogleFonts.raleway().fontFamily,
-        ),
-        onChanged: (String newLang) {
-          lang = newLang;
-          fetchQuotes();
-          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
-        },
-        items: ['en', 'fr'].map((String value) {
-          return DropdownMenuItem(
-              value: value,
-              child: Text(
-                value.toUpperCase(),
-              ));
-        }).toList(),
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate.fixed([
+          Center(child: child),
+        ]),
       ),
     );
   }
@@ -448,24 +490,6 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget refPanel() {
-    return Container(
-      alignment: AlignmentDirectional.center,
-      padding: const EdgeInsets.only(bottom: 60.0),
-      child: Column(
-        children: <Widget>[
-          heroSmall(),
-          if (isSummaryVisible)
-            FadeInY(
-              beginY: -20.0,
-              endY: 0.0,
-              child: summaryContainer(),
-            ),
-        ],
-      ),
-    );
-  }
-
   Widget summaryContainer() {
     final width = MediaQuery.of(context).size.width < 600.0 ? 600.0 : 800;
 
@@ -474,9 +498,7 @@ class ReferencePageState extends State<ReferencePage> {
         Padding(
           padding: const EdgeInsets.only(top: 40.0),
         ),
-        Divider(
-          thickness: 1.0,
-        ),
+        Divider(thickness: 1.0),
         Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Opacity(
@@ -519,6 +541,10 @@ class ReferencePageState extends State<ReferencePage> {
             icon: Icon(Icons.open_in_new),
             label: Text('More on Wikipedia'),
           ),
+        Divider(
+          height: 80.0,
+          thickness: 1.0,
+        ),
       ],
     );
   }
@@ -569,7 +595,7 @@ class ReferencePageState extends State<ReferencePage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('references')
-          .doc(widget.id)
+          .doc(widget.referenceId)
           .get();
 
       if (!snapshot.exists) {
@@ -607,7 +633,7 @@ class ReferencePageState extends State<ReferencePage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
-          .where('mainReference.id', isEqualTo: widget.id)
+          .where('mainReference.id', isEqualTo: widget.referenceId)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(limit)
@@ -648,7 +674,7 @@ class ReferencePageState extends State<ReferencePage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
-          .where('mainReference.id', isEqualTo: widget.id)
+          .where('mainReference.id', isEqualTo: widget.referenceId)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastFetchedDoc)

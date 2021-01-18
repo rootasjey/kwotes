@@ -1,10 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ReferenceRow extends StatefulWidget {
   final bool isNarrow;
@@ -72,12 +72,15 @@ class _ReferenceRowState extends State<ReferenceRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            showCupertinoModalBottomSheet(
-                context: context,
-                builder: (_) => ReferencePage(
-                      id: reference.id,
-                      scrollController: ModalScrollController.of(context),
-                    ));
+            context.router.root.push(
+              ReferencesDeepRoute(children: [
+                ReferencePageRoute(
+                  referenceId: reference.id,
+                  referenceName: reference.name,
+                  referenceImageUrl: reference.urls.image,
+                ),
+              ]),
+            );
           },
           onHover: (isHover) {
             elevation = isHover ? 2.0 : 0.0;

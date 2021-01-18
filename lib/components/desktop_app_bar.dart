@@ -119,22 +119,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                       groupedDropdown()
                     else
                       ...separateDropdowns(),
-                    // if (widget.title.isNotEmpty)
-                    //   Expanded(
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.only(left: 40.0),
-                    //       child: Opacity(
-                    //         opacity: 0.6,
-                    //         child: Text(
-                    //           widget.title,
-                    //           overflow: TextOverflow.ellipsis,
-                    //           style: TextStyle(
-                    //             color: stateColors.foreground,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
                     if (widget.showCloseButton) closeButton(),
                   ],
                 ),
@@ -555,8 +539,8 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             context.router.push(AuthorsDeepRoute(children: [AuthorsRoute()]));
             break;
           case AppBarQuotesBy.references:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => References()));
+            context.router
+                .push(ReferencesDeepRoute(children: [ReferencesRoute()]));
             break;
           case AppBarQuotesBy.topics:
             final topicName = appTopicsColors.shuffle(max: 1).first.name;
