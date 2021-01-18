@@ -7,14 +7,15 @@
 import 'package:auto_route/auto_route.dart' as _i1;
 import '../screens/home/home.dart' as _i2;
 import '../screens/about.dart' as _i3;
-import '../screens/forgot_password.dart' as _i4;
-import '../screens/settings.dart' as _i5;
-import '../screens/search.dart' as _i6;
-import '../screens/signin.dart' as _i7;
-import '../screens/signup.dart' as _i8;
-import '../screens/tos.dart' as _i9;
-import '../screens/authors.dart' as _i10;
-import '../screens/author_page.dart' as _i11;
+import '../screens/contact.dart' as _i4;
+import '../screens/forgot_password.dart' as _i5;
+import '../screens/settings.dart' as _i6;
+import '../screens/search.dart' as _i7;
+import '../screens/signin.dart' as _i8;
+import '../screens/signup.dart' as _i9;
+import '../screens/tos.dart' as _i10;
+import '../screens/authors.dart' as _i11;
+import '../screens/author_page.dart' as _i12;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -34,32 +35,35 @@ class AppRouter extends _i1.RootStackRouter {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
+    ContactRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i4.Contact());
+    },
     ForgotPasswordRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i4.ForgotPassword());
+      return _i1.MaterialPageX(entry: entry, child: _i5.ForgotPassword());
     },
     SettingsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i5.Settings());
+      return _i1.MaterialPageX(entry: entry, child: _i6.Settings());
     },
     SearchRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i6.Search());
+      return _i1.MaterialPageX(entry: entry, child: _i7.Search());
     },
     SigninRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i7.Signin());
+      return _i1.MaterialPageX(entry: entry, child: _i8.Signin());
     },
     SignupRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i8.Signup());
+      return _i1.MaterialPageX(entry: entry, child: _i9.Signup());
     },
     TosRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i9.Tos());
+      return _i1.MaterialPageX(entry: entry, child: _i10.Tos());
     },
     AuthorsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i10.Authors());
+      return _i1.MaterialPageX(entry: entry, child: _i11.Authors());
     },
     AuthorPageRoute.name: (entry) {
       var route = entry.routeData.as<AuthorPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i11.AuthorPage(
+          child: _i12.AuthorPage(
               authorId: route.authorId,
               authorImageUrl: route.authorImageUrl ?? '',
               authorName: route.authorName ?? ''));
@@ -84,6 +88,9 @@ class AppRouter extends _i1.RootStackRouter {
                   path: ':authorId',
                   routeBuilder: (match) => AuthorPageRoute.fromMatch(match))
             ]),
+        _i1.RouteConfig<ContactRoute>(ContactRoute.name,
+            path: '/contact',
+            routeBuilder: (match) => ContactRoute.fromMatch(match)),
         _i1.RouteConfig<ForgotPasswordRoute>(ForgotPasswordRoute.name,
             path: '/forgotpassword',
             routeBuilder: (match) => ForgotPasswordRoute.fromMatch(match)),
@@ -131,6 +138,14 @@ class AuthorsDeepRoute extends _i1.PageRouteInfo {
   AuthorsDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'AuthorsDeepRoute';
+}
+
+class ContactRoute extends _i1.PageRouteInfo {
+  const ContactRoute() : super(name, path: '/contact');
+
+  ContactRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'ContactRoute';
 }
 
 class ForgotPasswordRoute extends _i1.PageRouteInfo {

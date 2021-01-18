@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/authors.dart';
+import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/search.dart';
@@ -37,6 +38,7 @@ export 'app_router.gr.dart';
         MaterialRoute(path: ':authorId', page: AuthorPage),
       ],
     ),
+    MaterialRoute(path: '/contact', page: Contact),
     // AutoRoute(
     //   path: 'quotes',
     //   page: EmptyRouterPage,

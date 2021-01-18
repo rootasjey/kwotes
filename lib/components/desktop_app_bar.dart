@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/authors.dart';
-import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/topic_page.dart';
@@ -668,8 +667,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             context.router.root.push(AboutRoute());
             break;
           case AppBarResources.contact:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Contact()));
+            context.router.root.push(ContactRoute());
             break;
           case AppBarResources.tos:
             context.router.root.push(TosRoute());
