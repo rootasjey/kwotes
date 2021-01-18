@@ -78,6 +78,9 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               userSectionWidgets.addAll(getGuestButtons(isNarrow));
             }
 
+            final mustShowNavBack = widget.automaticallyImplyLeading &&
+                context.router.root.stack.length > 1;
+
             return SliverAppBar(
               floating: true,
               snap: true,
@@ -92,8 +95,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    if (widget.automaticallyImplyLeading &&
-                        context.router.stack.length > 1)
+                    if (mustShowNavBack)
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 10.0,
