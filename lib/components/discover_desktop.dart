@@ -494,7 +494,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
               height: MediaQuery.of(context).size.height - 100.0,
               padding: const EdgeInsets.all(60.0),
               child: AuthorPage(
-                id: id,
+                authorId: id,
               ),
             ),
           ),

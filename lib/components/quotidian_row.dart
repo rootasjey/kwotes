@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flash/flash.dart';
@@ -221,11 +222,12 @@ class _QuotidianRowState extends State<QuotidianRow> {
                       Padding(padding: const EdgeInsets.only(top: 10.0)),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => AuthorPage(id: quote.author.id),
-                            ),
-                          );
+                          final author = quote.author;
+
+                          AuthorPageRoute(
+                            authorId: author.id,
+                            authorName: author.name,
+                          ).show(context);
                         },
                         child: Opacity(
                           opacity: .5,

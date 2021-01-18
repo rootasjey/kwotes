@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/user_lists.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/favourites.dart';
@@ -9,7 +10,6 @@ import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:figstyle/utils/animation.dart';
-import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:mobx/mobx.dart';
@@ -163,12 +163,12 @@ class _QuotidianPageState extends State<QuotidianPage> {
       },
       child: GestureDetector(
         onTap: () {
-          final id = quotidian.quote.author.id;
+          final author = quotidian.quote.author;
 
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => AuthorPage(
-                    id: id,
-                  )));
+          AuthorPageRoute(
+            authorId: author.id,
+            authorName: author.name,
+          ).show(context);
         },
         child: Text(
           quotidian.quote.author.name,

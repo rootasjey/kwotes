@@ -36,7 +36,7 @@ class DesktopAppBar extends StatefulWidget {
   final String title;
 
   DesktopAppBar({
-    this.automaticallyImplyLeading = false,
+    this.automaticallyImplyLeading = true,
     this.onTapIconHeader,
     this.padding = EdgeInsets.zero,
     this.pinned = true,
@@ -551,8 +551,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       onSelected: (value) {
         switch (value) {
           case AppBarQuotesBy.authors:
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Authors()));
+            context.router.push(AuthorsDeepRoute(children: [AuthorsRoute()]));
             break;
           case AppBarQuotesBy.references:
             Navigator.of(context)

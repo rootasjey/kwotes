@@ -1,6 +1,7 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/footer.dart';
-import 'package:figstyle/screens/home/home.dart';
 
 class AppIcon extends StatefulWidget {
   final Function onTap;
@@ -32,9 +33,8 @@ class _AppIconState extends State<AppIcon> {
           width: widget.size,
           height: widget.size,
           child: InkWell(
-            onTap: widget.onTap ??
-                () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Home())),
+            onTap:
+                widget.onTap ?? () => context.router.root.navigate(HomeRoute()),
             onLongPress: () => showFooter(),
           ),
         ),

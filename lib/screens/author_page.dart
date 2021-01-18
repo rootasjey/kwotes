@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/author_avatar.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -21,10 +22,15 @@ import 'package:supercharged/supercharged.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthorPage extends StatefulWidget {
-  final String id;
-  final ScrollController scrollController;
+  final String authorId;
+  final String authorName;
+  final String authorImageUrl;
 
-  AuthorPage({@required this.id, this.scrollController});
+  AuthorPage({
+    @PathParam('authorId') this.authorId,
+    this.authorImageUrl = '',
+    this.authorName = '',
+  });
 
   @override
   _AuthorPageState createState() => _AuthorPageState();
@@ -50,7 +56,7 @@ class _AuthorPageState extends State<AuthorPage> {
 
   String lang = 'en';
 
-  TextOverflow nameEllipsis = TextOverflow.ellipsis;
+  final _pageScrollController = ScrollController();
 
   @override
   void initState() {
@@ -76,27 +82,14 @@ class _AuthorPageState extends State<AuthorPage> {
             return false;
           },
           child: CustomScrollView(
-            physics: ClampingScrollPhysics(),
-            controller: widget.scrollController,
+            controller: _pageScrollController,
             slivers: <Widget>[
-              DesktopAppBar(
-                title: author != null ? author.name : '',
-                showCloseButton: true,
-                showUserMenu: false,
-              ),
-              infoPannel(),
-              SliverPadding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate.fixed([
-                    Center(child: langSelectButton()),
-                  ]),
-                ),
-              ),
-              quotesListView(),
-              SliverPadding(
-                padding: const EdgeInsets.only(bottom: 200.0),
-              ),
+              DesktopAppBar(),
+              heroSection(),
+              textsPanels(),
+              langDropdown(),
+              authorQuotesListView(),
+              SliverPadding(padding: const EdgeInsets.only(bottom: 200.0)),
             ],
           )),
     );
@@ -120,7 +113,64 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget infoPannel() {
+  /// Author picture profile (avatar) and name.
+  Widget heroSection() {
+    String authorName = widget.authorName;
+    String authorImageUrl = widget.authorImageUrl;
+
+    if (authorName == null || authorName.isEmpty) {
+      authorName = author?.name;
+    }
+
+    if (authorImageUrl == null || authorImageUrl.isEmpty) {
+      authorImageUrl = author?.urls?.image;
+    }
+
+    authorImageUrl = authorImageUrl ?? '';
+    authorName = authorName ?? '';
+
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 100.0),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate.fixed([
+          Column(
+            children: [
+              if (authorImageUrl.isNotEmpty)
+                Hero(
+                  tag: widget.authorId,
+                  child: AuthorAvatar(
+                    imageUrl: authorImageUrl,
+                  ),
+                ),
+              if (authorName.isNotEmpty)
+                Hero(
+                  tag: '${widget.authorId}-name',
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: Opacity(
+                        opacity: 0.8,
+                        child: Text(
+                          authorName,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ]),
+      ),
+    );
+  }
+
+  /// Author's job, links and summary.
+  Widget textsPanels() {
     if (isLoading) {
       return SliverList(
         delegate: SliverChildListDelegate([
@@ -138,7 +188,7 @@ class _AuthorPageState extends State<AuthorPage> {
       return SliverList(
         delegate: SliverChildListDelegate([
           ErrorContainer(
-            message: 'There was an error while loading the reference',
+            message: "There was an error while loading the author's data",
             onRefresh: () => fetch(),
           ),
         ]),
@@ -149,7 +199,31 @@ class _AuthorPageState extends State<AuthorPage> {
       delegate: SliverChildListDelegate([
         LayoutBuilder(
           builder: (context, constrains) {
-            return authorPanel();
+            return Container(
+              alignment: AlignmentDirectional.center,
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: Column(
+                children: <Widget>[
+                  FadeInY(
+                    beginY: beginY,
+                    delay: 200.milliseconds,
+                    child: job(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 60.0,
+                    ),
+                    child: links(),
+                  ),
+                  if (isSummaryVisible)
+                    FadeInY(
+                      beginY: -20.0,
+                      endY: 0.0,
+                      child: summaryContainer(),
+                    ),
+                ],
+              ),
+            );
           },
         ),
       ]),
@@ -205,35 +279,9 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget heroSmall() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
-      child: Column(
-        children: <Widget>[
-          FadeInY(
-            beginY: beginY,
-            delay: 100.milliseconds,
-            child: AuthorAvatar(imageUrl: author.urls.image),
-          ),
-          FadeInY(
-            beginY: beginY,
-            delay: 200.milliseconds,
-            child: job(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 45.0,
-            ),
-            child: links(),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget job() {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Opacity(
         opacity: 0.5,
         child: Text(
@@ -247,41 +295,52 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget langSelectButton() {
+  Widget langDropdown() {
+    Widget child;
+
     if (isLoading) {
-      return Padding(
+      child = Padding(
         padding: EdgeInsets.zero,
+      );
+    } else {
+      child = Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: DropdownButton<String>(
+          elevation: 2,
+          value: lang,
+          isDense: true,
+          underline: Container(
+            height: 0,
+            color: Colors.deepPurpleAccent,
+          ),
+          icon: Icon(Icons.keyboard_arrow_down),
+          style: TextStyle(
+            color: stateColors.foreground.withOpacity(0.6),
+            fontSize: 20.0,
+            fontFamily: GoogleFonts.raleway().fontFamily,
+          ),
+          onChanged: (String newLang) {
+            lang = newLang;
+            fetchQuotes();
+            appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+          },
+          items: ['en', 'fr'].map((String value) {
+            return DropdownMenuItem(
+                value: value,
+                child: Text(
+                  value.toUpperCase(),
+                ));
+          }).toList(),
+        ),
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 0.0),
-      child: DropdownButton<String>(
-        elevation: 2,
-        value: lang,
-        isDense: true,
-        underline: Container(
-          height: 0,
-          color: Colors.deepPurpleAccent,
-        ),
-        icon: Icon(Icons.keyboard_arrow_down),
-        style: TextStyle(
-          color: stateColors.foreground.withOpacity(0.6),
-          fontSize: 20.0,
-          fontFamily: GoogleFonts.raleway().fontFamily,
-        ),
-        onChanged: (String newLang) {
-          lang = newLang;
-          fetchQuotes();
-          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
-        },
-        items: ['en', 'fr'].map((String value) {
-          return DropdownMenuItem(
-              value: value,
-              child: Text(
-                value.toUpperCase(),
-              ));
-        }).toList(),
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate.fixed([
+          Center(child: child),
+        ]),
       ),
     );
   }
@@ -304,14 +363,26 @@ class _AuthorPageState extends State<AuthorPage> {
             beginX: 50.0,
             delay: 0.seconds,
             child: Tooltip(
-              message: 'summary',
+              message: isSummaryVisible ? "Hide summary" : "Show summary",
               child: Material(
                 elevation: 4.0,
                 shape: CircleBorder(),
                 clipBehavior: Clip.hardEdge,
                 child: InkWell(
-                  onTap: () =>
-                      setState(() => isSummaryVisible = !isSummaryVisible),
+                  onTap: () {
+                    setState(() => isSummaryVisible = !isSummaryVisible);
+
+                    if (isSummaryVisible) {
+                      Future.delayed(
+                        250.milliseconds,
+                        () => _pageScrollController.animateTo(
+                          500.0,
+                          duration: 250.milliseconds,
+                          curve: Curves.bounceIn,
+                        ),
+                      );
+                    }
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Icon(
@@ -398,31 +469,7 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget name() {
-    return Padding(
-      padding: EdgeInsets.only(top: 50.0),
-      child: FlatButton(
-        onPressed: () {
-          setState(() {
-            nameEllipsis = nameEllipsis == TextOverflow.ellipsis
-                ? TextOverflow.visible
-                : TextOverflow.ellipsis;
-          });
-        },
-        child: Text(
-          author.name,
-          overflow: nameEllipsis,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget quotesListView() {
+  Widget authorQuotesListView() {
     if (isLoading) {
       return SliverPadding(padding: EdgeInsets.zero);
     }
@@ -430,8 +477,15 @@ class _AuthorPageState extends State<AuthorPage> {
     if (quotes.isEmpty) {
       return SliverEmptyView(
         title: "No quote found",
-        description:
-            "Sorry, we didn't found any quote in ${Language.frontend(lang)} for ${author.name}. You can try in another language.",
+        subtitle: Text(
+          "Sorry, we didn't found any quote in"
+          "${Language.frontend(lang)} for ${author?.name}."
+          " You can try in another language.",
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
         onRefresh: () => fetchQuotes(),
       );
     }
@@ -475,24 +529,6 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
         );
       },
-    );
-  }
-
-  Widget authorPanel() {
-    return Container(
-      alignment: AlignmentDirectional.center,
-      padding: const EdgeInsets.only(bottom: 60.0),
-      child: Column(
-        children: <Widget>[
-          heroSmall(),
-          if (isSummaryVisible)
-            FadeInY(
-              beginY: -20.0,
-              endY: 0.0,
-              child: summaryContainer(),
-            ),
-        ],
-      ),
     );
   }
 
@@ -546,6 +582,10 @@ class _AuthorPageState extends State<AuthorPage> {
             icon: Icon(Icons.open_in_new),
             label: Text('More on Wikipedia'),
           ),
+        Divider(
+          height: 80.0,
+          thickness: 1.0,
+        ),
       ],
     );
   }
@@ -558,7 +598,7 @@ class _AuthorPageState extends State<AuthorPage> {
     try {
       final docSnap = await FirebaseFirestore.instance
           .collection('authors')
-          .doc(widget.id)
+          .doc(widget.authorId)
           .get();
 
       if (!docSnap.exists) {
@@ -571,11 +611,6 @@ class _AuthorPageState extends State<AuthorPage> {
 
       setState(() {
         author = Author.fromJSON(data);
-
-        nameEllipsis = author.name.length > 42
-            ? TextOverflow.ellipsis
-            : TextOverflow.visible;
-
         isLoading = false;
       });
     } catch (error) {
@@ -593,7 +628,7 @@ class _AuthorPageState extends State<AuthorPage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
-          .where('author.id', isEqualTo: widget.id)
+          .where('author.id', isEqualTo: widget.authorId)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(limit)
@@ -634,7 +669,7 @@ class _AuthorPageState extends State<AuthorPage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
-          .where('author.id', isEqualTo: widget.id)
+          .where('author.id', isEqualTo: widget.authorId)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastFetchedDoc)

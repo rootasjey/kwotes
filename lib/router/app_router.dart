@@ -1,6 +1,8 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/screens/about.dart';
+import 'package:figstyle/screens/author_page.dart';
+import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/search.dart';
@@ -25,13 +27,16 @@ export 'app_router.gr.dart';
     //     AutoRoute(path: 'quotidians', page: Quotidians),
     //   ],
     // ),
-    // AutoRoute(
-    //   path: 'authors',
-    //   page: Authors,
-    //   children: [
-    //     AutoRoute(path: '/:id', page: AuthorPage),
-    //   ],
-    // ),
+    AutoRoute(
+      path: '/authors',
+      page: EmptyRouterPage,
+      name: 'AuthorsDeepRoute',
+      children: [
+        // RedirectRoute(path: '', redirectTo: '/'),
+        MaterialRoute(path: '', page: Authors),
+        MaterialRoute(path: ':authorId', page: AuthorPage),
+      ],
+    ),
     // AutoRoute(
     //   path: 'quotes',
     //   page: EmptyRouterPage,
@@ -71,6 +76,7 @@ export 'app_router.gr.dart';
     MaterialRoute(path: '/signin', page: Signin),
     MaterialRoute(path: '/signup', page: Signup),
     MaterialRoute(path: '/tos', page: Tos),
+    // RedirectRoute(path: '*', redirectTo: '/'),
   ],
 )
 class $AppRouter {}

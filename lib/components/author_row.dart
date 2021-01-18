@@ -1,10 +1,9 @@
 import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AuthorRow extends StatefulWidget {
   final Author author;
@@ -72,12 +71,11 @@ class _AuthorRowState extends State<AuthorRow> {
         color: stateColors.appBackground,
         child: InkWell(
           onTap: () {
-            showCupertinoModalBottomSheet(
-                context: context,
-                builder: (_) => AuthorPage(
-                      id: author.id,
-                      scrollController: ModalScrollController.of(context),
-                    ));
+            AuthorPageRoute(
+              authorId: author.id,
+              authorImageUrl: author.urls.image,
+              authorName: author.name,
+            ).show(context);
           },
           onHover: (isHover) {
             setState(() {
@@ -152,7 +150,9 @@ class _AuthorRowState extends State<AuthorRow> {
     final right = widget.isNarrow ? 10.0 : 40.0;
 
     return Padding(
-        padding: EdgeInsets.only(right: right),
+      padding: EdgeInsets.only(right: right),
+      child: Hero(
+        tag: author.id,
         child: Material(
           elevation: 4.0,
           shape: CircleBorder(),
@@ -166,7 +166,9 @@ class _AuthorRowState extends State<AuthorRow> {
               fit: BoxFit.cover,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget title(Author author) {
@@ -177,11 +179,14 @@ class _AuthorRowState extends State<AuthorRow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            author.name,
-            style: TextStyle(
-              fontSize: titleFontSize,
-              fontWeight: FontWeight.w600,
+          Hero(
+            tag: '${author.id}-name',
+            child: Text(
+              author.name,
+              style: TextStyle(
+                fontSize: titleFontSize,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           if (author.job?.isNotEmpty)

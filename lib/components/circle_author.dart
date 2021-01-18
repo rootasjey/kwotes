@@ -1,8 +1,6 @@
-import 'package:flash/flash.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/types/author.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 /// A widget which displays an author's image url
@@ -184,43 +182,11 @@ class _CircleAuthorState extends State<CircleAuthor>
     );
   }
 
-  Future onTap(Author author) {
-    if (MediaQuery.of(context).size.width > 600.0) {
-      return showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: AuthorPage(
-                  id: author.id,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => AuthorPage(
-        id: author.id,
-        scrollController: ModalScrollController.of(context),
-      ),
-    );
+  void onTap(Author author) {
+    AuthorPageRoute(
+      authorId: author.id,
+      authorImageUrl: author.urls.image,
+      authorName: author.name,
+    ).show(context);
   }
 }

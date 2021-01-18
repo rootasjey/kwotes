@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/user_lists.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:figstyle/components/full_page_loading.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/topic_card_color.dart';
 import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
@@ -484,45 +484,11 @@ class _QuotePageState extends State<QuotePage> {
     return success;
   }
 
-  Future onTapAuthor() {
-    final id = quote.author.id;
-
-    if (MediaQuery.of(context).size.width > 600.0) {
-      return showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: stateColors.appBackground.withOpacity(1.0),
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: AuthorPage(
-                  id: id,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return showCupertinoModalBottomSheet(
-        context: context,
-        builder: (_) => AuthorPage(
-              id: id,
-              scrollController: ModalScrollController.of(context),
-            ));
+  void onTapAuthor() {
+    AuthorPageRoute(
+      authorId: quote.author.id,
+      authorName: quote.author.name,
+    ).show(context);
   }
 
   Future onReferenceTap() {

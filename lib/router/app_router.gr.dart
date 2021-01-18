@@ -13,6 +13,8 @@ import '../screens/search.dart' as _i6;
 import '../screens/signin.dart' as _i7;
 import '../screens/signup.dart' as _i8;
 import '../screens/tos.dart' as _i9;
+import '../screens/authors.dart' as _i10;
+import '../screens/author_page.dart' as _i11;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -27,6 +29,10 @@ class AppRouter extends _i1.RootStackRouter {
     },
     AboutRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i3.About());
+    },
+    AuthorsDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
     },
     ForgotPasswordRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i4.ForgotPassword());
@@ -45,6 +51,18 @@ class AppRouter extends _i1.RootStackRouter {
     },
     TosRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i9.Tos());
+    },
+    AuthorsRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i10.Authors());
+    },
+    AuthorPageRoute.name: (entry) {
+      var route = entry.routeData.as<AuthorPageRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i11.AuthorPage(
+              authorId: route.authorId,
+              authorImageUrl: route.authorImageUrl ?? '',
+              authorName: route.authorName ?? ''));
     }
   };
 
@@ -55,6 +73,17 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig<AboutRoute>(AboutRoute.name,
             path: '/about',
             routeBuilder: (match) => AboutRoute.fromMatch(match)),
+        _i1.RouteConfig<AuthorsDeepRoute>(AuthorsDeepRoute.name,
+            path: '/authors',
+            routeBuilder: (match) => AuthorsDeepRoute.fromMatch(match),
+            children: [
+              _i1.RouteConfig<AuthorsRoute>(AuthorsRoute.name,
+                  path: '',
+                  routeBuilder: (match) => AuthorsRoute.fromMatch(match)),
+              _i1.RouteConfig<AuthorPageRoute>(AuthorPageRoute.name,
+                  path: ':authorId',
+                  routeBuilder: (match) => AuthorPageRoute.fromMatch(match))
+            ]),
         _i1.RouteConfig<ForgotPasswordRoute>(ForgotPasswordRoute.name,
             path: '/forgotpassword',
             routeBuilder: (match) => ForgotPasswordRoute.fromMatch(match)),
@@ -93,6 +122,15 @@ class AboutRoute extends _i1.PageRouteInfo {
   AboutRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'AboutRoute';
+}
+
+class AuthorsDeepRoute extends _i1.PageRouteInfo {
+  const AuthorsDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: '/authors', initialChildren: children);
+
+  AuthorsDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'AuthorsDeepRoute';
 }
 
 class ForgotPasswordRoute extends _i1.PageRouteInfo {
@@ -141,4 +179,32 @@ class TosRoute extends _i1.PageRouteInfo {
   TosRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'TosRoute';
+}
+
+class AuthorsRoute extends _i1.PageRouteInfo {
+  const AuthorsRoute() : super(name, path: '');
+
+  AuthorsRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'AuthorsRoute';
+}
+
+class AuthorPageRoute extends _i1.PageRouteInfo {
+  AuthorPageRoute(
+      {this.authorId, this.authorImageUrl = '', this.authorName = ''})
+      : super(name, path: ':authorId', params: {'authorId': authorId});
+
+  AuthorPageRoute.fromMatch(_i1.RouteMatch match)
+      : authorId = match.pathParams.getString('authorId'),
+        authorImageUrl = null,
+        authorName = null,
+        super.fromMatch(match);
+
+  final String authorId;
+
+  final String authorImageUrl;
+
+  final String authorName;
+
+  static const String name = 'AuthorPageRoute';
 }
