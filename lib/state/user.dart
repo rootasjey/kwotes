@@ -168,7 +168,7 @@ abstract class StateUserBase with Store {
   }
 
   /// Signin user with credentials if FirebaseAuth is null.
-  Future signin({String email, String password}) async {
+  Future<User> signin({String email, String password}) async {
     try {
       final credentialsMap = appStorage.getCredentials();
 
@@ -201,8 +201,11 @@ abstract class StateUserBase with Store {
       PushNotifications.linkAuthUser(_userAuth.uid);
 
       await refreshUserRights();
+
+      return _userAuth;
     } catch (error) {
       appStorage.clearUserAuthData();
+      return null;
     }
   }
 
