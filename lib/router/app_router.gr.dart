@@ -22,12 +22,14 @@ import '../screens/drafts.dart' as _i15;
 import '../screens/favourites.dart' as _i16;
 import '../screens/my_published_quotes.dart' as _i17;
 import '../screens/my_temp_quotes.dart' as _i18;
-import '../screens/quotes_lists.dart' as _i19;
-import '../screens/quotes_list.dart' as _i20;
-import '../screens/topic_page.dart' as _i21;
-import '../screens/references.dart' as _i22;
-import '../screens/reference_page.dart' as _i23;
-import 'package:flutter/foundation.dart' as _i24;
+import '../screens/quotidians.dart' as _i19;
+import '../screens/admin_temp_quotes.dart' as _i20;
+import '../screens/quotes_lists.dart' as _i21;
+import '../screens/quotes_list.dart' as _i22;
+import '../screens/topic_page.dart' as _i23;
+import '../screens/references.dart' as _i24;
+import '../screens/reference_page.dart' as _i25;
+import 'package:flutter/foundation.dart' as _i26;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -97,6 +99,10 @@ class AppRouter extends _i1.RootStackRouter {
           entry: entry,
           child: _i14.AddQuoteSteps(key: route.key, step: route.step ?? 0));
     },
+    AdminDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
     DraftsRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i15.Drafts());
     },
@@ -113,29 +119,39 @@ class AppRouter extends _i1.RootStackRouter {
     MyTempQuotesRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i18.MyTempQuotes());
     },
+    QuotidiansRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i19.Quotidians());
+    },
+    AdminTempDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
+    AdminTempQuotesRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i20.AdminTempQuotes());
+    },
     QuotesListsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i19.QuotesLists());
+      return _i1.MaterialPageX(entry: entry, child: _i21.QuotesLists());
     },
     QuotesListRoute.name: (entry) {
       var route = entry.routeData.as<QuotesListRoute>();
       return _i1.MaterialPageX(
-          entry: entry, child: _i20.QuotesList(listId: route.listId));
+          entry: entry, child: _i22.QuotesList(listId: route.listId));
     },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i21.TopicPage(
+          child: _i23.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i22.References());
+      return _i1.MaterialPageX(entry: entry, child: _i24.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i23.ReferencePage(
+          child: _i25.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -172,6 +188,28 @@ class AppRouter extends _i1.RootStackRouter {
               _i1.RouteConfig<AddQuoteStepsRoute>(AddQuoteStepsRoute.name,
                   path: 'addquote',
                   routeBuilder: (match) => AddQuoteStepsRoute.fromMatch(match)),
+              _i1.RouteConfig<AdminDeepRoute>(AdminDeepRoute.name,
+                  path: 'admin',
+                  routeBuilder: (match) => AdminDeepRoute.fromMatch(match),
+                  children: [
+                    _i1.RouteConfig('#redirect',
+                        path: '', redirectTo: 'temp', fullMatch: true),
+                    _i1.RouteConfig<QuotidiansRoute>(QuotidiansRoute.name,
+                        path: 'quotidians',
+                        routeBuilder: (match) =>
+                            QuotidiansRoute.fromMatch(match)),
+                    _i1.RouteConfig<AdminTempDeepRoute>(AdminTempDeepRoute.name,
+                        path: 'temp',
+                        routeBuilder: (match) =>
+                            AdminTempDeepRoute.fromMatch(match),
+                        children: [
+                          _i1.RouteConfig<AdminTempQuotesRoute>(
+                              AdminTempQuotesRoute.name,
+                              path: 'quotes',
+                              routeBuilder: (match) =>
+                                  AdminTempQuotesRoute.fromMatch(match))
+                        ])
+                  ]),
               _i1.RouteConfig<DraftsRoute>(DraftsRoute.name,
                   path: 'drafts',
                   routeBuilder: (match) => DraftsRoute.fromMatch(match)),
@@ -389,11 +427,20 @@ class AddQuoteStepsRoute extends _i1.PageRouteInfo {
         step = match.queryParams.getInt('step', 0),
         super.fromMatch(match);
 
-  final _i24.Key key;
+  final _i26.Key key;
 
   final int step;
 
   static const String name = 'AddQuoteStepsRoute';
+}
+
+class AdminDeepRoute extends _i1.PageRouteInfo {
+  const AdminDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: 'admin', initialChildren: children);
+
+  AdminDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'AdminDeepRoute';
 }
 
 class DraftsRoute extends _i1.PageRouteInfo {
@@ -436,6 +483,31 @@ class MyTempQuotesRoute extends _i1.PageRouteInfo {
   MyTempQuotesRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'MyTempQuotesRoute';
+}
+
+class QuotidiansRoute extends _i1.PageRouteInfo {
+  const QuotidiansRoute() : super(name, path: 'quotidians');
+
+  QuotidiansRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'QuotidiansRoute';
+}
+
+class AdminTempDeepRoute extends _i1.PageRouteInfo {
+  const AdminTempDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: 'temp', initialChildren: children);
+
+  AdminTempDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'AdminTempDeepRoute';
+}
+
+class AdminTempQuotesRoute extends _i1.PageRouteInfo {
+  const AdminTempQuotesRoute() : super(name, path: 'quotes');
+
+  AdminTempQuotesRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'AdminTempQuotesRoute';
 }
 
 class QuotesListsRoute extends _i1.PageRouteInfo {

@@ -77,6 +77,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
+                SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
                 appBar(),
                 body(),
               ],

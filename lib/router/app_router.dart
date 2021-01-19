@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
+import 'package:figstyle/screens/admin_temp_quotes.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
@@ -14,6 +15,7 @@ import 'package:figstyle/screens/my_published_quotes.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/quotes_list.dart';
 import 'package:figstyle/screens/quotes_lists.dart';
+import 'package:figstyle/screens/quotidians.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
@@ -29,16 +31,6 @@ export 'app_router.gr.dart';
   routes: <AutoRoute>[
     AutoRoute(path: '/', page: Home),
     MaterialRoute(path: '/about', page: About),
-    // AutoRoute(
-    //   path: 'admin',
-    //   page: EmptyRouterPage,
-    //   name: 'AdminDeepRoute',
-    //   children: [
-    //     RedirectRoute(path: '', redirectTo: 'temp'),
-    //     AutoRoute(path: 'temp', page: AdminTempQuotes),
-    //     AutoRoute(path: 'quotidians', page: Quotidians),
-    //   ],
-    // ),
     AutoRoute(
       path: '/authors',
       page: EmptyRouterPage,
@@ -64,6 +56,23 @@ export 'app_router.gr.dart';
       children: [
         RedirectRoute(path: '', redirectTo: 'fav'),
         AutoRoute(path: 'addquote', page: AddQuoteSteps),
+        AutoRoute(
+          path: 'admin',
+          page: EmptyRouterPage,
+          name: 'AdminDeepRoute',
+          children: [
+            RedirectRoute(path: '', redirectTo: 'temp'),
+            MaterialRoute(path: 'quotidians', page: Quotidians),
+            AutoRoute(
+              path: 'temp',
+              page: EmptyRouterPage,
+              name: 'AdminTempDeepRoute',
+              children: [
+                AutoRoute(path: 'quotes', page: AdminTempQuotes),
+              ],
+            ),
+          ],
+        ),
         AutoRoute(path: 'drafts', page: Drafts),
         AutoRoute(path: 'fav', page: Favourites),
         AutoRoute(

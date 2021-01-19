@@ -3,6 +3,7 @@ import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/side_menu_item.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,12 @@ class _DashboardPageState extends State<DashboardPage> {
       hoverColor: Colors.yellow.shade800,
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    tryAddAdminPage();
+  }
 
   @override
   Widget build(context) {
@@ -94,7 +101,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     Color color = stateColors.foreground.withOpacity(0.6);
                     Color textColor = stateColors.foreground.withOpacity(0.6);
 
-                    if (item.destination.routeName == router.current?.name) {
+                    if (item.destination.fullPath ==
+                        router.current?.route?.fullPath) {
                       color = item.hoverColor;
                       textColor = stateColors.foreground;
                     }
@@ -110,7 +118,13 @@ class _DashboardPageState extends State<DashboardPage> {
                           color: textColor,
                         ),
                       ),
-                      onTap: () => router.navigate(item.destination),
+                      onTap: () {
+                        if (item.destination.routeName == 'AdminDeepRoute') {
+                          item.destination.show(context);
+                          return;
+                        }
+                        router.navigate(item.destination);
+                      },
                     );
                   }).toList(),
                 )),
@@ -162,5 +176,34 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
     );
+  }
+
+  void tryAddAdminPage() async {
+    if (!stateUser.canManageQuote) {
+      return;
+    }
+
+    _sideMenuItems.addAll([
+      SideMenuItem(
+        destination: AdminDeepRoute(
+          children: [
+            AdminTempDeepRoute(
+              children: [
+                AdminTempQuotesRoute(),
+              ],
+            )
+          ],
+        ),
+        iconData: Icons.timelapse,
+        label: 'Admin Temp Quotes',
+        hoverColor: Colors.red,
+      ),
+      SideMenuItem(
+        destination: AdminDeepRoute(children: [QuotidiansRoute()]),
+        iconData: Icons.wb_sunny,
+        label: 'Quotidians',
+        hoverColor: Colors.red,
+      ),
+    ]);
   }
 }
