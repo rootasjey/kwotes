@@ -158,6 +158,7 @@ class QuotidiansState extends State<Quotidians> {
     return CustomScrollView(
       controller: scrollController,
       slivers: <Widget>[
+        SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
         appBar(),
         if (itemsLayout == ItemsLayout.list) customScrollViewChild(),
         if (itemsLayout == ItemsLayout.grid) ...groupedGrids(),
