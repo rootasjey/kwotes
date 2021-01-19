@@ -400,11 +400,7 @@ class _SigninState extends State<Signin> {
       isSigningIn = false;
       isCompleted = true;
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => Home(),
-        ),
-      );
+      context.router.navigate(HomeRoute());
     } catch (error) {
       debugPrint(error.toString());
 
