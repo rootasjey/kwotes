@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
@@ -12,8 +13,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/router/rerouter.dart';
-import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -479,8 +478,8 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       tooltip: "New quote",
       onPressed: () {
         DataQuoteInputs.clearAll();
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AddQuoteSteps()),
+        context.router.root.navigate(
+          DashboardPageRoute(children: [AddQuoteStepsRoute()]),
         );
       },
       color: stateColors.foreground,
@@ -870,15 +869,49 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             return;
           }
 
-          Rerouter.push(
-            context: context,
-            value: value,
-          );
+          switch (value) {
+            case RouteNames.AddQuoteContentRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [AddQuoteStepsRoute()]),
+              );
+              break;
+            case RouteNames.SearchRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [SearchRoute()]),
+              );
+              break;
+            case RouteNames.FavouritesRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [FavouritesRoute()]),
+              );
+              break;
+            case RouteNames.ListsRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [QuotesListsRoute()]),
+              );
+              break;
+            case RouteNames.DraftsRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [DraftsRoute()]),
+              );
+              break;
+            case RouteNames.TempQuotesRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [MyTempQuotesRoute()]),
+              );
+              break;
+            case RouteNames.AccountRoute:
+              context.router.root.navigate(
+                SettingsRoute(),
+              );
+              break;
+            default:
+          }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           if (isNarrow)
             const PopupMenuItem(
-                value: '/add/quote/content',
+                value: RouteNames.AddQuoteContentRoute,
                 child: ListTile(
                   leading: Icon(Icons.add),
                   title: Text(
@@ -887,7 +920,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                   ),
                 )),
           const PopupMenuItem(
-              value: '/search',
+              value: RouteNames.SearchRoute,
               child: ListTile(
                 leading: Icon(Icons.search),
                 title: Text(
@@ -896,7 +929,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-              value: '/favourites',
+              value: RouteNames.FavouritesRoute,
               child: ListTile(
                 leading: Icon(Icons.favorite),
                 title: Text(
@@ -905,7 +938,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-              value: '/lists',
+              value: RouteNames.ListsRoute,
               child: ListTile(
                 leading: Icon(Icons.list),
                 title: Text(
@@ -914,7 +947,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: '/drafts',
+            value: RouteNames.DraftsRoute,
             child: ListTile(
               leading: Icon(Icons.edit),
               title: Text(
@@ -924,7 +957,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ),
           ),
           const PopupMenuItem(
-            value: '/publishedquotes',
+            value: RouteNames.PublishedQuotesRoute,
             child: ListTile(
               leading: Icon(Icons.cloud_done),
               title: Text(
@@ -934,7 +967,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ),
           ),
           const PopupMenuItem(
-              value: '/tempquotes',
+              value: RouteNames.TempQuotesRoute,
               child: ListTile(
                 leading: Icon(Icons.timelapse),
                 title: Text(
@@ -943,7 +976,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: '/account',
+            value: RouteNames.AccountRoute,
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
@@ -1007,21 +1040,21 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       icon: Icon(Icons.more_vert),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
-          value: '/signin',
+          value: RouteNames.SigninRoute,
           child: ListTile(
             leading: Icon(Icons.perm_identity),
             title: Text('Sign in'),
           ),
         ),
         PopupMenuItem(
-          value: 'signup',
+          value: RouteNames.SignupRoute,
           child: ListTile(
             leading: Icon(Icons.open_in_browser),
             title: Text('Sign up'),
           ),
         ),
         PopupMenuItem(
-          value: '/search',
+          value: RouteNames.SearchRoute,
           child: ListTile(
             leading: Icon(Icons.search),
             title: Text('Search'),
@@ -1029,10 +1062,24 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
       ],
       onSelected: (value) {
-        Rerouter.push(
-          context: context,
-          value: value,
-        );
+        switch (value) {
+          case RouteNames.SigninRoute:
+            context.router.navigate(
+              SigninRoute(),
+            );
+            break;
+          case RouteNames.SignupRoute:
+            context.router.navigate(
+              SignupRoute(),
+            );
+            break;
+          case RouteNames.SearchRoute:
+            context.router.navigate(
+              SearchRoute(),
+            );
+            break;
+          default:
+        }
       },
     );
   }

@@ -38,7 +38,7 @@ class _FavouritesState extends State<Favourites> {
   List<Quote> quotes = [];
 
   final ScrollController scrollController = ScrollController();
-  final String pageRoute = FavouritesRoute;
+  final String pageRoute = RouteNames.FavouritesRoute;
 
   @override
   initState() {
@@ -104,6 +104,7 @@ class _FavouritesState extends State<Favourites> {
                   builder: (_) => CustomScrollView(
                     controller: scrollController,
                     slivers: <Widget>[
+                      SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
                       appBar(),
                       body(screenWidth: screenWidth),
                       SliverPadding(

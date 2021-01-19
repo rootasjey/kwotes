@@ -41,7 +41,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
   ScrollController scrollController = ScrollController();
 
   String lang = 'en';
-  final String pageRoute = PublishedQuotesRoute;
+  final String pageRoute = RouteNames.PublishedQuotesRoute;
 
   @override
   initState() {
@@ -109,6 +109,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   builder: (_) => CustomScrollView(
                     controller: scrollController,
                     slivers: <Widget>[
+                      SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
                       appBar(),
                       body(),
                     ],

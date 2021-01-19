@@ -4,7 +4,6 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:figstyle/components/colored_list_tile.dart';
 import 'package:figstyle/components/side_bar_header.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
@@ -78,31 +77,31 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
         icon: Icons.cloud,
         outlined: false,
         hoverColor: Colors.green.shade200,
-        selected: widget.childName == QuotesRoute,
+        selected: widget.childName == RouteNames.QuotesRoute,
         title: Text(
           'All Published quotes',
         ),
-        onTap: () => navigateToSection(QuotesRoute),
+        onTap: () => navigateToSection(RouteNames.QuotesRoute),
       ),
       ColoredListTile(
         icon: Icons.timelapse,
         outlined: false,
         hoverColor: Colors.orange.shade200,
-        selected: widget.childName == AdminTempQuotesRoute,
+        selected: widget.childName == RouteNames.AdminTempQuotesRoute,
         title: Text(
           'All In Validation',
         ),
-        onTap: () => navigateToSection(AdminTempQuotesRoute),
+        onTap: () => navigateToSection(RouteNames.AdminTempQuotesRoute),
       ),
       ColoredListTile(
         icon: Icons.wb_sunny,
         outlined: false,
         hoverColor: Colors.yellow.shade600,
-        selected: widget.childName == QuotidiansRoute,
+        selected: widget.childName == RouteNames.QuotidiansRoute,
         title: Text(
           'Quotidians',
         ),
-        onTap: () => navigateToSection(QuotidiansRoute),
+        onTap: () => navigateToSection(RouteNames.QuotidiansRoute),
       ),
     ];
   }
@@ -129,52 +128,52 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
               ColoredListTile(
                 icon: Icons.favorite,
                 outlined: false,
-                selected: widget.childName == FavouritesRoute,
+                selected: widget.childName == RouteNames.FavouritesRoute,
                 hoverColor: Colors.red,
                 title: Text(
                   'Favourites',
                 ),
-                onTap: () => navigateToSection(FavouritesRoute),
+                onTap: () => navigateToSection(RouteNames.FavouritesRoute),
               ),
               ColoredListTile(
                 icon: Icons.list,
                 outlined: false,
                 hoverColor: Colors.blue.shade700,
-                selected: widget.childName == ListsRoute,
+                selected: widget.childName == RouteNames.ListsRoute,
                 title: Text(
                   'Lists',
                 ),
-                onTap: () => navigateToSection(ListsRoute),
+                onTap: () => navigateToSection(RouteNames.ListsRoute),
               ),
               ColoredListTile(
                 icon: Icons.edit,
                 outlined: false,
                 hoverColor: Colors.pink.shade200,
-                selected: widget.childName == DraftsRoute,
+                selected: widget.childName == RouteNames.DraftsRoute,
                 title: Text(
                   'Drafts',
                 ),
-                onTap: () => navigateToSection(DraftsRoute),
+                onTap: () => navigateToSection(RouteNames.DraftsRoute),
               ),
               ColoredListTile(
                 icon: Icons.cloud_done,
                 outlined: false,
                 hoverColor: Colors.green,
-                selected: widget.childName == PublishedQuotesRoute,
+                selected: widget.childName == RouteNames.PublishedQuotesRoute,
                 title: Text(
                   'Published',
                 ),
-                onTap: () => navigateToSection(PublishedQuotesRoute),
+                onTap: () => navigateToSection(RouteNames.PublishedQuotesRoute),
               ),
               ColoredListTile(
                 icon: Icons.timelapse,
                 outlined: false,
                 hoverColor: Colors.yellow.shade800,
-                selected: widget.childName == TempQuotesRoute,
+                selected: widget.childName == RouteNames.TempQuotesRoute,
                 title: Text(
                   'In Validation',
                 ),
-                onTap: () => navigateToSection(TempQuotesRoute),
+                onTap: () => navigateToSection(RouteNames.TempQuotesRoute),
               ),
               if (isAdmin) ...adminTiles(),
               Padding(
@@ -235,7 +234,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
       return;
     }
 
-    Rerouter.push(context: context, value: route);
+    // Rerouter.push(context: context, value: route);
   }
 
   Widget smallView() {

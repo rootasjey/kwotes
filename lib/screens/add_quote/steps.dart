@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,13 @@ import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/services.dart';
 
 class AddQuoteSteps extends StatefulWidget {
+  final int step;
+
+  const AddQuoteSteps({
+    Key key,
+    @QueryParam('step') this.step = 0,
+  }) : super(key: key);
+
   @override
   _AddQuoteStepsState createState() => _AddQuoteStepsState();
 }
@@ -70,6 +78,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   @override
   void initState() {
     super.initState();
+    currentStep = widget.step;
+
     checkAuth();
 
     if (DataQuoteInputs.quote.id.isNotEmpty) {

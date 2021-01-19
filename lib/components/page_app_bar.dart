@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -216,7 +217,7 @@ class _PageAppBarState extends State<PageAppBar> {
               child: IconButton(
                 color: stateColors.foreground,
                 icon: Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.router.pop(),
               ),
             ),
           ],
@@ -232,7 +233,7 @@ class _PageAppBarState extends State<PageAppBar> {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: CircleButton(
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () => context.router.pop(),
                 icon: Icon(Icons.arrow_back, color: stateColors.foreground),
               ),
             ),
@@ -322,7 +323,7 @@ class _PageAppBarState extends State<PageAppBar> {
         children: [
           if (widget.showNavBackIcon)
             CircleButton(
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () => context.router.pop(),
                 icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
           AppIcon(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -366,7 +367,7 @@ class _PageAppBarState extends State<PageAppBar> {
               child: IconButton(
                 color: stateColors.foreground,
                 icon: Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.router.pop(),
               ),
             ),
         ],

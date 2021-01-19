@@ -118,7 +118,7 @@ class _TopicPageState extends State<TopicPage> {
     }
 
     scrollController = ScrollController();
-    pageRoute = TopicRoute.replaceFirst(':name', topicName);
+    pageRoute = RouteNames.TopicRoute.replaceFirst(':name', topicName);
 
     final storageKey = '$pageRoute?lang';
 

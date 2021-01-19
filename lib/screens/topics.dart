@@ -35,7 +35,7 @@ class _TopicsState extends State<Topics> {
 
   final limit = 3;
   final quotesByTopicsList = <List<Quote>>[];
-  final pageRoute = TopicsRoute;
+  final pageRoute = RouteNames.TopicsRoute;
 
   ReactionDisposer topicsDisposer;
 

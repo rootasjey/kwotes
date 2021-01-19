@@ -1,11 +1,19 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/screens/about.dart';
+import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
+import 'package:figstyle/screens/dashboard_page.dart';
+import 'package:figstyle/screens/drafts.dart';
+import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
+import 'package:figstyle/screens/my_published_quotes.dart';
+import 'package:figstyle/screens/my_temp_quotes.dart';
+import 'package:figstyle/screens/quotes_list.dart';
+import 'package:figstyle/screens/quotes_lists.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
@@ -50,21 +58,27 @@ export 'app_router.gr.dart';
     //     AutoRoute(path: 'recent', page: RecentQuotes),
     //   ],
     // ),
-    // AutoRoute(
-    //   path: 'account',
-    //   page: EmptyRouterPage,
-    //   name: 'AccountDeepRoute',
-    //   children: [
-    //     RedirectRoute(path: '', redirectTo: 'settings'),
-    //     AutoRoute(path: 'settings', page: Settings),
-    //     AutoRoute(path: 'addquote', page: AddQuoteSteps),
-    //     AutoRoute(path: 'drafts', page: Drafts),
-    //     AutoRoute(path: 'fav', page: Favourites),
-    //     AutoRoute(path: 'lists', page: QuotesLists),
-    //     AutoRoute(path: 'published', page: MyPublishedQuotes),
-    //     AutoRoute(path: 'temp', page: MyTempQuotes),
-    //   ],
-    // ),
+    AutoRoute(
+      path: '/dashboard',
+      page: DashboardPage,
+      children: [
+        RedirectRoute(path: '', redirectTo: 'fav'),
+        AutoRoute(path: 'addquote', page: AddQuoteSteps),
+        AutoRoute(path: 'drafts', page: Drafts),
+        AutoRoute(path: 'fav', page: Favourites),
+        AutoRoute(
+          path: 'lists',
+          page: EmptyRouterPage,
+          name: 'QuotesListsDeepRoute',
+          children: [
+            AutoRoute(path: '', page: QuotesLists),
+            AutoRoute(path: ':listId', page: QuotesList),
+          ],
+        ),
+        AutoRoute(path: 'published', page: MyPublishedQuotes),
+        AutoRoute(path: 'temp', page: MyTempQuotes),
+      ],
+    ),
     AutoRoute(
       path: '/topics',
       page: EmptyRouterPage,

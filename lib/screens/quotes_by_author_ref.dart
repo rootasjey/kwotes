@@ -58,8 +58,8 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
     super.initState();
 
     pageRoute = widget.type == SubjectType.author
-        ? AuthorQuotesRoute
-        : ReferenceQuotesRoute;
+        ? RouteNames.AuthorQuotesRoute
+        : RouteNames.ReferenceQuotesRoute;
 
     getSavedProps();
     fetch();

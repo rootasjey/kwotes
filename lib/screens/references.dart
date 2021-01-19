@@ -47,7 +47,7 @@ class _ReferencesState extends State<References> {
 
   final recentlyAddedReferences = <Reference>[];
   final searchResultsReferences = <ReferenceSuggestion>[];
-  final pageRoute = ReferencesRoute;
+  final pageRoute = RouteNames.ReferencesRoute;
 
   FocusNode searchFocusNode;
 

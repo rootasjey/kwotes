@@ -8,17 +8,26 @@ import 'package:auto_route/auto_route.dart' as _i1;
 import '../screens/home/home.dart' as _i2;
 import '../screens/about.dart' as _i3;
 import '../screens/contact.dart' as _i4;
-import '../screens/forgot_password.dart' as _i5;
-import '../screens/settings.dart' as _i6;
-import '../screens/search.dart' as _i7;
-import '../screens/signin.dart' as _i8;
-import '../screens/signup.dart' as _i9;
-import '../screens/tos.dart' as _i10;
-import '../screens/authors.dart' as _i11;
-import '../screens/author_page.dart' as _i12;
-import '../screens/topic_page.dart' as _i13;
-import '../screens/references.dart' as _i14;
-import '../screens/reference_page.dart' as _i15;
+import '../screens/dashboard_page.dart' as _i5;
+import '../screens/forgot_password.dart' as _i6;
+import '../screens/settings.dart' as _i7;
+import '../screens/search.dart' as _i8;
+import '../screens/signin.dart' as _i9;
+import '../screens/signup.dart' as _i10;
+import '../screens/tos.dart' as _i11;
+import '../screens/authors.dart' as _i12;
+import '../screens/author_page.dart' as _i13;
+import '../screens/add_quote/steps.dart' as _i14;
+import '../screens/drafts.dart' as _i15;
+import '../screens/favourites.dart' as _i16;
+import '../screens/my_published_quotes.dart' as _i17;
+import '../screens/my_temp_quotes.dart' as _i18;
+import '../screens/quotes_lists.dart' as _i19;
+import '../screens/quotes_list.dart' as _i20;
+import '../screens/topic_page.dart' as _i21;
+import '../screens/references.dart' as _i22;
+import '../screens/reference_page.dart' as _i23;
+import 'package:flutter/foundation.dart' as _i24;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -41,59 +50,92 @@ class AppRouter extends _i1.RootStackRouter {
     ContactRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i4.Contact());
     },
+    DashboardPageRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i5.DashboardPage());
+    },
     TopicsDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     ForgotPasswordRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i5.ForgotPassword());
+      return _i1.MaterialPageX(entry: entry, child: _i6.ForgotPassword());
     },
     ReferencesDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     SettingsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i6.Settings());
+      return _i1.MaterialPageX(entry: entry, child: _i7.Settings());
     },
     SearchRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i7.Search());
+      return _i1.MaterialPageX(entry: entry, child: _i8.Search());
     },
     SigninRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i8.Signin());
+      return _i1.MaterialPageX(entry: entry, child: _i9.Signin());
     },
     SignupRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i9.Signup());
+      return _i1.MaterialPageX(entry: entry, child: _i10.Signup());
     },
     TosRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i10.Tos());
+      return _i1.MaterialPageX(entry: entry, child: _i11.Tos());
     },
     AuthorsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i11.Authors());
+      return _i1.MaterialPageX(entry: entry, child: _i12.Authors());
     },
     AuthorPageRoute.name: (entry) {
       var route = entry.routeData.as<AuthorPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i12.AuthorPage(
+          child: _i13.AuthorPage(
               authorId: route.authorId,
               authorImageUrl: route.authorImageUrl ?? '',
               authorName: route.authorName ?? ''));
+    },
+    AddQuoteStepsRoute.name: (entry) {
+      var route = entry.routeData.as<AddQuoteStepsRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i14.AddQuoteSteps(key: route.key, step: route.step ?? 0));
+    },
+    DraftsRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i15.Drafts());
+    },
+    FavouritesRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i16.Favourites());
+    },
+    QuotesListsDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
+    MyPublishedQuotesRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i17.MyPublishedQuotes());
+    },
+    MyTempQuotesRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i18.MyTempQuotes());
+    },
+    QuotesListsRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i19.QuotesLists());
+    },
+    QuotesListRoute.name: (entry) {
+      var route = entry.routeData.as<QuotesListRoute>();
+      return _i1.MaterialPageX(
+          entry: entry, child: _i20.QuotesList(listId: route.listId));
     },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i13.TopicPage(
+          child: _i21.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i14.References());
+      return _i1.MaterialPageX(entry: entry, child: _i22.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i15.ReferencePage(
+          child: _i23.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -121,6 +163,44 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig<ContactRoute>(ContactRoute.name,
             path: '/contact',
             routeBuilder: (match) => ContactRoute.fromMatch(match)),
+        _i1.RouteConfig<DashboardPageRoute>(DashboardPageRoute.name,
+            path: '/dashboard',
+            routeBuilder: (match) => DashboardPageRoute.fromMatch(match),
+            children: [
+              _i1.RouteConfig('#redirect',
+                  path: '', redirectTo: 'fav', fullMatch: true),
+              _i1.RouteConfig<AddQuoteStepsRoute>(AddQuoteStepsRoute.name,
+                  path: 'addquote',
+                  routeBuilder: (match) => AddQuoteStepsRoute.fromMatch(match)),
+              _i1.RouteConfig<DraftsRoute>(DraftsRoute.name,
+                  path: 'drafts',
+                  routeBuilder: (match) => DraftsRoute.fromMatch(match)),
+              _i1.RouteConfig<FavouritesRoute>(FavouritesRoute.name,
+                  path: 'fav',
+                  routeBuilder: (match) => FavouritesRoute.fromMatch(match)),
+              _i1.RouteConfig<QuotesListsDeepRoute>(QuotesListsDeepRoute.name,
+                  path: 'lists',
+                  routeBuilder: (match) =>
+                      QuotesListsDeepRoute.fromMatch(match),
+                  children: [
+                    _i1.RouteConfig<QuotesListsRoute>(QuotesListsRoute.name,
+                        path: '',
+                        routeBuilder: (match) =>
+                            QuotesListsRoute.fromMatch(match)),
+                    _i1.RouteConfig<QuotesListRoute>(QuotesListRoute.name,
+                        path: ':listId',
+                        routeBuilder: (match) =>
+                            QuotesListRoute.fromMatch(match))
+                  ]),
+              _i1.RouteConfig<MyPublishedQuotesRoute>(
+                  MyPublishedQuotesRoute.name,
+                  path: 'published',
+                  routeBuilder: (match) =>
+                      MyPublishedQuotesRoute.fromMatch(match)),
+              _i1.RouteConfig<MyTempQuotesRoute>(MyTempQuotesRoute.name,
+                  path: 'temp',
+                  routeBuilder: (match) => MyTempQuotesRoute.fromMatch(match))
+            ]),
         _i1.RouteConfig<TopicsDeepRoute>(TopicsDeepRoute.name,
             path: '/topics',
             routeBuilder: (match) => TopicsDeepRoute.fromMatch(match),
@@ -195,6 +275,15 @@ class ContactRoute extends _i1.PageRouteInfo {
   ContactRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'ContactRoute';
+}
+
+class DashboardPageRoute extends _i1.PageRouteInfo {
+  const DashboardPageRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: '/dashboard', initialChildren: children);
+
+  DashboardPageRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'DashboardPageRoute';
 }
 
 class TopicsDeepRoute extends _i1.PageRouteInfo {
@@ -289,6 +378,85 @@ class AuthorPageRoute extends _i1.PageRouteInfo {
   final String authorName;
 
   static const String name = 'AuthorPageRoute';
+}
+
+class AddQuoteStepsRoute extends _i1.PageRouteInfo {
+  AddQuoteStepsRoute({this.key, this.step = 0})
+      : super(name, path: 'addquote', queryParams: {'step': step});
+
+  AddQuoteStepsRoute.fromMatch(_i1.RouteMatch match)
+      : key = null,
+        step = match.queryParams.getInt('step', 0),
+        super.fromMatch(match);
+
+  final _i24.Key key;
+
+  final int step;
+
+  static const String name = 'AddQuoteStepsRoute';
+}
+
+class DraftsRoute extends _i1.PageRouteInfo {
+  const DraftsRoute() : super(name, path: 'drafts');
+
+  DraftsRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'DraftsRoute';
+}
+
+class FavouritesRoute extends _i1.PageRouteInfo {
+  const FavouritesRoute() : super(name, path: 'fav');
+
+  FavouritesRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'FavouritesRoute';
+}
+
+class QuotesListsDeepRoute extends _i1.PageRouteInfo {
+  const QuotesListsDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: 'lists', initialChildren: children);
+
+  QuotesListsDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'QuotesListsDeepRoute';
+}
+
+class MyPublishedQuotesRoute extends _i1.PageRouteInfo {
+  const MyPublishedQuotesRoute() : super(name, path: 'published');
+
+  MyPublishedQuotesRoute.fromMatch(_i1.RouteMatch match)
+      : super.fromMatch(match);
+
+  static const String name = 'MyPublishedQuotesRoute';
+}
+
+class MyTempQuotesRoute extends _i1.PageRouteInfo {
+  const MyTempQuotesRoute() : super(name, path: 'temp');
+
+  MyTempQuotesRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'MyTempQuotesRoute';
+}
+
+class QuotesListsRoute extends _i1.PageRouteInfo {
+  const QuotesListsRoute() : super(name, path: '');
+
+  QuotesListsRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'QuotesListsRoute';
+}
+
+class QuotesListRoute extends _i1.PageRouteInfo {
+  QuotesListRoute({this.listId})
+      : super(name, path: ':listId', params: {'listId': listId});
+
+  QuotesListRoute.fromMatch(_i1.RouteMatch match)
+      : listId = match.pathParams.getString('listId'),
+        super.fromMatch(match);
+
+  final String listId;
+
+  static const String name = 'QuotesListRoute';
 }
 
 class TopicPageRoute extends _i1.PageRouteInfo {

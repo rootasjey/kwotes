@@ -51,7 +51,7 @@ class _SearchState extends State<Search> {
 
   final limit = 10;
 
-  final pageRoute = SearchRoute;
+  final pageRoute = RouteNames.SearchRoute;
   FocusNode searchFocusNode;
   ScrollController scrollController;
 

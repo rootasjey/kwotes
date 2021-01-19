@@ -44,7 +44,7 @@ class _AuthorsState extends State<Authors> {
   final recentlyAddedAuthors = <Author>[];
   final authorsSearchResults = <AuthorSuggestion>[];
 
-  final pageRoute = ReferencesRoute;
+  final pageRoute = RouteNames.ReferencesRoute;
   FocusNode searchFocusNode;
   ScrollController scrollController;
 

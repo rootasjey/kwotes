@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -11,8 +13,6 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/screens/quotes_list.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
@@ -35,7 +35,7 @@ class _QuotesListsState extends State<QuotesLists> {
   bool newIsPublic = false;
   bool updateListIsPublic = false;
 
-  final pageRoute = ListsRoute;
+  final pageRoute = RouteNames.ListsRoute;
   final scrollController = ScrollController();
 
   int limit = 10;
@@ -62,9 +62,9 @@ class _QuotesListsState extends State<QuotesLists> {
           textButtonConfirmation: "Create",
           title: "You'll be able to change these properties later",
           subtitle: 'Create a new list',
-          onCancel: () => Navigator.of(context).pop(),
+          onCancel: () => context.router.pop(),
           onConfirm: (payload) {
-            Navigator.of(context).pop();
+            context.router.pop();
             createNewList(payload);
           },
         ),
@@ -93,6 +93,7 @@ class _QuotesListsState extends State<QuotesLists> {
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
+                SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
                 appBar(),
                 body(),
               ],
@@ -210,9 +211,9 @@ class _QuotesListsState extends State<QuotesLists> {
                       listName: quotesList.name,
                       listIsPublic: quotesList.isPublic,
                       subtitle: quotesList.name,
-                      onCancel: () => Navigator.of(context).pop(),
+                      onCancel: () => context.router.pop(),
                       onConfirm: (payload) {
-                        Navigator.of(context).pop();
+                        context.router.pop();
                         updateSelectedList(quotesList, payload);
                       },
                     );
@@ -230,9 +231,9 @@ class _QuotesListsState extends State<QuotesLists> {
                     showDeleteListDialog(
                       context: context,
                       listName: quotesList.name,
-                      onCancel: () => Navigator.of(context).pop(),
+                      onCancel: () => context.router.pop(),
                       onConfirm: () {
-                        Navigator.of(context).pop();
+                        context.router.pop();
                         deleteCurrentList(quotesList);
                       },
                     );
@@ -252,12 +253,8 @@ class _QuotesListsState extends State<QuotesLists> {
       elevation: 2.0,
       child: InkWell(
         onTap: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => QuotesList(
-                id: quotesList.id,
-              ),
-            ),
+          await context.router.push(
+            QuotesListRoute(listId: quotesList.id),
           );
 
           fetch();
@@ -320,9 +317,9 @@ class _QuotesListsState extends State<QuotesLists> {
           showDeleteListDialog(
             context: context,
             listName: quotesList.name,
-            onCancel: () => Navigator.of(context).pop(),
+            onCancel: () => context.router.pop(),
             onConfirm: () {
-              Navigator.of(context).pop();
+              context.router.pop();
               deleteCurrentList(quotesList);
             },
           );
@@ -336,9 +333,9 @@ class _QuotesListsState extends State<QuotesLists> {
             listName: quotesList.name,
             listIsPublic: quotesList.isPublic,
             subtitle: quotesList.name,
-            onCancel: () => Navigator.of(context).pop(),
+            onCancel: () => context.router.pop(),
             onConfirm: (payload) {
-              Navigator.of(context).pop();
+              context.router.pop();
               updateSelectedList(quotesList, payload);
             },
           );
@@ -417,9 +414,9 @@ class _QuotesListsState extends State<QuotesLists> {
                     textButtonConfirmation: 'Create',
                     title: "You'll be able to change these properties later",
                     subtitle: 'Create a new list',
-                    onCancel: () => Navigator.of(context).pop(),
+                    onCancel: () => context.router.pop(),
                     onConfirm: (payload) {
-                      Navigator.of(context).pop();
+                      context.router.pop();
                       createNewList(payload);
                     },
                   ),
@@ -518,7 +515,7 @@ class _QuotesListsState extends State<QuotesLists> {
       final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        context.router.root.navigate(SigninRoute());
         return;
       }
 
@@ -571,7 +568,7 @@ class _QuotesListsState extends State<QuotesLists> {
       final userAuth = await stateUser.userAuth;
 
       if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        context.router.root.navigate(SigninRoute());
         return;
       }
 

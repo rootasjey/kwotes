@@ -1,11 +1,11 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -48,20 +48,20 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
         ),
         child: Row(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: IconButton(
-                color: stateColors.foreground,
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back),
+            if (context.router.root.stack.length > 1)
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: IconButton(
+                  color: stateColors.foreground,
+                  onPressed: () => context.router.pop(),
+                  icon: Icon(Icons.arrow_back),
+                ),
               ),
-            ),
             AppIcon(
-                size: 40.0,
-                padding: EdgeInsets.zero,
-                onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => Home()),
-                    )),
+              size: 40.0,
+              padding: EdgeInsets.zero,
+              onTap: () => context.router.root.navigate(HomeRoute()),
+            ),
             if (widget.title.isNotEmpty) titleBar(isNarrow: widget.isNarrow),
           ],
         ),
@@ -227,11 +227,43 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             return;
           }
 
-          Rerouter.push(context: context, value: value);
+          switch (value) {
+            case RouteNames.FavouritesRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [FavouritesRoute()]),
+              );
+              break;
+            case RouteNames.ListsRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [QuotesListsRoute()]),
+              );
+              break;
+            case RouteNames.DraftsRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [DraftsRoute()]),
+              );
+              break;
+            case RouteNames.PublishedQuotesRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [MyPublishedQuotesRoute()]),
+              );
+              break;
+            case RouteNames.TempQuotesRoute:
+              context.router.root.navigate(
+                DashboardPageRoute(children: [MyTempQuotesRoute()]),
+              );
+              break;
+            case RouteNames.AccountRoute:
+              context.router.root.navigate(
+                SettingsRoute(),
+              );
+              break;
+            default:
+          }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           const PopupMenuItem(
-              value: FavouritesRoute,
+              value: RouteNames.FavouritesRoute,
               child: ListTile(
                 leading: Icon(Icons.favorite),
                 title: Text(
@@ -240,7 +272,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                 ),
               )),
           const PopupMenuItem(
-              value: ListsRoute,
+              value: RouteNames.ListsRoute,
               child: ListTile(
                 leading: Icon(Icons.list),
                 title: Text(
@@ -249,7 +281,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: DraftsRoute,
+            value: RouteNames.DraftsRoute,
             child: ListTile(
               leading: Icon(Icons.edit),
               title: Text(
@@ -259,7 +291,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
           const PopupMenuItem(
-            value: PublishedQuotesRoute,
+            value: RouteNames.PublishedQuotesRoute,
             child: ListTile(
               leading: Icon(Icons.cloud_done),
               title: Text(
@@ -269,7 +301,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
           const PopupMenuItem(
-              value: TempQuotesRoute,
+              value: RouteNames.TempQuotesRoute,
               child: ListTile(
                 leading: Icon(Icons.timelapse),
                 title: Text(
@@ -278,7 +310,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: AccountRoute,
+            value: RouteNames.AccountRoute,
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(

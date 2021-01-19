@@ -38,7 +38,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
     Drafts(),
     MyPublishedQuotes(),
     MyTempQuotes(),
-    QuotesList(id: quoteListId), // doesn't get dynamic params
+    QuotesList(listId: quoteListId), // doesn't get dynamic params
     RecentQuotes(),
     AdminTempQuotes(),
     Quotidians(),
@@ -64,7 +64,7 @@ class _DashboardSectionsState extends State<DashboardSections> {
   Widget build(BuildContext context) {
     return DashboardSectionTemplate(
       child: _selectedIndex == 5
-          ? QuotesList(id: widget.quoteListId)
+          ? QuotesList(listId: widget.quoteListId)
           : _sections[_selectedIndex],
       childName: getSectionName(_selectedIndex),
       isNested: _selectedIndex == 5,
@@ -74,33 +74,33 @@ class _DashboardSectionsState extends State<DashboardSections> {
   String getSectionName(int index) {
     switch (index) {
       case 0:
-        return FavouritesRoute;
+        return RouteNames.FavouritesRoute;
       case 1:
-        return ListsRoute;
+        return RouteNames.ListsRoute;
       case 2:
-        return DraftsRoute;
+        return RouteNames.DraftsRoute;
       case 3:
-        return PublishedQuotesRoute;
+        return RouteNames.PublishedQuotesRoute;
       case 4:
-        return TempQuotesRoute;
+        return RouteNames.TempQuotesRoute;
       case 5:
-        return ListsRoute;
+        return RouteNames.ListsRoute;
       case 6:
-        return QuotesRoute;
+        return RouteNames.QuotesRoute;
       case 7:
-        return AdminTempQuotesRoute;
+        return RouteNames.AdminTempQuotesRoute;
       case 8:
-        return QuotidiansRoute;
+        return RouteNames.QuotidiansRoute;
       case 9:
-        return AccountRoute;
+        return RouteNames.AccountRoute;
       case 10:
-        return EditEmailRoute;
+        return RouteNames.EditEmailRoute;
       case 11:
-        return EditPasswordRoute;
+        return RouteNames.EditPasswordRoute;
       case 12:
-        return DeleteAccountRoute;
+        return RouteNames.DeleteAccountRoute;
       default:
-        return FavouritesRoute;
+        return RouteNames.FavouritesRoute;
     }
   }
 }

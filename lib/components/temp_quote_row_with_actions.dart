@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/reject_temp_quote.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -6,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
 import 'package:figstyle/components/temp_quote_row.dart';
-import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/types/enums.dart';
@@ -221,11 +222,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void editAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote);
 
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AddQuoteSteps(),
-      ),
-    );
+    await context.router.root
+        .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
 
     if (widget.onNavBack != null) {
       widget.onNavBack();
@@ -235,11 +233,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void copyFromAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AddQuoteSteps(),
-      ),
-    );
+    context.router.root
+        .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
   }
 
   void onLongPress() {

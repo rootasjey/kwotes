@@ -37,7 +37,7 @@ class RecentQuotesState extends State<RecentQuotes> {
   bool isLoading = false;
   bool isLoadingMore = false;
 
-  final pageRoute = QuotesRoute;
+  final pageRoute = RouteNames.QuotesRoute;
 
   final limit = 30;
   List<Quote> quotes = [];

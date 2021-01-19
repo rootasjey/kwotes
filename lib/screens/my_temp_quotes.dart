@@ -41,7 +41,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   ScrollController scrollController = ScrollController();
 
   String lang = 'en';
-  final String pageRoute = TempQuotesRoute;
+  final String pageRoute = RouteNames.TempQuotesRoute;
 
   List<TempQuote> tempQuotes = [];
 
@@ -108,6 +108,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
+                SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
                 appBar(),
                 body(),
               ],

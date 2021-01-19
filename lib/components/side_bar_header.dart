@@ -1,7 +1,8 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/router/rerouter.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
@@ -83,14 +84,19 @@ class _SideBarHeaderState extends State<SideBarHeader> {
             return;
           }
 
-          Rerouter.push(
-            context: context,
-            value: value,
-          );
+          switch (value) {
+            case RouteNames.RootRoute:
+              context.router.navigate(HomeRoute());
+              break;
+            case RouteNames.AccountRoute:
+              context.router.navigate(SettingsRoute());
+              break;
+            default:
+          }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           const PopupMenuItem(
-              value: RootRoute,
+              value: RouteNames.RootRoute,
               child: ListTile(
                 leading: Icon(Icons.home),
                 title: Text(
@@ -99,7 +105,7 @@ class _SideBarHeaderState extends State<SideBarHeader> {
                 ),
               )),
           const PopupMenuItem(
-            value: AccountRoute,
+            value: RouteNames.AccountRoute,
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
@@ -159,14 +165,19 @@ class _SideBarHeaderState extends State<SideBarHeader> {
           icon: Icon(Icons.keyboard_arrow_down),
           tooltip: 'Menu',
           onSelected: (value) {
-            Rerouter.push(
-              context: context,
-              value: value,
-            );
+            switch (value) {
+              case RouteNames.RootRoute:
+                context.router.navigate(HomeRoute());
+                break;
+              case RouteNames.AccountRoute:
+                context.router.navigate(SettingsRoute());
+                break;
+              default:
+            }
           },
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             const PopupMenuItem(
-                value: RootRoute,
+                value: RouteNames.RootRoute,
                 child: ListTile(
                   leading: Icon(Icons.home),
                   title: Text(
@@ -175,7 +186,7 @@ class _SideBarHeaderState extends State<SideBarHeader> {
                   ),
                 )),
             const PopupMenuItem(
-              value: AccountRoute,
+              value: RouteNames.AccountRoute,
               child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text(

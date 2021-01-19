@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
@@ -25,10 +26,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotesList extends StatefulWidget {
-  final String id;
+  final String listId;
 
   QuotesList({
-    @required this.id,
+    @PathParam('listId') this.listId,
   });
 
   @override
@@ -96,6 +97,7 @@ class _QuotesListState extends State<QuotesList> {
                   return CustomScrollView(
                     controller: scrollController,
                     slivers: <Widget>[
+                      SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
                       appBar(),
                       body(),
                     ],
@@ -411,7 +413,7 @@ class _QuotesListState extends State<QuotesList> {
           .collection('users')
           .doc(userAuth.uid)
           .collection('lists')
-          .doc(widget.id)
+          .doc(widget.listId)
           .get();
 
       if (!docList.exists) {
@@ -532,7 +534,7 @@ class _QuotesListState extends State<QuotesList> {
 
     final success = await deleteList(
       context: context,
-      id: widget.id,
+      id: widget.listId,
     );
 
     setState(() {
@@ -561,7 +563,7 @@ class _QuotesListState extends State<QuotesList> {
 
     final success = await removeFromList(
       context: context,
-      id: widget.id,
+      id: widget.listId,
       quote: quote,
     );
 
@@ -582,7 +584,7 @@ class _QuotesListState extends State<QuotesList> {
   void updateCurrentList(EditListPayload payload) async {
     final success = await updateList(
       context: context,
-      id: widget.id,
+      id: widget.listId,
       name: payload.name,
       description: payload.description,
       isPublic: payload.isPublic,

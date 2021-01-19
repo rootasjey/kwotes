@@ -1,6 +1,6 @@
 import 'package:animations/animations.dart';
-import 'package:figstyle/screens/add_quote/steps.dart';
-import 'package:figstyle/screens/favourites.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/user.dart';
@@ -12,7 +12,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/utils/icons_more_icons.dart';
-import 'package:figstyle/screens/dashboard.dart';
+import 'package:figstyle/screens/dashboard_mobile_tab.dart';
 import 'package:figstyle/screens/discover.dart';
 import 'package:figstyle/screens/recent_quotes.dart';
 import 'package:figstyle/screens/search.dart';
@@ -45,7 +45,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
     Search(),
     Discover(),
     Topics(),
-    Dashboard(),
+    DashboardMobileTab(),
   ];
 
   ReactionDisposer reactionDisposer;
@@ -95,19 +95,19 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       }
 
       if (startRoute == 'action_add_quote') {
-        NavigationHelper.navigateNextFrame(
-          MaterialPageRoute(builder: (_) => AddQuoteSteps()),
-          context,
-        );
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          context.router.root
+              .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
+        });
 
         return;
       }
 
       if (startRoute == 'action_favourites') {
-        NavigationHelper.navigateNextFrame(
-          MaterialPageRoute(builder: (_) => Favourites()),
-          context,
-        );
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          context.router.root
+              .navigate(DashboardPageRoute(children: [FavouritesRoute()]));
+        });
 
         return;
       }

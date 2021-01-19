@@ -36,7 +36,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   ScrollController scrollController = ScrollController();
 
-  String pageRoute = AdminTempQuotesRoute;
+  String pageRoute = RouteNames.AdminTempQuotesRoute;
   String lang = 'en';
 
   @override

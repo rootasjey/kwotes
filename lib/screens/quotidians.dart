@@ -34,7 +34,7 @@ class QuotidiansState extends State<Quotidians> {
   String lang = 'en';
   int limit = 30;
   bool descending = false;
-  final pageRoute = QuotidiansRoute;
+  final pageRoute = RouteNames.QuotidiansRoute;
 
   List<Quotidian> quotidians = [];
   ScrollController scrollController = ScrollController();

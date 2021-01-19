@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -14,7 +16,6 @@ import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/settings.dart';
-import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/admin_temp_quotes.dart';
 import 'package:figstyle/screens/drafts.dart';
 import 'package:figstyle/screens/my_published_quotes.dart';
@@ -32,12 +33,12 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
-class Dashboard extends StatefulWidget {
+class DashboardMobileTab extends StatefulWidget {
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardMobileTabState createState() => _DashboardMobileTabState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardMobileTabState extends State<DashboardMobileTab> {
   bool canManage = false;
   bool prevIsAuthenticated = false;
   bool isAccountAdvVisible = false;
@@ -83,8 +84,9 @@ class _DashboardState extends State<Dashboard> {
           icon: Icon(Icons.add),
           onPressed: () {
             DataQuoteInputs.clearAll();
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddQuoteSteps()));
+
+            context.router.root
+                .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
           },
         );
       }),
