@@ -535,9 +535,7 @@ class _SignupState extends State<Signup> {
       return;
     }
 
-    setState(() {
-      isSigningUp = true;
-    });
+    setState(() => isSigningUp = true);
 
     if (!await valuesAvailabilityCheck()) {
       setState(() {
@@ -567,9 +565,7 @@ class _SignupState extends State<Signup> {
       if (!respCreateAcc.success) {
         final exception = respCreateAcc.error;
 
-        setState(() {
-          isSigningUp = false;
-        });
+        setState(() => isSigningUp = false);
 
         showSnack(
           context: context,
@@ -604,13 +600,11 @@ class _SignupState extends State<Signup> {
     } catch (error) {
       debugPrint(error.toString());
 
-      setState(() {
-        isSigningUp = false;
-      });
+      setState(() => isSigningUp = false);
 
       showSnack(
         context: context,
-        message: "An occurred while creating your account. " +
+        message: "An occurred while creating your account. "
             "Please try again or contact us if the problem persists.",
         type: SnackType.error,
       );
