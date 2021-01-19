@@ -330,7 +330,7 @@ class _DraftsState extends State<Drafts> {
     try {
       fetchOffline();
 
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();
@@ -384,7 +384,7 @@ class _DraftsState extends State<Drafts> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();

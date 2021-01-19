@@ -512,7 +512,7 @@ class _QuotesListsState extends State<QuotesLists> {
     try {
       userQuotesLists.clear();
 
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         context.router.root.navigate(SigninRoute());
@@ -565,7 +565,7 @@ class _QuotesListsState extends State<QuotesLists> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         context.router.root.navigate(SigninRoute());

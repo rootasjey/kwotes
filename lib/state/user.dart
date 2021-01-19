@@ -1,5 +1,15 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:figstyle/router/app_router.dart';
+import 'package:figstyle/types/cloud_func_error.dart';
+import 'package:figstyle/types/update_email_resp.dart';
+import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:figstyle/utils/app_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user.g.dart';
@@ -11,6 +21,9 @@ abstract class StateUserBase with Store {
 
   @observable
   String avatarUrl = '';
+
+  @observable
+  bool canManageQuote = false;
 
   @observable
   String lang = 'en';
@@ -33,27 +46,90 @@ abstract class StateUserBase with Store {
   @observable
   DateTime updatedFavAt = DateTime.now();
 
-  Future<User> get userAuth async {
-    if (_userAuth != null) {
-      return _userAuth;
-    }
-
-    _userAuth = FirebaseAuth.instance.currentUser;
-
-    if (_userAuth == null) {
-      await _signin();
-    }
-
-    if (_userAuth != null) {
-      setUserName(_userAuth.displayName);
-    }
-
+  User get userAuth {
     return _userAuth;
+  }
+
+  Future refreshUserRights() async {
+    try {
+      final userAuth = stateUser.userAuth;
+
+      if (userAuth == null) {
+        canManageQuote = false;
+      }
+
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userAuth.uid)
+          .get();
+
+      if (user == null) {
+        canManageQuote = false;
+      }
+
+      final bool canManage = user.data()['rights']['user:managequotidian'];
+      canManageQuote = canManage;
+    } on CloudFunctionsException catch (exception) {
+      debugPrint("[code: ${exception.code}] - ${exception.message}");
+      canManageQuote = false;
+    } catch (error) {
+      debugPrint(error.toString());
+      canManageQuote = false;
+    }
   }
 
   /// Use on sign out / user's data has changed.
   void clearAuthCache() {
     _userAuth = null;
+  }
+
+  Future<UpdateEmailResp> deleteAccount(String idToken) async {
+    try {
+      final callable = CloudFunctions(
+        app: Firebase.app(),
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'users-deleteAccount',
+      );
+
+      final response = await callable.call({
+        'idToken': idToken,
+      });
+
+      signOut();
+
+      return UpdateEmailResp.fromJSON(response.data);
+    } on CloudFunctionsException catch (exception) {
+      debugPrint("[code: ${exception.code}] - ${exception.message}");
+
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: exception.details['code'],
+          message: exception.details['message'],
+        ),
+      );
+    } on PlatformException catch (exception) {
+      debugPrint(exception.toString());
+
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: exception.details['code'],
+          message: exception.details['message'],
+        ),
+      );
+    } catch (error) {
+      debugPrint(error.toString());
+
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: '',
+          message: error.toString(),
+        ),
+      );
+    }
   }
 
   @action
@@ -86,13 +162,18 @@ abstract class StateUserBase with Store {
     username = name;
   }
 
+  @action
+  void setAdminValue(bool value) {
+    canManageQuote = value;
+  }
+
   /// Signin user with credentials if FirebaseAuth is null.
-  Future _signin() async {
+  Future signin({String email, String password}) async {
     try {
       final credentialsMap = appStorage.getCredentials();
 
-      final email = credentialsMap['email'];
-      final password = credentialsMap['password'];
+      email = email ?? credentialsMap['email'];
+      password = password ?? credentialsMap['password'];
 
       if ((email == null || email.isEmpty) ||
           (password == null || password.isEmpty)) {
@@ -105,22 +186,149 @@ abstract class StateUserBase with Store {
       );
 
       _userAuth = auth.user;
-      isUserConnected = true;
+
+      // Subscription updates.
+      FirebaseAuth.instance.userChanges().listen((userEvent) {
+        _userAuth = userEvent;
+        refreshUserRights();
+      }, onDone: () {
+        _userAuth = null;
+      });
+
+      setUserConnected();
+
+      appStorage.setUserName(_userAuth.displayName);
+      PushNotifications.linkAuthUser(_userAuth.uid);
+
+      await refreshUserRights();
     } catch (error) {
       appStorage.clearUserAuthData();
     }
   }
 
   @action
-  Future signOut() async {
+  Future signOut({
+    BuildContext context,
+    bool redirectOnComplete = false,
+  }) async {
     _userAuth = null;
+    await appStorage.clearUserAuthData();
     await FirebaseAuth.instance.signOut();
     setUserDisconnected();
+
+    PushNotifications.unlinkAuthUser();
+
+    if (redirectOnComplete) {
+      if (context == null) {
+        debugPrint("Please specify a context value to the"
+            " [userState.signOut] function.");
+        return;
+      }
+
+      context.router.navigate(HomeRoute());
+    }
   }
 
   @action
   void updateFavDate() {
     updatedFavAt = DateTime.now();
+  }
+
+  Future<UpdateEmailResp> updateEmail(String email, String idToken) async {
+    try {
+      final callable = CloudFunctions(
+        app: Firebase.app(),
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'users-updateEmail',
+      );
+
+      final response = await callable.call({
+        'newEmail': email,
+        'idToken': idToken,
+      });
+
+      appStorage.setEmail(email);
+      await stateUser.signin(email: email);
+
+      return UpdateEmailResp.fromJSON(response.data);
+    } on CloudFunctionsException catch (exception) {
+      debugPrint("[code: ${exception.code}] - ${exception.message}");
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: exception.details['code'],
+          message: exception.details['message'],
+        ),
+      );
+    } on PlatformException catch (exception) {
+      debugPrint(exception.toString());
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: exception.details['code'],
+          message: exception.details['message'],
+        ),
+      );
+    } catch (error) {
+      debugPrint(error.toString());
+
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: '',
+          message: error.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<UpdateEmailResp> updateUsername(String newUsername) async {
+    try {
+      final callable = CloudFunctions(
+        app: Firebase.app(),
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'users-updateUsername',
+      );
+
+      final response = await callable.call({
+        'newUsername': newUsername,
+      });
+
+      appStorage.setUserName(newUsername);
+
+      return UpdateEmailResp.fromJSON(response.data);
+    } on CloudFunctionsException catch (exception) {
+      debugPrint("[code: ${exception.code}] - ${exception.message}");
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: exception.details['code'],
+          message: exception.details['message'],
+        ),
+      );
+    } on PlatformException catch (exception) {
+      debugPrint(exception.toString());
+
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: exception.details['code'],
+          message: exception.details['message'],
+        ),
+      );
+    } catch (error) {
+      debugPrint(error.toString());
+
+      return UpdateEmailResp(
+        success: false,
+        error: CloudFuncError(
+          code: '',
+          message: error.toString(),
+        ),
+      );
+    }
   }
 }
 

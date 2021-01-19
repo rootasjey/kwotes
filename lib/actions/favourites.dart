@@ -14,7 +14,7 @@ Future<bool> addToFavourites({
   Quote quote,
 }) async {
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       showSnack(
@@ -88,7 +88,7 @@ Future<bool> addToFavourites({
 Future<bool> isFavourite({
   String quoteId,
 }) async {
-  final userAuth = await stateUser.userAuth;
+  final userAuth = stateUser.userAuth;
 
   try {
     final doc = await FirebaseFirestore.instance
@@ -113,7 +113,7 @@ Future<bool> removeFromFavourites({
   Quote quote,
 }) async {
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       showSnack(

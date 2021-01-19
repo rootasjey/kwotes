@@ -19,7 +19,7 @@ Future<bool> deleteDraft({
   BuildContext context,
   TempQuote draft,
 }) async {
-  final userAuth = await stateUser.userAuth;
+  final userAuth = stateUser.userAuth;
 
   if (userAuth == null) {
     Navigator.of(context).push(
@@ -86,7 +86,7 @@ Future<bool> saveDraft({
   });
 
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       return false;
@@ -169,7 +169,7 @@ Future<bool> saveOfflineDraft({
   });
 
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     Map<String, dynamic> draft = {
       'author': {

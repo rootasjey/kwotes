@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:figstyle/utils/storage_keys.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RejectTempQuote extends StatefulWidget {
@@ -224,7 +224,7 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
     final userId = tempQuote.user.id;
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).pushReplacement(

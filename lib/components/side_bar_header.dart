@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
@@ -80,7 +79,10 @@ class _SideBarHeaderState extends State<SideBarHeader> {
         tooltip: 'Menu',
         onSelected: (value) {
           if (value == 'signout') {
-            userSignOut(context: context);
+            stateUser.signOut(
+              context: context,
+              redirectOnComplete: true,
+            );
             return;
           }
 

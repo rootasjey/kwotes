@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -59,7 +58,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     descending = appStorage.getPageOrder(pageRoute: pageRoute);
     itemsLayout = appStorage.getItemsStyle(pageRoute);
 
-    canManage = await canUserManage();
+    canManage = stateUser.canManageQuote;
 
     setState(() {});
   }

@@ -253,7 +253,7 @@ class _DashboardSectionTemplateState extends State<DashboardSectionTemplate> {
 
   void checkAdmin() async {
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       final user = await FirebaseFirestore.instance
           .collection('users')

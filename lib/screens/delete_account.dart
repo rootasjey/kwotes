@@ -1,4 +1,3 @@
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -416,7 +415,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
   void checkAuth() async {
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
@@ -435,7 +434,7 @@ class DeleteAccountState extends State<DeleteAccount> {
     setState(() => isDeleting = true);
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() => isDeleting = false);
@@ -457,7 +456,7 @@ class DeleteAccountState extends State<DeleteAccount> {
       await userAuth.reauthenticateWithCredential(credentials);
       final idToken = await userAuth.getIdToken();
 
-      final respDelAcc = await deleteAccount(idToken);
+      final respDelAcc = await stateUser.deleteAccount(idToken);
 
       if (!respDelAcc.success) {
         final exception = respDelAcc.error;

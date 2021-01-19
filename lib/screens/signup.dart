@@ -514,7 +514,7 @@ class _SignupState extends State<Signup> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;

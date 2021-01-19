@@ -370,7 +370,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       widget.onBeforeValidate();
     }
 
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     final success = await validateTempQuote(
       tempQuote: tempQuote,

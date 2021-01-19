@@ -11,7 +11,7 @@ Future addNewTempQuote({
   List<Map<String, dynamic>> references,
   Map<String, bool> topics,
 }) async {
-  final userAuth = await stateUser.userAuth;
+  final userAuth = stateUser.userAuth;
 
   await FirebaseFirestore.instance.collection('tempquotes').add({
     'author': {
@@ -274,7 +274,7 @@ Future saveExistingTempQuote({
   List<Map<String, dynamic>> references,
   Map<String, bool> topics,
 }) async {
-  final userAuth = await stateUser.userAuth;
+  final userAuth = stateUser.userAuth;
 
   await FirebaseFirestore.instance
       .collection('tempquotes')

@@ -406,7 +406,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -479,7 +479,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         return;
       }
 
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         isCompleted = false;
@@ -491,7 +491,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         return;
       }
 
-      final usernameUpdateResp = await updateUsername(newUserName);
+      final usernameUpdateResp = await stateUser.updateUsername(newUserName);
 
       if (!usernameUpdateResp.success) {
         final exception = usernameUpdateResp.error;

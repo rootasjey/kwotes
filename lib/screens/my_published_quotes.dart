@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/utils/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
@@ -310,7 +309,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     });
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(
@@ -371,7 +370,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
     isLoadingMore = true;
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(
@@ -426,7 +425,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
   void fetchPermissions() async {
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         return;

@@ -814,7 +814,7 @@ class _SettingsState extends State<Settings> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         stateUser.setUserDisconnected();
@@ -875,7 +875,7 @@ class _SettingsState extends State<Settings> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       await FirebaseFirestore.instance
           .collection('users')

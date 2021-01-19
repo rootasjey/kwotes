@@ -13,7 +13,7 @@ Future<UserQuotesList> createList({
   bool isPublic = false,
 }) async {
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(
@@ -54,7 +54,7 @@ Future<bool> deleteList({
   @required String id,
 }) async {
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(
@@ -95,7 +95,7 @@ Future<bool> removeFromList({
   @required Quote quote,
 }) async {
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(
@@ -130,7 +130,7 @@ Future<bool> updateList({
   bool isPublic = false,
 }) async {
   try {
-    final userAuth = await stateUser.userAuth;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       Navigator.of(context).pushReplacement(

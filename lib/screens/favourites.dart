@@ -339,7 +339,7 @@ class _FavouritesState extends State<Favourites> {
     quotes.clear();
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -399,7 +399,7 @@ class _FavouritesState extends State<Favourites> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));

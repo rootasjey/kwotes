@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/state/user.dart';
@@ -85,16 +84,14 @@ class AppState extends State<App> {
 // ------------------------
 Future _autoLogin() async {
   try {
-    final userCred = await userSignin();
+    final userCred = await stateUser.signin();
 
     if (userCred == null) {
-      userSignOut(autoNavigateAfter: false);
-      PushNotifications.unlinkAuthUser();
+      stateUser.signOut();
     }
   } catch (error) {
     debugPrint(error.toString());
-    userSignOut(autoNavigateAfter: false);
-    PushNotifications.unlinkAuthUser();
+    stateUser.signOut();
   }
 }
 

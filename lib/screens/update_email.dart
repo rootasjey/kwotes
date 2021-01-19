@@ -449,7 +449,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -491,7 +491,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
         return;
       }
 
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -515,7 +515,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
       await userAuth.reauthenticateWithCredential(credentials);
       final idToken = await userAuth.getIdToken();
 
-      final respUpdateEmail = await updateEmail(email, idToken);
+      final respUpdateEmail = await stateUser.updateEmail(email, idToken);
 
       if (!respUpdateEmail.success) {
         final exception = respUpdateEmail.error;

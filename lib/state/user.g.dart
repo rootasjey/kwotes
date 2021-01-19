@@ -24,6 +24,21 @@ mixin _$StateUser on StateUserBase, Store {
     });
   }
 
+  final _$canManageQuoteAtom = Atom(name: 'StateUserBase.canManageQuote');
+
+  @override
+  bool get canManageQuote {
+    _$canManageQuoteAtom.reportRead();
+    return super.canManageQuote;
+  }
+
+  @override
+  set canManageQuote(bool value) {
+    _$canManageQuoteAtom.reportWrite(value, super.canManageQuote, () {
+      super.canManageQuote = value;
+    });
+  }
+
   final _$langAtom = Atom(name: 'StateUserBase.lang');
 
   @override
@@ -102,8 +117,10 @@ mixin _$StateUser on StateUserBase, Store {
   final _$signOutAsyncAction = AsyncAction('StateUserBase.signOut');
 
   @override
-  Future<dynamic> signOut() {
-    return _$signOutAsyncAction.run(() => super.signOut());
+  Future<dynamic> signOut(
+      {BuildContext context, bool redirectOnComplete = false}) {
+    return _$signOutAsyncAction.run(() => super
+        .signOut(context: context, redirectOnComplete: redirectOnComplete));
   }
 
   final _$StateUserBaseActionController =
@@ -176,6 +193,17 @@ mixin _$StateUser on StateUserBase, Store {
   }
 
   @override
+  void setAdminValue(bool value) {
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setAdminValue');
+    try {
+      return super.setAdminValue(value);
+    } finally {
+      _$StateUserBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateFavDate() {
     final _$actionInfo = _$StateUserBaseActionController.startAction(
         name: 'StateUserBase.updateFavDate');
@@ -190,6 +218,7 @@ mixin _$StateUser on StateUserBase, Store {
   String toString() {
     return '''
 avatarUrl: ${avatarUrl},
+canManageQuote: ${canManageQuote},
 lang: ${lang},
 isFirstLaunch: ${isFirstLaunch},
 isUserConnected: ${isUserConnected},

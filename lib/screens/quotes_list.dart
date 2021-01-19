@@ -1,6 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
@@ -66,7 +65,7 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   void initProps() async {
-    canManage = await canUserManage();
+    canManage = stateUser.canManageQuote;
     setState(() {});
   }
 
@@ -398,7 +397,7 @@ class _QuotesListState extends State<QuotesList> {
     try {
       quotes.clear();
 
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -477,7 +476,7 @@ class _QuotesListState extends State<QuotesList> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {

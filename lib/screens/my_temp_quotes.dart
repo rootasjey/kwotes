@@ -405,7 +405,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     tempQuotes.clear();
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();
@@ -479,7 +479,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         throw Error();

@@ -5,7 +5,6 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/push_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -163,7 +162,7 @@ class _OnBoardingState extends State<OnBoarding> {
       notificationsON = await PushNotifications.isActive();
     }
 
-    final user = FirebaseAuth.instance.currentUser;
+    final user = stateUser.userAuth;
 
     setState(() {
       isAuth = user != null;

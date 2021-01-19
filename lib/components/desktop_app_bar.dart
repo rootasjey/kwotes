@@ -10,7 +10,6 @@ import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
@@ -865,7 +864,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         // tooltip: 'More quick links',
         onSelected: (value) {
           if (value == 'signout') {
-            userSignOut(context: context);
+            stateUser.signOut(
+              context: context,
+              redirectOnComplete: true,
+            );
             return;
           }
 

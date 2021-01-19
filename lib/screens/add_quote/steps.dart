@@ -552,7 +552,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
-        final userAuth = await stateUser.userAuth;
+        final userAuth = stateUser.userAuth;
 
         if (userAuth == null) {
           setState(() => isCheckingAuth = false);

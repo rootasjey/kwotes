@@ -172,7 +172,7 @@ class _UserListsState extends State<UserLists> {
     final quote = widget.quote;
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         return;
@@ -207,7 +207,7 @@ class _UserListsState extends State<UserLists> {
 
   Future<String> createList() async {
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         return null;
@@ -257,7 +257,7 @@ class _UserListsState extends State<UserLists> {
 
     try {
       userQuotesLists.clear();
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         return;
@@ -314,7 +314,7 @@ class _UserListsState extends State<UserLists> {
     isLoadingMore = true;
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         return;

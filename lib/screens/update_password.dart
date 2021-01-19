@@ -363,7 +363,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     });
 
     try {
-      final userAuth = await stateUser.userAuth;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {

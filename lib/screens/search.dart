@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author_suggestion.dart';
@@ -632,7 +631,7 @@ class _SearchState extends State<Search> {
   }
 
   void fetchPermissions() async {
-    canManage = await canUserManage();
+    canManage = stateUser.canManageQuote;
   }
 
   Future search() async {

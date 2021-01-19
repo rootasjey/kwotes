@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/enums.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/about.dart';
@@ -261,7 +260,7 @@ class _FooterState extends State<Footer> {
   }
 
   void updateUserAccountLang() async {
-    final userAuth = FirebaseAuth.instance.currentUser;
+    final userAuth = stateUser.userAuth;
 
     if (userAuth == null) {
       notifyLangSuccess();

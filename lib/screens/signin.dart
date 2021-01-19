@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
@@ -329,7 +328,7 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       setState(() {
         isCheckingAuth = false;
@@ -380,7 +379,10 @@ class _SigninState extends State<Signin> {
     });
 
     try {
-      final userCred = await userSignin(email: email, password: password);
+      final userCred = await stateUser.signin(
+        email: email,
+        password: password,
+      );
 
       if (userCred == null) {
         showSnack(

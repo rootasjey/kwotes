@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/router/route_names.dart';
@@ -220,10 +219,13 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
         ),
-        // tooltip: 'More quick links',
         onSelected: (value) {
           if (value == 'signout') {
-            userSignOut(context: context);
+            stateUser.signOut(
+              context: context,
+              redirectOnComplete: true,
+            );
+
             return;
           }
 

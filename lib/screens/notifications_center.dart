@@ -10,11 +10,11 @@ import 'package:figstyle/components/sliver_loading_view.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/app_notification.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:jiffy/jiffy.dart';
@@ -274,7 +274,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     });
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -342,7 +342,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     });
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         setState(() {
@@ -403,7 +403,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     });
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
         Navigator.of(context)
@@ -528,7 +528,7 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     setState(() => notif.isRead = true);
 
     try {
-      final userAuth = FirebaseAuth.instance.currentUser;
+      final userAuth = stateUser.userAuth;
 
       final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
