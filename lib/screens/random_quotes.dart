@@ -314,10 +314,12 @@ class _RandomQuotesState extends State<RandomQuotes> {
                     child: QuoteRowWithActions(
                       quote: quote,
                       elevation: 2.0,
-                      showAuthor: true,
                       cardHeight: 400.0,
                       cardWidth: cardWidth,
+                      showAuthor: true,
                       showBorder: true,
+                      canManage: stateUser.canManageQuote,
+                      isConnected: stateUser.isUserConnected,
                       componentType: ItemComponentType.card,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 35.0,
@@ -364,6 +366,8 @@ class _RandomQuotesState extends State<RandomQuotes> {
                       elevation: 2.0,
                       showAuthor: true,
                       showBorder: true,
+                      canManage: stateUser.canManageQuote,
+                      isConnected: stateUser.isUserConnected,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 70.0,
                         vertical: 40.0,
