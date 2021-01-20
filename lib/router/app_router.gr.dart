@@ -17,19 +17,21 @@ import '../screens/signup.dart' as _i10;
 import '../screens/tos.dart' as _i11;
 import '../screens/authors.dart' as _i12;
 import '../screens/author_page.dart' as _i13;
-import '../screens/add_quote/steps.dart' as _i14;
-import '../screens/drafts.dart' as _i15;
-import '../screens/favourites.dart' as _i16;
-import '../screens/my_published_quotes.dart' as _i17;
-import '../screens/my_temp_quotes.dart' as _i18;
-import '../screens/quotidians.dart' as _i19;
-import '../screens/admin_temp_quotes.dart' as _i20;
-import '../screens/quotes_lists.dart' as _i21;
-import '../screens/quotes_list.dart' as _i22;
-import '../screens/topic_page.dart' as _i23;
-import '../screens/references.dart' as _i24;
-import '../screens/reference_page.dart' as _i25;
-import 'package:flutter/foundation.dart' as _i26;
+import '../screens/recent_quotes.dart' as _i14;
+import '../screens/random_quotes.dart' as _i15;
+import '../screens/add_quote/steps.dart' as _i16;
+import '../screens/drafts.dart' as _i17;
+import '../screens/favourites.dart' as _i18;
+import '../screens/my_published_quotes.dart' as _i19;
+import '../screens/my_temp_quotes.dart' as _i20;
+import '../screens/quotidians.dart' as _i21;
+import '../screens/admin_temp_quotes.dart' as _i22;
+import '../screens/quotes_lists.dart' as _i23;
+import '../screens/quotes_list.dart' as _i24;
+import '../screens/topic_page.dart' as _i25;
+import '../screens/references.dart' as _i26;
+import '../screens/reference_page.dart' as _i27;
+import 'package:flutter/foundation.dart' as _i28;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -51,6 +53,10 @@ class AppRouter extends _i1.RootStackRouter {
     },
     ContactRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i4.Contact());
+    },
+    QuotesDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
     },
     DashboardPageRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i5.DashboardPage());
@@ -78,6 +84,14 @@ class AppRouter extends _i1.RootStackRouter {
     SignupRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i10.Signup());
     },
+    SignOutRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
+    ExtDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
     TosRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i11.Tos());
     },
@@ -93,68 +107,82 @@ class AppRouter extends _i1.RootStackRouter {
               authorImageUrl: route.authorImageUrl ?? '',
               authorName: route.authorName ?? ''));
     },
+    RecentQuotesRoute.name: (entry) {
+      var route = entry.routeData.as<RecentQuotesRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i14.RecentQuotes(
+              showNavBackIcon: route.showNavBackIcon ?? true));
+    },
+    RandomQuotesRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i15.RandomQuotes());
+    },
     AddQuoteStepsRoute.name: (entry) {
       var route = entry.routeData.as<AddQuoteStepsRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i14.AddQuoteSteps(key: route.key, step: route.step ?? 0));
+          child: _i16.AddQuoteSteps(key: route.key, step: route.step ?? 0));
     },
     AdminDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     DraftsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i15.Drafts());
+      return _i1.MaterialPageX(entry: entry, child: _i17.Drafts());
     },
     FavouritesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i16.Favourites());
+      return _i1.MaterialPageX(entry: entry, child: _i18.Favourites());
     },
     QuotesListsDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     MyPublishedQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i17.MyPublishedQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i19.MyPublishedQuotes());
     },
     MyTempQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i18.MyTempQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i20.MyTempQuotes());
     },
     QuotidiansRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i19.Quotidians());
+      return _i1.MaterialPageX(entry: entry, child: _i21.Quotidians());
     },
     AdminTempDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     AdminTempQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i20.AdminTempQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i22.AdminTempQuotes());
     },
     QuotesListsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i21.QuotesLists());
+      return _i1.MaterialPageX(entry: entry, child: _i23.QuotesLists());
     },
     QuotesListRoute.name: (entry) {
       var route = entry.routeData.as<QuotesListRoute>();
       return _i1.MaterialPageX(
-          entry: entry, child: _i22.QuotesList(listId: route.listId));
+          entry: entry, child: _i24.QuotesList(listId: route.listId));
     },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i23.TopicPage(
+          child: _i25.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i24.References());
+      return _i1.MaterialPageX(entry: entry, child: _i26.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i25.ReferencePage(
+          child: _i27.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
+    },
+    GitHubRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
     }
   };
 
@@ -179,6 +207,19 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig<ContactRoute>(ContactRoute.name,
             path: '/contact',
             routeBuilder: (match) => ContactRoute.fromMatch(match)),
+        _i1.RouteConfig<QuotesDeepRoute>(QuotesDeepRoute.name,
+            path: 'quotes',
+            routeBuilder: (match) => QuotesDeepRoute.fromMatch(match),
+            children: [
+              _i1.RouteConfig('#redirect',
+                  path: '', redirectTo: 'recent', fullMatch: true),
+              _i1.RouteConfig<RecentQuotesRoute>(RecentQuotesRoute.name,
+                  path: 'recent',
+                  routeBuilder: (match) => RecentQuotesRoute.fromMatch(match)),
+              _i1.RouteConfig<RandomQuotesRoute>(RandomQuotesRoute.name,
+                  path: 'random',
+                  routeBuilder: (match) => RandomQuotesRoute.fromMatch(match))
+            ]),
         _i1.RouteConfig<DashboardPageRoute>(DashboardPageRoute.name,
             path: '/dashboard',
             routeBuilder: (match) => DashboardPageRoute.fromMatch(match),
@@ -273,6 +314,17 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig<SignupRoute>(SignupRoute.name,
             path: '/signup',
             routeBuilder: (match) => SignupRoute.fromMatch(match)),
+        _i1.RouteConfig<SignOutRoute>(SignOutRoute.name,
+            path: '/signout',
+            routeBuilder: (match) => SignOutRoute.fromMatch(match)),
+        _i1.RouteConfig<ExtDeepRoute>(ExtDeepRoute.name,
+            path: '/ext',
+            routeBuilder: (match) => ExtDeepRoute.fromMatch(match),
+            children: [
+              _i1.RouteConfig<GitHubRoute>(GitHubRoute.name,
+                  path: 'github',
+                  routeBuilder: (match) => GitHubRoute.fromMatch(match))
+            ]),
         _i1.RouteConfig<TosRoute>(TosRoute.name,
             path: '/tos', routeBuilder: (match) => TosRoute.fromMatch(match))
       ];
@@ -313,6 +365,15 @@ class ContactRoute extends _i1.PageRouteInfo {
   ContactRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'ContactRoute';
+}
+
+class QuotesDeepRoute extends _i1.PageRouteInfo {
+  const QuotesDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: 'quotes', initialChildren: children);
+
+  QuotesDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'QuotesDeepRoute';
 }
 
 class DashboardPageRoute extends _i1.PageRouteInfo {
@@ -382,6 +443,23 @@ class SignupRoute extends _i1.PageRouteInfo {
   static const String name = 'SignupRoute';
 }
 
+class SignOutRoute extends _i1.PageRouteInfo {
+  const SignOutRoute() : super(name, path: '/signout');
+
+  SignOutRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'SignOutRoute';
+}
+
+class ExtDeepRoute extends _i1.PageRouteInfo {
+  const ExtDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: '/ext', initialChildren: children);
+
+  ExtDeepRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'ExtDeepRoute';
+}
+
 class TosRoute extends _i1.PageRouteInfo {
   const TosRoute() : super(name, path: '/tos');
 
@@ -418,6 +496,27 @@ class AuthorPageRoute extends _i1.PageRouteInfo {
   static const String name = 'AuthorPageRoute';
 }
 
+class RecentQuotesRoute extends _i1.PageRouteInfo {
+  RecentQuotesRoute({this.showNavBackIcon = true})
+      : super(name, path: 'recent');
+
+  RecentQuotesRoute.fromMatch(_i1.RouteMatch match)
+      : showNavBackIcon = null,
+        super.fromMatch(match);
+
+  final bool showNavBackIcon;
+
+  static const String name = 'RecentQuotesRoute';
+}
+
+class RandomQuotesRoute extends _i1.PageRouteInfo {
+  const RandomQuotesRoute() : super(name, path: 'random');
+
+  RandomQuotesRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'RandomQuotesRoute';
+}
+
 class AddQuoteStepsRoute extends _i1.PageRouteInfo {
   AddQuoteStepsRoute({this.key, this.step = 0})
       : super(name, path: 'addquote', queryParams: {'step': step});
@@ -427,7 +526,7 @@ class AddQuoteStepsRoute extends _i1.PageRouteInfo {
         step = match.queryParams.getInt('step', 0),
         super.fromMatch(match);
 
-  final _i26.Key key;
+  final _i28.Key key;
 
   final int step;
 
@@ -573,4 +672,12 @@ class ReferencePageRoute extends _i1.PageRouteInfo {
   final String referenceImageUrl;
 
   static const String name = 'ReferencePageRoute';
+}
+
+class GitHubRoute extends _i1.PageRouteInfo {
+  const GitHubRoute() : super(name, path: 'github');
+
+  GitHubRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'GitHubRoute';
 }

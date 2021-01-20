@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -208,7 +207,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
         left: 20.0,
         right: 20.0,
       ),
-      child: PopupMenuButton<String>(
+      child: PopupMenuButton<PageRouteInfo>(
         icon: CircleAvatar(
           backgroundColor: stateColors.primary,
           radius: 20.0,
@@ -219,53 +218,20 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
         ),
-        onSelected: (value) {
-          if (value == 'signout') {
+        onSelected: (pageRouteInfo) {
+          if (pageRouteInfo.routeName == 'SignOutRoute') {
             stateUser.signOut(
               context: context,
               redirectOnComplete: true,
             );
-
             return;
           }
 
-          switch (value) {
-            case RouteNames.FavouritesRoute:
-              context.router.root.navigate(
-                DashboardPageRoute(children: [FavouritesRoute()]),
-              );
-              break;
-            case RouteNames.ListsRoute:
-              context.router.root.navigate(
-                DashboardPageRoute(children: [QuotesListsRoute()]),
-              );
-              break;
-            case RouteNames.DraftsRoute:
-              context.router.root.navigate(
-                DashboardPageRoute(children: [DraftsRoute()]),
-              );
-              break;
-            case RouteNames.PublishedQuotesRoute:
-              context.router.root.navigate(
-                DashboardPageRoute(children: [MyPublishedQuotesRoute()]),
-              );
-              break;
-            case RouteNames.TempQuotesRoute:
-              context.router.root.navigate(
-                DashboardPageRoute(children: [MyTempQuotesRoute()]),
-              );
-              break;
-            case RouteNames.AccountRoute:
-              context.router.root.navigate(
-                SettingsRoute(),
-              );
-              break;
-            default:
-          }
+          context.router.root.navigate(pageRouteInfo);
         },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<PageRouteInfo>>[
           const PopupMenuItem(
-              value: RouteNames.FavouritesRoute,
+              value: DashboardPageRoute(children: [FavouritesRoute()]),
               child: ListTile(
                 leading: Icon(Icons.favorite),
                 title: Text(
@@ -274,7 +240,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                 ),
               )),
           const PopupMenuItem(
-              value: RouteNames.ListsRoute,
+              value: DashboardPageRoute(children: [QuotesListsRoute()]),
               child: ListTile(
                 leading: Icon(Icons.list),
                 title: Text(
@@ -283,7 +249,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: RouteNames.DraftsRoute,
+            value: DashboardPageRoute(children: [DraftsRoute()]),
             child: ListTile(
               leading: Icon(Icons.edit),
               title: Text(
@@ -293,7 +259,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
           const PopupMenuItem(
-            value: RouteNames.PublishedQuotesRoute,
+            value: DashboardPageRoute(children: [MyPublishedQuotesRoute()]),
             child: ListTile(
               leading: Icon(Icons.cloud_done),
               title: Text(
@@ -303,7 +269,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
           const PopupMenuItem(
-              value: RouteNames.TempQuotesRoute,
+              value: DashboardPageRoute(children: [MyTempQuotesRoute()]),
               child: ListTile(
                 leading: Icon(Icons.timelapse),
                 title: Text(
@@ -312,7 +278,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                 ),
               )),
           const PopupMenuItem(
-            value: RouteNames.AccountRoute,
+            value: SettingsRoute(),
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
@@ -322,7 +288,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
             ),
           ),
           const PopupMenuItem(
-            value: 'signout',
+            value: SignOutRoute(),
             child: ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text(

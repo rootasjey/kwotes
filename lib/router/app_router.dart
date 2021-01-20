@@ -16,6 +16,8 @@ import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/quotes_list.dart';
 import 'package:figstyle/screens/quotes_lists.dart';
 import 'package:figstyle/screens/quotidians.dart';
+import 'package:figstyle/screens/random_quotes.dart';
+import 'package:figstyle/screens/recent_quotes.dart';
 import 'package:figstyle/screens/reference_page.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/screens/search.dart';
@@ -41,15 +43,16 @@ export 'app_router.gr.dart';
       ],
     ),
     MaterialRoute(path: '/contact', page: Contact),
-    // AutoRoute(
-    //   path: 'quotes',
-    //   page: EmptyRouterPage,
-    //   name: 'QuotesDeepRoute',
-    //   children: [
-    //     RedirectRoute(path: '', redirectTo: 'recent'),
-    //     AutoRoute(path: 'recent', page: RecentQuotes),
-    //   ],
-    // ),
+    AutoRoute(
+      path: 'quotes',
+      page: EmptyRouterPage,
+      name: 'QuotesDeepRoute',
+      children: [
+        RedirectRoute(path: '', redirectTo: 'recent'),
+        AutoRoute(path: 'recent', page: RecentQuotes),
+        AutoRoute(path: 'random', page: RandomQuotes),
+      ],
+    ),
     AutoRoute(
       path: '/dashboard',
       page: DashboardPage,
@@ -110,6 +113,23 @@ export 'app_router.gr.dart';
     MaterialRoute(path: '/search', page: Search),
     MaterialRoute(path: '/signin', page: Signin),
     MaterialRoute(path: '/signup', page: Signup),
+    MaterialRoute(
+      path: '/signout',
+      page: EmptyRouterPage,
+      name: 'SignOutRoute',
+    ),
+    AutoRoute(
+      path: '/ext',
+      page: EmptyRouterPage,
+      name: 'ExtDeepRoute',
+      children: [
+        MaterialRoute(
+          path: 'github',
+          page: EmptyRouterPage,
+          name: 'GitHubRoute',
+        ),
+      ],
+    ),
     MaterialRoute(path: '/tos', page: Tos),
     // RedirectRoute(path: '*', redirectTo: '/'),
   ],

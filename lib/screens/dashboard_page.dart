@@ -123,6 +123,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           item.destination.show(context);
                           return;
                         }
+
                         router.navigate(item.destination);
                       },
                     );
