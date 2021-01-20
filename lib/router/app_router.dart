@@ -7,6 +7,7 @@ import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/authors.dart';
 import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/dashboard_page.dart';
+import 'package:figstyle/screens/delete_account.dart';
 import 'package:figstyle/screens/drafts.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/forgot_password.dart';
@@ -26,6 +27,9 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/screens/tos.dart';
+import 'package:figstyle/screens/update_email.dart';
+import 'package:figstyle/screens/update_password.dart';
+import 'package:figstyle/screens/update_username.dart';
 
 export 'app_router.gr.dart';
 
@@ -89,6 +93,30 @@ export 'app_router.gr.dart';
         ),
         AutoRoute(path: 'published', page: MyPublishedQuotes),
         AutoRoute(path: 'temp', page: MyTempQuotes),
+        AutoRoute(
+          path: 'settings',
+          page: EmptyRouterPage,
+          name: 'DashboardSettingsDeepRoute',
+          children: [
+            MaterialRoute(
+              path: '',
+              page: Settings,
+              name: 'DashboardSettingsRoute',
+            ),
+            AutoRoute(path: 'delete/account', page: DeleteAccount),
+            AutoRoute(
+              path: 'update',
+              page: EmptyRouterPage,
+              name: 'AccountUpdateDeepRoute',
+              children: [
+                // RedirectRoute(path: '', redirectTo: 'email'),
+                MaterialRoute(path: 'email', page: UpdateEmail),
+                MaterialRoute(path: 'password', page: UpdatePassword),
+                MaterialRoute(path: 'username', page: UpdateUsername),
+              ],
+            ),
+          ],
+        ),
       ],
     ),
     AutoRoute(

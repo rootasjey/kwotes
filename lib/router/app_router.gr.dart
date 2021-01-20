@@ -28,10 +28,14 @@ import '../screens/quotidians.dart' as _i21;
 import '../screens/admin_temp_quotes.dart' as _i22;
 import '../screens/quotes_lists.dart' as _i23;
 import '../screens/quotes_list.dart' as _i24;
-import '../screens/topic_page.dart' as _i25;
-import '../screens/references.dart' as _i26;
-import '../screens/reference_page.dart' as _i27;
-import 'package:flutter/foundation.dart' as _i28;
+import '../screens/delete_account.dart' as _i25;
+import '../screens/update_email.dart' as _i26;
+import '../screens/update_password.dart' as _i27;
+import '../screens/update_username.dart' as _i28;
+import '../screens/topic_page.dart' as _i29;
+import '../screens/references.dart' as _i30;
+import '../screens/reference_page.dart' as _i31;
+import 'package:flutter/foundation.dart' as _i32;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
@@ -143,6 +147,10 @@ class AppRouter extends _i1.RootStackRouter {
     MyTempQuotesRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i20.MyTempQuotes());
     },
+    DashboardSettingsDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
     QuotidiansRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i21.Quotidians());
     },
@@ -161,21 +169,40 @@ class AppRouter extends _i1.RootStackRouter {
       return _i1.MaterialPageX(
           entry: entry, child: _i24.QuotesList(listId: route.listId));
     },
+    DashboardSettingsRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i7.Settings());
+    },
+    DeleteAccountRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i25.DeleteAccount());
+    },
+    AccountUpdateDeepRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
+    UpdateEmailRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i26.UpdateEmail());
+    },
+    UpdatePasswordRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i27.UpdatePassword());
+    },
+    UpdateUsernameRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i28.UpdateUsername());
+    },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i25.TopicPage(
+          child: _i29.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i26.References());
+      return _i1.MaterialPageX(entry: entry, child: _i30.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i27.ReferencePage(
+          child: _i31.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -278,7 +305,45 @@ class AppRouter extends _i1.RootStackRouter {
                       MyPublishedQuotesRoute.fromMatch(match)),
               _i1.RouteConfig<MyTempQuotesRoute>(MyTempQuotesRoute.name,
                   path: 'temp',
-                  routeBuilder: (match) => MyTempQuotesRoute.fromMatch(match))
+                  routeBuilder: (match) => MyTempQuotesRoute.fromMatch(match)),
+              _i1.RouteConfig<DashboardSettingsDeepRoute>(
+                  DashboardSettingsDeepRoute.name,
+                  path: 'settings',
+                  routeBuilder: (match) =>
+                      DashboardSettingsDeepRoute.fromMatch(match),
+                  children: [
+                    _i1.RouteConfig<DashboardSettingsRoute>(
+                        DashboardSettingsRoute.name,
+                        path: '',
+                        routeBuilder: (match) =>
+                            DashboardSettingsRoute.fromMatch(match)),
+                    _i1.RouteConfig<DeleteAccountRoute>(DeleteAccountRoute.name,
+                        path: 'delete/account',
+                        routeBuilder: (match) =>
+                            DeleteAccountRoute.fromMatch(match)),
+                    _i1.RouteConfig<AccountUpdateDeepRoute>(
+                        AccountUpdateDeepRoute.name,
+                        path: 'update',
+                        routeBuilder: (match) =>
+                            AccountUpdateDeepRoute.fromMatch(match),
+                        children: [
+                          _i1.RouteConfig<UpdateEmailRoute>(
+                              UpdateEmailRoute.name,
+                              path: 'email',
+                              routeBuilder: (match) =>
+                                  UpdateEmailRoute.fromMatch(match)),
+                          _i1.RouteConfig<UpdatePasswordRoute>(
+                              UpdatePasswordRoute.name,
+                              path: 'password',
+                              routeBuilder: (match) =>
+                                  UpdatePasswordRoute.fromMatch(match)),
+                          _i1.RouteConfig<UpdateUsernameRoute>(
+                              UpdateUsernameRoute.name,
+                              path: 'username',
+                              routeBuilder: (match) =>
+                                  UpdateUsernameRoute.fromMatch(match))
+                        ])
+                  ])
             ]),
         _i1.RouteConfig<TopicsDeepRoute>(TopicsDeepRoute.name,
             path: '/topics',
@@ -526,7 +591,7 @@ class AddQuoteStepsRoute extends _i1.PageRouteInfo {
         step = match.queryParams.getInt('step', 0),
         super.fromMatch(match);
 
-  final _i28.Key key;
+  final _i32.Key key;
 
   final int step;
 
@@ -584,6 +649,16 @@ class MyTempQuotesRoute extends _i1.PageRouteInfo {
   static const String name = 'MyTempQuotesRoute';
 }
 
+class DashboardSettingsDeepRoute extends _i1.PageRouteInfo {
+  const DashboardSettingsDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: 'settings', initialChildren: children);
+
+  DashboardSettingsDeepRoute.fromMatch(_i1.RouteMatch match)
+      : super.fromMatch(match);
+
+  static const String name = 'DashboardSettingsDeepRoute';
+}
+
 class QuotidiansRoute extends _i1.PageRouteInfo {
   const QuotidiansRoute() : super(name, path: 'quotidians');
 
@@ -628,6 +703,57 @@ class QuotesListRoute extends _i1.PageRouteInfo {
   final String listId;
 
   static const String name = 'QuotesListRoute';
+}
+
+class DashboardSettingsRoute extends _i1.PageRouteInfo {
+  const DashboardSettingsRoute() : super(name, path: '');
+
+  DashboardSettingsRoute.fromMatch(_i1.RouteMatch match)
+      : super.fromMatch(match);
+
+  static const String name = 'DashboardSettingsRoute';
+}
+
+class DeleteAccountRoute extends _i1.PageRouteInfo {
+  const DeleteAccountRoute() : super(name, path: 'delete/account');
+
+  DeleteAccountRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'DeleteAccountRoute';
+}
+
+class AccountUpdateDeepRoute extends _i1.PageRouteInfo {
+  const AccountUpdateDeepRoute({List<_i1.PageRouteInfo> children})
+      : super(name, path: 'update', initialChildren: children);
+
+  AccountUpdateDeepRoute.fromMatch(_i1.RouteMatch match)
+      : super.fromMatch(match);
+
+  static const String name = 'AccountUpdateDeepRoute';
+}
+
+class UpdateEmailRoute extends _i1.PageRouteInfo {
+  const UpdateEmailRoute() : super(name, path: 'email');
+
+  UpdateEmailRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'UpdateEmailRoute';
+}
+
+class UpdatePasswordRoute extends _i1.PageRouteInfo {
+  const UpdatePasswordRoute() : super(name, path: 'password');
+
+  UpdatePasswordRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'UpdatePasswordRoute';
+}
+
+class UpdateUsernameRoute extends _i1.PageRouteInfo {
+  const UpdateUsernameRoute() : super(name, path: 'username');
+
+  UpdateUsernameRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'UpdateUsernameRoute';
 }
 
 class TopicPageRoute extends _i1.PageRouteInfo {

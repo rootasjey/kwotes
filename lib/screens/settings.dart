@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/screens/update_username.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -15,15 +16,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
-import 'package:figstyle/screens/delete_account.dart';
-import 'package:figstyle/screens/update_email.dart';
-import 'package:figstyle/screens/update_password.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Settings extends StatefulWidget {
@@ -230,17 +227,6 @@ class _SettingsState extends State<Settings> {
                     width: 80.0)
                 : Image.asset(path, width: 80.0),
           ),
-          onTap: isUserConnected
-              ? () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return showAvatarDialog();
-                    },
-                  );
-                }
-              : null,
         ),
       ),
     );
@@ -381,8 +367,8 @@ class _SettingsState extends State<Settings> {
           child: Card(
             elevation: 4.0,
             child: InkWell(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => DeleteAccount()),
+              onTap: () => context.router.push(
+                DeleteAccountRoute(),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -407,13 +393,11 @@ class _SettingsState extends State<Settings> {
   Widget emailButton() {
     return FlatButton(
       onPressed: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => UpdateEmail(),
+        context.router.push(
+          AccountUpdateDeepRoute(
+            children: [UpdateEmailRoute()],
           ),
         );
-
-        checkAuth();
       },
       onLongPress: () {
         showDialog(
@@ -513,7 +497,13 @@ class _SettingsState extends State<Settings> {
 
   Widget updateUsernameButton(bool isUserConnected) {
     return FlatButton(
-      onPressed: () => showUpdateNameDialog(),
+      onPressed: () {
+        context.router.push(
+          AccountUpdateDeepRoute(
+            children: [UpdateUsernameRoute()],
+          ),
+        );
+      },
       child: Container(
         width: 250.0,
         padding: const EdgeInsets.all(5.0),
@@ -550,17 +540,6 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
-  }
-
-  Future showUpdateNameDialog() async {
-    await showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => UpdateUsername(
-        scrollController: ModalScrollController.of(context),
-      ),
-    );
-
-    checkAuth();
   }
 
   Widget langSelect() {
@@ -696,8 +675,11 @@ class _SettingsState extends State<Settings> {
             elevation: 4.0,
             child: InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => UpdatePassword()));
+                context.router.push(
+                  AccountUpdateDeepRoute(
+                    children: [UpdatePasswordRoute()],
+                  ),
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.all(15.0),

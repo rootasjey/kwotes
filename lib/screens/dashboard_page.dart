@@ -44,6 +44,14 @@ class _DashboardPageState extends State<DashboardPage> {
       label: 'My Temporary',
       hoverColor: Colors.yellow.shade800,
     ),
+    SideMenuItem(
+      destination: DashboardSettingsDeepRoute(
+        children: [DashboardSettingsRoute()],
+      ),
+      iconData: Icons.settings,
+      label: 'Settings',
+      hoverColor: Colors.blueGrey,
+    ),
   ];
 
   @override

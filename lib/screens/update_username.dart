@@ -15,10 +15,6 @@ import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class UpdateUsername extends StatefulWidget {
-  final ScrollController scrollController;
-
-  UpdateUsername({this.scrollController});
-
   @override
   _UpdateUsernameState createState() => _UpdateUsernameState();
 }
@@ -33,6 +29,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
   final beginY = 10.0;
   final passwordNode = FocusNode();
   final usernameController = TextEditingController();
+  final _pageScrollController = ScrollController();
 
   String currentUsername = '';
   String nameErrorMessage = '';
@@ -57,7 +54,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
-        controller: widget.scrollController,
+        controller: _pageScrollController,
         slivers: <Widget>[
           SliverPadding(
             padding: const EdgeInsets.only(top: 10.0),
@@ -83,8 +80,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       titlePadding: EdgeInsets.only(
         left: titleLeftPadding,
       ),
+      showNavBackIcon: true,
       expandedHeight: 90.0,
-      showCloseButton: true,
     );
   }
 
@@ -190,7 +187,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
                     Opacity(
                       opacity: 0.6,
                       child: Text(
-                        'Current email',
+                        'Current username',
                       ),
                     ),
                   ],
