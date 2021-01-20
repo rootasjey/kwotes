@@ -217,7 +217,7 @@ class _PageAppBarState extends State<PageAppBar> {
               child: IconButton(
                 color: stateColors.foreground,
                 icon: Icon(Icons.close),
-                onPressed: () => context.router.pop(),
+                onPressed: context.router.pop,
               ),
             ),
           ],
@@ -233,7 +233,7 @@ class _PageAppBarState extends State<PageAppBar> {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: CircleButton(
-                onTap: () => context.router.pop(),
+                onTap: context.router.pop,
                 icon: Icon(Icons.arrow_back, color: stateColors.foreground),
               ),
             ),
@@ -323,12 +323,12 @@ class _PageAppBarState extends State<PageAppBar> {
         children: [
           if (widget.showNavBackIcon)
             CircleButton(
-                onTap: () => context.router.pop(),
+                onTap: context.router.pop,
                 icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
           AppIcon(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             size: 30.0,
-            onTap: widget.onIconPressed,
+            onTap: widget.onIconPressed ?? context.router.pop,
           ),
           Expanded(
             child: InkWell(
@@ -367,7 +367,7 @@ class _PageAppBarState extends State<PageAppBar> {
               child: IconButton(
                 color: stateColors.foreground,
                 icon: Icon(Icons.close),
-                onPressed: () => context.router.pop(),
+                onPressed: context.router.pop,
               ),
             ),
         ],

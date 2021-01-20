@@ -1,7 +1,9 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +16,6 @@ import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
@@ -127,7 +128,7 @@ class _QuotesListState extends State<QuotesList> {
         child: Row(
           children: [
             CircleButton(
-                onTap: () => Navigator.of(context).pop(),
+                onTap: context.router.pop,
                 icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
             AppIcon(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -176,9 +177,9 @@ class _QuotesListState extends State<QuotesList> {
                   listName: quotesList.name,
                   listIsPublic: quotesList.isPublic,
                   subtitle: quotesList.name,
-                  onCancel: () => Navigator.of(context).pop(),
+                  onCancel: context.router.pop,
                   onConfirm: (payload) {
-                    Navigator.of(context).pop();
+                    context.router.pop();
                     updateCurrentList(payload);
                   },
                 ),
@@ -189,9 +190,9 @@ class _QuotesListState extends State<QuotesList> {
                 onPressed: () => showDeleteListDialog(
                   context: context,
                   listName: quotesList.name,
-                  onCancel: () => Navigator.of(context).pop(),
+                  onCancel: context.router.pop,
                   onConfirm: () {
-                    Navigator.of(context).pop();
+                    context.router.pop();
                     deleteCurrentList();
                   },
                 ),
@@ -311,9 +312,9 @@ class _QuotesListState extends State<QuotesList> {
             showDeleteListDialog(
               context: context,
               listName: quotesList.name,
-              onCancel: () => Navigator.of(context).pop(),
+              onCancel: context.router.pop,
               onConfirm: () {
-                Navigator.of(context).pop();
+                context.router.pop();
                 deleteCurrentList();
               },
             );
@@ -325,9 +326,9 @@ class _QuotesListState extends State<QuotesList> {
               listName: quotesList.name,
               listIsPublic: quotesList.isPublic,
               subtitle: quotesList.name,
-              onCancel: () => Navigator.of(context).pop(),
+              onCancel: context.router.pop,
               onConfirm: (payload) {
-                Navigator.of(context).pop();
+                context.router.pop();
                 updateCurrentList(payload);
               },
             );
@@ -404,7 +405,7 @@ class _QuotesListState extends State<QuotesList> {
           isLoading = false;
         });
 
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        context.router.root.push(SigninRoute());
         return;
       }
 
@@ -422,7 +423,7 @@ class _QuotesListState extends State<QuotesList> {
           type: SnackType.error,
         );
 
-        Navigator.of(context).pop();
+        context.router.pop();
         return;
       }
 
@@ -483,7 +484,7 @@ class _QuotesListState extends State<QuotesList> {
           isLoadingMore = false;
         });
 
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
+        context.router.root.push(SigninRoute());
         return;
       }
 
@@ -550,7 +551,7 @@ class _QuotesListState extends State<QuotesList> {
       return;
     }
 
-    Navigator.pop(context, true);
+    context.router.pop();
   }
 
   void removeQuote(Quote quote) async {

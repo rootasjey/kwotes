@@ -149,7 +149,6 @@ class _FavouritesState extends State<Favourites> {
           curve: Curves.easeIn,
         );
       },
-      onIconPressed: () => Navigator.of(context).pop(),
       descending: descending,
       onDescendingChanged: (newDescending) {
         if (descending == newDescending) {
