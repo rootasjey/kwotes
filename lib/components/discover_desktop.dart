@@ -4,13 +4,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/screens/authors.dart';
-import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/screens/references.dart';
 import 'package:figstyle/types/reference.dart';
@@ -511,34 +509,12 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   }
 
   void onTapQuote(Quote quote) {
-    showFlash(
-      context: context,
-      persistent: false,
-      builder: (context, controller) {
-        return Flash.dialog(
-          controller: controller,
-          backgroundColor: stateColors.appBackground.withOpacity(1.0),
-          enableDrag: true,
-          margin: const EdgeInsets.only(
-            left: 120.0,
-            right: 120.0,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          child: FlashBar(
-            message: Container(
-              height: MediaQuery.of(context).size.height - 100.0,
-              padding: const EdgeInsets.all(60.0),
-              child: QuotePage(
-                pinnedAppBar: false,
-                quote: quote,
-                quoteId: quote.id,
-              ),
-            ),
-          ),
-        );
-      },
+    context.router.push(
+      QuotesDeepRoute(children: [
+        QuotePageRoute(
+          quoteId: quote.id,
+        )
+      ]),
     );
   }
 }

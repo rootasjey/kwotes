@@ -1,16 +1,16 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
-import 'package:figstyle/screens/quote_page.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:figstyle/utils/language.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -100,7 +100,7 @@ class _RecentHeroState extends State<RecentHero> {
         runSpacing: 20.0,
         children: [
           ElevatedButton.icon(
-            onPressed: showQuotidian,
+            onPressed: navigateToQuote,
             icon: icon,
             label: Text(
               "Tap here to see today quote",
@@ -479,35 +479,14 @@ class _RecentHeroState extends State<RecentHero> {
     }
   }
 
-  void showQuotidian() {
-    showFlash(
-      context: context,
-      persistent: false,
-      builder: (context, controller) {
-        return Flash.dialog(
-          controller: controller,
-          backgroundColor: stateColors.appBackground.withOpacity(1.0),
-          enableDrag: true,
-          margin: const EdgeInsets.only(
-            left: 120.0,
-            right: 120.0,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          child: FlashBar(
-            message: Container(
-              height: MediaQuery.of(context).size.height - 100.0,
-              padding: const EdgeInsets.all(60.0),
-              child: QuotePage(
-                pinnedAppBar: false,
-                quote: quotidian.quote,
-                quoteId: quotidian.quote.id,
-              ),
-            ),
-          ),
-        );
-      },
+  void navigateToQuote() {
+    context.router.push(
+      QuotesDeepRoute(children: [
+        QuotePageRoute(
+          quoteId: quotidian.quote.id,
+          quote: quotidian.quote,
+        )
+      ]),
     );
   }
 }

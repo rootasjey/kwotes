@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
-import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -233,13 +232,12 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         appStorage.setString(StorageKeys.quoteIdNotification, '');
 
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => QuotePage(
-            padding: const EdgeInsets.only(left: 10.0),
-            quoteId: quoteId,
-            scrollController: ModalScrollController.of(context),
-          ),
+        context.router.push(
+          QuotesDeepRoute(children: [
+            QuotePageRoute(
+              quoteId: quoteId,
+            )
+          ]),
         );
       });
     }

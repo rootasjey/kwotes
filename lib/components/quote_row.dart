@@ -5,16 +5,12 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/utils/constants.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:mobx/mobx.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuoteRow extends StatefulWidget {
@@ -549,53 +545,18 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
   Future onQuoteTap() async {
     final quote = widget.quote;
-    final id = quote.quoteId != null && quote.quoteId.isNotEmpty
+    final quoteId = quote.quoteId != null && quote.quoteId.isNotEmpty
         ? quote.quoteId
         : quote.id;
 
-    final size = MediaQuery.of(context).size;
-
-    if (size.width > Constants.maxMobileWidth &&
-        size.height > Constants.maxMobileWidth) {
-      await showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.symmetric(
-              horizontal: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: QuotePage(
-                  pinnedAppBar: false,
-                  quote: widget.quote,
-                  quoteId: id,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    } else {
-      await showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) => QuotePage(
-          padding: const EdgeInsets.only(left: 10.0),
-          quote: widget.quote,
-          quoteId: id,
-          scrollController: ModalScrollController.of(context),
-        ),
-      );
-    }
+    await context.router.push(
+      QuotesDeepRoute(children: [
+        QuotePageRoute(
+          quoteId: quoteId,
+          quote: quote,
+        )
+      ]),
+    );
 
     if (stateUser.mustUpdateFav) {
       stateUser.mustUpdateFav = false;

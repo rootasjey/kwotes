@@ -14,6 +14,7 @@ import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/my_published_quotes.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
+import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/screens/quotes_list.dart';
 import 'package:figstyle/screens/quotes_lists.dart';
 import 'package:figstyle/screens/quotidians.dart';
@@ -48,13 +49,14 @@ export 'app_router.gr.dart';
     ),
     MaterialRoute(path: '/contact', page: Contact),
     AutoRoute(
-      path: 'quotes',
+      path: '/quotes',
       page: EmptyRouterPage,
       name: 'QuotesDeepRoute',
       children: [
         RedirectRoute(path: '', redirectTo: 'recent'),
         AutoRoute(path: 'recent', page: RecentQuotes),
         AutoRoute(path: 'random', page: RandomQuotes),
+        MaterialRoute(path: ':quoteId', page: QuotePage),
       ],
     ),
     AutoRoute(

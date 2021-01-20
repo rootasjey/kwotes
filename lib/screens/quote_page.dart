@@ -21,21 +21,16 @@ import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotePage extends StatefulWidget {
-  final bool pinnedAppBar;
-
-  final EdgeInsets padding;
-
+  /// Quote object to show. If not available,
+  /// the [quoteId] parameter can be specfied.
   final Quote quote;
 
-  final ScrollController scrollController;
+  /// Quote's id to show. Cannot be null.
   final String quoteId;
 
   QuotePage({
-    this.padding = EdgeInsets.zero,
-    this.pinnedAppBar = true,
-    this.quoteId,
+    @PathParam('quoteId') this.quoteId,
     this.quote,
-    this.scrollController,
   });
 
   @override
@@ -46,6 +41,8 @@ class _QuotePageState extends State<QuotePage> {
   bool isLoading = false;
 
   Color accentColor = Colors.blue;
+
+  final _pageScrollController = ScrollController();
 
   List<TopicColor> topicColors = [];
 
@@ -73,11 +70,9 @@ class _QuotePageState extends State<QuotePage> {
     return Scaffold(
       body: CustomScrollView(
         physics: ClampingScrollPhysics(),
-        controller: widget.scrollController,
+        controller: _pageScrollController,
         slivers: <Widget>[
           DesktopAppBar(
-            padding: widget.padding,
-            pinned: widget.pinnedAppBar,
             showCloseButton: true,
             showUserMenu: false,
           ),

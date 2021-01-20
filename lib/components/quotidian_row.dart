@@ -1,15 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/types/quotidian.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class QuotidianRow extends StatefulWidget {
   final bool useSwipeActions;
@@ -397,45 +395,13 @@ class _QuotidianRowState extends State<QuotidianRow> {
     return "$day/$month/$year";
   }
 
-  Future onTap(String id) {
-    if (MediaQuery.of(context).size.width > 600.0) {
-      return showFlash(
-        context: context,
-        persistent: false,
-        builder: (context, controller) {
-          return Flash.dialog(
-            controller: controller,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            enableDrag: true,
-            margin: const EdgeInsets.only(
-              left: 120.0,
-              right: 120.0,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-            child: FlashBar(
-              message: Container(
-                height: MediaQuery.of(context).size.height - 100.0,
-                padding: const EdgeInsets.all(60.0),
-                child: QuotePage(
-                  pinnedAppBar: false,
-                  quoteId: id,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => QuotePage(
-        padding: const EdgeInsets.only(left: 10.0),
-        quoteId: id,
-        scrollController: ModalScrollController.of(context),
-      ),
+  void onTap(String quoteId) {
+    context.router.push(
+      QuotesDeepRoute(children: [
+        QuotePageRoute(
+          quoteId: quoteId,
+        )
+      ]),
     );
   }
 }
