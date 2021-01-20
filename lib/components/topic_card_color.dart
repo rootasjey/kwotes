@@ -140,7 +140,7 @@ class _TopicCardColorState extends State<TopicCardColor> {
 
   Widget withTooltip({Widget child}) {
     return Tooltip(
-      message: widget.name,
+      message: widget.tooltip,
       child: child,
     );
   }
