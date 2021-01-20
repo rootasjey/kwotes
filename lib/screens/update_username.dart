@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -56,10 +57,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       body: CustomScrollView(
         controller: _pageScrollController,
         slivers: <Widget>[
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 10.0),
-            sliver: appBar(),
-          ),
+          SliverEdgePadding(),
+          appBar(),
           body(),
         ],
       ),

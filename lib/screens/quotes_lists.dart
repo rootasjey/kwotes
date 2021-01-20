@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
+import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
@@ -93,7 +94,7 @@ class _QuotesListsState extends State<QuotesLists> {
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
-                SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
+                SliverEdgePadding(),
                 appBar(),
                 body(),
               ],

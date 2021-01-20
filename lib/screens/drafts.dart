@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class _DraftsState extends State<Drafts> {
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
-                SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
+                SliverEdgePadding(),
                 appBar(),
                 body(),
               ],

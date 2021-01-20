@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:figstyle/components/animated_app_icon.dart';
+import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,6 +58,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
+          SliverEdgePadding(),
           appBar(),
           body(),
         ],

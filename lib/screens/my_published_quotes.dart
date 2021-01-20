@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +109,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
                   builder: (_) => CustomScrollView(
                     controller: scrollController,
                     slivers: <Widget>[
-                      SliverPadding(padding: const EdgeInsets.only(top: 40.0)),
+                      SliverEdgePadding(),
                       appBar(),
                       body(),
                     ],
