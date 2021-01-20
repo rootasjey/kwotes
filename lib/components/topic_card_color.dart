@@ -11,6 +11,8 @@ class TopicCardColor extends StatefulWidget {
   final double elevation;
   final double size;
 
+  final EdgeInsets padding;
+
   final Function onColorTap;
   final Function onTextTap;
 
@@ -28,6 +30,7 @@ class TopicCardColor extends StatefulWidget {
     this.onColorTap,
     this.onTextTap,
     this.outline = false,
+    this.padding = const EdgeInsets.all(10.0),
     this.size = 70.0,
     this.style,
     this.tooltip,
@@ -37,21 +40,32 @@ class TopicCardColor extends StatefulWidget {
   _TopicCardColorState createState() => _TopicCardColorState();
 }
 
-class _TopicCardColorState extends State<TopicCardColor> {
-  double growSize = 0.0;
-  double size;
+class _TopicCardColorState extends State<TopicCardColor>
+    with TickerProviderStateMixin {
+  Animation<double> scaleAnimation;
+  AnimationController scaleAnimationController;
 
   @override
   void initState() {
     super.initState();
-    size = widget.size;
-    growSize = widget.size + 5.0;
+
+    scaleAnimationController = AnimationController(
+      lowerBound: 0.6,
+      upperBound: 1.0,
+      duration: 250.milliseconds,
+      vsync: this,
+    );
+
+    scaleAnimation = CurvedAnimation(
+      parent: scaleAnimationController,
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(0.0),
       child: Column(
         children: <Widget>[
           cardColor(context: context),
@@ -61,47 +75,52 @@ class _TopicCardColorState extends State<TopicCardColor> {
     );
   }
 
+  @override
+  dispose() {
+    scaleAnimationController?.dispose();
+    super.dispose();
+  }
+
   Widget cardColor({BuildContext context}) {
-    final card = AnimatedContainer(
-      height: size,
-      width: size,
-      duration: 250.milliseconds,
-      curve: Curves.bounceInOut,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: widget.outline ? widget.color : Colors.transparent,
+    final card = ScaleTransition(
+      scale: scaleAnimation,
+      child: Container(
+        height: widget.size,
+        width: widget.size,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: widget.outline ? widget.color : Colors.transparent,
+            ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: widget.elevation,
-        color: widget.outline ? Colors.transparent : widget.color,
-        child: InkWell(
-          onTap: () {
-            if (widget.onColorTap != null) {
-              widget.onColorTap();
-              return;
-            }
+          elevation: widget.elevation,
+          color: widget.outline ? Colors.transparent : widget.color,
+          child: InkWell(
+            onTap: () {
+              if (widget.onColorTap != null) {
+                widget.onColorTap();
+                return;
+              }
 
-            context.router.root.push(
-              TopicsDeepRoute(
-                children: [
-                  TopicPageRoute(
-                    topicName: widget.name,
-                  )
-                ],
-              ),
-            );
-          },
-          onHover: (isHover) {
-            if (isHover) {
-              size = growSize;
-            } else {
-              size = widget.size;
-            }
-
-            setState(() {});
-          },
+              context.router.root.push(
+                TopicsDeepRoute(
+                  children: [
+                    TopicPageRoute(
+                      topicName: widget.name,
+                    )
+                  ],
+                ),
+              );
+            },
+            onHover: (isHover) {
+              if (isHover) {
+                scaleAnimationController.forward();
+              } else {
+                scaleAnimationController.reverse();
+              }
+            },
+          ),
         ),
       ),
     );
