@@ -10,7 +10,6 @@ import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/utils/icons_more_icons.dart';
 import 'package:figstyle/screens/dashboard_mobile_tab.dart';
 import 'package:figstyle/screens/discover.dart';
 import 'package:figstyle/screens/recent_quotes.dart';
@@ -193,7 +192,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              IconsMore.tags,
+              Icons.tag,
             ),
             label: 'Topics',
           ),
