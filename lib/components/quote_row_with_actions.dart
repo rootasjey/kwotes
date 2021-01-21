@@ -1,5 +1,6 @@
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -522,28 +523,35 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       ]);
     }
 
+    int flex =
+        MediaQuery.of(context).size.width < Constants.maxMobileWidth ? 5 : 1;
+
     showCustomModalBottomSheet(
       context: context,
       builder: (context) {
-        return Material(
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: children,
-            ),
-          ),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
         );
       },
       containerWidget: (context, animation, child) {
         return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Material(
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(12.0),
-              child: child,
-            ),
+          child: Row(
+            children: [
+              Spacer(),
+              Expanded(
+                flex: flex,
+                child: Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Material(
+                    clipBehavior: Clip.antiAlias,
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: child,
+                  ),
+                ),
+              ),
+              Spacer(),
+            ],
           ),
         );
       },
