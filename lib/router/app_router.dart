@@ -31,6 +31,7 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/screens/topic_page.dart';
 import 'package:figstyle/screens/tos.dart';
+import 'package:figstyle/screens/undefined_page.dart';
 import 'package:figstyle/screens/update_email.dart';
 import 'package:figstyle/screens/update_password.dart';
 import 'package:figstyle/screens/update_username.dart';
@@ -166,7 +167,7 @@ export 'app_router.gr.dart';
       ],
     ),
     MaterialRoute(path: '/tos', page: Tos),
-    // RedirectRoute(path: '*', redirectTo: '/'),
+    MaterialRoute(path: '*', page: UndefinedPage),
   ],
 )
 class $AppRouter {}
