@@ -1,5 +1,8 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:figstyle/router/admin_auth_guard.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/router/auth_guard.dart';
+import 'package:figstyle/router/no_auth_guard.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,7 +38,11 @@ class App extends StatefulWidget {
 
 /// Main app class state.
 class AppState extends State<App> {
-  final appRouter = AppRouter();
+  final appRouter = AppRouter(
+    adminAuthGuard: AdminAuthGuard(),
+    authGuard: AuthGuard(),
+    noAuthGuard: NoAuthGuard(),
+  );
 
   @override
   Widget build(BuildContext context) {

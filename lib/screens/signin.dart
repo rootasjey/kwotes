@@ -15,6 +15,10 @@ import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Signin extends StatefulWidget {
+  final void Function(bool isAuthenticated) onSigninResult;
+
+  const Signin({Key key, this.onSigninResult}) : super(key: key);
+
   @override
   _SigninState createState() => _SigninState();
 }
@@ -401,6 +405,13 @@ class _SigninState extends State<Signin> {
 
       isSigningIn = false;
       isCompleted = true;
+
+      // If this callback is defined,
+      // this page is call from AuthGuard.
+      if (widget.onSigninResult != null) {
+        widget.onSigninResult(true);
+        return;
+      }
 
       context.router.navigate(HomeRoute());
     } catch (error) {

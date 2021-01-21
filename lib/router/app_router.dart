@@ -1,5 +1,8 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/admin_auth_guard.dart';
+import 'package:figstyle/router/auth_guard.dart';
+import 'package:figstyle/router/no_auth_guard.dart';
 import 'package:figstyle/screens/about.dart';
 import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/admin_temp_quotes.dart';
@@ -62,6 +65,7 @@ export 'app_router.gr.dart';
     AutoRoute(
       path: '/dashboard',
       page: DashboardPage,
+      guards: [AuthGuard],
       children: [
         RedirectRoute(path: '', redirectTo: 'fav'),
         AutoRoute(path: 'addquote', page: AddQuoteSteps),
@@ -69,6 +73,7 @@ export 'app_router.gr.dart';
           path: 'admin',
           page: EmptyRouterPage,
           name: 'AdminDeepRoute',
+          guards: [AdminAuthGuard],
           children: [
             RedirectRoute(path: '', redirectTo: 'temp'),
             MaterialRoute(path: 'quotidians', page: Quotidians),
@@ -141,8 +146,8 @@ export 'app_router.gr.dart';
     ),
     MaterialRoute(path: '/settings', page: Settings),
     MaterialRoute(path: '/search', page: Search),
-    MaterialRoute(path: '/signin', page: Signin),
-    MaterialRoute(path: '/signup', page: Signup),
+    MaterialRoute(path: '/signin', page: Signin, guards: [NoAuthGuard]),
+    MaterialRoute(path: '/signup', page: Signup, guards: [NoAuthGuard]),
     MaterialRoute(
       path: '/signout',
       page: EmptyRouterPage,
