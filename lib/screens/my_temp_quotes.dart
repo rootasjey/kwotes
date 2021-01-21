@@ -10,7 +10,6 @@ import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
@@ -401,30 +400,23 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   Future fetch() async {
     setState(() {
       isLoading = true;
+      tempQuotes.clear();
     });
 
-    tempQuotes.clear();
-
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        throw Error();
-      }
-
       QuerySnapshot snapshot;
 
       if (lang == 'all') {
         snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
-            .where('user.id', isEqualTo: userAuth.uid)
+            .where('user.id', isEqualTo: stateUser.userAuth.uid)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
             .get();
       } else {
         snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
-            .where('user.id', isEqualTo: userAuth.uid)
+            .where('user.id', isEqualTo: stateUser.userAuth.uid)
             .where('lang', isEqualTo: lang)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
@@ -463,10 +455,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         isLoading = false;
         hasErrors = true;
       });
-
-      if (!stateUser.isUserConnected) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-      }
     }
   }
 
@@ -475,24 +463,16 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       return;
     }
 
-    setState(() {
-      isLoadingMore = true;
-    });
+    setState(() => isLoadingMore = true);
 
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        throw Error();
-      }
-
       QuerySnapshot snapshot;
 
       if (lang == 'all') {
         snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
             .startAfterDocument(lastDoc)
-            .where('user.id', isEqualTo: userAuth.uid)
+            .where('user.id', isEqualTo: stateUser.userAuth.uid)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
             .get();
@@ -500,7 +480,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         snapshot = await FirebaseFirestore.instance
             .collection('tempquotes')
             .startAfterDocument(lastDoc)
-            .where('user.id', isEqualTo: userAuth.uid)
+            .where('user.id', isEqualTo: stateUser.userAuth.uid)
             .where('lang', isEqualTo: lang)
             .orderBy('createdAt', descending: descending)
             .limit(limit)
@@ -530,10 +510,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       });
     } catch (error) {
       debugPrint(error.toString());
-
-      setState(() {
-        isLoadingMore = false;
-      });
+      setState(() => isLoadingMore = false);
     }
   }
 }

@@ -796,9 +796,7 @@ class _SettingsState extends State<Settings> {
     });
 
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
+      if (stateUser.userAuth == null) {
         stateUser.setUserDisconnected();
 
         setState(() {
@@ -811,7 +809,7 @@ class _SettingsState extends State<Settings> {
 
       final user = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .get();
 
       final data = user.data();
@@ -822,8 +820,7 @@ class _SettingsState extends State<Settings> {
       stateUser.setUserName(currentUserName);
 
       setState(() {
-        email = userAuth.email ?? '';
-
+        email = stateUser.userAuth.email ?? '';
         isLoadingImageURL = false;
         isLoadingLang = false;
       });

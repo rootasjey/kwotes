@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
-import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -394,30 +393,18 @@ class _QuotesListState extends State<QuotesList> {
   Future fetch() async {
     setState(() {
       isLoading = true;
+      quotes.clear();
     });
 
     try {
-      quotes.clear();
-
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        setState(() {
-          isLoading = false;
-        });
-
-        context.router.root.push(SigninRoute());
-        return;
-      }
-
-      final docList = await FirebaseFirestore.instance
+      final docListSnap = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('lists')
           .doc(widget.listId)
           .get();
 
-      if (!docList.exists) {
+      if (!docListSnap.exists) {
         showSnack(
           context: context,
           message: "This list doesn't' exist anymore",
@@ -428,22 +415,22 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      final data = docList.data();
-      data['id'] = docList.id;
+      final data = docListSnap.data();
+      data['id'] = docListSnap.id;
       quotesList = UserQuotesList.fromJSON(data);
 
       updateListIsPublic = quotesList.isPublic;
 
-      final collSnap = await FirebaseFirestore.instance
+      final listQuotesSnap = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('lists')
           .doc(quotesList.id)
           .collection('quotes')
           .limit(limit)
           .get();
 
-      if (collSnap.docs.isEmpty) {
+      if (listQuotesSnap.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -452,7 +439,7 @@ class _QuotesListState extends State<QuotesList> {
         return;
       }
 
-      collSnap.docs.forEach((doc) {
+      listQuotesSnap.docs.forEach((doc) {
         final data = doc.data();
         data['id'] = doc.id;
         final quote = Quote.fromJSON(data);
@@ -460,7 +447,7 @@ class _QuotesListState extends State<QuotesList> {
       });
 
       setState(() {
-        hasNext = collSnap.docs.length == limit;
+        hasNext = listQuotesSnap.docs.length == limit;
         isLoading = false;
       });
     } catch (err) {
@@ -473,25 +460,12 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   void fetchMore() async {
-    setState(() {
-      isLoadingMore = true;
-    });
+    setState(() => isLoadingMore = true);
 
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        setState(() {
-          isLoadingMore = false;
-        });
-
-        context.router.root.push(SigninRoute());
-        return;
-      }
-
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('lists')
           .doc(quotesList.id)
           .collection('quotes')

@@ -491,9 +491,7 @@ class _QuotesListsState extends State<QuotesLists> {
     );
 
     if (!success) {
-      setState(() {
-        userQuotesLists.insert(index, quotesList);
-      });
+      setState(() => userQuotesLists.insert(index, quotesList));
 
       showSnack(
         context: context,
@@ -508,21 +506,13 @@ class _QuotesListsState extends State<QuotesLists> {
   Future fetch() async {
     setState(() {
       isLoading = true;
+      userQuotesLists.clear();
     });
 
     try {
-      userQuotesLists.clear();
-
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        context.router.root.navigate(SigninRoute());
-        return;
-      }
-
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('lists')
           .orderBy('updatedAt', descending: descending)
           .limit(limit)
@@ -553,29 +543,17 @@ class _QuotesListsState extends State<QuotesLists> {
       });
     } catch (error) {
       debugPrint(error.toString());
-
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
 
   void fetchMore() async {
-    setState(() {
-      isLoadingMore = true;
-    });
+    setState(() => isLoadingMore = true);
 
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        context.router.root.navigate(SigninRoute());
-        return;
-      }
-
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('lists')
           .orderBy('updatedAt', descending: descending)
           .startAfterDocument(lastDoc)
@@ -607,10 +585,7 @@ class _QuotesListsState extends State<QuotesLists> {
       });
     } catch (error) {
       debugPrint(error.toString());
-
-      setState(() {
-        isLoadingMore = false;
-      });
+      setState(() => isLoadingMore = false);
     }
   }
 

@@ -331,21 +331,15 @@ class _DraftsState extends State<Drafts> {
     try {
       fetchOffline();
 
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        throw Error();
-      }
-
-      final snapColl = await FirebaseFirestore.instance
+      final draftsSnap = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('drafts')
           .orderBy('createdAt', descending: descending)
           .limit(limit)
           .get();
 
-      if (snapColl.docs.isEmpty) {
+      if (draftsSnap.docs.isEmpty) {
         setState(() {
           hasNext = false;
           isLoading = false;
@@ -354,7 +348,7 @@ class _DraftsState extends State<Drafts> {
         return;
       }
 
-      snapColl.docs.forEach((doc) {
+      draftsSnap.docs.forEach((doc) {
         final data = doc.data();
         data['id'] = doc.id;
 
@@ -362,12 +356,12 @@ class _DraftsState extends State<Drafts> {
         drafts.add(draft);
       });
 
-      lastDoc = snapColl.docs.last;
+      lastDoc = draftsSnap.docs.last;
 
       setState(() {
         isLoading = false;
         hasErrors = false;
-        hasNext = snapColl.docs.length == limit;
+        hasNext = draftsSnap.docs.length == limit;
       });
     } catch (error) {
       debugPrint(error.toString());
@@ -380,20 +374,12 @@ class _DraftsState extends State<Drafts> {
       return;
     }
 
-    setState(() {
-      isLoadingMore = true;
-    });
+    setState(() => isLoadingMore = true);
 
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        throw Error();
-      }
-
       final snapColl = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('drafts')
           .startAfterDocument(lastDoc)
           .orderBy('createdAt', descending: descending)
@@ -436,9 +422,7 @@ class _DraftsState extends State<Drafts> {
   }
 
   void deleteAction({TempQuote draft, int index}) async {
-    setState(() {
-      drafts.removeAt(index);
-    });
+    setState(() => drafts.removeAt(index));
 
     bool success = false;
 

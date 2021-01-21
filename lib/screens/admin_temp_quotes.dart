@@ -404,10 +404,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       });
     } catch (error) {
       debugPrint(error.toString());
-
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
 
@@ -416,9 +413,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
       return;
     }
 
-    setState(() {
-      isLoadingMore = true;
-    });
+    setState(() => isLoadingMore = true);
 
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -446,13 +441,9 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         tempQuotes.insert(tempQuotes.length - 1, quote);
       });
 
-      setState(() {
-        isLoadingMore = false;
-      });
+      setState(() => isLoadingMore = false);
     } catch (error) {
-      setState(() {
-        isLoadingMore = false;
-      });
+      setState(() => isLoadingMore = false);
     }
   }
 }

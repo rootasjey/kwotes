@@ -8,7 +8,6 @@ import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
@@ -334,26 +333,13 @@ class _FavouritesState extends State<Favourites> {
   void fetch() async {
     setState(() {
       isLoading = true;
+      quotes.clear();
     });
 
-    quotes.clear();
-
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        setState(() {
-          isLoading = false;
-        });
-
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => Signin()));
-        return;
-      }
-
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('favourites')
           .orderBy('createdAt', descending: descending)
           .limit(limit)
@@ -394,20 +380,12 @@ class _FavouritesState extends State<Favourites> {
   }
 
   void fetchMore() async {
-    setState(() {
-      isLoadingMore = true;
-    });
+    setState(() => isLoadingMore = true);
 
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-      }
-
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(stateUser.userAuth.uid)
           .collection('favourites')
           .orderBy('createdAt', descending: true)
           .startAfterDocument(lastDoc)
