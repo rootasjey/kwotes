@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
@@ -114,12 +113,7 @@ class _PageAppBarState extends State<PageAppBar> {
             alignment: WrapAlignment.start,
             children: <Widget>[
               if (showOrderButtons) orderButton(),
-              if (showOrderButtons && showLangSelector)
-                separator(), // separator
               if (showLangSelector) langSelector(),
-              if (showLangSelector && showItemsLayout) separator(), // separator
-              if (showOrderButtons && showItemsLayout && !showLangSelector)
-                separator(), // separator
               if (showItemsLayout) itemsLayoutSelector(),
               ...widget.additionalIconButtons,
             ],
@@ -130,29 +124,18 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget itemsLayoutSelector() {
-    return DropdownButton<ItemsLayout>(
-      icon: Container(),
-      underline: Container(),
-      value: widget.itemsLayout,
-      onChanged: (itemsLayout) {
-        widget.onItemsLayoutSelected(itemsLayout);
+    final itemsLayout = widget.itemsLayout;
+    final isListLayout = itemsLayout == ItemsLayout.list;
+
+    return IconButton(
+      tooltip: isListLayout ? "View in grid layout" : "View in list layout",
+      icon: isListLayout ? Icon(Icons.list) : Icon(Icons.grid_on),
+      onPressed: () {
+        final newItemsLayout = itemsLayout == ItemsLayout.list
+            ? ItemsLayout.grid
+            : ItemsLayout.list;
+        widget.onItemsLayoutSelected(newItemsLayout);
       },
-      items: [
-        DropdownMenuItem(
-          value: ItemsLayout.list,
-          child: Opacity(
-            opacity: 0.6,
-            child: Icon(Icons.list),
-          ),
-        ),
-        DropdownMenuItem(
-          value: ItemsLayout.grid,
-          child: Opacity(
-            opacity: 0.6,
-            child: Icon(Icons.grid_on),
-          ),
-        ),
-      ],
     );
   }
 
@@ -276,25 +259,14 @@ class _PageAppBarState extends State<PageAppBar> {
   Widget orderButton() {
     final descending = widget.descending;
 
-    return DropdownButton<bool>(
-      value: descending,
-      icon: Container(),
-      underline: Container(),
-      onChanged: (newDescending) {
-        widget.onDescendingChanged(newDescending);
+    return IconButton(
+      tooltip: descending ? "View last to first" : "View first to last",
+      icon: descending
+          ? Icon(Icons.arrow_circle_down)
+          : Icon(Icons.arrow_circle_up),
+      onPressed: () {
+        widget.onDescendingChanged(!descending);
       },
-      items: [
-        DropdownMenuItem(
-          child: Opacity(
-              opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericDownAlt)),
-          value: true,
-        ),
-        DropdownMenuItem(
-          child: Opacity(
-              opacity: 0.6, child: FaIcon(FontAwesomeIcons.sortNumericUpAlt)),
-          value: false,
-        ),
-      ],
     );
   }
 
