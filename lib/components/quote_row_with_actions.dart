@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -208,14 +209,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                 ),
                 tileColor: Color(0xfff55c5c),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  context.router.pop();
                   deletePubQuote();
                 },
               ),
               ListTile(
                 title: Text('Cancel'),
                 trailing: Icon(Icons.close),
-                onTap: () => Navigator.of(context).pop(),
+                onTap: context.router.pop,
               ),
             ]),
           ),
@@ -466,7 +467,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           Icons.ios_share,
         ),
         onTap: () {
-          Navigator.of(context).pop();
+          context.router.pop();
           shareQuote(context: context, quote: widget.quote);
         },
       ),
@@ -480,7 +481,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             Icons.playlist_add,
           ),
           onTap: () {
-            Navigator.of(context).pop();
+            context.router.pop();
             showBottomSheetList();
           },
         ),
@@ -490,7 +491,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
               ? Icon(Icons.favorite)
               : Icon(Icons.favorite_border),
           onTap: () {
-            Navigator.of(context).pop();
+            context.router.pop();
             toggleFavourite();
           },
         ),
@@ -505,7 +506,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             Icons.delete_outline,
           ),
           onTap: () {
-            Navigator.of(context).pop();
+            context.router.pop();
             confirmAndDeletePubQuote();
           },
         ),
@@ -513,7 +514,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           title: Text('Next quotidian'),
           trailing: Icon(Icons.wb_sunny),
           onTap: () {
-            Navigator.of(context).pop();
+            context.router.pop();
             addToQuotidians(
               quote: widget.quote,
               lang: widget.quote.lang,
