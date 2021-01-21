@@ -52,15 +52,13 @@ abstract class StateUserBase with Store {
 
   Future refreshUserRights() async {
     try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
+      if (_userAuth == null || _userAuth.uid == null) {
         canManageQuote = false;
       }
 
       final user = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userAuth.uid)
+          .doc(_userAuth.uid)
           .get();
 
       if (user == null) {
@@ -228,7 +226,7 @@ abstract class StateUserBase with Store {
         return;
       }
 
-      context.router.navigate(HomeRoute());
+      context.router.root.navigate(HomeRoute());
     }
   }
 
