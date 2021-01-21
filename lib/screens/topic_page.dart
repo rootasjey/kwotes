@@ -542,7 +542,7 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   void fetchPermissions() async {
-    canManage = stateUser.canManageQuote;
+    canManage = stateUser.canManageQuotes;
   }
 
   Future<bool> fetchIsFav(String quoteId) async {

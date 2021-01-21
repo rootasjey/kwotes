@@ -631,7 +631,7 @@ class _SearchState extends State<Search> {
   }
 
   void fetchPermissions() async {
-    canManage = stateUser.canManageQuote;
+    canManage = stateUser.canManageQuotes;
   }
 
   Future search() async {

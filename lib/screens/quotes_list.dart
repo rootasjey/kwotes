@@ -67,7 +67,7 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   void initProps() async {
-    canManage = stateUser.canManageQuote;
+    canManage = stateUser.canManageQuotes;
     setState(() {});
   }
 

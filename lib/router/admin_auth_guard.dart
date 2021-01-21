@@ -8,7 +8,7 @@ class AdminAuthGuard extends AutoRouteGuard {
     List<PageRouteInfo> pendingRoutes,
     StackRouter router,
   ) async {
-    if (stateUser.isUserConnected && stateUser.canManageQuote) {
+    if (stateUser.isUserConnected && stateUser.canManageQuotes) {
       return true;
     }
 

@@ -188,7 +188,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void tryAddAdminPage() async {
-    if (!stateUser.canManageQuote) {
+    if (!stateUser.canManageQuotes) {
       return;
     }
 

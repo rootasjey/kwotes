@@ -502,7 +502,7 @@ class _QuotePageState extends State<QuotePage> {
       addToListButton(),
     ];
 
-    if (stateUser.canManageQuote) {
+    if (stateUser.canManageQuotes) {
       final ldivider = axis == Axis.horizontal
           ? VerticalDivider(thickness: 1.0)
           : Divider(
@@ -728,7 +728,7 @@ class _QuotePageState extends State<QuotePage> {
       ]);
     }
 
-    if (stateUser.canManageQuote) {
+    if (stateUser.canManageQuotes) {
       children.addAll([
         ListTile(
           title: Text('Delete'),

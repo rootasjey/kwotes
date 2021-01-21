@@ -23,7 +23,7 @@ abstract class StateUserBase with Store {
   String avatarUrl = '';
 
   @observable
-  bool canManageQuote = false;
+  bool canManageQuotes = false;
 
   @observable
   String lang = 'en';
@@ -53,7 +53,7 @@ abstract class StateUserBase with Store {
   Future refreshUserRights() async {
     try {
       if (_userAuth == null || _userAuth.uid == null) {
-        canManageQuote = false;
+        canManageQuotes = false;
       }
 
       final user = await FirebaseFirestore.instance
@@ -62,17 +62,17 @@ abstract class StateUserBase with Store {
           .get();
 
       if (user == null) {
-        canManageQuote = false;
+        canManageQuotes = false;
       }
 
       final bool canManage = user.data()['rights']['user:managequotidian'];
-      canManageQuote = canManage;
+      canManageQuotes = canManage;
     } on CloudFunctionsException catch (exception) {
       debugPrint("[code: ${exception.code}] - ${exception.message}");
-      canManageQuote = false;
+      canManageQuotes = false;
     } catch (error) {
       debugPrint(error.toString());
-      canManageQuote = false;
+      canManageQuotes = false;
     }
   }
 
@@ -162,7 +162,7 @@ abstract class StateUserBase with Store {
 
   @action
   void setAdminValue(bool value) {
-    canManageQuote = value;
+    canManageQuotes = value;
   }
 
   /// Signin user with credentials if FirebaseAuth is null.

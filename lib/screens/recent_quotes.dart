@@ -58,7 +58,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     descending = appStorage.getPageOrder(pageRoute: pageRoute);
     itemsLayout = appStorage.getItemsStyle(pageRoute);
 
-    canManage = stateUser.canManageQuote;
+    canManage = stateUser.canManageQuotes;
 
     setState(() {});
   }

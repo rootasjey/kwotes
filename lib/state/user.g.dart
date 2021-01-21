@@ -24,18 +24,18 @@ mixin _$StateUser on StateUserBase, Store {
     });
   }
 
-  final _$canManageQuoteAtom = Atom(name: 'StateUserBase.canManageQuote');
+  final _$canManageQuotesAtom = Atom(name: 'StateUserBase.canManageQuotes');
 
   @override
-  bool get canManageQuote {
-    _$canManageQuoteAtom.reportRead();
-    return super.canManageQuote;
+  bool get canManageQuotes {
+    _$canManageQuotesAtom.reportRead();
+    return super.canManageQuotes;
   }
 
   @override
-  set canManageQuote(bool value) {
-    _$canManageQuoteAtom.reportWrite(value, super.canManageQuote, () {
-      super.canManageQuote = value;
+  set canManageQuotes(bool value) {
+    _$canManageQuotesAtom.reportWrite(value, super.canManageQuotes, () {
+      super.canManageQuotes = value;
     });
   }
 
@@ -218,7 +218,7 @@ mixin _$StateUser on StateUserBase, Store {
   String toString() {
     return '''
 avatarUrl: ${avatarUrl},
-canManageQuote: ${canManageQuote},
+canManageQuotes: ${canManageQuotes},
 lang: ${lang},
 isFirstLaunch: ${isFirstLaunch},
 isUserConnected: ${isUserConnected},
