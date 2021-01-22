@@ -63,7 +63,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
               onPressed: () {
                 scrollController.animateTo(
                   0.0,
-                  duration: Duration(seconds: 1),
+                  duration: 500.milliseconds,
                   curve: Curves.easeOut,
                 );
               },
@@ -81,13 +81,9 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
             onNotification: (ScrollNotification scrollNotif) {
               // FAB visibility
               if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-                setState(() {
-                  isFabVisible = false;
-                });
+                setState(() => isFabVisible = false);
               } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-                setState(() {
-                  isFabVisible = true;
-                });
+                setState(() => isFabVisible = true);
               }
 
               // Load more scenario
