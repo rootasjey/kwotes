@@ -23,19 +23,7 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
-  final titleStyle = TextStyle(
-    fontSize: 20.0,
-    fontWeight: FontWeight.w600,
-  );
-
-  final paragraphStyle = TextStyle(
-    fontSize: 18.0,
-    height: 1.5,
-  );
-
-  final titleOpacity = 0.9;
-
-  final paragraphOpacity = 0.6;
+  bool isFabVisible = false;
 
   final captionOpacity = 0.6;
 
@@ -43,63 +31,87 @@ class _AboutState extends State<About> {
 
   final _pageScrollController = ScrollController();
 
-  @override
-  initState() {
-    super.initState();
+  final paragraphOpacity = 0.6;
+  final paragraphStyle = TextStyle(
+    fontSize: 18.0,
+    height: 1.5,
+  );
 
-    Future.delayed(
-      2.seconds,
-      () => _pageScrollController?.animateTo(
-        MediaQuery.of(context).size.height * 3,
-        duration: 250.milliseconds,
-        curve: Curves.bounceIn,
-      ),
-    );
-  }
+  final titleOpacity = 0.9;
+  final titleStyle = TextStyle(
+    fontSize: 20.0,
+    fontWeight: FontWeight.w600,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                _pageScrollController.animateTo(
+                  0.0,
+                  duration: 500.milliseconds,
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.primary,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
       body: Overlay(
         initialEntries: [
           OverlayEntry(builder: (context) {
-            return CustomScrollView(
-              controller: _pageScrollController,
-              slivers: <Widget>[
-                DesktopAppBar(
-                  title: 'About',
-                  automaticallyImplyLeading: true,
-                  showUserMenu: false,
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                    bottom: 200.0,
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollNotif) {
+                // FAB visibility
+                if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+                  setState(() => isFabVisible = false);
+                } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+                  setState(() => isFabVisible = true);
+                }
+
+                return false;
+              },
+              child: CustomScrollView(
+                controller: _pageScrollController,
+                slivers: <Widget>[
+                  DesktopAppBar(
+                    title: 'About',
+                    automaticallyImplyLeading: true,
+                    showUserMenu: false,
                   ),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      Column(
-                        children: <Widget>[
-                          appIconImage(context),
-                          otherLinks(context),
-                          whatIs(context),
-                          features(),
-                          whoIs(context),
-                          whoIs2(context),
-                          creditsSection(),
-                        ],
-                      ),
-                    ]),
+                  SliverPadding(
+                    padding: const EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      bottom: 200.0,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        Column(
+                          children: <Widget>[
+                            appIconImage(context),
+                            otherLinks(context),
+                            whatIs(context),
+                            features(),
+                            whoIs(context),
+                            whoIs2(context),
+                            creditsSection(),
+                          ],
+                        ),
+                      ]),
+                    ),
                   ),
-                ),
-                if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Footer(),
-                    ]),
-                  ),
-              ],
+                  if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        Footer(),
+                      ]),
+                    ),
+                ],
+              ),
             );
           }),
         ],
