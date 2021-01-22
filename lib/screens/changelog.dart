@@ -23,6 +23,19 @@ class _ChangelogState extends State<Changelog> {
   initContent() {
     changelogItemsList.addAll([
       itemChangelogTemplate(
+        textTitle: "2.5.0",
+        date: DateTime(2021, 01, 24),
+        children: [
+          descriptionRow("• Add routing system (for better navigation)"),
+          descriptionRow("• Update icons"),
+          descriptionRow("• Use better authentication management"
+              " (-> real time updates)"),
+          descriptionRow("• Re-design quote page (web)"),
+          descriptionRow("• Update user dashboard layout (web)"),
+          descriptionRow("• Update footer component and about page (web)"),
+        ],
+      ),
+      itemChangelogTemplate(
         textTitle: "2.0.0",
         date: DateTime(2020, 12, 01),
         children: [
