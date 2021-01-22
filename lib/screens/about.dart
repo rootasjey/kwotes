@@ -241,6 +241,11 @@ class About extends StatelessWidget {
             ),
           ),
           creditItem(
+            textTitle: 'Icons by Unicons',
+            onPressed: () => launch('https://iconscout.com/unicons'),
+            leading: Text('💄'),
+          ),
+          creditItem(
             textTitle: 'Icons by Icons8',
             onPressed: () => launch('https://icons8.com'),
             leading: Text('💄'),
@@ -278,7 +283,7 @@ class About extends StatelessWidget {
 
   Widget otherLinks(context) {
     return SizedBox(
-      width: maxWidth,
+      width: maxWidth / 2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

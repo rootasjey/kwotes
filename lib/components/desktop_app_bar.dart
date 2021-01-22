@@ -14,6 +14,7 @@ import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DesktopAppBar extends StatefulWidget {
@@ -236,8 +237,8 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<AppBarDevelopers>>[
         developerEntry(
           value: AppBarDevelopers.github,
-          icon: FaIcon(
-            FontAwesomeIcons.github,
+          icon: Icon(
+            UniconsLine.github,
             color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'GitHub',
@@ -306,8 +307,8 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           value: AppBarDiscover.random,
           icon: Padding(
             padding: const EdgeInsets.only(top: 5.0),
-            child: FaIcon(
-              FontAwesomeIcons.random,
+            child: Icon(
+              UniconsLine.arrow_random,
               color: stateColors.foreground.withOpacity(0.6),
             ),
           ),
@@ -416,29 +417,29 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<PageRouteInfo>>[
         groupedSectionEntry(
           value: HomeRoute(),
-          icon: FaIcon(FontAwesomeIcons.home),
+          icon: Icon(UniconsLine.home),
           textData: 'home',
         ),
         groupedSectionEntry(
           value: QuotesDeepRoute(children: [RandomQuotesRoute()]),
-          icon: FaIcon(FontAwesomeIcons.random),
+          icon: Icon(UniconsLine.arrow_random),
           textData: 'random quotes',
         ),
         PopupMenuDivider(),
         groupedSectionEntry(
           value: GitHubRoute(),
-          icon: FaIcon(FontAwesomeIcons.github, color: stateColors.foreground),
-          textData: 'github',
+          icon: Icon(UniconsLine.github, color: stateColors.foreground),
+          textData: 'GitHub',
         ),
         PopupMenuDivider(),
         groupedSectionEntry(
           value: AboutRoute(),
-          icon: Icon(Icons.help, color: stateColors.foreground),
+          icon: Icon(Icons.help_outline, color: stateColors.foreground),
           textData: 'about',
         ),
         groupedSectionEntry(
           value: ContactRoute(),
-          icon: Icon(Icons.sms, color: stateColors.foreground),
+          icon: Icon(Icons.sms_outlined, color: stateColors.foreground),
           textData: 'contact',
         ),
         groupedSectionEntry(
@@ -514,7 +515,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         quotesByEntry(
           value: AppBarQuotesBy.references,
           icon: Icon(
-            Icons.book,
+            UniconsLine.bookmark,
             color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'by references',
@@ -522,7 +523,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         quotesByEntry(
           value: AppBarQuotesBy.topics,
           icon: Icon(
-            Icons.topic_outlined,
+            UniconsLine.circle,
             color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'by topics',
@@ -605,7 +606,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         resourcesEntry(
           value: AppBarResources.about,
           icon: Icon(
-            Icons.help,
+            Icons.help_outline,
             color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'about',
@@ -613,7 +614,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         resourcesEntry(
           value: AppBarResources.contact,
           icon: Icon(
-            Icons.sms,
+            Icons.sms_outlined,
             color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'contact',

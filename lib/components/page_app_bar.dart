@@ -8,6 +8,7 @@ import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/language.dart';
+import 'package:unicons/unicons.dart';
 
 class PageAppBar extends StatefulWidget {
   final bool descending;
@@ -129,7 +130,7 @@ class _PageAppBarState extends State<PageAppBar> {
 
     return IconButton(
       tooltip: isListLayout ? "View in grid layout" : "View in list layout",
-      icon: isListLayout ? Icon(Icons.list) : Icon(Icons.grid_on),
+      icon: isListLayout ? Icon(UniconsLine.list_ul) : Icon(UniconsLine.grid),
       onPressed: () {
         final newItemsLayout = itemsLayout == ItemsLayout.list
             ? ItemsLayout.grid
@@ -262,8 +263,8 @@ class _PageAppBarState extends State<PageAppBar> {
     return IconButton(
       tooltip: descending ? "View last to first" : "View first to last",
       icon: descending
-          ? Icon(Icons.arrow_circle_down)
-          : Icon(Icons.arrow_circle_up),
+          ? Icon(UniconsLine.sort_amount_down)
+          : Icon(UniconsLine.sort_amount_up),
       onPressed: () {
         widget.onDescendingChanged(!descending);
       },
