@@ -11,38 +11,39 @@ import 'no_auth_guard.dart' as _i4;
 import 'admin_auth_guard.dart' as _i5;
 import '../screens/home/home.dart' as _i6;
 import '../screens/about.dart' as _i7;
-import '../screens/contact.dart' as _i8;
-import '../screens/dashboard_page.dart' as _i9;
-import '../screens/forgot_password.dart' as _i10;
-import '../screens/settings.dart' as _i11;
-import '../screens/search.dart' as _i12;
-import '../screens/signin.dart' as _i13;
-import '../screens/signup.dart' as _i14;
-import '../screens/tos.dart' as _i15;
-import '../screens/undefined_page.dart' as _i16;
-import '../screens/authors.dart' as _i17;
-import '../screens/author_page.dart' as _i18;
-import '../screens/recent_quotes.dart' as _i19;
-import '../screens/random_quotes.dart' as _i20;
-import '../screens/quote_page.dart' as _i21;
-import '../screens/add_quote/steps.dart' as _i22;
-import '../screens/drafts.dart' as _i23;
-import '../screens/favourites.dart' as _i24;
-import '../screens/my_published_quotes.dart' as _i25;
-import '../screens/my_temp_quotes.dart' as _i26;
-import '../screens/quotidians.dart' as _i27;
-import '../screens/admin_temp_quotes.dart' as _i28;
-import '../screens/quotes_lists.dart' as _i29;
-import '../screens/quotes_list.dart' as _i30;
-import '../screens/delete_account.dart' as _i31;
-import '../screens/update_email.dart' as _i32;
-import '../screens/update_password.dart' as _i33;
-import '../screens/update_username.dart' as _i34;
-import '../screens/topic_page.dart' as _i35;
-import '../screens/references.dart' as _i36;
-import '../screens/reference_page.dart' as _i37;
-import 'package:flutter/foundation.dart' as _i38;
-import '../types/quote.dart' as _i39;
+import '../screens/changelog.dart' as _i8;
+import '../screens/contact.dart' as _i9;
+import '../screens/dashboard_page.dart' as _i10;
+import '../screens/forgot_password.dart' as _i11;
+import '../screens/settings.dart' as _i12;
+import '../screens/search.dart' as _i13;
+import '../screens/signin.dart' as _i14;
+import '../screens/signup.dart' as _i15;
+import '../screens/tos.dart' as _i16;
+import '../screens/undefined_page.dart' as _i17;
+import '../screens/authors.dart' as _i18;
+import '../screens/author_page.dart' as _i19;
+import '../screens/recent_quotes.dart' as _i20;
+import '../screens/random_quotes.dart' as _i21;
+import '../screens/quote_page.dart' as _i22;
+import '../screens/add_quote/steps.dart' as _i23;
+import '../screens/drafts.dart' as _i24;
+import '../screens/favourites.dart' as _i25;
+import '../screens/my_published_quotes.dart' as _i26;
+import '../screens/my_temp_quotes.dart' as _i27;
+import '../screens/quotidians.dart' as _i28;
+import '../screens/admin_temp_quotes.dart' as _i29;
+import '../screens/quotes_lists.dart' as _i30;
+import '../screens/quotes_list.dart' as _i31;
+import '../screens/delete_account.dart' as _i32;
+import '../screens/update_email.dart' as _i33;
+import '../screens/update_password.dart' as _i34;
+import '../screens/update_username.dart' as _i35;
+import '../screens/topic_page.dart' as _i36;
+import '../screens/references.dart' as _i37;
+import '../screens/reference_page.dart' as _i38;
+import 'package:flutter/foundation.dart' as _i39;
+import '../types/quote.dart' as _i40;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter(
@@ -74,42 +75,45 @@ class AppRouter extends _i1.RootStackRouter {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
+    ChangelogRoute.name: (entry) {
+      return _i1.MaterialPageX(entry: entry, child: _i8.Changelog());
+    },
     ContactRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i8.Contact());
+      return _i1.MaterialPageX(entry: entry, child: _i9.Contact());
     },
     QuotesDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     DashboardPageRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i9.DashboardPage());
+      return _i1.MaterialPageX(entry: entry, child: _i10.DashboardPage());
     },
     TopicsDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     ForgotPasswordRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i10.ForgotPassword());
+      return _i1.MaterialPageX(entry: entry, child: _i11.ForgotPassword());
     },
     ReferencesDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     SettingsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i11.Settings());
+      return _i1.MaterialPageX(entry: entry, child: _i12.Settings());
     },
     SearchRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i12.Search());
+      return _i1.MaterialPageX(entry: entry, child: _i13.Search());
     },
     SigninRoute.name: (entry) {
       var route = entry.routeData.as<SigninRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i13.Signin(
+          child: _i14.Signin(
               key: route.key, onSigninResult: route.onSigninResult));
     },
     SignupRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i14.Signup());
+      return _i1.MaterialPageX(entry: entry, child: _i15.Signup());
     },
     SignOutRoute.name: (entry) {
       return _i1.MaterialPageX(
@@ -120,19 +124,19 @@ class AppRouter extends _i1.RootStackRouter {
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     TosRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i15.Tos());
+      return _i1.MaterialPageX(entry: entry, child: _i16.Tos());
     },
     UndefinedPageRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i16.UndefinedPage());
+      return _i1.MaterialPageX(entry: entry, child: _i17.UndefinedPage());
     },
     AuthorsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i17.Authors());
+      return _i1.MaterialPageX(entry: entry, child: _i18.Authors());
     },
     AuthorPageRoute.name: (entry) {
       var route = entry.routeData.as<AuthorPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i18.AuthorPage(
+          child: _i19.AuthorPage(
               authorId: route.authorId,
               authorImageUrl: route.authorImageUrl ?? '',
               authorName: route.authorName ?? ''));
@@ -141,100 +145,100 @@ class AppRouter extends _i1.RootStackRouter {
       var route = entry.routeData.as<RecentQuotesRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i19.RecentQuotes(
+          child: _i20.RecentQuotes(
               showNavBackIcon: route.showNavBackIcon ?? true));
     },
     RandomQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i20.RandomQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i21.RandomQuotes());
     },
     QuotePageRoute.name: (entry) {
       var route = entry.routeData.as<QuotePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i21.QuotePage(quoteId: route.quoteId, quote: route.quote));
+          child: _i22.QuotePage(quoteId: route.quoteId, quote: route.quote));
     },
     AddQuoteStepsRoute.name: (entry) {
       var route = entry.routeData.as<AddQuoteStepsRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i22.AddQuoteSteps(key: route.key, step: route.step ?? 0));
+          child: _i23.AddQuoteSteps(key: route.key, step: route.step ?? 0));
     },
     AdminDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     DraftsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i23.Drafts());
+      return _i1.MaterialPageX(entry: entry, child: _i24.Drafts());
     },
     FavouritesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i24.Favourites());
+      return _i1.MaterialPageX(entry: entry, child: _i25.Favourites());
     },
     QuotesListsDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     MyPublishedQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i25.MyPublishedQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i26.MyPublishedQuotes());
     },
     MyTempQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i26.MyTempQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i27.MyTempQuotes());
     },
     DashboardSettingsDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     QuotidiansRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i27.Quotidians());
+      return _i1.MaterialPageX(entry: entry, child: _i28.Quotidians());
     },
     AdminTempDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     AdminTempQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i28.AdminTempQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i29.AdminTempQuotes());
     },
     QuotesListsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i29.QuotesLists());
+      return _i1.MaterialPageX(entry: entry, child: _i30.QuotesLists());
     },
     QuotesListRoute.name: (entry) {
       var route = entry.routeData.as<QuotesListRoute>();
       return _i1.MaterialPageX(
-          entry: entry, child: _i30.QuotesList(listId: route.listId));
+          entry: entry, child: _i31.QuotesList(listId: route.listId));
     },
     DashboardSettingsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i11.Settings());
+      return _i1.MaterialPageX(entry: entry, child: _i12.Settings());
     },
     DeleteAccountRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i31.DeleteAccount());
+      return _i1.MaterialPageX(entry: entry, child: _i32.DeleteAccount());
     },
     AccountUpdateDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     UpdateEmailRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i32.UpdateEmail());
+      return _i1.MaterialPageX(entry: entry, child: _i33.UpdateEmail());
     },
     UpdatePasswordRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i33.UpdatePassword());
+      return _i1.MaterialPageX(entry: entry, child: _i34.UpdatePassword());
     },
     UpdateUsernameRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i34.UpdateUsername());
+      return _i1.MaterialPageX(entry: entry, child: _i35.UpdateUsername());
     },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i35.TopicPage(
+          child: _i36.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i36.References());
+      return _i1.MaterialPageX(entry: entry, child: _i37.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i37.ReferencePage(
+          child: _i38.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -263,6 +267,9 @@ class AppRouter extends _i1.RootStackRouter {
                   path: ':authorId',
                   routeBuilder: (match) => AuthorPageRoute.fromMatch(match))
             ]),
+        _i1.RouteConfig<ChangelogRoute>(ChangelogRoute.name,
+            path: '/changelog',
+            routeBuilder: (match) => ChangelogRoute.fromMatch(match)),
         _i1.RouteConfig<ContactRoute>(ContactRoute.name,
             path: '/contact',
             routeBuilder: (match) => ContactRoute.fromMatch(match)),
@@ -470,6 +477,14 @@ class AuthorsDeepRoute extends _i1.PageRouteInfo {
   static const String name = 'AuthorsDeepRoute';
 }
 
+class ChangelogRoute extends _i1.PageRouteInfo {
+  const ChangelogRoute() : super(name, path: '/changelog');
+
+  ChangelogRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'ChangelogRoute';
+}
+
 class ContactRoute extends _i1.PageRouteInfo {
   const ContactRoute() : super(name, path: '/contact');
 
@@ -546,7 +561,7 @@ class SigninRoute extends _i1.PageRouteInfo {
         onSigninResult = null,
         super.fromMatch(match);
 
-  final _i38.Key key;
+  final _i39.Key key;
 
   final void Function(bool) onSigninResult;
 
@@ -654,7 +669,7 @@ class QuotePageRoute extends _i1.PageRouteInfo {
 
   final String quoteId;
 
-  final _i39.Quote quote;
+  final _i40.Quote quote;
 
   static const String name = 'QuotePageRoute';
 }
@@ -668,7 +683,7 @@ class AddQuoteStepsRoute extends _i1.PageRouteInfo {
         step = match.queryParams.getInt('step', 0),
         super.fromMatch(match);
 
-  final _i38.Key key;
+  final _i39.Key key;
 
   final int step;
 

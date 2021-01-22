@@ -8,6 +8,7 @@ import 'package:figstyle/screens/add_quote/steps.dart';
 import 'package:figstyle/screens/admin_temp_quotes.dart';
 import 'package:figstyle/screens/author_page.dart';
 import 'package:figstyle/screens/authors.dart';
+import 'package:figstyle/screens/changelog.dart';
 import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/dashboard_page.dart';
 import 'package:figstyle/screens/delete_account.dart';
@@ -51,6 +52,7 @@ export 'app_router.gr.dart';
         MaterialRoute(path: ':authorId', page: AuthorPage),
       ],
     ),
+    MaterialRoute(path: '/changelog', page: Changelog),
     MaterialRoute(path: '/contact', page: Contact),
     AutoRoute(
       path: '/quotes',

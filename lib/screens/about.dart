@@ -1,11 +1,11 @@
 import 'dart:ui';
 
 import 'package:animations/animations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/credit_item.dart';
 import 'package:figstyle/components/image_hero.dart';
-import 'package:figstyle/screens/changelog.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/on_boarding.dart';
-import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
@@ -92,12 +92,12 @@ class _AboutState extends State<About> {
                       delegate: SliverChildListDelegate([
                         Column(
                           children: <Widget>[
-                            appIconImage(context),
-                            otherLinks(context),
-                            whatIs(context),
+                            appIconImage(),
+                            otherLinks(),
+                            whatIs(),
                             features(),
-                            whoIs(context),
-                            whoIs2(context),
+                            whoIs(),
+                            whoIs2(),
                             creditsSection(),
                           ],
                         ),
@@ -119,7 +119,7 @@ class _AboutState extends State<About> {
     );
   }
 
-  Widget appIconImage(BuildContext context) {
+  Widget appIconImage() {
     final size = MediaQuery.of(context).size.width < 500.0 ? 280.0 : 380.0;
 
     return Container(
@@ -318,7 +318,7 @@ class _AboutState extends State<About> {
     );
   }
 
-  Widget otherLinks(context) {
+  Widget otherLinks() {
     return SizedBox(
       width: maxWidth / 2,
       child: Column(
@@ -341,16 +341,14 @@ class _AboutState extends State<About> {
             child: ListTile(
               title: Text('Changelog'),
               trailing: Icon(Icons.arrow_forward),
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Changelog())),
+              onTap: () => context.router.push(ChangelogRoute()),
             ),
           ),
           Card(
             child: ListTile(
               title: Text('Terms of service'),
               trailing: Icon(Icons.arrow_forward),
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Tos())),
+              onTap: () => context.router.push(TosRoute()),
             ),
           ),
           Card(
@@ -364,7 +362,7 @@ class _AboutState extends State<About> {
             child: ListTile(
               title: Text('On boarding'),
               trailing: Icon(Icons.arrow_forward),
-              onTap: () => showOnBoarding(context),
+              onTap: () => showOnBoarding(),
             ),
           ),
         ],
@@ -372,7 +370,7 @@ class _AboutState extends State<About> {
     );
   }
 
-  Widget whatIs(BuildContext context) {
+  Widget whatIs() {
     return Container(
       width: maxWidth,
       padding: const EdgeInsets.only(
@@ -406,7 +404,7 @@ class _AboutState extends State<About> {
     );
   }
 
-  Widget whoIs(BuildContext context) {
+  Widget whoIs() {
     return SizedBox(
       width: maxWidth,
       child: Column(
@@ -557,7 +555,7 @@ class _AboutState extends State<About> {
     );
   }
 
-  Widget whoIs2(BuildContext context) {
+  Widget whoIs2() {
     return SizedBox(
       width: maxWidth,
       child: Column(
@@ -756,7 +754,7 @@ class _AboutState extends State<About> {
     );
   }
 
-  void showOnBoarding(BuildContext context) {
+  void showOnBoarding() {
     if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => OnBoarding()),
