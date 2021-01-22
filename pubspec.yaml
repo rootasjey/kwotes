@@ -62,6 +62,7 @@ dependencies:
   simple_animations: 2.4.2
   sticky_headers: 0.1.8+1
   supercharged: 1.12.0
+  unicons: 1.0.1
   url_launcher: 5.4.10
 
 dev_dependencies:
