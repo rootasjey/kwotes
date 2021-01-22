@@ -1,10 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/home/home.dart';
-import 'package:figstyle/screens/about.dart';
-import 'package:figstyle/screens/contact.dart';
-import 'package:figstyle/screens/tos.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -53,9 +51,12 @@ class _FooterState extends State<Footer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(bottom: 30.0, left: 15.0),
+          padding: const EdgeInsets.only(
+            bottom: 30.0,
+            left: 10.0,
+          ),
           child: Opacity(
-            opacity: .5,
+            opacity: 0.5,
             child: Text(
               'DEVELOPERS',
               style: TextStyle(
@@ -64,53 +65,22 @@ class _FooterState extends State<Footer> {
             ),
           ),
         ),
-        FlatButton(
-            onPressed: null,
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'Documentation',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
-        FlatButton(
-            onPressed: null,
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'API References',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
-        FlatButton(
-            onPressed: null,
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'API Status',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
-        FlatButton(
-            onPressed: () async {
-              onBeforeNav();
-              await launch('https://github.com/outofcontextapp/app');
-            },
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'GitHub',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
+        basicButtonLink(
+          textValue: 'Documentation',
+        ),
+        basicButtonLink(
+          textValue: 'API References',
+        ),
+        basicButtonLink(
+          textValue: 'API Status',
+        ),
+        basicButtonLink(
+          textValue: 'GitHub',
+          onTap: () async {
+            onBeforeNav();
+            await launch('https://github.com/outofcontextapp/app');
+          },
+        ),
       ],
     );
   }
@@ -120,9 +90,12 @@ class _FooterState extends State<Footer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(bottom: 30.0, left: 15.0),
+          padding: const EdgeInsets.only(
+            bottom: 30.0,
+            left: 10.0,
+          ),
           child: Opacity(
-            opacity: .5,
+            opacity: 0.5,
             child: Text(
               'LANGUAGE',
               style: TextStyle(
@@ -131,37 +104,53 @@ class _FooterState extends State<Footer> {
             ),
           ),
         ),
-        FlatButton(
-            onPressed: () async {
-              onBeforeNav();
-              Language.setLang(Language.en);
-              updateUserAccountLang();
-            },
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'English',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
-        FlatButton(
-            onPressed: () {
-              onBeforeNav();
-              Language.setLang(Language.fr);
-              updateUserAccountLang();
-            },
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'Français',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
+        basicButtonLink(
+          textValue: 'English',
+          onTap: () {
+            onBeforeNav();
+            Language.setLang(Language.en);
+            updateUserAccountLang();
+          },
+        ),
+        basicButtonLink(
+          textValue: 'Français',
+          onTap: () {
+            onBeforeNav();
+            Language.setLang(Language.fr);
+            updateUserAccountLang();
+          },
+        ),
       ],
+    );
+  }
+
+  Widget basicButtonLink({Function onTap, @required String textValue}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10.0,
+          vertical: 6.0,
+        ),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(8.0),
+            ),
+            // side: BorderSide(),
+          ),
+        ),
+        child: Opacity(
+          opacity: onTap != null ? 0.7 : 0.3,
+          child: Text(
+            textValue,
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -170,9 +159,12 @@ class _FooterState extends State<Footer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(bottom: 30.0, left: 15.0),
+          padding: const EdgeInsets.only(
+            bottom: 30.0,
+            left: 10.0,
+          ),
           child: Opacity(
-            opacity: .5,
+            opacity: 0.5,
             child: Text(
               'RESOURCES',
               style: TextStyle(
@@ -181,54 +173,27 @@ class _FooterState extends State<Footer> {
             ),
           ),
         ),
-        FlatButton(
-            onPressed: () {
-              onBeforeNav();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => About()),
-              );
-            },
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'About',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
-        FlatButton(
-            onPressed: () {
-              onBeforeNav();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => Contact()),
-              );
-            },
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'Contact',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
-        FlatButton(
-            onPressed: () {
-              onBeforeNav();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => Tos()),
-              );
-            },
-            child: Opacity(
-              opacity: .5,
-              child: Text(
-                'Privacy & Terms',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            )),
+        basicButtonLink(
+          textValue: 'About',
+          onTap: () {
+            onBeforeNav();
+            context.router.root.push(AboutRoute());
+          },
+        ),
+        basicButtonLink(
+          textValue: 'Contact',
+          onTap: () {
+            onBeforeNav();
+            context.router.root.push(ContactRoute());
+          },
+        ),
+        basicButtonLink(
+          textValue: 'Privacy & Terms',
+          onTap: () {
+            onBeforeNav();
+            context.router.root.push(TosRoute());
+          },
+        ),
       ],
     );
   }
@@ -241,9 +206,7 @@ class _FooterState extends State<Footer> {
         curve: Curves.easeOut,
       );
     } else if (widget.autoNavToHome) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => Home()),
-      );
+      context.router.root.navigate(HomeRoute());
     }
 
     showSnack(
@@ -255,7 +218,7 @@ class _FooterState extends State<Footer> {
 
   void onBeforeNav() {
     if (widget.closeModalOnNav) {
-      Navigator.pop(context);
+      context.router.pop();
     }
   }
 
