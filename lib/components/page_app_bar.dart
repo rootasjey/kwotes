@@ -1,7 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/app_icon.dart';
@@ -141,31 +139,30 @@ class _PageAppBarState extends State<PageAppBar> {
   }
 
   Widget langSelector() {
-    return Observer(builder: (context) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 12.0),
-        child: DropdownButton<String>(
-          elevation: 2,
-          value: widget.lang,
-          isDense: true,
-          underline: Container(),
-          icon: Container(),
-          style: TextStyle(
-            color: stateColors.foreground.withOpacity(0.6),
-            fontSize: 20.0,
-            fontFamily: GoogleFonts.raleway().fontFamily,
+    return Padding(
+      padding: const EdgeInsets.only(top: 2.0),
+      child: PopupMenuButton<String>(
+        tooltip: "Change language",
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            widget.lang.toUpperCase(),
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
           ),
-          onChanged: widget.onLangChanged,
-          items: Language.available().map((String value) {
-            return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value.toUpperCase(),
-                ));
-          }).toList(),
         ),
-      );
-    });
+        onSelected: widget.onLangChanged,
+        itemBuilder: (context) => Language.available()
+            .map(
+              (value) => PopupMenuItem(
+                value: value,
+                child: Text(value.toUpperCase()),
+              ),
+            )
+            .toList(),
+      ),
+    );
   }
 
   Widget oneLineTitle() {
