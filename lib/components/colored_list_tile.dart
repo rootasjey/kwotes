@@ -15,10 +15,10 @@ class ColoredListTile extends StatefulWidget {
     this.hoverColor,
     this.icon,
     this.onTap,
-    this.outlined,
-    this.selected,
-    this.title,
-    this.width,
+    this.outlined = false,
+    this.selected = false,
+    @required this.title,
+    this.width = 200.0,
   }) : super(key: key);
 
   @override

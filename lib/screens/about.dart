@@ -1,19 +1,28 @@
 import 'dart:ui';
 
 import 'package:animations/animations.dart';
+import 'package:figstyle/components/credit_item.dart';
 import 'package:figstyle/components/image_hero.dart';
 import 'package:figstyle/screens/changelog.dart';
 import 'package:figstyle/screens/on_boarding.dart';
 import 'package:figstyle/screens/tos.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/footer.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
+import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:supercharged/supercharged.dart';
 
-class About extends StatelessWidget {
+class About extends StatefulWidget {
+  @override
+  _AboutState createState() => _AboutState();
+}
+
+class _AboutState extends State<About> {
   final titleStyle = TextStyle(
     fontSize: 20.0,
     fontWeight: FontWeight.w600,
@@ -25,10 +34,28 @@ class About extends StatelessWidget {
   );
 
   final titleOpacity = 0.9;
+
   final paragraphOpacity = 0.6;
+
   final captionOpacity = 0.6;
 
   final maxWidth = 600.0;
+
+  final _pageScrollController = ScrollController();
+
+  @override
+  initState() {
+    super.initState();
+
+    Future.delayed(
+      2.seconds,
+      () => _pageScrollController?.animateTo(
+        MediaQuery.of(context).size.height * 3,
+        duration: 250.milliseconds,
+        curve: Curves.bounceIn,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +64,7 @@ class About extends StatelessWidget {
         initialEntries: [
           OverlayEntry(builder: (context) {
             return CustomScrollView(
+              controller: _pageScrollController,
               slivers: <Widget>[
                 DesktopAppBar(
                   title: 'About',
@@ -67,11 +95,9 @@ class About extends StatelessWidget {
                 ),
                 if (kIsWeb && MediaQuery.of(context).size.width > 700.0)
                   SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        Footer(),
-                      ],
-                    ),
+                    delegate: SliverChildListDelegate([
+                      Footer(),
+                    ]),
                   ),
               ],
             );
@@ -151,12 +177,23 @@ class About extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 25.0),
-            child: Opacity(
-              opacity: 1.0,
-              child: Text(
-                '👇 Available now:',
-                style: paragraphStyle,
-              ),
+            child: Wrap(
+              spacing: 10.0,
+              children: [
+                Icon(
+                  UniconsLine.exclamation_circle,
+                  color: Colors.lightGreen,
+                ),
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'Available now',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -171,12 +208,23 @@ class About extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 35.0),
-            child: Opacity(
-              opacity: 1.0,
-              child: Text(
-                '🚀 Future development:',
-                style: paragraphStyle,
-              ),
+            child: Wrap(
+              spacing: 10.0,
+              children: [
+                Icon(
+                  UniconsLine.rocket,
+                  color: Colors.yellow.shade600,
+                ),
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    'Future development',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Opacity(
@@ -186,36 +234,6 @@ class About extends StatelessWidget {
               child: Text(
                 '• API\n• Fitbit app\n• Chrome/Firefox extension\n• Desktop app widget',
                 style: paragraphStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget creditItem({
-    @required String textTitle,
-    VoidCallback onPressed,
-    Widget leading,
-  }) {
-    return FlatButton(
-      onPressed: onPressed,
-      child: Row(
-        children: <Widget>[
-          if (leading != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: leading,
-            ),
-          Expanded(
-            child: Opacity(
-              opacity: paragraphOpacity,
-              child: Text(
-                textTitle,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
               ),
             ),
           ),
@@ -240,41 +258,48 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-          creditItem(
-            textTitle: 'Icons by Unicons',
-            onPressed: () => launch('https://iconscout.com/unicons'),
-            leading: Text('💄'),
+          CreditItem(
+            textValue: 'Icons by Unicons',
+            onTap: () => launch('https://iconscout.com/unicons'),
+            iconData: UniconsLine.palette,
+            hoverColor: stateColors.primary,
           ),
-          creditItem(
-            textTitle: 'Icons by Icons8',
-            onPressed: () => launch('https://icons8.com'),
-            leading: Text('💄'),
+          CreditItem(
+            textValue: 'Icons by Icons8',
+            onTap: () => launch('https://icons8.com'),
+            iconData: UniconsLine.palette,
+            hoverColor: stateColors.primary,
           ),
-          creditItem(
-            textTitle: 'Icons by iconmonstr',
-            onPressed: () => launch('https://iconmonstr.com'),
-            leading: Text('💄'),
+          CreditItem(
+            textValue: 'Icons by iconmonstr',
+            onTap: () => launch('https://iconmonstr.com'),
+            iconData: UniconsLine.palette,
+            hoverColor: stateColors.primary,
           ),
-          creditItem(
-            textTitle: 'Icons by Orion Icon Library',
-            onPressed: () => launch('https://orioniconlibrary.com'),
-            leading: Text('💄'),
+          CreditItem(
+            textValue: 'Icons by Orion Icon Library',
+            onTap: () => launch('https://orioniconlibrary.com'),
+            iconData: UniconsLine.palette,
+            hoverColor: stateColors.primary,
           ),
-          creditItem(
-            textTitle: 'Icons by Pixel Perfect',
-            onPressed: () =>
+          CreditItem(
+            textValue: 'Icons by Pixel Perfect',
+            onTap: () =>
                 launch('https://www.flaticon.com/authors/pixel-perfect'),
-            leading: Text('💄'),
+            iconData: UniconsLine.palette,
+            hoverColor: stateColors.primary,
           ),
-          creditItem(
-            textTitle: 'Illustrations by Natasha Remarchuk from Icons8',
-            onPressed: () => launch('https://icons8.com/'),
-            leading: Text('🖼️'),
+          CreditItem(
+            textValue: 'Illustrations by Natasha Remarchuk from Icons8',
+            onTap: () => launch('https://icons8.com/'),
+            iconData: UniconsLine.image,
+            hoverColor: Colors.pink,
           ),
-          creditItem(
-            textTitle: 'Mobile app screenshots created with Previewed',
-            onPressed: () => launch('https://previewed.app/'),
-            leading: Text('📷'),
+          CreditItem(
+            textValue: 'Mobile app screenshots created with AppMockUp',
+            onTap: () => launch('https://app-mockup.com/'),
+            iconData: UniconsLine.mobile_android,
+            hoverColor: stateColors.secondary,
           ),
         ],
       ),
@@ -473,12 +498,34 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-          FlatButton.icon(
-            onPressed: () async {
-              await launch('http://evene.lefigaro.fr/');
+          InkWell(
+            onTap: () async {
+              launch('http://evene.lefigaro.fr/');
             },
-            icon: Icon(Icons.link),
-            label: Text('http://evene.lefigaro.fr/'),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Opacity(
+                opacity: 0.6,
+                child: Wrap(
+                  children: [
+                    Text(
+                      'http://evene.lefigaro.fr/',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Icon(
+                        UniconsLine.external_link_alt,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
