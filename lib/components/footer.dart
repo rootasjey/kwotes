@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
@@ -228,25 +228,6 @@ class _FooterState extends State<Footer> {
     if (userAuth == null) {
       notifyLangSuccess();
       return;
-    }
-
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userAuth.uid)
-          .update({
-        'lang': stateUser.lang,
-      });
-
-      notifyLangSuccess();
-    } catch (error) {
-      debugPrint(error.toString());
-
-      showSnack(
-        context: context,
-        message: 'Sorry, there was an error while updating your language.',
-        type: SnackType.error,
-      );
     }
   }
 }
