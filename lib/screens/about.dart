@@ -324,6 +324,19 @@ class _AboutState extends State<About> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Opacity(
+              opacity: 0.7,
+              child: Text(
+                "v2.5.0",
+                style: TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
           Card(
             child: ListTile(
               title: Text('Changelog'),
