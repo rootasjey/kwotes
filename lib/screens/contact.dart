@@ -1,3 +1,4 @@
+import 'package:figstyle/components/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,6 +28,10 @@ class _ContactState extends State<Contact> {
                     emailBlock(),
                     twitterBlock(),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 80.0),
+                  child: Footer(),
                 ),
               ]),
             ),
