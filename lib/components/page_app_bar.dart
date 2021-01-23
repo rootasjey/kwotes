@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/components/lang_popup_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/utils/language.dart';
 import 'package:unicons/unicons.dart';
 
 class PageAppBar extends StatefulWidget {
@@ -112,7 +112,11 @@ class _PageAppBarState extends State<PageAppBar> {
             alignment: WrapAlignment.start,
             children: <Widget>[
               if (showOrderButtons) orderButton(),
-              if (showLangSelector) langSelector(),
+              if (showLangSelector)
+                LangPopupMenuButton(
+                  lang: widget.lang,
+                  onLangChanged: widget.onLangChanged,
+                ),
               if (showItemsLayout) itemsLayoutSelector(),
               ...widget.additionalIconButtons,
             ],
@@ -135,33 +139,6 @@ class _PageAppBarState extends State<PageAppBar> {
             : ItemsLayout.list;
         widget.onItemsLayoutSelected(newItemsLayout);
       },
-    );
-  }
-
-  Widget langSelector() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 2.0),
-      child: PopupMenuButton<String>(
-        tooltip: "Change language",
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            widget.lang.toUpperCase(),
-            style: TextStyle(
-              fontSize: 16.0,
-            ),
-          ),
-        ),
-        onSelected: widget.onLangChanged,
-        itemBuilder: (context) => Language.available()
-            .map(
-              (value) => PopupMenuItem(
-                value: value,
-                child: Text(value.toUpperCase()),
-              ),
-            )
-            .toList(),
-      ),
     );
   }
 
