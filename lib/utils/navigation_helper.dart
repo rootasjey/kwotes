@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,11 @@ class NavigationHelper {
   }
 
   static void navigateNextFrame(
-    MaterialPageRoute pageRoute,
+    PageRouteInfo pageRoute,
     BuildContext context,
   ) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      Navigator.of(context).push(pageRoute);
+      context.router.navigate(pageRoute);
     });
   }
 }
