@@ -864,34 +864,15 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   }
 
   Widget userAvatar({bool isNarrow = true}) {
-    final arrStr = stateUser.username.split(' ');
-    String initials = '';
-
-    if (arrStr.length > 0) {
-      initials = arrStr.length > 1
-          ? arrStr.reduce((value, element) => value + element.substring(1))
-          : arrStr.first;
-
-      if (initials != null && initials.isNotEmpty) {
-        initials = initials.substring(0, 1);
-      }
-    }
-
     return Padding(
       padding: const EdgeInsets.only(
         left: 20.0,
         right: 60.0,
       ),
       child: PopupMenuButton<PageRouteInfo>(
-        icon: CircleAvatar(
-          backgroundColor: stateColors.primary,
-          radius: 20.0,
-          child: Text(
-            initials,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
+        icon: Icon(
+          UniconsLine.user_circle,
+          color: stateColors.primary,
         ),
         // tooltip: 'More quick links',
         onSelected: (pageRouteInfo) {

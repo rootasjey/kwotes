@@ -22,6 +22,7 @@ import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   bool isLoadingLang = false;
-  bool isLoadingImageURL = false;
+  bool isLoadingAvatarUrl = false;
   bool isNameAvailable = false;
   bool isThemeAuto = true;
   bool notificationsON = false;
@@ -189,27 +190,24 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget avatar(bool isUserConnected) {
-    if (isLoadingImageURL) {
-      return Padding(
-        padding: const EdgeInsets.only(
-          bottom: 30.0,
-        ),
-        child: Material(
-          elevation: 4.0,
-          shape: CircleBorder(),
-          clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: CircularProgressIndicator(),
-            ),
-          ),
-        ),
-      );
-    }
-
-    String path = avatarUrl.replaceFirst('local:', '');
-    path = 'assets/images/$path-${stateColors.iconExt}.png';
+    // if (isLoadingImageURL) {
+    //   return Padding(
+    //     padding: const EdgeInsets.only(
+    //       bottom: 30.0,
+    //     ),
+    //     child: Material(
+    //       elevation: 4.0,
+    //       shape: CircleBorder(),
+    //       clipBehavior: Clip.hardEdge,
+    //       child: InkWell(
+    //         child: Padding(
+    //           padding: const EdgeInsets.all(40.0),
+    //           child: CircularProgressIndicator(),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -222,10 +220,11 @@ class _SettingsState extends State<Settings> {
         child: InkWell(
           child: Padding(
             padding: const EdgeInsets.all(40.0),
-            child: avatarUrl.isEmpty
-                ? Image.asset('assets/images/user-${stateColors.iconExt}.png',
-                    width: 80.0)
-                : Image.asset(path, width: 80.0),
+            child: Icon(
+              UniconsLine.user_circle,
+              color: stateColors.primary,
+              size: 64.0,
+            ),
           ),
         ),
       ),
@@ -791,7 +790,7 @@ class _SettingsState extends State<Settings> {
 
   Future checkAuth() async {
     setState(() {
-      isLoadingImageURL = true;
+      // isLoadingAvatarUrl = true;
       isLoadingLang = true;
     });
 
@@ -800,7 +799,7 @@ class _SettingsState extends State<Settings> {
         stateUser.setUserDisconnected();
 
         setState(() {
-          isLoadingImageURL = false;
+          // isLoadingAvatarUrl = false;
           isLoadingLang = false;
         });
 
@@ -821,14 +820,14 @@ class _SettingsState extends State<Settings> {
 
       setState(() {
         email = stateUser.userAuth.email ?? '';
-        isLoadingImageURL = false;
+        // isLoadingAvatarUrl = false;
         isLoadingLang = false;
       });
     } catch (error) {
       debugPrint(error.toString());
 
       setState(() {
-        isLoadingImageURL = false;
+        // isLoadingAvatarUrl = false;
         isLoadingLang = false;
       });
     }
@@ -849,9 +848,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void updateImageUrl({String imageName}) async {
-    setState(() {
-      isLoadingImageURL = true;
-    });
+    setState(() => isLoadingAvatarUrl = true);
 
     try {
       final userAuth = stateUser.userAuth;
@@ -865,7 +862,7 @@ class _SettingsState extends State<Settings> {
 
       setState(() {
         avatarUrl = 'local:$imageName';
-        isLoadingImageURL = false;
+        isLoadingAvatarUrl = false;
       });
 
       showSnack(
@@ -876,9 +873,7 @@ class _SettingsState extends State<Settings> {
     } catch (error) {
       debugPrint(error.toString());
 
-      setState(() {
-        isLoadingImageURL = false;
-      });
+      setState(() => isLoadingAvatarUrl = false);
 
       showSnack(
         context: context,
