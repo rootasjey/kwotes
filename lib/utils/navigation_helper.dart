@@ -27,11 +27,11 @@ class NavigationHelper {
     if (stateUser.isUserConnected) {
       return DashboardPageRoute(children: [
         DashboardSettingsDeepRoute(children: [
-          DashboardSettingsRoute(),
+          DashboardSettingsRoute(showAppBar: false),
         ])
       ]);
     }
 
-    return SettingsRoute();
+    return SettingsRoute(showAppBar: true);
   }
 }

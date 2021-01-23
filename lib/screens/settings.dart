@@ -25,6 +25,13 @@ import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
 
 class Settings extends StatefulWidget {
+  final bool showAppBar;
+
+  const Settings({
+    Key key,
+    @PathParam('showAppBar') this.showAppBar = false,
+  }) : super(key: key);
+
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -51,7 +58,7 @@ class _SettingsState extends State<Settings> {
   Timer nameTimer;
   Timer timer;
 
-  ScrollController _scrollController = ScrollController();
+  ScrollController _pageScrollController = ScrollController();
 
   @override
   initState() {
@@ -75,9 +82,9 @@ class _SettingsState extends State<Settings> {
           },
           child: NotificationListener<ScrollNotification>(
             child: CustomScrollView(
-              controller: _scrollController,
+              controller: _pageScrollController,
               slivers: <Widget>[
-                appBar(),
+                if (widget.showAppBar) appBar(),
                 body(),
               ],
             ),
@@ -325,7 +332,7 @@ class _SettingsState extends State<Settings> {
     bool showBigTitle = false;
 
     if (MediaQuery.of(context).size.width > 700.0) {
-      paddingTop = 100.0;
+      paddingTop = widget.showAppBar ? 100.0 : 20.0;
       showBigTitle = true;
     }
 
@@ -336,17 +343,25 @@ class _SettingsState extends State<Settings> {
           if (showBigTitle)
             Padding(
               padding: const EdgeInsets.only(bottom: 80.0),
-              child: Center(
-                child: SizedBox(
-                  width: 400.0,
-                  child: Text(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (context.router.root.stack.length > 1)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: IconButton(
+                        onPressed: context.router.pop,
+                        icon: Icon(Icons.arrow_back),
+                      ),
+                    ),
+                  Text(
                     'Settings',
                     style: TextStyle(
-                      fontSize: 60.0,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 80.0,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           accountSettings(),

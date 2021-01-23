@@ -100,7 +100,11 @@ class AppRouter extends _i1.RootStackRouter {
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     SettingsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i12.Settings());
+      var route = entry.routeData.as<SettingsRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i12.Settings(
+              key: route.key, showAppBar: route.showAppBar ?? false));
     },
     SearchRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i13.Search());
@@ -206,7 +210,11 @@ class AppRouter extends _i1.RootStackRouter {
           entry: entry, child: _i31.QuotesList(listId: route.listId));
     },
     DashboardSettingsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i12.Settings());
+      var route = entry.routeData.as<DashboardSettingsRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i12.Settings(
+              key: route.key, showAppBar: route.showAppBar ?? false));
     },
     DeleteAccountRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i32.DeleteAccount());
@@ -552,9 +560,17 @@ class ReferencesDeepRoute extends _i1.PageRouteInfo {
 }
 
 class SettingsRoute extends _i1.PageRouteInfo {
-  const SettingsRoute() : super(name, path: '/settings');
+  SettingsRoute({this.key, this.showAppBar = false})
+      : super(name, path: '/settings');
 
-  SettingsRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+  SettingsRoute.fromMatch(_i1.RouteMatch match)
+      : key = null,
+        showAppBar = match.pathParams.getBool('showAppBar'),
+        super.fromMatch(match);
+
+  final _i39.Key key;
+
+  final bool showAppBar;
 
   static const String name = 'SettingsRoute';
 }
@@ -812,10 +828,17 @@ class QuotesListRoute extends _i1.PageRouteInfo {
 }
 
 class DashboardSettingsRoute extends _i1.PageRouteInfo {
-  const DashboardSettingsRoute() : super(name, path: '');
+  DashboardSettingsRoute({this.key, this.showAppBar = false})
+      : super(name, path: '');
 
   DashboardSettingsRoute.fromMatch(_i1.RouteMatch match)
-      : super.fromMatch(match);
+      : key = null,
+        showAppBar = match.pathParams.getBool('showAppBar'),
+        super.fromMatch(match);
+
+  final _i39.Key key;
+
+  final bool showAppBar;
 
   static const String name = 'DashboardSettingsRoute';
 }
