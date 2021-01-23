@@ -7,6 +7,7 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/language.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/app_icon.dart';
@@ -353,6 +354,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     }
 
     return [
+      langButton(),
       brightnessButton(),
       searchButton(),
       newQuoteButton(),
@@ -417,12 +419,12 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<PageRouteInfo>>[
         groupedSectionEntry(
           value: HomeRoute(),
-          icon: Icon(UniconsLine.home),
+          icon: Icon(UniconsLine.home, color: stateColors.foreground),
           textData: 'home',
         ),
         groupedSectionEntry(
           value: QuotesDeepRoute(children: [RandomQuotesRoute()]),
-          icon: Icon(UniconsLine.arrow_random),
+          icon: Icon(UniconsLine.arrow_random, color: stateColors.foreground),
           textData: 'random quotes',
         ),
         PopupMenuDivider(),
@@ -456,6 +458,45 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
         context.router.root.navigate(pageRouteInfo);
       },
+    );
+  }
+
+  Widget langButton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20.0),
+      child: PopupMenuButton<String>(
+        tooltip: "Change language",
+        icon: Icon(
+          UniconsLine.language,
+          color: stateColors.foreground,
+        ),
+        onSelected: (newValue) {
+          Language.setLang(newValue);
+          showSnack(
+            context: context,
+            message: "Your language has been successfully updated"
+                " to ${Language.frontend(newValue)}",
+            type: SnackType.success,
+          );
+        },
+        itemBuilder: (context) => Language.available().map((value) {
+          final isSelected = stateUser.lang == value;
+
+          return PopupMenuItem(
+            value: value,
+            child: ListTile(
+              trailing: isSelected ? Icon(UniconsLine.check) : null,
+              title: Text(
+                Language.frontend(value),
+                style: TextStyle(
+                  color:
+                      isSelected ? stateColors.primary : stateColors.foreground,
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -763,9 +804,21 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               break;
             case AppBarSettings.en:
               Language.setLang('en');
+              showSnack(
+                context: context,
+                message: "Your language has been successfully updated"
+                    " to ${Language.frontend('en')}",
+                type: SnackType.success,
+              );
               break;
             case AppBarSettings.fr:
               Language.setLang('fr');
+              showSnack(
+                context: context,
+                message: "Your language has been successfully updated"
+                    " to ${Language.frontend('fr')}",
+                type: SnackType.success,
+              );
               break;
             default:
           }
