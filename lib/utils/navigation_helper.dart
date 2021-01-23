@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.dart';
+import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
@@ -19,5 +21,17 @@ class NavigationHelper {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       context.router.navigate(pageRoute);
     });
+  }
+
+  static PageRouteInfo getSettingsRoute() {
+    if (stateUser.isUserConnected) {
+      return DashboardPageRoute(children: [
+        DashboardSettingsDeepRoute(children: [
+          DashboardSettingsRoute(),
+        ])
+      ]);
+    }
+
+    return SettingsRoute();
   }
 }

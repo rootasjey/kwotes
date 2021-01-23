@@ -6,6 +6,7 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/language.dart';
+import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -889,49 +890,53 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         itemBuilder: (BuildContext context) => <PopupMenuEntry<PageRouteInfo>>[
           if (isNarrow)
             PopupMenuItem(
-                value: DashboardPageRoute(children: [AddQuoteStepsRoute()]),
-                child: ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text(
-                    'Add quote',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-          const PopupMenuItem(
-              value: SearchRoute(),
+              value: DashboardPageRoute(children: [AddQuoteStepsRoute()]),
               child: ListTile(
-                leading: Icon(Icons.search),
+                leading: Icon(Icons.add),
                 title: Text(
-                  'Search',
+                  'Add quote',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              )),
-          const PopupMenuItem(
-              value: DashboardPageRoute(children: [FavouritesRoute()]),
-              child: ListTile(
-                leading: Icon(Icons.favorite),
-                title: Text(
-                  'Favourites',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )),
-          const PopupMenuItem(
-              value: DashboardPageRoute(
-                children: [
-                  QuotesListsDeepRoute(
-                    children: [
-                      QuotesListsRoute(),
-                    ],
-                  ),
-                ],
               ),
-              child: ListTile(
-                leading: Icon(Icons.list),
-                title: Text(
-                  'Lists',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          const PopupMenuItem(
+            value: SearchRoute(),
+            child: ListTile(
+              leading: Icon(Icons.search),
+              title: Text(
+                'Search',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const PopupMenuItem(
+            value: DashboardPageRoute(children: [FavouritesRoute()]),
+            child: ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text(
+                'Favourites',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const PopupMenuItem(
+            value: DashboardPageRoute(
+              children: [
+                QuotesListsDeepRoute(
+                  children: [
+                    QuotesListsRoute(),
+                  ],
                 ),
-              )),
+              ],
+            ),
+            child: ListTile(
+              leading: Icon(Icons.list),
+              title: Text(
+                'Lists',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
           const PopupMenuItem(
             value: DashboardPageRoute(children: [DraftsRoute()]),
             child: ListTile(
@@ -953,16 +958,17 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             ),
           ),
           const PopupMenuItem(
-              value: DashboardPageRoute(children: [MyTempQuotesRoute()]),
-              child: ListTile(
-                leading: Icon(Icons.timelapse),
-                title: Text(
-                  'In Validation',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )),
-          const PopupMenuItem(
-            value: SettingsRoute(),
+            value: DashboardPageRoute(children: [MyTempQuotesRoute()]),
+            child: ListTile(
+              leading: Icon(Icons.timelapse),
+              title: Text(
+                'In Validation',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: NavigationHelper.getSettingsRoute(),
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
