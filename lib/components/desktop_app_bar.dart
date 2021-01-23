@@ -737,7 +737,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             child: Row(
               children: [
                 Icon(
-                  Icons.language,
+                  UniconsLine.language,
                   color: stateColors.foreground,
                 ),
                 Padding(
