@@ -874,9 +874,9 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           UniconsLine.user_circle,
           color: stateColors.primary,
         ),
-        // tooltip: 'More quick links',
+        tooltip: 'Show user menu',
         onSelected: (pageRouteInfo) {
-          if (pageRouteInfo.routeName == 'SignOutRoute') {
+          if (pageRouteInfo.routeName == SignOutRoute.name) {
             stateUser.signOut(
               context: context,
               redirectOnComplete: true,
