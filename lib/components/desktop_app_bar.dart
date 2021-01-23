@@ -1013,41 +1013,6 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
     );
   }
 
-  Widget userSection(bool isNarrow) {
-    return Observer(builder: (context) {
-      final children = <Widget>[];
-
-      if (stateUser.isUserConnected) {
-        isNarrow
-            ? children.add(userAvatar(isNarrow: isNarrow))
-            : children.addAll([
-                userAvatar(),
-                newQuoteButton(),
-                searchButton(),
-              ]);
-      } else {
-        isNarrow
-            ? children.add(userSigninMenu())
-            : children.addAll([
-                signinButton(),
-                signupButton(),
-                searchButton(),
-              ]);
-      }
-
-      return Container(
-        padding: const EdgeInsets.only(
-          top: 5.0,
-          right: 10.0,
-        ),
-        child: Row(
-          textDirection: TextDirection.rtl,
-          children: children,
-        ),
-      );
-    });
-  }
-
   Widget userSigninMenu() {
     return PopupMenuButton(
       icon: Icon(Icons.more_vert),
