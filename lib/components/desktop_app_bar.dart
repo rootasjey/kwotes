@@ -155,7 +155,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       child: PopupMenuButton<String>(
         icon: Icon(
           iconBrightness,
-          color: stateColors.foreground,
+          color: stateColors.foreground.withOpacity(0.6),
         ),
         tooltip: 'Brightness',
         onSelected: (value) {
@@ -170,29 +170,70 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           setBrightness(context, brightness);
           DynamicTheme.of(context).setBrightness(brightness);
         },
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: 'auto',
-            child: ListTile(
-              leading: Icon(Icons.brightness_auto),
-              title: Text('Auto'),
+        itemBuilder: (context) {
+          final autoBrightness = appStorage.getAutoBrightness();
+          final brightness = autoBrightness ? null : appStorage.getBrightness();
+
+          final primary = stateColors.primary;
+          final basic = stateColors.foreground;
+
+          return [
+            PopupMenuItem(
+              value: 'auto',
+              child: ListTile(
+                leading: Icon(Icons.brightness_auto),
+                title: Text(
+                  'Auto',
+                  style: TextStyle(
+                    color: autoBrightness ? primary : basic,
+                  ),
+                ),
+                trailing: autoBrightness
+                    ? Icon(
+                        UniconsLine.check,
+                        color: primary,
+                      )
+                    : null,
+              ),
             ),
-          ),
-          const PopupMenuItem(
-            value: 'dark',
-            child: ListTile(
-              leading: Icon(Icons.brightness_2),
-              title: Text('Dark'),
+            PopupMenuItem(
+              value: 'dark',
+              child: ListTile(
+                leading: Icon(Icons.brightness_2),
+                title: Text(
+                  'Dark',
+                  style: TextStyle(
+                    color: brightness == Brightness.dark ? primary : basic,
+                  ),
+                ),
+                trailing: brightness == Brightness.dark
+                    ? Icon(
+                        UniconsLine.check,
+                        color: primary,
+                      )
+                    : null,
+              ),
             ),
-          ),
-          const PopupMenuItem(
-            value: 'light',
-            child: ListTile(
-              leading: Icon(Icons.brightness_5),
-              title: Text('Light'),
+            PopupMenuItem(
+              value: 'light',
+              child: ListTile(
+                leading: Icon(Icons.brightness_5),
+                title: Text(
+                  'Light',
+                  style: TextStyle(
+                    color: brightness == Brightness.light ? primary : basic,
+                  ),
+                ),
+                trailing: brightness == Brightness.light
+                    ? Icon(
+                        UniconsLine.check,
+                        color: primary,
+                      )
+                    : null,
+              ),
             ),
-          ),
-        ],
+          ];
+        },
       ),
     );
   }
@@ -412,34 +453,52 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       itemBuilder: (_) => <PopupMenuEntry<PageRouteInfo>>[
         groupedSectionEntry(
           value: HomeRoute(),
-          icon: Icon(UniconsLine.home, color: stateColors.foreground),
+          icon: Icon(
+            UniconsLine.home,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
           textData: 'home',
         ),
         groupedSectionEntry(
           value: QuotesDeepRoute(children: [RandomQuotesRoute()]),
-          icon: Icon(UniconsLine.arrow_random, color: stateColors.foreground),
+          icon: Icon(
+            UniconsLine.arrow_random,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
           textData: 'random quotes',
         ),
         PopupMenuDivider(),
         groupedSectionEntry(
           value: GitHubRoute(),
-          icon: Icon(UniconsLine.github, color: stateColors.foreground),
+          icon: Icon(
+            UniconsLine.github,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
           textData: 'GitHub',
         ),
         PopupMenuDivider(),
         groupedSectionEntry(
           value: AboutRoute(),
-          icon: Icon(Icons.help_outline, color: stateColors.foreground),
+          icon: Icon(
+            Icons.help_outline,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
           textData: 'about',
         ),
         groupedSectionEntry(
           value: ContactRoute(),
-          icon: Icon(Icons.sms_outlined, color: stateColors.foreground),
+          icon: Icon(
+            Icons.sms_outlined,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
           textData: 'contact',
         ),
         groupedSectionEntry(
           value: TosRoute(),
-          icon: Icon(Icons.privacy_tip_outlined, color: stateColors.foreground),
+          icon: Icon(
+            Icons.privacy_tip_outlined,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
           textData: 'Privacy Terms',
         ),
       ],
@@ -461,7 +520,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         tooltip: "Change language",
         icon: Icon(
           UniconsLine.language,
-          color: stateColors.foreground,
+          color: stateColors.foreground.withOpacity(0.6),
         ),
         onSelected: (newValue) {
           Language.setLang(newValue);
@@ -728,7 +787,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         tooltip: 'Search',
         onPressed: () => context.router.root.push(SearchRoute()),
         color: stateColors.foreground,
-        icon: Icon(Icons.search),
+        icon: Icon(
+          Icons.search,
+          color: stateColors.foreground.withOpacity(0.6),
+        ),
       ),
     );
   }
@@ -950,9 +1012,9 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           const PopupMenuItem(
             value: DashboardPageRoute(children: [MyPublishedQuotesRoute()]),
             child: ListTile(
-              leading: Icon(Icons.cloud_done),
+              leading: Icon(Icons.publish_outlined),
               title: Text(
-                'Published',
+                'My Published',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -962,7 +1024,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             child: ListTile(
               leading: Icon(Icons.timelapse),
               title: Text(
-                'In Validation',
+                'My Temporary',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -980,7 +1042,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           const PopupMenuItem(
             value: SignOutRoute(),
             child: ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: Icon(UniconsLine.signout),
               title: Text(
                 'Sign out',
                 style: TextStyle(fontWeight: FontWeight.bold),
