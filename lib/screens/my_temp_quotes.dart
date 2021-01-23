@@ -38,10 +38,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
   int limit = 30;
   int order = -1;
 
-  ScrollController scrollController = ScrollController();
-
   String lang = 'en';
   final String pageRoute = RouteNames.TempQuotesRoute;
+  final _pageScrollController = ScrollController();
 
   List<TempQuote> tempQuotes = [];
 
@@ -64,7 +63,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       floatingActionButton: isFabVisible
           ? FloatingActionButton(
               onPressed: () {
-                scrollController.animateTo(
+                _pageScrollController.animateTo(
                   0.0,
                   duration: Duration(seconds: 1),
                   curve: Curves.easeOut,
@@ -84,13 +83,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             onNotification: (ScrollNotification scrollNotif) {
               // FAB visibility
               if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
-                setState(() {
-                  isFabVisible = false;
-                });
+                setState(() => isFabVisible = false);
               } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
-                setState(() {
-                  isFabVisible = true;
-                });
+                setState(() => isFabVisible = true);
               }
 
               // Load more scenario
@@ -106,7 +101,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               return false;
             },
             child: CustomScrollView(
-              controller: scrollController,
+              controller: _pageScrollController,
               slivers: <Widget>[
                 SliverEdgePadding(),
                 appBar(),
@@ -139,7 +134,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       ),
       showNavBackIcon: true,
       onTitlePressed: () {
-        scrollController.animateTo(
+        _pageScrollController.animateTo(
           0,
           duration: 250.milliseconds,
           curve: Curves.easeIn,
