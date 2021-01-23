@@ -4,9 +4,19 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:supercharged/supercharged.dart';
 
 /// Terms Of Service.
-class Tos extends StatelessWidget {
+class Tos extends StatefulWidget {
+  @override
+  _TosState createState() => _TosState();
+}
+
+class _TosState extends State<Tos> {
+  bool isFabVisible = false;
+
+  final _pageScrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -20,41 +30,67 @@ class Tos extends StatelessWidget {
     }
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          DesktopAppBar(
-            title: "Privacy Terms",
-            automaticallyImplyLeading: true,
-            showUserMenu: showUserMenu,
-          ),
-          SliverPadding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horPadding,
-              vertical: 60.0,
+      floatingActionButton: isFabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                _pageScrollController.animateTo(
+                  0.0,
+                  duration: 500.milliseconds,
+                  curve: Curves.easeOut,
+                );
+              },
+              backgroundColor: stateColors.accent,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollNotif) {
+          // FAB visibility
+          if (scrollNotif.metrics.pixels < 50 && isFabVisible) {
+            setState(() => isFabVisible = false);
+          } else if (scrollNotif.metrics.pixels > 50 && !isFabVisible) {
+            setState(() => isFabVisible = true);
+          }
+          return false;
+        },
+        child: CustomScrollView(
+          controller: _pageScrollController,
+          slivers: [
+            DesktopAppBar(
+              title: "Privacy Terms",
+              automaticallyImplyLeading: true,
+              showUserMenu: showUserMenu,
             ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed([
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 600.0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          termsBlock(),
-                          cookiesBlock(),
-                          analyticsBlock(),
-                          advertisingBlock(),
-                          inAppPurchasesBlock(),
-                        ],
+            SliverPadding(
+              padding: EdgeInsets.symmetric(
+                horizontal: horPadding,
+                vertical: 60.0,
+              ),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 600.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            termsBlock(),
+                            cookiesBlock(),
+                            analyticsBlock(),
+                            advertisingBlock(),
+                            inAppPurchasesBlock(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ]),
+                    ],
+                  ),
+                ]),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
