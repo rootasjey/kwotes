@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/router/app_router.dart';
+import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/circle_button.dart';
@@ -277,8 +278,8 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               )),
-          const PopupMenuItem(
-            value: SettingsRoute(),
+          PopupMenuItem(
+            value: NavigationHelper.getSettingsRoute(),
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
