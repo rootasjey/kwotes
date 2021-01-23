@@ -166,6 +166,16 @@ export 'app_router.gr.dart';
           page: EmptyRouterPage,
           name: 'GitHubRoute',
         ),
+        MaterialRoute(
+          path: 'android',
+          page: EmptyRouterPage,
+          name: 'AndroidAppRoute',
+        ),
+        MaterialRoute(
+          path: 'ios',
+          page: EmptyRouterPage,
+          name: 'IosAppRoute',
+        ),
       ],
     ),
     MaterialRoute(path: '/tos', page: Tos),

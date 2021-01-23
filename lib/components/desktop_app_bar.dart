@@ -669,7 +669,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   }
 
   Widget resourcesDropdown() {
-    return PopupMenuButton(
+    return PopupMenuButton<PageRouteInfo>(
       tooltip: 'Resources',
       child: Opacity(
         opacity: 0.6,
@@ -695,9 +695,9 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           ),
         ),
       ),
-      itemBuilder: (_) => <PopupMenuEntry<AppBarResources>>[
+      itemBuilder: (_) => <PopupMenuEntry<PageRouteInfo>>[
         resourcesEntry(
-          value: AppBarResources.about,
+          value: AboutRoute(),
           icon: Icon(
             Icons.help_outline,
             color: stateColors.foreground.withOpacity(0.6),
@@ -705,7 +705,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           textData: 'about',
         ),
         resourcesEntry(
-          value: AppBarResources.contact,
+          value: ContactRoute(),
           icon: Icon(
             Icons.sms_outlined,
             color: stateColors.foreground.withOpacity(0.6),
@@ -713,7 +713,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           textData: 'contact',
         ),
         resourcesEntry(
-          value: AppBarResources.tos,
+          value: TosRoute(),
           icon: Icon(
             Icons.privacy_tip_outlined,
             color: stateColors.foreground.withOpacity(0.6),
@@ -722,7 +722,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
         PopupMenuDivider(),
         resourcesEntry(
-          value: AppBarResources.androidApp,
+          value: AndroidAppRoute(),
           icon: FaIcon(
             FontAwesomeIcons.googlePlay,
             color: Colors.green,
@@ -730,7 +730,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           textData: 'Android app',
         ),
         resourcesEntry(
-          value: AppBarResources.iosApp,
+          value: IosAppRoute(),
           icon: FaIcon(
             FontAwesomeIcons.appStoreIos,
             color: Colors.blue,
@@ -739,33 +739,25 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
       ],
       onSelected: (value) {
-        switch (value) {
-          case AppBarResources.about:
-            context.router.root.push(AboutRoute());
-            break;
-          case AppBarResources.contact:
-            context.router.root.push(ContactRoute());
-            break;
-          case AppBarResources.tos:
-            context.router.root.push(TosRoute());
-            break;
-          case AppBarResources.androidApp:
-            launch(
-                "https://play.google.com/store/apps/details?id=com.outofcontext.app");
-            break;
-          case AppBarResources.iosApp:
-            launch(
-                "https://apps.apple.com/us/app/out-of-context/id1516117110?ls=1");
-            break;
-          default:
+        if (value.routeName == AndroidAppRoute.name) {
+          launch("https://play.google.com/store/apps/"
+              "details?id=com.outofcontext.app");
+          return;
         }
+        if (value.routeName == IosAppRoute.name) {
+          launch("https://apps.apple.com/us/app/"
+              "out-of-context/id1516117110?ls=1");
+          return;
+        }
+
+        context.router.root.push(value);
       },
     );
   }
 
   Widget resourcesEntry({
     @required Widget icon,
-    @required AppBarResources value,
+    @required PageRouteInfo value,
     @required String textData,
   }) {
     return PopupMenuItem(

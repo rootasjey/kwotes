@@ -246,6 +246,14 @@ class AppRouter extends _i1.RootStackRouter {
     GitHubRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
+    },
+    AndroidAppRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
+    },
+    IosAppRoute.name: (entry) {
+      return _i1.MaterialPageX(
+          entry: entry, child: const _i1.EmptyRouterPage());
     }
   };
 
@@ -438,7 +446,13 @@ class AppRouter extends _i1.RootStackRouter {
             children: [
               _i1.RouteConfig<GitHubRoute>(GitHubRoute.name,
                   path: 'github',
-                  routeBuilder: (match) => GitHubRoute.fromMatch(match))
+                  routeBuilder: (match) => GitHubRoute.fromMatch(match)),
+              _i1.RouteConfig<AndroidAppRoute>(AndroidAppRoute.name,
+                  path: 'android',
+                  routeBuilder: (match) => AndroidAppRoute.fromMatch(match)),
+              _i1.RouteConfig<IosAppRoute>(IosAppRoute.name,
+                  path: 'ios',
+                  routeBuilder: (match) => IosAppRoute.fromMatch(match))
             ]),
         _i1.RouteConfig<TosRoute>(TosRoute.name,
             path: '/tos', routeBuilder: (match) => TosRoute.fromMatch(match)),
@@ -898,4 +912,20 @@ class GitHubRoute extends _i1.PageRouteInfo {
   GitHubRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
 
   static const String name = 'GitHubRoute';
+}
+
+class AndroidAppRoute extends _i1.PageRouteInfo {
+  const AndroidAppRoute() : super(name, path: 'android');
+
+  AndroidAppRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'AndroidAppRoute';
+}
+
+class IosAppRoute extends _i1.PageRouteInfo {
+  const IosAppRoute() : super(name, path: 'ios');
+
+  IosAppRoute.fromMatch(_i1.RouteMatch match) : super.fromMatch(match);
+
+  static const String name = 'IosAppRoute';
 }
