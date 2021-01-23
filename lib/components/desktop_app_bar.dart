@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -199,7 +198,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
 
   Widget closeButton() {
     return IconButton(
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: context.router.pop,
       color: Theme.of(context).iconTheme.color,
       icon: Icon(Icons.close),
     );
@@ -303,9 +302,11 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           ),
         ),
       ),
-      itemBuilder: (_) => <PopupMenuEntry<AppBarDiscover>>[
+      itemBuilder: (_) => <PopupMenuEntry<PageRouteInfo>>[
         discoverEntry(
-          value: AppBarDiscover.random,
+          value: QuotesDeepRoute(
+            children: [RandomQuotesRoute()],
+          ),
           icon: Padding(
             padding: const EdgeInsets.only(top: 5.0),
             child: Icon(
@@ -317,23 +318,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
       ],
       onSelected: (value) {
-        switch (value) {
-          case AppBarDiscover.random:
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => RandomQuotes(),
-              ),
-            );
-            break;
-          default:
-        }
+        context.router.root.navigate(value);
       },
     );
   }
 
   Widget discoverEntry({
     @required Widget icon,
-    @required AppBarDiscover value,
+    @required PageRouteInfo value,
     @required String textData,
   }) {
     return PopupMenuItem(
