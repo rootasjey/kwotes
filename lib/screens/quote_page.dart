@@ -62,16 +62,19 @@ class _QuotePageState extends State<QuotePage> {
     if (widget.quote == null) {
       showAnimations = true;
       fetchQuote();
-    } else {
-      setState(() {
-        showAnimations = false;
-        quote = widget.quote;
-
-        final topicColor = appTopicsColors.find(quote.topics.first);
-        accentColor =
-            topicColor != null ? Color(topicColor.decimal) : accentColor;
-      });
+      return;
     }
+
+    setState(() {
+      showAnimations = false;
+      quote = widget.quote;
+
+      final topicColor = appTopicsColors.find(quote.topics.first);
+      accentColor =
+          topicColor != null ? Color(topicColor.decimal) : accentColor;
+
+      fetchQuote(silent: true);
+    });
   }
 
   @override
@@ -609,10 +612,13 @@ class _QuotePageState extends State<QuotePage> {
     });
   }
 
-  void fetchQuote() async {
-    setState(() {
-      isLoading = true;
-    });
+  /// Fetch the quote matching the [widget.quoteId].
+  /// If [silent] is [true], there won't be visual cue
+  /// of fetching & loading data.
+  void fetchQuote({bool silent = false}) async {
+    if (!silent) {
+      setState(() => isLoading = true);
+    }
 
     try {
       final doc = await FirebaseFirestore.instance
@@ -621,10 +627,7 @@ class _QuotePageState extends State<QuotePage> {
           .get();
 
       if (!doc.exists) {
-        setState(() {
-          isLoading = false;
-        });
-
+        setState(() => isLoading = false);
         return;
       }
 
@@ -634,28 +637,30 @@ class _QuotePageState extends State<QuotePage> {
 
       await fetchIsFav();
 
-      setState(() {
-        isLoading = false;
-      });
+      if (!silent) {
+        setState(() => isLoading = false);
+      }
 
       fetchTopics();
     } catch (error) {
-      setState(() {
-        isLoading = false;
-      });
+      if (!silent) {
+        setState(() => isLoading = false);
+      }
 
       debugPrint(error);
     }
   }
 
   Future fetchIsFav() async {
-    if (stateUser.isUserConnected) {
-      final isFav = await isFavourite(
-        quoteId: quote.id,
-      );
-
-      quote.starred = isFav;
+    if (!stateUser.isUserConnected) {
+      return;
     }
+
+    final isFav = await isFavourite(
+      quoteId: quote.id,
+    );
+
+    quote.starred = isFav;
   }
 
   Future<bool> likeQuote() async {
