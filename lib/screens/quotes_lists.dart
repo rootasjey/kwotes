@@ -241,7 +241,10 @@ class _QuotesListsState extends State<QuotesLists> {
                   },
                 ),
               ],
-              child: cardListItemContent(quotesList, showPopupMenu),
+              child: cardListItemContent(
+                quotesList,
+                showPopupMenu,
+              ),
             ),
           ),
         ],
@@ -249,7 +252,10 @@ class _QuotesListsState extends State<QuotesLists> {
     );
   }
 
-  Widget cardListItemContent(UserQuotesList quotesList, bool showPopupMenu) {
+  Widget cardListItemContent(
+    UserQuotesList quotesList,
+    bool showPopupMenu,
+  ) {
     return Card(
       elevation: 2.0,
       child: InkWell(
