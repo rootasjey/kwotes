@@ -3,7 +3,11 @@ import { adminApp } from './adminApp';
 
 const firestore = adminApp.firestore();
 
-
+/**
+ * If [author.name] is edited,
+ * update all quotes referencing this author.
+ * Specifically [quote.author.name] property.
+ */
 export const onAuthorUpdated = functions
   .region('europe-west3')
   .firestore
@@ -20,16 +24,16 @@ export const onAuthorUpdated = functions
       return;
     }
 
-    const allQuotesWithAuthorName = await firestore
+    const allQuotesWithAuthor = await firestore
       .collection('quotes')
       .where('author.id', '==', authorId)
       .get();
 
-    if (allQuotesWithAuthorName.empty) {
+    if (allQuotesWithAuthor.empty) {
       return;
     }
 
-    for await (const quoteDoc of allQuotesWithAuthorName.docs) {
+    for await (const quoteDoc of allQuotesWithAuthor.docs) {
       await quoteDoc.ref
         .update('author.name', afterName);
     }
@@ -83,4 +87,42 @@ export const onQuoteDeleted = functions
     
     return await user.ref
       .update('stats.published', Math.max(0, userPub - 1));
+  });
+
+/**
+ * If [reference.name] is edited, 
+ * update all quotes referencing this reference
+ * Specifically the [quote.mainReference.name] property.
+ */
+export const onReferenceUpdated = functions
+  .region('europe-west3')
+  .firestore
+  .document('references/{referenceId}')
+  .onUpdate(async (snapshot) => {
+    const beforeData = snapshot.before.data();
+    const afterData = snapshot.after.data();
+    const referenceId = snapshot.after.id;
+
+    const beforeName: string = beforeData.name;
+    const afterName: string = afterData.name;
+
+    if (beforeName === afterName) {
+      return;
+    }
+
+    const allQuotesWithReference = await firestore
+      .collection('quotes')
+      .where('mainReference.id', '==', referenceId)
+      .get();
+
+    if (allQuotesWithReference.empty) {
+      return;
+    }
+
+    for await (const quoteDoc of allQuotesWithReference.docs) {
+      await quoteDoc.ref
+        .update('mainReference.name', afterName);
+    }
+
+    return true;
   });
