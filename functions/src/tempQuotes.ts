@@ -30,7 +30,7 @@ export const onTempQuoteAdded = functions
 export const onTempQuoteDeleted = functions
   .region('europe-west3')
   .firestore
-  .document('users/{userId}/favourites/{quoteId}')
+  .document('tempquotes/{tempQuoteId}')
   .onDelete(async (snapshot) => {
     const quoteData = snapshot.data();
     if (!quoteData) { return; }
