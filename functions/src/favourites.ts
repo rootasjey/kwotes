@@ -7,11 +7,18 @@ export const onFavAdded = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}/favourites/{quoteId}')
-  .onCreate(async (snapshot, context) => {
-    const quoteData = snapshot.data();
-    if (!quoteData) { return; }
+  .onCreate(async ({}, context) => {
+    const quoteDoc = await firestore
+      .collection('quotes')
+      .doc(context.params.quoteId)
+      .get();
 
-    const quoteFav: number = quoteData.stats.fav ?? 0;
+    const quoteData = quoteDoc.data();
+    if (!quoteData) {
+      return;
+    }
+
+    const quoteLikes: number = quoteData.stats?.likes ?? 0;
 
     const user = await firestore
       .collection('users')
@@ -21,12 +28,14 @@ export const onFavAdded = functions
     const userData = user.data();
 
     if (userData) {
-      const userFav: number = userData.stats.likes ?? 0;
+      const userFav: number = userData.stats.fav ?? 0;
       await user.ref.update('stats.fav', userFav + 1);
     }
       
-    return await snapshot.ref
-      .update('stats.fav', quoteFav + 1);
+    return await firestore
+      .collection('quotes')
+      .doc(context.params.quoteId)
+      .update('stats.likes', quoteLikes + 1);
   });
 
 export const onFavDeleted = functions
@@ -37,7 +46,7 @@ export const onFavDeleted = functions
     const quoteData = snapshot.data();
     if (!quoteData) { return; }
 
-    const quoteFav: number = quoteData.stats.fav ?? 0;
+    const quoteFav: number = quoteData.stats?.likes ?? 0;
 
     const user = await firestore
       .collection('users')
@@ -51,6 +60,8 @@ export const onFavDeleted = functions
       await user.ref.update('stats.fav', Math.max(0, userFav - 1));
     }
 
-    return await snapshot.ref
-      .update('stats.fav', Math.max(0, quoteFav - 1));
+    return await firestore
+      .collection('quotes')
+      .doc(context.params.quoteId)
+      .update('stats.likes', Math.max(0, quoteFav - 1));
   });
