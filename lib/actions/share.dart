@@ -1,4 +1,5 @@
 import 'package:figstyle/screens/image_share.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/types/author.dart';
@@ -8,13 +9,19 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void shareAuthor({@required BuildContext context, @required Author author}) {
+void shareAuthor({
+  @required BuildContext context,
+  @required Author author,
+}) {
   if (kIsWeb) {
     shareAuthorWeb(author: author);
     return;
   }
 
-  shareAuthorMobile(context: context, author: author);
+  shareAuthorMobile(
+    context: context,
+    author: author,
+  );
 }
 
 void shareAuthorMobile({
@@ -23,13 +30,13 @@ void shareAuthorMobile({
 }) {
   final RenderBox box = context.findRenderObject();
   String sharingText = author.name;
-  final urlReference = 'https://fig.style/#/author/${author.id}';
+  final authorUrl = "${Constants.baseAuthorUrl}${author.id}";
 
   if (author.job != null && author.job.isNotEmpty) {
-    sharingText += ' (${author.job})';
+    sharingText += " (${author.job})";
   }
 
-  sharingText += ' - URL: $urlReference';
+  sharingText += " - URL: $authorUrl";
 
   Share.share(
     sharingText,
@@ -40,20 +47,26 @@ void shareAuthorMobile({
 
 void shareAuthorWeb({@required Author author}) async {
   String sharingText = author.name;
-  final urlReference = 'https://fig.style/#/author/${author.id}';
+  final authorUrl = "${Constants.baseAuthorUrl}${author.id}";
 
   if (author.job != null && author.job.isNotEmpty) {
     sharingText += ' (${author.job})';
   }
 
-  final hashtags = '&hashtags=outofcontext';
+  final hashtags = Constants.twitterShareHashtags;
 
   await launch(
-    'https://twitter.com/intent/tweet?via=fig_style&text=$sharingText$hashtags&url=$urlReference',
+    "${Constants.baseTwitterShareUrl}"
+    "$sharingText"
+    "$hashtags"
+    "&url=$authorUrl",
   );
 }
 
-void shareQuote({@required BuildContext context, @required Quote quote}) {
+void shareQuote({
+  @required BuildContext context,
+  @required Quote quote,
+}) {
   if (kIsWeb) {
     shareQuoteWeb(quote: quote);
     return;
@@ -62,7 +75,10 @@ void shareQuote({@required BuildContext context, @required Quote quote}) {
   shareQuoteMobile(quote: quote, context: context);
 }
 
-void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
+void shareQuoteMobile({
+  @required BuildContext context,
+  @required Quote quote,
+}) {
   showCustomModalBottomSheet(
     context: context,
     builder: (context) {
@@ -124,7 +140,10 @@ void shareQuoteMobile({@required BuildContext context, @required Quote quote}) {
   );
 }
 
-void shareTextMobile({@required BuildContext context, @required Quote quote}) {
+void shareTextMobile({
+  @required BuildContext context,
+  @required Quote quote,
+}) {
   final RenderBox box = context.findRenderObject();
   final quoteName = quote.name;
   final authorName = quote.author?.name ?? '';
@@ -150,7 +169,7 @@ void shareTextMobile({@required BuildContext context, @required Quote quote}) {
 void shareLinkMobile({@required BuildContext context, @required Quote quote}) {
   final RenderBox box = context.findRenderObject();
 
-  String sharingText = "https://fig.style/quote/${quote.id}";
+  String sharingText = "${Constants.baseQuoteUrl}${quote.id}";
 
   Share.share(
     sharingText,
@@ -175,50 +194,67 @@ Future shareQuoteWeb({@required Quote quote}) async {
     sharingText += ' — $referenceName';
   }
 
-  final hashtags = '&hashtags=outofcontext';
-
-  final url =
-      'https://twitter.com/intent/tweet?via=fig_style&text=$sharingText$hashtags';
-  await launch(url);
-}
-
-void shareReference(
-    {@required BuildContext context, @required Reference reference}) {
-  if (kIsWeb) {
-    shareReferenceWeb(context: context, reference: reference);
-    return;
-  }
-
-  shareReferenceMobile(context: context, reference: reference);
-}
-
-void shareReferenceWeb(
-    {@required BuildContext context, @required Reference reference}) async {
-  String sharingText = reference.name;
-  final urlReference = 'https://fig.style/#/reference/${reference.id}';
-
-  if (reference.type.primary.isNotEmpty) {
-    sharingText += ' (${reference.type.primary})';
-  }
-
-  final hashtags = '&hashtags=outofcontext';
+  final hashtags = Constants.twitterShareHashtags;
 
   await launch(
-    'https://twitter.com/intent/tweet?via=fig_style&text=$sharingText$hashtags&url=$urlReference',
+    "${Constants.baseTwitterShareUrl}"
+    "$sharingText"
+    "$hashtags",
   );
 }
 
-void shareReferenceMobile(
-    {@required BuildContext context, @required Reference reference}) {
-  final RenderBox box = context.findRenderObject();
+void shareReference({
+  @required BuildContext context,
+  @required Reference reference,
+}) {
+  if (kIsWeb) {
+    shareReferenceWeb(
+      context: context,
+      reference: reference,
+    );
+    return;
+  }
+
+  shareReferenceMobile(
+    context: context,
+    reference: reference,
+  );
+}
+
+void shareReferenceWeb({
+  @required BuildContext context,
+  @required Reference reference,
+}) async {
   String sharingText = reference.name;
-  final urlReference = 'https://fig.style/#/reference/${reference.id}';
+  final referenceUrl = '${Constants.baseReferenceUrl}${reference.id}';
 
   if (reference.type.primary.isNotEmpty) {
     sharingText += ' (${reference.type.primary})';
   }
 
-  sharingText += ' - URL: $urlReference';
+  final hashtags = Constants.twitterShareHashtags;
+
+  await launch(
+    "${Constants.baseTwitterShareUrl}"
+    "$sharingText"
+    "$hashtags"
+    "&url=$referenceUrl",
+  );
+}
+
+void shareReferenceMobile({
+  @required BuildContext context,
+  @required Reference reference,
+}) {
+  final RenderBox box = context.findRenderObject();
+  String sharingText = reference.name;
+  final referenceUrl = '${Constants.baseReferenceUrl}${reference.id}';
+
+  if (reference.type.primary.isNotEmpty) {
+    sharingText += ' (${reference.type.primary})';
+  }
+
+  sharingText += ' - URL: $referenceUrl';
 
   Share.share(
     sharingText,
