@@ -119,3 +119,4 @@ android/.idea
 .firebase/hosting.YnVpbGQvd2Vi.cache
 firebase.json
 ios/Runner/GoogleService-Info.plist
+.firebase/
