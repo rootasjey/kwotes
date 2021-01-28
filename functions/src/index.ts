@@ -1,3 +1,7 @@
+import * as functions         from 'firebase-functions';
+
+import { apiModule }          from './api/index';
+
 import * as draftsFunc        from './drafts';
 import * as favouritesFunc    from './favourites';
 import * as imagesFunc        from './images';
@@ -19,3 +23,9 @@ export const quotidians     = quotidiansFunc;
 export const search         = searchFunc;
 export const tempQuotes     = tempQuotesFunc;
 export const users          = usersFunc;
+
+// API
+export const api = functions
+  .region('us-central1')
+  .https
+  .onRequest(apiModule);

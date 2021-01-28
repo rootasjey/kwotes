@@ -1,4 +1,3 @@
-
 interface CreateUserAccountParams {
   email: string;
   password: string;
