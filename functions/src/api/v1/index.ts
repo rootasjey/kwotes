@@ -18,21 +18,14 @@ export const v1Router = express.Router()
       version: 'v1',
     });
   })
-  .get('/quotidian', async (req, res) => {
+  .get('/quotidian', async (req, res, next) => {
     const lang = req.query.lang as string ?? 'en';
 
     if (!isLangAvailable(lang)) {
-      res.send({
-        response: {
-          date: undefined,
-          quotidian: undefined,
-          requestState: {
-            success: false,
-            error: {
-              reason: `The language ${lang} is not available. Please try 'en', 'fr'.`,
-            },
-            warning: '',
-          },
+      res.status(400).send({
+        error: {
+          reason: `The language ${lang} is not available. 
+            Please try the following values: 'en', 'fr'.`,
         }
       });
       return;
@@ -46,10 +39,17 @@ export const v1Router = express.Router()
 
     const dateId = `${date.getFullYear()}:${month}:${day}:${lang}`;
 
-    const quotidian = await adminApp.firestore()
-      .collection('quotidians')
-      .doc(dateId)
-      .get();
+    let quotidian: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+
+    try {
+      quotidian = await adminApp.firestore()
+        .collection('quotidians')
+        .doc(dateId)
+        .get();
+    } catch (error) {
+      next(error);
+      return;
+    }
 
     const quotidianData = quotidian.data();
 

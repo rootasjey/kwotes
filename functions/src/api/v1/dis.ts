@@ -7,7 +7,7 @@ import {
 } from '../utils';
 
 export const disRouter = express.Router()
-  .get('/random', async (req, res) => {
+  .get('/random', async (req, res, next) => {
     const responsePayload = {
       question: {
         quoteId: '',
@@ -28,30 +28,47 @@ export const disRouter = express.Router()
     };
 
     // 1. Get a random quote with available author or reference.
-    const randQuoteRes = await getRandomQuoteAuthored();
+    let randQuoteRes: RandQuoteResp;
+
+    try { randQuoteRes = await getRandomQuoteAuthored(); } 
+    catch (error) { next(error); return; }
+
     const selectedQuote = randQuoteRes.quote;
 
     if (!selectedQuote) {
-      responsePayload.requestState
-        .error.reason = `Sorry, but we couldn't find a suitable quote. Please try again.`;
-      res.send({ response: responsePayload });
+      res.status(404).send({
+        error: {
+          reason: `Sorry, but we couldn't find a suitable quote. 
+            Please try again.`,
+        }
+      });
       return;
     }
 
     // 2.1. If the returned quote has a known author,
     //      fetch this author's data to include in proposals.
     if (randQuoteRes.guessType === 'author') {
-      const answerAuthorSnap = await adminApp.firestore()
-      .collection('authors')
-      .doc(selectedQuote.author.id)
-      .get();
+      let answerAuthorSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+
+      try {
+        answerAuthorSnap = await adminApp.firestore()
+          .collection('authors')
+          .doc(selectedQuote.author.id)
+          .get();
+      } catch (error) {
+        next(error);
+        return;
+      }
       
       const answerAuthorData = answerAuthorSnap.data();
 
       if (!answerAuthorData) {
-        responsePayload.requestState
-          .error.reason = `Sorry, but we couldn't find a suitable author answer. Please try again.`;
-        res.send({ response: responsePayload });
+        res.status(404).send({
+          error: {
+            reason: `Sorry, but we couldn't find a suitable author answer. 
+            Please try again.`,
+          }
+        });
         return;
       }
 
@@ -62,17 +79,27 @@ export const disRouter = express.Router()
     // 2.2. If the returned quote has a known reference,
     //      fetch this author's data to include in proposals.
     if (randQuoteRes.guessType === 'reference') {
-      const answerReferenceSnap = await adminApp.firestore()
-        .collection('references')
-        .doc(selectedQuote.mainReference.id)
-        .get();
+      let answerReferenceSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>; 
+
+      try {
+        answerReferenceSnap = await adminApp.firestore()
+          .collection('references')
+          .doc(selectedQuote.mainReference.id)
+          .get();
+      } catch (error) {
+        next(error);
+        return;
+      }
 
       const answerReferenceData = answerReferenceSnap.data();
 
       if (!answerReferenceData) {
-        responsePayload.requestState
-          .error.reason = `Sorry, but we couldn't find a suitable reference anwser. Please try again.`;
-        res.send({ response: responsePayload });
+        res.status(404).send({
+          error: {
+            reason: `Sorry, but we couldn't find a suitable reference answer. 
+            Please try again.`,
+          }
+        });
         return;
       }
 
@@ -82,7 +109,10 @@ export const disRouter = express.Router()
 
     // 3.1. If the answer is an author, fetch 2 more random authors.
     if (randQuoteRes.guessType === 'author') {
-      const randAuthorsRes = await getRandomAuthors();
+      let randAuthorsRes: RandomMapArray;
+
+      try { randAuthorsRes = await getRandomAuthors(); } 
+      catch (error) { next(error); return; }
       
       responsePayload.proposals.type = randAuthorsRes.type;
       responsePayload.proposals.values.push(...randAuthorsRes.values);
@@ -90,7 +120,10 @@ export const disRouter = express.Router()
     
     // 3.2. If the answer is a reference, fetch 2 more random references.
     if (randQuoteRes.guessType === 'reference') {
-      const randReferencesRes = await getRandomReferences();
+      let randReferencesRes: RandomMapArray;
+
+      try { randReferencesRes = await getRandomReferences(); } 
+      catch (error) { next(error); return; }
 
       responsePayload.proposals.type = randReferencesRes.type;
       responsePayload.proposals.values.push(...randReferencesRes.values);
@@ -120,7 +153,16 @@ export const disRouter = express.Router()
       },
     };
 
-    checkValidateRouteParams(req.body);
+    const checkResult = checkValidateRouteParams(req.body);
+    
+    if (!checkResult.success) {
+      res.status(400).send({
+        error: {
+          reason: checkResult.message,
+        },
+      });
+      return;
+    }
 
     let quoteSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
 
@@ -138,9 +180,14 @@ export const disRouter = express.Router()
     const quoteSnapData = quoteSnap.data();
 
     if (!quoteSnapData) {
-      throw new Error("Sorry, we couldn't fetch the data." +
-        " This is either due to a bad network or the quote's id does not exist. " +
-        "Please try again.");
+      res.status(404).send({
+        error: {
+          reason: `Sorry, we couldn't fetch the data. 
+            This is either due to a bad network or the quote's id does not exist. 
+            Please try again.`,
+        },
+      });
+      return;
     }
 
     if (question.guessType === 'author') {
@@ -158,54 +205,66 @@ export const disRouter = express.Router()
 
 function checkValidateRouteParams(body: any) {
   const { answer, question } = body;
+  const result = {
+    success: true,
+    message: '',
+  };
 
   if (!answer) {
-    throw new Error(
-      "This endpoint must be called with a valid [answer] object." +
-      " The [answer] object should have 1 property filled with a string value " +
-      "which is an author's id or a reference's id. [answer.value] = 'author|reference's id.'"
-    );
+    result.success = false;
+    result.message = `This endpoint must be called with a valid [answer] object. 
+      The [answer] object should have 1 property filled with a string value 
+      which is an author's id or a reference's id. 
+      [answer.value] = 'author|reference's id.'`;
   }
   
   if (!answer.value) {
-    throw new Error(
-      "The request body is missing the following property [answer.value]." + 
-      "This endpoint must be called with a valid [answer] object." +
-      " The [answer] object should have 1 property filled with a string value " +
-      "which is an author's id or a reference's id. [answer.value] = 'author|reference's id.'"
-    );
+    result.success = false;
+    result.message = `The request body is missing the following property [answer.value]. 
+      This endpoint must be called with a valid [answer] object. 
+      The [answer] object should have 1 property filled with a string value 
+      which is an author's id or a reference's id. 
+      [answer.value] = 'author|reference's id.'`;
   }
   
   if (!question) {
-    throw new Error(
-      "This endpoint must be called with a valid [question] object." +
-      " The [question] object should have 2 properties [question.quoteId] " +
-      "which a string, and [question.guessType] which is also a string."
-    );
+    result.success = false;
+    result.message = `This endpoint must be called with a valid [question] object. 
+      The [question] object should have 2 properties [question.quoteId] 
+      which a string, and [question.guessType] which is also a string.`;
   }
   
   if (!question.guessType) {
-    throw new Error(
-      "The request body is missing the following property [question.guessType]." +
-      "This endpoint must be called with a valid [question] object." +
-      " The [question] object should have 2 properties [question.quoteId] " +
-      "which a string, and [question.guessType] which is also a string."
-    );
+    result.success = false;
+    result.message = `The request body is missing the following property [question.guessType]. 
+      This endpoint must be called with a valid [question] object. 
+      The [question] object should have 2 properties [question.quoteId] which a string, 
+      and [question.guessType] which is also a string.`;
   }
   
   if (question.guessType !== 'author' && question.guessType !== 'reference') {
-    throw new Error(
-      "The property [question.guessType] should either be equal to " +
-      "'author' or 'reference'. Other values are invalid."
-    );
+    result.success = false;
+    result.message = `The property [question.guessType] should either 
+      be equal to 'author' or 'reference'. Any other values are invalid.`;
   }
     
     if (!question.quoteId) {
-      throw new Error(
-        "The request body is missing the following property [question.quoteId]." +
-        "This endpoint must be called with a valid [question] object." +
-        " The [question] object should have 2 properties [question.quoteId] " +
-        "which a string, and [question.guessType] which is also a string."
-      );
+      result.success = false;
+      result.message = `The request body is missing the following property [question.quoteId]. 
+        This endpoint must be called with a valid [question] object. 
+        The [question] object should have 2 properties [question.quoteId] 
+        which a string, and [question.guessType] which is also a string.`;
     }
+
+  return result;
+}
+
+interface RandQuoteResp {
+  quote?: FirebaseFirestore.DocumentData;
+  guessType: string;
+}
+
+interface RandomMapArray {
+  type: string;
+  values: any[];
 }

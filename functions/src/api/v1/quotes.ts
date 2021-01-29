@@ -3,7 +3,7 @@ import { adminApp } from '../../adminApp';
 import { getRandomIntInclusive, isLangAvailable } from '../utils';
 
 export const quotesRouter = express.Router()
-  .get('/', async (req, res) => {
+  .get('/', async (req, res, next) => {
     const startAfter = req.query.startAfter as string ?? '';
 
     const strOffset = req.query.offset as string ?? '0';
@@ -32,8 +32,12 @@ export const quotesRouter = express.Router()
     };
 
     if (!isLangAvailable(lang)) {
-      responsePayload.error.reason = `The language ${lang} is not available. Please try 'en', 'fr'.`;
-      res.send({ response: responsePayload });
+      res.status(400).send({
+        error: {
+          reason: `The language ${lang} is not available. 
+            Please try the following values: 'en', 'fr'.`,
+        }
+      });
       return;
     }
 
@@ -52,11 +56,17 @@ export const quotesRouter = express.Router()
       query.startAfter(startAfterDoc);
     }
 
-    const snapshot = await query.get();
+    let snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
+
+    try { snapshot = await query.get(); } 
+    catch (error) { next(error); return; }
 
     if (snapshot.empty) {
-      responsePayload.error.reason = 'The snapshot is empty for this query.';
-      res.send({ response: responsePayload });
+      res.status(404).send({
+        error: {
+          reason: `There is no data for this query.`
+        }
+      });
       return;
     }
 
@@ -71,7 +81,7 @@ export const quotesRouter = express.Router()
     responsePayload.quotes = quotes;
     res.send({ response: responsePayload });
   })
-  .get('/random', async (req, res) => {
+  .get('/random', async (req, res, next) => {
     const userStrLimit = req.query.limit as string ?? '12';
     const userIntLimit = parseInt(userStrLimit);
 
@@ -97,26 +107,38 @@ export const quotesRouter = express.Router()
     };
 
     if (!isLangAvailable(lang)) {
-      responsePayload.requestState
-        .error.reason = `The language ${lang} is not available. Please try 'en', 'fr'.`;
-      res.send({ response: responsePayload });
+      res.status(400).send({
+        error: {
+          reason: `The language ${lang} is not available. 
+            Please try the following values: 'en', 'fr'.`,
+        }
+      });
       return;
     }
 
     const createdAt = new Date();
     createdAt.setDate(createdAt.getDate() - getRandomIntInclusive(0, 360));
 
-    const snapshot = await adminApp.firestore()
-      .collection('quotes')
-      .where('lang', '==', lang)
-      .where('createdAt', '>=', createdAt)
-      .limit(limit)
-      .get();
+    let snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
+
+    try {
+      snapshot = await adminApp.firestore()
+        .collection('quotes')
+        .where('lang', '==', lang)
+        .where('createdAt', '>=', createdAt)
+        .limit(limit)
+        .get();
+    } catch (error) {
+      next(error);
+      return;
+    }
 
     if (snapshot.empty) {
-      responsePayload.requestState
-        .error.reason = 'The snapshot is empty for this query.';
-      res.send({ response: responsePayload });
+      res.status(404).send({
+        error: {
+          reason: `There is no data for this query.`,
+        }
+      });
       return;
     }
 
