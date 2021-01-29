@@ -140,6 +140,18 @@ export const createAccount = functions
       .collection('users')
       .doc(userRecord.uid)
       .set({
+        developer: {
+          apps: {
+            current: 0,
+            limit: 5,
+          },
+          isProgramActive: false,
+          payment: {
+            isActive: false,
+            plan: 'free',
+            stripeId: '',
+          }
+        },
         email: email,
         lang: 'en',
         name: username,
