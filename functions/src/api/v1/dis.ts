@@ -200,6 +200,7 @@ export const disRouter = express.Router()
         quoteSnapData.mainReference.id === answer.value;
     }
 
+    responsePayload.requestState.success = true;
     res.send({ response: responsePayload });
   });
 
