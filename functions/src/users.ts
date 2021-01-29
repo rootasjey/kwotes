@@ -6,6 +6,7 @@ import { checkUserIsSignedIn } from './utils';
 const firestore = adminApp.firestore();
 
 /**
+ * TEMPORARY: Delete after execution.
  * Update list.quote doc to use same id
  * Must be used after app updates (mobile & web).
  */
@@ -257,13 +258,10 @@ export const deleteAccount = functions
       const userData = userSnapshot.data();
 
       if (!userSnapshot.exists || !userData) {
-        return {
-          success: false,
-          error: {
-            message: "This user document doesn't exist anymore.",
-          },
-          uid: userAuth.uid,
-        };
+        throw new functions.https.HttpsError(
+          'not-found',
+          `This user document doesn't exist.`,
+        );
       }
 
       const stats = userData.stats;
