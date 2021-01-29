@@ -105,7 +105,107 @@ export const disRouter = express.Router()
 
     res.send({ response: responsePayload });
   })
-  .post('/validate', async (req, res) => {
-    res.send("Didn't check, sorry.");
+  .post('/validate', async (req, res, next) => {
+    const { answer, question } = req.body;
+
+    const responsePayload = {
+      question,
+      answer,
+      requestState: {
+        success: false,
+        error: {
+          reason: '',
+        },
+        warning: '',
+      },
+    };
+
+    checkValidateRouteParams(req.body);
+
+    let quoteSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+
+    try {
+      quoteSnap = await adminApp.firestore()
+        .collection('quotes')
+        .doc(question.quoteId)
+        .get();
+      
+    } catch (error) {
+      next(error);
+      return;
+    }
+
+    const quoteSnapData = quoteSnap.data();
+
+    if (!quoteSnapData) {
+      throw new Error("Sorry, we couldn't fetch the data." +
+        " This is either due to a bad network or the quote's id does not exist. " +
+        "Please try again.");
+    }
+
+    if (question.guessType === 'author') {
+      responsePayload.answer.isCorrect = 
+        quoteSnapData.author.id === answer.value;
+    }
+
+    if (question.guessType === 'reference') {
+      responsePayload.answer.isCorrect = 
+        quoteSnapData.mainReference.id === answer.value;
+    }
+
+    res.send({ response: responsePayload });
   });
 
+function checkValidateRouteParams(body: any) {
+  const { answer, question } = body;
+
+  if (!answer) {
+    throw new Error(
+      "This endpoint must be called with a valid [answer] object." +
+      " The [answer] object should have 1 property filled with a string value " +
+      "which is an author's id or a reference's id. [answer.value] = 'author|reference's id.'"
+    );
+  }
+  
+  if (!answer.value) {
+    throw new Error(
+      "The request body is missing the following property [answer.value]." + 
+      "This endpoint must be called with a valid [answer] object." +
+      " The [answer] object should have 1 property filled with a string value " +
+      "which is an author's id or a reference's id. [answer.value] = 'author|reference's id.'"
+    );
+  }
+  
+  if (!question) {
+    throw new Error(
+      "This endpoint must be called with a valid [question] object." +
+      " The [question] object should have 2 properties [question.quoteId] " +
+      "which a string, and [question.guessType] which is also a string."
+    );
+  }
+  
+  if (!question.guessType) {
+    throw new Error(
+      "The request body is missing the following property [question.guessType]." +
+      "This endpoint must be called with a valid [question] object." +
+      " The [question] object should have 2 properties [question.quoteId] " +
+      "which a string, and [question.guessType] which is also a string."
+    );
+  }
+  
+  if (question.guessType !== 'author' && question.guessType !== 'reference') {
+    throw new Error(
+      "The property [question.guessType] should either be equal to " +
+      "'author' or 'reference'. Other values are invalid."
+    );
+  }
+    
+    if (!question.quoteId) {
+      throw new Error(
+        "The request body is missing the following property [question.quoteId]." +
+        "This endpoint must be called with a valid [question] object." +
+        " The [question] object should have 2 properties [question.quoteId] " +
+        "which a string, and [question.guessType] which is also a string."
+      );
+    }
+}
