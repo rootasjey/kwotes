@@ -1,3 +1,8 @@
+interface AddAppParams {
+  name: string;
+  description: string;
+}
+
 interface CreateUserAccountParams {
   email: string;
   password: string;
@@ -15,9 +20,19 @@ interface DeleteAccountParams {
   idToken: string;
 }
 
+interface DeleteAppParams {
+  appId: string;
+}
+
 interface DeleteListParams {
   listId: string;
   idToken: string;
+}
+
+interface GenerateNewKeysParam {
+  appId: string;
+  resetPrimary: boolean;
+  resetSecondary: boolean;
 }
 
 interface NotifFuncParams {
@@ -29,6 +44,11 @@ interface NotifFuncParams {
 interface UpdateEmailParams {
   newEmail: string;
   idToken: string;
+}
+
+interface UpdateAppPermissionsParams {
+  appId: string;
+  rights: Map<string, boolean>;
 }
 
 interface UpdateUsernameParams {
