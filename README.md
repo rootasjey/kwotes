@@ -203,9 +203,10 @@ You can find the platform's privacy policy in this repo: [TOS.md](https://privac
 
 The following screenshots was taken on the web application.
 
-![web home](./screenshots/web.png) _Home_ <br/><br/><br/>
-![web home](./screenshots/web_discover.png) _Discover_ <br/><br/><br/>
-![web home](./screenshots/web_topics.png) _Topics_ <br/><br/><br/>
+![web homepage](./screenshots/web.png) _Home_ <br/><br/><br/>
+![web recent quotes](./screenshots/web_recent.png) _Recent_ <br/><br/><br/>
+![web search author](./screenshots/web_search_author.png) _Search_ <br/><br/><br/>
+![web random quotes](./screenshots/web_random_quotes.png) _Random quotes_ <br/><br/><br/>
 
 -------
 
