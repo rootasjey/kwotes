@@ -46,7 +46,13 @@ interface UpdateEmailParams {
   idToken: string;
 }
 
-interface UpdateAppPermissionsParams {
+interface UpdateAppMetadataParams {
+  appId: string;
+  name: string;
+  description: string;
+}
+
+interface UpdateAppRightsParams {
   appId: string;
   rights: Map<string, boolean>;
 }

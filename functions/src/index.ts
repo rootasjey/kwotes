@@ -2,6 +2,7 @@ import * as functions         from 'firebase-functions';
 
 import { apiModule }          from './api/index';
 
+import * as developersFunc    from './developers';
 import * as draftsFunc        from './drafts';
 import * as favouritesFunc    from './favourites';
 import * as imagesFunc        from './images';
@@ -13,6 +14,7 @@ import * as searchFunc        from './search';
 import * as tempQuotesFunc    from './tempQuotes';
 import * as usersFunc         from './users';
 
+export const developers     = developersFunc;
 export const drafts         = draftsFunc;
 export const favourites     = favouritesFunc;
 export const images         = imagesFunc;
