@@ -50,12 +50,6 @@ class _SignupState extends State<Signup> {
   final confirmPasswordNode = FocusNode();
 
   @override
-  initState() {
-    super.initState();
-    ensureNotConnected();
-  }
-
-  @override
   void dispose() {
     super.dispose();
     usernameNode.dispose();
@@ -506,28 +500,6 @@ class _SignupState extends State<Signup> {
         ),
       ),
     );
-  }
-
-  void ensureNotConnected() async {
-    setState(() {
-      isCheckingAuth = true;
-    });
-
-    try {
-      final userAuth = stateUser.userAuth;
-
-      setState(() {
-        isCheckingAuth = false;
-      });
-
-      if (userAuth != null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
-      }
-    } catch (error) {
-      setState(() {
-        isCheckingAuth = false;
-      });
-    }
   }
 
   void signUpProcess() async {
