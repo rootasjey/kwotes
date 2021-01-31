@@ -387,7 +387,7 @@ class _FavouritesState extends State<Favourites> {
           .collection('users')
           .doc(stateUser.userAuth.uid)
           .collection('favourites')
-          .orderBy('createdAt', descending: true)
+          .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
           .limit(limit)
           .get();
