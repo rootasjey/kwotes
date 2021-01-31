@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -112,8 +112,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
           child: FlatButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Home()));
+              context.router.navigate(HomeRoute());
             },
             child: Opacity(
               opacity: .6,

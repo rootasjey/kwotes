@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
@@ -9,8 +11,6 @@ import 'package:figstyle/components/circle_button.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/screens/home/home.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -29,12 +29,6 @@ class DeleteAccountState extends State<DeleteAccount> {
   double beginY = 10.0;
 
   String password = '';
-
-  @override
-  initState() {
-    super.initState();
-    checkAuth();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +57,12 @@ class DeleteAccountState extends State<DeleteAccount> {
           Padding(
             padding: EdgeInsets.only(left: titleLeftPadding),
             child: CircleButton(
-                onTap: () => Navigator.of(context).pop(),
-                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+              onTap: context.router.pop,
+              icon: Icon(
+                Icons.arrow_back,
+                color: stateColors.foreground,
+              ),
+            ),
           ),
           AppIcon(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -159,10 +157,7 @@ class DeleteAccountState extends State<DeleteAccount> {
                 top: 45.0,
               ),
               child: OutlinedButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Home()));
-                },
+                onPressed: () => context.router.navigate(HomeRoute()),
                 child: Opacity(
                   opacity: .6,
                   child: Text(
@@ -413,19 +408,6 @@ class DeleteAccountState extends State<DeleteAccount> {
     );
   }
 
-  void checkAuth() async {
-    try {
-      final userAuth = stateUser.userAuth;
-
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-      }
-    } catch (error) {
-      debugPrint(error.toString());
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-    }
-  }
-
   void deleteAccountProcess() async {
     if (!inputValuesOk()) {
       return;
@@ -438,13 +420,7 @@ class DeleteAccountState extends State<DeleteAccount> {
 
       if (userAuth == null) {
         setState(() => isDeleting = false);
-
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => Signin(),
-          ),
-        );
-
+        context.router.navigate(SigninRoute());
         return;
       }
 

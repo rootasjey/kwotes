@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -38,12 +39,6 @@ class _UpdateEmailState extends State<UpdateEmail> {
   String password = '';
 
   Timer emailTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    checkAuth();
-  }
 
   @override
   void dispose() {
@@ -445,30 +440,6 @@ class _UpdateEmailState extends State<UpdateEmail> {
     );
   }
 
-  void checkAuth() async {
-    setState(() {
-      isCheckingAuth = true;
-    });
-
-    try {
-      final userAuth = stateUser.userAuth;
-
-      setState(() {
-        isCheckingAuth = false;
-      });
-
-      if (userAuth == null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-      }
-
-      setState(() {
-        currentEmail = userAuth.email;
-      });
-    } catch (error) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signin()));
-    }
-  }
-
   void updateEmailProcess() async {
     if (!inputValuesOk()) {
       return;
@@ -480,9 +451,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
     try {
       if (!await valuesAvailabilityCheck()) {
-        setState(() {
-          isUpdating = false;
-        });
+        setState(() => isUpdating = false);
 
         showSnack(
           context: context,
@@ -496,16 +465,8 @@ class _UpdateEmailState extends State<UpdateEmail> {
       final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
-        setState(() {
-          isUpdating = false;
-        });
-
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => Signin(),
-          ),
-        );
-
+        setState(() => isUpdating = false);
+        context.router.navigate(SigninRoute());
         return;
       }
 

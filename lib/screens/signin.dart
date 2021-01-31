@@ -7,7 +7,6 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -34,12 +33,6 @@ class _SigninState extends State<Signin> {
   final passwordNode = FocusNode();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    ensureNotConnected();
-  }
 
   @override
   void dispose() {
@@ -324,29 +317,6 @@ class _SigninState extends State<Signin> {
         ),
       ),
     );
-  }
-
-  void ensureNotConnected() async {
-    setState(() {
-      isCheckingAuth = true;
-    });
-
-    try {
-      final userAuth = stateUser.userAuth;
-
-      setState(() {
-        isCheckingAuth = false;
-      });
-
-      if (userAuth != null) {
-        stateUser.setUserConnected();
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
-      }
-    } catch (error) {
-      setState(() {
-        isCheckingAuth = false;
-      });
-    }
   }
 
   bool inputValuesOk() {

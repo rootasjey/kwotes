@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -478,12 +480,12 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
-        isCompleted = false;
-        isUpdating = false;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => Signin()),
-        );
+        setState(() {
+          isCompleted = false;
+          isUpdating = false;
+        });
 
+        context.router.navigate(SigninRoute());
         return;
       }
 
