@@ -11,7 +11,6 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -563,12 +562,7 @@ class _SignupState extends State<Signup> {
 
       stateUser.setUserConnected();
       PushNotifications.linkAuthUser(respCreateAcc.user.id);
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => Home(),
-        ),
-      );
+      context.router.navigate(HomeRoute());
     } catch (error) {
       debugPrint(error.toString());
 
