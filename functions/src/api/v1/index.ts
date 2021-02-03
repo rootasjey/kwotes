@@ -3,10 +3,12 @@ import { adminApp } from '../../adminApp';
 import { isLangAvailable } from '../utils';
 import { quotesRouter } from './quotes';
 import { disRouter } from './dis';
+import { searchRouter } from './search';
 
 export const v1Router = express.Router()
   .use('/quotes', quotesRouter)
   .use('/dis', disRouter)
+  .use('/search', searchRouter)
   .get('/', (req, res) => {
     res.send({
       lastUpdated: new Date(2021, 0, 27),
