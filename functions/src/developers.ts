@@ -38,6 +38,15 @@ export const activateDevProgram = functions
         );
       }
 
+      const isProgramActive: boolean = userData.developer?.isProgramActive;
+
+      if (!isProgramActive) {
+        throw new functions.https.HttpsError(
+          'permission-denied',
+          `Your developer program is already active.`,
+        );
+      }
+
       await userSnapshot.ref
         .update({
           developer: {
