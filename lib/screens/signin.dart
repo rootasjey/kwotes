@@ -218,12 +218,10 @@ class _SigninState extends State<Signin> {
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: FlatButton(
-            onPressed: () async {
-              await context.router.navigate(SignupRoute());
-
-              if (stateUser.isUserConnected) {
-                context.router.navigate(HomeRoute());
-              }
+            onPressed: () {
+              context.router.navigate(
+                SignupRoute(onSignupResult: widget.onSigninResult),
+              );
             },
             child: Opacity(
               opacity: 0.6,

@@ -195,6 +195,11 @@ abstract class StateUserBase with Store {
 
       setUserConnected();
 
+      appStorage.setCredentials(
+        email: email,
+        password: password,
+      );
+
       appStorage.setUserName(_userAuth.displayName);
       PushNotifications.linkAuthUser(_userAuth.uid);
 

@@ -5,7 +5,6 @@ import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/push_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
@@ -13,11 +12,14 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Signup extends StatefulWidget {
+  final void Function(bool isAuthenticated) onSignupResult;
+
+  const Signup({Key key, this.onSignupResult}) : super(key: key);
+
   @override
   _SignupState createState() => _SignupState();
 }
@@ -547,21 +549,33 @@ class _SignupState extends State<Signup> {
         return;
       }
 
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userCred = await stateUser.signin(
         email: email,
         password: password,
       );
 
-      isSigningUp = false;
-      isCompleted = true;
+      setState(() {
+        isSigningUp = false;
+        isCompleted = true;
+      });
 
-      appStorage.setCredentials(
-        email: email,
-        password: password,
-      );
+      if (userCred == null) {
+        showSnack(
+          context: context,
+          type: SnackType.error,
+          message: "There was an issue while connecting to your new account.",
+        );
 
-      stateUser.setUserConnected();
+        return;
+      }
+
       PushNotifications.linkAuthUser(respCreateAcc.user.id);
+
+      if (widget.onSignupResult != null) {
+        widget.onSignupResult(true);
+        return;
+      }
+
       context.router.navigate(HomeRoute());
     } catch (error) {
       debugPrint(error.toString());
