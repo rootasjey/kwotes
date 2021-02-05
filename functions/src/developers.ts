@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 
 import { adminApp } from './adminApp';
+import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
@@ -81,10 +82,10 @@ export const activateDevProgram = functions
   });
 
 /**
- * Add a new app for the authenticated user.
+ * Create a new app for the authenticated user.
  * Check user's apps limit.
  */
-export const addApp = functions
+export const createApp = functions
   .region('europe-west3')
   .https
   .onCall(async (data: AddAppParams, context) => {
@@ -231,6 +232,7 @@ export const deactivateDevProgram = functions
   .https
   .onCall(async (data, context) => {
     const userAuth = context.auth;
+    const { idToken } = data;
 
     if (!userAuth) {
       throw new functions.https.HttpsError(
@@ -238,6 +240,8 @@ export const deactivateDevProgram = functions
         `The function must be called from an authenticated user.`
       );
     }
+
+    await checkUserIsSignedIn(context, idToken);
 
     try {
       const userSnapshot = await firestore
