@@ -371,7 +371,6 @@ class DeleteAccountState extends State<DeleteAccount> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    // contentPadding: const EdgeInsets.all(25.0),
                     children: <Widget>[
                       Divider(
                         color: stateColors.secondary,

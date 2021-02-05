@@ -254,8 +254,10 @@ export const deleteAccount = functions
     const { idToken } = data;
 
     if (!userAuth) {
-      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-        'an authenticated user.');
+      throw new functions.https.HttpsError(
+        'unauthenticated', 
+        `The function must be called from an authenticated user.`,
+      );
     }
 
     await checkUserIsSignedIn(context, idToken);

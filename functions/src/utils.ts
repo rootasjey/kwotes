@@ -10,8 +10,10 @@ export async function checkUserIsSignedIn(
   const userAuth = context.auth;
 
   if (!userAuth) {
-    throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-      'an authenticated user (2).');
+    throw new functions.https.HttpsError(
+      'unauthenticated', 
+      `The function must be called from an authenticated user (2).`,
+    );
   }
 
   let isTokenValid = false;
@@ -28,8 +30,10 @@ export async function checkUserIsSignedIn(
   }
 
   if (!isTokenValid) {
-    throw new functions.https.HttpsError('unauthenticated', 'Your session has expired. ' +
-      'Please (sign out and) sign in again.');
+    throw new functions.https.HttpsError(
+      'unauthenticated', 
+      `Your session has expired. Please (sign out and) sign in again.`,
+    );
   }
 }
 
