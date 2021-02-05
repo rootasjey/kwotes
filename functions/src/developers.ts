@@ -41,7 +41,7 @@ export const activateDevProgram = functions
 
       const isProgramActive: boolean = userData.developer?.isProgramActive;
 
-      if (!isProgramActive) {
+      if (isProgramActive) {
         throw new functions.https.HttpsError(
           'permission-denied',
           `Your developer program is already active.`,
@@ -170,6 +170,7 @@ export const createApp = functions
             'api:proposequote': false,
             'api:readquote': true,
             'api:readuser': false,
+            'api:services': false,
             'api:validatequote': false,
           },
           stats: {
