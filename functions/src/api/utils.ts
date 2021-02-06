@@ -208,11 +208,43 @@ export const checkAPIKey = async (req: Request, res: Response, next: NextFunctio
   if (!appDoc.exists || !docData) {
     res
       .status(401)
-      .send(`Please provide a valid API key. None was sent.`);
+      .send(`Missing API key. Please provide a valid API key.`);
 
     return;
   }
 
+  // Check other API keys segments.
+  const keyNumber = segments[segments.length - 1];
+
+  if (keyNumber.indexOf('k=1') > -1) {
+    const primaryKey: string = docData.keys.primary;
+
+    if (primaryKey !== apiKey) {
+      res
+        .status(401)
+        .send(`Wrong (primary) API key. Please provide a valid API key.`);
+
+      return;
+    }
+  } else if (keyNumber.indexOf('k=2') > -1) {
+    const secondaryKey: string = docData.keys.secondary;
+
+    if (secondaryKey !== apiKey) {
+      res
+        .status(401)
+        .send(`Wrong (secondary) API key. Please provide a valid API key.`);
+
+      return;
+    }
+  } else {
+    res
+      .status(401)
+      .send(`Wrong API key. Please provide a valid API key.`);
+
+    return;
+  }
+
+  // Check rate limit and update stats.
   const allTimeCalls: number  = docData.stats.calls.allTime;
   const callsLimit: number  = docData.stats.calls.limit;
 
