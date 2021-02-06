@@ -135,23 +135,14 @@ export const createApp = functions
         description = 'This is an awesome app!';
       }
 
-      const hash1 = require("crypto")
-        .createHash("md5")
-        .update(Date.now().toString())
-        .digest("base64");
-
-      const hash2 = require("crypto")
-        .createHash("md5")
-        .update(Date.now().toString())
-        .digest("base64");
 
       const appDoc = await firestore
         .collection('apps')
         .add({
           createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
           keys: {
-            primary: `${userAuth.uid},${hash1},k=1`,
-            secondary: `${userAuth.uid},${hash2},k=2`,
+            primary: '',
+            secondary: '',
           },
           cert: {
             active: false,
@@ -191,6 +182,23 @@ export const createApp = functions
             id: userAuth.uid,
           }
         });
+
+      const hash1 = require("crypto")
+        .createHash("md5")
+        .update(Date.now().toString())
+        .digest("base64");
+
+      const hash2 = require("crypto")
+        .createHash("md5")
+        .update(Date.now().toString())
+        .digest("base64");
+        
+      await appDoc.update({
+        keys: {
+          primary: `${appDoc.id},${hash1},k=1`,
+          secondary: `${appDoc.id},${hash2},k=2`,
+        },
+      });
 
       // Update apps count.
       const newCurrentAppsCount = Math.max(currentAppsCount + 1, 0);
