@@ -60,11 +60,13 @@ interface UpdateAppRightsParams {
 interface UpdateDailyStatsParams {
   appDoc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
   callsLimit: number;
+  date: Date;
   dayDateId: string;
 }
 
 interface UpdateStatsParams {
   appDoc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+  date: Date;
   dateId: string;
 }
 

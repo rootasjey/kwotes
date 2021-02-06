@@ -258,7 +258,12 @@ export const checkAPIKey = async (req: Request, res: Response, next: NextFunctio
 
   const dayDateId = `${date.getFullYear()}:${month}:${day}`;
   
-  const updateDayOk = await updateDailyStats({ appDoc, dayDateId, callsLimit });
+  const updateDayOk = await updateDailyStats({ 
+    appDoc, 
+    callsLimit, 
+    date, 
+    dayDateId, 
+  });
 
   if (!updateDayOk) {
     res
@@ -270,7 +275,8 @@ export const checkAPIKey = async (req: Request, res: Response, next: NextFunctio
   }
 
   const updateMonthOk = await updateMonthlyStats({ 
-    appDoc, 
+    appDoc,
+    date,
     dateId: `${date.getFullYear()}:${month}`, 
   });
 
@@ -285,6 +291,7 @@ export const checkAPIKey = async (req: Request, res: Response, next: NextFunctio
 
   const updateYearOk = await updateYearlyStats({
     appDoc,
+    date,
     dateId: `${date.getFullYear()}`,
   });
 
@@ -301,7 +308,7 @@ export const checkAPIKey = async (req: Request, res: Response, next: NextFunctio
 }
 
 async function updateDailyStats(params: UpdateDailyStatsParams) {
-  const { appDoc, dayDateId, callsLimit } = params;
+  const { appDoc, dayDateId, callsLimit, date } = params;
 
   const dailyCallsDoc = await appDoc
     .ref
@@ -311,7 +318,11 @@ async function updateDailyStats(params: UpdateDailyStatsParams) {
 
   if (!dailyCallsDoc.exists) {
     await dailyCallsDoc.ref.create({
-      date: dayDateId,
+      date: new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+      ),
       calls: 0,
     });
 
@@ -335,7 +346,7 @@ async function updateDailyStats(params: UpdateDailyStatsParams) {
 }
 
 async function updateMonthlyStats(params: UpdateStatsParams) {
-  const { appDoc, dateId } = params;
+  const { appDoc, dateId, date } = params;
 
   const monthlyCallsDoc = await appDoc
     .ref
@@ -345,7 +356,7 @@ async function updateMonthlyStats(params: UpdateStatsParams) {
 
   if (!monthlyCallsDoc.exists) {
     await monthlyCallsDoc.ref.create({
-      date: dateId,
+      date: new Date(date.getFullYear(), date.getMonth()),
       calls: 0,
     });
 
@@ -365,7 +376,7 @@ async function updateMonthlyStats(params: UpdateStatsParams) {
 }
 
 async function updateYearlyStats(params: UpdateStatsParams) {
-  const { appDoc, dateId } = params;
+  const { appDoc, dateId, date } = params;
 
   const yearlyCallsDoc = await appDoc
     .ref
@@ -375,7 +386,7 @@ async function updateYearlyStats(params: UpdateStatsParams) {
 
   if (!yearlyCallsDoc.exists) {
     await yearlyCallsDoc.ref.create({
-      date: dateId,
+      date: new Date(date.getFullYear(), 0),
       calls: 0,
     });
 
