@@ -323,7 +323,7 @@ async function updateDailyStats(params: UpdateDailyStatsParams) {
         date.getMonth(),
         date.getDate(),
       ),
-      calls: 0,
+      calls:1,
     });
 
     return true;
@@ -357,7 +357,7 @@ async function updateMonthlyStats(params: UpdateStatsParams) {
   if (!monthlyCallsDoc.exists) {
     await monthlyCallsDoc.ref.create({
       date: new Date(date.getFullYear(), date.getMonth()),
-      calls: 0,
+      calls: 1,
     });
 
     return true;
@@ -387,7 +387,7 @@ async function updateYearlyStats(params: UpdateStatsParams) {
   if (!yearlyCallsDoc.exists) {
     await yearlyCallsDoc.ref.create({
       date: new Date(date.getFullYear(), 0),
-      calls: 0,
+      calls: 1,
     });
 
     return true;
