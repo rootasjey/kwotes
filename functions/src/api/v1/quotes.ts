@@ -1,8 +1,9 @@
 import * as express from 'express';
 import { adminApp } from '../../adminApp';
-import { getRandomIntInclusive, isLangAvailable } from '../utils';
+import { checkAPIKey, getRandomIntInclusive, isLangAvailable } from '../utils';
 
 export const quotesRouter = express.Router()
+  .use(checkAPIKey)
   .get('/', async (req, res, next) => {
     const startAfter = req.query.startAfter as string ?? '';
 

@@ -57,6 +57,17 @@ interface UpdateAppRightsParams {
   rights: Map<string, boolean>;
 }
 
+interface UpdateDailyStatsParams {
+  appDoc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+  callsLimit: number;
+  dayDateId: string;
+}
+
+interface UpdateStatsParams {
+  appDoc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+  dateId: string;
+}
+
 interface UpdateUsernameParams {
   newUsername: string;
 }

@@ -1,12 +1,14 @@
 import * as express from 'express';
 import { adminApp } from '../../adminApp';
 import { 
+  checkAPIKey,
   getRandomAuthors, 
   getRandomQuoteAuthored,
   getRandomReferences,
 } from '../utils';
 
 export const disRouter = express.Router()
+  .use(checkAPIKey)
   .get('/random', async (req, res, next) => {
     const responsePayload = {
       question: {

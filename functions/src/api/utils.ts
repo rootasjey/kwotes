@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express';
 import { adminApp } from '../adminApp';
 
 export const extractQueryStringNumber = (value: string, defaultValue: number) => {
@@ -178,4 +179,185 @@ export const shuffle = (array: any[]) => {
   }
 
   return array;
+}
+
+export const checkAPIKey = async (req: Request, res: Response, next: NextFunction) =>  {
+  const queryStringApiKey: string = req.query.apiKey as string;
+  const headerApiKey = req.headers.authorization;
+
+  const apiKey = queryStringApiKey || headerApiKey;
+
+  if (!apiKey) {
+    res
+      .status(401)
+      .send(`Please provide a valid API key. None was sent.`);
+      
+    return;
+  }
+
+  const segments = apiKey.split(',');
+  const appId = segments[0];
+
+  const appDoc = await adminApp.firestore()
+    .collection('apps')
+    .doc(appId)
+    .get();
+
+  const docData = appDoc.data();
+
+  if (!appDoc.exists || !docData) {
+    res
+      .status(401)
+      .send(`Please provide a valid API key. None was sent.`);
+
+    return;
+  }
+
+  const allTimeCalls: number  = docData.stats.calls.allTime;
+  const callsLimit: number  = docData.stats.calls.limit;
+
+  await appDoc.ref.update('stats.calls.allTime', allTimeCalls + 1);
+
+  const date = new Date();
+
+  const monthNumber = date.getMonth() + 1;
+  const month = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+
+  const dayDateId = `${date.getFullYear()}:${month}:${day}`;
+  
+  const updateDayOk = await updateDailyStats({ appDoc, dayDateId, callsLimit });
+
+  if (!updateDayOk) {
+    res
+      .status(401)
+      .send(`You've reached your API calls limit of ${callsLimit}. 
+        Please wait until your quota resets or use the premium plan.`);
+
+    return;
+  }
+
+  const updateMonthOk = await updateMonthlyStats({ 
+    appDoc, 
+    dateId: `${date.getFullYear()}${month}`, 
+  });
+
+  if (!updateMonthOk) {
+    res
+      .status(500)
+      .send(`There was an error while performing your request. 
+        Please try again later or contact us for more information.`);
+
+    return;
+  }
+
+  const updateYearOk = await updateYearlyStats({
+    appDoc,
+    dateId: `${date.getFullYear()}`,
+  });
+
+  if (!updateYearOk) {
+    res
+      .status(500)
+      .send(`There was an error while performing your request. 
+        Please try again later or contact us for more information.`);
+
+    return;
+  }
+
+  next();
+}
+
+async function updateDailyStats(params: UpdateDailyStatsParams) {
+  const { appDoc, dayDateId, callsLimit } = params;
+
+  const dailyCallsDoc = await appDoc
+    .ref
+    .collection('dailycalls')
+    .doc(dayDateId)
+    .get();
+
+  if (!dailyCallsDoc.exists) {
+    await dailyCallsDoc.ref.create({
+      date: dayDateId,
+      calls: 0,
+    });
+
+    return true;
+  }
+
+  const dailyCallsData = dailyCallsDoc.data();
+
+  if (!dailyCallsData) {
+    return false;
+  }
+
+  const todayCalls: number = dailyCallsData.calls;
+  
+  if (todayCalls >= callsLimit) {
+    return false;
+  }
+
+  await dailyCallsDoc.ref.update('calls', todayCalls + 1);
+  return true;
+}
+
+async function updateMonthlyStats(params: UpdateStatsParams) {
+  const { appDoc, dateId } = params;
+
+  const monthlyCallsDoc = await appDoc
+    .ref
+    .collection('monthlycalls')
+    .doc(dateId)
+    .get();
+
+  if (!monthlyCallsDoc.exists) {
+    await monthlyCallsDoc.ref.create({
+      date: dateId,
+      calls: 0,
+    });
+
+    return true;
+  }
+
+  const monthlyCallsData = monthlyCallsDoc.data();
+
+  if (!monthlyCallsData) {
+    return false;
+  }
+
+  const monthCalls: number = monthlyCallsData.calls;
+
+  await monthlyCallsDoc.ref.update('calls', monthCalls + 1);
+  return true;
+}
+
+async function updateYearlyStats(params: UpdateStatsParams) {
+  const { appDoc, dateId } = params;
+
+  const yearlyCallsDoc = await appDoc
+    .ref
+    .collection('yearlycalls')
+    .doc(dateId)
+    .get();
+
+  if (!yearlyCallsDoc.exists) {
+    await yearlyCallsDoc.ref.create({
+      date: dateId,
+      calls: 0,
+    });
+
+    return true;
+  }
+
+  const yearlyCallsData = yearlyCallsDoc.data();
+
+  if (!yearlyCallsData) {
+    return false;
+  }
+
+  const yearCalls: number = yearlyCallsData.calls;
+
+  await yearlyCallsDoc.ref.update('calls', yearCalls + 1);
+  return true;
 }

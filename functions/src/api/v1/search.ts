@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import algolia from 'algoliasearch';
+import { checkAPIKey } from '../utils';
 
 const env = functions.config();
 
@@ -10,6 +11,7 @@ const quotesIndex = client.initIndex('quotes');
 const referencesIndex = client.initIndex('references');
 
 export const searchRouter = express.Router()
+  .use(checkAPIKey)
   .get('/', async (req, res) => {
     const query = req.query.q as string ?? '';
 
