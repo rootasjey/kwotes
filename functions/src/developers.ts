@@ -167,7 +167,7 @@ export const createApp = functions
           stats: {
             calls: {
               allTime: 0,
-              callsLimit: 1000,
+              limit: 1000,
             },
             usedBy: 0,
           },
@@ -192,7 +192,7 @@ export const createApp = functions
         .createHash("md5")
         .update(Date.now().toString())
         .digest("base64");
-        
+
       await appDoc.update({
         keys: {
           primary: `${appDoc.id},${hash1},k=1`,
