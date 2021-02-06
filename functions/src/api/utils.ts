@@ -271,7 +271,7 @@ export const checkAPIKey = async (req: Request, res: Response, next: NextFunctio
 
   const updateMonthOk = await updateMonthlyStats({ 
     appDoc, 
-    dateId: `${date.getFullYear()}${month}`, 
+    dateId: `${date.getFullYear()}:${month}`, 
   });
 
   if (!updateMonthOk) {
