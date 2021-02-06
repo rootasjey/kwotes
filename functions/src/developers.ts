@@ -509,7 +509,7 @@ export const generateNewKeys = functions
           .update(Date.now().toString())
           .digest("base64");
 
-        appUpdatePayload.keys.primary = `${userAuth.uid},${hash1},k=1`;
+        appUpdatePayload.keys.primary = `${appId},${hash1},k=1`;
       }
       
       if (resetSecondary) {
@@ -518,7 +518,7 @@ export const generateNewKeys = functions
         .update(Date.now().toString())
         .digest("base64");
         
-        appUpdatePayload.keys.secondary = `${userAuth.uid},${hash2},k=2`;
+        appUpdatePayload.keys.secondary = `${appId},${hash2},k=2`;
       }
 
       await appSnap.ref.update(appUpdatePayload);
