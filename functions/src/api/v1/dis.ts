@@ -177,11 +177,23 @@ export const disRouter = express.Router()
     res.send({ response: responsePayload });
   })
   .post('/validate', async (req, res, next) => {
-    const { answer, question } = req.body;
+    const answerProposalId: string = req.body.answerProposalId;
+    const guessType: string = req.body.guessType;
+    const quoteId: string = req.body.quoteId;
 
     const responsePayload = {
-      question,
-      answer,
+      question: {
+        guessType,
+        quote: {
+          id: quoteId,
+        },
+      },
+      answerProposalId,
+      isCorrect: false,
+      correction: {
+        id: '',
+        name: '',
+      },
       requestState: {
         success: false,
         error: {
@@ -207,7 +219,7 @@ export const disRouter = express.Router()
     try {
       quoteSnap = await adminApp.firestore()
         .collection('quotes')
-        .doc(question.quoteId)
+        .doc(quoteId)
         .get();
       
     } catch (error) {
@@ -218,7 +230,7 @@ export const disRouter = express.Router()
     const quoteSnapData = quoteSnap.data();
 
     if (!quoteSnapData) {
-      res.status(404).send({
+      res.status(500).send({
         error: {
           reason: `Sorry, we couldn't fetch the data. 
             This is either due to a bad network or the quote's id does not exist. 
@@ -228,24 +240,24 @@ export const disRouter = express.Router()
       return;
     }
 
-    if (question.guessType === 'author') {
-      responsePayload.answer.isCorrect = 
-        quoteSnapData.author.id === answer.value;
+    if (guessType === 'author') {
+      responsePayload.isCorrect = 
+        quoteSnapData.author.id === answerProposalId;
 
-      if (!responsePayload.answer.isCorrect) {
-        responsePayload.answer.correction = {
+      if (!responsePayload.isCorrect) {
+        responsePayload.correction = {
           id: quoteSnapData.author.id,
           name: quoteSnapData.author.name,
         };
       }
     }
 
-    if (question.guessType === 'reference') {
-      responsePayload.answer.isCorrect = 
-        quoteSnapData.mainReference.id === answer.value;
+    if (guessType === 'reference') {
+      responsePayload.isCorrect = 
+        quoteSnapData.mainReference.id === answerProposalId;
 
-      if (!responsePayload.answer.isCorrect) {
-        responsePayload.answer.correction = {
+      if (!responsePayload.isCorrect) {
+        responsePayload.correction = {
           id: quoteSnapData.mainReference.id,
           name: quoteSnapData.mainReference.name,
         };
@@ -257,57 +269,32 @@ export const disRouter = express.Router()
   });
 
 function checkValidateRouteParams(body: any) {
-  const { answer, question } = body;
+  const answerProposalId: string = body.answerProposalId;
+  const guessType: string = body.guessType;
+  const quoteId: string = body.quoteId;
+
   const result = {
     success: true,
     message: '',
   };
 
-  if (!answer) {
+  if (!answerProposalId) {
     result.success = false;
-    result.message = `This endpoint must be called with a valid [answer] object. 
-      The [answer] object should have 1 property filled with a string value 
-      which is an author's id or a reference's id. 
-      [answer.value] = 'author|reference's id.'`;
+    result.message = `The request body is missing the following property [answerProposalId]. 
+      [answerProposalId] is a string reprensenting a reference or an author id.`;
   }
   
-  if (!answer.value) {
+  if (!guessType) {
     result.success = false;
-    result.message = `The request body is missing the following property [answer.value]. 
-      This endpoint must be called with a valid [answer] object. 
-      The [answer] object should have 1 property filled with a string value 
-      which is an author's id or a reference's id. 
-      [answer.value] = 'author|reference's id.'`;
+    result.message = `The request body is missing the following property [guessType]. 
+      [guessType] is a string equals to either 'author' or 'reference'`;
   }
   
-  if (!question) {
+  if (!quoteId) {
     result.success = false;
-    result.message = `This endpoint must be called with a valid [question] object. 
-      The [question] object should have 2 properties [question.quoteId] 
-      which a string, and [question.guessType] which is also a string.`;
+    result.message = `The request body is missing the following property [quoteId]. 
+      [quoteId] is a string representing the quote to guess.`;
   }
-  
-  if (!question.guessType) {
-    result.success = false;
-    result.message = `The request body is missing the following property [question.guessType]. 
-      This endpoint must be called with a valid [question] object. 
-      The [question] object should have 2 properties [question.quoteId] which a string, 
-      and [question.guessType] which is also a string.`;
-  }
-  
-  if (question.guessType !== 'author' && question.guessType !== 'reference') {
-    result.success = false;
-    result.message = `The property [question.guessType] should either 
-      be equal to 'author' or 'reference'. Any other values are invalid.`;
-  }
-    
-    if (!question.quoteId) {
-      result.success = false;
-      result.message = `The request body is missing the following property [question.quoteId]. 
-        This endpoint must be called with a valid [question] object. 
-        The [question] object should have 2 properties [question.quoteId] 
-        which a string, and [question.guessType] which is also a string.`;
-    }
 
   return result;
 }
