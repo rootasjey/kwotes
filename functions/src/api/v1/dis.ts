@@ -12,9 +12,12 @@ export const disRouter = express.Router()
   .get('/random', async (req, res, next) => {
     const responsePayload = {
       question: {
-        quoteId: '',
-        quoteName: '',
         guessType: 'author',
+        quote: {
+          id: '',
+          name: '',
+          topics: [],
+        }
       },
       proposals: {
         type: 'author',
@@ -133,8 +136,9 @@ export const disRouter = express.Router()
 
     // 4. Prepare the response payload.
     responsePayload.question.guessType = randQuoteRes.guessType;
-    responsePayload.question.quoteId = selectedQuote.id;
-    responsePayload.question.quoteName = selectedQuote.name;
+    responsePayload.question.quote.id = selectedQuote.id;
+    responsePayload.question.quote.name = selectedQuote.name;
+    responsePayload.question.quote.topics = selectedQuote.topics;
 
     responsePayload.requestState.success = true;
 
