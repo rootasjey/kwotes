@@ -176,7 +176,7 @@ export const disRouter = express.Router()
 
     res.send({ response: responsePayload });
   })
-  .post('/validate', async (req, res, next) => {
+  .post('/check', async (req, res, next) => {
     const answerProposalId: string = req.body.answerProposalId;
     const guessType: string = req.body.guessType;
     const quoteId: string = req.body.quoteId;
