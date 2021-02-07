@@ -62,10 +62,19 @@ export const getRandomIntInclusive = (min: number, max: number) => {
   return Math.floor(Math.random() * (maximum - minimum + 1) + minimum);
 }
 
-export const getRandomQuoteAuthored = async () => {
-  const lang = 'en';
-  const limit = 6;
+export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) => {
+  let { lang, guessType } = params;
 
+  if (!isLangAvailable(lang)) {
+    lang = 'en';
+  }
+
+  if (!guessType) {
+    const rand = getRandomIntInclusive(0, 1);
+    guessType = rand === 0 ? GuessType.author : GuessType.reference;
+  }
+
+  const limit = 8;
   const createdAt = new Date();
   createdAt.setDate(createdAt.getDate() - getRandomIntInclusive(0, 360));
 
@@ -95,14 +104,13 @@ export const getRandomQuoteAuthored = async () => {
 
   shuffle(boxQuotes);
 
-  let guessType = 'author';
+  let selectedQuote: FirebaseFirestore.DocumentData | undefined;
 
-  let selectedQuote = boxQuotes.find((item) => {
-    return item.author.id !== 'TySUhQPqndIkiVHWVYq1';
-  });
-
-  if (!selectedQuote) {
-    guessType = 'reference';
+  if (guessType === GuessType.author) {
+    selectedQuote = boxQuotes.find((item) => {
+      return item.author.id !== 'TySUhQPqndIkiVHWVYq1';
+    });
+  } else {
     selectedQuote = boxQuotes.find((item) => {
       return typeof item.mainReference.id !== 'undefined';
     });

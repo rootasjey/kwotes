@@ -3,6 +3,7 @@ import { adminApp } from '../../adminApp';
 import { 
   checkAPIKey,
   getRandomAuthors, 
+  getRandomIntInclusive, 
   getRandomQuoteAuthored,
   getRandomReferences,
 } from '../utils';
@@ -10,6 +11,22 @@ import {
 export const disRouter = express.Router()
   .use(checkAPIKey)
   .get('/random', async (req, res, next) => {
+    const lang = req.query?.lang as string ?? 'en';
+    const guessStrType = req.query?.guessType as string ?? '';
+
+    let guessType: GuessType = GuessType.author;
+
+    if (guessStrType) {
+      guessType = guessStrType === 'author'
+        ? GuessType.author
+        : GuessType.reference;
+      } else {
+      const rand = getRandomIntInclusive(0, 1);
+      guessType = rand === 0 
+        ? GuessType.author 
+        : GuessType.reference;
+    }
+
     const responsePayload = {
       question: {
         guessType: 'author',
@@ -35,13 +52,28 @@ export const disRouter = express.Router()
     // 1. Get a random quote with available author or reference.
     let randQuoteRes: RandQuoteResp;
 
-    try { randQuoteRes = await getRandomQuoteAuthored(); } 
-    catch (error) { next(error); return; }
+    try { 
+      randQuoteRes = await getRandomQuoteAuthored({
+        lang,
+        guessType,
+      }); 
+
+      // 2nd try if no authored quote is found.
+      if (!randQuoteRes.quote) {
+        randQuoteRes = await getRandomQuoteAuthored({
+          lang,
+          guessType,
+        });
+      }
+    } catch (error) { 
+      next(error); 
+      return; 
+    }
 
     const selectedQuote = randQuoteRes.quote;
 
     if (!selectedQuote) {
-      res.status(404).send({
+      res.status(500).send({
         error: {
           reason: `Sorry, but we couldn't find a suitable quote. 
             Please try again.`,

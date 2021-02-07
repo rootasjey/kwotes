@@ -1,3 +1,8 @@
+declare enum GuessType {
+  author = 'author',
+  reference = 'reference',
+}
+
 interface AddAppParams {
   name: string;
   description: string;
@@ -39,6 +44,11 @@ interface NotifFuncParams {
   userId: string;
   userData: any;
   notifSnapshot: FirebaseFirestore.QueryDocumentSnapshot;
+}
+
+interface RandomQuoteAuthoredParams {
+  lang: string;
+  guessType: GuessType;
 }
 
 interface UpdateEmailParams {
