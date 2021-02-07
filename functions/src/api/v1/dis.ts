@@ -231,12 +231,26 @@ export const disRouter = express.Router()
     if (question.guessType === 'author') {
       responsePayload.answer.isCorrect = 
         quoteSnapData.author.id === answer.value;
+
+      if (!responsePayload.answer.isCorrect) {
+        responsePayload.answer.correction = {
+          id: quoteSnapData.author.id,
+          name: quoteSnapData.author.name,
+        };
+      }
     }
 
     if (question.guessType === 'reference') {
       responsePayload.answer.isCorrect = 
         quoteSnapData.mainReference.id === answer.value;
-    }
+
+      if (!responsePayload.answer.isCorrect) {
+        responsePayload.answer.correction = {
+          id: quoteSnapData.mainReference.id,
+          name: quoteSnapData.mainReference.name,
+        };
+      }
+    }    
 
     responsePayload.requestState.success = true;
     res.send({ response: responsePayload });
