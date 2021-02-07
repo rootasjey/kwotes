@@ -1,8 +1,3 @@
-declare enum GuessType {
-  author = 'author',
-  reference = 'reference',
-}
-
 interface AddAppParams {
   name: string;
   description: string;
@@ -48,7 +43,7 @@ interface NotifFuncParams {
 
 interface RandomQuoteAuthoredParams {
   lang: string;
-  guessType: GuessType;
+  guessType: 'author' | 'reference';
 }
 
 interface UpdateEmailParams {

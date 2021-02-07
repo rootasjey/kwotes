@@ -71,7 +71,7 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
 
   if (!guessType) {
     const rand = getRandomIntInclusive(0, 1);
-    guessType = rand === 0 ? GuessType.author : GuessType.reference;
+    guessType = rand === 0 ? 'author' : 'reference';
   }
 
   const limit = 8;
@@ -106,7 +106,7 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
 
   let selectedQuote: FirebaseFirestore.DocumentData | undefined;
 
-  if (guessType === GuessType.author) {
+  if (guessType === 'author') {
     selectedQuote = boxQuotes.find((item) => {
       return item.author.id !== 'TySUhQPqndIkiVHWVYq1';
     });

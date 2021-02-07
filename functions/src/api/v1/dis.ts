@@ -14,17 +14,17 @@ export const disRouter = express.Router()
     const lang = req.query?.lang as string ?? 'en';
     const guessStrType = req.query?.guessType as string ?? '';
 
-    let guessType: GuessType = GuessType.author;
+    let guessType: ('author' | 'reference') = 'author';
 
     if (guessStrType) {
       guessType = guessStrType === 'author'
-        ? GuessType.author
-        : GuessType.reference;
+        ? 'author'
+        : 'reference';
       } else {
       const rand = getRandomIntInclusive(0, 1);
       guessType = rand === 0 
-        ? GuessType.author 
-        : GuessType.reference;
+        ? 'author' 
+        : 'reference';
     }
 
     const responsePayload = {
