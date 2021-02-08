@@ -492,8 +492,13 @@ class _DraftsState extends State<Drafts> {
     DataQuoteInputs.draft = draft;
     DataQuoteInputs.populateWithTempQuote(draft);
 
-    await context.router.root
-        .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
+    await context.router.root.push(
+      DashboardPageRoute(
+        children: [
+          AddQuoteStepsRoute(),
+        ],
+      ),
+    );
 
     fetch();
   }

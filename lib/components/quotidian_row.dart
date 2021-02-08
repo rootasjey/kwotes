@@ -396,7 +396,7 @@ class _QuotidianRowState extends State<QuotidianRow> {
   }
 
   void onTap(String quoteId) {
-    context.router.push(
+    context.router.root.push(
       QuotesDeepRoute(children: [
         QuotePageRoute(
           quoteId: quoteId,

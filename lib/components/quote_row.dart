@@ -549,7 +549,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         ? quote.quoteId
         : quote.id;
 
-    await context.router.push(
+    await context.router.root.push(
       QuotesDeepRoute(children: [
         QuotePageRoute(
           quoteId: quoteId,
