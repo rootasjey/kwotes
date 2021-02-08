@@ -329,7 +329,7 @@ class _AboutState extends State<About> {
             child: Opacity(
               opacity: 0.7,
               child: Text(
-                "v2.5.0",
+                Constants.appVersion,
                 style: TextStyle(
                   fontSize: 17.0,
                   fontWeight: FontWeight.w700,

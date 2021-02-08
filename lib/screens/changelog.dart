@@ -23,7 +23,7 @@ class _ChangelogState extends State<Changelog> {
   initContent() {
     changelogItemsList.addAll([
       itemChangelogTemplate(
-        textTitle: "2.5.0",
+        textTitle: Constants.appVersion,
         date: DateTime(2021, 01, 24),
         children: [
           descriptionRow("• Add routing system (for better navigation)"),
