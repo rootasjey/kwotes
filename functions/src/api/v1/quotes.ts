@@ -82,6 +82,35 @@ export const quotesRouter = express.Router()
     responsePayload.quotes = quotes;
     res.send({ response: responsePayload });
   })
+  .get('/:id', async (req, res) => {
+    const quoteId: string = req.params.id;
+
+    if (!quoteId) {
+      res
+        .status(400)
+        .send(`No id was provided. Please send a valid quote's id.`);
+      
+      return;
+    }
+
+    const quoteDoc = await adminApp.firestore()
+      .collection('quotes')
+      .doc(quoteId)
+      .get();
+
+    const quoteData = quoteDoc.data();
+
+    if (!quoteData || !quoteDoc.exists) {
+      res
+        .status(404)
+        .send(`No quote was found for the specified id: ${quoteId}.
+          Maybe the data has been deleted.`);
+
+      return;
+    }
+
+    res.send({response: quoteData });
+  })
   .get('/random', async (req, res, next) => {
     const userStrLimit = req.query.limit as string ?? '12';
     const userIntLimit = parseInt(userStrLimit);
