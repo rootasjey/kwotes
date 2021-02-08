@@ -222,8 +222,13 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void editAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote);
 
-    await context.router.root
-        .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
+    await context.router.root.push(
+      DashboardPageRoute(
+        children: [
+          AddQuoteStepsRoute(),
+        ],
+      ),
+    );
 
     if (widget.onNavBack != null) {
       widget.onNavBack();
