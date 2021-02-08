@@ -5,12 +5,14 @@ import { quotesRouter }     from './quotes';
 import { disRouter }        from './dis';
 import { referencesRouter } from './references';
 import { searchRouter }     from './search';
+import { topicsRouter }     from './topics';
 
 export const v1Router = express.Router()
+  .use('/dis', disRouter)
   .use('/quotes', quotesRouter)
   .use('/references', referencesRouter)
-  .use('/dis', disRouter)
   .use('/search', searchRouter)
+  .use('/topics', topicsRouter)
   .get('/', (req, res) => {
     res.send({
       lastUpdated: new Date(2021, 0, 27),
