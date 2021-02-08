@@ -1,12 +1,14 @@
-import * as express from 'express';
-import { adminApp } from '../../adminApp';
-import { isLangAvailable } from '../utils';
-import { quotesRouter } from './quotes';
-import { disRouter } from './dis';
-import { searchRouter } from './search';
+import * as express         from 'express';
+import { adminApp }         from '../../adminApp';
+import { isLangAvailable }  from '../utils';
+import { quotesRouter }     from './quotes';
+import { disRouter }        from './dis';
+import { referencesRouter } from './references';
+import { searchRouter }     from './search';
 
 export const v1Router = express.Router()
   .use('/quotes', quotesRouter)
+  .use('/references', referencesRouter)
   .use('/dis', disRouter)
   .use('/search', searchRouter)
   .get('/', (req, res) => {
