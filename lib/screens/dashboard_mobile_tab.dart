@@ -21,6 +21,7 @@ import 'package:figstyle/utils/snack.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class DashboardMobileTab extends StatefulWidget {
   @override
@@ -95,7 +96,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget aboutButton() {
     return tileButton(
-      iconData: Icons.help,
+      iconData: UniconsLine.question,
       textTitle: 'About',
       onTap: () {
         context.router.push(AboutRoute());
@@ -120,7 +121,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
         },
       ),
       tileButton(
-        iconData: Icons.timelapse,
+        iconData: UniconsLine.clock,
         textTitle: 'Admin validation',
         onTap: () {
           context.router.push(
@@ -139,7 +140,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
         },
       ),
       tileButton(
-        iconData: Icons.wb_sunny,
+        iconData: UniconsLine.sunset,
         textTitle: 'Quotidians',
         onTap: () {
           context.router.push(
@@ -292,7 +293,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget draftsButton() {
     return tileButton(
-      iconData: Icons.edit,
+      iconData: UniconsLine.edit,
       textTitle: 'Drafts',
       onTap: () {
         context.router.push(
@@ -306,7 +307,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget favButton() {
     return tileButton(
-      iconData: Icons.favorite,
+      iconData: UniconsLine.favorite,
       textTitle: 'Favourites',
       onTap: () {
         context.router.push(
@@ -347,7 +348,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget signOutButton() {
     return tileButton(
-      iconData: Icons.exit_to_app,
+      iconData: UniconsLine.signout,
       textTitle: 'Sign out',
       onTap: () async {
         await appStorage.clearUserAuthData();
@@ -364,7 +365,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget listsButton() {
     return tileButton(
-      iconData: Icons.list,
+      iconData: UniconsLine.list_ul,
       textTitle: 'Lists',
       onTap: () {
         context.router.push(
@@ -385,58 +386,64 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           return Container();
         }
 
-        return Badge(
-          badgeContent: Text(
-            "$unreadNotifiCount",
-            style: TextStyle(
-              color: Colors.white,
-            ),
+        return Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+            right: 32.0,
           ),
-          showBadge: showNotifiBadge,
-          child: IconButton(
-            onPressed: () async {
-              final size = MediaQuery.of(context).size;
+          child: Badge(
+            badgeContent: Text(
+              "$unreadNotifiCount",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            showBadge: showNotifiBadge,
+            child: IconButton(
+              onPressed: () async {
+                final size = MediaQuery.of(context).size;
 
-              if (size.width > Constants.maxMobileWidth &&
-                  size.height > Constants.maxMobileWidth) {
-                await showFlash(
-                  context: context,
-                  persistent: false,
-                  builder: (context, controller) {
-                    return Flash.dialog(
-                      controller: controller,
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      enableDrag: true,
-                      margin: const EdgeInsets.only(
-                        left: 120.0,
-                        right: 120.0,
-                      ),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8.0),
-                      ),
-                      child: FlashBar(
-                        message: Container(
-                          height: MediaQuery.of(context).size.height - 100.0,
-                          padding: const EdgeInsets.all(60.0),
-                          child: NotificationsCenter(),
+                if (size.width > Constants.maxMobileWidth &&
+                    size.height > Constants.maxMobileWidth) {
+                  await showFlash(
+                    context: context,
+                    persistent: false,
+                    builder: (context, controller) {
+                      return Flash.dialog(
+                        controller: controller,
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        enableDrag: true,
+                        margin: const EdgeInsets.only(
+                          left: 120.0,
+                          right: 120.0,
                         ),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                await showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (_) => NotificationsCenter(
-                    scrollController: scrollController,
-                  ),
-                );
-              }
-            },
-            color: stateColors.foreground,
-            tooltip: "My notifications",
-            icon: Icon(Icons.notifications),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                        child: FlashBar(
+                          message: Container(
+                            height: MediaQuery.of(context).size.height - 100.0,
+                            padding: const EdgeInsets.all(60.0),
+                            child: NotificationsCenter(),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (_) => NotificationsCenter(
+                      scrollController: scrollController,
+                    ),
+                  );
+                }
+              },
+              color: stateColors.foreground,
+              tooltip: "My notifications",
+              icon: Icon(UniconsLine.bell),
+            ),
           ),
         );
       },
@@ -445,7 +452,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget pubQuotesButton() {
     return tileButton(
-      iconData: Icons.check,
+      iconData: UniconsLine.upload,
       textTitle: 'Published',
       onTap: () {
         context.router.push(
@@ -459,7 +466,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget settingsButton() {
     return tileButton(
-      iconData: Icons.settings,
+      iconData: UniconsLine.setting,
       textTitle: 'Settings',
       onTap: () {
         context.router.push(
@@ -552,7 +559,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget tempQuotesButton() {
     return tileButton(
-      iconData: Icons.timelapse,
+      iconData: UniconsLine.clock,
       textTitle: 'In validation',
       onTap: () {
         context.router.push(
@@ -570,10 +577,10 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     @required VoidCallback onTap,
   }) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 40.0),
+      contentPadding: const EdgeInsets.only(left: 30.0),
       leading: Icon(
         iconData,
-        size: 30.0,
+        color: stateColors.primary,
       ),
       title: Text(
         textTitle,
