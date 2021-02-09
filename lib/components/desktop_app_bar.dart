@@ -84,6 +84,10 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
             final mustShowNavBack = widget.automaticallyImplyLeading &&
                 context.router.root.stack.length > 1;
 
+            if (mustShowNavBack && constrains.crossAxisExtent < 1100.0) {
+              useIconButton = true;
+            }
+
             return SliverAppBar(
               floating: true,
               snap: true,
