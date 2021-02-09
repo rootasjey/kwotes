@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/lang_popup_menu_button.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
@@ -275,7 +276,10 @@ class _PageAppBarState extends State<PageAppBar> {
           AppIcon(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             size: 30.0,
-            onTap: widget.onIconPressed ?? context.router.pop,
+            onTap: widget.onIconPressed ??
+                () {
+                  context.router.root.push(HomeRoute());
+                },
           ),
           Expanded(
             child: InkWell(
