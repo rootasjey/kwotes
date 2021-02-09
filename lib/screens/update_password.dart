@@ -64,7 +64,6 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       bottomPadding: EdgeInsets.only(
         bottom: 10.0,
       ),
-      showNavBackIcon: true,
     );
   }
 

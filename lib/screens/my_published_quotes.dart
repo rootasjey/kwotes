@@ -137,7 +137,6 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
         bottom: 10.0,
       ),
       expandedHeight: 120.0,
-      showNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

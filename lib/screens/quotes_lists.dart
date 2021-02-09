@@ -124,7 +124,6 @@ class _QuotesListsState extends State<QuotesLists> {
         bottom: 10.0,
       ),
       expandedHeight: 100.0,
-      showNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

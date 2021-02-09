@@ -81,7 +81,6 @@ class _UpdateUsernameState extends State<UpdateUsername> {
       titlePadding: EdgeInsets.only(
         left: titleLeftPadding,
       ),
-      showNavBackIcon: true,
       expandedHeight: 90.0,
     );
   }

@@ -142,7 +142,7 @@ class _TopicsState extends State<Topics> {
         appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
         fetch();
       },
-      showNavBackIcon: false,
+      alwaysHideNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

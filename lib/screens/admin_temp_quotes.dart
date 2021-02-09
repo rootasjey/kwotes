@@ -106,7 +106,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         left: bottomContentLeftPadding,
         bottom: 10.0,
       ),
-      showNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

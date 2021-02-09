@@ -111,7 +111,6 @@ class _DraftsState extends State<Drafts> {
         left: bottomContentLeftPadding,
         bottom: 10.0,
       ),
-      showNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

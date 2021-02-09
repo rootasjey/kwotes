@@ -10,8 +10,8 @@ import 'package:figstyle/types/enums.dart';
 import 'package:unicons/unicons.dart';
 
 class PageAppBar extends StatefulWidget {
+  final bool alwaysHideNavBackIcon;
   final bool descending;
-  final bool showNavBackIcon;
 
   /// If true, add a close button on the right.
   /// This property will override `showNavBackIcon` as its not conventional
@@ -51,6 +51,7 @@ class PageAppBar extends StatefulWidget {
   const PageAppBar({
     Key key,
     this.additionalIconButtons = const [],
+    this.alwaysHideNavBackIcon = false,
     this.bottomPadding = EdgeInsets.zero,
     this.collapsedHeight,
     this.descending = true,
@@ -63,7 +64,6 @@ class PageAppBar extends StatefulWidget {
     this.onLangChanged,
     this.onTitlePressed,
     this.showCloseButton = false,
-    this.showNavBackIcon = false,
     this.textTitle,
     this.textSubTitle,
     this.title,
@@ -76,6 +76,8 @@ class PageAppBar extends StatefulWidget {
 }
 
 class _PageAppBarState extends State<PageAppBar> {
+  bool showNavBackIcon = false;
+
   @override
   initState() {
     super.initState();
@@ -100,10 +102,16 @@ class _PageAppBarState extends State<PageAppBar> {
     final showLangSelector = widget.onLangChanged != null;
     final showItemsLayout = widget.onItemsLayoutSelected != null;
 
+    if (!widget.alwaysHideNavBackIcon) {
+      showNavBackIcon = context.router.root.stack.length > 1;
+    } else {
+      showNavBackIcon = false;
+    }
+
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
       title: widget.textSubTitle != null ? twoLinesTitle() : oneLineTitle(),
-      showNavBackIcon: widget.showNavBackIcon,
+      showNavBackIcon: showNavBackIcon,
       bottom: Align(
         alignment: Alignment.topLeft,
         child: Padding(
@@ -184,7 +192,7 @@ class _PageAppBarState extends State<PageAppBar> {
       );
     }
 
-    if (widget.showNavBackIcon) {
+    if (showNavBackIcon) {
       return Padding(
         padding: widget.titlePadding,
         child: Row(
@@ -269,7 +277,7 @@ class _PageAppBarState extends State<PageAppBar> {
       padding: widget.titlePadding,
       child: Row(
         children: [
-          if (widget.showNavBackIcon)
+          if (showNavBackIcon)
             CircleButton(
                 onTap: context.router.pop,
                 icon: Icon(Icons.arrow_back, color: stateColors.foreground)),

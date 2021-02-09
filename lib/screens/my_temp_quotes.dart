@@ -132,7 +132,6 @@ class MyTempQuotesState extends State<MyTempQuotes> {
         left: bottomContentLeftPadding,
         bottom: 10.0,
       ),
-      showNavBackIcon: true,
       onTitlePressed: () {
         _pageScrollController.animateTo(
           0,

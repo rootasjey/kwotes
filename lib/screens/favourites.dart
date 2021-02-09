@@ -141,7 +141,6 @@ class _FavouritesState extends State<Favourites> {
         left: bottomContentLeftPadding,
         bottom: 10.0,
       ),
-      showNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

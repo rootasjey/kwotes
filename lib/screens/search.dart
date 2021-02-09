@@ -159,7 +159,7 @@ class _SearchState extends State<Search> {
           bottom: 10.0,
         ),
         expandedHeight: 60.0,
-        showNavBackIcon: false,
+        alwaysHideNavBackIcon: true,
         onTitlePressed: () {
           scrollController.animateTo(
             0,

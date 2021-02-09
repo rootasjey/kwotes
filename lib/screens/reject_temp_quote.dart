@@ -79,7 +79,7 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
         textTitle: "Reject quote",
         textSubTitle: "Explain why this quote doesn't pass validation",
         expandedHeight: 90.0,
-        showNavBackIcon: false,
+        alwaysHideNavBackIcon: true,
         showCloseButton: true,
       ),
     );

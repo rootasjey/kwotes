@@ -108,7 +108,6 @@ class QuotidiansState extends State<Quotidians> {
         left: bottomContentLeftPadding,
         bottom: 10.0,
       ),
-      showNavBackIcon: true,
       onTitlePressed: () {
         scrollController.animateTo(
           0,

@@ -76,7 +76,6 @@ class _UpdateEmailState extends State<UpdateEmail> {
         left: titleLeftPadding,
       ),
       expandedHeight: 90.0,
-      showNavBackIcon: true,
     );
   }
 
