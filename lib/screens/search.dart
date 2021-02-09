@@ -144,7 +144,7 @@ class _SearchState extends State<Search> {
       double bottomContentLeftPadding = 94.0;
 
       if (width < Constants.maxMobileWidth) {
-        titleLeftPadding = 0.0;
+        titleLeftPadding = 16.0;
         bottomContentLeftPadding = 24.0;
       }
 
@@ -533,7 +533,7 @@ class _SearchState extends State<Search> {
     final fontSize = MediaQuery.of(context).size.width < 390.0 ? 20.0 : 36.0;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 5.0),
+      padding: const EdgeInsets.only(left: 12.0),
       child: TextField(
         maxLines: null,
         autofocus: true,

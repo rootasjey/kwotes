@@ -122,7 +122,7 @@ class _TopicsState extends State<Topics> {
     double bottomContentLeftPadding = 94.0;
 
     if (width < Constants.maxMobileWidth) {
-      titleLeftPadding = 0.0;
+      titleLeftPadding = 16.0;
       bottomContentLeftPadding = 24.0;
     }
 
@@ -257,18 +257,17 @@ class _TopicsState extends State<Topics> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              TopicCardColor(
+                size: 50.0,
+                elevation: 6.0,
+                color: Color(topic.decimal),
+                name: topic.name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
                 padding: const EdgeInsets.only(
                   top: 10.0,
-                ),
-                child: TopicCardColor(
-                  size: 50.0,
-                  elevation: 6.0,
-                  color: Color(topic.decimal),
-                  name: topic.name,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
+                  left: 32.0,
                 ),
               ),
               Column(

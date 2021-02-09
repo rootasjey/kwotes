@@ -127,7 +127,7 @@ class RecentQuotesState extends State<RecentQuotes> {
     double bottomContentLeftPadding = 94.0;
 
     if (width < Constants.maxMobileWidth) {
-      titleLeftPadding = 0.0;
+      titleLeftPadding = 16.0;
       bottomContentLeftPadding = 24.0;
     }
 

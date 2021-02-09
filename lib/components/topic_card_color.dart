@@ -30,7 +30,7 @@ class TopicCardColor extends StatefulWidget {
     this.onColorTap,
     this.onTextTap,
     this.outline = false,
-    this.padding = const EdgeInsets.all(10.0),
+    this.padding = EdgeInsets.zero,
     this.size = 70.0,
     this.style,
     this.tooltip,
@@ -65,7 +65,7 @@ class _TopicCardColorState extends State<TopicCardColor>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0.0),
+      padding: widget.padding,
       child: Column(
         children: <Widget>[
           cardColor(context: context),

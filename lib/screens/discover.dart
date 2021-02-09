@@ -155,7 +155,7 @@ class _DiscoverState extends State<Discover> {
     double bottomContentLeftPadding = 94.0;
 
     if (width < Constants.maxMobileWidth) {
-      titleLeftPadding = 0.0;
+      titleLeftPadding = 16.0;
       bottomContentLeftPadding = 24.0;
     }
 
@@ -211,7 +211,7 @@ class _DiscoverState extends State<Discover> {
   Widget appBarType() {
     final isReferencesSelected = discoverType == DiscoverType.references;
     final width = MediaQuery.of(context).size.width;
-    double left = width < Constants.maxMobileWidth ? 16.0 : 86.0;
+    double left = width < Constants.maxMobileWidth ? 32.0 : 86.0;
 
     return SliverPersistentHeader(
       pinned: true,
