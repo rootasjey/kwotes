@@ -7,6 +7,7 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -14,13 +15,11 @@ import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/screens/about.dart';
-import 'package:figstyle/screens/settings.dart';
 import 'package:figstyle/screens/admin_temp_quotes.dart';
 import 'package:figstyle/screens/drafts.dart';
 import 'package:figstyle/screens/my_published_quotes.dart';
 import 'package:figstyle/screens/quotes_lists.dart';
 import 'package:figstyle/screens/quotidians.dart';
-import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/state/colors.dart';
@@ -425,8 +424,11 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.settings,
       textTitle: 'Settings',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => Settings())),
+      onTap: () {
+        context.router.push(
+          NavigationHelper.getSettingsRoute(showAppBar: true),
+        );
+      },
     );
   }
 
@@ -475,7 +477,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   Widget signupButton() {
     return FlatButton(
       onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => Signup()));
+        context.router.push(SignupRoute());
       },
       textColor: stateColors.secondary,
       shape: RoundedRectangleBorder(
@@ -603,7 +605,6 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
       userSubscription = userSnapshot.reference.snapshots().listen(
         (documentSnapshot) {
-          print('change...');
           final data = documentSnapshot.data();
           if (data == null) {
             userSubscription.cancel();

@@ -23,15 +23,15 @@ class NavigationHelper {
     });
   }
 
-  static PageRouteInfo getSettingsRoute() {
+  static PageRouteInfo getSettingsRoute({bool showAppBar = false}) {
     if (stateUser.isUserConnected) {
       return DashboardPageRoute(children: [
         DashboardSettingsDeepRoute(children: [
-          DashboardSettingsRoute(showAppBar: false),
+          DashboardSettingsRoute(showAppBar: showAppBar),
         ])
       ]);
     }
 
-    return SettingsRoute(showAppBar: true);
+    return SettingsRoute(showAppBar: showAppBar);
   }
 }
