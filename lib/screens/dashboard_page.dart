@@ -5,6 +5,7 @@ import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/side_menu_item.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -78,6 +79,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget buildSideMenu(BuildContext context) {
     final router = context.router;
+
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      return Container();
+    }
 
     return Container(
       foregroundDecoration: BoxDecoration(
@@ -163,7 +168,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     minWidth: 160.0,
                   ),
                   child: Row(
-                    // mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.add, color: Colors.white),
