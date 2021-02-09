@@ -29,7 +29,7 @@ class Settings extends StatefulWidget {
 
   const Settings({
     Key key,
-    @PathParam('showAppBar') this.showAppBar = false,
+    @PathParam('showAppBar') this.showAppBar = true,
   }) : super(key: key);
 
   @override
@@ -63,32 +63,27 @@ class _SettingsState extends State<Settings> {
   @override
   initState() {
     super.initState();
-
-    getLocalLang();
-    checkAuth();
     initNotifState();
 
-    isThemeAuto = appStorage.getAutoBrightness();
-    currentBrightness = DynamicTheme.of(context).brightness;
+    setState(() {
+      selectedLang = Language.frontend(stateUser.lang);
+      isThemeAuto = appStorage.getAutoBrightness();
+      currentBrightness = DynamicTheme.of(context).brightness;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-          onRefresh: () async {
-            await checkAuth();
-            return null;
-          },
-          child: NotificationListener<ScrollNotification>(
-            child: CustomScrollView(
-              controller: _pageScrollController,
-              slivers: <Widget>[
-                if (widget.showAppBar) appBar(),
-                body(),
-              ],
-            ),
-          )),
+      body: NotificationListener<ScrollNotification>(
+        child: CustomScrollView(
+          controller: _pageScrollController,
+          slivers: <Widget>[
+            if (widget.showAppBar) appBar(),
+            body(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -800,59 +795,6 @@ class _SettingsState extends State<Settings> {
     }
 
     PushNotifications.deactivate();
-  }
-
-  Future checkAuth() async {
-    setState(() {
-      // isLoadingAvatarUrl = true;
-      isLoadingLang = true;
-    });
-
-    try {
-      if (stateUser.userAuth == null) {
-        stateUser.setUserDisconnected();
-
-        setState(() {
-          // isLoadingAvatarUrl = false;
-          isLoadingLang = false;
-        });
-
-        return;
-      }
-
-      final user = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(stateUser.userAuth.uid)
-          .get();
-
-      final data = user.data();
-
-      avatarUrl = data['urls']['image'];
-      currentUserName = data['name'] ?? '';
-
-      stateUser.setUserName(currentUserName);
-
-      setState(() {
-        email = stateUser.userAuth.email ?? '';
-        // isLoadingAvatarUrl = false;
-        isLoadingLang = false;
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-
-      setState(() {
-        // isLoadingAvatarUrl = false;
-        isLoadingLang = false;
-      });
-    }
-  }
-
-  void getLocalLang() {
-    final lang = appStorage.getLang();
-
-    setState(() {
-      selectedLang = Language.frontend(lang);
-    });
   }
 
   String themeDescription() {

@@ -104,7 +104,7 @@ class AppRouter extends _i1.RootStackRouter {
       return _i1.MaterialPageX(
           entry: entry,
           child: _i12.Settings(
-              key: route.key, showAppBar: route.showAppBar ?? false));
+              key: route.key, showAppBar: route.showAppBar ?? true));
     },
     SearchRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i13.Search());
@@ -218,7 +218,7 @@ class AppRouter extends _i1.RootStackRouter {
       return _i1.MaterialPageX(
           entry: entry,
           child: _i12.Settings(
-              key: route.key, showAppBar: route.showAppBar ?? false));
+              key: route.key, showAppBar: route.showAppBar ?? true));
     },
     DeleteAccountRoute.name: (entry) {
       return _i1.MaterialPageX(entry: entry, child: _i32.DeleteAccount());
@@ -564,7 +564,7 @@ class ReferencesDeepRoute extends _i1.PageRouteInfo {
 }
 
 class SettingsRoute extends _i1.PageRouteInfo {
-  SettingsRoute({this.key, this.showAppBar = false})
+  SettingsRoute({this.key, this.showAppBar = true})
       : super(name, path: '/settings');
 
   SettingsRoute.fromMatch(_i1.RouteMatch match)
@@ -839,7 +839,7 @@ class QuotesListRoute extends _i1.PageRouteInfo {
 }
 
 class DashboardSettingsRoute extends _i1.PageRouteInfo {
-  DashboardSettingsRoute({this.key, this.showAppBar = false})
+  DashboardSettingsRoute({this.key, this.showAppBar = true})
       : super(name, path: '');
 
   DashboardSettingsRoute.fromMatch(_i1.RouteMatch match)
