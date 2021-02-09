@@ -14,14 +14,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/screens/about.dart';
-import 'package:figstyle/screens/admin_temp_quotes.dart';
-import 'package:figstyle/screens/drafts.dart';
-import 'package:figstyle/screens/my_published_quotes.dart';
-import 'package:figstyle/screens/quotes_lists.dart';
-import 'package:figstyle/screens/quotidians.dart';
-import 'package:figstyle/screens/my_temp_quotes.dart';
-import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -105,8 +97,9 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.help,
       textTitle: 'About',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => About())),
+      onTap: () {
+        context.router.push(AboutRoute());
+      },
     );
   }
 
@@ -129,14 +122,36 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
       tileButton(
         iconData: Icons.timelapse,
         textTitle: 'Admin validation',
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AdminTempQuotes())),
+        onTap: () {
+          context.router.push(
+            DashboardPageRoute(
+              children: [
+                AdminDeepRoute(
+                  children: [
+                    AdminTempDeepRoute(
+                      children: [AdminTempQuotesRoute()],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
       tileButton(
         iconData: Icons.wb_sunny,
         textTitle: 'Quotidians',
-        onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => Quotidians())),
+        onTap: () {
+          context.router.push(
+            DashboardPageRoute(
+              children: [
+                AdminDeepRoute(
+                  children: [QuotidiansRoute()],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     ];
   }
@@ -279,8 +294,13 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.edit,
       textTitle: 'Drafts',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => Drafts())),
+      onTap: () {
+        context.router.push(
+          DashboardPageRoute(
+            children: [DraftsRoute()],
+          ),
+        );
+      },
     );
   }
 
@@ -288,8 +308,13 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.favorite,
       textTitle: 'Favourites',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => Favourites())),
+      onTap: () {
+        context.router.push(
+          DashboardPageRoute(
+            children: [FavouritesRoute()],
+          ),
+        );
+      },
     );
   }
 
@@ -341,8 +366,15 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.list,
       textTitle: 'Lists',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => QuotesLists())),
+      onTap: () {
+        context.router.push(
+          DashboardPageRoute(
+            children: [
+              QuotesListsDeepRoute(),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -415,8 +447,13 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.check,
       textTitle: 'Published',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => MyPublishedQuotes())),
+      onTap: () {
+        context.router.push(
+          DashboardPageRoute(
+            children: [MyPublishedQuotesRoute()],
+          ),
+        );
+      },
     );
   }
 
@@ -517,8 +554,13 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
     return tileButton(
       iconData: Icons.timelapse,
       textTitle: 'In validation',
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => MyTempQuotes())),
+      onTap: () {
+        context.router.push(
+          DashboardPageRoute(
+            children: [MyTempQuotesRoute()],
+          ),
+        );
+      },
     );
   }
 
