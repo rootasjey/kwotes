@@ -20,7 +20,6 @@ import 'package:figstyle/screens/drafts.dart';
 import 'package:figstyle/screens/my_published_quotes.dart';
 import 'package:figstyle/screens/quotes_lists.dart';
 import 'package:figstyle/screens/quotidians.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/screens/signup.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
 import 'package:figstyle/screens/favourites.dart';
@@ -38,7 +37,6 @@ class DashboardMobileTab extends StatefulWidget {
 }
 
 class _DashboardMobileTabState extends State<DashboardMobileTab> {
-  bool canManage = false;
   bool prevIsAuthenticated = false;
   bool isAccountAdvVisible = false;
   bool showNotifiBadge = false;
@@ -84,8 +82,13 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           onPressed: () {
             DataQuoteInputs.clearAll();
 
-            context.router.root
-                .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
+            context.router.root.push(
+              DashboardPageRoute(
+                children: [
+                  AddQuoteStepsRoute(),
+                ],
+              ),
+            );
           },
         );
       }),
@@ -218,7 +221,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
         if (stateUser.isUserConnected) {
           children.addAll(authWidgets(context));
 
-          if (canManage) {
+          if (stateUser.canManageQuotes) {
             children.addAll(adminWidgets(context));
           }
         } else {
@@ -326,10 +329,6 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
         await appStorage.clearUserAuthData();
         await stateUser.signOut();
 
-        setState(() {
-          canManage = false;
-        });
-
         showSnack(
           context: context,
           message: 'You have been successfully disconnected.',
@@ -436,8 +435,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
       padding: const EdgeInsets.only(bottom: 30.0),
       child: FlatButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => Signin()));
+          context.router.push(SigninRoute());
         },
         textColor: stateColors.primary,
         shape: RoundedRectangleBorder(
@@ -605,6 +603,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
       userSubscription = userSnapshot.reference.snapshots().listen(
         (documentSnapshot) {
+          print('change...');
           final data = documentSnapshot.data();
           if (data == null) {
             userSubscription.cancel();
@@ -612,7 +611,6 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           }
 
           setState(() {
-            canManage = data['rights']['user:managequote'] ?? false;
             unreadNotifiCount = data['stats']['notifications']['unread'];
             showNotifiBadge = unreadNotifiCount > 0;
           });
