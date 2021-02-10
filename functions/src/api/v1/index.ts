@@ -1,13 +1,15 @@
 import * as express         from 'express';
 import { adminApp }         from '../../adminApp';
 import { isLangAvailable }  from '../utils';
-import { quotesRouter }     from './quotes';
+import { authorsRouter }     from './authors';
 import { disRouter }        from './dis';
+import { quotesRouter }     from './quotes';
 import { referencesRouter } from './references';
 import { searchRouter }     from './search';
 import { topicsRouter }     from './topics';
 
 export const v1Router = express.Router()
+  .use('/authors', authorsRouter)
   .use('/dis', disRouter)
   .use('/quotes', quotesRouter)
   .use('/references', referencesRouter)
