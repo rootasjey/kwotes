@@ -11,8 +11,16 @@ export const extractQueryStringNumber = (value: string, defaultValue: number) =>
   return parseInt(normalizedValue);
 }
 
-export const getRandomAuthors = async () => {
+export const getRandomAuthors = async (params?: GetRandomAuthorsParams) => {
   const limit = 6;
+
+  /** Excluded id.
+   *  Because it's already included in the proposal (as the right answer). */
+  let exceptId = '';
+
+  if (params && params.except) {
+    exceptId = params.except;
+  }
 
   const createdAt = new Date();
   createdAt.setDate(createdAt.getDate() - getRandomIntInclusive(0, 360));
@@ -37,7 +45,10 @@ export const getRandomAuthors = async () => {
   for (const doc of snapshot.docs) {
     const docData = doc.data();
     docData.id = doc.id;
-    boxAuthors.push(docData);
+
+    if (docData.id !== exceptId) {
+      boxAuthors.push(docData);
+    }
   }
 
   shuffle(boxAuthors);
@@ -131,8 +142,16 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
   };
 }
 
-export const getRandomReferences = async () => {
+export const getRandomReferences = async (params?: GetRandomReferencesParams) => {
   const limit = 6;
+
+  /** Excluded id.
+   *  Because it's already included in the proposal (as the right answer). */
+  let exceptId = '';
+
+  if (params && params.except) {
+    exceptId = params.except;
+  }
 
   const createdAt = new Date();
   createdAt.setDate(createdAt.getDate() - getRandomIntInclusive(0, 360));
@@ -157,7 +176,10 @@ export const getRandomReferences = async () => {
   for (const doc of snapshot.docs) {
     const docData = doc.data();
     docData.id = doc.id;
-    boxReferences.push(docData);
+
+    if (docData.id !== exceptId) {
+      boxReferences.push(docData);
+    }
   }
 
   shuffle(boxReferences);

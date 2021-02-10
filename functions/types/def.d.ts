@@ -35,6 +35,16 @@ interface GenerateNewKeysParam {
   resetSecondary: boolean;
 }
 
+interface GetRandomAuthorsParams {
+  /** Id to exclude when fetching random authors. */
+  except?: string;
+}
+
+interface GetRandomReferencesParams {
+  /** Id to exclude when fetching random references. */
+  except?: string;
+}
+
 interface NotifFuncParams {
   userId: string;
   userData: any;

@@ -261,10 +261,6 @@ export const disRouter = express.Router()
     if (randQuoteRes.guessType === 'author') {
       let answerAuthorSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
 
-      if (!selectedQuote.author.id) {
-        console.log(`-> Empty author.id for ${selectedQuote.author.id}`);
-      }
-
       try {
         answerAuthorSnap = await adminApp.firestore()
           .collection('authors')
@@ -326,8 +322,15 @@ export const disRouter = express.Router()
     if (randQuoteRes.guessType === 'author') {
       let randAuthorsRes: RandomMapArray;
 
-      try { randAuthorsRes = await getRandomAuthors(); }
-      catch (error) { next(error); return; }
+      try { 
+        randAuthorsRes = await getRandomAuthors({ 
+          except: selectedQuote.author.id 
+        }); 
+      }
+      catch (error) { 
+        next(error); 
+        return; 
+      }
 
       responsePayload.proposals.type = randAuthorsRes.type;
       responsePayload.proposals.values.push(...randAuthorsRes.values);
@@ -337,8 +340,15 @@ export const disRouter = express.Router()
     if (randQuoteRes.guessType === 'reference') {
       let randReferencesRes: RandomMapArray;
 
-      try { randReferencesRes = await getRandomReferences(); }
-      catch (error) { next(error); return; }
+      try { 
+        randReferencesRes = await getRandomReferences({ 
+          except: selectedQuote.mainReference.id 
+        }); 
+      }
+      catch (error) { 
+        next(error); 
+        return; 
+      }
 
       responsePayload.proposals.type = randReferencesRes.type;
       responsePayload.proposals.values.push(...randReferencesRes.values);
