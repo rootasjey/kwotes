@@ -114,12 +114,13 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
 
   if (guessType === 'author') {
     selectedQuote = boxQuotes.find((item) => {
-      return item.author.id !== 'TySUhQPqndIkiVHWVYq1' // anonymous author
+      return item.author.id 
+        && item.author.id !== 'TySUhQPqndIkiVHWVYq1' // anonymous author
         && item.author.id !== lastAuthorReferenceId;
     });
   } else {
     selectedQuote = boxQuotes.find((item) => {
-      return typeof item.mainReference.id !== 'undefined' 
+      return item.mainReference.id 
         && item.mainReference.id !== lastAuthorReferenceId;
     });
   }
