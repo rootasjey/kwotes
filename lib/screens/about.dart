@@ -120,11 +120,11 @@ class _AboutState extends State<About> {
   }
 
   Widget appIconImage() {
-    final size = MediaQuery.of(context).size.width < 500.0 ? 280.0 : 380.0;
+    final width = MediaQuery.of(context).size.width;
+    final size = width < Constants.maxMobileWidth ? 280.0 : 380.0;
 
     return Container(
       padding: const EdgeInsets.only(
-        top: 20.0,
         bottom: 40.0,
       ),
       width: maxWidth,
@@ -162,7 +162,7 @@ class _AboutState extends State<About> {
               onPressed: null,
               child: Opacity(
                 opacity: captionOpacity,
-                child: Text('App large icon'),
+                child: Text('App alternative icon'),
               ),
             ),
           ),
