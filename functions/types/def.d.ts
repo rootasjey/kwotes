@@ -44,6 +44,7 @@ interface NotifFuncParams {
 interface RandomQuoteAuthoredParams {
   lang: string;
   guessType: 'author' | 'reference';
+  previousQuestionsIds?: Array<string>;
 }
 
 interface UpdateEmailParams {

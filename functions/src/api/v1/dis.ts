@@ -176,6 +176,184 @@ export const disRouter = express.Router()
 
     res.send({ response: responsePayload });
   })
+  .post('/random', async (req, res, next) => {
+    let lang = req.query?.lang as string ?? 'en';
+    let guessStrType = req.query?.guessType as string ?? '';
+
+    lang = req.body.lang ?? lang;
+    guessStrType = req.body.guessType ?? guessStrType;
+
+    const previousQuestionsIdsStr: string = req.body.previousQuestionsIds;
+    const previousQuestionsIds: Array<string> = JSON.parse(previousQuestionsIdsStr);
+
+    let guessType: ('author' | 'reference') = 'author';
+
+    if (guessStrType) {
+      guessType = guessStrType === 'author'
+        ? 'author'
+        : 'reference';
+    } else {
+      const rand = getRandomIntInclusive(0, 1);
+      guessType = rand === 0
+        ? 'author'
+        : 'reference';
+    }
+
+    const responsePayload = {
+      question: {
+        guessType: 'author',
+        quote: {
+          id: '',
+          name: '',
+          topics: [],
+        }
+      },
+      proposals: {
+        type: 'author',
+        values: Array<FirebaseFirestore.DocumentData>(),
+      },
+      requestState: {
+        success: false,
+        error: {
+          reason: '',
+        },
+        warning: '',
+      },
+    };
+
+    // 1. Get a random quote with available author or reference.
+    let randQuoteRes: RandQuoteResp;
+
+    try {
+      randQuoteRes = await getRandomQuoteAuthored({
+        lang,
+        guessType,
+        previousQuestionsIds,
+      });
+
+      // 2nd try if no authored quote is found.
+      if (!randQuoteRes.quote) {
+        randQuoteRes = await getRandomQuoteAuthored({
+          lang,
+          guessType,
+          previousQuestionsIds,
+        });
+      }
+    } catch (error) {
+      next(error);
+      return;
+    }
+
+    const selectedQuote = randQuoteRes.quote;
+
+    if (!selectedQuote) {
+      res.status(500).send({
+        error: {
+          reason: `Sorry, but we couldn't find a suitable quote. 
+            Please try again.`,
+        }
+      });
+      return;
+    }
+
+    // 2.1. If the returned quote has a known author,
+    //      fetch this author's data to include in proposals.
+    if (randQuoteRes.guessType === 'author') {
+      let answerAuthorSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+
+      if (!selectedQuote.author.id) {
+        console.log(`-> Empty author.id for ${selectedQuote.author.id}`);
+      }
+
+      try {
+        answerAuthorSnap = await adminApp.firestore()
+          .collection('authors')
+          .doc(selectedQuote.author.id)
+          .get();
+      } catch (error) {
+        next(error);
+        return;
+      }
+
+      const answerAuthorData = answerAuthorSnap.data();
+
+      if (!answerAuthorData) {
+        res.status(404).send({
+          error: {
+            reason: `Sorry, but we couldn't find a suitable author answer. 
+            Please try again.`,
+          }
+        });
+        return;
+      }
+
+      answerAuthorData.id = answerAuthorSnap.id;
+      responsePayload.proposals.values.push(answerAuthorData);
+    }
+
+    // 2.2. If the returned quote has a known reference,
+    //      fetch this reference's data to include in proposals.
+    if (randQuoteRes.guessType === 'reference') {
+      let answerReferenceSnap: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
+
+      try {
+        answerReferenceSnap = await adminApp.firestore()
+          .collection('references')
+          .doc(selectedQuote.mainReference.id)
+          .get();
+      } catch (error) {
+        next(error);
+        return;
+      }
+
+      const answerReferenceData = answerReferenceSnap.data();
+
+      if (!answerReferenceData) {
+        res.status(404).send({
+          error: {
+            reason: `Sorry, but we couldn't find a suitable reference answer. 
+            Please try again.`,
+          }
+        });
+        return;
+      }
+
+      answerReferenceData.id = answerReferenceSnap.id;
+      responsePayload.proposals.values.push(answerReferenceData);
+    }
+
+    // 3.1. If the answer is an author, fetch 2 more random authors.
+    if (randQuoteRes.guessType === 'author') {
+      let randAuthorsRes: RandomMapArray;
+
+      try { randAuthorsRes = await getRandomAuthors(); }
+      catch (error) { next(error); return; }
+
+      responsePayload.proposals.type = randAuthorsRes.type;
+      responsePayload.proposals.values.push(...randAuthorsRes.values);
+    }
+
+    // 3.2. If the answer is a reference, fetch 2 more random references.
+    if (randQuoteRes.guessType === 'reference') {
+      let randReferencesRes: RandomMapArray;
+
+      try { randReferencesRes = await getRandomReferences(); }
+      catch (error) { next(error); return; }
+
+      responsePayload.proposals.type = randReferencesRes.type;
+      responsePayload.proposals.values.push(...randReferencesRes.values);
+    }
+
+    // 4. Prepare the response payload.
+    responsePayload.question.guessType = randQuoteRes.guessType;
+    responsePayload.question.quote.id = selectedQuote.id;
+    responsePayload.question.quote.name = selectedQuote.name;
+    responsePayload.question.quote.topics = selectedQuote.topics;
+
+    responsePayload.requestState.success = true;
+
+    res.send({ response: responsePayload });
+  })
   .post('/check', async (req, res, next) => {
     const answerProposalId: string = req.body.answerProposalId;
     const guessType: string = req.body.guessType;

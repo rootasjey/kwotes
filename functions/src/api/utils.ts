@@ -63,7 +63,13 @@ export const getRandomIntInclusive = (min: number, max: number) => {
 }
 
 export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) => {
-  let { lang, guessType } = params;
+  let { lang, guessType, previousQuestionsIds } = params;
+
+  let lastAuthorReferenceId = '';
+
+  if (previousQuestionsIds && previousQuestionsIds.length > 0) {
+    lastAuthorReferenceId = previousQuestionsIds[previousQuestionsIds.length - 1];
+  }
 
   if (!isLangAvailable(lang)) {
     lang = 'en';
@@ -108,11 +114,13 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
 
   if (guessType === 'author') {
     selectedQuote = boxQuotes.find((item) => {
-      return item.author.id !== 'TySUhQPqndIkiVHWVYq1';
+      return item.author.id !== 'TySUhQPqndIkiVHWVYq1' // anonymous author
+        && item.author.id !== lastAuthorReferenceId;
     });
   } else {
     selectedQuote = boxQuotes.find((item) => {
-      return typeof item.mainReference.id !== 'undefined';
+      return typeof item.mainReference.id !== 'undefined' 
+        && item.mainReference.id !== lastAuthorReferenceId;
     });
   }
 
