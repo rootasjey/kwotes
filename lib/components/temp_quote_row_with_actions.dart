@@ -5,7 +5,6 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
 import 'package:figstyle/components/temp_quote_row.dart';
 import 'package:figstyle/state/user.dart';

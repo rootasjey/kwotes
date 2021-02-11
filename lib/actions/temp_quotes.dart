@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/user.dart';
@@ -109,8 +111,10 @@ Future<bool> deleteTempQuoteAdmin({
   }
 }
 
-String getResultMessage(
-    {AddQuoteType actionIntent, AddQuoteType actionResult}) {
+String getResultMessage({
+  AddQuoteType actionIntent,
+  AddQuoteType actionResult,
+}) {
   if ((actionIntent == actionResult) &&
       actionIntent == AddQuoteType.tempquote) {
     return DataQuoteInputs.quote.id.isEmpty
@@ -140,8 +144,10 @@ String getResultMessage(
   return 'Your quote has been successfully saved';
 }
 
-String getResultSubMessage(
-    {AddQuoteType actionIntent, AddQuoteType actionResult}) {
+String getResultSubMessage({
+  AddQuoteType actionIntent,
+  AddQuoteType actionResult,
+}) {
   if ((actionIntent == actionResult) &&
       actionIntent == AddQuoteType.tempquote) {
     return DataQuoteInputs.quote.id.isEmpty
@@ -339,4 +345,34 @@ Future saveExistingTempQuote({
       'updatedAt': DateTime.now(),
     }
   });
+}
+
+Future<bool> validateTempQuote({
+  TempQuote tempQuote,
+  String uid,
+}) async {
+  try {
+    final callable = CloudFunctions(
+      app: Firebase.app(),
+      region: 'europe-west3',
+    ).getHttpsCallable(
+      functionName: 'tempQuotes-validate',
+    );
+
+    final idToken = await stateUser.userAuth.getIdToken();
+
+    final resp = await callable.call({
+      'tempQuoteId': tempQuote.id,
+      'idToken': idToken,
+    });
+
+    final isOk = resp.data['success'] as bool;
+    return isOk;
+  } on CloudFunctionsException catch (exception) {
+    debugPrint("[code: ${exception.code}] - ${exception.message}");
+    return false;
+  } catch (error) {
+    debugPrint(error.toString());
+    return false;
+  }
 }
