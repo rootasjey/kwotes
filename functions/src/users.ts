@@ -65,13 +65,17 @@ export const checkEmailAvailability = functions
     const email: string = data.email;
 
     if (!(typeof email === 'string') || email.length === 0) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'one (string) argument "email" which is the email to check.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with one (string) argument "email" which is the email to check.`,
+      );
     }
 
     if (!validateEmailFormat(email)) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'a valid email address.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with a valid email address.`,
+      );
     }
 
     const exists = await isUserExistsByEmail(email);
@@ -90,13 +94,17 @@ export const checkUsernameAvailability = functions
     const name: string = data.name;
 
     if (!(typeof name === 'string') || name.length === 0) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'one (string) argument "name" which is the name to check.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with one (string) argument "name" which is the name to check.`,
+      );
     }
 
     if (!validateNameFormat(name)) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'a valid name with at least 3 alpha-numeric characters (underscore is allowed) (A-Z, 0-9, _).');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with a valid name with at least 3 alpha-numeric characters (underscore is allowed) (A-Z, 0-9, _).`,
+      );
     }
 
     const nameSnap = await firestore
@@ -120,8 +128,10 @@ export const createAccount = functions
   .https
   .onCall(async (data: CreateUserAccountParams) => {
     if (!checkCreateAccountData(data)) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        '3 string arguments "username", "email" and "password".');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with 3 string arguments "username", "email" and "password".`,
+      );
     }
 
     const { username, password, email } = data;
@@ -216,8 +226,10 @@ export const createAccount = functions
       };
 
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
-        'while creating your account. Please try again or contact us if the problem persists".');
+      throw new functions.https.HttpsError(
+        'internal', 
+        `There was an internal error while creating your account. Please try again or contact us if the problem persists".`,
+      );
     }
   });
 

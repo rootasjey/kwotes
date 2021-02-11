@@ -74,7 +74,8 @@ export const getRandomIntInclusive = (min: number, max: number) => {
 }
 
 export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) => {
-  let { lang, guessType, previousQuestionsIds } = params;
+  let { lang, guessType } = params;
+  const previousQuestionsIds = params.previousQuestionsIds;
 
   let lastAuthorReferenceId = '';
 

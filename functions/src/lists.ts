@@ -17,16 +17,19 @@ export const deleteList = functions
     const { listId, idToken } = data;
 
     if (!userAuth) {
-      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-        'an authenticated user.');
+      throw new functions.https.HttpsError(
+        'unauthenticated', 
+        `The function must be called from an authenticated user.`,
+      );
     }
 
     await checkUserIsSignedIn(context, idToken);
-  
 
     if (!listId) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'one argument "listId" which is the list to delete.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with one argument "listId" which is the list to delete.`
+      );
     }
 
     const listSnapshot = await firestore

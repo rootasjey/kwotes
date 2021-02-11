@@ -26,6 +26,7 @@ export async function checkUserIsSignedIn(
     isTokenValid = true;
 
   } catch (error) {
+    console.error(error);
     isTokenValid = false;
   }
 
