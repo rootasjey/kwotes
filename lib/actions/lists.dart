@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
@@ -14,14 +13,6 @@ Future<UserQuotesList> createList({
 }) async {
   try {
     final userAuth = stateUser.userAuth;
-
-    if (userAuth == null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Signin()),
-      );
-
-      return null;
-    }
 
     final docRef = await FirebaseFirestore.instance
         .collection('users')
@@ -56,14 +47,6 @@ Future<bool> deleteList({
   try {
     final userAuth = stateUser.userAuth;
 
-    if (userAuth == null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Signin()),
-      );
-
-      return false;
-    }
-
     // Add a new document containing information
     // to delete the subcollection (in order to delete its documents).
     await FirebaseFirestore.instance.collection('todelete').add({
@@ -97,14 +80,6 @@ Future<bool> removeFromList({
   try {
     final userAuth = stateUser.userAuth;
 
-    if (userAuth == null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Signin()),
-      );
-
-      return false;
-    }
-
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userAuth.uid)
@@ -131,14 +106,6 @@ Future<bool> updateList({
 }) async {
   try {
     final userAuth = stateUser.userAuth;
-
-    if (userAuth == null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Signin()),
-      );
-
-      return false;
-    }
 
     await FirebaseFirestore.instance
         .collection('users')
