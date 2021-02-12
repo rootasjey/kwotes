@@ -8,7 +8,7 @@ const firestore = adminApp.firestore();
  * update all quotes referencing this author.
  * Specifically [quote.author.name] property.
  */
-export const onAuthorUpdated = functions
+export const onUpdateAuthor = functions
   .region('europe-west3')
   .firestore
   .document('authors/{authorId}')
@@ -34,59 +34,13 @@ export const onAuthorUpdated = functions
     }
 
     for await (const quoteDoc of allQuotesWithAuthor.docs) {
-      await quoteDoc.ref
-        .update('author.name', afterName);
+      await quoteDoc.ref.update(
+        'author.name', 
+        afterName,
+      );
     }
 
     return true;
-  });
-
-export const onQuoteAdded = functions
-  .region('europe-west3')
-  .firestore
-  .document('quotes/{quoteId}')
-  .onCreate(async (snapshot) => {
-    const quoteData = snapshot.data();
-    if (!quoteData) { return; }
-
-    const user = await firestore
-      .collection('users')
-      .doc(quoteData.user.id)
-      .get();
-
-    if (!user.exists) { return; }
-    
-    const userData = user.data();
-    if (!userData) { return; }
-
-    const userPub: number = userData.stats.published ?? 0;
-    
-    return await user.ref
-      .update('stats.published', userPub + 1);
-  });
-
-export const onQuoteDeleted = functions
-  .region('europe-west3')
-  .firestore
-  .document('quotes/{quoteId}')
-  .onDelete(async (snapshot) => {
-    const quoteData = snapshot.data();
-    if (!quoteData) { return; }
-
-    const user = await firestore
-      .collection('users')
-      .doc(quoteData.user.id)
-      .get();
-
-    if (!user.exists) { return; }
-
-    const userData = user.data();
-    if (!userData) { return; }
-
-    const userPub: number = userData.stats.published ?? 0;
-    
-    return await user.ref
-      .update('stats.published', Math.max(0, userPub - 1));
   });
 
 /**
@@ -94,7 +48,7 @@ export const onQuoteDeleted = functions
  * update all quotes referencing this reference
  * Specifically the [quote.mainReference.name] property.
  */
-export const onReferenceUpdated = functions
+export const onUpdateReference = functions
   .region('europe-west3')
   .firestore
   .document('references/{referenceId}')
@@ -110,18 +64,33 @@ export const onReferenceUpdated = functions
       return;
     }
 
-    const allQuotesWithReference = await firestore
+    let allQuotesWithReference = await firestore
       .collection('quotes')
-      .where('mainReference.id', '==', referenceId)
+      .where('reference.id', '==', referenceId)
       .get();
+
+    if (allQuotesWithReference.empty) {
+      allQuotesWithReference = await firestore
+        .collection('quotes')
+        .where('mainReference.id', '==', referenceId)
+        .get();
+    }
 
     if (allQuotesWithReference.empty) {
       return;
     }
 
     for await (const quoteDoc of allQuotesWithReference.docs) {
-      await quoteDoc.ref
-        .update('mainReference.name', afterName);
+      await quoteDoc.ref.update({
+        mainReference: {
+          name: afterName,
+          id: referenceId,
+        },
+        reference: { // new prop. to replace [mainReference]
+          name: afterName,
+          id: referenceId,
+        },
+      });
     }
 
     return true;

@@ -77,28 +77,8 @@ export const deleteQuote = functions
     const authorId: string = quoteData.author.id;
     const reference = quoteData.reference;
     const referenceId: string = reference ? reference.id : quoteData.mainReference.id;
-    const quoteLang: string = quoteData.lang;
 
     await quoteDoc.ref.delete();
-
-    // Update quotes stats.
-    const quotesStats = await firestore
-      .collection('stats')
-      .doc('quotes')
-      .get();
-
-    const quotesStatsData = quotesStats.data();
-
-    if (quotesStats.exists && quotesStatsData) {
-      const total = quotesStatsData.total - 1;
-      const payload: Record<string, number> = { total };
-
-      if (quoteLang && quotesStatsData[quoteLang]) {
-        payload[quoteLang] = quotesStatsData[quoteLang] - 1;
-      }
-
-      await quotesStats.ref.update(payload);
-    }
 
     if (deleteAuthor) {
       await deleteQuoteAuthor(authorId);
@@ -139,19 +119,6 @@ async function deleteQuoteAuthor(authorId: string) {
   }
 
   await authorDoc.ref.delete();
-
-  const authorsStats = await firestore
-    .collection('stats')
-    .doc('authors')
-    .get();
-
-  const authorsStatsData = authorsStats.data();
-
-  if (authorsStats.exists && authorsStatsData) {
-    await authorsStats.ref.update({
-      total: authorsStatsData.total + 1,
-    });
-  }
 }
 
 /**
@@ -170,25 +137,5 @@ async function deleteQuoteReference(referenceId: string) {
     return;
   }
 
-  const referenceLang: string = referenceData.lang;
-
   await referenceDoc.ref.delete();
-
-  const referencesStats = await firestore
-    .collection('stats')
-    .doc('references')
-    .get();
-
-  const referencesStatsData = referencesStats.data();
-
-  if (referencesStats.exists && referencesStatsData) {
-    const total = referencesStatsData.total - 1;
-    const payload: Record<string, number> = { total };
-
-    if (referenceLang && referencesStatsData[referenceLang]) {
-      payload[referenceLang] = referencesStatsData[referenceLang] - 1;
-    }
-
-    await referencesStats.ref.update(payload);
-  }
 }

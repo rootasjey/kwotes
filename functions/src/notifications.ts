@@ -56,7 +56,7 @@ export const decrementStats = functions
   .region('europe-west3')
   .firestore
   .document('users/{userId}/notifications/{notificationId}')
-  .onDelete(async (notifSnapshot, context) => {
+  .onDelete(async ({}, context) => {
     const userId: string = context.params.userId;
 
     const userSnapshot = await firestore

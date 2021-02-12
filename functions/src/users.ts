@@ -13,7 +13,7 @@ const firestore = adminApp.firestore();
 export const updateUserLists = functions
   .region('europe-west3')
   .https
-  .onRequest(async (req, res) => {
+  .onRequest(async ({}, res) => {
     // The app has very few users right now (less than 20).
     const userSnapshot = firestore
       .collection('users')
