@@ -4,6 +4,284 @@ import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
+
+/**
+ * TODO: TEMPORARY: Delete after execution.
+ * Update references stats.
+ */
+export const updateTopicsStats = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (params, resp) => {
+    const limit = 200;
+    let offset = 0;
+
+    let hasNext = true;
+
+    const maxIterations = 100;
+    let currIteration = 0;
+
+    let totalCount = 0;
+
+    while (hasNext && currIteration < maxIterations) {
+      const snapshot = await firestore
+        .collection('topics')
+        .limit(limit)
+        .offset(offset)
+        .get();
+
+      if (snapshot.empty || snapshot.size === 0) {
+        hasNext = false;
+      }
+
+      totalCount += snapshot.size;
+
+      currIteration++;
+      offset += snapshot.size;
+    }
+
+    // Update stats
+    await firestore
+      .collection('stats')
+      .doc('topics')
+      .update({
+        total: totalCount,
+      });
+
+    console.log('-------ref--------');
+    console.log(`stopped at (offset): ${offset}`);
+    console.log(`iterations done: ${currIteration}/${maxIterations}`);
+    console.log(`Docs counted: ${totalCount}`);
+
+    resp.send({
+      'stopped at (offset)': offset,
+      'iterations done': `${currIteration}/${maxIterations}`,
+      'Docs counted': totalCount,
+    });
+  });
+
+/**
+ * TODO: TEMPORARY: Delete after execution.
+ * Update references stats.
+ */
+export const updateUsersStats = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (params, resp) => {
+    const limit = 200;
+    let offset = 0;
+
+    let hasNext = true;
+
+    const maxIterations = 100;
+    let currIteration = 0;
+
+    let totalCount = 0;
+
+    while (hasNext && currIteration < maxIterations) {
+      const snapshot = await firestore
+        .collection('users')
+        .limit(limit)
+        .offset(offset)
+        .get();
+
+      if (snapshot.empty || snapshot.size === 0) {
+        hasNext = false;
+      }
+
+      totalCount += snapshot.size;
+
+      currIteration++;
+      offset += snapshot.size;
+    }
+
+    // Update stats
+    await firestore
+      .collection('stats')
+      .doc('users')
+      .update({
+        total: totalCount,
+      });
+
+    console.log('-------ref--------');
+    console.log(`stopped at (offset): ${offset}`);
+    console.log(`iterations done: ${currIteration}/${maxIterations}`);
+    console.log(`Docs counted: ${totalCount}`);
+
+    resp.send({
+      'stopped at (offset)': offset,
+      'iterations done': `${currIteration}/${maxIterations}`,
+      'Docs counted': totalCount,
+    });
+  });
+
+/**
+ * TODO: TEMPORARY: Delete after execution.
+ * Update temp quotes stats.
+ */
+export const updateTQStats = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (params, resp) => {
+    const limit = 200;
+    let offset = 0;
+
+    let hasNext = true;
+
+    const maxIterations = 100;
+    let currIteration = 0;
+
+    let totalCount = 0;
+
+    while (hasNext && currIteration < maxIterations) {
+      const snapshot = await firestore
+        .collection('tempquotes')
+        .limit(limit)
+        .offset(offset)
+        .get();
+
+      if (snapshot.empty || snapshot.size === 0) {
+        hasNext = false;
+      }
+
+      totalCount += snapshot.size;
+
+      currIteration++;
+      offset += snapshot.size;
+    }
+
+    // Update stats
+    await firestore
+      .collection('stats')
+      .doc('tempquotes')
+      .update({
+        total: totalCount,
+      });
+
+    console.log('-------ref--------');
+    console.log(`stopped at (offset): ${offset}`);
+    console.log(`iterations done: ${currIteration}/${maxIterations}`);
+    console.log(`Docs counted: ${totalCount}`);
+
+    resp.send({
+      'stopped at (offset)': offset,
+      'iterations done': `${currIteration}/${maxIterations}`,
+      'Docs counted': totalCount,
+    });
+  });
+
+/**
+ * TODO: TEMPORARY: Delete after execution.
+ * Update references stats.
+ */
+export const updateTQStatsEN = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (params, resp) => {
+    const limit = 200;
+    let offset = 0;
+
+    let hasNext = true;
+
+    const maxIterations = 100;
+    let currIteration = 0;
+
+    let totalCount = 0;
+
+    while (hasNext && currIteration < maxIterations) {
+      const snapshot = await firestore
+        .collection('tempquotes')
+        .where('lang', '==', 'en')
+        .limit(limit)
+        .offset(offset)
+        .get();
+
+      if (snapshot.empty || snapshot.size === 0) {
+        hasNext = false;
+      }
+
+      totalCount += snapshot.size;
+
+      currIteration++;
+      offset += snapshot.size;
+    }
+
+    // Update stats
+    await firestore
+      .collection('stats')
+      .doc('tempquotes')
+      .update({
+        en: totalCount,
+      });
+
+    console.log('-------ref--------');
+    console.log(`stopped at (offset): ${offset}`);
+    console.log(`iterations done: ${currIteration}/${maxIterations}`);
+    console.log(`Docs counted: ${totalCount}`);
+
+    resp.send({
+      'stopped at (offset)': offset,
+      'iterations done': `${currIteration}/${maxIterations}`,
+      'Docs counted': totalCount,
+    });
+  });
+
+/**
+ * TODO: TEMPORARY: Delete after execution.
+ * Update references stats.
+ */
+export const updateTQStatsFR = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (params, resp) => {
+    const limit = 200;
+    let offset = 0;
+
+    let hasNext = true;
+
+    const maxIterations = 100;
+    let currIteration = 0;
+
+    let totalCount = 0;
+
+    while (hasNext && currIteration < maxIterations) {
+      const snapshot = await firestore
+        .collection('tempquotes')
+        .where('lang', '==', 'fr')
+        .limit(limit)
+        .offset(offset)
+        .get();
+
+      if (snapshot.empty || snapshot.size === 0) {
+        hasNext = false;
+      }
+
+      totalCount += snapshot.size;
+
+      currIteration++;
+      offset += snapshot.size;
+    }
+
+    // Update stats
+    await firestore
+      .collection('stats')
+      .doc('tempquotes')
+      .update({
+        fr: totalCount,
+      });
+
+    console.log('-------ref--------');
+    console.log(`stopped at (offset): ${offset}`);
+    console.log(`iterations done: ${currIteration}/${maxIterations}`);
+    console.log(`Docs counted: ${totalCount}`);
+
+    resp.send({
+      'stopped at (offset)': offset,
+      'iterations done': `${currIteration}/${maxIterations}`,
+      'Docs counted': totalCount,
+    });
+  });
+
 /**
  * Delete a published quote 
  * with its associated author & reference if specified.
