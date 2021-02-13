@@ -34,8 +34,13 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
   ItemsLayout itemsLayout = ItemsLayout.list;
   List<TempQuote> tempQuotes = [];
 
+  /// Quotes which are being deleted.
+  /// Useful reference if a rollback is necessary.
+  Map<int, TempQuote> processingQuotes = Map();
+
   ScrollController scrollController = ScrollController();
 
+  String actionStr = "deleting";
   String pageRoute = RouteNames.AdminTempQuotesRoute;
   String lang = 'en';
 
@@ -239,46 +244,18 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
               tempQuote: tempQuote,
               padding: const EdgeInsets.all(20.0),
               elevation: Constants.cardElevation,
-              onBeforeDelete: () {
-                setState(() {
-                  tempQuotes.removeAt(index);
-                });
-              },
-              onAfterDelete: (success) {
-                if (success) {
-                  return;
-                }
-
-                setState(() {
-                  tempQuotes.insert(index, tempQuote);
-                });
-
-                showSnack(
-                  context: context,
-                  message: "Couldn't delete the temporary quote",
-                  type: SnackType.error,
-                );
-              },
-              onBeforeValidate: () {
-                setState(() {
-                  tempQuotes.removeAt(index);
-                });
-              },
-              onAfterValidate: (success) {
-                if (success) {
-                  return;
-                }
-
-                setState(() {
-                  tempQuotes.insert(index, tempQuote);
-                });
-
-                showSnack(
-                  context: context,
-                  message: "Couldn't validate your temporary quote.",
-                  type: SnackType.error,
-                );
-              },
+              onBeforeDelete: () => onBeforeProcessingTempQuote(
+                index: index,
+                tempQuote: tempQuote,
+                actionType: TempQuoteUIActionType.delete,
+              ),
+              onAfterDelete: onAfterProcessingTempQuote,
+              onBeforeValidate: () => onBeforeProcessingTempQuote(
+                index: index,
+                tempQuote: tempQuote,
+                actionType: TempQuoteUIActionType.validate,
+              ),
+              onAfterValidate: onAfterProcessingTempQuote,
               onNavBack: () {
                 SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                   fetch();
@@ -313,46 +290,18 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             key: ObjectKey(index),
             showPopupMenuButton: showPopupMenuButton,
             useSwipeActions: true,
-            onBeforeDelete: () {
-              setState(() {
-                tempQuotes.removeAt(index);
-              });
-            },
-            onAfterDelete: (success) {
-              if (success) {
-                return;
-              }
-
-              setState(() {
-                tempQuotes.insert(index, tempQuote);
-              });
-
-              showSnack(
-                context: context,
-                message: "Couldn't delete the temporary quote",
-                type: SnackType.error,
-              );
-            },
-            onBeforeValidate: () {
-              setState(() {
-                tempQuotes.removeAt(index);
-              });
-            },
-            onAfterValidate: (success) {
-              if (success) {
-                return;
-              }
-
-              setState(() {
-                tempQuotes.insert(index, tempQuote);
-              });
-
-              showSnack(
-                context: context,
-                message: "Couldn't validate your temporary quote.",
-                type: SnackType.error,
-              );
-            },
+            onBeforeDelete: () => onBeforeProcessingTempQuote(
+              index: index,
+              tempQuote: tempQuote,
+              actionType: TempQuoteUIActionType.delete,
+            ),
+            onAfterDelete: onAfterProcessingTempQuote,
+            onBeforeValidate: () => onBeforeProcessingTempQuote(
+              index: index,
+              tempQuote: tempQuote,
+              actionType: TempQuoteUIActionType.validate,
+            ),
+            onAfterValidate: onAfterProcessingTempQuote,
             onNavBack: () {
               SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                 fetch();
@@ -444,5 +393,38 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     } catch (error) {
       setState(() => isLoadingMore = false);
     }
+  }
+
+  void onAfterProcessingTempQuote(bool success) {
+    if (!success) {
+      processingQuotes.forEach((key, value) {
+        tempQuotes.insert(key, value);
+      });
+
+      setState(() {});
+
+      showSnack(
+        context: context,
+        type: SnackType.error,
+        message: "Sorry, there was an issue while validating the quote(s). "
+            "Try again later or contact the support of the issue persist.",
+      );
+    }
+
+    processingQuotes.clear();
+  }
+
+  void onBeforeProcessingTempQuote({
+    int index,
+    TempQuote tempQuote,
+    TempQuoteUIActionType actionType,
+  }) {
+    setState(() {
+      actionStr = actionType == TempQuoteUIActionType.delete
+          ? "deleting"
+          : "validating";
+      processingQuotes.putIfAbsent(index, () => tempQuote);
+      tempQuotes.remove(tempQuote);
+    });
   }
 }

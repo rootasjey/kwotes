@@ -123,3 +123,8 @@ enum SnackType {
   info,
   success,
 }
+
+enum TempQuoteUIActionType {
+  delete,
+  validate,
+}
