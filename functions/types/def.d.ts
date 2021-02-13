@@ -3,6 +3,15 @@ interface AddAppParams {
   description: string;
 }
 
+interface CreateListParams {
+  quoteIds: string[];
+  idToken: string;
+  name: string;
+  description: string;
+  isPublic: boolean;
+  iconType:string;
+}
+
 interface CreateUserAccountParams {
   email: string;
   password: string;

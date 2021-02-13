@@ -6,6 +6,90 @@ const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
+ * Create a list.
+ * Immediately add quotes (from argument) if specified.
+ */
+export const createList = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data: CreateListParams, context) => {
+    const userAuth = context.auth;
+    const { 
+      quoteIds, 
+      idToken, 
+      name, 
+      isPublic,
+      description, 
+    } = sanitizeCreateListParams(data);
+
+    if (!userAuth) {
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        `The function must be called from an authenticated user.`,
+      );
+    }
+
+    await checkUserIsSignedIn(context, idToken);
+
+    const quotesListDoc = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .collection('lists')
+      .add({
+        createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+        description: description,
+        name: name,
+        itemsCount: 0,
+        icon: {
+          localType: '',
+          url: '',
+        },
+        isPublic: isPublic,
+        updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
+      });
+
+    if (!quoteIds || quoteIds.length === 0) {
+      return {
+        success: true,
+        list: {
+          id: quotesListDoc.id,
+        },
+      };
+    }
+
+    for await (const quoteId of quoteIds) {
+      const quoteDoc = await firestore
+        .collection('quotes')
+        .doc(quoteId)
+        .get();
+
+      const quoteData = quoteDoc.data();
+
+      if (!quoteDoc.exists || !quoteData) {
+        continue;
+      }
+
+      await quotesListDoc
+        .collection('quotes')
+        .doc(quoteDoc.id)
+        .set({
+          author: quoteData.author,
+          createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+          name: quoteData.name,
+          topics: quoteData.topics,
+          reference: quoteData.reference,
+        });
+    }
+
+    return {
+      success: true,
+      list: {
+        id: quotesListDoc.id,
+      },
+    };
+  });
+
+/**
  * Delete a user's quotes list.
  */
 export const deleteList = functions
@@ -170,3 +254,38 @@ export const deleteLists = functions
       listIds,
     };
   });
+
+/**
+ * Ensure that specified paramters are correct.
+ * @param createListParams - CreateList's parameters.
+ */
+function sanitizeCreateListParams(createListParams: CreateListParams) {
+  const response = {
+    quoteIds: Array<string>(),
+    idToken: createListParams.idToken,
+    iconType: '',
+    name: `list-${Date.now()}`,
+    isPublic: false,
+    description: '',
+  };
+
+  response.quoteIds = [];
+
+  if (createListParams.name && typeof createListParams.name === 'string') {
+    response.name = createListParams.name;
+  }
+
+  if (createListParams.description && typeof createListParams.description === 'string') {
+    response.description = createListParams.description;
+  }
+
+  if (createListParams.isPublic && typeof createListParams.isPublic === 'boolean') {
+    response.isPublic = createListParams.isPublic;
+  }
+
+  if (createListParams.quoteIds && Array.isArray(createListParams.quoteIds)) {
+    response.quoteIds = createListParams.quoteIds;
+  }
+
+  return response;
+}
