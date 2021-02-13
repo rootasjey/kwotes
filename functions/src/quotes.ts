@@ -36,21 +36,16 @@ export const updateQuotesReference = functions
 
         const mainReference = quoteData.mainReference;
 
-        if (mainReference && mainReference.id) {
+        if (!mainReference || !mainReference.id) {
           await quoteDoc.ref.update({
             reference: {
-              id: mainReference.id,
-              name: mainReference.name,
+              id: '',
+              name: '',
             },
             references: adminApp.firestore.FieldValue.delete(),
           });
 
           updatedCount++;
-
-          if (!mainReference.name) {
-            missingDataCount++;
-            console.log(`- Missing reference's name for ${mainReference.id}`);
-          }
         }
       }
 
