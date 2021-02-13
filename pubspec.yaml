@@ -51,6 +51,7 @@ dependencies:
   introduction_screen: 1.0.9
   jiffy: 3.0.1
   like_button: 1.0.4
+  logger: 0.9.4
   mobx: 1.2.1+4
   mobx_codegen: 1.1.2
   modal_bottom_sheet: 1.0.0+1
