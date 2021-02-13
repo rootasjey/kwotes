@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions';
 import { adminApp } from './adminApp';
 import { checkUserIsSignedIn } from './utils';
 
+const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
@@ -12,7 +13,7 @@ const firestore = adminApp.firestore();
 export const activateDevProgram = functions
   .region('europe-west3')
   .https
-  .onCall(async (data, context) => {
+  .onCall(async ({}, context) => {
     const userAuth = context.auth;
 
     if (!userAuth) {
@@ -98,136 +99,117 @@ export const createApp = functions
       );
     }
 
-    try {
-      const userSnapshot = await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .get();
+    const userSnapshot = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
 
-      const userData = userSnapshot.data();
+    const userData = userSnapshot.data();
 
-      if (!userSnapshot.exists || !userData) {
-        throw new functions.https.HttpsError(
-          'not-found',
-          `The user [${userAuth.uid}] document doesn't exist. 
-          It may occurs if your data has been lost or a bad internet connection. 
-          Please try again later.`,
-        );
-      }
-
-      const currentAppsCount: number = userData.developer?.apps?.current ?? 0;
-      const limitAppsCount: number = userData.developer?.apps?.limit ?? 5;
-
-      if (currentAppsCount >= limitAppsCount) {
-        throw new functions.https.HttpsError(
-          'permission-denied',
-          `You've reached your applications' limit number.`
-        );
-      }
-
-      let { name, description } = data;
-
-      if (!name) {
-        name = `app-${userAuth.uid}-${Date.now()}`;
-      }
-
-      if (!description) {
-        description = 'This is an awesome app!';
-      }
-
-
-      const appDoc = await firestore
-        .collection('apps')
-        .add({
-          createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
-          keys: {
-            primary: '',
-            secondary: '',
-          },
-          cert: {
-            active: false,
-            deliveredAt: adminApp.firestore.FieldValue.serverTimestamp(),
-            exp: adminApp.firestore.FieldValue.serverTimestamp(),
-          },
-          description,
-          name,
-          plan: 'free',
-          rights: {
-            'api:edituser': false,
-            'api:manageauthor': false,
-            'api:managequote': false,
-            'api:managereference': false,
-            'api:managequotidian': false,
-            'api:proposequote': false,
-            'api:readquote': true,
-            'api:readuser': false,
-            'api:services': false,
-            'api:validatequote': false,
-          },
-          stats: {
-            calls: {
-              allTime: 0,
-              limit: 1000,
-            },
-            usedBy: 0,
-          },
-          updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
-          urls: {
-            email: '',
-            image: '',
-            website: '',
-            privacy: '',
-          },
-          user: {
-            id: userAuth.uid,
-          }
-        });
-
-      const hash1 = require("crypto")
-        .createHash("md5")
-        .update(Date.now().toString())
-        .digest("base64");
-
-      const hash2 = require("crypto")
-        .createHash("md5")
-        .update(Date.now().toString())
-        .digest("base64");
-
-      await appDoc.update({
-        keys: {
-          primary: `${appDoc.id},${hash1},k=1`,
-          secondary: `${appDoc.id},${hash2},k=2`,
-        },
-      });
-
-      // Update apps count.
-      const newCurrentAppsCount = Math.max(currentAppsCount + 1, 0);
-
-      await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .update('developer.apps.current', newCurrentAppsCount);
-
-      return {
-        success: true,
-        app: {
-          description,
-          id: appDoc.id,
-          name,
-          user: {
-            id: userAuth.uid,
-          },
-        },
-      };
-      
-    } catch (error) {
-      console.error(error);
+    if (!userSnapshot.exists || !userData) {
       throw new functions.https.HttpsError(
-        'internal', 
-        `There was an internal error while creating your new app. 
-        Please try again or contact us if the problem persists".`,
+        'not-found',
+        `The user [${userAuth.uid}] document doesn't exist. 
+        It may occurs if your data has been lost or a bad internet connection. 
+        Please try again later.`,
       );
     }
+
+    const currentAppsCount: number = userData.developer?.apps?.current ?? 0;
+    const limitAppsCount: number = userData.developer?.apps?.limit ?? 5;
+
+    if (currentAppsCount >= limitAppsCount) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        `You've reached your applications' limit number.`
+      );
+    }
+
+    let { name, description } = data;
+
+    if (!name) {
+      name = `app-${userAuth.uid}-${Date.now()}`;
+    }
+
+    if (!description) {
+      description = 'This is an awesome app!';
+    }
+
+    const appDoc = await firestore
+      .collection('apps')
+      .add({
+        createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+        keys: {
+          primary: '',
+          secondary: '',
+        },
+        cert: {
+          active: false,
+          deliveredAt: adminApp.firestore.FieldValue.serverTimestamp(),
+          exp: adminApp.firestore.FieldValue.serverTimestamp(),
+        },
+        description,
+        name,
+        plan: 'free',
+        rights: {
+          'api:edituser': false,
+          'api:manageauthor': false,
+          'api:managequote': false,
+          'api:managereference': false,
+          'api:managequotidian': false,
+          'api:proposequote': false,
+          'api:readquote': true,
+          'api:readuser': false,
+          'api:services': false,
+          'api:validatequote': false,
+        },
+        stats: {
+          calls: {
+            allTime: 0,
+            limit: 1000,
+          },
+          usedBy: 0,
+        },
+        updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
+        urls: {
+          email: '',
+          image: '',
+          website: '',
+          privacy: '',
+        },
+        user: {
+          id: userAuth.uid,
+        }
+      });
+
+    const hash1 = require("crypto")
+      .createHash("md5")
+      .update(Date.now().toString())
+      .digest("base64");
+
+    const hash2 = require("crypto")
+      .createHash("md5")
+      .update(Date.now().toString())
+      .digest("base64");
+
+    await appDoc.update({
+      keys: {
+        primary: `${appDoc.id},${hash1},k=1`,
+        secondary: `${appDoc.id},${hash2},k=2`,
+      },
+    });
+
+    return {
+      success: true,
+      app: {
+        description,
+        id: appDoc.id,
+        name,
+        user: {
+          id: userAuth.uid,
+        },
+      },
+    };
   });
 
 /**
@@ -366,64 +348,25 @@ export const deleteApp = functions
       )
     }
 
+    const appDoc = await firestore
+      .collection('apps')
+      .doc(appId)
+      .get();
+
+    if (!appDoc.exists) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `No app was found for the specified app. It may have been deleted.`,
+      );
+    }
+
     try {
-      // Add a reference in the 'todelete' collection
-      // in order to delete sub-collection documents.
-      await firestore
-        .collection('todelete')
-        .doc(appId)
-        .create({
-          doc: {
-            id: appId,
-            conceptualType: 'dev app',
-            dataType: 'document',
-            hasChildren: true,
-          },
-          path: `apps/${appId}`,
-          task: {
-            createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
-            done: false,
-            items: {
-              deleted: 0,
-              total: 0,
-            },
-            updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
-          },
-          user: {
-            id: userAuth.uid,
-          },
+      await firebaseTools.firestore
+        .delete(appDoc.ref.path, {
+          project: process.env.GCLOUD_PROJECT,
+          recursive: true,
+          yes: true,
         });
-
-      // Delete app doc.
-      await firestore
-        .collection('apps')
-        .doc(appId)
-        .delete();
-
-      // Update apps count.
-      const docUser = await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .get();
-
-      const userData = docUser.data();
-
-      if (!userData) {
-        throw new functions.https.HttpsError(
-          'not-found',
-          `The user [${userAuth.uid}] document doesn't exist. 
-          It may occurs if your data has been lost or a bad internet connection. 
-          Please try again later.`,
-        );
-      }
-
-      let currentAppsCount: number = userData.developer?.apps?.current ?? 0;
-      currentAppsCount = Math.max(currentAppsCount - 1, 0);
-
-      await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .update('developer.apps.current', currentAppsCount);
 
       return {
         success: true,
@@ -440,10 +383,9 @@ export const deleteApp = functions
         'internal',
         `There was an internal error while deactivating 
         your developer account. Please try again 
-        or contact us if the problem persists".`
+        or contact us if the problem persists.`
       );
     }
-
   });
 
 /**

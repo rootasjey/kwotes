@@ -10,7 +10,7 @@ export const onCreateApp = functions
   .region('europe-west3')
   .firestore
   .document('apps/{appId}')
-  .onCreate(async () => {
+  .onCreate(async (appSnap) => {
     const statsSnap = await firestore
       .collection('stats')
       .doc('apps')
@@ -28,6 +28,28 @@ export const onCreateApp = functions
       total: total + 1,
     });
 
+    // Update user's apps count.
+    const appData = appSnap.data();
+
+    const docUser = await firestore
+    .collection('users')
+    .doc(appData.user.id)
+    .get();
+    
+    const userData = docUser.data();
+    
+    if (!docUser.exists || !userData) {
+      return true;
+    }
+    
+    let currentAppsCount: number = userData.developer?.apps?.current ?? 0;
+    currentAppsCount = Math.max(currentAppsCount + 1, 0);
+
+    await firestore
+      .collection('users')
+      .doc(appData.user.id)
+      .update('developer.apps.current', currentAppsCount);
+
     return true;
   });
 
@@ -35,7 +57,7 @@ export const onDeleteApp = functions
   .region('europe-west3')
   .firestore
   .document('apps/{appId}')
-  .onDelete(async () => {
+  .onDelete(async (appSnap) => {
     const statsSnap = await firestore
       .collection('stats')
       .doc('apps')
@@ -52,6 +74,32 @@ export const onDeleteApp = functions
     await statsSnap.ref.update({
       total: Math.max(0, total - 1),
     });
+
+    const appData = appSnap.data();
+
+    if (!appData) {
+      return true;
+    }
+
+    // Update user's apps count.
+    const docUser = await firestore
+      .collection('users')
+      .doc(appData.user.id)
+      .get();
+
+    const userData = docUser.data();
+
+    if (!docUser.exists || !userData) {
+      return true;
+    }
+
+    let currentAppsCount: number = userData.developer?.apps?.current ?? 0;
+    currentAppsCount = Math.max(currentAppsCount - 1, 0);
+
+    await firestore
+      .collection('users')
+      .doc(appData.user.id)
+      .update('developer.apps.current', currentAppsCount);
 
     return true;
   });
