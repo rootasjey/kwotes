@@ -202,12 +202,12 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     bool success = false;
 
     if (widget.canManage) {
-      success = await deleteTempQuoteAdmin(
+      success = await TempQuotesActions.deleteTempQuoteAdmin(
         context: context,
         tempQuote: tempQuote,
       );
     } else {
-      success = await deleteTempQuote(
+      success = await TempQuotesActions.deleteTempQuote(
         context: context,
         tempQuote: tempQuote,
       );
@@ -376,7 +376,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
 
     final userAuth = stateUser.userAuth;
 
-    final success = await validateTempQuote(
+    final success = await TempQuotesActions.validateTempQuote(
       tempQuote: tempQuote,
       uid: userAuth.uid,
     );

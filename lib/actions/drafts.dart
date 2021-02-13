@@ -82,7 +82,7 @@ class DraftsActions {
       comments.add(DataQuoteInputs.comment);
     }
 
-    final references = formatReferences();
+    final references = TempQuotesActions.formatReferences();
 
     final topics = Map<String, bool>();
 
@@ -166,7 +166,7 @@ class DraftsActions {
       comments.add(DataQuoteInputs.comment);
     }
 
-    final references = formatReferences();
+    final references = TempQuotesActions.formatReferences();
 
     final topics = Map<String, bool>();
 

@@ -612,11 +612,11 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       isFabVisible = false;
     });
 
-    final success = await proposeQuote(context: context);
+    final success = await TempQuotesActions.proposeQuote(context: context);
 
     showSnack(
       context: context,
-      message: getResultMessage(
+      message: TempQuotesActions.getResultMessage(
         actionIntent: actionIntent,
         actionResult: actionResult,
       ),
