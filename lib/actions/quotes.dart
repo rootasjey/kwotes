@@ -1,17 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:figstyle/state/user.dart';
+import 'package:figstyle/utils/app_logger.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:figstyle/types/quote.dart';
 
-Future<bool> deleteQuote({Quote quote}) async {
+Future<bool> deleteQuote({
+  Quote quote,
+  bool deleteAuthor = false,
+  bool deleteReference = false,
+}) async {
   try {
-    await FirebaseFirestore.instance
-        .collection('quotes')
-        .doc(quote.id)
-        .delete();
+    final userAuth = stateUser.userAuth;
+    final idToken = await userAuth.getIdToken();
 
-    return true;
+    final callable = CloudFunctions(
+      app: Firebase.app(),
+      region: 'europe-west3',
+    ).getHttpsCallable(
+      functionName: 'quotes-deleteQuotes',
+    );
+
+    final response = await callable.call({
+      'quoteIds': [quote.id],
+      'idToken': idToken,
+      'deleteAuthor': deleteAuthor,
+      'deleteReference': deleteReference,
+    });
+
+    final responseData = response.data;
+    final bool success = responseData['success'];
+    return success;
   } catch (error) {
-    debugPrint(error.toString());
+    appLogger.e("deleteQuote() failed");
+    appLogger.e(error);
     return false;
   }
 }

@@ -53,7 +53,7 @@ class QuoteRowWithActions extends StatefulWidget {
   final double quoteFontSize;
 
   final Function onAfterAddToFavourites;
-  final Function onAfterDeletePubQuote;
+  final Function(bool) onAfterDeletePubQuote;
   final Function onAfterRemoveFromFavourites;
   final Function onAfterRemoveFromList;
   final Function onBeforeAddToFavourites;
@@ -134,6 +134,9 @@ class QuoteRowWithActions extends StatefulWidget {
 }
 
 class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
+  bool deleteAuthor = false;
+  bool deleteReference = false;
+
   @override
   initState() {
     super.initState();
@@ -192,40 +195,73 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     showCustomModalBottomSheet(
       context: context,
       builder: (context) {
-        return Material(
-          child: SafeArea(
-            top: false,
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              ListTile(
-                title: Text(
-                  'Confirm',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+        return StatefulBuilder(
+          builder: (context, childSetState) {
+            return Material(
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CheckboxListTile(
+                      dense: true,
+                      title: Opacity(
+                        opacity: 0.6,
+                        child: Text("Delete associated author"),
+                      ),
+                      value: deleteAuthor,
+                      onChanged: (isChecked) {
+                        childSetState(() {
+                          deleteAuthor = isChecked;
+                        });
+                      },
+                    ),
+                    CheckboxListTile(
+                      dense: true,
+                      title: Opacity(
+                        opacity: 0.6,
+                        child: Text("Delete associated reference"),
+                      ),
+                      value: deleteReference,
+                      onChanged: (isChecked) {
+                        childSetState(() {
+                          deleteReference = isChecked;
+                        });
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Confirm',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
+                      tileColor: Color(0xfff55c5c),
+                      onTap: () {
+                        context.router.pop();
+                        deletePubQuote();
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Cancel'),
+                      trailing: Icon(Icons.close),
+                      onTap: context.router.pop,
+                    ),
+                  ],
                 ),
-                trailing: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-                tileColor: Color(0xfff55c5c),
-                onTap: () {
-                  context.router.pop();
-                  deletePubQuote();
-                },
               ),
-              ListTile(
-                title: Text('Cancel'),
-                trailing: Icon(Icons.close),
-                onTap: context.router.pop,
-              ),
-            ]),
-          ),
+            );
+          },
         );
       },
       containerWidget: (context, animation, child) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Material(
               clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadius.circular(12.0),
@@ -242,7 +278,11 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       widget.onBeforeDeletePubQuote();
     }
 
-    final success = await deleteQuote(quote: widget.quote);
+    final success = await deleteQuote(
+      quote: widget.quote,
+      deleteAuthor: deleteAuthor,
+      deleteReference: deleteReference,
+    );
 
     if (widget.onAfterDeletePubQuote != null) {
       widget.onAfterDeletePubQuote(success);

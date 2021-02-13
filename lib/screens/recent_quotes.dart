@@ -398,6 +398,18 @@ class RecentQuotesState extends State<RecentQuotes> {
                 horizontal: horizontal,
               ),
               quotePageType: QuotePageType.published,
+              onBeforeDeletePubQuote: () {
+                setState(() {
+                  quotes.remove(quote);
+                });
+              },
+              onAfterDeletePubQuote: (success) {
+                if (!success) {
+                  setState(() {
+                    quotes.insert(index, quote);
+                  });
+                }
+              },
             );
           },
           childCount: quotes.length,
