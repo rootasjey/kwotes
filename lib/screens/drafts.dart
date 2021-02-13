@@ -416,7 +416,7 @@ class _DraftsState extends State<Drafts> {
   }
 
   void fetchOffline() {
-    final savedDrafts = getOfflineDrafts();
+    final savedDrafts = DraftsActions.getOfflineData();
     drafts.addAll(savedDrafts);
   }
 
@@ -426,9 +426,10 @@ class _DraftsState extends State<Drafts> {
     bool success = false;
 
     if (draft.isOffline) {
-      success = deleteOfflineDraft(createdAt: draft.createdAt.toString());
+      success = DraftsActions.deleteOfflineItem(
+          createdAt: draft.createdAt.toString());
     } else {
-      success = await deleteDraft(
+      success = await DraftsActions.deleteItem(
         context: context,
         draft: draft,
       );

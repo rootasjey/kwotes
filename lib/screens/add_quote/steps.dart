@@ -634,13 +634,13 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
-        deleteOfflineDraft(
+        DraftsActions.deleteOfflineItem(
           createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
 
       if (DataQuoteInputs.draft != null) {
-        await deleteDraft(
+        await DraftsActions.deleteItem(
           context: context,
           draft: DataQuoteInputs.draft,
         );
@@ -662,7 +662,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       return;
     }
 
-    final successDraft = await saveDraft(
+    final successDraft = await DraftsActions.saveItem(
       context: context,
     );
 
@@ -675,7 +675,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
-        deleteOfflineDraft(
+        DraftsActions.deleteOfflineItem(
           createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
@@ -683,7 +683,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       return;
     }
 
-    await saveOfflineDraft(context: context);
+    await DraftsActions.saveOfflineItem(context: context);
 
     setState(() {
       actionResult = AddQuoteType.offline;
@@ -706,7 +706,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     actionIntent = AddQuoteType.draft;
 
-    final successDraft = await saveDraft(
+    final successDraft = await DraftsActions.saveItem(
       context: context,
     );
 
@@ -717,7 +717,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
-        deleteOfflineDraft(
+        DraftsActions.deleteOfflineItem(
           createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
@@ -725,7 +725,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       return;
     }
 
-    await saveOfflineDraft(context: context);
+    await DraftsActions.saveOfflineItem(context: context);
 
     setState(() {
       actionResult = AddQuoteType.offline;
