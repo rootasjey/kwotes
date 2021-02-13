@@ -8,7 +8,7 @@ const firestore = adminApp.firestore();
 
 /**
  * TODO: TEMPORARY: Delete after execution.
- * Update list.quote docto use same id
+ * Update list.quote document to use same id.
  * Must be used after app updates (mobile & web).
  */
 export const configUpdateUserLists = functions
