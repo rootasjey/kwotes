@@ -309,7 +309,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
       isPrevFav = true;
     });
 
-    final result = await addToFavourites(
+    final result = await FavActions.add(
       context: context,
       quotidian: quotidian,
     );
@@ -326,7 +326,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
       return;
     }
 
-    final isCurrentFav = await isFavourite(
+    final isCurrentFav = await FavActions.isFav(
       quoteId: quotidian.quote.id,
     );
 
@@ -383,7 +383,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
       isPrevFav = false;
     });
 
-    final result = await removeFromFavourites(
+    final result = await FavActions.remove(
       context: context,
       quotidian: quotidian,
     );

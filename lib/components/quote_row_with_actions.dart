@@ -294,7 +294,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       return;
     }
 
-    final isFav = await isFavourite(
+    final isFav = await FavActions.isFav(
       quoteId: widget.quote.id,
     );
 
@@ -608,7 +608,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           widget.onBeforeAddToFavourites();
         }
 
-        final success = await addToFavourites(
+        final success = await FavActions.add(
           context: context,
           quote: quote,
         );
@@ -626,7 +626,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           widget.onBeforeRemoveFromFavourites();
         }
 
-        final success = await removeFromFavourites(
+        final success = await FavActions.remove(
           context: context,
           quote: quote,
         );
@@ -689,7 +689,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         widget.onBeforeRemoveFromFavourites();
       }
 
-      final success = await removeFromFavourites(
+      final success = await FavActions.remove(
         context: context,
         quote: quote,
       );
@@ -712,7 +712,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         widget.onBeforeAddToFavourites();
       }
 
-      final success = await addToFavourites(
+      final success = await FavActions.add(
         context: context,
         quote: quote,
       );

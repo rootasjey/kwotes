@@ -658,7 +658,7 @@ class _QuotePageState extends State<QuotePage> {
       return;
     }
 
-    final isFav = await isFavourite(
+    final isFav = await FavActions.isFav(
       quoteId: quote.id,
     );
 
@@ -666,7 +666,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Future<bool> likeQuote() async {
-    final success = await addToFavourites(
+    final success = await FavActions.add(
       context: context,
       quote: quote,
     );
@@ -819,7 +819,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Future<bool> unlikeQuote() async {
-    final success = await removeFromFavourites(
+    final success = await FavActions.remove(
       context: context,
       quote: quote,
     );

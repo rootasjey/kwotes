@@ -434,7 +434,7 @@ class _FavouritesState extends State<Favourites> {
     });
 
     try {
-      final result = await removeFromFavourites(quote: quote);
+      final result = await FavActions.remove(quote: quote);
 
       if (!result) {
         setState(() {
