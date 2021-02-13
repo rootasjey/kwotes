@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
@@ -46,26 +48,23 @@ Future<bool> deleteList({
 }) async {
   try {
     final userAuth = stateUser.userAuth;
+    final idToken = await userAuth.getIdToken();
 
-    // Add a new document containing information
-    // to delete the subcollection (in order to delete its documents).
-    await FirebaseFirestore.instance.collection('todelete').add({
-      'objectId': id,
-      'path': 'users/<userId>/lists/<listId>/quotes',
-      'userId': userAuth.uid,
-      'target': 'list',
-      'type': 'subcollection',
+    final callable = CloudFunctions(
+      app: Firebase.app(),
+      region: 'europe-west3',
+    ).getHttpsCallable(
+      functionName: 'lists-deleteList',
+    );
+
+    final response = await callable.call({
+      'listId': id,
+      'idToken': idToken,
     });
 
-    // Delete the quote collection doc.
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userAuth.uid)
-        .collection('lists')
-        .doc(id)
-        .delete();
-
-    return true;
+    final responseData = response.data;
+    final bool success = responseData['success'];
+    return success;
   } catch (error) {
     debugPrint(error.toString());
     return false;
