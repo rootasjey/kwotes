@@ -94,6 +94,12 @@ interface UpdateDailyStatsParams {
   dayDateId: string;
 }
 
+interface UpdateListItemsParams {
+  quoteIds: string[];
+  listId: string;
+  idToken: string;
+}
+
 interface UpdateStatsParams {
   appDoc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
   date: Date;

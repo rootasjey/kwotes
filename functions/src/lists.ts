@@ -6,6 +6,71 @@ const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
+ * Add quotes to a target list.
+ */
+export const addQuotes = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (params: UpdateListItemsParams, context) => {
+    const userAuth = context.auth;
+    const { idToken, quoteIds, listId } = params;
+
+    handleAddQuoteExceptions({
+      listParams: params, 
+      context, 
+      operationType: "add",
+    });
+
+    await checkUserIsSignedIn(context, idToken);
+    if (!userAuth) { return; } // already checked in handleAddQuoteExceptions().
+
+    const quotesListDoc = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .collection('lists')
+      .doc(listId)
+      .get();
+
+    if (!quotesListDoc.exists) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `The target list [${listId}] was not found. 
+        It may have been deleted.`,
+      );
+    }
+
+    for await (const quoteId of quoteIds) {
+      const quoteDoc = await firestore
+        .collection('quotes')
+        .doc(quoteId)
+        .get();
+
+      const quoteData = quoteDoc.data();
+
+      if (!quoteDoc.exists || !quoteData) {
+        continue;
+      }
+
+      await quotesListDoc.ref
+        .collection('quotes')
+        .doc(quoteDoc.id)
+        .set({
+          author: quoteData.author,
+          createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+          name: quoteData.name,
+          topics: quoteData.topics,
+          reference: quoteData.reference,
+        });
+    }
+
+    return {
+      success: true,
+      list: { id: quotesListDoc.id },
+      quoteIds,
+    };
+  });
+
+/**
  * Create a list.
  * Immediately add quotes (from argument) if specified.
  */
@@ -254,6 +319,115 @@ export const deleteLists = functions
       listIds,
     };
   });
+
+
+/**
+ * Remove quotes from a target list.
+ */
+export const removeQuotes = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (params: UpdateListItemsParams, context) => {
+    const userAuth = context.auth;
+    const { idToken, quoteIds, listId } = params;
+
+    handleAddQuoteExceptions({
+      listParams: params,
+      context,
+      operationType: "remove",
+    });
+
+    await checkUserIsSignedIn(context, idToken);
+    if (!userAuth) { return; } // already checked in handleAddQuoteExceptions().
+
+    const quotesListDoc = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .collection('lists')
+      .doc(listId)
+      .get();
+
+    if (!quotesListDoc.exists) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `The target list [${listId}] was not found. 
+        It may have been deleted.`,
+      );
+    }
+
+    for await (const quoteId of quoteIds) {
+      await quotesListDoc.ref
+        .collection('quotes')
+        .doc(quoteId)
+        .delete();
+    }
+
+    return {
+      success: true,
+      list: { id: quotesListDoc.id },
+      quoteIds,
+    };
+  });
+
+// --------
+// Helpers
+// --------
+interface HandleAddQuoteExceptions {
+  listParams: UpdateListItemsParams;
+  context: functions.https.CallableContext;
+  operationType: string;
+}
+
+/**
+ * Check input parameters.
+ * @param params - Cloud function parameters.
+ */
+function handleAddQuoteExceptions(params: HandleAddQuoteExceptions) {
+  const userAuth = params.context.auth;
+  const { quoteIds, listId } = params.listParams;
+  const operationType = params.operationType ?? 'add';
+
+  if (!userAuth) {
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      `The function must be called from an authenticated user.`,
+    );
+  }
+
+  if (!listId) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `Missing [listId] argument which is a string. 
+        [listId] is the target list to ${operationType} quotes.`,
+    );
+  }
+
+  if (!quoteIds) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `Missing [quoteIds] which is an non-empty string array. 
+        They are the quotes to ${operationType}.`,
+    );
+  }
+
+  if (!Array.isArray(quoteIds)) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `The argument [quoteIds] is not an array. 
+        Please provide a string array representing 
+        the quotes to ${operationType}.`,
+    );
+  }
+
+  if (quoteIds.length === 0) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `The argument [quoteIds] is an empty array.
+        The array must have at least one string 
+        (representing a quote to ${operationType}).`,
+    );
+  }
+}
 
 /**
  * Ensure that specified paramters are correct.
