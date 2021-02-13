@@ -59,6 +59,34 @@ export const configUpdateUserLists = functions
     res.status(200).send('done');
   });
 
+/**
+ * TODO: TEMPORARY: Delete after execution.
+ * Update list.quote docto use same id
+ * Must be used after app updates (mobile & web).
+ */
+export const configUpdateUserQuota = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async ({}, res) => {
+    // The app has very few users right now (less than 20).
+    const usersSnap = await firestore
+      .collection('users')
+      .limit(100)
+      .get();
+
+    let count = 0;
+
+    
+    for await (const userDoc of usersSnap.docs) {
+      if (userDoc.id !== 'O4B1wjKFByWulMQdaxkATolAKX02' && userDoc.id !== 'PqFZbBTyPpQHPoeHO9jjnmDAbLE2') {
+        await userDoc.ref.update('quota.limit', 30);
+        count++;
+      }
+    }
+
+    res.send({ processed: count })
+  });
+
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
@@ -171,7 +199,7 @@ export const createAccount = functions
         quota: {
           current: 0,
           date: new Date(),
-          limit: 1,
+          limit: 20,
         },
         rights: {
           'user:managedata'     : false,
@@ -304,58 +332,6 @@ export const deleteAccount = functions
         id: userAuth.uid,
       },
     };
-  });
-
-/**
- * Increment user's quote proposition quota.
- * All users have a daily quota limit except moderators or special users.
- * The quota resets everyday at midnight +1 second.
- */
-export const incrementQuota = functions
-  .region('europe-west3')
-  .firestore
-  .document('tempquotes/{tempquoteId}')
-  .onCreate(async (snapshot, context) => {
-    const snapshotData = snapshot.data();
-    if (!snapshotData) { return; }
-
-    const userUid = snapshotData.user.id;
-    if (!userUid) { return; }
-
-    const userDoc = await firestore
-      .collection('users')
-      .doc(userUid)
-      .get();
-
-    if (!userDoc.exists) { return; }
-
-    const data = userDoc.data();
-    if (!data) { return; }
-
-    const serverDate = new Date(context.timestamp);
-    const quota = data.quota;
-
-    let date = quota.date !== null && typeof quota.date !== 'undefined' ?
-      quota.date.toDate() :
-      new Date('January 1');
-
-    let current: number = quota['current'];
-
-    if (date.getDate() !== serverDate.getDate() ||
-      date.getMonth() !== serverDate.getMonth() ||
-      date.getFullYear() !== serverDate.getFullYear()) {
-
-      current = 0;
-      date = serverDate;
-    }
-
-    current += 1;
-
-    return await userDoc.ref
-      .update({
-        'quota.date': adminApp.firestore.Timestamp.fromDate(date),
-        'quota.current': current,
-      });
   });
 
 async function isUserExistsByEmail(email: string) {

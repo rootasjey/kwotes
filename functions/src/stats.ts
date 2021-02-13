@@ -479,6 +479,55 @@ export const onCreateTempQuote = functions
     return true;
   });
 
+/**
+ * Increment user's quote proposition quota.
+ * All users have a daily quota limit except moderators or special users.
+ * The quota resets everyday at midnight +1 second.
+ */
+export const onIncrementUserQuota = functions
+  .region('europe-west3')
+  .firestore
+  .document('tempquotes/{tempquoteId}')
+  .onCreate(async (tempQuoteSnap, context) => {
+    const tempQuoteData = tempQuoteSnap.data();
+    if (!tempQuoteData) { return; }
+
+    const userUid = tempQuoteData.user.id;
+    if (!userUid) { return; }
+
+    const userDoc = await firestore
+      .collection('users')
+      .doc(userUid)
+      .get();
+
+    if (!userDoc.exists) { return; }
+
+    const data = userDoc.data();
+    if (!data) { return; }
+
+    const serverDate = new Date(context.timestamp);
+    const quota = data.quota;
+
+    let date = quota.date !== null && typeof quota.date !== 'undefined' ?
+      quota.date.toDate() :
+      new Date('January 1');
+
+    let current: number = quota['current'];
+
+    if (date.getDate() !== serverDate.getDate() ||
+      date.getMonth() !== serverDate.getMonth() ||
+      date.getFullYear() !== serverDate.getFullYear()) {
+
+      current = 0;
+      date = serverDate;
+    }
+
+    return await userDoc.ref.update({
+      'quota.date': adminApp.firestore.Timestamp.fromDate(date),
+      'quota.current': current + 1,
+    });
+  });
+
 export const onDeleteTempQuote = functions
   .region('europe-west3')
   .firestore
