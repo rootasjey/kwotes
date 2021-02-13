@@ -20,6 +20,7 @@
     "file-type": "16.2.0",
     "firebase-admin": "9.4.2",
     "firebase-functions": "3.13.1",
+    "firebase-tools": "9.3.0",
     "got": "11.8.1"
   },
   "devDependencies": {
