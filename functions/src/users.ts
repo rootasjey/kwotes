@@ -59,34 +59,6 @@ export const configUpdateUserLists = functions
     res.status(200).send('done');
   });
 
-/**
- * TODO: TEMPORARY: Delete after execution.
- * Update list.quote docto use same id
- * Must be used after app updates (mobile & web).
- */
-export const configUpdateUserQuota = functions
-  .region('europe-west3')
-  .https
-  .onRequest(async ({}, res) => {
-    // The app has very few users right now (less than 20).
-    const usersSnap = await firestore
-      .collection('users')
-      .limit(100)
-      .get();
-
-    let count = 0;
-
-    
-    for await (const userDoc of usersSnap.docs) {
-      if (userDoc.id !== 'O4B1wjKFByWulMQdaxkATolAKX02' && userDoc.id !== 'PqFZbBTyPpQHPoeHO9jjnmDAbLE2') {
-        await userDoc.ref.update('quota.limit', 30);
-        count++;
-      }
-    }
-
-    res.send({ processed: count })
-  });
-
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
