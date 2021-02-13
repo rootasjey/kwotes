@@ -318,7 +318,7 @@ class _SigninState extends State<Signin> {
   }
 
   bool inputValuesOk() {
-    if (!checkEmailFormat(email)) {
+    if (!UsersActions.checkEmailFormat(email)) {
       showSnack(
         context: context,
         message: "The value specified is not a valid email",

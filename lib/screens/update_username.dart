@@ -310,7 +310,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
                 isCheckingName = true;
               });
 
-              final isWellFormatted = checkUsernameFormat(newUserName);
+              final isWellFormatted =
+                  UsersActions.checkUsernameFormat(newUserName);
 
               if (!isWellFormatted) {
                 setState(() {
@@ -329,7 +330,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
               }
 
               nameTimer = Timer(1.seconds, () async {
-                isNameAvailable = await checkUsernameAvailability(newUserName);
+                isNameAvailable =
+                    await UsersActions.checkUsernameAvailability(newUserName);
 
                 if (!isNameAvailable) {
                   setState(() {
@@ -433,7 +435,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
   }
 
   bool inputValuesOk() {
-    final isWellFormatted = checkUsernameFormat(newUserName);
+    final isWellFormatted = UsersActions.checkUsernameFormat(newUserName);
 
     if (!isWellFormatted) {
       setState(() {
@@ -459,7 +461,8 @@ class _UpdateUsernameState extends State<UpdateUsername> {
     });
 
     try {
-      isNameAvailable = await checkUsernameAvailability(newUserName);
+      isNameAvailable =
+          await UsersActions.checkUsernameAvailability(newUserName);
 
       if (!isNameAvailable) {
         setState(() {

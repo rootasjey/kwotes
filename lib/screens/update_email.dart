@@ -279,7 +279,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
                 isCheckingEmail = true;
               });
 
-              final isWellFormatted = checkEmailFormat(email);
+              final isWellFormatted = UsersActions.checkEmailFormat(email);
 
               if (!isWellFormatted) {
                 setState(() {
@@ -296,7 +296,8 @@ class _UpdateEmailState extends State<UpdateEmail> {
               }
 
               emailTimer = Timer(1.seconds, () async {
-                final isAvailable = await checkEmailAvailability(email);
+                final isAvailable =
+                    await UsersActions.checkEmailAvailability(email);
 
                 if (!isAvailable) {
                   setState(() {
@@ -518,7 +519,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
   }
 
   Future<bool> valuesAvailabilityCheck() async {
-    return await checkEmailAvailability(email);
+    return await UsersActions.checkEmailAvailability(email);
   }
 
   bool inputValuesOk() {
@@ -542,7 +543,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
       return false;
     }
 
-    if (!checkEmailFormat(email)) {
+    if (!UsersActions.checkEmailFormat(email)) {
       showSnack(
         context: context,
         message: "The value specified is not a valid email.",

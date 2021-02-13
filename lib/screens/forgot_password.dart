@@ -269,7 +269,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       return false;
     }
 
-    if (!checkEmailFormat(email)) {
+    if (!UsersActions.checkEmailFormat(email)) {
       showSnack(
         context: context,
         message: "The value specified is not a valid email",
