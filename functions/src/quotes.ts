@@ -4,7 +4,7 @@ import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
-export const updateQuotesReference = functions
+export const configDeleteOldReference = functions
   .region('europe-west3')
   .https
   .onRequest(async (req, resp) => {
@@ -34,19 +34,12 @@ export const updateQuotesReference = functions
         const quoteData = quoteDoc.data();
         if (!quoteData) { continue; }
 
-        const mainReference = quoteData.mainReference;
+        await quoteDoc.ref.update({
+          random: adminApp.firestore.FieldValue.delete(),
+          mainReference: adminApp.firestore.FieldValue.delete(),
+        });
 
-        if (!mainReference || !mainReference.id) {
-          await quoteDoc.ref.update({
-            reference: {
-              id: '',
-              name: '',
-            },
-            references: adminApp.firestore.FieldValue.delete(),
-          });
-
-          updatedCount++;
-        }
+        updatedCount++;
       }
 
       currIteration++;

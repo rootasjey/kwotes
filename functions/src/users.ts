@@ -7,11 +7,11 @@ const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
- * TEMPORARY: Delete after execution.
+ * TODO: TEMPORARY: Delete after execution.
  * Update list.quote docto use same id
  * Must be used after app updates (mobile & web).
  */
-export const updateUserLists = functions
+export const configUpdateUserLists = functions
   .region('europe-west3')
   .https
   .onRequest(async ({}, res) => {
