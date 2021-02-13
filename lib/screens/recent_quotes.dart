@@ -36,18 +36,19 @@ class RecentQuotesState extends State<RecentQuotes> {
   bool isLoading = false;
   bool isLoadingMore = false;
 
+  DocumentSnapshot lastDoc;
   final pageRoute = RouteNames.QuotesRoute;
-
   final limit = 30;
+
   List<Quote> quotes = [];
-  String lang = 'en';
 
   /// Quotes which are being deleted.
   /// Useful reference if a rollback is necessary.
   Map<int, Quote> deletingQuotes = Map();
 
+  String lang = 'en';
+
   var itemsLayout = ItemsLayout.list;
-  DocumentSnapshot lastDoc;
   var scrollController = ScrollController();
 
   @override
