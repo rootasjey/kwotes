@@ -98,7 +98,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget addToQuotidiansButton() {
     return IconButton(
       tooltip: "Add to quotidians",
-      onPressed: () => addToQuotidians(
+      onPressed: () => QuotidiansActions.add(
         quote: widget.quote,
         lang: widget.quote.lang,
       ),
@@ -752,7 +752,7 @@ class _QuotePageState extends State<QuotePage> {
           trailing: Icon(Icons.wb_sunny),
           onTap: () {
             context.router.pop();
-            addToQuotidians(
+            QuotidiansActions.add(
               quote: widget.quote,
               lang: widget.quote.lang,
             );

@@ -414,7 +414,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           color: Colors.yellow.shade800,
           onTap: (CompletionHandler handler) async {
             handler(false);
-            await addToQuotidians(
+            await QuotidiansActions.add(
               quote: quote,
               lang: quote.lang,
             );
@@ -555,7 +555,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           trailing: Icon(Icons.wb_sunny),
           onTap: () {
             context.router.pop();
-            addToQuotidians(
+            QuotidiansActions.add(
               quote: widget.quote,
               lang: widget.quote.lang,
             );
@@ -643,7 +643,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         shareQuote(context: context, quote: quote);
         break;
       case 'addquotidian':
-        addToQuotidians(
+        QuotidiansActions.add(
           quote: quote,
           lang: quote.lang,
         );
