@@ -68,7 +68,9 @@
 
 # Presentation
 
-fig.style is a quotes app and service featuring one quote each day. It's available on web, Android, iOS & more to come. You can find quotes in English or French at the moment. More languages will be added later.
+[fig.style](https://fig.style) is a quotes app and service featuring one quote each day. It's available on web, Android, iOS & more to come. You can find quotes in English or French at the moment. More languages will be added later.
+
+You can also try the APIs at [dev.fig.style](https://dev.fig.style).
 
 ## What's different from existing apps ?
 
@@ -104,7 +106,7 @@ More about why and how I made these devlopment decisions in future [blog posts](
 
 # How to add a quote
 
-You can freely add a quote to the app after creating an account. You can only add one quote per day but you can save the excedent as drafts. Next day you will be able to submit another quote.
+You can freely add a quote to the app after creating an account. You can add a maximum of 30 quotes per day but you can save the excess as drafts. Next day you will be able to submit another 30.
 
 ## Basic rules
 
@@ -153,7 +155,7 @@ Depending on which works the best, other sources may disapear.
 
 A better roadmap will be available later. For now, it's just a bullet list in this document.
 
-* Start API development
+* ~~Start API development~~
 * Third-party sign in (when Flutter web hashtag issue is solved in stale channel)
 
 # Contribute
