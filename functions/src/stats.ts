@@ -166,7 +166,7 @@ export const onCreateUser = functions
   .document('users/{userId}')
   .onCreate(async (userSnap) => {
     const userData = userSnap.data();
-    const isDev: boolean = userData.developer.isProgramActive;
+    const isDev: boolean = userData.developer?.isProgramActive;
 
     const statsSnap = await firestore
       .collection('stats')
@@ -245,7 +245,7 @@ export const onDeleteUser = functions
   .document('users/{userId}')
   .onDelete(async (userSnap) => {
     const userData = userSnap.data();
-    const wasDev: boolean = userData.developer.isProgramActive;
+    const wasDev: boolean = userData.developer?.isProgramActive ?? false;
 
     const statsSnap = await firestore
       .collection('stats')
