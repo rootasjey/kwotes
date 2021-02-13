@@ -3,11 +3,12 @@ import * as functions from 'firebase-functions';
 import { adminApp } from './adminApp';
 import { checkUserIsSignedIn } from './utils';
 
+const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
- * TEMPORARY: Delete after execution.
- * Update list.quote doc to use same id
+ * TEMPORARY: Delete af ter execution.
+ * Update list.quote docto use same id
  * Must be used after app updates (mobile & web).
  */
 export const updateUserLists = functions
@@ -254,9 +255,7 @@ function checkCreateAccountData(data: any) {
 }
 
 /**
- * Delete user's entry from Firebase auth and from Firestore.
- * Add a new document to the `todelete` collection to clear user's data
- * as `notifications`, `drafts`, `lists`, `favourites` sub-collection.
+ * Delete user's document from Firebase auth & Firestore.
  */
 export const deleteAccount = functions
   .region('europe-west3')
@@ -274,74 +273,37 @@ export const deleteAccount = functions
 
     await checkUserIsSignedIn(context, idToken);
 
-    try {
-      const userSnapshot = await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .get();
+    const userSnap = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
 
+    const userData = userSnap.data();
 
-      const userData = userSnapshot.data();
-
-      if (!userSnapshot.exists || !userData) {
-        throw new functions.https.HttpsError(
-          'not-found',
-          `This user document doesn't exist.`,
-        );
-      }
-
-      const stats = userData.stats;
-      const totalItemsCount = stats.fav + stats.lists +
-        stats.tempQuotes + stats.notifications.total;
-
-      // Add delete entry.
-      // Eventually set the quote.author.id field to anonymous's id.
-      await firestore
-        .collection('todelete')
-        .doc(userAuth.uid)
-        .set({
-          doc: {
-            id: userAuth.uid,
-            conceptualType: 'user',
-            dataType: 'document',
-            hasChildren: true,
-          },
-          path: `users/${userAuth.uid}`,
-          task: {
-            createdAt: Date.now(),
-            done: false,
-            items: {
-              deleted: 0,
-              total: totalItemsCount ?? 0,
-            },
-            updatedAt: Date.now(),
-          },
-          user: {
-            id: userAuth.uid,
-          },
-        });
-
-      // Delete user auth
-      await adminApp
-        .auth()
-        .deleteUser(userAuth.uid);
-
-      // Delete Firestore document
-      await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .delete();
-
-      return {
-        user: {
-          id: userAuth.uid,
-        },
-      };
-
-    } catch (error) {
-      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
-        'while creating your account. Please try again or contact us if the problem persists".');
+    if (!userSnap.exists || !userData) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `This user document doesn't exist. It may have been deleted.`,
+      );
     }
+
+    await adminApp
+      .auth()
+      .deleteUser(userAuth.uid);
+
+    await firebaseTools.firestore
+      .delete(userSnap.ref.path, {
+        project: process.env.GCLOUD_PROJECT,
+        recursive: true,
+        yes: true,
+      });
+
+    return {
+      success: true,
+      user: {
+        id: userAuth.uid,
+      },
+    };
   });
 
 /**
