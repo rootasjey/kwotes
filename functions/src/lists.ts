@@ -369,6 +369,65 @@ export const removeQuotes = functions
     };
   });
 
+/**
+ * Update list's properties (name, description, isPublic, ...).
+ */
+export const updateList = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (params: UpdateListParams, context) => {
+    const userAuth = context.auth;
+    const { idToken, listId } = params;
+
+    if (!userAuth) {
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        `The function must be called from an authenticated user.`,
+      );
+    }
+
+    await checkUserIsSignedIn(context, idToken);
+
+    const quotesListDoc = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .collection('lists')
+      .doc(listId)
+      .get();
+
+    if (!quotesListDoc.exists) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `The target list [${listId}] was not found. 
+        It may have been deleted.`,
+      );
+    }
+
+    const payload: Record<string, any> = {};
+
+    if (params.name && typeof params.name === 'string') {
+      payload.name = params.name;
+    }
+
+    if (typeof params.description === 'string') {
+      payload.description = params.description;
+    }
+
+    if (typeof params.isPublic === 'boolean') {
+      payload.isPublic = params.isPublic;
+    }
+
+    if (Object.keys(payload).length > 0) {
+      payload.updatedAt = adminApp.firestore.FieldValue.serverTimestamp();
+      await quotesListDoc.ref.update(payload);
+    }
+
+    return {
+      success: true,
+      list: { id: quotesListDoc.id },
+    };
+  });
+
 // --------
 // Helpers
 // --------

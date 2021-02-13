@@ -94,6 +94,14 @@ interface UpdateDailyStatsParams {
   dayDateId: string;
 }
 
+interface UpdateListParams {
+  idToken: string;
+  listId: string;
+  name: string;
+  description: string;
+  isPublic: boolean;
+}
+
 interface UpdateListItemsParams {
   quoteIds: string[];
   listId: string;
