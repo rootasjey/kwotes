@@ -42,6 +42,10 @@ class RecentQuotesState extends State<RecentQuotes> {
   List<Quote> quotes = [];
   String lang = 'en';
 
+  /// Quotes which are being deleted.
+  /// Useful reference if a rollback is necessary.
+  Map<int, Quote> deletingQuotes = Map();
+
   var itemsLayout = ItemsLayout.list;
   DocumentSnapshot lastDoc;
   var scrollController = ScrollController();
@@ -286,22 +290,9 @@ class RecentQuotesState extends State<RecentQuotes> {
                 componentType: ItemComponentType.card,
                 elevation: Constants.cardElevation,
                 padding: const EdgeInsets.all(25.0),
-                onBeforeDeletePubQuote: () {
-                  setState(() {
-                    quotes.removeAt(index);
-                  });
-                },
-                onAfterDeletePubQuote: (bool success) {
-                  if (!success) {
-                    quotes.insert(index, quote);
-
-                    showSnack(
-                      context: context,
-                      message: "Couldn't delete the temporary quote.",
-                      type: SnackType.error,
-                    );
-                  }
-                },
+                onBeforeDeletePubQuote: () =>
+                    onBeforeDeletePubQuote(index, quote),
+                onAfterDeletePubQuote: onAfterDeletePubQuote,
               ),
             ]),
           ),
@@ -335,22 +326,9 @@ class RecentQuotesState extends State<RecentQuotes> {
                 elevation: Constants.cardElevation,
                 padding: const EdgeInsets.all(20.0),
                 componentType: ItemComponentType.card,
-                onBeforeDeletePubQuote: () {
-                  setState(() {
-                    quotes.removeAt(index);
-                  });
-                },
-                onAfterDeletePubQuote: (bool success) {
-                  if (!success) {
-                    quotes.insert(index, quote);
-
-                    showSnack(
-                      context: context,
-                      message: "Couldn't delete the temporary quote.",
-                      type: SnackType.error,
-                    );
-                  }
-                },
+                onBeforeDeletePubQuote: () =>
+                    onBeforeDeletePubQuote(index, quote),
+                onAfterDeletePubQuote: onAfterDeletePubQuote,
               );
             },
             childCount: quotes.length,
@@ -398,18 +376,9 @@ class RecentQuotesState extends State<RecentQuotes> {
                 horizontal: horizontal,
               ),
               quotePageType: QuotePageType.published,
-              onBeforeDeletePubQuote: () {
-                setState(() {
-                  quotes.remove(quote);
-                });
-              },
-              onAfterDeletePubQuote: (success) {
-                if (!success) {
-                  setState(() {
-                    quotes.insert(index, quote);
-                  });
-                }
-              },
+              onBeforeDeletePubQuote: () =>
+                  onBeforeDeletePubQuote(index, quote),
+              onAfterDeletePubQuote: onAfterDeletePubQuote,
             );
           },
           childCount: quotes.length,
@@ -507,5 +476,31 @@ class RecentQuotesState extends State<RecentQuotes> {
         isLoadingMore = false;
       });
     }
+  }
+
+  void onAfterDeletePubQuote(bool success) {
+    if (!success) {
+      deletingQuotes.forEach((key, value) {
+        quotes.insert(key, value);
+      });
+
+      setState(() {});
+
+      showSnack(
+        context: context,
+        type: SnackType.error,
+        message: "Sorry, there was an issue while deleting quotes. "
+            "Try again later or contact the support of the issue persist.",
+      );
+    }
+
+    deletingQuotes.clear();
+  }
+
+  void onBeforeDeletePubQuote(int index, Quote quote) {
+    setState(() {
+      deletingQuotes.putIfAbsent(index, () => quote);
+      quotes.remove(quote);
+    });
   }
 }
