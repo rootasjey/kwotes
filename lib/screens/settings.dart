@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
@@ -64,11 +63,10 @@ class _SettingsState extends State<Settings> {
   initState() {
     super.initState();
     initNotifState();
+    initBrightness();
 
     setState(() {
       selectedLang = Language.frontend(stateUser.lang);
-      isThemeAuto = appStorage.getAutoBrightness();
-      currentBrightness = DynamicTheme.of(context).brightness;
     });
   }
 
@@ -641,12 +639,12 @@ class _SettingsState extends State<Settings> {
                 setState(() => isThemeAuto = newValue);
 
                 if (newValue) {
-                  setAutoBrightness(context);
+                  BrightnessUtils.setAutoBrightness(context);
                   return;
                 }
 
                 currentBrightness = appStorage.getBrightness();
-                setBrightness(context, currentBrightness);
+                BrightnessUtils.setBrightness(context, currentBrightness);
               },
             ),
           ),
@@ -662,7 +660,7 @@ class _SettingsState extends State<Settings> {
                   currentBrightness =
                       newValue ? Brightness.light : Brightness.dark;
 
-                  setBrightness(context, currentBrightness);
+                  BrightnessUtils.setBrightness(context, currentBrightness);
                   setState(() {});
                 },
               ),
@@ -788,6 +786,33 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  void initBrightness() {
+    final autoBrightness = appStorage.getAutoBrightness();
+    isThemeAuto = autoBrightness;
+
+    if (!autoBrightness) {
+      currentBrightness = appStorage.getBrightness();
+    } else {
+      Brightness brightness = Brightness.light;
+      final now = DateTime.now();
+
+      if (now.hour < 6 || now.hour > 17) {
+        brightness = Brightness.dark;
+      }
+
+      currentBrightness = brightness;
+    }
+  }
+
+  void initNotifState() async {
+    if (kIsWeb) {
+      return;
+    }
+
+    notificationsON = await PushNotifications.isActive();
+    setState(() {});
+  }
+
   void toggleQuotidianNotifications() async {
     if (notificationsON) {
       PushNotifications.activate();
@@ -857,14 +882,5 @@ class _SettingsState extends State<Settings> {
       message: 'Your language has been successfully updated.',
       type: SnackType.success,
     );
-  }
-
-  void initNotifState() async {
-    if (kIsWeb) {
-      return;
-    }
-
-    notificationsON = await PushNotifications.isActive();
-    setState(() {});
   }
 }

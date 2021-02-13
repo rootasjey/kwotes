@@ -1,4 +1,4 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:figstyle/router/admin_auth_guard.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/router/auth_guard.dart';
@@ -49,17 +49,28 @@ class AppState extends State<App> {
     final brightness = getBrightness();
     stateColors.refreshTheme(brightness);
 
-    return DynamicTheme(
-      defaultBrightness: brightness,
-      data: (brightness) => ThemeData(
+    return AdaptiveTheme(
+      light: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: Colors.red,
+        accentColor: Colors.blue,
         fontFamily: GoogleFonts.raleway().fontFamily,
-        brightness: brightness,
       ),
-      themedWidgetBuilder: (context, theme) {
+      dark: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.red,
+        accentColor: Colors.blue,
+        fontFamily: GoogleFonts.raleway().fontFamily,
+      ),
+      initial: brightness == Brightness.light
+          ? AdaptiveThemeMode.light
+          : AdaptiveThemeMode.dark,
+      builder: (theme, darkTheme) {
         stateColors.themeData = theme;
 
         return MaterialApp.router(
           title: 'fig.style',
+          darkTheme: darkTheme,
           theme: stateColors.themeData,
           debugShowCheckedModeBanner: false,
           routerDelegate: appRouter.delegate(),

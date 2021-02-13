@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
@@ -164,15 +163,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         tooltip: 'Brightness',
         onSelected: (value) {
           if (value == 'auto') {
-            setAutoBrightness(context);
+            BrightnessUtils.setAutoBrightness(context);
             return;
           }
 
           final brightness =
               value == 'dark' ? Brightness.dark : Brightness.light;
 
-          setBrightness(context, brightness);
-          DynamicTheme.of(context).setBrightness(brightness);
+          BrightnessUtils.setBrightness(context, brightness);
         },
         itemBuilder: (context) {
           final autoBrightness = appStorage.getAutoBrightness();
