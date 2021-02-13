@@ -7,7 +7,7 @@ const firestore = adminApp.firestore();
 export const configDeleteOldReference = functions
   .region('europe-west3')
   .https
-  .onRequest(async (req, resp) => {
+  .onRequest(async ({}, resp) => {
     const limit = 200;
     let offset = 0;
 
@@ -61,24 +61,39 @@ export const configDeleteOldReference = functions
  * with its associated author & reference if specified.
  * Update stats too.
  */
-export const deleteQuote = functions
+export const deleteQuotes = functions
   .region('europe-west3')
   .https
-  .onCall(async (data, context) => {
+  .onCall(async (params, context) => {
     const userAuth = context.auth;
-    const { quoteId, idToken } = data;
-    const deleteAuthor = data.deleteAuthor ?? false;
-    const deleteReference = data.deleteReference ?? false;
+    const { quoteIds, idToken } = params;
+    const deleteAuthor = params.deleteAuthor ?? false;
+    const deleteReference = params.deleteReference ?? false;
 
-    if (!quoteId) {
+    if (!quoteIds) {
       throw new functions.https.HttpsError(
         'invalid-argument',
-        `Missing [quoteId] argument. The function must be called with [quoteId]
-        representing the quote's id to delete.`,
+        `Missing [quoteIds] argument. The function must be called with [quoteIds]
+        representing the quotes ids to delete.`,
       );
     }
 
-    // 0.Check authentication & rights.
+    if (!Array.isArray(quoteIds)) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `The [quoteIds] argument is not an array. 
+        Please provid a valid array of strings.`,
+      );
+    }
+
+    if (quoteIds.length === 0) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `The [quoteIds] argument is an empty array. 
+        Please provid an array containing valid strings.`,
+      );
+    }
+
     if (!userAuth) {
       throw new functions.https.HttpsError(
         'unauthenticated',
@@ -98,7 +113,7 @@ export const deleteQuote = functions
     if (!userDoc.exists || !userData) {
       throw new functions.https.HttpsError(
         'not-found',
-        `You got a ghost. This user doesn't seem to exist.,`
+        `You've got a ghost. This user doesn't seem to exist.,`
       );
     }
 
@@ -112,48 +127,59 @@ export const deleteQuote = functions
       );
     }
 
-    const quoteDoc = await firestore
-      .collection('quotes')
-      .doc(quoteId)
-      .get();
+    const payloadArray = Array<any>();
 
-    const quoteData = quoteDoc.data();
+    for await (const quoteId of quoteIds) {
+      const quoteDoc = await firestore
+        .collection('quotes')
+        .doc(quoteId)
+        .get();
 
-    if (!quoteDoc.exists || !quoteData) {
-      throw new functions.https.HttpsError(
-        'data-loss',
-        `The document [${quoteId}] doesn't exist. It may have been deleted.`,
-      );
-    }
+      const quoteData = quoteDoc.data();
 
-    const authorId: string = quoteData.author.id;
-    const reference = quoteData.reference;
-    const referenceId: string = reference ? reference.id : quoteData.mainReference.id;
+      if (!quoteDoc.exists || !quoteData) {
+        throw new functions.https.HttpsError(
+          'data-loss',
+          `The document [${quoteId}] doesn't exist. It may have been deleted.`,
+        );
+      }
 
-    await quoteDoc.ref.delete();
+      const authorId: string = quoteData.author.id;
+      const reference = quoteData.reference;
+      const referenceId: string = reference ? reference.id : quoteData.mainReference.id;
 
-    if (deleteAuthor) {
-      await deleteQuoteAuthor(authorId);
-    }
+      await quoteDoc.ref.delete();
 
-    if (deleteReference) {
-      await deleteQuoteReference(referenceId)
+      const payload: Record<string, any> = {
+        success: true,
+        quote: {
+          id: quoteId,
+        },
+      };
+
+      if (deleteAuthor) {
+        await deleteQuoteAuthor(authorId);
+        payload.author = {
+          id: authorId,
+          deleted: deleteAuthor,
+        };
+      }
+
+      if (deleteReference) {
+        await deleteQuoteReference(referenceId);
+        payload.reference = {
+          id: referenceId,
+          deleted: deleteReference,
+        };
+      }
+
+      payloadArray.push(payload);      
     }
 
     return {
       success: true,
-      author: {
-        id: authorId,
-        deleted: deleteAuthor,
-      },
-      quote: {
-        id: quoteId,
-      },
-      reference: {
-        id: referenceId,
-        deleted: deleteReference,
-      },
-    }
+      entries: payloadArray,
+    };
   });
 
 /**
