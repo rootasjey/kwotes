@@ -561,7 +561,9 @@ class _QuotePageState extends State<QuotePage> {
                 onTap: () async {
                   context.router.pop();
 
-                  final success = await deleteQuote(quote: widget.quote);
+                  final success = await QuotesActions.delete(
+                    quote: widget.quote,
+                  );
 
                   if (success) {
                     context.router.pop();

@@ -278,7 +278,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       widget.onBeforeDeletePubQuote();
     }
 
-    final success = await deleteQuote(
+    final success = await QuotesActions.delete(
       quote: widget.quote,
       deleteAuthor: deleteAuthor,
       deleteReference: deleteReference,
