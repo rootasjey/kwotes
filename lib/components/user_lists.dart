@@ -170,7 +170,7 @@ class _UserListsState extends State<UserLists> {
   }
 
   void addQuoteToList({String listId}) async {
-    final success = await appAddQuoteToList(
+    final success = await ListsActions.addQuote(
       listId: listId,
       quoteIds: [widget.quote.id],
     );
@@ -185,7 +185,7 @@ class _UserListsState extends State<UserLists> {
   }
 
   void createListAndAddQuote(BuildContext context) async {
-    final createdList = await createList(
+    final createdList = await ListsActions.create(
       name: newListName,
       description: newListDescription,
       isPublic: false,

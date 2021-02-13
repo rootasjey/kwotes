@@ -461,7 +461,7 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   void createNewList(EditListPayload payload) async {
-    final quotesList = await createList(
+    final quotesList = await ListsActions.create(
       name: payload.name,
       description: payload.description,
       isPublic: payload.isPublic,
@@ -489,10 +489,7 @@ class _QuotesListsState extends State<QuotesLists> {
       userQuotesLists.removeAt(index);
     });
 
-    final success = await deleteList(
-      context: context,
-      id: quotesList.id,
-    );
+    final success = await ListsActions.delete(id: quotesList.id);
 
     if (!success) {
       setState(() => userQuotesLists.insert(index, quotesList));
@@ -608,8 +605,7 @@ class _QuotesListsState extends State<QuotesLists> {
       quotesList.isPublic = payload.isPublic;
     });
 
-    final success = await updateList(
-      context: context,
+    final success = await ListsActions.update(
       id: quotesList.id,
       name: payload.name,
       description: payload.description,

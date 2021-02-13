@@ -507,10 +507,7 @@ class _QuotesListState extends State<QuotesList> {
       isDeletingList = true;
     });
 
-    final success = await deleteList(
-      context: context,
-      id: widget.listId,
-    );
+    final success = await ListsActions.delete(id: widget.listId);
 
     setState(() {
       isDeletingList = false;
@@ -536,8 +533,7 @@ class _QuotesListState extends State<QuotesList> {
       quotes.removeAt(index);
     });
 
-    final success = await removeFromList(
-      context: context,
+    final success = await ListsActions.removeFrom(
       id: widget.listId,
       quote: quote,
     );
@@ -557,8 +553,7 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   void updateCurrentList(EditListPayload payload) async {
-    final success = await updateList(
-      context: context,
+    final success = await ListsActions.update(
       id: widget.listId,
       name: payload.name,
       description: payload.description,
