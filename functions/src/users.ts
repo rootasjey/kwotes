@@ -7,7 +7,7 @@ const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
- * TEMPORARY: Delete af ter execution.
+ * TEMPORARY: Delete after execution.
  * Update list.quote docto use same id
  * Must be used after app updates (mobile & web).
  */
@@ -16,13 +16,13 @@ export const updateUserLists = functions
   .https
   .onRequest(async ({}, res) => {
     // The app has very few users right now (less than 20).
-    const userSnapshot = firestore
+    const userSnapshot = await firestore
       .collection('users')
       .limit(100)
       .get();
 
     // For each user
-    (await userSnapshot).docs.forEach(async (userDoc) => {
+    userSnapshot.docs.forEach(async (userDoc) => {
       // Get all lists
       const listsSnapshot = await firestore
         .collection(`users/${userDoc.id}/lists`)

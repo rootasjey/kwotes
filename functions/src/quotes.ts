@@ -4,6 +4,70 @@ import { checkUserIsSignedIn } from './utils';
 
 const firestore = adminApp.firestore();
 
+export const updateQuotesReference = functions
+  .region('europe-west3')
+  .https
+  .onRequest(async (req, resp) => {
+    const limit = 200;
+    let offset = 0;
+
+    let hasNext = true;
+
+    const maxIterations = 100;
+    let currIteration = 0;
+    let totalCount = 0;
+    let updatedCount = 0;
+    let missingDataCount = 0;
+
+    while (hasNext && currIteration < maxIterations) {
+      const quotesSnap = await firestore
+        .collection('quotes')
+        .limit(limit)
+        .offset(offset)
+        .get();
+
+      if (quotesSnap.empty || quotesSnap.size === 0) {
+        hasNext = false;
+      }
+
+      for await (const quoteDoc of quotesSnap.docs) {
+        const quoteData = quoteDoc.data();
+        if (!quoteData) { continue; }
+
+        const mainReference = quoteData.mainReference;
+
+        if (mainReference && mainReference.id) {
+          await quoteDoc.ref.update({
+            reference: {
+              id: mainReference.id,
+              name: mainReference.name,
+            },
+            references: adminApp.firestore.FieldValue.delete(),
+          });
+
+          updatedCount++;
+
+          if (!mainReference.name) {
+            missingDataCount++;
+            console.log(`- Missing reference's name for ${mainReference.id}`);
+          }
+        }
+      }
+
+      currIteration++;
+      offset += quotesSnap.size;
+      totalCount += quotesSnap.size;
+    }
+
+    resp.send({
+      'stopped at (offset)': offset,
+      'iterations done': `${currIteration}/${maxIterations}`,
+      'Docs counted': totalCount,
+      'Docs updated:': updatedCount,
+      'Docs with missing data:': missingDataCount,
+    });
+  });
+
 /**
  * Delete a published quote 
  * with its associated author & reference if specified.
