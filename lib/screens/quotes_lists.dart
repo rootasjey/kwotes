@@ -462,7 +462,6 @@ class _QuotesListsState extends State<QuotesLists> {
 
   void createNewList(EditListPayload payload) async {
     final quotesList = await createList(
-      context: context,
       name: payload.name,
       description: payload.description,
       isPublic: payload.isPublic,
