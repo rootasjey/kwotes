@@ -22,6 +22,7 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
+  adaptive_theme: 1.1.0
   algolia: 0.1.7
   animations: 1.1.2
   auto_route:  1.0.0-beta.7
@@ -33,7 +34,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.0
-  dynamic_theme: 1.0.1
   firebase_auth: 0.18.1+2
   firebase_core: 0.5.0+1
   firebase_analytics: 6.0.2
