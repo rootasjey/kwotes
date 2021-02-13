@@ -279,7 +279,10 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
                 onSelected: (value) {
                   switch (value) {
                     case 'share':
-                      shareQuote(context: context, quote: quote);
+                      ShareActions.shareQuote(
+                        context: context,
+                        quote: quote,
+                      );
                       break;
                     default:
                   }

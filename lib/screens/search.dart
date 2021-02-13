@@ -202,7 +202,10 @@ class _SearchState extends State<Search> {
             ],
             onSelected: (value) {
               if (value == 'share') {
-                shareAuthor(context: context, author: suggestion.author);
+                ShareActions.shareAuthor(
+                  context: context,
+                  author: suggestion.author,
+                );
                 return;
               }
             },
@@ -412,8 +415,10 @@ class _SearchState extends State<Search> {
             ],
             onSelected: (value) {
               if (value == 'share') {
-                shareReference(
-                    context: context, reference: suggestion.reference);
+                ShareActions.shareReference(
+                  context: context,
+                  reference: suggestion.reference,
+                );
                 return;
               }
             },

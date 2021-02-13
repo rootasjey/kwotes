@@ -233,7 +233,7 @@ class _AuthorRowState extends State<AuthorRow> {
         color: Colors.blue,
         onTap: (CompletionHandler handler) {
           handler(false);
-          shareAuthor(context: context, author: widget.author);
+          ShareActions.shareAuthor(context: context, author: widget.author);
         },
       ),
     );
@@ -243,7 +243,7 @@ class _AuthorRowState extends State<AuthorRow> {
 
   void onSelected(value) {
     if (value == 'share') {
-      shareAuthor(context: context, author: widget.author);
+      ShareActions.shareAuthor(context: context, author: widget.author);
       return;
     }
   }

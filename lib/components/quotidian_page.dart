@@ -230,7 +230,10 @@ class _QuotidianPageState extends State<QuotidianPage> {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: IconButton(
               onPressed: () async {
-                shareQuote(context: context, quote: quotidian.quote);
+                ShareActions.shareQuote(
+                  context: context,
+                  quote: quotidian.quote,
+                );
               },
               icon: Icon(Icons.share),
             ),

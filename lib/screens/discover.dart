@@ -428,7 +428,10 @@ class _DiscoverState extends State<Discover> {
               ],
               onSelected: (value) {
                 if (value == 'share') {
-                  shareReference(context: context, reference: reference);
+                  ShareActions.shareReference(
+                    context: context,
+                    reference: reference,
+                  );
                   return;
                 }
               },

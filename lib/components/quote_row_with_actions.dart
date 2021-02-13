@@ -401,7 +401,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         color: Colors.blue,
         onTap: (CompletionHandler handler) {
           handler(false);
-          shareQuote(context: context, quote: quote);
+          ShareActions.shareQuote(context: context, quote: quote);
         },
       ),
     ];
@@ -508,7 +508,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         ),
         onTap: () {
           context.router.pop();
-          shareQuote(context: context, quote: widget.quote);
+          ShareActions.shareQuote(
+            context: context,
+            quote: widget.quote,
+          );
         },
       ),
     ];
@@ -640,7 +643,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         widget.onRemoveFromList(quote);
         break;
       case 'share':
-        shareQuote(context: context, quote: quote);
+        ShareActions.shareQuote(
+          context: context,
+          quote: quote,
+        );
         break;
       case 'addquotidian':
         QuotidiansActions.add(

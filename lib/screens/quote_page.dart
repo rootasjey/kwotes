@@ -457,7 +457,10 @@ class _QuotePageState extends State<QuotePage> {
       child: IconButton(
         tooltip: 'Share this quote',
         onPressed: () async {
-          shareQuote(context: context, quote: quote);
+          ShareActions.shareQuote(
+            context: context,
+            quote: quote,
+          );
         },
         icon: Icon(Icons.share),
       ),
@@ -683,7 +686,10 @@ class _QuotePageState extends State<QuotePage> {
         ),
         onTap: () {
           context.router.pop();
-          shareQuote(context: context, quote: widget.quote);
+          ShareActions.shareQuote(
+            context: context,
+            quote: widget.quote,
+          );
         },
       ),
     ];

@@ -415,7 +415,10 @@ class _ReferencesState extends State<References> {
       ],
       onSelected: (value) {
         if (value == 'share') {
-          shareReference(context: context, reference: reference);
+          ShareActions.shareReference(
+            context: context,
+            reference: reference,
+          );
           return;
         }
       },

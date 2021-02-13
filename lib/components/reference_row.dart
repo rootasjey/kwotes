@@ -235,7 +235,10 @@ class _ReferenceRowState extends State<ReferenceRow> {
         color: Colors.blue,
         onTap: (CompletionHandler handler) {
           handler(false);
-          shareReference(context: context, reference: widget.reference);
+          ShareActions.shareReference(
+            context: context,
+            reference: widget.reference,
+          );
         },
       ),
     );
@@ -245,7 +248,10 @@ class _ReferenceRowState extends State<ReferenceRow> {
 
   void onSelected(value) {
     if (value == 'share') {
-      shareReference(context: context, reference: widget.reference);
+      ShareActions.shareReference(
+        context: context,
+        reference: widget.reference,
+      );
       return;
     }
   }
