@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import { adminApp } from './adminApp';
 import { checkUserIsSignedIn } from './utils';
 
+const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
 /**
@@ -39,64 +40,55 @@ export const deleteList = functions
       .doc(listId)
       .get();
 
-
-    const listData = listSnapshot.data();
-
-    if (!listSnapshot.exists || !listData) {
-      return {
-        success: false,
-        error: {
-          message: "This list doesn't exist anymore.",
-        },
-        uid: userAuth.uid,
-        target: {
-          type: 'list',
-          id: listId,
-          date: Date.now(),
-        }
-      }
+    if (!listSnapshot.exists) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `This collection doesn't exist anymore. It may have been deleted.`,
+      );
     }
 
-    await firestore
-      .collection('todelete')
-      .doc(listId)
-      .set({
-        doc: {
-          id: listId,
-          conceptualType: 'list',
-          dataType: 'subcollection',
-          hasChildren: true,
-        },
-        path: `users/${userAuth.uid}/lists/${listId}/quotes`,
-        task: {
-          createdAt: Date.now(),
-          done: false,
-          items: {
-            deleted: 0,
-            total: listData.itemsCount ?? 0,
-          },
-          updatedAt: Date.now(),
-        },
+    try {
+      await firebaseTools.firestore
+        .delete(listSnapshot.ref.path, {
+          project: process.env.GCLOUD_PROJECT,
+          recursive: true,
+          yes: true,
+        });
+
+      return {
+        success: true,
         user: {
           id: userAuth.uid,
         },
-      });
+        target: {
+          type: 'list',
+          id: listId,
+        }
+      };
+    } catch (error) {
+      console.error(error);
 
-    await firestore
-      .collection('users')
-      .doc(userAuth.uid)
-      .collection('lists')
-      .doc(listId)
-      .delete();
+      await firestore
+        .collection('todelete')
+        .doc(listId)
+        .set({
+          doc: {
+            id: listId,
+            conceptualType: 'list',
+            dataType: 'subcollection',
+            hasChildren: true,
+          },
+          // path: `users/${userAuth.uid}/lists/${listId}/quotes`,
+          path: listSnapshot.ref.path,
+          user: {
+            id: userAuth.uid,
+          },
+        });
 
-    return {
-      user: {
-        id: userAuth.uid,
-      },
-      target: {
-        type: 'list',
-        id: listId,
-        date: Date.now(),
-      }
+      throw new functions.https.HttpsError(
+        'internal',
+        `There was an unexpected issue while deleting the list.
+        Please try again or contact the support for more information.`,
+      );
     }
   });
