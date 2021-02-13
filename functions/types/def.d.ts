@@ -29,6 +29,11 @@ interface DeleteListParams {
   idToken: string;
 }
 
+interface DeleteListsParams {
+  listIds: string[];
+  idToken: string;
+}
+
 interface GenerateNewKeysParam {
   appId: string;
   resetPrimary: boolean;
