@@ -5,62 +5,6 @@ import { checkUserIsSignedIn } from './utils';
 const firestore = adminApp.firestore();
 
 /**
- * TODO: This function is temporary.
- * Use to update all temp quotes property:
- * Add a [reference] property.
- */
-export const configUpdateProperty = functions
-  .region('europe-west3')
-  .https
-  .onRequest(async ({ }, resp) => {
-    const limit = 200;
-    let offset = 0;
-
-    let hasNext = true;
-
-    const maxIterations = 100;
-    let currIteration = 0;
-    let totalCount = 0;
-    let updatedCount = 0;
-    let missingDataCount = 0;
-
-    while (hasNext && currIteration < maxIterations) {
-      const quotesSnap = await firestore
-        .collection('tempquotes')
-        .limit(limit)
-        .offset(offset)
-        .get();
-
-      if (quotesSnap.empty || quotesSnap.size === 0) {
-        hasNext = false;
-      }
-
-      for await (const quoteDoc of quotesSnap.docs) {
-        const quoteData = quoteDoc.data();
-        if (!quoteData) { continue; }
-
-        await quoteDoc.ref.update({
-          mainReference: adminApp.firestore.FieldValue.delete(),
-          references: adminApp.firestore.FieldValue.delete(),
-        });
-      }
-
-      currIteration++;
-      offset += quotesSnap.size;
-      totalCount += quotesSnap.size;
-    }
-
-    resp.send({
-      'stopped at (offset)': offset,
-      'iterations done': `${currIteration}/${maxIterations}`,
-      'Docs counted': totalCount,
-      'Docs updated:': updatedCount,
-      'Docs with missing data:': missingDataCount,
-    });
-  });
-
-
-/**
  * Validate temporary quote
  * -> Add new quote doc & delete temp quote doc.
  * -> Format data (author, reference, comments).
