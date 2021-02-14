@@ -53,7 +53,7 @@ class _SettingsState extends State<Settings> {
   String selectedLang = 'English';
 
   Timer nameTimer;
-  Timer timer;
+  Timer quotidiansNotifTimer;
 
   ScrollController _pageScrollController = ScrollController();
 
@@ -266,9 +266,11 @@ class _SettingsState extends State<Settings> {
                   onChanged: (bool value) {
                     notificationsON = value;
 
-                    timer?.cancel();
-                    timer = Timer(Duration(seconds: 1),
-                        () => toggleQuotidianNotifications());
+                    quotidiansNotifTimer?.cancel();
+                    quotidiansNotifTimer = Timer(
+                      Duration(seconds: 1),
+                      () => toggleQuotidianNotifications(),
+                    );
                   },
                   value: notificationsON,
                   title: Text('Daily quote'),
