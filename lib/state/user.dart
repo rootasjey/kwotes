@@ -26,6 +26,9 @@ abstract class StateUserBase with Store {
   bool canManageQuotes = false;
 
   @observable
+  String email = '';
+
+  @observable
   String lang = 'en';
 
   @observable
@@ -56,17 +59,20 @@ abstract class StateUserBase with Store {
         canManageQuotes = false;
       }
 
-      final user = await FirebaseFirestore.instance
+      final userSnap = await FirebaseFirestore.instance
           .collection('users')
           .doc(_userAuth.uid)
           .get();
 
-      if (user == null) {
+      final userData = userSnap.data();
+
+      if (!userSnap.exists || userData == null) {
         canManageQuotes = false;
       }
 
-      final bool canManage = user.data()['rights']['user:managequotidian'];
+      final bool canManage = userData['rights']['user:managequotidian'];
       canManageQuotes = canManage;
+      setUsername(userData['name']);
     } on CloudFunctionsException catch (exception) {
       debugPrint("[code: ${exception.code}] - ${exception.message}");
       canManageQuotes = false;
@@ -156,13 +162,18 @@ abstract class StateUserBase with Store {
   }
 
   @action
-  void setUserName(String name) {
+  void setUsername(String name) {
     username = name;
   }
 
   @action
   void setAdminValue(bool value) {
     canManageQuotes = value;
+  }
+
+  @action
+  void setEmail(String value) {
+    email = value;
   }
 
   /// Signin user with credentials if FirebaseAuth is null.
@@ -202,6 +213,7 @@ abstract class StateUserBase with Store {
 
       appStorage.setUserName(_userAuth.displayName);
       PushNotifications.linkAuthUser(_userAuth.uid);
+      setEmail(email);
 
       await refreshUserRights();
 

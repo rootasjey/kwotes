@@ -39,6 +39,21 @@ mixin _$StateUser on StateUserBase, Store {
     });
   }
 
+  final _$emailAtom = Atom(name: 'StateUserBase.email');
+
+  @override
+  String get email {
+    _$emailAtom.reportRead();
+    return super.email;
+  }
+
+  @override
+  set email(String value) {
+    _$emailAtom.reportWrite(value, super.email, () {
+      super.email = value;
+    });
+  }
+
   final _$langAtom = Atom(name: 'StateUserBase.lang');
 
   @override
@@ -182,11 +197,11 @@ mixin _$StateUser on StateUserBase, Store {
   }
 
   @override
-  void setUserName(String name) {
+  void setUsername(String name) {
     final _$actionInfo = _$StateUserBaseActionController.startAction(
         name: 'StateUserBase.setUserName');
     try {
-      return super.setUserName(name);
+      return super.setUsername(name);
     } finally {
       _$StateUserBaseActionController.endAction(_$actionInfo);
     }
@@ -198,6 +213,17 @@ mixin _$StateUser on StateUserBase, Store {
         name: 'StateUserBase.setAdminValue');
     try {
       return super.setAdminValue(value);
+    } finally {
+      _$StateUserBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEmail(String value) {
+    final _$actionInfo = _$StateUserBaseActionController.startAction(
+        name: 'StateUserBase.setEmail');
+    try {
+      return super.setEmail(value);
     } finally {
       _$StateUserBaseActionController.endAction(_$actionInfo);
     }
@@ -219,6 +245,7 @@ mixin _$StateUser on StateUserBase, Store {
     return '''
 avatarUrl: ${avatarUrl},
 canManageQuotes: ${canManageQuotes},
+email: ${email},
 lang: ${lang},
 isFirstLaunch: ${isFirstLaunch},
 isUserConnected: ${isUserConnected},

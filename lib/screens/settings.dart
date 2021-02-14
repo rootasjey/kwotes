@@ -48,8 +48,6 @@ class _SettingsState extends State<Settings> {
   double beginY = 20.0;
 
   String avatarUrl = '';
-  String currentUserName = '';
-  String email = '';
   String imageUrl = '';
   String notifLang = 'en';
   String selectedLang = 'English';
@@ -423,7 +421,7 @@ class _SettingsState extends State<Settings> {
                       right: 25.0,
                     ),
                     child: Text(
-                      email,
+                      stateUser.email,
                       style: TextStyle(
                         color: stateColors.primary,
                       ),
@@ -457,7 +455,7 @@ class _SettingsState extends State<Settings> {
                 Padding(
                   padding: const EdgeInsets.only(left: 35.0),
                   child: Text(
-                    email,
+                    stateUser.email,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -534,7 +532,7 @@ class _SettingsState extends State<Settings> {
                 Padding(
                   padding: const EdgeInsets.only(left: 35.0),
                   child: Text(
-                    currentUserName,
+                    stateUser.username,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

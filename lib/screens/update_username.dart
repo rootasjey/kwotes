@@ -517,7 +517,7 @@ class _UpdateUsernameState extends State<UpdateUsername> {
         newUserName = '';
       });
 
-      stateUser.setUserName(currentUsername);
+      stateUser.setUsername(currentUsername);
 
       showSnack(
         context: context,
