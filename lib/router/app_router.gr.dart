@@ -218,7 +218,9 @@ class AppRouter extends _i1.RootStackRouter {
     QuotesListRoute.name: (entry) {
       var route = entry.routeData.as<QuotesListRoute>();
       return _i1.MaterialPageX(
-          entry: entry, child: _i32.QuotesList(listId: route.listId));
+          entry: entry,
+          child:
+              _i32.QuotesList(listId: route.listId, onResult: route.onResult));
     },
     DashboardSettingsRoute.name: (entry) {
       var route = entry.routeData.as<DashboardSettingsRoute>();
@@ -848,14 +850,17 @@ class QuotesListsRoute extends _i1.PageRouteInfo {
 }
 
 class QuotesListRoute extends _i1.PageRouteInfo {
-  QuotesListRoute({this.listId})
+  QuotesListRoute({this.listId, this.onResult})
       : super(name, path: ':listId', params: {'listId': listId});
 
   QuotesListRoute.fromMatch(_i1.RouteMatch match)
       : listId = match.pathParams.getString('listId'),
+        onResult = null,
         super.fromMatch(match);
 
   final String listId;
+
+  final void Function(bool) onResult;
 
   static const String name = 'QuotesListRoute';
 }

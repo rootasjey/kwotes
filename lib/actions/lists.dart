@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:figstyle/types/background_op.dart';
+import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
+import 'package:figstyle/utils/background_op_manager.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
@@ -96,6 +100,7 @@ class ListsActions {
     @required String id,
   }) async {
     try {
+      BackgroundOpManager.addListOp(BackgroundOp(itemId: id));
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
@@ -113,9 +118,22 @@ class ListsActions {
 
       final responseData = response.data;
       final bool success = responseData['success'] ?? false;
+
+      if (!success) {
+        throw new ErrorDescription("The delete operation wasn't successful.");
+      }
+
+      BackgroundOpManager.setOpDone(id);
       return success;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
+      BackgroundOpManager.setOpDone(id);
+      showSnack(
+        context: BackgroundOpManager.context,
+        message: 'There was and issue while deleting the list. Try again later',
+        type: SnackType.error,
+      );
+
       return false;
     }
   }

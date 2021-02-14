@@ -6,6 +6,8 @@ import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/app_logger.dart';
+import 'package:figstyle/utils/background_op_manager.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
@@ -259,11 +261,22 @@ class _QuotesListsState extends State<QuotesLists> {
       elevation: 2.0,
       child: InkWell(
         onTap: () async {
-          await context.router.push(
-            QuotesListRoute(listId: quotesList.id),
-          );
+          context.router.push(
+            QuotesListRoute(
+              listId: quotesList.id,
+              onResult: (hasDeletedList) {
+                if (!hasDeletedList) {
+                  return;
+                }
 
-          fetch();
+                if (BackgroundOpManager.listOp.containsKey(quotesList.id)) {
+                  setState(() {
+                    userQuotesLists.remove(quotesList);
+                  });
+                }
+              },
+            ),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(25.0),
@@ -292,7 +305,7 @@ class _QuotesListsState extends State<QuotesLists> {
                             ),
                           ),
                           Opacity(
-                            opacity: .6,
+                            opacity: 0.6,
                             child: Text(
                               quotesList.description,
                               overflow: TextOverflow.ellipsis,
@@ -447,10 +460,11 @@ class _QuotesListsState extends State<QuotesLists> {
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            final quoteList = userQuotesLists.elementAt(index);
+            final quotesList = userQuotesLists.elementAt(index);
+
             return cardListItem(
               index: index,
-              quotesList: quoteList,
+              quotesList: quotesList,
               showPopupMenu: showPopupMenu,
             );
           },
@@ -543,7 +557,7 @@ class _QuotesListsState extends State<QuotesLists> {
         isLoading = false;
       });
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       setState(() => isLoading = false);
     }
   }

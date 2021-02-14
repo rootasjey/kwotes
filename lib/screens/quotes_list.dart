@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
+import 'package:figstyle/utils/background_op_manager.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +24,17 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:supercharged/supercharged.dart';
 
 class QuotesList extends StatefulWidget {
   final String listId;
+  final void Function(bool) onResult;
 
   QuotesList({
     @PathParam('listId') this.listId,
+    this.onResult,
   });
 
   @override
@@ -503,27 +508,25 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   void deleteCurrentList() async {
-    setState(() {
-      isDeletingList = true;
-    });
+    BackgroundOpManager.setContext(context);
+    ListsActions.delete(id: widget.listId);
 
-    final success = await ListsActions.delete(id: widget.listId);
+    if (context.router.stack.length > 1) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        if (widget.onResult != null) {
+          widget.onResult(true);
+        }
 
-    setState(() {
-      isDeletingList = false;
-    });
-
-    if (!success) {
-      showSnack(
-        context: context,
-        message: 'There was and issue while deleting the list. Try again later',
-        type: SnackType.error,
-      );
-
+        context.router.pop();
+      });
       return;
     }
 
-    context.router.pop();
+    context.router.root.push(
+      DashboardPageRoute(
+        children: [QuotesListsDeepRoute()],
+      ),
+    );
   }
 
   void removeQuote(Quote quote) async {
