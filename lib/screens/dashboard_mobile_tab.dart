@@ -307,7 +307,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
 
   Widget favButton() {
     return tileButton(
-      iconData: UniconsLine.favorite,
+      iconData: UniconsLine.heart,
       textTitle: 'Favourites',
       onTap: () {
         context.router.push(
