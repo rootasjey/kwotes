@@ -298,6 +298,9 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       return;
     }
 
+    stateUser.setFirstLaunch(false);
+    appStorage.setFirstLaunch();
+
     showFlash(
       context: context,
       duration: 60.seconds,
@@ -305,7 +308,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
       builder: (_, controller) {
         return Flash(
           controller: controller,
-          backgroundColor: stateColors.appBackground,
+          backgroundColor: stateColors.background,
           boxShadows: [BoxShadow(blurRadius: 4)],
           barrierBlur: 3.0,
           barrierColor: Colors.black38,
@@ -341,7 +344,6 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
                     context.router.push(OnBoardingRoute());
                   },
                 ),
-                // Padding(padding: const EdgeInsets.only(left: 8.0),),
                 IconButton(
                   icon: Icon(
                     UniconsLine.times,
