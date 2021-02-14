@@ -53,14 +53,10 @@ class AppState extends State<App> {
     return AdaptiveTheme(
       light: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.red,
-        accentColor: Colors.blue,
         fontFamily: GoogleFonts.raleway().fontFamily,
       ),
       dark: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.red,
-        accentColor: Colors.blue,
         fontFamily: GoogleFonts.raleway().fontFamily,
       ),
       initial: brightness == Brightness.light
