@@ -145,7 +145,7 @@ class FlashHelper {
           position: FlashPosition.top,
           child: FlashBar(
             icon: icon,
-            title: title != null
+            title: title != null && title.length > 0
                 ? Text(
                     title,
                     overflow: TextOverflow.ellipsis,
@@ -163,6 +163,66 @@ class FlashHelper {
               ),
             ),
             showProgressIndicator: true,
+            primaryAction: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    UniconsLine.times,
+                    color: stateColors.secondary,
+                  ),
+                  onPressed: () => controller.dismiss(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<T> groundedBottom<T>(
+    BuildContext context, {
+    String title,
+    @required String message,
+    Widget icon = const Icon(UniconsLine.chat_info),
+    Duration duration = const Duration(seconds: 5),
+  }) {
+    return showFlash<T>(
+      context: context,
+      duration: duration,
+      persistent: true,
+      builder: (_, controller) {
+        _previousController = controller;
+
+        return Flash(
+          controller: controller,
+          backgroundColor: stateColors.background,
+          boxShadows: [BoxShadow(blurRadius: 4)],
+          barrierBlur: 1.0,
+          barrierColor: Colors.black38,
+          barrierDismissible: true,
+          style: FlashStyle.grounded,
+          position: FlashPosition.bottom,
+          child: FlashBar(
+            icon: icon,
+            title: title != null && title.length > 0
+                ? Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  )
+                : null,
+            message: Opacity(
+              opacity: 0.5,
+              child: Text(
+                message,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
             primaryAction: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
