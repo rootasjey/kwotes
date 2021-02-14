@@ -4,8 +4,11 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
+import 'package:figstyle/utils/flash_helper.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
+import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class UserLists extends StatefulWidget {
   final ScrollController scrollController;
@@ -170,6 +173,13 @@ class _UserListsState extends State<UserLists> {
   }
 
   void addQuoteToList({String listId}) async {
+    showSnack(
+      context: context,
+      title: "Add",
+      type: SnackType.success,
+      message: "Your quote has been successfully added!",
+    );
+
     final success = await ListsActions.addQuote(
       listId: listId,
       quoteIds: [widget.quote.id],
@@ -181,16 +191,29 @@ class _UserListsState extends State<UserLists> {
         message: "There was an error while adding the quote to the list.",
         type: SnackType.error,
       );
+
+      return;
     }
   }
 
   void createListAndAddQuote(BuildContext context) async {
+    FlashHelper.showProgress(
+      context,
+      title: "Delete",
+      progressId: 'create_list',
+      message: "Deleting the list $newListName...",
+      icon: Icon(UniconsLine.plus),
+      duration: 60.seconds,
+    );
+
     final createdList = await ListsActions.create(
       name: newListName,
       description: newListDescription,
       isPublic: false,
       quoteIds: [widget.quote.id],
     );
+
+    FlashHelper.dismissProgress(id: 'create_list');
 
     if (createdList == null) {
       showSnack(
@@ -199,7 +222,15 @@ class _UserListsState extends State<UserLists> {
             "Try again later or contact us if the problem persists.",
         type: SnackType.error,
       );
+
+      return;
     }
+
+    showSnack(
+      context: context,
+      title: "Create",
+      message: "Your list $newListName has been successfully created!",
+    );
   }
 
   Future fetchLists() async {
