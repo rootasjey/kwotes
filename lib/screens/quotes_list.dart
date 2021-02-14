@@ -377,7 +377,7 @@ class _QuotesListState extends State<QuotesList> {
                 key: ObjectKey(index),
                 useSwipeActions: true,
                 quotePageType: QuotePageType.list,
-                onRemoveFromList: () => removeQuote(quote),
+                onRemoveFromList: (_) => removeQuote(quote),
                 padding: EdgeInsets.symmetric(
                   horizontal: horPadding,
                 ),
@@ -545,8 +545,8 @@ class _QuotesListState extends State<QuotesList> {
 
       showSnack(
         context: context,
-        message:
-            "Sorry, could not remove the quote from your list. Please try again later.",
+        message: "Sorry, could not remove the quote from your list."
+            " Please try again later.",
         type: SnackType.error,
       );
     }
