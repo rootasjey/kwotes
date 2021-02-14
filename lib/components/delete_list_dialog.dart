@@ -17,34 +17,37 @@ Future showDeleteListDialog({
         return Material(
           child: SafeArea(
             top: false,
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              ListTile(
-                title: Text(
-                  'Confirm',
-                  style: TextStyle(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text(
+                    'Confirm',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.check,
                     color: Colors.white,
                   ),
+                  tileColor: Color(0xfff55c5c),
+                  onTap: onConfirm,
                 ),
-                trailing: Icon(
-                  Icons.check,
-                  color: Colors.white,
+                ListTile(
+                  title: Text('Cancel'),
+                  trailing: Icon(Icons.close),
+                  onTap: onCancel,
                 ),
-                tileColor: Color(0xfff55c5c),
-                onTap: onConfirm,
-              ),
-              ListTile(
-                title: Text('Cancel'),
-                trailing: Icon(Icons.close),
-                onTap: onCancel,
-              ),
-            ]),
+              ],
+            ),
           ),
         );
       },
       containerWidget: (context, animation, child) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Material(
               clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadius.circular(12.0),
