@@ -525,7 +525,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           ),
           onTap: () {
             context.router.pop();
-            showBottomSheetList();
+
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              showBottomSheetList();
+            });
           },
         ),
         ListTile(
