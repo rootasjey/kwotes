@@ -633,7 +633,7 @@ class ReferencePageState extends State<ReferencePage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
-          .where('mainReference.id', isEqualTo: widget.referenceId)
+          .where('reference.id', isEqualTo: widget.referenceId)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .limit(limit)
@@ -674,7 +674,7 @@ class ReferencePageState extends State<ReferencePage> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('quotes')
-          .where('mainReference.id', isEqualTo: widget.referenceId)
+          .where('reference.id', isEqualTo: widget.referenceId)
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastFetchedDoc)

@@ -114,8 +114,8 @@ class _QuotidianPageState extends State<QuotidianPage> {
                         ),
                         animatedDivider(),
                         authorName(),
-                        if (quotidian.quote.mainReference?.name != null &&
-                            quotidian.quote.mainReference.name.length > 0)
+                        if (quotidian.quote.reference?.name != null &&
+                            quotidian.quote.reference.name.length > 0)
                           referenceName(),
                       ],
                     ),
@@ -277,7 +277,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
       tween: Tween(begin: 0.0, end: 0.6),
       child: GestureDetector(
         onTap: () {
-          final reference = quotidian.quote.mainReference;
+          final reference = quotidian.quote.reference;
 
           context.router.push(
             ReferencesDeepRoute(children: [
@@ -289,7 +289,7 @@ class _QuotidianPageState extends State<QuotidianPage> {
           );
         },
         child: Text(
-          quotidian.quote.mainReference.name,
+          quotidian.quote.reference.name,
           style: TextStyle(
             fontSize: 18.0,
           ),

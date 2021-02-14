@@ -349,11 +349,9 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   }
 
   Widget quoteReference() {
-    final mainReference = widget.quote.mainReference;
+    final reference = widget.quote.reference;
 
-    if (mainReference == null ||
-        mainReference.id == null ||
-        mainReference.id.isEmpty) {
+    if (reference == null || reference.id == null || reference.id.isEmpty) {
       return Padding(padding: EdgeInsets.zero);
     }
 
@@ -362,8 +360,8 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         context.router.root.push(
           ReferencesDeepRoute(children: [
             ReferencePageRoute(
-              referenceId: mainReference.id,
-              referenceName: mainReference.name,
+              referenceId: reference.id,
+              referenceName: reference.name,
             ),
           ]),
         );
@@ -371,7 +369,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
       child: Opacity(
         opacity: 0.4,
         child: Text(
-          widget.quote.mainReference.name,
+          widget.quote.reference.name,
         ),
       ),
     );
@@ -601,7 +599,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
 
   Future<String> fetchReferencePP() async {
     try {
-      final referenceId = widget.quote.mainReference.id;
+      final referenceId = widget.quote.reference.id;
 
       final referenceDoc = await FirebaseFirestore.instance
           .collection('references')

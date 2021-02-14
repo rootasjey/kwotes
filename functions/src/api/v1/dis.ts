@@ -121,7 +121,7 @@ export const disRouter = express.Router()
       try {
         answerReferenceSnap = await adminApp.firestore()
           .collection('references')
-          .doc(selectedQuote.mainReference.id)
+          .doc(selectedQuote.reference.id)
           .get();
       } catch (error) {
         next(error);
@@ -295,7 +295,7 @@ export const disRouter = express.Router()
       try {
         answerReferenceSnap = await adminApp.firestore()
           .collection('references')
-          .doc(selectedQuote.mainReference.id)
+          .doc(selectedQuote.reference.id)
           .get();
       } catch (error) {
         next(error);
@@ -342,7 +342,7 @@ export const disRouter = express.Router()
 
       try { 
         randReferencesRes = await getRandomReferences({ 
-          except: selectedQuote.mainReference.id 
+          except: selectedQuote.reference.id 
         }); 
       }
       catch (error) { 
@@ -442,12 +442,12 @@ export const disRouter = express.Router()
 
     if (guessType === 'reference') {
       responsePayload.isCorrect = 
-        quoteSnapData.mainReference.id === answerProposalId;
+        quoteSnapData.reference.id === answerProposalId;
 
       if (!responsePayload.isCorrect) {
         responsePayload.correction = {
-          id: quoteSnapData.mainReference.id,
-          name: quoteSnapData.mainReference.name,
+          id: quoteSnapData.reference.id,
+          name: quoteSnapData.reference.name,
         };
       }
     }    

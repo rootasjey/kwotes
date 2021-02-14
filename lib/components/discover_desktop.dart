@@ -256,7 +256,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
                         ),
                       ),
                     ),
-                    if (quote.mainReference != null)
+                    if (quote.reference != null)
                       Align(
                         alignment: Alignment.topRight,
                         child: Opacity(
@@ -264,7 +264,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
                           child: InkWell(
                             onTap: () => goToReference(quote),
                             child: Text(
-                              quote.mainReference.name,
+                              quote.reference.name,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -443,7 +443,7 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
 
         final quoteSnap = await FirebaseFirestore.instance
             .collection('quotes')
-            .where('mainReference.id', isEqualTo: refDoc.id)
+            .where('reference.id', isEqualTo: refDoc.id)
             .where('lang', isEqualTo: lang)
             .limit(1)
             .get();
@@ -489,20 +489,18 @@ class _DiscoverDesktopState extends State<DiscoverDesktop> {
   }
 
   void goToReference(Quote quote) {
-    final mainReference = quote.mainReference;
+    final reference = quote.reference;
 
-    if (mainReference == null ||
-        mainReference.id == null ||
-        mainReference.id.isEmpty) {
+    if (reference == null || reference.id == null || reference.id.isEmpty) {
       return;
     }
 
     context.router.root.push(
       ReferencesDeepRoute(children: [
         ReferencePageRoute(
-          referenceId: mainReference.id,
-          referenceName: mainReference.name,
-          referenceImageUrl: mainReference.urls.image,
+          referenceId: reference.id,
+          referenceName: reference.name,
+          referenceImageUrl: reference.urls.image,
         ),
       ]),
     );

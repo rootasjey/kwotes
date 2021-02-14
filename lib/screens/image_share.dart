@@ -169,12 +169,12 @@ class _ImageShareState extends State<ImageShare> {
                           ),
                         ),
                       ),
-                      if (quote.mainReference != null &&
-                          quote.mainReference.name.isNotEmpty)
+                      if (quote.reference != null &&
+                          quote.reference.name.isNotEmpty)
                         Opacity(
                           opacity: 0.6,
                           child: Text(
-                            quote.mainReference.name,
+                            quote.reference.name,
                             style: TextStyle(
                               color: getForegroundColor(),
                             ),

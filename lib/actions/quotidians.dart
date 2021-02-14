@@ -58,9 +58,9 @@ class QuotidiansActions {
             'name': quote.author.name,
           },
           'id': quote.id,
-          'mainReference': {
-            'id': quote.mainReference.id,
-            'name': quote.mainReference.name,
+          'reference': {
+            'id': quote.reference.id,
+            'name': quote.reference.name,
           },
           'name': quote.name,
           'topics': quote.topics,

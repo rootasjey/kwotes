@@ -46,11 +46,9 @@ class FavActions {
         return true;
       }
 
-      final mainReferenceId =
-          quote.mainReference != null ? quote.mainReference.id : '';
+      final referenceId = quote.reference != null ? quote.reference.id : '';
 
-      final mainReferenceName =
-          quote.mainReference != null ? quote.mainReference.name : '';
+      final referenceName = quote.reference != null ? quote.reference.name : '';
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -64,9 +62,9 @@ class FavActions {
         },
         'createdAt': DateTime.now(),
         'lang': lang,
-        'mainReference': {
-          'id': mainReferenceId,
-          'name': mainReferenceName,
+        'reference': {
+          'id': referenceId,
+          'name': referenceName,
         },
         'name': quote.name,
         'topics': quote.topics,

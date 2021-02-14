@@ -145,8 +145,7 @@ export const deleteQuotes = functions
       }
 
       const authorId: string = quoteData.author.id;
-      const reference = quoteData.reference;
-      const referenceId: string = reference ? reference.id : quoteData.mainReference.id;
+      const referenceId: string = quoteData.reference.id;
 
       await quoteDoc.ref.delete();
 

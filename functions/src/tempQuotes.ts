@@ -93,7 +93,7 @@ export const validate = functions
         createdAt: adminApp.firestore.Timestamp.now(),
         lang: tempQuoteData.lang,
         links: [],
-        mainReference: {
+        reference: {
           id: reference.id,
           name: reference.name,
         },

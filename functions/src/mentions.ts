@@ -46,7 +46,7 @@ export const onUpdateAuthor = functions
 /**
  * If [reference.name] is edited, 
  * update all quotes referencing this reference
- * Specifically the [quote.mainReference.name] property.
+ * Specifically the [quote.reference.name] property.
  */
 export const onUpdateReference = functions
   .region('europe-west3')
@@ -72,7 +72,7 @@ export const onUpdateReference = functions
     if (allQuotesWithReference.empty) {
       allQuotesWithReference = await firestore
         .collection('quotes')
-        .where('mainReference.id', '==', referenceId)
+        .where('reference.id', '==', referenceId)
         .get();
     }
 
@@ -82,11 +82,7 @@ export const onUpdateReference = functions
 
     for await (const quoteDoc of allQuotesWithReference.docs) {
       await quoteDoc.ref.update({
-        mainReference: {
-          name: afterName,
-          id: referenceId,
-        },
-        reference: { // new prop. to replace [mainReference]
+        reference: {
           name: afterName,
           id: referenceId,
         },

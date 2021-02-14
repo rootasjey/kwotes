@@ -152,7 +152,7 @@ class ShareActions {
     final RenderBox box = context.findRenderObject();
     final quoteName = quote.name;
     final authorName = quote.author?.name ?? '';
-    final referenceName = quote.mainReference?.name ?? '';
+    final referenceName = quote.reference?.name ?? '';
 
     String sharingText = quoteName;
 
@@ -190,7 +190,7 @@ class ShareActions {
   static Future shareQuoteWeb({@required Quote quote}) async {
     final quoteName = quote.name;
     final authorName = quote.author?.name ?? '';
-    final referenceName = quote.mainReference?.name ?? '';
+    final referenceName = quote.reference?.name ?? '';
 
     String sharingText = quoteName;
 

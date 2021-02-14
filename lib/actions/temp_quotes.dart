@@ -56,7 +56,7 @@ class TempQuotesActions {
       'createdAt': DateTime.now(),
       'lang': DataQuoteInputs.quote.lang,
       'name': DataQuoteInputs.quote.name,
-      'mainReference': {
+      'reference': {
         'id': DataQuoteInputs.reference.id,
         'name': DataQuoteInputs.reference.name,
       },
@@ -326,7 +326,7 @@ class TempQuotesActions {
       'createdAt': DateTime.now(),
       'lang': DataQuoteInputs.quote.lang,
       'name': DataQuoteInputs.quote.name,
-      'mainReference': {
+      'reference': {
         'id': DataQuoteInputs.reference.id,
         'name': DataQuoteInputs.reference.name,
       },

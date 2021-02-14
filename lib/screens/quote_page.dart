@@ -175,7 +175,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget authorAndReference() {
     bool showBar = false;
     final author = quote?.author;
-    final reference = quote?.mainReference;
+    final reference = quote?.reference;
 
     if (author != null &&
         author.name.isNotEmpty &&
@@ -421,7 +421,7 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Widget referenceName() {
-    if (quote.mainReference == null || quote.mainReference.name.isEmpty) {
+    if (quote.reference == null || quote.reference.name.isEmpty) {
       return Container();
     }
 
@@ -434,7 +434,7 @@ class _QuotePageState extends State<QuotePage> {
         child: InkWell(
           onTap: onReferenceTap,
           child: Text(
-            quote.mainReference.name,
+            quote.reference.name,
             style: TextStyle(
               fontSize: 18.0,
               fontStyle: FontStyle.italic,
@@ -817,8 +817,8 @@ class _QuotePageState extends State<QuotePage> {
     context.router.root.push(
       ReferencesDeepRoute(children: [
         ReferencePageRoute(
-          referenceId: quote.mainReference.id,
-          referenceName: quote.mainReference.name,
+          referenceId: quote.reference.id,
+          referenceName: quote.reference.name,
         )
       ]),
     );

@@ -14,12 +14,11 @@ class TempQuote {
   final DateTime updatedAt;
 
   final List<String> comments;
-  final List<Reference> references;
   final List<String> topics;
 
   final PartialUser user;
 
-  final Reference mainReference;
+  final Reference reference;
 
   final String id;
   final String lang;
@@ -35,9 +34,8 @@ class TempQuote {
     this.id,
     this.isOffline = false,
     this.lang,
-    this.mainReference,
+    this.reference,
     this.name,
-    this.references,
     this.region,
     this.topics,
     this.updatedAt,
@@ -45,38 +43,39 @@ class TempQuote {
     this.validation,
   });
 
-  factory TempQuote.fromJSON(Map<String, dynamic> json) {
-    List<Reference> referencesList = [];
-    List<String> topicsList = [];
-
-    if (json['references'] != null) {
-      for (var ref in json['references']) {
-        referencesList.add(Reference.fromJSON(ref));
-      }
-    }
-
-    if (json['topics'] != null) {
-      final Map<String, dynamic> topics = json['topics'];
+  factory TempQuote.fromJSON(Map<String, dynamic> data) {
+    List<String> _topicsList = [];
+    if (data['topics'] != null) {
+      final Map<String, dynamic> topics = data['topics'];
       topics.forEach((key, value) {
-        topicsList.add(key);
+        _topicsList.add(key);
       });
     }
 
-    final author =
-        json['author'] != null ? Author.fromJSON(json['author']) : null;
+    Author _author;
+    if (data['author'] != null) {
+      _author = Author.fromJSON(data['author']);
+    }
 
-    final _mainReference = json['mainReference'] != null
-        ? Reference.fromJSON(json['mainReference'])
-        : null;
+    Reference _reference;
+    if (data['reference'] != null) {
+      Reference.fromJSON(data['reference']);
+    } else if (data['mainReference != null']) {
+      // Keep for drafts. To delete later.
+      Reference.fromJSON(data['mainReference']);
+    }
 
-    final user =
-        json['user'] != null ? PartialUser.fromJSON(json['user']) : null;
+    PartialUser _user;
+    if (data['user'] != null) {
+      _user = PartialUser.fromJSON(data['user']);
+    }
 
-    final validation = json['validation'] != null
-        ? Validation.fromJSON(json['validation'])
-        : null;
+    Validation _validation;
+    if (data['validation'] != null) {
+      Validation.fromJSON(data['validation']);
+    }
 
-    final List<dynamic> rawComments = json['comments'];
+    final List<dynamic> rawComments = data['comments'];
     final comments = <String>[];
 
     if (rawComments != null) {
@@ -85,29 +84,34 @@ class TempQuote {
       });
     }
 
-    final createdAt = json['createdAt'].runtimeType == String
-        ? DateTime.parse(json['createdAt'])
-        : (json['createdAt'] as Timestamp).toDate();
+    DateTime _createdAt;
+    if (data['createdAt'].runtimeType == String) {
+      _createdAt = DateTime.parse(data['createdAt']);
+    } else {
+      _createdAt = (data['createdAt'] as Timestamp).toDate();
+    }
 
-    final updatedAt = json['updatedAt'].runtimeType == String
-        ? DateTime.parse(json['updatedAt'])
-        : (json['updatedAt'] as Timestamp).toDate();
+    DateTime _updatedAt;
+    if (data['updatedAt'].runtimeType == String) {
+      DateTime.parse(data['updatedAt']);
+    } else {
+      _updatedAt = (data['updatedAt'] as Timestamp).toDate();
+    }
 
     return TempQuote(
-      author: author,
+      author: _author,
       comments: comments,
-      createdAt: createdAt,
-      id: json['id'],
-      isOffline: json['isOffline'] ?? false,
-      lang: json['lang'],
-      mainReference: _mainReference,
-      name: json['name'],
-      references: referencesList,
-      region: json['region'],
-      topics: topicsList,
-      updatedAt: updatedAt,
-      user: user,
-      validation: validation,
+      createdAt: _createdAt,
+      id: data['id'],
+      isOffline: data['isOffline'] ?? false,
+      lang: data['lang'],
+      reference: _reference,
+      name: data['name'],
+      region: data['region'],
+      topics: _topicsList,
+      updatedAt: _updatedAt,
+      user: _user,
+      validation: _validation,
     );
   }
 }

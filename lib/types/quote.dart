@@ -6,11 +6,11 @@ class Quote {
   final String id;
   String lang;
   String name;
-  final Reference mainReference;
+  final Reference reference;
 
   /// Match the quote's id in the 'quotes' collection.
   final String quoteId;
-  final List<Reference> references;
+
   bool starred;
   List<String> topics;
 
@@ -19,9 +19,8 @@ class Quote {
     this.id,
     this.lang,
     this.name,
-    this.mainReference,
+    this.reference,
     this.quoteId,
-    this.references,
     this.starred = false,
     this.topics,
   });
@@ -32,38 +31,33 @@ class Quote {
       id: '',
       lang: 'en',
       name: '',
-      mainReference: Reference.empty(),
+      reference: Reference.empty(),
       quoteId: '',
-      references: [],
       starred: false,
       topics: [],
     );
   }
 
-  factory Quote.fromJSON(Map<String, dynamic> json) {
-    List<Reference> _references = [];
+  factory Quote.fromJSON(Map<String, dynamic> data) {
     List<String> _topics = [];
 
-    final _author =
-        json['author'] != null ? Author.fromJSON(json['author']) : null;
-
-    final _mainReference = json['mainReference'] != null
-        ? Reference.fromJSON(json['mainReference'])
-        : null;
-
-    if (json['references'] != null) {
-      for (var ref in json['references']) {
-        _references.add(Reference.fromJSON(ref));
-      }
+    Author _author;
+    if (data['author'] != null) {
+      _author = Author.fromJSON(data['author']);
     }
 
-    if (json['topics'] != null) {
-      if (json['topics'] is Iterable<dynamic>) {
-        for (var tag in json['topics']) {
+    Reference _reference;
+    if (data['reference'] != null) {
+      Reference.fromJSON(data['reference']);
+    }
+
+    if (data['topics'] != null) {
+      if (data['topics'] is Iterable<dynamic>) {
+        for (var tag in data['topics']) {
           _topics.add(tag);
         }
       } else {
-        Map<String, dynamic> mapTopics = json['topics'];
+        Map<String, dynamic> mapTopics = data['topics'];
 
         mapTopics.forEach((key, value) {
           _topics.add(key);
@@ -73,31 +67,25 @@ class Quote {
 
     return Quote(
       author: _author,
-      id: json['id'],
-      lang: json['lang'],
-      name: json['name'],
-      mainReference: _mainReference,
-      quoteId: json['quoteId'] ?? '',
-      references: _references,
-      starred: json['starred'] ?? false,
+      id: data['id'],
+      lang: data['lang'],
+      name: data['name'],
+      reference: _reference,
+      quoteId: data['quoteId'] ?? '',
+      starred: data['starred'] ?? false,
       topics: _topics,
     );
   }
 
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> json = Map();
-    List<Map<String, dynamic>> refStr = [];
-
-    for (var ref in references) {
-      refStr.add(ref.toJSON());
-    }
 
     json['author'] = author.toJSON();
     json['id'] = id;
     json['lang'] = lang;
     json['name'] = name;
+    json['reference'] = reference.toJSON();
     json['quoteId'] = quoteId;
-    json['references'] = refStr;
     json['starred'] = starred;
     json['topics'] = topics;
 

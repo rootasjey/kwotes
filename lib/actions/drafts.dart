@@ -128,7 +128,7 @@ class DraftsActions {
         'createdAt': DateTime.now(),
         'lang': DataQuoteInputs.quote.lang,
         'name': DataQuoteInputs.quote.name,
-        'mainReference': {
+        'reference': {
           'id': DataQuoteInputs.reference.id,
           'name': DataQuoteInputs.reference.name,
         },
@@ -205,7 +205,7 @@ class DraftsActions {
         'isOffline': true,
         'lang': DataQuoteInputs.quote.lang,
         'name': DataQuoteInputs.quote.name,
-        'mainReference': {
+        'reference': {
           'id': DataQuoteInputs.reference.id,
           'name': DataQuoteInputs.reference.name,
         },

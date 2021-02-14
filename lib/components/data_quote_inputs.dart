@@ -2,8 +2,6 @@ import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/point_in_time.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/types/reference_type.dart';
-import 'package:figstyle/types/release.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/types/urls.dart';
 
@@ -68,75 +66,41 @@ class DataQuoteInputs {
     }
 
     quote = Quote(
-      id    : id,
-      name  : tempQuote.name,
-      lang  : tempQuote.lang,
+      id: id,
+      name: tempQuote.name,
+      lang: tempQuote.lang,
       topics: tempQuote.topics,
     );
 
-    final born  = tempQuote.author.born;
+    final born = tempQuote.author.born;
     final death = tempQuote.author.death;
 
-    final tAuthor     = tempQuote.author;
+    final tAuthor = tempQuote.author;
     final tAuthorUrls = tempQuote.author.urls;
 
     author = Author(
-      born        : born ?? PointInTime(),
-      death       : death ?? PointInTime(),
-      id          : tAuthor.id,
-      isFictional : tAuthor.isFictional ?? false,
-      job         : tAuthor.job,
-      name        : tAuthor.name,
-      summary     : tAuthor.summary,
-      urls        : Urls(
-        affiliate : tAuthorUrls.affiliate,
-        amazon    : tAuthorUrls.amazon,
-        facebook  : tAuthorUrls.facebook,
-        image     : tAuthorUrls.image,
-        instagram : tAuthorUrls.instagram,
-        netflix   : tAuthorUrls.netflix,
+      born: born ?? PointInTime(),
+      death: death ?? PointInTime(),
+      id: tAuthor.id,
+      isFictional: tAuthor.isFictional ?? false,
+      job: tAuthor.job,
+      name: tAuthor.name,
+      summary: tAuthor.summary,
+      urls: Urls(
+        affiliate: tAuthorUrls.affiliate,
+        amazon: tAuthorUrls.amazon,
+        facebook: tAuthorUrls.facebook,
+        image: tAuthorUrls.image,
+        instagram: tAuthorUrls.instagram,
+        netflix: tAuthorUrls.netflix,
         primeVideo: tAuthorUrls.primeVideo,
-        twitch    : tAuthorUrls.twitch,
-        twitter   : tAuthorUrls.twitter,
-        website   : tAuthorUrls.website,
-        wikipedia : tAuthorUrls.wikipedia,
-        youtube   : tAuthorUrls.youtube,
+        twitch: tAuthorUrls.twitch,
+        twitter: tAuthorUrls.twitter,
+        website: tAuthorUrls.website,
+        wikipedia: tAuthorUrls.wikipedia,
+        youtube: tAuthorUrls.youtube,
       ),
     );
-
-    if (tempQuote.references.length > 0) {
-      final tRef      = tempQuote.references.first;
-      final release   = tRef.release ?? Release();
-      final tRefUrls  = tRef.urls;
-
-      reference = Reference(
-        id          : tRef.id,
-        lang        : tRef.lang,
-        name        : tRef.name,
-        release     : release,
-        summary     : tRef.summary,
-        type        : ReferenceType(
-          primary   : tRef.type.primary,
-          secondary : tRef.type.secondary,
-        ),
-        urls        : Urls(
-          affiliate : tRefUrls.affiliate,
-          amazon    : tRefUrls.amazon,
-          facebook  : tRefUrls.facebook,
-          image     : tRefUrls.image,
-          instagram : tRefUrls.instagram,
-          netflix   : tRefUrls.netflix,
-          primeVideo: tRefUrls.primeVideo,
-          twitch    : tRefUrls.twitch,
-          twitter   : tRefUrls.twitter,
-          website   : tRefUrls.website,
-          wikipedia : tRefUrls.wikipedia,
-          youtube   : tRefUrls.youtube,
-        ),
-      );
-    } else {
-      clearReference();
-    }
 
     if (tempQuote.comments.length > 0) {
       comment = tempQuote.comments.first;

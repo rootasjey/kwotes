@@ -417,7 +417,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
 
     return await FirebaseFirestore.instance
         .collection('quotes')
-        .where('mainReference.id', isEqualTo: widget.id)
+        .where('reference.id', isEqualTo: widget.id)
         .where('lang', isEqualTo: lang)
         .orderBy('createdAt', descending: descending)
         .limit(30)
@@ -439,7 +439,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
 
     return await FirebaseFirestore.instance
         .collection('quotes')
-        .where('mainReference.id', isEqualTo: widget.id)
+        .where('reference.id', isEqualTo: widget.id)
         .where('lang', isEqualTo: lang)
         .orderBy('createdAt', descending: descending)
         .startAfterDocument(lastDoc)

@@ -132,8 +132,12 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
     });
   } else {
     selectedQuote = boxQuotes.find((item) => {
-      return item.mainReference.id 
-        && item.mainReference.id !== lastAuthorReferenceId;
+      if (item.reference && item.reference.id) {
+        return item.reference.id 
+          && item.reference.id !== lastAuthorReferenceId;
+      }
+
+      return false;
     });
   }
 
