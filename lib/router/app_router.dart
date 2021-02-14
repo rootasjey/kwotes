@@ -18,6 +18,7 @@ import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
 import 'package:figstyle/screens/my_published_quotes.dart';
 import 'package:figstyle/screens/my_temp_quotes.dart';
+import 'package:figstyle/screens/on_boarding.dart';
 import 'package:figstyle/screens/quote_page.dart';
 import 'package:figstyle/screens/quotes_list.dart';
 import 'package:figstyle/screens/quotes_lists.dart';
@@ -129,6 +130,7 @@ export 'app_router.gr.dart';
         ),
       ],
     ),
+    MaterialRoute(path: '/onboarding', page: OnBoarding),
     AutoRoute(
       path: '/topics',
       page: EmptyRouterPage,

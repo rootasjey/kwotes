@@ -756,9 +756,7 @@ class _AboutState extends State<About> {
 
   void showOnBoarding() {
     if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => OnBoarding()),
-      );
+      context.router.push(OnBoardingRoute());
       return;
     }
 

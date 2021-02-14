@@ -21,6 +21,8 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class HomeMobile extends StatefulWidget {
   final int initialIndex;
@@ -59,6 +61,11 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
 
     initQuickActions();
     mayOpenNotification();
+
+    Future.delayed(
+      3.seconds,
+      () => showOnBoardingAlert(),
+    );
   }
 
   @override
@@ -284,5 +291,69 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
         );
       }
     });
+  }
+
+  void showOnBoardingAlert() {
+    if (!stateUser.isFirstLaunch) {
+      return;
+    }
+
+    showFlash(
+      context: context,
+      duration: 60.seconds,
+      persistent: false,
+      builder: (_, controller) {
+        return Flash(
+          controller: controller,
+          backgroundColor: stateColors.appBackground,
+          boxShadows: [BoxShadow(blurRadius: 4)],
+          barrierBlur: 3.0,
+          barrierColor: Colors.black38,
+          barrierDismissible: true,
+          style: FlashStyle.grounded,
+          position: FlashPosition.top,
+          child: FlashBar(
+            icon: Icon(UniconsLine.chat_info),
+            title: Text(
+              'Welcome!',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            message: Opacity(
+              opacity: 0.5,
+              child: Text(
+                "Come on board if it's your first time.",
+              ),
+            ),
+            showProgressIndicator: false,
+            primaryAction: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    UniconsLine.check,
+                    color: stateColors.validation,
+                  ),
+                  onPressed: () {
+                    controller.dismiss();
+                    context.router.push(OnBoardingRoute());
+                  },
+                ),
+                // Padding(padding: const EdgeInsets.only(left: 8.0),),
+                IconButton(
+                  icon: Icon(
+                    UniconsLine.times,
+                    color: stateColors.secondary,
+                  ),
+                  onPressed: () => controller.dismiss(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

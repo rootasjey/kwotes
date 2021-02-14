@@ -48,6 +48,7 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     final brightness = getBrightness();
     stateColors.refreshTheme(brightness);
+    stateUser.setFirstLaunch(appStorage.isFirstLanch());
 
     return AdaptiveTheme(
       light: ThemeData(

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:figstyle/screens/home/home.dart';
-import 'package:figstyle/screens/signin.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/push_notifications.dart';
@@ -142,13 +142,12 @@ class _OnBoardingState extends State<OnBoarding> {
           return Navigator.of(context).pop();
         }
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return Home();
-            },
-          ),
-        );
+        if (context.router.stack.length > 1) {
+          context.router.pop();
+          return;
+        }
+
+        context.router.replace(HomeRoute());
       },
       showSkipButton: true,
       next: const Text("Next"),
@@ -287,10 +286,11 @@ class _OnBoardingState extends State<OnBoarding> {
       width: 100.0,
       height: 100.0,
       child: Card(
+        elevation: 2.0,
         child: InkWell(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: icon,
+            child: Center(child: icon),
           ),
           onTap: () => launch(url),
         ),
@@ -331,22 +331,11 @@ class _OnBoardingState extends State<OnBoarding> {
                 appStorage.setFirstLaunch();
                 stateUser.setFirstLaunch(false);
 
-                if (widget.isDesktop) {
-                  Navigator.of(context).pop();
-
-                  return Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => Signin()),
-                  );
+                if (context.router.stack.length > 1) {
+                  context.router.popAndPush(SigninRoute());
                 }
 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Signin();
-                    },
-                  ),
-                );
+                context.router.replace(SigninRoute());
               },
               child: Text("Sign in"),
             ),
