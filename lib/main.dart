@@ -4,6 +4,8 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/router/auth_guard.dart';
 import 'package:figstyle/router/no_auth_guard.dart';
 import 'package:figstyle/types/topic_color.dart';
+import 'package:figstyle/utils/app_logger.dart';
+import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -28,11 +30,29 @@ void main() async {
   PushNotifications.init();
   await Future.wait([_autoLogin(), _initColors(), _initLang()]);
 
-  return runApp(App());
+  final brightness = BrightnessUtils.getCurrent();
+
+  final savedThemeMode = brightness == Brightness.dark
+      ? AdaptiveThemeMode.dark
+      : AdaptiveThemeMode.light;
+
+  return runApp(App(
+    savedThemeMode: savedThemeMode,
+    brightness: brightness,
+  ));
 }
 
 /// Main app class.
 class App extends StatefulWidget {
+  final AdaptiveThemeMode savedThemeMode;
+  final Brightness brightness;
+
+  const App({
+    Key key,
+    this.savedThemeMode,
+    this.brightness,
+  }) : super(key: key);
+
   AppState createState() => AppState();
 }
 
@@ -46,8 +66,7 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = getBrightness();
-    stateColors.refreshTheme(brightness);
+    stateColors.refreshTheme(widget.brightness);
     stateUser.setFirstLaunch(appStorage.isFirstLanch());
 
     return AdaptiveTheme(
@@ -59,7 +78,7 @@ class AppState extends State<App> {
         brightness: Brightness.dark,
         fontFamily: GoogleFonts.raleway().fontFamily,
       ),
-      initial: brightness == Brightness.light
+      initial: widget.brightness == Brightness.light
           ? AdaptiveThemeMode.light
           : AdaptiveThemeMode.dark,
       builder: (theme, darkTheme) {
@@ -67,31 +86,14 @@ class AppState extends State<App> {
 
         return MaterialApp.router(
           title: 'fig.style',
+          theme: theme,
           darkTheme: darkTheme,
-          theme: stateColors.themeData,
           debugShowCheckedModeBanner: false,
           routerDelegate: appRouter.delegate(),
           routeInformationParser: appRouter.defaultRouteParser(),
         );
       },
     );
-  }
-
-  Brightness getBrightness() {
-    final autoBrightness = appStorage.getAutoBrightness();
-
-    if (!autoBrightness) {
-      return appStorage.getBrightness();
-    }
-
-    Brightness brightness = Brightness.light;
-    final now = DateTime.now();
-
-    if (now.hour < 6 || now.hour > 17) {
-      brightness = Brightness.dark;
-    }
-
-    return brightness;
   }
 }
 
@@ -105,7 +107,7 @@ Future _autoLogin() async {
       stateUser.signOut();
     }
   } catch (error) {
-    debugPrint(error.toString());
+    appLogger.e(error);
     stateUser.signOut();
   }
 }

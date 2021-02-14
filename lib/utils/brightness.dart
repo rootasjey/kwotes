@@ -36,4 +36,21 @@ class BrightnessUtils {
     appStorage.setAutoBrightness(false);
     appStorage.setBrightness(brightness);
   }
+
+  static Brightness getCurrent() {
+    final autoBrightness = appStorage.getAutoBrightness();
+
+    if (!autoBrightness) {
+      return appStorage.getBrightness();
+    }
+
+    Brightness brightness = Brightness.light;
+    final now = DateTime.now();
+
+    if (now.hour < 6 || now.hour > 17) {
+      brightness = Brightness.dark;
+    }
+
+    return brightness;
+  }
 }
