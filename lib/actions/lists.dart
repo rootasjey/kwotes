@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
@@ -78,13 +79,14 @@ class ListsActions {
             .get();
 
         final listData = listSnap.data();
+        listData['id'] = listSnap.id;
         final userQuotesList = UserQuotesList.fromJSON(listData);
         return userQuotesList;
       }
 
       return null;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       return null;
     }
   }
