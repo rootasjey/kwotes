@@ -4,6 +4,7 @@ import 'package:figstyle/types/background_op.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/background_op_manager.dart';
+import 'package:figstyle/utils/flash_helper.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +119,8 @@ class ListsActions {
 
       final responseData = response.data;
       final bool success = responseData['success'] ?? false;
+
+      FlashHelper.dismissProgress(id: id);
 
       if (!success) {
         throw new ErrorDescription("The delete operation wasn't successful.");

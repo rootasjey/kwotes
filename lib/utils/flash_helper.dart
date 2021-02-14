@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:figstyle/state/colors.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:unicons/unicons.dart';
 
 class _MessageItem<T> {
   final String message;
@@ -16,6 +18,8 @@ class FlashHelper {
   static Completer<BuildContext> _buildCompleter = Completer<BuildContext>();
   static Queue<_MessageItem> _messageQueue = Queue<_MessageItem>();
   static Completer _previousCompleter;
+  static FlashController _previousController;
+  static String _currentProgressId = '';
 
   static void init(BuildContext context) {
     if (_buildCompleter?.isCompleted == false) {
@@ -30,6 +34,17 @@ class FlashHelper {
       _buildCompleter.completeError('NotInitalize');
     }
     _buildCompleter = Completer<BuildContext>();
+  }
+
+  static void dismissProgress({String id = ''}) {
+    if (id.isEmpty) {
+      _previousController?.dismiss();
+      return;
+    }
+
+    if (id == _currentProgressId) {
+      _previousController?.dismiss();
+    }
   }
 
   static Future<T> toast<T>(String message) async {
@@ -98,6 +113,72 @@ class FlashHelper {
     var theme = Theme.of(context);
     return (theme.dialogTheme?.contentTextStyle ?? theme.textTheme.bodyText2)
         .copyWith(color: color);
+  }
+
+  static Future<T> showProgress<T>(
+    BuildContext context, {
+    String title,
+    String progressId = '',
+    @required String message,
+    Widget icon = const Icon(UniconsLine.chat_info),
+    Duration duration = const Duration(seconds: 10),
+  }) {
+    if (progressId.isNotEmpty) {
+      _currentProgressId = progressId;
+    }
+
+    return showFlash<T>(
+      context: context,
+      duration: duration,
+      persistent: true,
+      builder: (_, controller) {
+        _previousController = controller;
+
+        return Flash(
+          controller: controller,
+          backgroundColor: stateColors.background,
+          boxShadows: [BoxShadow(blurRadius: 4)],
+          barrierBlur: 3.0,
+          barrierColor: Colors.black38,
+          barrierDismissible: true,
+          style: FlashStyle.grounded,
+          position: FlashPosition.top,
+          child: FlashBar(
+            icon: icon,
+            title: title != null
+                ? Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  )
+                : null,
+            message: Opacity(
+              opacity: 0.5,
+              child: Text(
+                message,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            showProgressIndicator: true,
+            primaryAction: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    UniconsLine.times,
+                    color: stateColors.secondary,
+                  ),
+                  onPressed: () => controller.dismiss(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   static Future<T> infoBar<T>(

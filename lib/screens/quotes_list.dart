@@ -8,6 +8,7 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/utils/background_op_manager.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
@@ -27,6 +28,7 @@ import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class QuotesList extends StatefulWidget {
   final String listId;
@@ -508,6 +510,15 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   void deleteCurrentList() async {
+    FlashHelper.showProgress(
+      context,
+      title: "Delete",
+      progressId: quotesList.id,
+      message: "Deleting the list ${quotesList.name}...",
+      icon: Icon(UniconsLine.trash, color: Colors.pink),
+      duration: 60.seconds,
+    );
+
     BackgroundOpManager.setContext(context);
     ListsActions.delete(id: widget.listId);
 

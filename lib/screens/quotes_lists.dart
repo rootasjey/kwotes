@@ -9,6 +9,7 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/background_op_manager.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -23,6 +24,7 @@ import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class QuotesLists extends StatefulWidget {
   @override
@@ -475,11 +477,22 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   void createNewList(EditListPayload payload) async {
+    FlashHelper.showProgress(
+      context,
+      title: "Create",
+      progressId: 'create_list',
+      message: "Ceating list ${payload.name}...",
+      icon: Icon(UniconsLine.plus),
+      duration: 60.seconds,
+    );
+
     final quotesList = await ListsActions.create(
       name: payload.name,
       description: payload.description,
       isPublic: payload.isPublic,
     );
+
+    FlashHelper.dismissProgress(id: 'create_list');
 
     if (quotesList == null) {
       showSnack(
