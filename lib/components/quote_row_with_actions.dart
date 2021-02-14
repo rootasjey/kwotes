@@ -16,6 +16,7 @@ import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:unicons/unicons.dart';
 
 class QuoteRowWithActions extends StatefulWidget {
   final bool canManage;
@@ -690,6 +691,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     final quote = widget.quote;
 
     if (widget.quote.starred) {
+      showSnack(
+        context: context,
+        title: "Favourites",
+        type: SnackType.success,
+        icon: Icon(UniconsLine.heart_break, color: Colors.pink),
+        message: "This quote has been successfully unliked!",
+      );
+
       setState(() {
         widget.quote.starred = false;
       });
@@ -713,6 +722,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         widget.onAfterRemoveFromFavourites(success);
       }
     } else {
+      showSnack(
+        context: context,
+        title: "Favourites",
+        type: SnackType.success,
+        icon: Icon(UniconsLine.heart, color: Colors.pink),
+        message: "This quote has been successfully liked!",
+      );
+
       setState(() {
         widget.quote.starred = true;
       });
