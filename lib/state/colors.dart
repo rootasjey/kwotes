@@ -28,7 +28,7 @@ abstract class StateColorsBase with Store {
 
   /// Secondary application's color.
   Color secondary = Colors.orange.shade600;
-  Color deletion = Color(0xfff55c5c);
+  Color deletion = Colors.pink;
   Color validation = Color(0xff38d589);
 
   // Color dark = Color(0xFF000000);
