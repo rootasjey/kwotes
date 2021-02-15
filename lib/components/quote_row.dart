@@ -313,6 +313,10 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   }
 
   Widget quoteAuthor() {
+    if (widget.quote.author.name.isEmpty) {
+      return Container();
+    }
+
     return InkWell(
       onTap: () {
         final author = widget.quote.author;
@@ -352,7 +356,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
     final reference = widget.quote.reference;
 
     if (reference == null || reference.id == null || reference.id.isEmpty) {
-      return Padding(padding: EdgeInsets.zero);
+      return Container();
     }
 
     return InkWell(
