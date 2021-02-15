@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -351,7 +352,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
         isLoading = false;
       });
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.d(error);
       setState(() => isLoading = false);
     }
   }

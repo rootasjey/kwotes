@@ -60,7 +60,7 @@ class TempQuote {
     Reference _reference;
     if (data['reference'] != null) {
       Reference.fromJSON(data['reference']);
-    } else if (data['mainReference != null']) {
+    } else if (data['mainReference'] != null) {
       // Keep for drafts. To delete later.
       Reference.fromJSON(data['mainReference']);
     }
