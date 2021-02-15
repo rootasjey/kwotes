@@ -190,9 +190,9 @@ class _QuotesListsState extends State<QuotesLists> {
               performsFirstActionWithFullSwipe: true,
               leadingActions: [
                 SwipeAction(
-                  title: "Edit",
-                  color: Colors.green,
-                  icon: Icon(Icons.edit, color: Colors.white),
+                  title: "edit",
+                  color: Colors.blue,
+                  icon: Icon(UniconsLine.edit, color: Colors.white),
                   onTap: (CompletionHandler handler) {
                     handler(false);
                     _showEditListDialog();
@@ -201,16 +201,16 @@ class _QuotesListsState extends State<QuotesLists> {
               ],
               trailingActions: [
                 SwipeAction(
-                  title: "Delete",
+                  title: "delete",
                   color: stateColors.deletion,
-                  icon: Icon(Icons.delete_outline, color: Colors.white),
+                  icon: Icon(UniconsLine.trash, color: Colors.white),
                   onTap: (CompletionHandler handler) {
                     handler(false);
 
                     showDeleteListDialog(
                       context: context,
                       listName: quotesList.name,
-                      onCancel: () => context.router.pop(),
+                      onCancel: context.router.pop,
                       onConfirm: () {
                         context.router.pop();
                         deleteCurrentList(quotesList);
