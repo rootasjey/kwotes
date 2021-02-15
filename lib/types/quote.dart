@@ -48,7 +48,7 @@ class Quote {
 
     Reference _reference;
     if (data['reference'] != null) {
-      Reference.fromJSON(data['reference']);
+      _reference = Reference.fromJSON(data['reference']);
     }
 
     if (data['topics'] != null) {
