@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/drafts.dart';
@@ -28,6 +30,7 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/services.dart';
+import 'package:unicons/unicons.dart';
 
 class AddQuoteSteps extends StatefulWidget {
   final int step;
@@ -541,7 +544,12 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       return;
     }
 
-    Navigator.pop(context);
+    if (DataQuoteInputs.quote.name.isEmpty) {
+      handleNavBack(false);
+      return;
+    }
+
+    showNavBackConfirm();
   }
 
   void checkAuth() {
@@ -593,6 +601,25 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     stepChanged = true;
     sharedAxisReverse = currentStep < step;
     setState(() => currentStep = step);
+  }
+
+  void handleNavBack(bool fromDialog) {
+    final rootRouter = context.router.root;
+    final stackLength = rootRouter.stack.length;
+
+    if (stackLength < 2) {
+      rootRouter.push(HomeRoute());
+      return;
+    }
+
+    final route = rootRouter.stack.elementAt(stackLength - 2).routeData.route;
+
+    if (fromDialog) {
+      rootRouter.push(route);
+      return;
+    }
+
+    rootRouter.navigate(route);
   }
 
   void next() {
@@ -731,5 +758,67 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       actionResult = AddQuoteType.offline;
       isSubmitting = false;
     });
+  }
+
+  void showNavBackConfirm() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        final focusNode = FocusNode();
+
+        return RawKeyboardListener(
+          autofocus: true,
+          focusNode: focusNode,
+          onKey: (keyEvent) {
+            if (keyEvent.isKeyPressed(LogicalKeyboardKey.enter) ||
+                keyEvent.isKeyPressed(LogicalKeyboardKey.space)) {
+              context.router.pop();
+              handleNavBack(true);
+            }
+          },
+          child: AlertDialog(
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  UniconsLine.exclamation_triangle,
+                  color: stateColors.secondary,
+                ),
+                Padding(padding: const EdgeInsets.only(left: 8.0)),
+                Text('Abandon'),
+              ],
+            ),
+            content: Opacity(
+              opacity: 0.6,
+              child: Text("All unsaved data will be lost."),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  context.router.pop();
+                  handleNavBack(true);
+                },
+                child: Text(
+                  'YES',
+                  style: TextStyle(
+                    color: stateColors.secondary,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: context.router.pop,
+                child: Text(
+                  'NO',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w200,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
