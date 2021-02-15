@@ -58,12 +58,6 @@ class App extends StatefulWidget {
 
 /// Main app class state.
 class AppState extends State<App> {
-  final appRouter = AppRouter(
-    adminAuthGuard: AdminAuthGuard(),
-    authGuard: AuthGuard(),
-    noAuthGuard: NoAuthGuard(),
-  );
-
   @override
   Widget build(BuildContext context) {
     stateColors.refreshTheme(widget.brightness);
@@ -84,15 +78,62 @@ class AppState extends State<App> {
       builder: (theme, darkTheme) {
         stateColors.themeData = theme;
 
-        return MaterialApp.router(
-          title: 'fig.style',
+        return AppWithTheme(
+          brightness: widget.brightness,
           theme: theme,
           darkTheme: darkTheme,
-          debugShowCheckedModeBanner: false,
-          routerDelegate: appRouter.delegate(),
-          routeInformationParser: appRouter.defaultRouteParser(),
         );
       },
+    );
+  }
+}
+
+/// Because we need a [context] with adaptive theme data available in it.
+class AppWithTheme extends StatefulWidget {
+  final ThemeData theme;
+  final ThemeData darkTheme;
+  final Brightness brightness;
+
+  const AppWithTheme({
+    Key key,
+    @required this.brightness,
+    @required this.darkTheme,
+    @required this.theme,
+  }) : super(key: key);
+
+  @override
+  _AppWithThemeState createState() => _AppWithThemeState();
+}
+
+class _AppWithThemeState extends State<AppWithTheme> {
+  final appRouter = AppRouter(
+    adminAuthGuard: AdminAuthGuard(),
+    authGuard: AuthGuard(),
+    noAuthGuard: NoAuthGuard(),
+  );
+
+  @override
+  initState() {
+    super.initState();
+    Future.delayed(250.milliseconds, () {
+      if (widget.brightness == Brightness.dark) {
+        AdaptiveTheme.of(context).setDark();
+        return;
+      }
+
+      AdaptiveTheme.of(context).setLight();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'fig.style',
+      theme: widget.theme,
+      darkTheme: widget.darkTheme,
+      debugShowCheckedModeBanner: false,
+      routerDelegate: appRouter.delegate(),
+      routeInformationParser: appRouter.defaultRouteParser(),
     );
   }
 }
