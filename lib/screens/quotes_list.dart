@@ -161,17 +161,18 @@ class _QuotesListState extends State<QuotesList> {
                       color: stateColors.foreground,
                     ),
                   ),
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text(
-                      quotesList == null ? '' : quotesList.description,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w400,
-                        color: stateColors.foreground,
+                  if (quotesList != null && quotesList.description.isNotEmpty)
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        quotesList.description,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w400,
+                          color: stateColors.foreground,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
