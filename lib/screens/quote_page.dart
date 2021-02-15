@@ -6,6 +6,7 @@ import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
@@ -22,6 +23,7 @@ import 'package:like_button/like_button.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class QuotePage extends StatefulWidget {
   /// Quote object to show. If not available,
@@ -90,6 +92,9 @@ class _QuotePageState extends State<QuotePage> {
               body(),
             ]),
           ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 100.0),
+          ),
         ],
       ),
     );
@@ -102,7 +107,12 @@ class _QuotePageState extends State<QuotePage> {
         quote: widget.quote,
         lang: widget.quote.lang,
       ),
-      icon: Icon(Icons.wb_sunny),
+      icon: Opacity(
+        opacity: 0.8,
+        child: Icon(
+          UniconsLine.sunset,
+        ),
+      ),
     );
   }
 
@@ -117,13 +127,23 @@ class _QuotePageState extends State<QuotePage> {
             quote: widget.quote,
           ),
         ),
-        icon: Icon(Icons.playlist_add),
+        icon: Opacity(
+          opacity: 0.8,
+          child: Icon(
+            UniconsLine.book_medical,
+          ),
+        ),
       );
     }
 
     return IconButton(
       tooltip: "You're not logged in",
-      icon: Opacity(opacity: 0.5, child: Icon(Icons.playlist_add)),
+      icon: Opacity(
+        opacity: 0.5,
+        child: Icon(
+          UniconsLine.book_medical,
+        ),
+      ),
       onPressed: () {
         showDialog(
             context: context,
@@ -243,11 +263,14 @@ class _QuotePageState extends State<QuotePage> {
     return pageLayout();
   }
 
-  Widget deletePubQuoteButton() {
+  Widget deleteQuoteButton() {
     return IconButton(
-      tooltip: "Delete published quote",
+      tooltip: "Delete quote",
       onPressed: () => confirmAndDeletePubQuote(),
-      icon: Icon(Icons.delete_outline),
+      icon: Opacity(
+        opacity: 0.8,
+        child: Icon(UniconsLine.trash),
+      ),
     );
   }
 
@@ -277,8 +300,11 @@ class _QuotePageState extends State<QuotePage> {
       return LikeButton(
         isLiked: quote.starred,
         likeBuilder: (bool isLiked) {
-          return Icon(
-            isLiked ? Icons.favorite : Icons.favorite_border,
+          return Opacity(
+            opacity: 0.8,
+            child: Icon(
+              isLiked ? UniconsLine.heart_break : UniconsLine.heart,
+            ),
           );
         },
         onTap: (bool isLiked) async {
@@ -297,7 +323,12 @@ class _QuotePageState extends State<QuotePage> {
 
     return IconButton(
       tooltip: "You're not logged in",
-      icon: Opacity(opacity: 0.5, child: Icon(Icons.favorite_border)),
+      icon: Opacity(
+        opacity: 0.5,
+        child: Icon(
+          UniconsLine.heart,
+        ),
+      ),
       onPressed: () {
         showDialog(
             context: context,
@@ -330,7 +361,7 @@ class _QuotePageState extends State<QuotePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Spacer(),
-          userActions(),
+          userActionsDesktop(),
           Expanded(
             flex: 6,
             child: Column(
@@ -392,7 +423,7 @@ class _QuotePageState extends State<QuotePage> {
           authorName(),
           referenceName(),
           topicsList(),
-          userActions(axis: Axis.horizontal),
+          userActionsMobile(),
         ],
       ),
     );
@@ -462,7 +493,12 @@ class _QuotePageState extends State<QuotePage> {
             quote: quote,
           );
         },
-        icon: Icon(Icons.share),
+        icon: Opacity(
+          opacity: 0.8,
+          child: Icon(
+            UniconsLine.share,
+          ),
+        ),
       ),
     );
   }
@@ -501,7 +537,7 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
-  Widget userActions({Axis axis = Axis.vertical}) {
+  Widget userActionsDesktop({Axis axis = Axis.vertical}) {
     var children = <Widget>[
       favIconButton(),
       shareButton(),
@@ -521,12 +557,13 @@ class _QuotePageState extends State<QuotePage> {
       children.addAll([
         ldivider,
         addToQuotidiansButton(),
-        deletePubQuoteButton(),
+        deleteQuoteButton(),
       ]);
     }
 
     if (axis == Axis.horizontal) {
       return Wrap(
+        alignment: WrapAlignment.center,
         children: children,
       );
     }
@@ -537,6 +574,127 @@ class _QuotePageState extends State<QuotePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: children,
+      ),
+    );
+  }
+
+  Widget userActionsMobile() {
+    final buttonsList = <Widget>[
+      squareAction(
+        icon: Icon(UniconsLine.share),
+        borderColor: Colors.blue,
+        tooltip: 'Share this quote',
+        onTap: () async {
+          ShareActions.shareQuote(
+            context: context,
+            quote: quote,
+          );
+        },
+      ),
+    ];
+
+    if (stateUser.isUserConnected) {
+      buttonsList.addAll([
+        squareAction(
+          icon: LikeButton(
+            isLiked: quote.starred,
+            likeBuilder: (bool isLiked) {
+              return Icon(
+                isLiked ? UniconsLine.heart_break : UniconsLine.heart,
+              );
+            },
+            onTap: (bool isLiked) async {
+              stateUser.mustUpdateFav = true;
+
+              if (quote.starred) {
+                final success = await unlikeQuote();
+                return success ? !isLiked : null;
+              }
+
+              final success = await likeQuote();
+              return success ? !isLiked : null;
+            },
+          ),
+          borderColor: Colors.blue,
+          tooltip: quote.starred ? "Unlike" : "Like",
+          onTap: () {},
+        ),
+        squareAction(
+          icon: Icon(UniconsLine.book_medical),
+          tooltip: "Add to list...",
+          onTap: () => showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => UserLists(
+              scrollController: ModalScrollController.of(context),
+              quote: widget.quote,
+            ),
+          ),
+        ),
+      ]);
+    }
+
+    if (stateUser.canManageQuotes) {
+      buttonsList.addAll([
+        squareAction(
+          icon: Icon(UniconsLine.sunset),
+          borderColor: Colors.pink,
+          tooltip: "Add to quotidians",
+          onTap: () => QuotidiansActions.add(
+            quote: widget.quote,
+            lang: widget.quote.lang,
+          ),
+        ),
+        squareAction(
+          icon: Icon(UniconsLine.trash),
+          borderColor: Colors.pink,
+          tooltip: "Delete quote",
+          onTap: () => confirmAndDeletePubQuote(),
+        ),
+      ]);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0),
+      child: Wrap(
+        spacing: 5.0,
+        children: buttonsList,
+      ),
+    );
+  }
+
+  Widget squareAction({
+    VoidCallback onTap,
+    String tooltip = '',
+    @required Widget icon,
+    Color borderColor,
+  }) {
+    final size = 60.0;
+
+    return Tooltip(
+      message: tooltip,
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: Card(
+          elevation: 0.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            side: BorderSide(
+              color: borderColor ?? stateColors.primary,
+              width: 2.0,
+            ),
+          ),
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Opacity(
+                opacity: 0.8,
+                child: icon,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -682,7 +840,7 @@ class _QuotePageState extends State<QuotePage> {
       ListTile(
         title: Text('Share'),
         trailing: Icon(
-          Icons.ios_share,
+          UniconsLine.share,
         ),
         onTap: () {
           context.router.pop();
@@ -699,7 +857,7 @@ class _QuotePageState extends State<QuotePage> {
         ListTile(
           title: Text('Add to...'),
           trailing: Icon(
-            Icons.playlist_add,
+            UniconsLine.book_medical,
           ),
           onTap: () {
             context.router.pop();
@@ -715,8 +873,8 @@ class _QuotePageState extends State<QuotePage> {
         ListTile(
           title: quote.starred ? Text('Unlike') : Text('Like'),
           trailing: quote.starred
-              ? Icon(Icons.favorite)
-              : Icon(Icons.favorite_border),
+              ? Icon(UniconsLine.heart_break)
+              : Icon(UniconsLine.heart),
           onTap: () async {
             context.router.pop();
             stateUser.mustUpdateFav = true;
@@ -746,7 +904,7 @@ class _QuotePageState extends State<QuotePage> {
         ListTile(
           title: Text('Delete'),
           trailing: Icon(
-            Icons.delete_outline,
+            UniconsLine.trash,
           ),
           onTap: () {
             context.router.pop();
@@ -755,7 +913,7 @@ class _QuotePageState extends State<QuotePage> {
         ),
         ListTile(
           title: Text('Next quotidian'),
-          trailing: Icon(Icons.wb_sunny),
+          trailing: Icon(UniconsLine.sunset),
           onTap: () {
             context.router.pop();
             QuotidiansActions.add(
