@@ -73,15 +73,16 @@ export const deleteQuotes = functions
     if (!quoteIds) {
       throw new functions.https.HttpsError(
         'invalid-argument',
-        `Missing [quoteIds] argument. The function must be called with [quoteIds]
-        representing the quotes ids to delete.`,
+        `Missing [quoteIds] (array of strings) argument. 
+        The function must be called with [quoteIds]
+        representing the quotes to delete.`,
       );
     }
 
     if (!Array.isArray(quoteIds)) {
       throw new functions.https.HttpsError(
         'invalid-argument',
-        `The [quoteIds] argument is not an array. 
+        `The [quoteIds] argument is not an array, but a ${typeof quoteIds}. 
         Please provid a valid array of strings.`,
       );
     }
@@ -113,7 +114,7 @@ export const deleteQuotes = functions
     if (!userDoc.exists || !userData) {
       throw new functions.https.HttpsError(
         'not-found',
-        `You've got a ghost. This user doesn't seem to exist.,`
+        `You caught a ghost. This user doesn't seem to exist.,`
       );
     }
 
@@ -140,7 +141,8 @@ export const deleteQuotes = functions
       if (!quoteDoc.exists || !quoteData) {
         throw new functions.https.HttpsError(
           'data-loss',
-          `The document [${quoteId}] doesn't exist. It may have been deleted.`,
+          `The document (quote) [${quoteId}] doesn't exist. 
+          It may have been deleted.`,
         );
       }
 

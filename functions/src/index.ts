@@ -2,6 +2,7 @@ import * as functions         from 'firebase-functions';
 
 import { apiModule }          from './api/index';
 
+import * as authorsFunc       from './authors';
 import * as developersFunc    from './developers';
 import * as imagesFunc        from './images';
 import * as listsFunc         from './lists';
@@ -9,11 +10,13 @@ import * as mentionsFunc      from './mentions';
 import * as notificationsFunc from './notifications';
 import * as quotidiansFunc    from './quotidians';
 import * as quotesFunc        from './quotes';
+import * as referencesFunc    from './references';
 import * as searchFunc        from './search';
 import * as statsFunc         from './stats';
 import * as tempQuotesFunc    from './tempQuotes';
 import * as usersFunc         from './users';
 
+export const authors        = authorsFunc;
 export const developers     = developersFunc;
 export const images         = imagesFunc;
 export const lists          = listsFunc;
@@ -21,6 +24,7 @@ export const notifications  = notificationsFunc;
 export const mentions       = mentionsFunc;
 export const quotidians     = quotidiansFunc;
 export const quotes         = quotesFunc;
+export const references     = referencesFunc;
 export const search         = searchFunc;
 export const stats          = statsFunc;
 export const tempQuotes     = tempQuotesFunc;
