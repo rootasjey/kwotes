@@ -505,7 +505,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       ListTile(
         title: Text('Share'),
         trailing: Icon(
-          Icons.ios_share,
+          UniconsLine.share,
         ),
         onTap: () {
           context.router.pop();
@@ -522,7 +522,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         ListTile(
           title: Text('Add to...'),
           trailing: Icon(
-            Icons.playlist_add,
+            UniconsLine.book_medical,
           ),
           onTap: () {
             context.router.pop();
@@ -535,8 +535,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         ListTile(
           title: widget.quote.starred ? Text('Unlike') : Text('Like'),
           trailing: widget.quote.starred
-              ? Icon(Icons.favorite)
-              : Icon(Icons.favorite_border),
+              ? Icon(UniconsLine.heart_break)
+              : Icon(UniconsLine.heart),
           onTap: () {
             context.router.pop();
             toggleFavourite();
@@ -550,7 +550,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         ListTile(
           title: Text('Delete'),
           trailing: Icon(
-            Icons.delete_outline,
+            UniconsLine.trash,
           ),
           onTap: () {
             context.router.pop();
@@ -559,7 +559,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         ),
         ListTile(
           title: Text('Next quotidian'),
-          trailing: Icon(Icons.wb_sunny),
+          trailing: Icon(UniconsLine.sunset),
           onTap: () {
             context.router.pop();
             QuotidiansActions.add(
