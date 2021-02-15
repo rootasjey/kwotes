@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
+import 'package:figstyle/components/sliver_empty_view.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';
@@ -347,60 +347,15 @@ class _QuotesListsState extends State<QuotesLists> {
   }
 
   Widget emptyView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        FadeInY(
-          delay: 200.milliseconds,
-          beginY: 50.0,
-          child: Container(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              children: <Widget>[
-                Opacity(
-                  opacity: .8,
-                  child: Icon(
-                    Icons.format_list_bulleted,
-                    size: 120.0,
-                    color: Color(0xFFFF005C),
-                  ),
-                ),
-                Opacity(
-                  opacity: .8,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 60.0),
-                    child: Text(
-                      "You've created no list yet",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
-                  child: Opacity(
-                    opacity: .6,
-                    child: Text(
-                      "You can create one by taping on the '+' button",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: _showEditListDialog,
-                  icon: Icon(
-                    Icons.add,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ]),
+    return SliverEmptyView(
+      icon: Icon(
+        UniconsLine.list_ui_alt,
+        size: 100.0,
+      ),
+      titleString: "There's no list there",
+      descriptionString: "You can create a new list "
+          "by taping on the '+' button",
+      onTapDescription: _showEditListDialog,
     );
   }
 
