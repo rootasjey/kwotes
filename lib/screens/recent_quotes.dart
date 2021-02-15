@@ -140,7 +140,7 @@ class RecentQuotesState extends State<RecentQuotes> {
       textTitle: 'Recent',
       titlePadding: EdgeInsets.only(
         left: titleLeftPadding,
-        top: 24.0,
+        top: 16.0,
       ),
       bottomPadding: EdgeInsets.only(
         left: bottomContentLeftPadding,

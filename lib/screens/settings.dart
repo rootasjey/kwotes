@@ -90,7 +90,7 @@ class _SettingsState extends State<Settings> {
       return PageAppBar(
         textTitle: "Settings",
         textSubTitle: "You can change your preferences here",
-        titlePadding: const EdgeInsets.only(top: 8.0),
+        titlePadding: const EdgeInsets.only(top: 16.0),
       );
     }
 

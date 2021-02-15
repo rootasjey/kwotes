@@ -265,28 +265,25 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   Widget bulletPoint({String text}) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: Row(
-        children: [
-          Icon(
-            Icons.check_circle_outline,
-            color: Colors.green,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-          ),
-          Expanded(
-            child: Opacity(
-              opacity: 0.6,
+      child: Opacity(
+        opacity: 0.5,
+        child: Row(
+          children: [
+            Icon(UniconsLine.check),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+            ),
+            Expanded(
               child: Text(
                 text,
                 style: TextStyle(
                   fontSize: 16.0,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -485,9 +482,10 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
         },
         textColor: stateColors.primary,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(7.0),
+            borderRadius: BorderRadius.circular(5.0),
             side: BorderSide(
               color: stateColors.primary,
+              width: 2.0,
             )),
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -525,9 +523,10 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
       },
       textColor: stateColors.secondary,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7.0),
+          borderRadius: BorderRadius.circular(5.0),
           side: BorderSide(
             color: Colors.orange.shade600,
+            width: 2.0,
           )),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -548,7 +547,10 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: Icon(Icons.person_add),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Icon(UniconsLine.user_plus),
+                ),
               ),
             ],
           ),
@@ -603,9 +605,9 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
             onPressed: () =>
                 setState(() => isAccountAdvVisible = !isAccountAdvVisible),
             child: Opacity(
-              opacity: 0.8,
+              opacity: 0.6,
               child: Text(
-                'WHY AN ACCOUNT?',
+                'Why create an account?',
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w600,
