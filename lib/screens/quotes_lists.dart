@@ -8,7 +8,6 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/background_op_manager.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/material.dart';
@@ -246,11 +245,9 @@ class _QuotesListsState extends State<QuotesLists> {
                   return;
                 }
 
-                if (BackgroundOpManager.listOp.containsKey(quotesList.id)) {
-                  setState(() {
-                    userQuotesLists.remove(quotesList);
-                  });
-                }
+                setState(() {
+                  userQuotesLists.remove(quotesList);
+                });
               },
             ),
           );

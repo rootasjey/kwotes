@@ -389,6 +389,10 @@ class _QuotesListState extends State<QuotesList> {
           type: SnackType.error,
         );
 
+        if (widget.onResult != null) {
+          widget.onResult(true);
+        }
+
         context.router.pop();
         return;
       }
