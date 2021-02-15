@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/delete_list_dialog.dart';
 import 'package:figstyle/components/edit_list_dialog.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
+import 'package:figstyle/components/sliver_empty_view.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
 import 'package:figstyle/utils/background_op_manager.dart';
@@ -17,7 +18,6 @@ import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
@@ -179,8 +179,20 @@ class _QuotesListState extends State<QuotesList> {
             children: <Widget>[
               OutlinedButton.icon(
                 onPressed: _showEditListDialog,
-                icon: Icon(Icons.edit),
-                label: Text('Edit'),
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Icon(UniconsLine.edit, size: 20.0),
+                ),
+                label: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
               ),
               OutlinedButton.icon(
                 onPressed: () => showDeleteListDialog(
@@ -192,10 +204,22 @@ class _QuotesListState extends State<QuotesList> {
                     deleteCurrentList();
                   },
                 ),
-                icon: Icon(Icons.delete),
-                label: Text('Delete'),
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Icon(UniconsLine.trash, size: 20.0),
+                ),
+                label: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
-                  primary: Colors.red,
+                  primary: Colors.pink,
                 ),
               ),
             ],
@@ -222,57 +246,17 @@ class _QuotesListState extends State<QuotesList> {
   }
 
   Widget emptyView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        FadeInY(
-          delay: 200.milliseconds,
-          beginY: 50.0,
-          child: Container(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 80.0),
-                  child: Opacity(
-                    opacity: .8,
-                    child: Icon(
-                      Icons.chat_bubble_outline,
-                      size: 100.0,
-                      color: Color(0xFFFF005C),
-                    ),
-                  ),
-                ),
-                Opacity(
-                  opacity: .8,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 60.0),
-                    child: Text(
-                      'No quote yet',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
-                  child: Opacity(
-                    opacity: .6,
-                    child: Text(
-                      "You can add some from other pages",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return SliverEmptyView(
+      titleString: "Empty list",
+      descriptionString: "You can add some quotes from other pages",
+      onRefresh: fetch,
+      icon: Opacity(
+        opacity: 0.8,
+        child: Icon(
+          UniconsLine.chat,
+          size: 100.0,
         ),
-      ]),
+      ),
     );
   }
 

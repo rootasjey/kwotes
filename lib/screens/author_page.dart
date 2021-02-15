@@ -476,16 +476,10 @@ class _AuthorPageState extends State<AuthorPage> {
 
     if (quotes.isEmpty) {
       return SliverEmptyView(
-        title: "No quote found",
-        subtitle: Text(
-          "Sorry, we didn't found any quote in"
-          "${Language.frontend(lang)} for ${author?.name}."
-          " You can try in another language.",
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
+        titleString: "No quote found",
+        descriptionString: "Sorry, we didn't found any quote in"
+            "${Language.frontend(lang)} for ${author?.name}."
+            " You can try in another language.",
         onRefresh: () => fetchQuotes(),
       );
     }

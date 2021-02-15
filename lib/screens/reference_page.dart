@@ -441,9 +441,10 @@ class ReferencePageState extends State<ReferencePage> {
 
     if (quotes.isEmpty) {
       return SliverEmptyView(
-        title: "No quote found",
-        description:
-            "Sorry, we didn't found any quote in ${Language.frontend(lang)} for ${reference.name}. You can try in another language.",
+        titleString: "No quote found",
+        descriptionString: "Sorry, we didn't found any quote "
+            "in ${Language.frontend(lang)} for ${reference.name}. "
+            "You can try in another language.",
         onRefresh: () => fetchQuotes(),
       );
     }
