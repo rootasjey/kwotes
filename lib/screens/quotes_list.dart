@@ -178,18 +178,7 @@ class _QuotesListState extends State<QuotesList> {
             spacing: 20.0,
             children: <Widget>[
               OutlinedButton.icon(
-                onPressed: () => showEditListDialog(
-                  context: context,
-                  listDesc: quotesList.description,
-                  listName: quotesList.name,
-                  listIsPublic: quotesList.isPublic,
-                  subtitle: quotesList.name,
-                  onCancel: context.router.pop,
-                  onConfirm: (payload) {
-                    context.router.pop();
-                    updateCurrentList(payload);
-                  },
-                ),
+                onPressed: _showEditListDialog,
                 icon: Icon(Icons.edit),
                 label: Text('Edit'),
               ),
@@ -327,18 +316,7 @@ class _QuotesListState extends State<QuotesList> {
             );
             break;
           case 'edit':
-            showEditListDialog(
-              context: context,
-              listDesc: quotesList.description,
-              listName: quotesList.name,
-              listIsPublic: quotesList.isPublic,
-              subtitle: quotesList.name,
-              onCancel: context.router.pop,
-              onConfirm: (payload) {
-                context.router.pop();
-                updateCurrentList(payload);
-              },
-            );
+            _showEditListDialog();
             break;
           default:
         }
@@ -590,5 +568,28 @@ class _QuotesListState extends State<QuotesList> {
       quotesList.description = payload.description;
       quotesList.isPublic = payload.isPublic;
     });
+  }
+
+  Future _showEditListDialog() {
+    return showEditListDialog(
+      context: context,
+      listDesc: quotesList.description,
+      listName: quotesList.name,
+      listIsPublic: quotesList.isPublic,
+      subtitle: quotesList.name,
+      onCancel: context.router.pop,
+      onConfirm: (payload) {
+        context.router.pop();
+        updateCurrentList(payload);
+      },
+      onNameSubmitted: (payload) {
+        context.router.pop();
+        updateCurrentList(payload);
+      },
+      onDescriptionSubmitted: (payload) {
+        context.router.pop();
+        updateCurrentList(payload);
+      },
+    );
   }
 }

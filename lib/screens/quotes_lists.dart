@@ -59,20 +59,7 @@ class _QuotesListsState extends State<QuotesLists> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showEditListDialog(
-          context: context,
-          listDesc: '',
-          listName: '',
-          listIsPublic: false,
-          textButtonConfirmation: "Create",
-          title: "You'll be able to change these properties later",
-          subtitle: 'Create a new list',
-          onCancel: () => context.router.pop(),
-          onConfirm: (payload) {
-            context.router.pop();
-            createNewList(payload);
-          },
-        ),
+        onPressed: _showEditListDialog,
         child: Icon(Icons.add),
         backgroundColor: stateColors.primary,
         foregroundColor: Colors.white,
@@ -208,19 +195,7 @@ class _QuotesListsState extends State<QuotesLists> {
                   icon: Icon(Icons.edit, color: Colors.white),
                   onTap: (CompletionHandler handler) {
                     handler(false);
-
-                    showEditListDialog(
-                      context: context,
-                      listDesc: quotesList.description,
-                      listName: quotesList.name,
-                      listIsPublic: quotesList.isPublic,
-                      subtitle: quotesList.name,
-                      onCancel: () => context.router.pop(),
-                      onConfirm: (payload) {
-                        context.router.pop();
-                        updateSelectedList(quotesList, payload);
-                      },
-                    );
+                    _showEditListDialog();
                   },
                 ),
               ],
@@ -348,18 +323,7 @@ class _QuotesListsState extends State<QuotesLists> {
         }
 
         if (value == 'edit') {
-          showEditListDialog(
-            context: context,
-            listDesc: quotesList.description,
-            listName: quotesList.name,
-            listIsPublic: quotesList.isPublic,
-            subtitle: quotesList.name,
-            onCancel: () => context.router.pop(),
-            onConfirm: (payload) {
-              context.router.pop();
-              updateSelectedList(quotesList, payload);
-            },
-          );
+          _showEditListDialog();
           return;
         }
       },
@@ -427,20 +391,7 @@ class _QuotesListsState extends State<QuotesLists> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => showEditListDialog(
-                    context: context,
-                    listDesc: '',
-                    listName: '',
-                    listIsPublic: false,
-                    textButtonConfirmation: 'Create',
-                    title: "You'll be able to change these properties later",
-                    subtitle: 'Create a new list',
-                    onCancel: () => context.router.pop(),
-                    onConfirm: (payload) {
-                      context.router.pop();
-                      createNewList(payload);
-                    },
-                  ),
+                  onPressed: _showEditListDialog,
                   icon: Icon(
                     Icons.add,
                   ),
@@ -656,5 +607,30 @@ class _QuotesListsState extends State<QuotesLists> {
 
       return;
     }
+  }
+
+  Future _showEditListDialog() {
+    return showEditListDialog(
+      context: context,
+      listDesc: '',
+      listName: '',
+      listIsPublic: false,
+      textButtonConfirmation: "Create",
+      title: "You'll be able to change these properties later",
+      subtitle: 'Create a new list',
+      onCancel: () => context.router.pop(),
+      onConfirm: (payload) {
+        context.router.pop();
+        createNewList(payload);
+      },
+      onNameSubmitted: (payload) {
+        context.router.pop();
+        createNewList(payload);
+      },
+      onDescriptionSubmitted: (payload) {
+        context.router.pop();
+        createNewList(payload);
+      },
+    );
   }
 }
