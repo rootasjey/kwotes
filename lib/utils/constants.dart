@@ -1,5 +1,5 @@
 class Constants {
-  static const appVersion = '2.15.0';
+  static const appVersion = '2.25.0';
   static const cardElevation = 2.0;
   static const maxMobileWidth = 700.0;
   static const appGithubUrl = 'https://github.com/rootasjey/fig.style';
