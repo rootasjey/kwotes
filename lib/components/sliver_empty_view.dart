@@ -9,11 +9,13 @@ class SliverEmptyView extends StatelessWidget {
   final Widget icon;
   final String titleString;
   final Function onRefresh;
+  final VoidCallback onTapDescription;
 
   SliverEmptyView({
     this.descriptionString = '',
     this.icon,
     this.onRefresh,
+    this.onTapDescription,
     @required this.titleString,
   });
 
@@ -58,15 +60,18 @@ class SliverEmptyView extends StatelessWidget {
                 FadeInY(
                   delay: 200.milliseconds,
                   beginY: 20.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        descriptionString,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18.0,
+                  child: InkWell(
+                    onTap: onTapDescription,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                      child: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          descriptionString,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
                     ),
