@@ -90,7 +90,7 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
             children: <Widget>[
               if (widget.showNavBackIcon) ...[
                 IconButton(
-                  onPressed: () => context.router.pop(),
+                  onPressed: context.router.pop,
                   tooltip: 'Back',
                   icon: Icon(Icons.arrow_back),
                 ),
@@ -108,9 +108,6 @@ class _BasePageAppBarState extends State<BasePageAppBar> {
 
   Widget bottomContainer() {
     if (widget.bottom == null) {
-      // return Padding(
-      //   padding: EdgeInsets.zero,
-      // );
       return null;
     }
 

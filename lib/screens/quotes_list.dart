@@ -134,9 +134,17 @@ class _QuotesListState extends State<QuotesList> {
         ),
         child: Row(
           children: [
-            CircleButton(
+            if (context.router.stack.length > 1)
+              CircleButton(
                 onTap: context.router.pop,
-                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Icon(
+                    UniconsLine.arrow_left,
+                    color: stateColors.foreground,
+                  ),
+                ),
+              ),
             AppIcon(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               size: 30.0,
