@@ -123,6 +123,7 @@ class _PageAppBarState extends State<PageAppBar> {
               if (showOrderButtons) orderButton(),
               if (showLangSelector)
                 LangPopupMenuButton(
+                  opacity: 0.6,
                   lang: widget.lang,
                   onLangChanged: widget.onLangChanged,
                 ),
@@ -139,15 +140,18 @@ class _PageAppBarState extends State<PageAppBar> {
     final itemsLayout = widget.itemsLayout;
     final isListLayout = itemsLayout == ItemsLayout.list;
 
-    return IconButton(
-      tooltip: isListLayout ? "View in grid layout" : "View in list layout",
-      icon: isListLayout ? Icon(UniconsLine.list_ul) : Icon(UniconsLine.grid),
-      onPressed: () {
-        final newItemsLayout = itemsLayout == ItemsLayout.list
-            ? ItemsLayout.grid
-            : ItemsLayout.list;
-        widget.onItemsLayoutSelected(newItemsLayout);
-      },
+    return Opacity(
+      opacity: 0.6,
+      child: IconButton(
+        tooltip: isListLayout ? "View in grid layout" : "View in list layout",
+        icon: isListLayout ? Icon(UniconsLine.list_ul) : Icon(UniconsLine.grid),
+        onPressed: () {
+          final newItemsLayout = itemsLayout == ItemsLayout.list
+              ? ItemsLayout.grid
+              : ItemsLayout.list;
+          widget.onItemsLayoutSelected(newItemsLayout);
+        },
+      ),
     );
   }
 
@@ -243,14 +247,17 @@ class _PageAppBarState extends State<PageAppBar> {
   Widget orderButton() {
     final descending = widget.descending;
 
-    return IconButton(
-      tooltip: descending ? "View last to first" : "View first to last",
-      icon: descending
-          ? Icon(UniconsLine.sort_amount_down)
-          : Icon(UniconsLine.sort_amount_up),
-      onPressed: () {
-        widget.onDescendingChanged(!descending);
-      },
+    return Opacity(
+      opacity: 0.6,
+      child: IconButton(
+        tooltip: descending ? "View last to first" : "View first to last",
+        icon: descending
+            ? Icon(UniconsLine.sort_amount_down)
+            : Icon(UniconsLine.sort_amount_up),
+        onPressed: () {
+          widget.onDescendingChanged(!descending);
+        },
+      ),
     );
   }
 
