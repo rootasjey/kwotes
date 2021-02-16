@@ -4,9 +4,9 @@ import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/quotidians.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
@@ -580,7 +580,7 @@ class _QuotePageState extends State<QuotePage> {
 
   Widget userActionsMobile() {
     final buttonsList = <Widget>[
-      squareAction(
+      SquareAction(
         icon: Icon(UniconsLine.share),
         borderColor: Colors.blue,
         tooltip: 'Share this quote',
@@ -595,7 +595,7 @@ class _QuotePageState extends State<QuotePage> {
 
     if (stateUser.isUserConnected) {
       buttonsList.addAll([
-        squareAction(
+        SquareAction(
           icon: LikeButton(
             isLiked: quote.starred,
             likeBuilder: (bool isLiked) {
@@ -619,7 +619,7 @@ class _QuotePageState extends State<QuotePage> {
           tooltip: quote.starred ? "Unlike" : "Like",
           onTap: () {},
         ),
-        squareAction(
+        SquareAction(
           icon: Icon(UniconsLine.book_medical),
           tooltip: "Add to list...",
           onTap: () => showCupertinoModalBottomSheet(
@@ -635,7 +635,7 @@ class _QuotePageState extends State<QuotePage> {
 
     if (stateUser.canManageQuotes) {
       buttonsList.addAll([
-        squareAction(
+        SquareAction(
           icon: Icon(UniconsLine.sunset),
           borderColor: Colors.pink,
           tooltip: "Add to quotidians",
@@ -644,7 +644,7 @@ class _QuotePageState extends State<QuotePage> {
             lang: widget.quote.lang,
           ),
         ),
-        squareAction(
+        SquareAction(
           icon: Icon(UniconsLine.trash),
           borderColor: Colors.pink,
           tooltip: "Delete quote",
@@ -658,43 +658,6 @@ class _QuotePageState extends State<QuotePage> {
       child: Wrap(
         spacing: 5.0,
         children: buttonsList,
-      ),
-    );
-  }
-
-  Widget squareAction({
-    VoidCallback onTap,
-    String tooltip = '',
-    @required Widget icon,
-    Color borderColor,
-  }) {
-    final size = 60.0;
-
-    return Tooltip(
-      message: tooltip,
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: Card(
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(
-              color: borderColor ?? stateColors.primary,
-              width: 2.0,
-            ),
-          ),
-          child: InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Opacity(
-                opacity: 0.8,
-                child: icon,
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
