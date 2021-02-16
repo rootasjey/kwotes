@@ -24,27 +24,27 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   bool isLoadingSuggestions = false;
   final beginY = 10.0;
 
-  final nameFocusNode = FocusNode();
-  final primaryTypeFocusNode = FocusNode();
-  final secondaryTypeFocusNode = FocusNode();
-  final summaryFocusNode = FocusNode();
+  FocusNode nameFocusNode;
+  FocusNode primaryTypeFocusNode;
+  FocusNode secondaryTypeFocusNode;
+  FocusNode summaryFocusNode;
 
-  final affiliateUrlController = TextEditingController();
-  final amazonUrlController = TextEditingController();
-  final facebookUrlController = TextEditingController();
-  final nameController = TextEditingController();
-  final netflixUrlController = TextEditingController();
-  final primaryTypeController = TextEditingController();
-  final primeVideoUrlController = TextEditingController();
-  final secondaryTypeController = TextEditingController();
-  final summaryController = TextEditingController();
-  final twitterUrlController = TextEditingController();
-  final twitchUrlController = TextEditingController();
-  final websiteUrlController = TextEditingController();
-  final wikiUrlController = TextEditingController();
-  final youtubeUrlController = TextEditingController();
+  TextEditingController affiliateUrlController;
+  TextEditingController amazonUrlController;
+  TextEditingController facebookUrlController;
+  TextEditingController nameController;
+  TextEditingController netflixUrlController;
+  TextEditingController primaryTypeController;
+  TextEditingController primeVideoUrlController;
+  TextEditingController secondaryTypeController;
+  TextEditingController summaryController;
+  TextEditingController twitterUrlController;
+  TextEditingController twitchUrlController;
+  TextEditingController websiteUrlController;
+  TextEditingController wikiUrlController;
+  TextEditingController youtubeUrlController;
 
-  final linkInputController = TextEditingController();
+  TextEditingController linkInputController;
 
   List<ReferenceSuggestion> referencesSuggestions = [];
 
@@ -55,6 +55,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   @override
   initState() {
+    initFocusNodes();
+    initInputs();
+
     setState(() {
       affiliateUrlController.text = DataQuoteInputs.reference.urls.affiliate;
       amazonUrlController.text = DataQuoteInputs.reference.urls.amazon;
@@ -73,6 +76,63 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     });
 
     super.initState();
+  }
+
+  @override
+  dispose() {
+    disposeFocusNodes();
+    disposeInputs();
+    super.dispose();
+  }
+
+  void initFocusNodes() {
+    nameFocusNode = FocusNode();
+    primaryTypeFocusNode = FocusNode();
+    secondaryTypeFocusNode = FocusNode();
+    summaryFocusNode = FocusNode();
+  }
+
+  void initInputs() {
+    affiliateUrlController = TextEditingController();
+    amazonUrlController = TextEditingController();
+    facebookUrlController = TextEditingController();
+    nameController = TextEditingController();
+    netflixUrlController = TextEditingController();
+    primaryTypeController = TextEditingController();
+    primeVideoUrlController = TextEditingController();
+    secondaryTypeController = TextEditingController();
+    summaryController = TextEditingController();
+    twitterUrlController = TextEditingController();
+    twitchUrlController = TextEditingController();
+    websiteUrlController = TextEditingController();
+    wikiUrlController = TextEditingController();
+    youtubeUrlController = TextEditingController();
+    linkInputController = TextEditingController();
+  }
+
+  void disposeFocusNodes() {
+    nameFocusNode.dispose();
+    primaryTypeFocusNode.dispose();
+    secondaryTypeFocusNode.dispose();
+    summaryFocusNode.dispose();
+  }
+
+  void disposeInputs() {
+    affiliateUrlController.dispose();
+    amazonUrlController.dispose();
+    facebookUrlController.dispose();
+    nameController.dispose();
+    netflixUrlController.dispose();
+    primaryTypeController.dispose();
+    primeVideoUrlController.dispose();
+    secondaryTypeController.dispose();
+    summaryController.dispose();
+    twitterUrlController.dispose();
+    twitchUrlController.dispose();
+    websiteUrlController.dispose();
+    wikiUrlController.dispose();
+    youtubeUrlController.dispose();
+    linkInputController.dispose();
   }
 
   @override
