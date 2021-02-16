@@ -66,15 +66,7 @@ export const validate = functions
     }
 
     // 2.Create or get reference if any.
-    const referencesArray = [];
     const reference = await createOrGetReference(tempQuoteData);
-
-    if (reference.id.length > 0) {
-      referencesArray.push({
-        id: reference.id,
-        name: reference.name,
-      });
-    }
 
     // 3.Create or get author if any.
     const author = await createOrGetAuthor(tempQuoteData, reference);
@@ -98,7 +90,6 @@ export const validate = functions
           name: reference.name,
         },
         name: tempQuoteData.name,
-        references: referencesArray,
         region: tempQuoteData.region,
         stats: {
           likes: 0,
