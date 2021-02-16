@@ -26,6 +26,15 @@ abstract class StateUserBase with Store {
   bool canManageQuotes = false;
 
   @observable
+  bool canManageQuotidians = false;
+
+  @observable
+  bool canManageAuthors = false;
+
+  @observable
+  bool canManageReferences = false;
+
+  @observable
   String email = '';
 
   @observable
@@ -56,7 +65,7 @@ abstract class StateUserBase with Store {
   Future refreshUserRights() async {
     try {
       if (_userAuth == null || _userAuth.uid == null) {
-        canManageQuotes = false;
+        setAllRightsToFalse();
       }
 
       final userSnap = await FirebaseFirestore.instance
@@ -67,18 +76,22 @@ abstract class StateUserBase with Store {
       final userData = userSnap.data();
 
       if (!userSnap.exists || userData == null) {
-        canManageQuotes = false;
+        setAllRightsToFalse();
       }
 
-      final bool canManage = userData['rights']['user:managequotidian'];
-      canManageQuotes = canManage;
+      final Map<String, dynamic> rights = userData['rights'];
+
+      canManageQuotes = rights['user:managequotidian'];
+      canManageQuotidians = rights['user:managequotes'];
+      canManageAuthors = rights['user:manageauthor'];
+      canManageReferences = rights['user:managereference'];
       setUsername(userData['name']);
     } on CloudFunctionsException catch (exception) {
       debugPrint("[code: ${exception.code}] - ${exception.message}");
-      canManageQuotes = false;
+      setAllRightsToFalse();
     } catch (error) {
       debugPrint(error.toString());
-      canManageQuotes = false;
+      setAllRightsToFalse();
     }
   }
 
@@ -167,8 +180,11 @@ abstract class StateUserBase with Store {
   }
 
   @action
-  void setAdminValue(bool value) {
-    canManageQuotes = value;
+  void setAllRightsToFalse() {
+    canManageQuotes = false;
+    canManageAuthors = false;
+    canManageReferences = false;
+    canManageQuotidians = false;
   }
 
   @action

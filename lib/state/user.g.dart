@@ -39,6 +39,53 @@ mixin _$StateUser on StateUserBase, Store {
     });
   }
 
+  final _$canManageQuotidiansAtom =
+      Atom(name: 'StateUserBase.canManageQuotidians');
+
+  @override
+  bool get canManageQuotidians {
+    _$canManageQuotidiansAtom.reportRead();
+    return super.canManageQuotidians;
+  }
+
+  @override
+  set canManageQuotidians(bool value) {
+    _$canManageQuotidiansAtom.reportWrite(value, super.canManageQuotidians, () {
+      super.canManageQuotidians = value;
+    });
+  }
+
+  final _$canManageAuthorsAtom = Atom(name: 'StateUserBase.canManageAuthors');
+
+  @override
+  bool get canManageAuthors {
+    _$canManageAuthorsAtom.reportRead();
+    return super.canManageAuthors;
+  }
+
+  @override
+  set canManageAuthors(bool value) {
+    _$canManageAuthorsAtom.reportWrite(value, super.canManageAuthors, () {
+      super.canManageAuthors = value;
+    });
+  }
+
+  final _$canManageReferencesAtom =
+      Atom(name: 'StateUserBase.canManageReferences');
+
+  @override
+  bool get canManageReferences {
+    _$canManageReferencesAtom.reportRead();
+    return super.canManageReferences;
+  }
+
+  @override
+  set canManageReferences(bool value) {
+    _$canManageReferencesAtom.reportWrite(value, super.canManageReferences, () {
+      super.canManageReferences = value;
+    });
+  }
+
   final _$emailAtom = Atom(name: 'StateUserBase.email');
 
   @override
@@ -199,7 +246,7 @@ mixin _$StateUser on StateUserBase, Store {
   @override
   void setUsername(String name) {
     final _$actionInfo = _$StateUserBaseActionController.startAction(
-        name: 'StateUserBase.setUserName');
+        name: 'StateUserBase.setUsername');
     try {
       return super.setUsername(name);
     } finally {
@@ -208,11 +255,11 @@ mixin _$StateUser on StateUserBase, Store {
   }
 
   @override
-  void setAdminValue(bool value) {
+  void setAllRightsToFalse() {
     final _$actionInfo = _$StateUserBaseActionController.startAction(
-        name: 'StateUserBase.setAdminValue');
+        name: 'StateUserBase.setAllRightsToFalse');
     try {
-      return super.setAdminValue(value);
+      return super.setAllRightsToFalse();
     } finally {
       _$StateUserBaseActionController.endAction(_$actionInfo);
     }
@@ -245,6 +292,9 @@ mixin _$StateUser on StateUserBase, Store {
     return '''
 avatarUrl: ${avatarUrl},
 canManageQuotes: ${canManageQuotes},
+canManageQuotidians: ${canManageQuotidians},
+canManageAuthors: ${canManageAuthors},
+canManageReferences: ${canManageReferences},
 email: ${email},
 lang: ${lang},
 isFirstLaunch: ${isFirstLaunch},
