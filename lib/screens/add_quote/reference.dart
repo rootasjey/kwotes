@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/components/form_action_inputs.dart';
+import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -11,8 +13,10 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/reference_suggestion.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:figstyle/utils/search.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class AddQuoteReference extends StatefulWidget {
   @override
@@ -225,41 +229,48 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget avatar() {
+    final _onTap =
+        prefilledInputs ? showPrefilledAlert : () => showAvatarDialog();
+
+    final imageUrl = DataQuoteInputs.reference.urls.image;
+
+    Widget child;
+
+    if (imageUrl.isEmpty) {
+      child = SizedBox(
+        width: 150.0,
+        height: 200.0,
+        child: InkWell(
+          child: Opacity(
+              opacity: 0.6,
+              child: Icon(
+                UniconsLine.plus,
+                size: 50.0,
+                color: stateColors.primary,
+              )),
+          onTap: _onTap,
+        ),
+      );
+    } else {
+      child = Ink.image(
+        width: 150.0,
+        height: 200.0,
+        fit: BoxFit.cover,
+        image: NetworkImage(imageUrl),
+        child: InkWell(
+          onTap: _onTap,
+        ),
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: 30.0,
       ),
       child: Card(
         color: Colors.black12,
-        elevation: 0.0,
-        child: DataQuoteInputs.reference.urls.image.length > 0
-            ? Ink.image(
-                width: 150.0,
-                height: 200.0,
-                fit: BoxFit.cover,
-                image: NetworkImage(DataQuoteInputs.reference.urls.image),
-                child: InkWell(
-                  onTap: prefilledInputs
-                      ? showPrefilledAlert
-                      : () => showAvatarDialog(),
-                ),
-              )
-            : SizedBox(
-                width: 150.0,
-                height: 200.0,
-                child: InkWell(
-                  child: Opacity(
-                      opacity: .6,
-                      child: Icon(
-                        Icons.add,
-                        size: 50.0,
-                        color: stateColors.primary,
-                      )),
-                  onTap: prefilledInputs
-                      ? showPrefilledAlert
-                      : () => showAvatarDialog(),
-                ),
-              ),
+        elevation: imageUrl.isEmpty ? 0.0 : 2.0,
+        child: child,
       ),
     );
   }
@@ -372,7 +383,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             delay: 100,
             name: 'Website',
             active: DataQuoteInputs.reference.urls.website.isNotEmpty,
-            imageUrl: 'assets/images/world-globe.png',
+            icon: Icon(UniconsLine.globe),
             onTap: () {
               showLinkInputSheet(
                 labelText: 'Website',
@@ -391,7 +402,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 delay: 200,
                 name: 'Wikipedia',
                 active: DataQuoteInputs.reference.urls.wikipedia.isNotEmpty,
-                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
+                icon: FaIcon(FontAwesomeIcons.wikipediaW),
                 onTap: () {
                   showLinkInputSheet(
                     labelText: 'Wikipedia',
@@ -409,7 +420,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 300,
             name: 'Amazon',
-            imageUrl: 'assets/images/amazon.png',
+            icon: Icon(UniconsLine.amazon),
             active: DataQuoteInputs.reference.urls.amazon.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -426,7 +437,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 400,
             name: 'Facebook',
-            imageUrl: 'assets/images/facebook.png',
+            icon: Icon(UniconsLine.facebook),
             active: DataQuoteInputs.reference.urls.facebook.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -443,7 +454,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 500,
             name: 'Instagram',
-            imageUrl: 'assets/images/instagram.png',
+            icon: Icon(UniconsLine.instagram),
             active: DataQuoteInputs.reference.urls.instagram.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -477,7 +488,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 700,
             name: 'Prime Video',
-            imageUrl: 'assets/images/prime-video.png',
+            icon: Icon(UniconsLine.video),
             active: DataQuoteInputs.reference.urls.primeVideo.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -494,7 +505,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 700,
             name: 'Twitch',
-            imageUrl: 'assets/images/twitch.png',
+            icon: FaIcon(FontAwesomeIcons.twitch),
             active: DataQuoteInputs.reference.urls.twitch.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -511,7 +522,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 800,
             name: 'Twitter',
-            imageUrl: 'assets/images/twitter.png',
+            icon: Icon(UniconsLine.twitter),
             active: DataQuoteInputs.reference.urls.twitter.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -528,7 +539,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           linkSquareButton(
             delay: 900,
             name: 'YouTube',
-            imageUrl: 'assets/images/youtube.png',
+            icon: Icon(UniconsLine.youtube),
             active: DataQuoteInputs.reference.urls.youtube.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -551,6 +562,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     bool active = false,
     int delay = 0,
     String imageUrl,
+    Widget icon,
     String name,
     Function onTap,
   }) {
@@ -565,15 +577,28 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           child: Card(
             elevation: active ? 4.0 : 0.0,
             clipBehavior: Clip.hardEdge,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+              side: BorderSide(
+                color: stateColors.foreground.withOpacity(0.1),
+                width: 2.0,
+              ),
+            ),
             child: InkWell(
               onTap: prefilledInputs ? showPrefilledAlert : onTap,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Image.asset(
-                  imageUrl,
-                  width: 30.0,
-                  color:
-                      active ? stateColors.secondary : stateColors.foreground,
+              child: Opacity(
+                opacity: 0.6,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: icon != null
+                      ? icon
+                      : Image.asset(
+                          imageUrl,
+                          width: 20.0,
+                          color: active
+                              ? stateColors.secondary
+                              : stateColors.foreground,
+                        ),
                 ),
               ),
             ),
@@ -585,51 +610,26 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget nameCardInput() {
     final referenceName = DataQuoteInputs.reference.name;
+    final subtitleString =
+        referenceName.isNotEmpty ? referenceName : tapToEditStr;
 
-    return Container(
+    return InputCard(
       width: 250.0,
-      padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: () async {
-            await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return nameInput();
-                });
-
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Name',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      referenceName != null && referenceName.isNotEmpty
-                          ? referenceName
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.account_box),
-            ]),
-          ),
-        ),
+      padding: const EdgeInsets.only(
+        top: 40.0,
+        bottom: 20.0,
       ),
+      titleString: 'Name',
+      icon: Icon(UniconsLine.user),
+      subtitleString: subtitleString,
+      onTap: () async {
+        await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => nameInput(),
+        );
+
+        setState(() {});
+      },
     );
   }
 
@@ -660,7 +660,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           focusNode: nameFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
-                            icon: Icon(Icons.person_outline),
+                            icon: Icon(UniconsLine.user),
                             labelText: "e.g. 1984, Interstellar",
                             alignLabelWithHint: true,
                           ),
@@ -681,8 +681,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           padding: const EdgeInsets.only(left: 40.0),
                           child: LinearProgressIndicator(),
                         ),
-                      actionsInput(
-                        onClearInput: () {
+                      FormActionInputs(
+                        onCancel: () {
                           DataQuoteInputs.reference.name = '';
                           nameController.clear();
                           nameFocusNode.requestFocus();
@@ -702,53 +702,30 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget primaryTypeCardInput() {
     final primaryType = DataQuoteInputs.reference.type.primary;
+    final subtitleString = primaryType.isNotEmpty ? primaryType : tapToEditStr;
 
-    return Container(
+    final _onTap = prefilledInputs
+        ? showPrefilledAlert
+        : () async {
+            await showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return primaryTypeInput();
+                });
+
+            setState(() {});
+          };
+
+    return InputCard(
       width: 300.0,
-      padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return primaryTypeInput();
-                      });
-
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Primary type (e.g. TV series)',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      primaryType != null && primaryType.isNotEmpty
-                          ? primaryType
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.filter_1),
-            ]),
-          ),
-        ),
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        bottom: 10.0,
       ),
+      titleString: 'Primary type (e.g. TV series)',
+      icon: Icon(UniconsLine.circle),
+      subtitleString: subtitleString,
+      onTap: _onTap,
     );
   }
 
@@ -775,7 +752,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     focusNode: primaryTypeFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.filter_1),
+                      icon: Icon(UniconsLine.circle),
                       labelText: "e.g. TV series, Book",
                       alignLabelWithHint: true,
                     ),
@@ -786,10 +763,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     onChanged: (newValue) {
                       DataQuoteInputs.reference.type.primary = newValue;
                     },
+                    onSubmitted: (_) => context.router.pop(),
                   ),
                 ),
-                actionsInput(
-                  onClearInput: () {
+                FormActionInputs(
+                  onCancel: () {
                     DataQuoteInputs.reference.type.primary = '';
                     primaryTypeController.clear();
                     primaryTypeFocusNode.requestFocus();
@@ -807,7 +785,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     final selectedDate = DataQuoteInputs.reference.release.original;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.only(bottom: 24.0),
       child: Column(
         children: [
           OutlinedButton.icon(
@@ -826,9 +804,12 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         DataQuoteInputs.reference.release.original = picked);
                   },
             icon: Icon(Icons.calendar_today),
-            label: Text(selectedDate != null
-                ? selectedDate.toLocal().toString().split(' ')[0]
-                : 'Select a new date'),
+            label: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(selectedDate != null
+                  ? selectedDate.toLocal().toString().split(' ')[0]
+                  : 'Select a new date'),
+            ),
           ),
           SizedBox(
             width: 300.0,
@@ -853,53 +834,34 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget secondaryTypeCardInput() {
     final secondaryType = DataQuoteInputs.reference.type.secondary;
+    final subtitleString =
+        secondaryType.isNotEmpty ? secondaryType : tapToEditStr;
 
-    return Container(
+    Function _onTap;
+
+    if (prefilledInputs) {
+      _onTap = showPrefilledAlert;
+    } else {
+      _onTap = () async {
+        await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return secondaryTypeInput();
+            });
+
+        setState(() {});
+      };
+    }
+
+    return InputCard(
       width: 300.0,
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return secondaryTypeInput();
-                      });
-
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Secondary type (e.g. Thriller)',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      secondaryType != null && secondaryType.isNotEmpty
-                          ? secondaryType
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.filter_2),
-            ]),
-          ),
-        ),
+      padding: const EdgeInsets.only(
+        bottom: 20.0,
       ),
+      titleString: 'Secondary type (e.g. Thriller)',
+      icon: Icon(UniconsLine.pentagon),
+      subtitleString: subtitleString,
+      onTap: _onTap,
     );
   }
 
@@ -926,7 +888,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     focusNode: secondaryTypeFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.filter_2),
+                      icon: Icon(UniconsLine.pentagon),
                       labelText: "e.g. Thriller, Drama",
                       alignLabelWithHint: true,
                     ),
@@ -937,10 +899,11 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     onChanged: (newValue) {
                       DataQuoteInputs.reference.type.secondary = newValue;
                     },
+                    onSubmitted: (_) => context.router.pop(),
                   ),
                 ),
-                actionsInput(
-                  onClearInput: () {
+                FormActionInputs(
+                  onCancel: () {
                     DataQuoteInputs.reference.type.secondary = '';
                     secondaryTypeController.clear();
                     secondaryTypeFocusNode.requestFocus();
@@ -991,53 +954,34 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget summaryCardInput() {
     final summary = DataQuoteInputs.reference.summary;
+    final subtitleString = summary.isNotEmpty ? summary : tapToEditStr;
 
-    return Container(
+    Function _onTap;
+
+    if (prefilledInputs) {
+      _onTap = showPrefilledAlert;
+    } else {
+      _onTap = () async {
+        await showMaterialModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return summaryInput();
+            });
+
+        setState(() {});
+      };
+    }
+
+    return InputCard(
       width: 300.0,
-      padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showMaterialModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return summaryInput();
-                      });
-
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Summary',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      summary != null && summary.isNotEmpty
-                          ? summary
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.short_text),
-            ]),
-          ),
-        ),
+      padding: const EdgeInsets.only(
+        top: 10.0,
+        bottom: 40.0,
       ),
+      titleString: 'Summary',
+      icon: Icon(UniconsLine.subject),
+      subtitleString: subtitleString,
+      onTap: _onTap,
     );
   }
 
@@ -1064,7 +1008,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     focusNode: summaryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.edit),
+                      icon: Icon(UniconsLine.subject),
                       labelText: "Once upon a time...",
                       alignLabelWithHint: true,
                     ),
@@ -1078,11 +1022,13 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     },
                   ),
                 ),
-                actionsInput(onClearInput: () {
-                  DataQuoteInputs.reference.summary = '';
-                  summaryController.clear();
-                  summaryFocusNode.requestFocus();
-                }),
+                FormActionInputs(
+                  onCancel: () {
+                    DataQuoteInputs.reference.summary = '';
+                    summaryController.clear();
+                    summaryFocusNode.requestFocus();
+                  },
+                ),
               ],
             ),
           ),
@@ -1132,6 +1078,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     showMaterialModalBottomSheet(
       context: context,
       builder: (context) {
+        final imageUrl = DataQuoteInputs.reference.urls.image;
+
         return Scaffold(
           body: ListView(
             physics: ClampingScrollPhysics(),
@@ -1158,69 +1106,41 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       ),
                       TextField(
                         autofocus: true,
+                        controller: linkInputController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText:
-                              DataQuoteInputs.reference.urls.image.length > 0
-                                  ? DataQuoteInputs.reference.urls.image
-                                  : 'URL',
+                          labelText: imageUrl.isNotEmpty ? imageUrl : 'URL',
                         ),
                         onChanged: (newValue) {
                           tempImgUrl = newValue;
+                        },
+                        onSubmitted: (newValue) {
+                          setState(() {
+                            DataQuoteInputs.reference.urls.image = tempImgUrl;
+                          });
+
+                          context.router.pop();
                         },
                       ),
                     ],
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: Wrap(
-                  spacing: 10.0,
-                  alignment: WrapAlignment.end,
-                  children: [
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        primary: stateColors.foreground,
-                      ),
-                      icon: Opacity(
-                        opacity: 0.6,
-                        child: Icon(Icons.clear),
-                      ),
-                      label: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          'Cancel',
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        primary: stateColors.foreground,
-                      ),
-                      icon: Opacity(
-                        opacity: 0.6,
-                        child: Icon(Icons.check),
-                      ),
-                      label: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          'Save',
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          DataQuoteInputs.reference.urls.image = tempImgUrl;
-                        });
-
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
+              FormActionInputs(
+                adaptivePadding: false,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40.0,
                 ),
+                onCancel: () {
+                  linkInputController.clear();
+                  tempImgUrl = '';
+                  DataQuoteInputs.reference.urls.image = '';
+                },
+                onValidate: () {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.image = tempImgUrl;
+                  });
+                },
               ),
             ],
           ),
@@ -1266,16 +1186,18 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     onChanged: (newValue) {
                       initialValue = newValue;
                     },
+                    onSubmitted: (newValue) {
+                      onSave(initialValue);
+                      context.router.pop();
+                    },
                   ),
                 ),
-                actionsInput(
-                  onClearInput: () {
+                FormActionInputs(
+                  onCancel: () {
                     linkInputController.clear();
                     initialValue = '';
                   },
-                  onSaveInput: () {
-                    onSave(initialValue);
-                  },
+                  onValidate: () => onSave(initialValue),
                 ),
               ],
             ),
