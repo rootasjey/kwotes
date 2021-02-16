@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/components/form_action_inputs.dart';
+import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -10,8 +12,10 @@ import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/author_suggestion.dart';
 import 'package:figstyle/utils/search.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class AddQuoteAuthor extends StatefulWidget {
   @override
@@ -109,71 +113,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  Widget actionsInput({
-    VoidCallback onClearInput,
-    VoidCallback onSaveInput,
-    String clearInputText = 'Clear input',
-  }) {
-    double left = 40.0;
-    double spacing = 20.0;
-
-    if (MediaQuery.of(context).size.width < 600.0) {
-      spacing = 5.0;
-      left = 0.0;
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 20.0,
-        left: left,
-      ),
-      child: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        children: [
-          OutlinedButton.icon(
-            onPressed: onClearInput,
-            icon: Opacity(
-              opacity: 0.6,
-              child: Icon(Icons.clear),
-            ),
-            label: Opacity(
-              opacity: 0.6,
-              child: Text(
-                clearInputText,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: stateColors.foreground,
-            ),
-          ),
-          OutlinedButton.icon(
-            onPressed: () {
-              if (onSaveInput != null) {
-                onSaveInput();
-              }
-
-              Navigator.of(context).pop();
-            },
-            icon: Opacity(
-              opacity: 0.6,
-              child: Icon(Icons.check),
-            ),
-            label: Opacity(
-              opacity: 0.6,
-              child: Text(
-                'Save',
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: stateColors.foreground,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget avatar() {
     return Material(
       elevation: DataQuoteInputs.author.urls.image.isEmpty ? 0.0 : 4.0,
@@ -200,10 +139,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     ? showPrefilledAlert
                     : () => showAvatarDialog(),
                 child: CircleAvatar(
-                  child: Icon(
-                    Icons.add,
-                    size: 50.0,
-                    color: stateColors.primary,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Icon(
+                      UniconsLine.plus,
+                      size: 50.0,
+                      color: stateColors.primary,
+                    ),
                   ),
                   backgroundColor: Colors.black12,
                   radius: 60.0,
@@ -227,108 +169,59 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       tapToEditLocalStr = 'Edit';
     }
 
+    final bornStr = born != null && born.date != null
+        ? born.date.toLocal().toString().split(' ')[0]
+        : tapToEditLocalStr;
+
+    final deathStr = death != null && death.date != null
+        ? death.date.toLocal().toString().split(' ')[0]
+        : tapToEditLocalStr;
+
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Wrap(
         spacing: spacing,
         runSpacing: spacing,
         children: [
-          SizedBox(
+          InputCard(
+            elevation: 1.0,
             width: width,
-            child: Card(
-              elevation: 1.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () async {
-                        await showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return bornInput(
-                                scrollController:
-                                    ModalScrollController.of(context),
-                              );
-                            });
+            titleString: 'Born',
+            subtitleString: bornStr,
+            padding: EdgeInsets.zero,
+            icon: Icon(UniconsLine.play),
+            onTap: prefilledInputs
+                ? showPrefilledAlert
+                : () async {
+                    await showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return bornInput(
+                            scrollController: ModalScrollController.of(context),
+                          );
+                        });
 
-                        setState(() {});
-                      },
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Born',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            born != null && born.date != null
-                                ? born.date.toLocal().toString().split(' ')[0]
-                                : tapToEditLocalStr,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.hourglass_full),
-                  ]),
-                ),
-              ),
-            ),
+                    setState(() {});
+                  },
           ),
-          SizedBox(
+          InputCard(
+            elevation: 1.0,
             width: width,
-            child: Card(
-              elevation: 1.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () async {
-                        await showCupertinoModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return deathInput();
-                            });
+            titleString: 'Death',
+            subtitleString: deathStr,
+            padding: EdgeInsets.zero,
+            icon: Icon(UniconsLine.square_shape),
+            onTap: prefilledInputs
+                ? showPrefilledAlert
+                : () async {
+                    await showCupertinoModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return deathInput();
+                        });
 
-                        setState(() {});
-                      },
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              'Death',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            death != null && death.date != null
-                                ? death.date.toLocal().toString().split(' ')[0]
-                                : tapToEditLocalStr,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.hourglass_empty),
-                  ]),
-                ),
-              ),
-            ),
+                    setState(() {});
+                  },
           ),
         ],
       ),
@@ -372,10 +265,19 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             childSetState(() =>
                                 DataQuoteInputs.author.born.date = picked);
                           },
-                          icon: Icon(Icons.calendar_today),
-                          label: Text(selectedDate != null
-                              ? selectedDate.toLocal().toString().split(' ')[0]
-                              : 'Select a new date'),
+                          icon: Padding(
+                            padding: const EdgeInsets.only(bottom: 4.0),
+                            child: Icon(UniconsLine.calender),
+                          ),
+                          label: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(selectedDate != null
+                                ? selectedDate
+                                    .toLocal()
+                                    .toString()
+                                    .split(' ')[0]
+                                : 'Select a new date'),
+                          ),
                         ),
                         SizedBox(
                           width: 400.0,
@@ -396,11 +298,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 Padding(
                   padding: EdgeInsets.only(top: 30.0),
                   child: TextField(
+                    autofocus: true,
                     controller: bornCountryController,
                     focusNode: bornCountryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.flag_outlined),
+                      icon: Icon(UniconsLine.map),
                       labelText: "Country (e.g. Italy)",
                     ),
                     minLines: 1,
@@ -414,13 +317,16 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 30.0),
+                  padding: EdgeInsets.only(
+                    top: 16.0,
+                    bottom: 32.0,
+                  ),
                   child: TextField(
                     controller: bornCityController,
                     focusNode: bornCityFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.pin_drop),
+                      icon: Icon(UniconsLine.map_marker),
                       labelText: "City (e.g. Rome)",
                     ),
                     minLines: 1,
@@ -433,9 +339,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                actionsInput(
-                  clearInputText: 'Clear inputs',
-                  onClearInput: () {
+                FormActionInputs(
+                  cancelTextString: 'Clear inputs',
+                  onCancel: () {
                     DataQuoteInputs.author.born.city = '';
                     DataQuoteInputs.author.born.country = '';
                     DataQuoteInputs.author.born.date = null;
@@ -529,9 +435,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                                 DataQuoteInputs.author.death.date = picked);
                           },
                           icon: Icon(Icons.calendar_today),
-                          label: Text(selectedDate != null
-                              ? selectedDate.toLocal().toString().split(' ')[0]
-                              : 'Select a new date'),
+                          label: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(selectedDate != null
+                                ? selectedDate
+                                    .toLocal()
+                                    .toString()
+                                    .split(' ')[0]
+                                : 'Select a new date'),
+                          ),
                         ),
                         SizedBox(
                           width: 400.0,
@@ -556,7 +468,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     focusNode: deathCountryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.flag_outlined),
+                      icon: Icon(UniconsLine.map),
                       labelText: "Country (e.g. Italy)",
                     ),
                     minLines: 1,
@@ -570,13 +482,16 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 30.0),
+                  padding: EdgeInsets.only(
+                    top: 16.0,
+                    bottom: 32.0,
+                  ),
                   child: TextField(
                     controller: deathCityController,
                     focusNode: deathCityFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.pin_drop),
+                      icon: Icon(UniconsLine.map_marker),
                       labelText: "City (e.g. Rome)",
                     ),
                     minLines: 1,
@@ -589,9 +504,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                actionsInput(
-                  clearInputText: 'Clear inputs',
-                  onClearInput: () {
+                FormActionInputs(
+                  cancelTextString: 'Clear inputs',
+                  onCancel: () {
                     DataQuoteInputs.author.death.city = '';
                     DataQuoteInputs.author.death.country = '';
                     DataQuoteInputs.author.death.date = null;
@@ -631,50 +546,24 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget jobCardInput() {
     final job = DataQuoteInputs.author.job;
+    final isJobValid = job != null && job.isNotEmpty;
 
-    return SizedBox(
-      width: 250.0,
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return jobInput();
-                      });
+    return InputCard(
+      titleString: 'Job',
+      padding: EdgeInsets.zero,
+      subtitleString: isJobValid ? job : tapToEditStr,
+      icon: Icon(UniconsLine.bag),
+      onTap: prefilledInputs
+          ? showPrefilledAlert
+          : () async {
+              await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return jobInput();
+                  });
 
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Job',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      job != null && job.isNotEmpty ? job : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.work),
-            ]),
-          ),
-        ),
-      ),
+              setState(() {});
+            },
     );
   }
 
@@ -701,7 +590,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   focusNode: jobFocusNode,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.work),
+                    icon: Icon(UniconsLine.bag),
                     labelText: "e.g. Housekeeper, Lawyer, Student, Teacher",
                     alignLabelWithHint: true,
                   ),
@@ -715,8 +604,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   },
                 ),
               ),
-              actionsInput(
-                onClearInput: () {
+              FormActionInputs(
+                onCancel: () {
                   DataQuoteInputs.author.job = '';
                   jobController.clear();
                   jobFocusNode.requestFocus();
@@ -739,8 +628,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 100,
             name: 'Website',
+            icon: Icon(UniconsLine.globe),
             active: DataQuoteInputs.author.urls.website?.isNotEmpty,
-            imageUrl: 'assets/images/world-globe.png',
             onTap: () {
               showLinkInputSheet(
                 labelText: 'Website',
@@ -758,8 +647,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               return linkCircleButton(
                 delay: 200,
                 name: 'Wikipedia',
+                icon: FaIcon(FontAwesomeIcons.wikipediaW),
                 active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
-                imageUrl: 'assets/images/wikipedia-${stateColors.iconExt}.png',
                 onTap: () {
                   showLinkInputSheet(
                     labelText: 'Wikipedia',
@@ -777,7 +666,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 300,
             name: 'Amazon',
-            imageUrl: 'assets/images/amazon.png',
+            icon: Icon(UniconsLine.amazon),
             active: DataQuoteInputs.author.urls.amazon.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -794,7 +683,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 400,
             name: 'Facebook',
-            imageUrl: 'assets/images/facebook.png',
+            icon: Icon(UniconsLine.facebook),
             active: DataQuoteInputs.author.urls.facebook.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -811,7 +700,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 500,
             name: 'Instagram',
-            imageUrl: 'assets/images/instagram.png',
+            icon: Icon(UniconsLine.instagram),
             active: DataQuoteInputs.author.urls.instagram.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -845,7 +734,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 700,
             name: 'Prime Video',
-            imageUrl: 'assets/images/prime-video.png',
+            icon: Icon(UniconsLine.video),
             active: DataQuoteInputs.author.urls.primeVideo.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -862,7 +751,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 800,
             name: 'Twitch',
-            imageUrl: 'assets/images/twitch.png',
+            icon: FaIcon(FontAwesomeIcons.twitch),
             active: DataQuoteInputs.author.urls.twitch.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -879,7 +768,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 900,
             name: 'Twitter',
-            imageUrl: 'assets/images/twitter.png',
+            icon: Icon(UniconsLine.twitter),
             active: DataQuoteInputs.author.urls.twitter.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -896,7 +785,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 1000,
             name: 'YouTube',
-            imageUrl: 'assets/images/youtube.png',
+            icon: Icon(UniconsLine.youtube),
             active: DataQuoteInputs.author.urls.youtube.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -919,6 +808,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     bool active = false,
     int delay = 0,
     String imageUrl,
+    Widget icon,
     String name,
     Function onTap,
   }) {
@@ -936,11 +826,16 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             onTap: prefilledInputs ? showPrefilledAlert : onTap,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Image.asset(
-                imageUrl,
-                width: 30.0,
-                color: active ? stateColors.secondary : stateColors.foreground,
-              ),
+              child: icon != null
+                  ? icon
+                  : Image.asset(
+                      imageUrl,
+                      width: 20.0,
+                      height: 20.0,
+                      color: active
+                          ? stateColors.secondary
+                          : stateColors.foreground,
+                    ),
             ),
           ),
         ),
@@ -950,51 +845,21 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget nameCardInput() {
     final authorName = DataQuoteInputs.author.name;
+    final isAuthorNameValid = authorName != null && authorName.isNotEmpty;
 
-    return Container(
-      width: 250.0,
-      padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: () async {
-            await showCupertinoModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return nameInput();
-                });
+    return InputCard(
+      titleString: 'Name',
+      subtitleString: isAuthorNameValid ? authorName : tapToEditStr,
+      icon: Icon(UniconsLine.user),
+      onTap: () async {
+        await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return nameInput();
+            });
 
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Name',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      authorName != null && authorName.isNotEmpty
-                          ? authorName
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.person),
-            ]),
-          ),
-        ),
-      ),
+        setState(() {});
+      },
     );
   }
 
@@ -1025,7 +890,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           focusNode: nameFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
-                            icon: Icon(Icons.person_outline),
+                            icon: Icon(UniconsLine.user),
                             labelText: "e.g. Freud, Aristote",
                             alignLabelWithHint: true,
                           ),
@@ -1046,8 +911,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           padding: const EdgeInsets.only(left: 40.0),
                           child: LinearProgressIndicator(),
                         ),
-                      actionsInput(
-                        onClearInput: () {
+                      FormActionInputs(
+                        onCancel: () {
                           DataQuoteInputs.author.name = '';
                           nameController.clear();
                           nameFocusNode.requestFocus();
@@ -1105,53 +970,26 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget summaryCardInput() {
     final summary = DataQuoteInputs.author.summary;
+    final summaryStr =
+        summary != null && summary.isNotEmpty ? summary : tapToEditStr;
 
-    return Container(
+    return InputCard(
+      titleString: 'Summary',
+      subtitleString: summaryStr,
       width: 300.0,
-      padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
-      child: Card(
-        elevation: 2.0,
-        child: InkWell(
-          onTap: prefilledInputs
-              ? showPrefilledAlert
-              : () async {
-                  await showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return summaryInput();
-                      });
+      icon: Icon(Icons.short_text),
+      padding: const EdgeInsets.symmetric(vertical: 40.0),
+      onTap: prefilledInputs
+          ? showPrefilledAlert
+          : () async {
+              await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return summaryInput();
+                  });
 
-                  setState(() {});
-                },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        'Summary',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      summary != null && summary.isNotEmpty
-                          ? summary
-                          : tapToEditStr,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.short_text),
-            ]),
-          ),
-        ),
-      ),
+              setState(() {});
+            },
     );
   }
 
@@ -1192,11 +1030,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                actionsInput(onClearInput: () {
-                  DataQuoteInputs.author.summary = '';
-                  summaryController.clear();
-                  summaryFocusNode.requestFocus();
-                })
+                FormActionInputs(
+                  onCancel: () {
+                    DataQuoteInputs.author.summary = '';
+                    summaryController.clear();
+                    summaryFocusNode.requestFocus();
+                  },
+                )
               ],
             ),
           ),
@@ -1329,54 +1169,19 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Wrap(
-                    spacing: 10.0,
-                    alignment: WrapAlignment.end,
-                    children: [
-                      OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.clear),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Cancel',
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          primary: stateColors.foreground,
-                        ),
-                        icon: Opacity(
-                          opacity: 0.6,
-                          child: Icon(Icons.check),
-                        ),
-                        label: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            'Save',
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            DataQuoteInputs.author.urls.image = tempImgUrl;
-                          });
-
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+                FormActionInputs(
+                  onCancel: context.router.pop,
+                  cancelTextString: 'Cancel',
+                  adaptivePadding: false,
+                  padding: const EdgeInsets.only(
+                    left: 40.0,
+                    top: 20.0,
                   ),
+                  onValidate: () {
+                    setState(() {
+                      DataQuoteInputs.author.urls.image = tempImgUrl;
+                    });
+                  },
                 ),
               ],
             ),
@@ -1423,12 +1228,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     },
                   ),
                 ),
-                actionsInput(
-                  onClearInput: () {
+                FormActionInputs(
+                  onCancel: () {
                     linkInputController.clear();
                     initialValue = '';
                   },
-                  onSaveInput: () {
+                  onValidate: () {
                     onSave(initialValue);
                   },
                 ),
