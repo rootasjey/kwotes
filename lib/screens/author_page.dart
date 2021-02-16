@@ -1,8 +1,15 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/actions/authors.dart';
+import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/author_avatar.dart';
+import 'package:figstyle/components/square_action.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -18,7 +25,9 @@ import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthorPage extends StatefulWidget {
@@ -89,7 +98,9 @@ class _AuthorPageState extends State<AuthorPage> {
               textsPanels(),
               langDropdown(),
               quotesListView(),
-              SliverPadding(padding: const EdgeInsets.only(bottom: 200.0)),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 200.0),
+              ),
             ],
           )),
     );
@@ -215,6 +226,7 @@ class _AuthorPageState extends State<AuthorPage> {
                     ),
                     child: links(),
                   ),
+                  userActions(),
                   if (isSummaryVisible)
                     FadeInY(
                       beginY: -20.0,
@@ -582,6 +594,120 @@ class _AuthorPageState extends State<AuthorPage> {
         ),
       ],
     );
+  }
+
+  Widget userActions() {
+    final buttonsList = <Widget>[
+      SquareAction(
+        icon: Icon(UniconsLine.share),
+        borderColor: Colors.blue,
+        tooltip: 'Share this author',
+        onTap: () async {
+          ShareActions.shareAuthor(
+            context: context,
+            author: author,
+          );
+        },
+      ),
+    ];
+
+    if (stateUser.canManageAuthors) {
+      buttonsList.addAll([
+        SquareAction(
+          icon: Icon(UniconsLine.trash),
+          borderColor: Colors.pink,
+          tooltip: "Delete author",
+          onTap: () => confirmAndDeleteAuthor(),
+        ),
+      ]);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0),
+      child: Wrap(
+        spacing: 5.0,
+        children: buttonsList,
+      ),
+    );
+  }
+
+  void confirmAndDeleteAuthor() async {
+    showCustomModalBottomSheet(
+      context: context,
+      builder: (context) {
+        final focusNode = FocusNode();
+
+        return RawKeyboardListener(
+          autofocus: true,
+          focusNode: focusNode,
+          onKey: (keyEvent) {
+            if (keyEvent.isKeyPressed(LogicalKeyboardKey.enter) ||
+                keyEvent.isKeyPressed(LogicalKeyboardKey.space)) {
+              deleteAuthorAndNavBack();
+              return;
+            }
+          },
+          child: Material(
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Confirm',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
+                    tileColor: stateColors.deletion,
+                    onTap: deleteAuthorAndNavBack,
+                  ),
+                  ListTile(
+                    title: Text('Cancel'),
+                    trailing: Icon(Icons.close),
+                    onTap: context.router.pop,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      containerWidget: (context, animation, child) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Material(
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.circular(12.0),
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void deleteAuthorAndNavBack() {
+    context.router.pop();
+
+    AuthorsActions.delete(
+      author: author,
+    );
+
+    if (context.router.root.stack.length > 1) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        context.router.pop();
+      });
+      return;
+    }
+
+    context.router.root.push(HomeRoute());
   }
 
   void fetch() async {
