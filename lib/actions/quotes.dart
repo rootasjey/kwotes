@@ -32,7 +32,7 @@ class QuotesActions {
       final bool success = responseData['success'];
       return success;
     } catch (error) {
-      appLogger.e("deleteQuote() failed");
+      appLogger.e("[QuotesActions] Delete quotes failed");
       appLogger.e(error);
       return false;
     }

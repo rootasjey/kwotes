@@ -19,6 +19,8 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/animation.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:like_button/like_button.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -666,47 +668,56 @@ class _QuotePageState extends State<QuotePage> {
     showCustomModalBottomSheet(
       context: context,
       builder: (context) {
-        return Material(
-          child: SafeArea(
-            top: false,
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              ListTile(
-                title: Text(
-                  'Confirm',
-                  style: TextStyle(
-                    color: Colors.white,
+        final focusNode = FocusNode();
+
+        return RawKeyboardListener(
+          autofocus: true,
+          focusNode: focusNode,
+          onKey: (keyEvent) {
+            if (keyEvent.isKeyPressed(LogicalKeyboardKey.enter) ||
+                keyEvent.isKeyPressed(LogicalKeyboardKey.space)) {
+              deleteQuoteAndNavBack();
+              return;
+            }
+          },
+          child: Material(
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Confirm',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
+                    tileColor: Color(0xfff55c5c),
+                    onTap: () async {
+                      context.router.pop();
+                      deleteQuoteAndNavBack();
+                    },
                   ),
-                ),
-                trailing: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-                tileColor: Color(0xfff55c5c),
-                onTap: () async {
-                  context.router.pop();
-
-                  final success = await QuotesActions.delete(
-                    quote: widget.quote,
-                  );
-
-                  if (success) {
-                    context.router.pop();
-                  }
-                },
+                  ListTile(
+                    title: Text('Cancel'),
+                    trailing: Icon(Icons.close),
+                    onTap: context.router.pop,
+                  ),
+                ],
               ),
-              ListTile(
-                title: Text('Cancel'),
-                trailing: Icon(Icons.close),
-                onTap: context.router.pop,
-              ),
-            ]),
+            ),
           ),
         );
       },
       containerWidget: (context, animation, child) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Material(
               clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadius.circular(12.0),
@@ -716,6 +727,23 @@ class _QuotePageState extends State<QuotePage> {
         );
       },
     );
+  }
+
+  void deleteQuoteAndNavBack() {
+    context.router.pop();
+
+    QuotesActions.delete(
+      quote: quote,
+    );
+
+    if (context.router.root.stack.length > 1) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        context.router.pop();
+      });
+      return;
+    }
+
+    context.router.root.push(HomeRoute());
   }
 
   void fetchTopics() async {
