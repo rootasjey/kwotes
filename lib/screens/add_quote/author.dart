@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
@@ -1035,6 +1036,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           ),
                           onChanged: (newValue) =>
                               onChanged(newValue, childSetState),
+                          onSubmitted: (newValue) {
+                            context.router.pop();
+                          },
                         ),
                       ),
                       if (isLoadingSuggestions)

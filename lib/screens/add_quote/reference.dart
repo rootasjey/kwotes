@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -610,6 +611,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                           ),
                           onChanged: (newValue) =>
                               onChanged(newValue, childSetState),
+                          onSubmitted: (newValue) {
+                            context.router.pop();
+                          },
                         ),
                       ),
                       if (isLoadingSuggestions)
