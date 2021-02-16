@@ -179,43 +179,52 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget avatar() {
+    final imageUrl = DataQuoteInputs.author.urls.image;
+    const size = 150.0;
+
+    final _onTap =
+        prefilledInputs ? showPrefilledAlert : () => showAvatarDialog();
+
+    Widget imageChild;
+
+    if (imageUrl.isEmpty) {
+      imageChild = Ink(
+        width: size,
+        height: size,
+        child: InkWell(
+          onTap: _onTap,
+          child: CircleAvatar(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Icon(
+                UniconsLine.plus,
+                size: 50.0,
+                color: stateColors.primary,
+              ),
+            ),
+            backgroundColor: Colors.black12,
+            radius: 60.0,
+          ),
+        ),
+      );
+    } else {
+      imageChild = Ink.image(
+        image: NetworkImage(imageUrl),
+        fit: BoxFit.cover,
+        width: size,
+        height: size,
+        child: InkWell(
+          onTap: _onTap,
+        ),
+      );
+    }
+
     return Material(
-      elevation: DataQuoteInputs.author.urls.image.isEmpty ? 0.0 : 4.0,
+      elevation: imageUrl.isEmpty ? 0.0 : 4.0,
       shape: CircleBorder(),
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
-      child: DataQuoteInputs.author.urls.image.isNotEmpty
-          ? Ink.image(
-              image: NetworkImage(DataQuoteInputs.author.urls.image),
-              fit: BoxFit.cover,
-              width: 150.0,
-              height: 150.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () => showAvatarDialog(),
-              ),
-            )
-          : Ink(
-              width: 150.0,
-              height: 150.0,
-              child: InkWell(
-                onTap: prefilledInputs
-                    ? showPrefilledAlert
-                    : () => showAvatarDialog(),
-                child: CircleAvatar(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Icon(
-                      UniconsLine.plus,
-                      size: 50.0,
-                      color: stateColors.primary,
-                    ),
-                  ),
-                  backgroundColor: Colors.black12,
-                  radius: 60.0,
-                ),
-              )),
+      child: imageChild,
     );
   }
 
