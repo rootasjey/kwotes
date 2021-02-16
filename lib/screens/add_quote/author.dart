@@ -27,33 +27,33 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   bool isLoadingSuggestions = false;
   final double beginY = 10.0;
 
-  final affiliateUrlController = TextEditingController();
-  final amazonUrlController = TextEditingController();
-  final facebookUrlController = TextEditingController();
-  final nameController = TextEditingController();
-  final instaController = TextEditingController();
-  final jobController = TextEditingController();
-  final summaryController = TextEditingController();
-  final twitchUrlController = TextEditingController();
-  final twitterUrlController = TextEditingController();
-  final websiteUrlController = TextEditingController();
-  final wikiUrlController = TextEditingController();
-  final youtubeUrlController = TextEditingController();
+  TextEditingController affiliateUrlController;
+  TextEditingController amazonUrlController;
+  TextEditingController facebookUrlController;
+  TextEditingController nameController;
+  TextEditingController instaController;
+  TextEditingController jobController;
+  TextEditingController summaryController;
+  TextEditingController twitchUrlController;
+  TextEditingController twitterUrlController;
+  TextEditingController websiteUrlController;
+  TextEditingController wikiUrlController;
+  TextEditingController youtubeUrlController;
 
-  final bornCityController = TextEditingController();
-  final bornCountryController = TextEditingController();
-  final deathCityController = TextEditingController();
-  final deathCountryController = TextEditingController();
+  TextEditingController bornCityController;
+  TextEditingController bornCountryController;
+  TextEditingController deathCityController;
+  TextEditingController deathCountryController;
 
-  final linkInputController = TextEditingController();
+  TextEditingController linkInputController;
 
-  final nameFocusNode = FocusNode();
-  final jobFocusNode = FocusNode();
-  final summaryFocusNode = FocusNode();
-  final bornCityFocusNode = FocusNode();
-  final bornCountryFocusNode = FocusNode();
-  final deathCityFocusNode = FocusNode();
-  final deathCountryFocusNode = FocusNode();
+  FocusNode nameFocusNode;
+  FocusNode jobFocusNode;
+  FocusNode summaryFocusNode;
+  FocusNode bornCityFocusNode;
+  FocusNode bornCountryFocusNode;
+  FocusNode deathCityFocusNode;
+  FocusNode deathCountryFocusNode;
 
   String tapToEditStr = 'Tap to edit';
   String tempImgUrl = '';
@@ -63,6 +63,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   void initState() {
+    initFocusNodes();
+    initInputs();
+
     setState(() {
       affiliateUrlController.text = DataQuoteInputs.author.urls.affiliate;
       amazonUrlController.text = DataQuoteInputs.author.urls.amazon;
@@ -87,11 +90,73 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   void dispose() {
-    if (searchTimer != null) {
-      searchTimer.cancel();
-    }
-
+    searchTimer?.cancel();
+    disposeInputs();
+    disposeFocusNodes();
     super.dispose();
+  }
+
+  void initFocusNodes() {
+    nameFocusNode = FocusNode();
+    jobFocusNode = FocusNode();
+    summaryFocusNode = FocusNode();
+    bornCityFocusNode = FocusNode();
+    bornCountryFocusNode = FocusNode();
+    deathCityFocusNode = FocusNode();
+    deathCountryFocusNode = FocusNode();
+  }
+
+  void initInputs() {
+    affiliateUrlController = TextEditingController();
+    amazonUrlController = TextEditingController();
+    facebookUrlController = TextEditingController();
+    nameController = TextEditingController();
+    instaController = TextEditingController();
+    jobController = TextEditingController();
+    summaryController = TextEditingController();
+    twitchUrlController = TextEditingController();
+    twitterUrlController = TextEditingController();
+    websiteUrlController = TextEditingController();
+    wikiUrlController = TextEditingController();
+    youtubeUrlController = TextEditingController();
+
+    bornCityController = TextEditingController();
+    bornCountryController = TextEditingController();
+    deathCityController = TextEditingController();
+    deathCountryController = TextEditingController();
+
+    linkInputController = TextEditingController();
+  }
+
+  void disposeFocusNodes() {
+    nameFocusNode.dispose();
+    jobFocusNode.dispose();
+    summaryFocusNode.dispose();
+    bornCityFocusNode.dispose();
+    bornCountryFocusNode.dispose();
+    deathCityFocusNode.dispose();
+    deathCountryFocusNode.dispose();
+  }
+
+  void disposeInputs() {
+    affiliateUrlController.dispose();
+    amazonUrlController.dispose();
+    facebookUrlController.dispose();
+    nameController.dispose();
+    instaController.dispose();
+    jobController.dispose();
+    summaryController.dispose();
+    twitchUrlController.dispose();
+    twitterUrlController.dispose();
+    websiteUrlController.dispose();
+    wikiUrlController.dispose();
+    youtubeUrlController.dispose();
+
+    bornCityController.dispose();
+    bornCountryController.dispose();
+    deathCityController.dispose();
+    deathCountryController.dispose();
+    linkInputController.dispose();
   }
 
   @override
