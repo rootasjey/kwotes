@@ -336,12 +336,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           ),
                           label: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Text(selectedDate != null
-                                ? selectedDate
-                                    .toLocal()
-                                    .toString()
-                                    .split(' ')[0]
-                                : 'Select a new date'),
+                            child: Text(
+                              selectedDate != null
+                                  ? selectedDate
+                                      .toLocal()
+                                      .toString()
+                                      .split(' ')[0]
+                                  : 'Select a new date',
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -351,8 +353,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             subtitle: Text('(e.g. year -500)'),
                             value: DataQuoteInputs.author.born.beforeJC,
                             onChanged: (newValue) {
-                              childSetState(() => DataQuoteInputs
-                                  .author.born.beforeJC = newValue);
+                              childSetState(() {
+                                DataQuoteInputs.author.born.beforeJC = newValue;
+                              });
                             },
                           ),
                         ),
@@ -367,6 +370,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     controller: bornCountryController,
                     focusNode: bornCountryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.map),
                       labelText: "Country (e.g. Italy)",
@@ -389,6 +393,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   child: TextField(
                     controller: bornCityController,
                     focusNode: bornCityFocusNode,
+                    textInputAction: TextInputAction.done,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.map_marker),
@@ -402,6 +407,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     onChanged: (newValue) {
                       DataQuoteInputs.author.born.city = newValue;
                     },
+                    onSubmitted: (_) => context.router.pop(),
                   ),
                 ),
                 FormActionInputs(
@@ -529,8 +535,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 Padding(
                   padding: EdgeInsets.only(top: 30.0),
                   child: TextField(
+                    autofocus: true,
                     controller: deathCountryController,
                     focusNode: deathCountryFocusNode,
+                    textInputAction: TextInputAction.next,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.map),
@@ -554,6 +562,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   child: TextField(
                     controller: deathCityController,
                     focusNode: deathCityFocusNode,
+                    textInputAction: TextInputAction.done,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.map_marker),
@@ -567,6 +576,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     onChanged: (newValue) {
                       DataQuoteInputs.author.death.city = newValue;
                     },
+                    onSubmitted: (_) => context.router.pop(),
                   ),
                 ),
                 FormActionInputs(
@@ -667,6 +677,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   onChanged: (newValue) {
                     DataQuoteInputs.author.job = newValue;
                   },
+                  onSubmitted: (_) => context.router.pop,
                 ),
               ),
               FormActionInputs(
@@ -1042,7 +1053,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       titleString: 'Summary',
       subtitleString: summaryStr,
       width: 300.0,
-      icon: Icon(Icons.short_text),
+      icon: Icon(UniconsLine.subject),
       padding: const EdgeInsets.symmetric(vertical: 40.0),
       onTap: prefilledInputs
           ? showPrefilledAlert
@@ -1081,7 +1092,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     focusNode: summaryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.edit),
+                      icon: Icon(UniconsLine.subject),
                       labelText: "Once upon a time...",
                       alignLabelWithHint: true,
                     ),
@@ -1290,6 +1301,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     ),
                     onChanged: (newValue) {
                       initialValue = newValue;
+                    },
+                    onSubmitted: (_) {
+                      onSave(initialValue);
+                      context.router.pop();
                     },
                   ),
                 ),
