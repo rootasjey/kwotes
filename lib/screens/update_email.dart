@@ -218,37 +218,38 @@ class _UpdateEmailState extends State<UpdateEmail> {
           ),
           onTap: () {
             showDialog(
-                context: context,
-                builder: (context) {
-                  return SimpleDialog(
-                    title: Text(
-                      'This is your current email',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
+              context: context,
+              builder: (context) {
+                return SimpleDialog(
+                  title: Text(
+                    'This is your current email',
+                    style: TextStyle(
+                      fontSize: 15.0,
                     ),
-                    children: <Widget>[
-                      Divider(
-                        color: stateColors.secondary,
-                        thickness: 1.0,
+                  ),
+                  children: <Widget>[
+                    Divider(
+                      color: stateColors.secondary,
+                      thickness: 1.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 25.0,
-                        ),
-                        child: Opacity(
-                          opacity: 0.6,
-                          child: Text(
-                            currentEmail,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: Opacity(
+                        opacity: 0.6,
+                        child: Text(
+                          currentEmail,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    ],
-                  );
-                });
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ),
