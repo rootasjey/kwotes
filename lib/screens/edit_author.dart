@@ -165,7 +165,7 @@ class _EditAuthorState extends State<EditAuthor> {
         setState(() {
           hasErrors = true;
           errorDescription = "The author with the id ${widget.authorId} "
-              "doesn't exists. She/He may have been deleted";
+              "doesn't exists. They may have been deleted";
         });
         return;
       }
@@ -210,7 +210,6 @@ class _EditAuthorState extends State<EditAuthor> {
     });
 
     try {
-      appLogger.d(DataQuoteInputs.author.fromReference.id);
       await authorDoc.reference.update(DataQuoteInputs.author.toJSON());
       setState(() => isSaving = false);
 

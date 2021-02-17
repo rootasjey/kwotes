@@ -811,8 +811,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   : 'Select a new date'),
             ),
           ),
-          SizedBox(
+          Container(
             width: 300.0,
+            padding: const EdgeInsets.only(top: 12.0),
             child: CheckboxListTile(
               title: Text('Before J-C (Jesus Christ)',
                   style: TextStyle(fontSize: 16)),

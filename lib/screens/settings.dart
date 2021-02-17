@@ -28,7 +28,7 @@ class Settings extends StatefulWidget {
 
   const Settings({
     Key key,
-    @PathParam('showAppBar') this.showAppBar = true,
+    @PathParam() this.showAppBar = true,
   }) : super(key: key);
 
   @override
