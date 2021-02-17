@@ -45,46 +45,50 @@ class Author {
     );
   }
 
-  factory Author.fromJSON(Map<String, dynamic> json) {
-    final urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
+  factory Author.fromJSON(Map<String, dynamic> data) {
+    final urls = data['urls'] != null ? Urls.fromJSON(data['urls']) : Urls();
 
-    final born = json['born'] != null
-        ? PointInTime.fromJSON(json['born'])
+    final born = data['born'] != null
+        ? PointInTime.fromJSON(data['born'])
         : PointInTime();
 
-    final death = json['death'] != null
-        ? PointInTime.fromJSON(json['death'])
+    final death = data['death'] != null
+        ? PointInTime.fromJSON(data['death'])
         : PointInTime();
 
-    final fromReference = json['fromReference'] != null
-        ? FromReference.fromJSON(json['fromReference'])
+    final fromReference = data['fromReference'] != null
+        ? FromReference.fromJSON(data['fromReference'])
         : FromReference();
 
     return Author(
       born: born,
       death: death,
       fromReference: fromReference,
-      id: json['id'] ?? '',
-      isFictional: json['isFictional'] ?? false,
-      job: json['job'],
-      name: json['name'],
-      summary: json['summary'],
+      id: data['id'] ?? '',
+      isFictional: data['isFictional'] ?? false,
+      job: data['job'],
+      name: data['name'],
+      summary: data['summary'],
       urls: urls,
     );
   }
 
-  Map<String, dynamic> toJSON() {
-    Map<String, dynamic> json = Map();
+  Map<String, dynamic> toJSON({bool withId = false}) {
+    Map<String, dynamic> data = Map();
 
-    json['born'] = born.toJSON();
-    json['death'] = death.toJSON();
-    json['fromReference'] = fromReference.toJSON();
-    json['isFictional'] = isFictional;
-    json['job'] = job;
-    json['name'] = name;
-    json['summary'] = summary;
-    json['urls'] = urls.toJSON();
+    if (withId) {
+      data['id'] = id;
+    }
 
-    return json;
+    data['born'] = born.toJSON();
+    data['death'] = death.toJSON();
+    data['fromReference'] = fromReference.toJSON();
+    data['isFictional'] = isFictional;
+    data['job'] = job;
+    data['name'] = name;
+    data['summary'] = summary;
+    data['urls'] = urls.toJSON();
+
+    return data;
   }
 }

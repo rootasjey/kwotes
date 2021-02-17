@@ -10,26 +10,35 @@ class Release {
     this.beforeJC = false,
   });
 
-  factory Release.fromJSON(Map<String, dynamic> json) {
+  factory Release.fromJSON(Map<String, dynamic> data) {
     DateTime original;
 
-    if (json['original'] == null) {
+    if (data['original'] == null) {
       return Release(
         original: original,
-        beforeJC: json['beforeJC'],
+        beforeJC: data['beforeJC'],
       );
     }
 
-    if (json['original'].runtimeType != Timestamp) {
+    if (data['original'].runtimeType != Timestamp) {
       original = DateTime.fromMillisecondsSinceEpoch(
-          json['original']['_seconds'] * 1000);
+          data['original']['_seconds'] * 1000);
     } else {
-      original = (json['original'] as Timestamp)?.toDate();
+      original = (data['original'] as Timestamp)?.toDate();
     }
 
     return Release(
       original: original,
-      beforeJC: json['beforeJC'],
+      beforeJC: data['beforeJC'],
     );
+  }
+
+  Map<String, dynamic> toJSON() {
+    final Map<String, dynamic> data = Map();
+
+    data['original'] = original;
+    data['beforeJC'] = beforeJC;
+
+    return data;
   }
 }

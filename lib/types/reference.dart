@@ -41,47 +41,51 @@ class Reference {
     );
   }
 
-  factory Reference.fromJSON(Map<String, dynamic> json) {
+  factory Reference.fromJSON(Map<String, dynamic> data) {
     final links = <String>[];
 
-    if (json['links'] != null) {
-      for (String ref in json['links']) {
+    if (data['links'] != null) {
+      for (String ref in data['links']) {
         links.add(ref);
       }
     }
 
-    final urls = json['urls'] != null ? Urls.fromJSON(json['urls']) : Urls();
+    final urls = data['urls'] != null ? Urls.fromJSON(data['urls']) : Urls();
 
-    final type = json['type'] != null
-        ? ReferenceType.fromJSON(json['type'])
+    final type = data['type'] != null
+        ? ReferenceType.fromJSON(data['type'])
         : ReferenceType();
 
     final release =
-        json['release'] != null ? Release.fromJSON(json['release']) : Release();
+        data['release'] != null ? Release.fromJSON(data['release']) : Release();
 
     return Reference(
-      id: json['id'] ?? '',
-      lang: json['lang'],
+      id: data['id'] ?? '',
+      lang: data['lang'],
       links: links,
-      name: json['name'] ?? '',
+      name: data['name'] ?? '',
       release: release,
-      summary: json['summary'],
+      summary: data['summary'],
       type: type,
       urls: urls,
     );
   }
 
-  Map<String, dynamic> toJSON() {
-    Map<String, dynamic> json = Map();
+  Map<String, dynamic> toJSON({bool withId = false}) {
+    final Map<String, dynamic> data = Map();
 
-    json['id'] = id;
-    json['lang'] = lang;
-    json['links'] = links;
-    json['name'] = name;
-    json['release'] = release;
-    json['summary'] = summary;
-    json['type'] = type;
+    if (withId) {
+      data['id'] = id;
+    }
 
-    return json;
+    data['lang'] = lang;
+    data['links'] = links;
+    data['name'] = name;
+    data['release'] = release.toJSON();
+    data['summary'] = summary;
+    data['type'] = type.toJSON();
+    data['urls'] = urls.toJSON();
+
+    return data;
   }
 }
