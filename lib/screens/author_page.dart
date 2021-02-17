@@ -140,19 +140,37 @@ class _AuthorPageState extends State<AuthorPage> {
     authorImageUrl = authorImageUrl ?? '';
     authorName = authorName ?? '';
 
+    Widget authorAvatar;
+
+    if (authorImageUrl.isNotEmpty) {
+      authorAvatar = Hero(
+        tag: widget.authorId,
+        child: AuthorAvatar(
+          imageUrl: authorImageUrl,
+        ),
+      );
+    } else {
+      authorAvatar = Material(
+        elevation: 2.0,
+        clipBehavior: Clip.hardEdge,
+        shape: CircleBorder(),
+        child: Padding(
+          padding: const EdgeInsets.all(48.0),
+          child: Opacity(
+            opacity: 0.6,
+            child: Icon(UniconsLine.user, size: 54.0),
+          ),
+        ),
+      );
+    }
+
     return SliverPadding(
       padding: const EdgeInsets.only(top: 100.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
           Column(
             children: [
-              if (authorImageUrl.isNotEmpty)
-                Hero(
-                  tag: widget.authorId,
-                  child: AuthorAvatar(
-                    imageUrl: authorImageUrl,
-                  ),
-                ),
+              authorAvatar,
               if (authorName.isNotEmpty)
                 Hero(
                   tag: '${widget.authorId}-name',
