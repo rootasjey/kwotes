@@ -628,6 +628,25 @@ class ReferencePageState extends State<ReferencePage> {
           tooltip: "Delete reference",
           onTap: () => confirmAndDeleteReference(),
         ),
+        SquareAction(
+          icon: Icon(UniconsLine.edit),
+          borderColor: Colors.amber,
+          tooltip: "Edit author",
+          onTap: () => context.router.root.push(
+            DashboardPageRoute(children: [
+              AdminDeepRoute(children: [
+                AdminEditDeepRoute(
+                  children: [
+                    EditReferenceRoute(
+                      referenceId: reference.id,
+                      reference: reference,
+                    ),
+                  ],
+                )
+              ])
+            ]),
+          ),
+        ),
       ]);
     }
 

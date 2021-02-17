@@ -34,19 +34,21 @@ import '../screens/my_published_quotes.dart' as _i27;
 import '../screens/my_temp_quotes.dart' as _i28;
 import '../screens/quotidians.dart' as _i29;
 import '../screens/edit_author.dart' as _i30;
-import '../screens/admin_temp_quotes.dart' as _i31;
-import '../screens/quotes_lists.dart' as _i32;
-import '../screens/quotes_list.dart' as _i33;
-import '../screens/delete_account.dart' as _i34;
-import '../screens/update_email.dart' as _i35;
-import '../screens/update_password.dart' as _i36;
-import '../screens/update_username.dart' as _i37;
-import '../screens/topic_page.dart' as _i38;
-import '../screens/references.dart' as _i39;
-import '../screens/reference_page.dart' as _i40;
-import 'package:flutter/foundation.dart' as _i41;
-import '../types/quote.dart' as _i42;
-import '../types/author.dart' as _i43;
+import '../screens/edit_reference.dart' as _i31;
+import '../screens/admin_temp_quotes.dart' as _i32;
+import '../screens/quotes_lists.dart' as _i33;
+import '../screens/quotes_list.dart' as _i34;
+import '../screens/delete_account.dart' as _i35;
+import '../screens/update_email.dart' as _i36;
+import '../screens/update_password.dart' as _i37;
+import '../screens/update_username.dart' as _i38;
+import '../screens/topic_page.dart' as _i39;
+import '../screens/references.dart' as _i40;
+import '../screens/reference_page.dart' as _i41;
+import 'package:flutter/foundation.dart' as _i42;
+import '../types/quote.dart' as _i43;
+import '../types/author.dart' as _i44;
+import '../types/reference.dart' as _i45;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter(
@@ -222,18 +224,27 @@ class AppRouter extends _i1.RootStackRouter {
           child: _i30.EditAuthor(
               key: route.key, authorId: route.authorId, author: route.author));
     },
+    EditReferenceRoute.name: (entry) {
+      var route = entry.routeData.as<EditReferenceRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i31.EditReference(
+              key: route.key,
+              referenceId: route.referenceId,
+              reference: route.reference));
+    },
     AdminTempQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i31.AdminTempQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i32.AdminTempQuotes());
     },
     QuotesListsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i32.QuotesLists());
+      return _i1.MaterialPageX(entry: entry, child: _i33.QuotesLists());
     },
     QuotesListRoute.name: (entry) {
       var route = entry.routeData.as<QuotesListRoute>();
       return _i1.MaterialPageX(
           entry: entry,
           child:
-              _i33.QuotesList(listId: route.listId, onResult: route.onResult));
+              _i34.QuotesList(listId: route.listId, onResult: route.onResult));
     },
     DashboardSettingsRoute.name: (entry) {
       var route = entry.routeData.as<DashboardSettingsRoute>();
@@ -243,36 +254,36 @@ class AppRouter extends _i1.RootStackRouter {
               key: route.key, showAppBar: route.showAppBar ?? true));
     },
     DeleteAccountRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i34.DeleteAccount());
+      return _i1.MaterialPageX(entry: entry, child: _i35.DeleteAccount());
     },
     AccountUpdateDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     UpdateEmailRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i35.UpdateEmail());
+      return _i1.MaterialPageX(entry: entry, child: _i36.UpdateEmail());
     },
     UpdatePasswordRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i36.UpdatePassword());
+      return _i1.MaterialPageX(entry: entry, child: _i37.UpdatePassword());
     },
     UpdateUsernameRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i37.UpdateUsername());
+      return _i1.MaterialPageX(entry: entry, child: _i38.UpdateUsername());
     },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i38.TopicPage(
+          child: _i39.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i39.References());
+      return _i1.MaterialPageX(entry: entry, child: _i40.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i40.ReferencePage(
+          child: _i41.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -360,7 +371,12 @@ class AppRouter extends _i1.RootStackRouter {
                           _i1.RouteConfig<EditAuthorRoute>(EditAuthorRoute.name,
                               path: 'author/:authorId',
                               routeBuilder: (match) =>
-                                  EditAuthorRoute.fromMatch(match))
+                                  EditAuthorRoute.fromMatch(match)),
+                          _i1.RouteConfig<EditReferenceRoute>(
+                              EditReferenceRoute.name,
+                              path: 'reference/:referenceId',
+                              routeBuilder: (match) =>
+                                  EditReferenceRoute.fromMatch(match))
                         ]),
                     _i1.RouteConfig<QuotidiansRoute>(QuotidiansRoute.name,
                         path: 'quotidians',
@@ -619,7 +635,7 @@ class SettingsRoute extends _i1.PageRouteInfo {
         showAppBar = match.pathParams.getBool('showAppBar'),
         super.fromMatch(match);
 
-  final _i41.Key key;
+  final _i42.Key key;
 
   final bool showAppBar;
 
@@ -642,7 +658,7 @@ class SigninRoute extends _i1.PageRouteInfo {
         onSigninResult = null,
         super.fromMatch(match);
 
-  final _i41.Key key;
+  final _i42.Key key;
 
   final void Function(bool) onSigninResult;
 
@@ -657,7 +673,7 @@ class SignupRoute extends _i1.PageRouteInfo {
         onSignupResult = null,
         super.fromMatch(match);
 
-  final _i41.Key key;
+  final _i42.Key key;
 
   final void Function(bool) onSignupResult;
 
@@ -757,7 +773,7 @@ class QuotePageRoute extends _i1.PageRouteInfo {
 
   final String quoteId;
 
-  final _i42.Quote quote;
+  final _i43.Quote quote;
 
   static const String name = 'QuotePageRoute';
 }
@@ -771,7 +787,7 @@ class AddQuoteStepsRoute extends _i1.PageRouteInfo {
         step = match.queryParams.getInt('step', 0),
         super.fromMatch(match);
 
-  final _i41.Key key;
+  final _i42.Key key;
 
   final int step;
 
@@ -875,13 +891,34 @@ class EditAuthorRoute extends _i1.PageRouteInfo {
         author = null,
         super.fromMatch(match);
 
-  final _i41.Key key;
+  final _i42.Key key;
 
   final String authorId;
 
-  final _i43.Author author;
+  final _i44.Author author;
 
   static const String name = 'EditAuthorRoute';
+}
+
+class EditReferenceRoute extends _i1.PageRouteInfo {
+  EditReferenceRoute({this.key, @_i2.required this.referenceId, this.reference})
+      : super(name,
+            path: 'reference/:referenceId',
+            params: {'referenceId': referenceId});
+
+  EditReferenceRoute.fromMatch(_i1.RouteMatch match)
+      : key = null,
+        referenceId = match.pathParams.getString('referenceId'),
+        reference = null,
+        super.fromMatch(match);
+
+  final _i42.Key key;
+
+  final String referenceId;
+
+  final _i45.Reference reference;
+
+  static const String name = 'EditReferenceRoute';
 }
 
 class AdminTempQuotesRoute extends _i1.PageRouteInfo {
@@ -925,7 +962,7 @@ class DashboardSettingsRoute extends _i1.PageRouteInfo {
         showAppBar = match.pathParams.getBool('showAppBar'),
         super.fromMatch(match);
 
-  final _i41.Key key;
+  final _i42.Key key;
 
   final bool showAppBar;
 
