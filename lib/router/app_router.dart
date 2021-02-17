@@ -13,6 +13,7 @@ import 'package:figstyle/screens/contact.dart';
 import 'package:figstyle/screens/dashboard_page.dart';
 import 'package:figstyle/screens/delete_account.dart';
 import 'package:figstyle/screens/drafts.dart';
+import 'package:figstyle/screens/edit_author.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/forgot_password.dart';
 import 'package:figstyle/screens/home/home.dart';
@@ -80,6 +81,14 @@ export 'app_router.gr.dart';
           guards: [AdminAuthGuard],
           children: [
             RedirectRoute(path: '', redirectTo: 'temp'),
+            AutoRoute(
+              path: 'edit',
+              page: EmptyRouterPage,
+              name: 'AdminEditDeepRoute',
+              children: [
+                AutoRoute(path: 'author/:authorId', page: EditAuthor),
+              ],
+            ),
             MaterialRoute(path: 'quotidians', page: Quotidians),
             AutoRoute(
               path: 'temp',
@@ -120,7 +129,6 @@ export 'app_router.gr.dart';
               page: EmptyRouterPage,
               name: 'AccountUpdateDeepRoute',
               children: [
-                // RedirectRoute(path: '', redirectTo: 'email'),
                 MaterialRoute(path: 'email', page: UpdateEmail),
                 MaterialRoute(path: 'password', page: UpdatePassword),
                 MaterialRoute(path: 'username', page: UpdateUsername),

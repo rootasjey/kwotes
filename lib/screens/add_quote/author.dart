@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/form_action_inputs.dart';
 import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
+import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/types/reference_suggestion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/fade_in_x.dart';
@@ -18,6 +20,17 @@ import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
 
 class AddQuoteAuthor extends StatefulWidget {
+  /// Gives information on data type we're editing
+  /// on [addquote/author] page.
+  /// e.g. if we're editing an author withing a quote
+  /// or a published author (indepeendently of other data).
+  final EditAuthorMode editMode;
+
+  const AddQuoteAuthor({
+    Key key,
+    this.editMode = EditAuthorMode.addQuote,
+  }) : super(key: key);
+
   @override
   _AddQuoteAuthorState createState() => _AddQuoteAuthorState();
 }
@@ -60,6 +73,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Timer searchTimer;
   List<AuthorSuggestion> authorsSuggestions = [];
+  List<ReferenceSuggestion> referencesSuggestions = [];
 
   @override
   void initState() {
@@ -172,9 +186,44 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           bornAndDeathCards(),
           summaryCardInput(),
           fictionalCharacterBox(),
+          referenceNameCardInput(),
           links(),
         ],
       ),
+    );
+  }
+
+  Widget authorSuggestions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: authorsSuggestions.map((authorSuggestion) {
+        ImageProvider image;
+        final imageUrl = authorSuggestion.author.urls.image;
+
+        if (imageUrl != null && imageUrl.isNotEmpty) {
+          image = NetworkImage(imageUrl);
+        } else {
+          image = AssetImage('assets/images/user-m.png');
+        }
+
+        return ListTile(
+          onTap: () {
+            onTapNameSuggestions(authorSuggestion);
+          },
+          title: Text(authorSuggestion.getTitle()),
+          contentPadding: const EdgeInsets.all(8.0),
+          leading: Material(
+            shape: CircleBorder(),
+            clipBehavior: Clip.hardEdge,
+            child: Image(
+              image: image,
+              width: 50.0,
+              height: 50.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -615,15 +664,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       child: CheckboxListTile(
         title: Text('is fictional?'),
         subtitle: Text(
-            "If true, a reference's id property will be added to this author."),
+          "If true, a reference's id property "
+          "will be added to this author.",
+        ),
         value: DataQuoteInputs.author.isFictional,
-        onChanged: prefilledInputs
-            ? null
-            : (newValue) {
-                setState(() {
-                  DataQuoteInputs.author.isFictional = newValue;
-                });
-              },
+        onChanged: onFictionalChanged,
       ),
     );
   }
@@ -663,8 +708,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SheetHeader(
                 title: "Job",
-                subTitle:
-                    "Job or role in real life or in the artistic material",
+                subTitle: "Job or role in real life or "
+                    "in the artistic material",
               ),
               Padding(
                 padding: EdgeInsets.only(top: 60.0),
@@ -672,6 +717,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   autofocus: true,
                   controller: jobController,
                   focusNode: jobFocusNode,
+                  textInputAction: TextInputAction.done,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     icon: Icon(UniconsLine.bag),
@@ -940,6 +986,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         await showCupertinoModalBottomSheet(
             context: context,
             builder: (context) {
+              nameController.text = isAuthorNameValid ? authorName : '';
               return nameInput();
             });
 
@@ -1003,7 +1050,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           nameFocusNode.requestFocus();
                         },
                       ),
-                      suggestions(),
+                      authorSuggestions(),
                     ],
                   );
                 }),
@@ -1015,32 +1062,132 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  Widget suggestions() {
+  /// Used when editing author.
+  Widget referenceNameCardInput() {
+    if (!DataQuoteInputs.author.isFictional) {
+      return Container();
+    }
+
+    final referenceName = DataQuoteInputs.author.fromReference.name;
+    final subtitleString =
+        referenceName.isNotEmpty ? referenceName : tapToEditStr;
+
+    return InputCard(
+      width: 250.0,
+      padding: const EdgeInsets.only(
+        top: 40.0,
+        bottom: 20.0,
+      ),
+      titleString: 'Reference name',
+      icon: Icon(UniconsLine.image),
+      subtitleString: subtitleString,
+      onTap: () async {
+        nameController.text = referenceName;
+        await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => referenceNameInput(),
+        );
+
+        setState(() {});
+      },
+    );
+  }
+
+  /// Used when editing author.
+  Widget referenceNameInput({ScrollController scrollController}) {
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SheetHeader(
+                  title: "Reference name",
+                  subTitle: "Suggestions will show when you'll start typing",
+                ),
+                StatefulBuilder(builder: (context, childSetState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 60.0),
+                        child: TextField(
+                          autofocus: true,
+                          controller: nameController,
+                          focusNode: nameFocusNode,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            icon: Icon(UniconsLine.user),
+                            labelText: "e.g. 1984, Interstellar",
+                            alignLabelWithHint: true,
+                          ),
+                          minLines: 1,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                          onChanged: (newValue) =>
+                              onReferenceNameChanged(newValue, childSetState),
+                          onSubmitted: (newValue) {
+                            context.router.pop();
+                          },
+                        ),
+                      ),
+                      if (isLoadingSuggestions)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: LinearProgressIndicator(),
+                        ),
+                      FormActionInputs(
+                        onCancel: () {
+                          DataQuoteInputs.reference.name = '';
+                          nameController.clear();
+                          nameFocusNode.requestFocus();
+                        },
+                      ),
+                      referenceSuggestions(),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Used when editing author.
+  Widget referenceSuggestions() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: authorsSuggestions.map((authorSuggestion) {
+      children: referencesSuggestions.map((referenceSuggestion) {
         ImageProvider image;
-        final imageUrl = authorSuggestion.author.urls.image;
+        final imageUrl = referenceSuggestion.reference.urls.image;
 
         if (imageUrl != null && imageUrl.isNotEmpty) {
           image = NetworkImage(imageUrl);
         } else {
-          image = AssetImage('assets/images/user-m.png');
+          image = AssetImage('assets/images/reference.png');
         }
 
         return ListTile(
           onTap: () {
-            DataQuoteInputs.author = authorSuggestion.author;
+            DataQuoteInputs.reference = referenceSuggestion.reference;
+            DataQuoteInputs.author.fromReference.id =
+                referenceSuggestion.reference.id;
+
             prefilledInputs = true;
             tapToEditStr = '-';
-
             Navigator.of(context).pop();
           },
-          title: Text(authorSuggestion.getTitle()),
+          title: Text(referenceSuggestion.getTitle()),
           contentPadding: const EdgeInsets.all(8.0),
-          leading: Material(
-            shape: CircleBorder(),
-            clipBehavior: Clip.hardEdge,
+          leading: Card(
             child: Image(
               image: image,
               width: 50.0,
@@ -1170,7 +1317,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       });
 
       final query = algolia.index('authors').search(newValue);
-
       final snapshot = await query.getObjects();
 
       if (snapshot.empty) {
@@ -1183,7 +1329,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         data['id'] = hit.objectID;
 
         final authorSuggestion = AuthorSuggestion.fromJSON(data);
-
         final fromReference = authorSuggestion.author.fromReference;
 
         if (fromReference != null &&
@@ -1207,6 +1352,130 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
       childSetState(() => isLoadingSuggestions = false);
     });
+  }
+
+  void onFictionalChanged(bool isChecked) async {
+    final isEditAuthorMode = widget.editMode == EditAuthorMode.editAuthor;
+
+    if (prefilledInputs && !isEditAuthorMode) {
+      return null;
+    }
+
+    if (isChecked && isEditAuthorMode) {
+      await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) {
+            nameController.text = '';
+            return referenceNameInput();
+          });
+
+      setState(() {
+        DataQuoteInputs.author.isFictional =
+            DataQuoteInputs.reference.id.isNotEmpty;
+
+        DataQuoteInputs.author.fromReference.id = DataQuoteInputs.reference.id;
+      });
+
+      return;
+    }
+
+    if (!isChecked && isEditAuthorMode) {
+      DataQuoteInputs.clearReference();
+
+      setState(() {
+        DataQuoteInputs.author.isFictional = isChecked;
+      });
+
+      return;
+    }
+
+    setState(() {
+      DataQuoteInputs.author.isFictional = isChecked;
+    });
+  }
+
+  /// Used when editing author.
+  void onReferenceNameChanged(String newValue, childSetState) {
+    DataQuoteInputs.reference.name = newValue;
+
+    if (searchTimer != null && searchTimer.isActive) {
+      searchTimer.cancel();
+    }
+
+    searchTimer = Timer(1.seconds, () async {
+      setState(() {
+        isLoadingSuggestions = true;
+        referencesSuggestions.clear();
+      });
+
+      final query = algolia.index('references').search(newValue);
+
+      final snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        childSetState(() => isLoadingSuggestions = false);
+        return;
+      }
+
+      for (final hit in snapshot.hits) {
+        final data = hit.data;
+        data['id'] = hit.objectID;
+
+        final referenceSuggestion = ReferenceSuggestion.fromJSON(data);
+        referencesSuggestions.add(referenceSuggestion);
+      }
+
+      childSetState(() => isLoadingSuggestions = false);
+    });
+  }
+
+  Function onTapNameSuggestions(AuthorSuggestion authorSuggestion) {
+    if (widget.editMode == EditAuthorMode.addQuote) {
+      return () {
+        DataQuoteInputs.author = authorSuggestion.author;
+        prefilledInputs = true;
+        tapToEditStr = '-';
+
+        Navigator.of(context).pop();
+      };
+    }
+
+    return () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text(
+              "Can't perform this action",
+              style: TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
+            children: <Widget>[
+              Divider(
+                color: stateColors.secondary,
+                thickness: 1.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                ),
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    "You can't select existing authors when already "
+                    "editing one. Suggestions are show to avoid duplications",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    };
   }
 
   void showAvatarDialog() {
@@ -1336,17 +1605,18 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   void showPrefilledAlert() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Text(
-              "Author's fields have been filled out for you.",
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(
+            "Author's fields have been filled out for you.",
+            style: TextStyle(
+              fontSize: 16.0,
             ),
-            titlePadding: const EdgeInsets.all(20.0),
-          );
-        });
+          ),
+          titlePadding: const EdgeInsets.all(20.0),
+        );
+      },
+    );
   }
 }

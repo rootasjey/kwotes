@@ -637,6 +637,25 @@ class _AuthorPageState extends State<AuthorPage> {
           tooltip: "Delete author",
           onTap: () => confirmAndDeleteAuthor(),
         ),
+        SquareAction(
+          icon: Icon(UniconsLine.edit),
+          borderColor: Colors.amber,
+          tooltip: "Edit author",
+          onTap: () => context.router.root.push(
+            DashboardPageRoute(children: [
+              AdminDeepRoute(children: [
+                AdminEditDeepRoute(
+                  children: [
+                    EditAuthorRoute(
+                      authorId: author.id,
+                      author: author,
+                    ),
+                  ],
+                )
+              ])
+            ]),
+          ),
+        ),
       ]);
     }
 
