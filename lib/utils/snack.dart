@@ -9,6 +9,7 @@ Future showSnack({
   Widget icon,
   @required String message,
   SnackType type = SnackType.info,
+  Widget primaryAction,
 }) {
   if (type == SnackType.error) {
     return FlashHelper.groundedBottom(
@@ -16,6 +17,7 @@ Future showSnack({
       title: title,
       message: message,
       icon: icon != null ? icon : Icon(UniconsLine.times, color: Colors.pink),
+      primaryAction: primaryAction,
     );
   } else if (type == SnackType.success) {
     return FlashHelper.groundedBottom(
@@ -23,6 +25,7 @@ Future showSnack({
       title: title,
       message: message,
       icon: icon != null ? icon : Icon(UniconsLine.check, color: Colors.green),
+      primaryAction: primaryAction,
     );
   }
   return FlashHelper.groundedBottom(
@@ -30,5 +33,6 @@ Future showSnack({
     title: title,
     message: message,
     icon: icon,
+    primaryAction: primaryAction,
   );
 }

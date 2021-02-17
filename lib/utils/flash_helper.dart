@@ -187,6 +187,7 @@ class FlashHelper {
     @required String message,
     Widget icon = const Icon(UniconsLine.chat_info),
     Duration duration = const Duration(seconds: 5),
+    Widget primaryAction,
   }) {
     return showFlash<T>(
       context: context,
@@ -226,13 +227,15 @@ class FlashHelper {
             primaryAction: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(
-                    UniconsLine.times,
-                    color: stateColors.secondary,
+                if (primaryAction != null) primaryAction,
+                if (primaryAction == null)
+                  IconButton(
+                    icon: Icon(
+                      UniconsLine.times,
+                      color: stateColors.secondary,
+                    ),
+                    onPressed: () => controller.dismiss(),
                   ),
-                  onPressed: () => controller.dismiss(),
-                ),
               ],
             ),
           ),
