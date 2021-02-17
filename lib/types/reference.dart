@@ -6,8 +6,6 @@ class Reference {
   /// When this reference was released.
   final Release release;
 
-  final List<String> links;
-
   final String id;
   String lang;
   String name;
@@ -20,7 +18,6 @@ class Reference {
   Reference({
     this.id = '',
     this.lang = 'en',
-    this.links,
     this.name = '',
     this.release,
     this.summary = '',
@@ -32,7 +29,6 @@ class Reference {
     return Reference(
       id: '',
       lang: 'en',
-      links: [],
       name: '',
       release: Release(),
       summary: '',
@@ -62,7 +58,6 @@ class Reference {
     return Reference(
       id: data['id'] ?? '',
       lang: data['lang'],
-      links: links,
       name: data['name'] ?? '',
       release: release,
       summary: data['summary'],
@@ -79,7 +74,6 @@ class Reference {
     }
 
     data['lang'] = lang;
-    data['links'] = links;
     data['name'] = name;
     data['release'] = release.toJSON();
     data['summary'] = summary;
