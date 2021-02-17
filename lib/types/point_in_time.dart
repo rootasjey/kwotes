@@ -30,4 +30,15 @@ class PointInTime {
       date: date,
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    final data = Map<String, dynamic>();
+
+    data['beforeJC'] = beforeJC;
+    data['country'] = country;
+    data['city'] = city;
+    data['date'] = date;
+
+    return data;
+  }
 }

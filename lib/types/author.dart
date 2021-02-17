@@ -76,15 +76,14 @@ class Author {
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> json = Map();
 
-    json['born'] = born;
-    json['death'] = death;
-    json['fromReference'] = fromReference;
-    json['id'] = id;
+    json['born'] = born.toJSON();
+    json['death'] = death.toJSON();
+    json['fromReference'] = fromReference.toJSON();
     json['isFictional'] = isFictional;
     json['job'] = job;
     json['name'] = name;
     json['summary'] = summary;
-    json['urls'] = urls;
+    json['urls'] = urls.toJSON();
 
     return json;
   }
