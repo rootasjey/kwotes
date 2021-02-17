@@ -104,14 +104,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         // or other single matching key events will override it.
 
         // <-- Previous step
-        if (keyEvent.isShiftPressed &&
+        if (keyEvent.isKeyPressed(LogicalKeyboardKey.alt) &&
             keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
           cancel();
           return;
         }
 
         // Next step -->
-        if (keyEvent.isShiftPressed &&
+        if (keyEvent.isKeyPressed(LogicalKeyboardKey.alt) &&
             keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
           next();
           return;
