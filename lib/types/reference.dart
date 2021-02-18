@@ -48,14 +48,6 @@ class Reference {
   }
 
   factory Reference.fromJSON(Map<String, dynamic> data) {
-    final links = <String>[];
-
-    if (data['links'] != null) {
-      for (String ref in data['links']) {
-        links.add(ref);
-      }
-    }
-
     final urls = data['urls'] != null ? Urls.fromJSON(data['urls']) : Urls();
 
     final type = data['type'] != null
