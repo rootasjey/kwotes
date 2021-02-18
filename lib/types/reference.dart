@@ -4,16 +4,16 @@ import 'package:figstyle/types/urls.dart';
 
 class Reference {
   /// When this reference was released.
-  final Release release;
+  Release release;
 
-  final String id;
+  String id;
   String lang;
   String name;
   String summary;
 
-  final ReferenceType type;
+  ReferenceType type;
 
-  final Urls urls;
+  Urls urls;
 
   Reference({
     this.id = '',
@@ -24,6 +24,16 @@ class Reference {
     this.type,
     this.urls,
   });
+
+  void clear() {
+    id = '';
+    lang = 'en';
+    name = '';
+    release = Release();
+    summary = '';
+    type = ReferenceType();
+    urls = Urls();
+  }
 
   factory Reference.empty() {
     return Reference(
@@ -60,7 +70,7 @@ class Reference {
       lang: data['lang'],
       name: data['name'] ?? '',
       release: release,
-      summary: data['summary'],
+      summary: data['summary'] ?? '',
       type: type,
       urls: urls,
     );
@@ -79,6 +89,17 @@ class Reference {
     data['summary'] = summary;
     data['type'] = type.toJSON();
     data['urls'] = urls.toJSON();
+
+    return data;
+  }
+
+  /// Return a map with only [id] and [name] as properties.
+  /// Useful wwhen converting reference"s data into a published quote.
+  Map<String, dynamic> toPartialJSON() {
+    Map<String, dynamic> data = Map();
+
+    data['id'] = id;
+    data['name'] = name;
 
     return data;
   }
