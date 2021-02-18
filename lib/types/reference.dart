@@ -48,23 +48,35 @@ class Reference {
   }
 
   factory Reference.fromJSON(Map<String, dynamic> data) {
-    final urls = data['urls'] != null ? Urls.fromJSON(data['urls']) : Urls();
+    Urls _urls;
+    if (data['urls'] != null) {
+      _urls = Urls.fromJSON(data['urls']);
+    } else {
+      Urls();
+    }
 
-    final type = data['type'] != null
-        ? ReferenceType.fromJSON(data['type'])
-        : ReferenceType();
+    ReferenceType _type;
+    if (data['type'] != null) {
+      _type = ReferenceType.fromJSON(data['type']);
+    } else {
+      _type = ReferenceType();
+    }
 
-    final release =
-        data['release'] != null ? Release.fromJSON(data['release']) : Release();
+    Release _release;
+    if (data['release'] != null) {
+      _release = Release.fromJSON(data['release']);
+    } else {
+      _release = Release();
+    }
 
     return Reference(
       id: data['id'] ?? '',
       lang: data['lang'],
       name: data['name'] ?? '',
-      release: release,
+      release: _release,
       summary: data['summary'] ?? '',
-      type: type,
-      urls: urls,
+      type: _type,
+      urls: _urls,
     );
   }
 
