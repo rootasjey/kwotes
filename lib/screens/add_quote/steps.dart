@@ -59,9 +59,10 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   FocusNode keyboardFocusNode = FocusNode();
 
-  Icon fabIcon = Icon(Icons.send);
+  Icon fabIcon = Icon(UniconsLine.message);
 
   int currentStep = 0;
+  int totalStep = 5;
 
   List<Widget> helpSteps = [
     HelpContent(),
@@ -87,7 +88,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     if (DataQuoteInputs.quote.id.isNotEmpty) {
       fabText = 'Save quote';
-      fabIcon = Icon(Icons.save_alt);
+      fabIcon = Icon(UniconsLine.save);
       fabBackgroundColor = stateColors.secondary;
     }
   }
@@ -383,6 +384,38 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   Widget stepperSections() {
     return Stepper(
+      controlsBuilder: (context, {onStepCancel, onStepContinue}) {
+        return Row(
+          children: [
+            TextButton(
+              onPressed: onStepCancel,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  currentStep > 0 ? "PREVIOUS" : "QUIT",
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+            ),
+            ElevatedButton(
+              onPressed: onStepContinue,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  currentStep >= (totalStep - 1)
+                      ? fabText.toUpperCase()
+                      : "NEXT",
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: stateColors.validation,
+              ),
+            ),
+          ],
+        );
+      },
       currentStep: currentStep,
       onStepContinue: next,
       onStepCancel: cancel,
@@ -624,7 +657,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   void next() {
     sharedAxisReverse = false;
-    currentStep + 1 < 5 ? goTo(currentStep + 1) : propose();
+    currentStep + 1 < totalStep ? goTo(currentStep + 1) : propose();
   }
 
   void propose() async {
@@ -673,7 +706,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         );
       }
 
-      fabIcon = Icon(Icons.send);
+      fabIcon = Icon(UniconsLine.message);
       return;
     }
 
@@ -683,7 +716,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         actionResult = AddQuoteType.draft;
         isFabVisible = true;
         isSubmitting = false;
-        fabIcon = Icon(Icons.send);
+        fabIcon = Icon(UniconsLine.message);
       });
 
       return;
@@ -698,7 +731,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
         isFabVisible = true;
-        fabIcon = Icon(Icons.send);
+        fabIcon = Icon(UniconsLine.message);
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
@@ -714,7 +747,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     setState(() {
       actionResult = AddQuoteType.offline;
-      fabIcon = Icon(Icons.send);
+      fabIcon = Icon(UniconsLine.message);
       isSubmitting = false;
       isFabVisible = true;
     });
