@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
@@ -28,7 +29,7 @@ class _SigninState extends State<Signin> {
 
   bool isCheckingAuth = false;
   bool isCompleted = false;
-  bool isSigningIn = false;
+  bool isConnecting = false;
 
   final passwordNode = FocusNode();
   final emailController = TextEditingController();
@@ -74,7 +75,7 @@ class _SigninState extends State<Signin> {
   }
 
   Widget body() {
-    if (isSigningIn) {
+    if (isConnecting) {
       return LoadingAnimation(
         textTitle: 'Signing in...',
       );
@@ -347,7 +348,7 @@ class _SigninState extends State<Signin> {
     }
 
     setState(() {
-      isSigningIn = true;
+      isConnecting = true;
     });
 
     try {
@@ -357,6 +358,11 @@ class _SigninState extends State<Signin> {
       );
 
       if (userCred == null) {
+        appLogger.d("empty user");
+        setState(() {
+          isConnecting = false;
+        });
+
         showSnack(
           context: context,
           type: SnackType.error,
@@ -371,7 +377,7 @@ class _SigninState extends State<Signin> {
         password: password,
       );
 
-      isSigningIn = false;
+      isConnecting = false;
       isCompleted = true;
 
       // If this callback is defined,
@@ -383,7 +389,7 @@ class _SigninState extends State<Signin> {
 
       context.router.navigate(HomeRoute());
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.d(error);
 
       showSnack(
         context: context,
@@ -392,7 +398,7 @@ class _SigninState extends State<Signin> {
       );
 
       setState(() {
-        isSigningIn = false;
+        isConnecting = false;
       });
     }
   }
