@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/partial_user.dart';
 import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/types/urls.dart';
 import 'package:figstyle/types/validation.dart';
 
 class TempQuote {
@@ -25,6 +26,8 @@ class TempQuote {
   final String name;
   final String region;
 
+  final Urls urls;
+
   final Validation validation;
 
   TempQuote({
@@ -39,6 +42,7 @@ class TempQuote {
     this.region,
     this.topics,
     this.updatedAt,
+    this.urls,
     this.user,
     this.validation,
   });
@@ -63,6 +67,13 @@ class TempQuote {
     } else if (data['mainReference'] != null) {
       // Keep for drafts. To delete later.
       _reference = Reference.fromJSON(data['mainReference']);
+    }
+
+    Urls _urls;
+    if (data['urls'] != null) {
+      _urls = Urls.fromJSON(data['urls']);
+    } else {
+      _urls = Urls();
     }
 
     PartialUser _user;
@@ -110,6 +121,7 @@ class TempQuote {
       region: data['region'],
       topics: _topicsList,
       updatedAt: _updatedAt,
+      urls: _urls,
       user: _user,
       validation: _validation,
     );
