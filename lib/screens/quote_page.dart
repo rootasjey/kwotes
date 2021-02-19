@@ -7,6 +7,7 @@ import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
@@ -696,6 +697,8 @@ class _QuotePageState extends State<QuotePage> {
       context: context,
       builder: (context) {
         final focusNode = FocusNode();
+        final author = quote.author;
+        final reference = quote.reference;
 
         return StatefulBuilder(builder: (context, childSetState) {
           return RawKeyboardListener(
@@ -714,7 +717,7 @@ class _QuotePageState extends State<QuotePage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (widget.quote.author.id.isNotEmpty)
+                    if (author != null && author.id.isNotEmpty)
                       CheckboxListTile(
                         dense: true,
                         title: Opacity(
@@ -728,7 +731,7 @@ class _QuotePageState extends State<QuotePage> {
                           });
                         },
                       ),
-                    if (widget.quote.reference.id.isNotEmpty)
+                    if (reference != null && reference.id.isNotEmpty)
                       CheckboxListTile(
                         dense: true,
                         title: Opacity(
@@ -806,21 +809,25 @@ class _QuotePageState extends State<QuotePage> {
   void fetchTopics() async {
     final _topicsColors = <TopicColor>[];
 
-    for (String topicName in quote.topics) {
-      final doc = await FirebaseFirestore.instance
-          .collection('topics')
-          .doc(topicName)
-          .get();
+    try {
+      for (String topicName in quote.topics) {
+        final doc = await FirebaseFirestore.instance
+            .collection('topics')
+            .doc(topicName)
+            .get();
 
-      if (doc.exists) {
-        final topic = TopicColor.fromJSON(doc.data());
-        _topicsColors.add(topic);
+        if (doc.exists) {
+          final topic = TopicColor.fromJSON(doc.data());
+          _topicsColors.add(topic);
+        }
       }
-    }
 
-    setState(() {
-      topicColors = _topicsColors;
-    });
+      setState(() {
+        topicColors = _topicsColors;
+      });
+    } catch (error) {
+      appLogger.d(error);
+    }
   }
 
   /// Fetch the quote matching the [widget.quoteId].
@@ -858,7 +865,7 @@ class _QuotePageState extends State<QuotePage> {
         setState(() => isLoading = false);
       }
 
-      debugPrint(error);
+      appLogger.d(error);
     }
   }
 
@@ -956,7 +963,9 @@ class _QuotePageState extends State<QuotePage> {
           ),
           onTap: () {
             context.router.pop();
-            confirmAndDeletePubQuote();
+            SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+              confirmAndDeletePubQuote();
+            });
           },
         ),
         ListTile(

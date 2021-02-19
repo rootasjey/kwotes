@@ -14,6 +14,7 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/snack.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:unicons/unicons.dart';
@@ -193,6 +194,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   }
 
   void confirmAndDeletePubQuote() async {
+    final author = widget.quote.author;
+    final reference = widget.quote.reference;
+
     showCustomModalBottomSheet(
       context: context,
       builder: (context) {
@@ -204,7 +208,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (widget.quote.author.id.isNotEmpty)
+                    if (author != null && author.id.isNotEmpty)
                       CheckboxListTile(
                         dense: true,
                         title: Opacity(
@@ -218,7 +222,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                           });
                         },
                       ),
-                    if (widget.quote.reference.id.isNotEmpty)
+                    if (reference != null && reference.id.isNotEmpty)
                       CheckboxListTile(
                         dense: true,
                         title: Opacity(
@@ -556,7 +560,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           ),
           onTap: () {
             context.router.pop();
-            confirmAndDeletePubQuote();
+            SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+              confirmAndDeletePubQuote();
+            });
           },
         ),
         ListTile(
