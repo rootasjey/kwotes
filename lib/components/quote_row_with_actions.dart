@@ -135,8 +135,8 @@ class QuoteRowWithActions extends StatefulWidget {
 }
 
 class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
-  bool deleteAuthor = false;
-  bool deleteReference = false;
+  bool deleteWithAuthor = false;
+  bool deleteWithReference = false;
 
   @override
   initState() {
@@ -204,32 +204,34 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CheckboxListTile(
-                      dense: true,
-                      title: Opacity(
-                        opacity: 0.6,
-                        child: Text("Delete associated author"),
+                    if (widget.quote.author.id.isNotEmpty)
+                      CheckboxListTile(
+                        dense: true,
+                        title: Opacity(
+                          opacity: 0.6,
+                          child: Text("Delete associated author"),
+                        ),
+                        value: deleteWithAuthor,
+                        onChanged: (isChecked) {
+                          childSetState(() {
+                            deleteWithAuthor = isChecked;
+                          });
+                        },
                       ),
-                      value: deleteAuthor,
-                      onChanged: (isChecked) {
-                        childSetState(() {
-                          deleteAuthor = isChecked;
-                        });
-                      },
-                    ),
-                    CheckboxListTile(
-                      dense: true,
-                      title: Opacity(
-                        opacity: 0.6,
-                        child: Text("Delete associated reference"),
+                    if (widget.quote.reference.id.isNotEmpty)
+                      CheckboxListTile(
+                        dense: true,
+                        title: Opacity(
+                          opacity: 0.6,
+                          child: Text("Delete associated reference"),
+                        ),
+                        value: deleteWithReference,
+                        onChanged: (isChecked) {
+                          childSetState(() {
+                            deleteWithReference = isChecked;
+                          });
+                        },
                       ),
-                      value: deleteReference,
-                      onChanged: (isChecked) {
-                        childSetState(() {
-                          deleteReference = isChecked;
-                        });
-                      },
-                    ),
                     ListTile(
                       title: Text(
                         'Confirm',
@@ -281,8 +283,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     final success = await QuotesActions.delete(
       quote: widget.quote,
-      deleteAuthor: deleteAuthor,
-      deleteReference: deleteReference,
+      deleteAuthor: deleteWithAuthor,
+      deleteReference: deleteWithReference,
     );
 
     if (widget.onAfterDeletePubQuote != null) {
