@@ -194,7 +194,7 @@ async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
 }
 
 async function createOrGetReference(data: any) {
-  const reference = {
+  const payload = {
     id: '',
     lang: 'en',
     links: [],
@@ -223,51 +223,51 @@ async function createOrGetReference(data: any) {
     },
   };
 
-  if (data.references.length === 0) {
-    return reference;
+  const { reference } = data;
+
+  if (!reference) {
+    return payload;
   }
 
-  const first = data.references[0];
-
-  if (first.id.length > 0) {
-    return { ...reference, ...{
-      id: first.id,
-      name: first.name,
+  if (reference.id.length > 0) {
+    return { ...payload, ...{
+      id: reference.id,
+      name: reference.name,
     }};
   }
 
   const newReferenceDoc = await firestore
     .collection('references')
-    .add({ ...reference, ...{
+    .add({ ...payload, ...{
       createdAt: adminApp.firestore.Timestamp.now(),
-      lang: first.lang ?? 'en',
-      name: first.name,
+      lang: reference.lang ?? 'en',
+      name: reference.name,
       release: {
-        original: first.release.original,
-        beforeJS: first.release.beforeJC,
+        original: reference.release.original,
+        beforeJS: reference.release.beforeJC,
       },
-      summary: first.summary,
+      summary: reference.summary,
       type: {
-        primary: first.type.primary,
-        secondary: first.type.secondary,
+        primary: reference.type.primary,
+        secondary: reference.type.secondary,
       },
       updatedAt: adminApp.firestore.Timestamp.now(),
       urls: {
-        amazon    : first.urls.amazon,
-        facebook  : first.urls.facebook,
-        image     : first.urls.image,
-        instagram : first.urls.instagram,
-        netflix   : first.urls.netflix,
-        primeVideo: first.urls.primeVideo,
-        twitch    : first.urls.twitch,
-        twitter   : first.urls.twitter,
-        website   : first.urls.website,
-        wikipedia : first.urls.wikipedia,
-        youtube   : first.urls.youtube,
+        amazon    : reference.urls.amazon,
+        facebook  : reference.urls.facebook,
+        image     : reference.urls.image,
+        instagram : reference.urls.instagram,
+        netflix   : reference.urls.netflix,
+        primeVideo: reference.urls.primeVideo,
+        twitch    : reference.urls.twitch,
+        twitter   : reference.urls.twitter,
+        website   : reference.urls.website,
+        wikipedia : reference.urls.wikipedia,
+        youtube   : reference.urls.youtube,
       },
     }});
 
-  reference.id = newReferenceDoc.id;
-  reference.name = first.name;
-  return reference;
+  payload.id = newReferenceDoc.id;
+  payload.name = reference.name;
+  return payload;
 }
