@@ -6,8 +6,8 @@ class ValidationComment {
   final String moderatorId;
 
   ValidationComment({
-    this.name,
-    this.moderatorId,
+    this.name = '',
+    this.moderatorId = '',
   });
 
   factory ValidationComment.fromJSON(Map<String, dynamic> json) {
@@ -15,5 +15,14 @@ class ValidationComment {
       name: json['name'],
       moderatorId: json['moderatorid'] != null ? json['moderatorid'] : '',
     );
+  }
+
+  Map<String, dynamic> toJSON() {
+    final Map<String, dynamic> data = Map();
+
+    data['name'] = name;
+    data['moderatorId'] = moderatorId;
+
+    return data;
   }
 }

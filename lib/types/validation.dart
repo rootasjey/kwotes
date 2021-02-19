@@ -13,16 +13,34 @@ class Validation {
   });
 
   factory Validation.fromJSON(Map<String, dynamic> json) {
-    final updatedAt = json['updatedAt'].runtimeType == String ?
-      DateTime.parse(json['updatedAt']) :
-      (json['updatedAt'] as Timestamp).toDate();
+    DateTime updatedAt;
+    if (json['updatedAt'].runtimeType == String) {
+      updatedAt = DateTime.parse(json['updatedAt']);
+    } else {
+      updatedAt = (json['updatedAt'] as Timestamp).toDate();
+    }
+
+    ValidationComment comment;
+    if (json['comment'] != null) {
+      comment = ValidationComment.fromJSON(json['comment']);
+    } else {
+      comment = ValidationComment();
+    }
 
     return Validation(
-      comment: json['comment'] != null ?
-        ValidationComment.fromJSON(json['comment']) : null,
-
+      comment: comment,
       status: json['status'],
       updatedAt: updatedAt,
     );
+  }
+
+  Map<String, dynamic> toJSON() {
+    final Map<String, dynamic> data = Map();
+
+    data['comment'] = comment.toJSON();
+    data['status'] = status;
+    data['updatedAt'] = updatedAt;
+
+    return data;
   }
 }

@@ -91,4 +91,15 @@ class Author {
 
     return data;
   }
+
+  /// Return a map with only [id] and [name] as properties.
+  /// Useful wwhen converting author"s data into a published quote.
+  Map<String, dynamic> toPartialJSON() {
+    Map<String, dynamic> data = Map();
+
+    data['id'] = id;
+    data['name'] = name;
+
+    return data;
+  }
 }

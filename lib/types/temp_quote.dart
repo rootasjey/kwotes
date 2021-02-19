@@ -6,7 +6,7 @@ import 'package:figstyle/types/urls.dart';
 import 'package:figstyle/types/validation.dart';
 
 class TempQuote {
-  final Author author;
+  Author author;
 
   // To distinguish offline draft.
   final bool isOffline;
@@ -19,7 +19,7 @@ class TempQuote {
 
   final PartialUser user;
 
-  final Reference reference;
+  Reference reference;
 
   final String id;
   final String lang;
@@ -125,5 +125,42 @@ class TempQuote {
       user: _user,
       validation: _validation,
     );
+  }
+
+  void addComment(String comment) {
+    comments.add(comment);
+  }
+
+  void setAuthor(Author newAuthor) {
+    author = newAuthor;
+  }
+
+  void setReference(Reference newReference) {
+    reference = newReference;
+  }
+
+  Map<String, dynamic> toJSON() {
+    final Map<String, dynamic> data = Map();
+    final Map<String, bool> topicsMap = Map();
+
+    for (var topic in topics) {
+      topicsMap.putIfAbsent(topic, () => true);
+    }
+
+    data['author'] = author.toJSON();
+    data['comments'] = comments;
+    data['createdAt'] = createdAt;
+    data['isOffline'] = isOffline;
+    data['lang'] = lang;
+    data['reference'] = reference.toJSON();
+    data['name'] = name;
+    data['region'] = region;
+    data['topics'] = topicsMap;
+    data['updatedAt'] = DateTime.now();
+    data['urls'] = urls.toJSON();
+    data['user'] = user.toJSON();
+    data['validation'] = validation.toJSON();
+
+    return data;
   }
 }

@@ -16,4 +16,14 @@ class PartialUser {
       email: data['email'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJSON() {
+    final Map<String, dynamic> data = Map();
+
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+
+    return data;
+  }
 }

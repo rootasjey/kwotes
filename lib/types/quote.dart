@@ -77,18 +77,25 @@ class Quote {
     );
   }
 
-  Map<String, dynamic> toJSON() {
-    Map<String, dynamic> json = Map();
+  Map<String, dynamic> toJSON({bool withId = false}) {
+    Map<String, dynamic> data = Map();
+    final Map<String, bool> topicsMap = Map();
 
-    json['author'] = author.toJSON();
-    json['id'] = id;
-    json['lang'] = lang;
-    json['name'] = name;
-    json['reference'] = reference.toJSON();
-    json['quoteId'] = quoteId;
-    json['starred'] = starred;
-    json['topics'] = topics;
+    for (var topic in topics) {
+      topicsMap.putIfAbsent(topic, () => true);
+    }
 
-    return json;
+    if (withId) {
+      data['id'] = id;
+    }
+
+    data['author'] = author.toPartialJSON();
+    data['lang'] = lang;
+    data['name'] = name;
+    data['reference'] = reference.toPartialJSON();
+    data['topics'] = topicsMap;
+    data['updatedAt'] = DateTime.now();
+
+    return data;
   }
 }
