@@ -59,10 +59,10 @@ class TempQuote {
 
     Reference _reference;
     if (data['reference'] != null) {
-      Reference.fromJSON(data['reference']);
+      _reference = Reference.fromJSON(data['reference']);
     } else if (data['mainReference'] != null) {
       // Keep for drafts. To delete later.
-      Reference.fromJSON(data['mainReference']);
+      _reference = Reference.fromJSON(data['mainReference']);
     }
 
     PartialUser _user;
@@ -102,11 +102,11 @@ class TempQuote {
       author: _author,
       comments: comments,
       createdAt: _createdAt,
-      id: data['id'],
+      id: data['id'] ?? '',
       isOffline: data['isOffline'] ?? false,
-      lang: data['lang'],
+      lang: data['lang'] ?? 'en',
       reference: _reference,
-      name: data['name'],
+      name: data['name'] ?? '',
       region: data['region'],
       topics: _topicsList,
       updatedAt: _updatedAt,
