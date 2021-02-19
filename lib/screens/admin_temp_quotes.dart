@@ -326,7 +326,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           .collection('tempquotes')
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
-          .limit(30)
+          .limit(limit)
           .get();
 
       if (snapshot.docs.isEmpty) {
@@ -370,7 +370,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
           .where('lang', isEqualTo: lang)
           .orderBy('createdAt', descending: descending)
           .startAfterDocument(lastDoc)
-          .limit(30)
+          .limit(limit)
           .get();
 
       if (snapshot.docs.isEmpty) {
