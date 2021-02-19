@@ -45,6 +45,14 @@ class QuotePage extends StatefulWidget {
 }
 
 class _QuotePageState extends State<QuotePage> {
+  /// If true, the author associated
+  /// with the current quote will be deleted alongside the quote.
+  bool deleteWithAuthor = false;
+
+  /// If true, the reference associated
+  /// with the current quote will be deleted alongside the quote.
+  bool deleteWithReference = false;
+
   /// True if data is loading.
   bool isLoading = false;
 
@@ -689,49 +697,79 @@ class _QuotePageState extends State<QuotePage> {
       builder: (context) {
         final focusNode = FocusNode();
 
-        return RawKeyboardListener(
-          autofocus: true,
-          focusNode: focusNode,
-          onKey: (keyEvent) {
-            if (keyEvent.isKeyPressed(LogicalKeyboardKey.enter) ||
-                keyEvent.isKeyPressed(LogicalKeyboardKey.space)) {
-              deleteQuoteAndNavBack();
-              return;
-            }
-          },
-          child: Material(
-            child: SafeArea(
-              top: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: Text(
-                      'Confirm',
-                      style: TextStyle(
+        return StatefulBuilder(builder: (context, childSetState) {
+          return RawKeyboardListener(
+            autofocus: true,
+            focusNode: focusNode,
+            onKey: (keyEvent) {
+              if (keyEvent.isKeyPressed(LogicalKeyboardKey.enter) ||
+                  keyEvent.isKeyPressed(LogicalKeyboardKey.space)) {
+                deleteQuoteAndNavBack();
+                return;
+              }
+            },
+            child: Material(
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.quote.author.id.isNotEmpty)
+                      CheckboxListTile(
+                        dense: true,
+                        title: Opacity(
+                          opacity: 0.6,
+                          child: Text("Delete associated author"),
+                        ),
+                        value: deleteWithAuthor,
+                        onChanged: (isChecked) {
+                          childSetState(() {
+                            deleteWithAuthor = isChecked;
+                          });
+                        },
+                      ),
+                    if (widget.quote.reference.id.isNotEmpty)
+                      CheckboxListTile(
+                        dense: true,
+                        title: Opacity(
+                          opacity: 0.6,
+                          child: Text("Delete associated reference"),
+                        ),
+                        value: deleteWithReference,
+                        onChanged: (isChecked) {
+                          childSetState(() {
+                            deleteWithReference = isChecked;
+                          });
+                        },
+                      ),
+                    ListTile(
+                      title: Text(
+                        'Confirm',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.check,
                         color: Colors.white,
                       ),
+                      tileColor: Color(0xfff55c5c),
+                      onTap: () async {
+                        context.router.pop();
+                        deleteQuoteAndNavBack();
+                      },
                     ),
-                    trailing: Icon(
-                      Icons.check,
-                      color: Colors.white,
+                    ListTile(
+                      title: Text('Cancel'),
+                      trailing: Icon(Icons.close),
+                      onTap: context.router.pop,
                     ),
-                    tileColor: Color(0xfff55c5c),
-                    onTap: () async {
-                      context.router.pop();
-                      deleteQuoteAndNavBack();
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Cancel'),
-                    trailing: Icon(Icons.close),
-                    onTap: context.router.pop,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
+          );
+        });
       },
       containerWidget: (context, animation, child) {
         return SafeArea(
