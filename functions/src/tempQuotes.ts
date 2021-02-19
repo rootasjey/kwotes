@@ -84,7 +84,6 @@ export const validate = functions
         },
         createdAt: adminApp.firestore.Timestamp.now(),
         lang: tempQuoteData.lang,
-        links: [],
         reference: {
           id: reference.id,
           name: reference.name,
@@ -197,7 +196,6 @@ async function createOrGetReference(data: any) {
   const payload = {
     id: '',
     lang: 'en',
-    links: [],
     name: '',
     release: {
       original: null,
