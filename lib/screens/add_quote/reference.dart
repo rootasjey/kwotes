@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/form_action_inputs.dart';
 import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/fade_in_x.dart';
@@ -33,7 +34,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   FocusNode secondaryTypeFocusNode;
   FocusNode summaryFocusNode;
 
-  TextEditingController affiliateUrlController;
   TextEditingController amazonUrlController;
   TextEditingController facebookUrlController;
   TextEditingController nameController;
@@ -63,7 +63,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     initInputs();
 
     setState(() {
-      affiliateUrlController.text = DataQuoteInputs.reference.urls.affiliate;
+      prefilledInputs = DataQuoteInputs.reference.id.isNotEmpty;
+
       amazonUrlController.text = DataQuoteInputs.reference.urls.amazon;
       facebookUrlController.text = DataQuoteInputs.reference.urls.facebook;
       nameController.text = DataQuoteInputs.reference.name;
@@ -97,7 +98,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   void initInputs() {
-    affiliateUrlController = TextEditingController();
     amazonUrlController = TextEditingController();
     facebookUrlController = TextEditingController();
     nameController = TextEditingController();
@@ -122,7 +122,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   void disposeInputs() {
-    affiliateUrlController.dispose();
     amazonUrlController.dispose();
     facebookUrlController.dispose();
     nameController.dispose();
@@ -141,6 +140,85 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   @override
   Widget build(BuildContext context) {
+    if (DataQuoteInputs.isEditingPubQuote &&
+        DataQuoteInputs.reference.id.isNotEmpty) {
+      return editPubQuoteView();
+    }
+
+    return normalEditView();
+  }
+
+  Widget editPubQuoteView() {
+    return SizedBox(
+      width: 600.0,
+      child: Column(
+        children: <Widget>[
+          existingDataCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget existingDataCard() {
+    final referenceName = DataQuoteInputs.reference.name;
+
+    return Row(
+      children: [
+        InputCard(
+          width: 250.0,
+          padding: const EdgeInsets.only(
+            top: 40.0,
+            bottom: 20.0,
+          ),
+          titleString: 'Reference',
+          icon: Icon(UniconsLine.image),
+          subtitleString: referenceName,
+          onTap: () {
+            context.router.root.push(
+              ReferencesDeepRoute(
+                children: [
+                  ReferencePageRoute(
+                    referenceId: DataQuoteInputs.reference.id,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: IconButton(
+            onPressed: () async {
+              await showCupertinoModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    nameController.text = referenceName ?? '';
+                    return nameInput();
+                  });
+
+              setState(() {});
+            },
+            color: stateColors.secondary,
+            icon: Icon(UniconsLine.edit),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                DataQuoteInputs.clearReference();
+              });
+            },
+            color: stateColors.deletion,
+            icon: Icon(UniconsLine.times),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget normalEditView() {
     return SizedBox(
       width: 600.0,
       child: Column(
@@ -670,7 +748,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                             fontSize: 20.0,
                           ),
                           onChanged: (newValue) =>
-                              onChanged(newValue, childSetState),
+                              onNameChanged(newValue, childSetState),
                           onSubmitted: (newValue) {
                             context.router.pop();
                           },
@@ -919,37 +997,40 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget suggestions() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: referencesSuggestions.map((referenceSuggestion) {
-        ImageProvider image;
-        final imageUrl = referenceSuggestion.reference.urls.image;
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: referencesSuggestions.map((referenceSuggestion) {
+          ImageProvider image;
+          final imageUrl = referenceSuggestion.reference.urls.image;
 
-        if (imageUrl != null && imageUrl.isNotEmpty) {
-          image = NetworkImage(imageUrl);
-        } else {
-          image = AssetImage('assets/images/reference.png');
-        }
+          if (imageUrl != null && imageUrl.isNotEmpty) {
+            image = NetworkImage(imageUrl);
+          } else {
+            image = AssetImage('assets/images/reference.png');
+          }
 
-        return ListTile(
-          onTap: () {
-            DataQuoteInputs.reference = referenceSuggestion.reference;
-            prefilledInputs = true;
-            tapToEditStr = '-';
-            Navigator.of(context).pop();
-          },
-          title: Text(referenceSuggestion.getTitle()),
-          contentPadding: const EdgeInsets.all(8.0),
-          leading: Card(
-            child: Image(
-              image: image,
-              width: 50.0,
-              height: 50.0,
-              fit: BoxFit.cover,
+          return ListTile(
+            onTap: () {
+              DataQuoteInputs.reference = referenceSuggestion.reference;
+              prefilledInputs = true;
+              tapToEditStr = '-';
+              Navigator.of(context).pop();
+            },
+            title: Text(referenceSuggestion.getTitle()),
+            contentPadding: const EdgeInsets.all(8.0),
+            leading: Card(
+              child: Image(
+                image: image,
+                width: 50.0,
+                height: 50.0,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -1038,9 +1119,14 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     );
   }
 
-  void onChanged(String newValue, childSetState) {
+  void onNameChanged(String newValue, childSetState) {
+    if (DataQuoteInputs.reference.id.isNotEmpty &&
+        DataQuoteInputs.reference.name != newValue) {
+      prefilledInputs = false;
+      DataQuoteInputs.clearReference();
+    }
+
     DataQuoteInputs.reference.name = newValue;
-    prefilledInputs = false;
     tapToEditStr = 'Tap to edit';
 
     if (searchTimer != null && searchTimer.isActive) {
@@ -1054,7 +1140,6 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       });
 
       final query = algolia.index('references').search(newValue);
-
       final snapshot = await query.getObjects();
 
       if (snapshot.empty) {
@@ -1066,9 +1151,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         final data = hit.data;
         data['id'] = hit.objectID;
 
-        final referenceSuggestion = ReferenceSuggestion.fromJSON(data);
-
-        referencesSuggestions.add(referenceSuggestion);
+        final suggestion = ReferenceSuggestion.fromJSON(data);
+        referencesSuggestions.add(suggestion);
       }
 
       childSetState(() => isLoadingSuggestions = false);
@@ -1213,10 +1297,15 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: Text(
-              "Reference's fields have been filled out for you.",
-              style: TextStyle(
-                fontSize: 16.0,
+            title: Opacity(
+              opacity: 0.6,
+              child: Text(
+                "Because you selected an exisisting reference, "
+                "you cannot edit this reference's fields. "
+                "Reference's fields have been filled out for you for available data.",
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
               ),
             ),
             titlePadding: const EdgeInsets.all(20.0),

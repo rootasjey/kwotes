@@ -36,7 +36,7 @@ class AuthorPage extends StatefulWidget {
   final String authorImageUrl;
 
   AuthorPage({
-    @PathParam('authorId') this.authorId,
+    @required @PathParam('authorId') this.authorId,
     this.authorImageUrl = '',
     this.authorName = '',
   });

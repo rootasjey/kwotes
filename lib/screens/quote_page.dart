@@ -647,6 +647,25 @@ class _QuotePageState extends State<QuotePage> {
           ),
         ),
         SquareAction(
+          icon: Icon(UniconsLine.edit),
+          borderColor: Colors.pink,
+          tooltip: "Edit quote",
+          onTap: () => context.router.root.push(
+            DashboardPageRoute(children: [
+              AdminDeepRoute(children: [
+                AdminEditDeepRoute(
+                  children: [
+                    EditQuoteRoute(
+                      quoteId: quote.id,
+                      quote: quote,
+                    ),
+                  ],
+                )
+              ])
+            ]),
+          ),
+        ),
+        SquareAction(
           icon: Icon(UniconsLine.trash),
           borderColor: Colors.pink,
           tooltip: "Delete quote",

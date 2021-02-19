@@ -34,21 +34,22 @@ import '../screens/my_published_quotes.dart' as _i27;
 import '../screens/my_temp_quotes.dart' as _i28;
 import '../screens/quotidians.dart' as _i29;
 import '../screens/edit_author.dart' as _i30;
-import '../screens/edit_reference.dart' as _i31;
-import '../screens/admin_temp_quotes.dart' as _i32;
-import '../screens/quotes_lists.dart' as _i33;
-import '../screens/quotes_list.dart' as _i34;
-import '../screens/delete_account.dart' as _i35;
-import '../screens/update_email.dart' as _i36;
-import '../screens/update_password.dart' as _i37;
-import '../screens/update_username.dart' as _i38;
-import '../screens/topic_page.dart' as _i39;
-import '../screens/references.dart' as _i40;
-import '../screens/reference_page.dart' as _i41;
-import 'package:flutter/foundation.dart' as _i42;
-import '../types/quote.dart' as _i43;
-import '../types/author.dart' as _i44;
-import '../types/reference.dart' as _i45;
+import '../screens/edit_quote.dart' as _i31;
+import '../screens/edit_reference.dart' as _i32;
+import '../screens/admin_temp_quotes.dart' as _i33;
+import '../screens/quotes_lists.dart' as _i34;
+import '../screens/quotes_list.dart' as _i35;
+import '../screens/delete_account.dart' as _i36;
+import '../screens/update_email.dart' as _i37;
+import '../screens/update_password.dart' as _i38;
+import '../screens/update_username.dart' as _i39;
+import '../screens/topic_page.dart' as _i40;
+import '../screens/references.dart' as _i41;
+import '../screens/reference_page.dart' as _i42;
+import 'package:flutter/foundation.dart' as _i43;
+import '../types/quote.dart' as _i44;
+import '../types/author.dart' as _i45;
+import '../types/reference.dart' as _i46;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter(
@@ -224,27 +225,34 @@ class AppRouter extends _i1.RootStackRouter {
           child: _i30.EditAuthor(
               key: route.key, authorId: route.authorId, author: route.author));
     },
+    EditQuoteRoute.name: (entry) {
+      var route = entry.routeData.as<EditQuoteRoute>();
+      return _i1.MaterialPageX(
+          entry: entry,
+          child: _i31.EditQuote(
+              key: route.key, quoteId: route.quoteId, quote: route.quote));
+    },
     EditReferenceRoute.name: (entry) {
       var route = entry.routeData.as<EditReferenceRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i31.EditReference(
+          child: _i32.EditReference(
               key: route.key,
               referenceId: route.referenceId,
               reference: route.reference));
     },
     AdminTempQuotesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i32.AdminTempQuotes());
+      return _i1.MaterialPageX(entry: entry, child: _i33.AdminTempQuotes());
     },
     QuotesListsRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i33.QuotesLists());
+      return _i1.MaterialPageX(entry: entry, child: _i34.QuotesLists());
     },
     QuotesListRoute.name: (entry) {
       var route = entry.routeData.as<QuotesListRoute>();
       return _i1.MaterialPageX(
           entry: entry,
           child:
-              _i34.QuotesList(listId: route.listId, onResult: route.onResult));
+              _i35.QuotesList(listId: route.listId, onResult: route.onResult));
     },
     DashboardSettingsRoute.name: (entry) {
       var route = entry.routeData.as<DashboardSettingsRoute>();
@@ -254,36 +262,36 @@ class AppRouter extends _i1.RootStackRouter {
               key: route.key, showAppBar: route.showAppBar ?? true));
     },
     DeleteAccountRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i35.DeleteAccount());
+      return _i1.MaterialPageX(entry: entry, child: _i36.DeleteAccount());
     },
     AccountUpdateDeepRoute.name: (entry) {
       return _i1.MaterialPageX(
           entry: entry, child: const _i1.EmptyRouterPage());
     },
     UpdateEmailRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i36.UpdateEmail());
+      return _i1.MaterialPageX(entry: entry, child: _i37.UpdateEmail());
     },
     UpdatePasswordRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i37.UpdatePassword());
+      return _i1.MaterialPageX(entry: entry, child: _i38.UpdatePassword());
     },
     UpdateUsernameRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i38.UpdateUsername());
+      return _i1.MaterialPageX(entry: entry, child: _i39.UpdateUsername());
     },
     TopicPageRoute.name: (entry) {
       var route = entry.routeData.as<TopicPageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i39.TopicPage(
+          child: _i40.TopicPage(
               topicName: route.topicName ?? '', decimal: route.decimal));
     },
     ReferencesRoute.name: (entry) {
-      return _i1.MaterialPageX(entry: entry, child: _i40.References());
+      return _i1.MaterialPageX(entry: entry, child: _i41.References());
     },
     ReferencePageRoute.name: (entry) {
       var route = entry.routeData.as<ReferencePageRoute>();
       return _i1.MaterialPageX(
           entry: entry,
-          child: _i41.ReferencePage(
+          child: _i42.ReferencePage(
               referenceId: route.referenceId,
               referenceName: route.referenceName,
               referenceImageUrl: route.referenceImageUrl));
@@ -372,6 +380,10 @@ class AppRouter extends _i1.RootStackRouter {
                               path: 'author/:authorId',
                               routeBuilder: (match) =>
                                   EditAuthorRoute.fromMatch(match)),
+                          _i1.RouteConfig<EditQuoteRoute>(EditQuoteRoute.name,
+                              path: 'quote/:quoteId',
+                              routeBuilder: (match) =>
+                                  EditQuoteRoute.fromMatch(match)),
                           _i1.RouteConfig<EditReferenceRoute>(
                               EditReferenceRoute.name,
                               path: 'reference/:referenceId',
@@ -635,7 +647,7 @@ class SettingsRoute extends _i1.PageRouteInfo {
         showAppBar = match.pathParams.getBool('showAppBar'),
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final bool showAppBar;
 
@@ -658,7 +670,7 @@ class SigninRoute extends _i1.PageRouteInfo {
         onSigninResult = null,
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final void Function(bool) onSigninResult;
 
@@ -673,7 +685,7 @@ class SignupRoute extends _i1.PageRouteInfo {
         onSignupResult = null,
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final void Function(bool) onSignupResult;
 
@@ -723,7 +735,9 @@ class AuthorsRoute extends _i1.PageRouteInfo {
 
 class AuthorPageRoute extends _i1.PageRouteInfo {
   AuthorPageRoute(
-      {this.authorId, this.authorImageUrl = '', this.authorName = ''})
+      {@_i2.required this.authorId,
+      this.authorImageUrl = '',
+      this.authorName = ''})
       : super(name, path: ':authorId', params: {'authorId': authorId});
 
   AuthorPageRoute.fromMatch(_i1.RouteMatch match)
@@ -773,7 +787,7 @@ class QuotePageRoute extends _i1.PageRouteInfo {
 
   final String quoteId;
 
-  final _i43.Quote quote;
+  final _i44.Quote quote;
 
   static const String name = 'QuotePageRoute';
 }
@@ -787,7 +801,7 @@ class AddQuoteStepsRoute extends _i1.PageRouteInfo {
         step = match.queryParams.getInt('step', 0),
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final int step;
 
@@ -891,13 +905,32 @@ class EditAuthorRoute extends _i1.PageRouteInfo {
         author = null,
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final String authorId;
 
-  final _i44.Author author;
+  final _i45.Author author;
 
   static const String name = 'EditAuthorRoute';
+}
+
+class EditQuoteRoute extends _i1.PageRouteInfo {
+  EditQuoteRoute({this.key, @_i2.required this.quoteId, this.quote})
+      : super(name, path: 'quote/:quoteId', params: {'quoteId': quoteId});
+
+  EditQuoteRoute.fromMatch(_i1.RouteMatch match)
+      : key = null,
+        quoteId = match.pathParams.getString('quoteId'),
+        quote = null,
+        super.fromMatch(match);
+
+  final _i43.Key key;
+
+  final String quoteId;
+
+  final _i44.Quote quote;
+
+  static const String name = 'EditQuoteRoute';
 }
 
 class EditReferenceRoute extends _i1.PageRouteInfo {
@@ -912,11 +945,11 @@ class EditReferenceRoute extends _i1.PageRouteInfo {
         reference = null,
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final String referenceId;
 
-  final _i45.Reference reference;
+  final _i46.Reference reference;
 
   static const String name = 'EditReferenceRoute';
 }
@@ -962,7 +995,7 @@ class DashboardSettingsRoute extends _i1.PageRouteInfo {
         showAppBar = match.pathParams.getBool('showAppBar'),
         super.fromMatch(match);
 
-  final _i42.Key key;
+  final _i43.Key key;
 
   final bool showAppBar;
 
@@ -1037,7 +1070,9 @@ class ReferencesRoute extends _i1.PageRouteInfo {
 
 class ReferencePageRoute extends _i1.PageRouteInfo {
   ReferencePageRoute(
-      {this.referenceId, this.referenceName, this.referenceImageUrl})
+      {@_i2.required this.referenceId,
+      this.referenceName,
+      this.referenceImageUrl})
       : super(name, path: ':referenceId', params: {'referenceId': referenceId});
 
   ReferencePageRoute.fromMatch(_i1.RouteMatch match)

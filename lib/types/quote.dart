@@ -77,7 +77,11 @@ class Quote {
     );
   }
 
-  Map<String, dynamic> toJSON({bool withId = false}) {
+  Map<String, dynamic> toJSON({
+    bool withId = false,
+    Author withAuthor,
+    Reference withReference,
+  }) {
     Map<String, dynamic> data = Map();
     final Map<String, bool> topicsMap = Map();
 
@@ -89,10 +93,20 @@ class Quote {
       data['id'] = id;
     }
 
-    data['author'] = author.toPartialJSON();
+    if (withAuthor != null) {
+      data['author'] = withAuthor.toPartialJSON();
+    } else {
+      data['author'] = author.toPartialJSON();
+    }
+
+    if (withReference != null) {
+      data['reference'] = withReference.toPartialJSON();
+    } else {
+      data['reference'] = reference.toPartialJSON();
+    }
+
     data['lang'] = lang;
     data['name'] = name;
-    data['reference'] = reference.toPartialJSON();
     data['topics'] = topicsMap;
     data['updatedAt'] = DateTime.now();
 

@@ -2,6 +2,7 @@ enum AddQuoteType {
   draft,
   offline,
   tempquote,
+  pubQuote,
 }
 
 enum AniProps {

@@ -14,6 +14,7 @@ import 'package:figstyle/screens/dashboard_page.dart';
 import 'package:figstyle/screens/delete_account.dart';
 import 'package:figstyle/screens/drafts.dart';
 import 'package:figstyle/screens/edit_author.dart';
+import 'package:figstyle/screens/edit_quote.dart';
 import 'package:figstyle/screens/edit_reference.dart';
 import 'package:figstyle/screens/favourites.dart';
 import 'package:figstyle/screens/forgot_password.dart';
@@ -88,6 +89,7 @@ export 'app_router.gr.dart';
               name: 'AdminEditDeepRoute',
               children: [
                 AutoRoute(path: 'author/:authorId', page: EditAuthor),
+                AutoRoute(path: 'quote/:quoteId', page: EditQuote),
                 AutoRoute(path: 'reference/:referenceId', page: EditReference),
               ],
             ),

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/form_action_inputs.dart';
 import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference_suggestion.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     initInputs();
 
     setState(() {
-      affiliateUrlController.text = DataQuoteInputs.author.urls.affiliate;
+      prefilledInputs = DataQuoteInputs.author.id.isNotEmpty;
+
       amazonUrlController.text = DataQuoteInputs.author.urls.amazon;
       facebookUrlController.text = DataQuoteInputs.author.urls.facebook;
       nameController.text = DataQuoteInputs.author.name;
@@ -175,55 +177,46 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 600.0,
-      child: Column(
-        children: <Widget>[
-          avatar(),
-          nameCardInput(),
-          jobCardInput(),
-          clearButton(),
-          bornAndDeathCards(),
-          summaryCardInput(),
-          fictionalCharacterBox(),
-          referenceNameCardInput(),
-          links(),
-        ],
-      ),
-    );
+    if (DataQuoteInputs.isEditingPubQuote &&
+        DataQuoteInputs.author.id.isNotEmpty) {
+      return editPubQuoteView();
+    }
+
+    return normalEditView();
   }
 
   Widget authorSuggestions() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: authorsSuggestions.map((authorSuggestion) {
-        ImageProvider image;
-        final imageUrl = authorSuggestion.author.urls.image;
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: authorsSuggestions.map((authorSuggestion) {
+          ImageProvider image;
+          final imageUrl = authorSuggestion.author.urls.image;
 
-        if (imageUrl != null && imageUrl.isNotEmpty) {
-          image = NetworkImage(imageUrl);
-        } else {
-          image = AssetImage('assets/images/user-m.png');
-        }
+          if (imageUrl != null && imageUrl.isNotEmpty) {
+            image = NetworkImage(imageUrl);
+          } else {
+            image = AssetImage('assets/images/user-m.png');
+          }
 
-        return ListTile(
-          onTap: () {
-            onTapNameSuggestions(authorSuggestion);
-          },
-          title: Text(authorSuggestion.getTitle()),
-          contentPadding: const EdgeInsets.all(8.0),
-          leading: Material(
-            shape: CircleBorder(),
-            clipBehavior: Clip.hardEdge,
-            child: Image(
-              image: image,
-              width: 50.0,
-              height: 50.0,
-              fit: BoxFit.cover,
+          return ListTile(
+            onTap: () => onTapNameSuggestions(authorSuggestion),
+            title: Text(authorSuggestion.getTitle()),
+            contentPadding: const EdgeInsets.all(8.0),
+            leading: Material(
+              shape: CircleBorder(),
+              clipBehavior: Clip.hardEdge,
+              child: Image(
+                image: image,
+                width: 50.0,
+                height: 50.0,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -657,10 +650,97 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  Widget fictionalCharacterBox() {
+  Widget editPubQuoteView() {
+    return SizedBox(
+      width: 600.0,
+      child: Column(
+        children: <Widget>[
+          existingDataCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget normalEditView() {
     return Container(
+      width: 600.0,
+      child: Column(
+        children: <Widget>[
+          avatar(),
+          nameCardInput(),
+          jobCardInput(),
+          clearButton(),
+          bornAndDeathCards(),
+          summaryCardInput(),
+          fictionalCharacterBox(),
+          referenceNameCardInput(),
+          links(),
+        ],
+      ),
+    );
+  }
+
+  Widget existingDataCard() {
+    final authorName = DataQuoteInputs.author.name;
+
+    return SizedBox(
+      height: 150.0,
+      child: Row(
+        children: [
+          InputCard(
+            width: 250.0,
+            titleString: 'Author',
+            icon: Icon(UniconsLine.image),
+            subtitleString: authorName,
+            onTap: () {
+              context.router.root.push(
+                AuthorsDeepRoute(
+                  children: [
+                    AuthorPageRoute(
+                      authorId: DataQuoteInputs.author.id,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: IconButton(
+              onPressed: () async {
+                await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      nameController.text = authorName ?? '';
+                      return nameInput();
+                    });
+
+                setState(() {});
+              },
+              color: stateColors.secondary,
+              icon: Icon(UniconsLine.edit),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  DataQuoteInputs.clearAuthor();
+                });
+              },
+              color: stateColors.deletion,
+              icon: Icon(UniconsLine.times),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget fictionalCharacterBox() {
+    return SizedBox(
       width: 400.0,
-      padding: const EdgeInsets.only(bottom: 32.0),
       child: CheckboxListTile(
         title: Text('is fictional?'),
         subtitle: Text(
@@ -751,7 +831,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   Widget links() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 80.0),
+      padding: const EdgeInsets.only(
+        top: 54.0,
+        bottom: 80.0,
+      ),
       child: Wrap(
         spacing: 20.0,
         runSpacing: 20.0,
@@ -759,7 +842,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 100,
             name: 'Website',
-            icon: Icon(UniconsLine.globe),
+            icon: Icon(
+              UniconsLine.globe,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.website?.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -778,7 +864,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               return linkCircleButton(
                 delay: 200,
                 name: 'Wikipedia',
-                icon: FaIcon(FontAwesomeIcons.wikipediaW),
+                icon: FaIcon(
+                  FontAwesomeIcons.wikipediaW,
+                  color: stateColors.primary.withOpacity(0.6),
+                ),
                 active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
                 onTap: () {
                   showLinkInputSheet(
@@ -797,7 +886,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 300,
             name: 'Amazon',
-            icon: Icon(UniconsLine.amazon),
+            icon: Icon(
+              UniconsLine.amazon,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.amazon.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -814,7 +906,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 400,
             name: 'Facebook',
-            icon: Icon(UniconsLine.facebook),
+            icon: Icon(
+              UniconsLine.facebook,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.facebook.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -831,7 +926,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 500,
             name: 'Instagram',
-            icon: Icon(UniconsLine.instagram),
+            icon: Icon(
+              UniconsLine.instagram,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.instagram.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -848,7 +946,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 600,
             name: 'Netflix',
-            imageUrl: 'assets/images/netflix.png',
+            icon: Image.asset(
+              'assets/images/netflix.png',
+              width: 20.0,
+              height: 20.0,
+              color: stateColors.primary,
+            ),
             active: DataQuoteInputs.author.urls.netflix.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -865,7 +968,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 700,
             name: 'Prime Video',
-            icon: Icon(UniconsLine.video),
+            icon: Icon(
+              UniconsLine.video,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.primeVideo.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -882,7 +988,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 800,
             name: 'Twitch',
-            icon: FaIcon(FontAwesomeIcons.twitch),
+            icon: FaIcon(
+              FontAwesomeIcons.twitch,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.twitch.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -899,7 +1008,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 900,
             name: 'Twitter',
-            icon: Icon(UniconsLine.twitter),
+            icon: Icon(
+              UniconsLine.twitter,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.twitter.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -916,7 +1028,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           linkCircleButton(
             delay: 1000,
             name: 'YouTube',
-            icon: Icon(UniconsLine.youtube),
+            icon: Icon(
+              UniconsLine.youtube,
+              color: stateColors.primary.withOpacity(0.6),
+            ),
             active: DataQuoteInputs.author.urls.youtube.isNotEmpty,
             onTap: () {
               showLinkInputSheet(
@@ -1032,7 +1147,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             fontSize: 20.0,
                           ),
                           onChanged: (newValue) =>
-                              onChanged(newValue, childSetState),
+                              onNameChanged(newValue, childSetState),
                           onSubmitted: (newValue) {
                             context.router.pop();
                           },
@@ -1064,7 +1179,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   /// Used when editing author.
   Widget referenceNameCardInput() {
-    if (!DataQuoteInputs.author.isFictional) {
+    if (!DataQuoteInputs.author.isFictional ||
+        !DataQuoteInputs.isEditingPubQuote) {
       return Container();
     }
 
@@ -1075,8 +1191,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     return InputCard(
       width: 250.0,
       padding: const EdgeInsets.only(
-        top: 40.0,
-        bottom: 20.0,
+        top: 16.0,
+        // bottom: 20.0,
       ),
       titleString: 'Reference name',
       icon: Icon(UniconsLine.image),
@@ -1301,9 +1417,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  void onChanged(String newValue, childSetState) {
+  void onNameChanged(String newValue, childSetState) {
+    if (DataQuoteInputs.author.id.isNotEmpty &&
+        DataQuoteInputs.author.name != newValue) {
+      prefilledInputs = false;
+      DataQuoteInputs.clearAuthor();
+    }
+
     DataQuoteInputs.author.name = newValue;
-    prefilledInputs = false;
     tapToEditStr = 'Tap to edit';
 
     if (searchTimer != null && searchTimer.isActive) {
@@ -1429,53 +1550,50 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     });
   }
 
-  Function onTapNameSuggestions(AuthorSuggestion authorSuggestion) {
+  void onTapNameSuggestions(AuthorSuggestion authorSuggestion) {
     if (widget.editMode == EditAuthorMode.addQuote) {
-      return () {
-        DataQuoteInputs.author = authorSuggestion.author;
-        prefilledInputs = true;
-        tapToEditStr = '-';
+      DataQuoteInputs.author = authorSuggestion.author;
+      prefilledInputs = true;
+      tapToEditStr = '-';
 
-        Navigator.of(context).pop();
-      };
+      Navigator.of(context).pop();
+      return;
     }
 
-    return () {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Text(
-              "Can't perform this action",
-              style: TextStyle(
-                fontSize: 15.0,
-              ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(
+            "Can't perform this action",
+            style: TextStyle(
+              fontSize: 15.0,
             ),
-            children: <Widget>[
-              Divider(
-                color: stateColors.secondary,
-                thickness: 1.0,
+          ),
+          children: <Widget>[
+            Divider(
+              color: stateColors.secondary,
+              thickness: 1.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 25.0,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                ),
-                child: Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    "You can't select existing authors when already "
-                    "editing one. Suggestions are show to avoid duplications",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+              child: Opacity(
+                opacity: 0.6,
+                child: Text(
+                  "You can't select existing authors when already "
+                  "editing one. Suggestions are show to avoid duplications",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          );
-        },
-      );
-    };
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showAvatarDialog() {
@@ -1608,10 +1726,15 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Text(
-            "Author's fields have been filled out for you.",
-            style: TextStyle(
-              fontSize: 16.0,
+          title: Opacity(
+            opacity: 0.6,
+            child: Text(
+              "Because you selected an exisisting author, "
+              "you cannot edit this author's field. "
+              "Author's fields have been filled out for you for available data.",
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
             ),
           ),
           titlePadding: const EdgeInsets.all(20.0),

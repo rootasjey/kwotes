@@ -11,56 +11,17 @@ import 'package:figstyle/utils/snack.dart';
 class TempQuotesActions {
   static Future addNewTempQuote({
     List<String> comments,
-    List<Map<String, dynamic>> references,
     Map<String, bool> topics,
   }) async {
     final userAuth = stateUser.userAuth;
 
     await FirebaseFirestore.instance.collection('tempquotes').add({
-      'author': {
-        'id': DataQuoteInputs.author.id,
-        'born': {
-          'beforeJC': DataQuoteInputs.author.born.beforeJC,
-          'city': DataQuoteInputs.author.born.city,
-          'country': DataQuoteInputs.author.born.country,
-          'date': DataQuoteInputs.author.born.date,
-        },
-        'death': {
-          'beforeJC': DataQuoteInputs.author.death.beforeJC,
-          'city': DataQuoteInputs.author.death.city,
-          'country': DataQuoteInputs.author.death.country,
-          'date': DataQuoteInputs.author.death.date,
-        },
-        'isFictional': DataQuoteInputs.author.isFictional,
-        'job': DataQuoteInputs.author.job,
-        'jobLang': {},
-        'name': DataQuoteInputs.author.name,
-        'summary': DataQuoteInputs.author.summary,
-        'summaryLang': {},
-        'updatedAt': DateTime.now(),
-        'urls': {
-          'amazon': DataQuoteInputs.author.urls.amazon,
-          'facebook': DataQuoteInputs.author.urls.facebook,
-          'image': DataQuoteInputs.author.urls.image,
-          'instagram': DataQuoteInputs.author.urls.instagram,
-          'netflix': DataQuoteInputs.author.urls.netflix,
-          'primeVideo': DataQuoteInputs.author.urls.primeVideo,
-          'twitch': DataQuoteInputs.author.urls.twitch,
-          'twitter': DataQuoteInputs.author.urls.twitter,
-          'website': DataQuoteInputs.author.urls.website,
-          'wikipedia': DataQuoteInputs.author.urls.wikipedia,
-          'youtube': DataQuoteInputs.author.urls.youtube,
-        }
-      },
+      'author': DataQuoteInputs.author.toJSON(withId: true),
       'comments': comments,
       'createdAt': DateTime.now(),
       'lang': DataQuoteInputs.quote.lang,
       'name': DataQuoteInputs.quote.name,
-      'reference': {
-        'id': DataQuoteInputs.reference.id,
-        'name': DataQuoteInputs.reference.name,
-      },
-      'references': references,
+      'reference': DataQuoteInputs.reference.toJSON(withId: true),
       'region': DataQuoteInputs.region,
       'topics': topics,
       'user': {
@@ -194,7 +155,7 @@ class TempQuotesActions {
     if (DataQuoteInputs.quote.topics.length == 0) {
       showSnack(
         context: context,
-        message: 'You must select at least 1 topics for the quote.',
+        message: "You must select at least 1 topics for the quote.",
         type: SnackType.error,
       );
 
@@ -207,8 +168,6 @@ class TempQuotesActions {
       comments.add(DataQuoteInputs.comment);
     }
 
-    final references = formatReferences();
-
     final topics = Map<String, bool>();
 
     DataQuoteInputs.quote.topics.forEach((topic) {
@@ -219,13 +178,11 @@ class TempQuotesActions {
       if (DataQuoteInputs.quote.id.isEmpty) {
         await addNewTempQuote(
           comments: comments,
-          references: references,
           topics: topics,
         );
       } else {
         await saveExistingTempQuote(
           comments: comments,
-          references: references,
           topics: topics,
         );
       }
@@ -278,73 +235,20 @@ class TempQuotesActions {
 
   static Future saveExistingTempQuote({
     List<String> comments,
-    List<Map<String, dynamic>> references,
     Map<String, bool> topics,
   }) async {
-    final userAuth = stateUser.userAuth;
-
     await FirebaseFirestore.instance
         .collection('tempquotes')
         .doc(DataQuoteInputs.quote.id)
-        .set({
-      'author': {
-        'id': DataQuoteInputs.author.id,
-        'born': {
-          'beforeJC': DataQuoteInputs.author.born.beforeJC,
-          'city': DataQuoteInputs.author.born.city,
-          'country': DataQuoteInputs.author.born.country,
-          'date': DataQuoteInputs.author.born.date,
-        },
-        'death': {
-          'beforeJC': DataQuoteInputs.author.death.beforeJC,
-          'city': DataQuoteInputs.author.death.city,
-          'country': DataQuoteInputs.author.death.country,
-          'date': DataQuoteInputs.author.death.date,
-        },
-        'isFictional': DataQuoteInputs.author.isFictional,
-        'job': DataQuoteInputs.author.job,
-        'jobLang': {},
-        'name': DataQuoteInputs.author.name,
-        'summary': DataQuoteInputs.author.summary,
-        'summaryLang': {},
-        'updatedAt': DateTime.now(),
-        'urls': {
-          'amazon': DataQuoteInputs.author.urls.amazon,
-          'facebook': DataQuoteInputs.author.urls.facebook,
-          'instagram': DataQuoteInputs.author.urls.instagram,
-          'image': DataQuoteInputs.author.urls.image,
-          'netflix': DataQuoteInputs.author.urls.netflix,
-          'primeVideo': DataQuoteInputs.author.urls.primeVideo,
-          'twitch': DataQuoteInputs.author.urls.twitch,
-          'twitter': DataQuoteInputs.author.urls.twitter,
-          'website': DataQuoteInputs.author.urls.website,
-          'wikipedia': DataQuoteInputs.author.urls.wikipedia,
-          'youtube': DataQuoteInputs.author.urls.youtube,
-        }
-      },
+        .update({
+      'author': DataQuoteInputs.author.toJSON(withId: true),
       'comments': comments,
-      'createdAt': DateTime.now(),
       'lang': DataQuoteInputs.quote.lang,
       'name': DataQuoteInputs.quote.name,
-      'reference': {
-        'id': DataQuoteInputs.reference.id,
-        'name': DataQuoteInputs.reference.name,
-      },
-      'references': references,
+      'reference': DataQuoteInputs.reference.toJSON(withId: true),
       'region': DataQuoteInputs.region,
       'topics': topics,
-      'user': {
-        'id': userAuth.uid,
-      },
       'updatedAt': DateTime.now(),
-      'validation': {
-        'comment': {
-          'name': '',
-          'updatedAt': DateTime.now(),
-        },
-        'status': 'proposed',
-        'updatedAt': DateTime.now(),
-      }
     });
   }
 

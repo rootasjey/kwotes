@@ -6,7 +6,7 @@ class Reference {
   /// When this reference was released.
   Release release;
 
-  String id;
+  final String id;
   String lang;
   String name;
   String summary;
@@ -25,21 +25,26 @@ class Reference {
     this.urls,
   });
 
-  void clear() {
-    id = '';
-    lang = 'en';
-    name = '';
-    release = Release();
-    summary = '';
-    type = ReferenceType();
-    urls = Urls();
-  }
-
   factory Reference.empty() {
     return Reference(
       id: '',
       lang: 'en',
       name: '',
+      release: Release(),
+      summary: '',
+      type: ReferenceType(),
+      urls: Urls(),
+    );
+  }
+
+  factory Reference.fromIdName({
+    id: '',
+    name: '',
+  }) {
+    return Reference(
+      id: id,
+      lang: 'en',
+      name: name,
       release: Release(),
       summary: '',
       type: ReferenceType(),

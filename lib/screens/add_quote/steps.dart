@@ -3,6 +3,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/drafts.dart';
@@ -55,8 +56,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   bool isSubmitting = false;
   bool stepChanged = false;
 
-  Color fabBackgroundColor = stateColors.primary;
-
   FocusNode keyboardFocusNode = FocusNode();
 
   Icon fabIcon = Icon(UniconsLine.message);
@@ -89,7 +88,6 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     if (DataQuoteInputs.quote.id.isNotEmpty) {
       fabText = 'Save quote';
       fabIcon = Icon(UniconsLine.save);
-      fabBackgroundColor = stateColors.secondary;
     }
   }
 
@@ -131,7 +129,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         floatingActionButton: isFabVisible
             ? FloatingActionButton.extended(
                 onPressed: () => propose(),
-                backgroundColor: fabBackgroundColor,
+                backgroundColor: stateColors.validation,
                 foregroundColor: Colors.white,
                 icon: fabIcon,
                 label: Text(
@@ -426,66 +424,71 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           subtitle: Text('Required'),
           content: dynamicStepContent(index: 0),
           state: computeStepState(
-              stepIndex: 0,
-              compute: () {
-                return DataQuoteInputs.quote.name.isEmpty
-                    ? StepState.error
-                    : StepState.complete;
-              }),
+            stepIndex: 0,
+            compute: () {
+              return DataQuoteInputs.quote.name.isEmpty
+                  ? StepState.error
+                  : StepState.complete;
+            },
+          ),
         ),
         Step(
           title: const Text('Topics'),
           subtitle: Text('Required'),
           content: dynamicStepContent(index: 1),
           state: computeStepState(
-              stepIndex: 1,
-              compute: () {
-                if (!stepChanged) {
-                  return StepState.indexed;
-                }
+            stepIndex: 1,
+            compute: () {
+              if (!stepChanged) {
+                return StepState.indexed;
+              }
 
-                if (DataQuoteInputs.quote.topics.length == 0) {
-                  return StepState.error;
-                }
+              if (DataQuoteInputs.quote.topics.length == 0) {
+                return StepState.error;
+              }
 
-                return StepState.complete;
-              }),
+              return StepState.complete;
+            },
+          ),
         ),
         Step(
           subtitle: Text('Optional'),
           title: const Text('Author'),
           content: dynamicStepContent(index: 2),
           state: computeStepState(
-              stepIndex: 2,
-              compute: () {
-                return DataQuoteInputs.author.name.isEmpty
-                    ? StepState.indexed
-                    : StepState.complete;
-              }),
+            stepIndex: 2,
+            compute: () {
+              return DataQuoteInputs.author.name.isEmpty
+                  ? StepState.indexed
+                  : StepState.complete;
+            },
+          ),
         ),
         Step(
           subtitle: Text('Optional'),
           title: const Text('Reference'),
           content: dynamicStepContent(index: 3),
           state: computeStepState(
-              stepIndex: 3,
-              compute: () {
-                return DataQuoteInputs.reference.name.isEmpty
-                    ? StepState.indexed
-                    : StepState.complete;
-              }),
+            stepIndex: 3,
+            compute: () {
+              return DataQuoteInputs.reference.name.isEmpty
+                  ? StepState.indexed
+                  : StepState.complete;
+            },
+          ),
         ),
         Step(
           subtitle: Text('Optional'),
           title: const Text('Comments'),
           content: dynamicStepContent(index: 4),
           state: computeStepState(
-              stepIndex: 2,
-              compute: () {
-                return DataQuoteInputs.comment.isEmpty
-                    ? StepState.indexed
-                    : StepState.complete;
-              }),
+            stepIndex: 2,
+            compute: () {
+              return DataQuoteInputs.comment.isEmpty
+                  ? StepState.indexed
+                  : StepState.complete;
+            },
+          ),
         ),
       ],
     );
@@ -672,6 +675,12 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       isFabVisible = false;
     });
 
+    if (DataQuoteInputs.isEditingPubQuote) {
+      actionIntent = AddQuoteType.pubQuote;
+      savePubQuote();
+      return;
+    }
+
     final success = await TempQuotesActions.proposeQuote(context: context);
 
     showSnack(
@@ -751,6 +760,64 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       isSubmitting = false;
       isFabVisible = true;
     });
+  }
+
+  void savePubQuote() async {
+    try {
+      final quoteDoc = await FirebaseFirestore.instance
+          .collection('quotes')
+          .doc(DataQuoteInputs.quote.id)
+          .get();
+
+      if (!quoteDoc.exists) {
+        showSnack(
+          context: context,
+          message:
+              "Sorry, the quote ${DataQuoteInputs.quote.id} does not exist. "
+              "It may have been deleted.",
+          type: SnackType.error,
+        );
+        return;
+      }
+
+      final payload = DataQuoteInputs.quote.toJSON(
+        withAuthor: DataQuoteInputs.author,
+        withReference: DataQuoteInputs.reference,
+      );
+
+      await quoteDoc.reference.update(payload);
+
+      setState(() {
+        actionResult = AddQuoteType.pubQuote;
+        isSubmitting = false;
+        isFabVisible = true;
+
+        DataQuoteInputs.clearQuoteData();
+        currentStep = 0;
+        fabIcon = Icon(UniconsLine.message);
+      });
+
+      showSnack(
+        context: context,
+        message: "Your changes has been successfully saved!",
+        type: SnackType.success,
+      );
+    } catch (error) {
+      appLogger.e(error);
+
+      setState(() {
+        actionResult = AddQuoteType.pubQuote;
+        isSubmitting = false;
+        isFabVisible = true;
+      });
+
+      showSnack(
+        context: context,
+        message: "Sorry, we couldn't save your modifications for this quote. "
+            "Please try again or contact us if the issue persists.",
+        type: SnackType.error,
+      );
+    }
   }
 
   void saveQuoteDraft() async {

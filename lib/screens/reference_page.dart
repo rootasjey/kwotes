@@ -37,7 +37,7 @@ class ReferencePage extends StatefulWidget {
   final String referenceImageUrl;
 
   ReferencePage({
-    @PathParam('referenceId') this.referenceId,
+    @required @PathParam('referenceId') this.referenceId,
     this.referenceName,
     this.referenceImageUrl,
   });

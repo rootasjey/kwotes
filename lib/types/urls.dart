@@ -1,5 +1,4 @@
 class Urls {
-  String affiliate;
   String amazon;
   String facebook;
   String image;
@@ -13,7 +12,6 @@ class Urls {
   String youtube;
 
   Urls({
-    this.affiliate = '',
     this.amazon = '',
     this.facebook = '',
     this.image = '',
@@ -28,8 +26,7 @@ class Urls {
   });
 
   bool areLinksEmpty() {
-    return affiliate.isEmpty &&
-        amazon.isEmpty &&
+    return amazon.isEmpty &&
         facebook.isEmpty &&
         netflix.isEmpty &&
         instagram.isEmpty &&
@@ -43,7 +40,6 @@ class Urls {
 
   factory Urls.fromJSON(Map<String, dynamic> json) {
     return Urls(
-      affiliate: json['affiliate'] ?? '',
       amazon: json['amazon'] ?? '',
       facebook: json['facebook'] ?? '',
       image: json['image'] ?? '',

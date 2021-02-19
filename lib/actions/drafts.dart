@@ -111,7 +111,6 @@ class DraftsActions {
           'summaryLang': {},
           'updatedAt': DateTime.now(),
           'urls': {
-            'affiliate': DataQuoteInputs.author.urls.affiliate,
             'amazon': DataQuoteInputs.author.urls.amazon,
             'facebook': DataQuoteInputs.author.urls.facebook,
             'image': DataQuoteInputs.author.urls.image,
@@ -187,7 +186,6 @@ class DraftsActions {
           'summaryLang': {},
           'updatedAt': DateTime.now().toString(),
           'urls': {
-            'affiliate': DataQuoteInputs.author.urls.affiliate,
             'amazon': DataQuoteInputs.author.urls.amazon,
             'facebook': DataQuoteInputs.author.urls.facebook,
             'image': DataQuoteInputs.author.urls.image,

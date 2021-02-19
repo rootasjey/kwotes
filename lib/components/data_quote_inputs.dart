@@ -1,9 +1,7 @@
 import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/point_in_time.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/types/urls.dart';
 
 class DataQuoteInputs {
   /// If not empty, the author already exists.
@@ -12,7 +10,10 @@ class DataQuoteInputs {
   static String comment = '';
   static TempQuote draft;
 
-  /// True if the quote which is being is edited
+  /// True if it's a published quote that's being edited.
+  static bool isEditingPubQuote = false;
+
+  /// True if it's a draft quote that's being edited.
   static bool isOfflineDraft = false;
 
   /// Quote's id is not empty if this is an edit.
@@ -24,6 +25,9 @@ class DataQuoteInputs {
   static String region = '';
 
   static void clearAll() {
+    isEditingPubQuote = false;
+    isOfflineDraft = false;
+
     clearAuthor();
     clearComment();
     clearQuoteData();
@@ -72,35 +76,8 @@ class DataQuoteInputs {
       topics: tempQuote.topics,
     );
 
-    final born = tempQuote.author.born;
-    final death = tempQuote.author.death;
-
-    final tAuthor = tempQuote.author;
-    final tAuthorUrls = tempQuote.author.urls;
-
-    author = Author(
-      born: born ?? PointInTime(),
-      death: death ?? PointInTime(),
-      id: tAuthor.id,
-      isFictional: tAuthor.isFictional ?? false,
-      job: tAuthor.job,
-      name: tAuthor.name,
-      summary: tAuthor.summary,
-      urls: Urls(
-        affiliate: tAuthorUrls.affiliate,
-        amazon: tAuthorUrls.amazon,
-        facebook: tAuthorUrls.facebook,
-        image: tAuthorUrls.image,
-        instagram: tAuthorUrls.instagram,
-        netflix: tAuthorUrls.netflix,
-        primeVideo: tAuthorUrls.primeVideo,
-        twitch: tAuthorUrls.twitch,
-        twitter: tAuthorUrls.twitter,
-        website: tAuthorUrls.website,
-        wikipedia: tAuthorUrls.wikipedia,
-        youtube: tAuthorUrls.youtube,
-      ),
-    );
+    author = tempQuote.author;
+    reference = tempQuote.reference;
 
     if (tempQuote.comments.length > 0) {
       comment = tempQuote.comments.first;

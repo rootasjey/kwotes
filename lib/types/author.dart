@@ -45,6 +45,23 @@ class Author {
     );
   }
 
+  factory Author.fromIdName({
+    id = '',
+    name = '',
+  }) {
+    return Author(
+      born: PointInTime(),
+      death: PointInTime(),
+      fromReference: FromReference(),
+      id: id,
+      isFictional: false,
+      job: '',
+      name: name,
+      summary: '',
+      urls: Urls(),
+    );
+  }
+
   factory Author.fromJSON(Map<String, dynamic> data) {
     final urls = data['urls'] != null ? Urls.fromJSON(data['urls']) : Urls();
 
@@ -93,7 +110,7 @@ class Author {
   }
 
   /// Return a map with only [id] and [name] as properties.
-  /// Useful wwhen converting author"s data into a published quote.
+  /// Useful when converting author's data into a published quote.
   Map<String, dynamic> toPartialJSON() {
     Map<String, dynamic> data = Map();
 

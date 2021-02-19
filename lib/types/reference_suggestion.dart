@@ -7,8 +7,8 @@ class ReferenceSuggestion {
     this.reference,
   });
 
-  factory ReferenceSuggestion.fromJSON(Map<String, dynamic> json) {
-    final reference = Reference.fromJSON(json);
+  factory ReferenceSuggestion.fromJSON(Map<String, dynamic> data) {
+    final reference = Reference.fromJSON(data);
     return ReferenceSuggestion(reference: reference);
   }
 
