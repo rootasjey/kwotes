@@ -52,7 +52,7 @@ class Reference {
     if (data['urls'] != null) {
       _urls = Urls.fromJSON(data['urls']);
     } else {
-      Urls();
+      _urls = Urls();
     }
 
     ReferenceType _type;
