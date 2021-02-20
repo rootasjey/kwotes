@@ -232,7 +232,6 @@ class FlashHelper {
                   IconButton(
                     icon: Icon(
                       UniconsLine.times,
-                      color: stateColors.secondary,
                     ),
                     onPressed: () => controller.dismiss(),
                   ),
