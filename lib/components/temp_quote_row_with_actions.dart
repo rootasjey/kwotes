@@ -3,6 +3,7 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/reject_temp_quote.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/temp_quotes.dart';
@@ -13,6 +14,7 @@ import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:unicons/unicons.dart';
 
 class TempQuoteRowWithActions extends StatefulWidget {
   final bool canManage;
@@ -246,7 +248,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       ListTile(
         title: Text('Edit'),
         trailing: Icon(
-          Icons.edit,
+          UniconsLine.edit,
         ),
         onTap: () {
           Navigator.of(context).pop();
@@ -256,7 +258,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       ListTile(
         title: Text('Copy from'),
         trailing: Icon(
-          Icons.copy,
+          UniconsLine.copy,
         ),
         onTap: () {
           Navigator.of(context).pop();
@@ -266,7 +268,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       ListTile(
         title: Text('Delete'),
         trailing: Icon(
-          Icons.delete_forever,
+          UniconsLine.trash,
         ),
         onTap: () {
           Navigator.of(context).pop();
@@ -280,7 +282,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         ListTile(
           title: Text('Validate'),
           trailing: Icon(
-            Icons.check,
+            UniconsLine.check,
           ),
           onTap: () {
             Navigator.of(context).pop();
@@ -290,7 +292,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         ListTile(
           title: Text('Reject'),
           trailing: Icon(
-            Icons.close,
+            UniconsLine.times,
           ),
           onTap: () {
             Navigator.of(context).pop();
@@ -373,6 +375,11 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     if (widget.onBeforeValidate != null) {
       widget.onBeforeValidate();
     }
+
+    Snack.s(
+      context: context,
+      message: "Quote has been validated.",
+    );
 
     final userAuth = stateUser.userAuth;
 
