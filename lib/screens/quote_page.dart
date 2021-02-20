@@ -306,6 +306,30 @@ class _QuotePageState extends State<QuotePage> {
     );
   }
 
+  Widget editQuoteButton() {
+    return IconButton(
+      tooltip: "Delete quote",
+      onPressed: () => context.router.root.push(
+        DashboardPageRoute(children: [
+          AdminDeepRoute(children: [
+            AdminEditDeepRoute(
+              children: [
+                EditQuoteRoute(
+                  quoteId: quote.id,
+                  quote: quote,
+                ),
+              ],
+            )
+          ])
+        ]),
+      ),
+      icon: Opacity(
+        opacity: 0.8,
+        child: Icon(UniconsLine.edit),
+      ),
+    );
+  }
+
   Widget favIconButton() {
     if (stateUser.isUserConnected) {
       return LikeButton(
@@ -382,18 +406,24 @@ class _QuotePageState extends State<QuotePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Card(
-                      elevation: 2.0,
-                      child: InkWell(
-                        onTap: () {},
-                        onLongPress: onLongPress,
-                        child: Padding(
-                          padding: const EdgeInsets.all(60.0),
-                          child: createHeroQuoteAnimation(
-                            quote: quote,
-                            isMobile: size.width < 700.0,
-                            screenWidth: size.width,
-                            screenHeight: size.height,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: 260.0,
+                        minWidth: 700.0,
+                      ),
+                      child: Card(
+                        elevation: 2.0,
+                        child: InkWell(
+                          onTap: () {},
+                          onLongPress: onLongPress,
+                          child: Padding(
+                            padding: const EdgeInsets.all(60.0),
+                            child: createHeroQuoteAnimation(
+                              quote: quote,
+                              isMobile: size.width < 700.0,
+                              screenWidth: size.width,
+                              screenHeight: size.height,
+                            ),
                           ),
                         ),
                       ),
@@ -449,14 +479,6 @@ class _QuotePageState extends State<QuotePage> {
         padding: const EdgeInsets.only(top: 60.0),
         child: desktopLayout(),
       );
-      // return OrientationBuilder(
-      //   builder: (context, orientation) {
-      //     return Padding(
-      //       padding: const EdgeInsets.only(top: 40.0),
-      //       child: quoteName(),
-      //     );
-      //   },
-      // );
     }
 
     return mobileLayout();
@@ -568,6 +590,7 @@ class _QuotePageState extends State<QuotePage> {
       children.addAll([
         ldivider,
         addToQuotidiansButton(),
+        editQuoteButton(),
         deleteQuoteButton(),
       ]);
     }
