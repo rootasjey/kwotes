@@ -421,9 +421,22 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           color: Colors.yellow.shade800,
           onTap: (CompletionHandler handler) async {
             handler(false);
-            await QuotidiansActions.add(
+            final success = await QuotidiansActions.add(
               quote: quote,
               lang: quote.lang,
+            );
+
+            if (success) {
+              Snack.s(
+                context: context,
+                message: "Added as quotidian",
+              );
+              return;
+            }
+
+            Snack.e(
+              context: context,
+              message: "Sorry, we couldn't add this quote as quotidian",
             );
           },
         ),

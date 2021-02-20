@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/types/quote.dart';
 
 /// Network interface for quotidians.
@@ -82,7 +82,7 @@ class QuotidiansActions {
 
       return true;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       return false;
     }
   }
