@@ -191,45 +191,6 @@ class TempQuotesActions {
     }
   }
 
-  static List<Map<String, dynamic>> formatReferences() {
-    final references = <Map<String, dynamic>>[];
-
-    if (DataQuoteInputs.reference.name.isEmpty) {
-      return references;
-    }
-
-    references.add({
-      'id': DataQuoteInputs.reference.id,
-      'lang': DataQuoteInputs.reference.lang,
-      'links': [],
-      'name': DataQuoteInputs.reference.name,
-      'release': {
-        'original': DataQuoteInputs.reference.release.original,
-        'beforeJC': DataQuoteInputs.reference.release.beforeJC,
-      },
-      'summary': DataQuoteInputs.reference.summary,
-      'type': {
-        'primary': DataQuoteInputs.reference.type.primary,
-        'secondary': DataQuoteInputs.reference.type.secondary,
-      },
-      'urls': {
-        'amazon': DataQuoteInputs.reference.urls.amazon,
-        'facebook': DataQuoteInputs.reference.urls.facebook,
-        'image': DataQuoteInputs.reference.urls.image,
-        'instagram': DataQuoteInputs.reference.urls.instagram,
-        'netflix': DataQuoteInputs.reference.urls.netflix,
-        'primeVideo': DataQuoteInputs.reference.urls.primeVideo,
-        'twitch': DataQuoteInputs.reference.urls.twitch,
-        'twitter': DataQuoteInputs.reference.urls.twitter,
-        'website': DataQuoteInputs.reference.urls.website,
-        'wikipedia': DataQuoteInputs.reference.urls.wikipedia,
-        'youtube': DataQuoteInputs.reference.urls.youtube,
-      },
-    });
-
-    return references;
-  }
-
   static Future saveExistingTempQuote({
     List<String> comments,
     Map<String, bool> topics,

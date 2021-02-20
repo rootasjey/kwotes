@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/actions/temp_quotes.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/user.dart';
@@ -80,8 +79,6 @@ class DraftsActions {
       comments.add(DataQuoteInputs.comment);
     }
 
-    final references = TempQuotesActions.formatReferences();
-
     final topics = Map<String, bool>();
 
     DataQuoteInputs.quote.topics.forEach((topic) {
@@ -100,36 +97,12 @@ class DraftsActions {
           .doc(userAuth.uid)
           .collection('drafts')
           .add({
-        'author': {
-          'id': DataQuoteInputs.author.id,
-          'job': DataQuoteInputs.author.job,
-          'jobLang': {},
-          'name': DataQuoteInputs.author.name,
-          'summary': DataQuoteInputs.author.summary,
-          'summaryLang': {},
-          'updatedAt': DateTime.now(),
-          'urls': {
-            'amazon': DataQuoteInputs.author.urls.amazon,
-            'facebook': DataQuoteInputs.author.urls.facebook,
-            'image': DataQuoteInputs.author.urls.image,
-            'netflix': DataQuoteInputs.author.urls.netflix,
-            'primeVideo': DataQuoteInputs.author.urls.primeVideo,
-            'twitch': DataQuoteInputs.author.urls.twitch,
-            'twitter': DataQuoteInputs.author.urls.twitter,
-            'website': DataQuoteInputs.author.urls.website,
-            'wikipedia': DataQuoteInputs.author.urls.wikipedia,
-            'youtube': DataQuoteInputs.author.urls.youtube,
-          }
-        },
+        'author': DataQuoteInputs.author.toJSON(withId: true),
         'comments': comments,
         'createdAt': DateTime.now(),
         'lang': DataQuoteInputs.quote.lang,
         'name': DataQuoteInputs.quote.name,
-        'reference': {
-          'id': DataQuoteInputs.reference.id,
-          'name': DataQuoteInputs.reference.name,
-        },
-        'references': references,
+        'reference': DataQuoteInputs.reference.toJSON(withId: true),
         'topics': topics,
         'user': {
           'id': userAuth.uid,
@@ -162,8 +135,6 @@ class DraftsActions {
       comments.add(DataQuoteInputs.comment);
     }
 
-    final references = TempQuotesActions.formatReferences();
-
     final topics = Map<String, bool>();
 
     DataQuoteInputs.quote.topics.forEach((topic) {
@@ -174,49 +145,24 @@ class DraftsActions {
       final userAuth = stateUser.userAuth;
 
       Map<String, dynamic> draft = {
-        'author': {
-          'id': DataQuoteInputs.author.id,
-          'job': DataQuoteInputs.author.job,
-          'jobLang': {},
-          'name': DataQuoteInputs.author.name,
-          'summary': DataQuoteInputs.author.summary,
-          'summaryLang': {},
-          'updatedAt': DateTime.now().toString(),
-          'urls': {
-            'amazon': DataQuoteInputs.author.urls.amazon,
-            'facebook': DataQuoteInputs.author.urls.facebook,
-            'image': DataQuoteInputs.author.urls.image,
-            'netflix': DataQuoteInputs.author.urls.netflix,
-            'primeVideo': DataQuoteInputs.author.urls.primeVideo,
-            'twitch': DataQuoteInputs.author.urls.twitch,
-            'twitter': DataQuoteInputs.author.urls.twitter,
-            'website': DataQuoteInputs.author.urls.website,
-            'wikipedia': DataQuoteInputs.author.urls.wikipedia,
-            'youtube': DataQuoteInputs.author.urls.youtube,
-          }
-        },
+        'author': DataQuoteInputs.author.toJSON(withId: true),
         'comments': comments,
-        'createdAt': DateTime.now().toString(),
-        'isOffline': true,
+        'createdAt': DateTime.now(),
         'lang': DataQuoteInputs.quote.lang,
         'name': DataQuoteInputs.quote.name,
-        'reference': {
-          'id': DataQuoteInputs.reference.id,
-          'name': DataQuoteInputs.reference.name,
-        },
-        'references': references,
+        'reference': DataQuoteInputs.reference.toJSON(withId: true),
         'topics': topics,
         'user': {
           'id': userAuth.uid,
         },
-        'updatedAt': DateTime.now().toString(),
+        'updatedAt': DateTime.now(),
         'validation': {
           'comment': {
             'name': '',
-            'updatedAt': DateTime.now().toString(),
+            'updatedAt': DateTime.now(),
           },
           'status': 'proposed',
-          'updatedAt': DateTime.now().toString(),
+          'updatedAt': DateTime.now(),
         }
       };
 
