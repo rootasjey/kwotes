@@ -322,13 +322,16 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       child: Opacity(
         opacity: 0.6,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 5.0,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               useIconButton
-                  ? FaIcon(
-                      FontAwesomeIcons.binoculars,
+                  ? Icon(
+                      UniconsLine.telescope,
                       color: stateColors.foreground,
                     )
                   : Text(
