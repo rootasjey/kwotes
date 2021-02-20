@@ -198,7 +198,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     final reference = widget.quote.reference;
 
     int flex =
-        MediaQuery.of(context).size.width < Constants.maxMobileWidth ? 5 : 1;
+        MediaQuery.of(context).size.width < Constants.maxMobileWidth ? 5 : 3;
 
     showCustomModalBottomSheet(
       context: context,
@@ -216,7 +216,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                         dense: true,
                         title: Opacity(
                           opacity: 0.6,
-                          child: Text("Delete associated author"),
+                          child: Text("• Delete associated author"),
                         ),
                         value: deleteWithAuthor,
                         onChanged: (isChecked) {
@@ -230,7 +230,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
                         dense: true,
                         title: Opacity(
                           opacity: 0.6,
-                          child: Text("Delete associated reference"),
+                          child: Text("• Delete associated reference"),
                         ),
                         value: deleteWithReference,
                         onChanged: (isChecked) {
