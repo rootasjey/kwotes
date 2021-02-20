@@ -154,21 +154,21 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       PopupMenuItem(
         value: 'edit',
         child: ListTile(
-          leading: Icon(Icons.edit),
+          leading: Icon(UniconsLine.edit),
           title: Text('Edit'),
         ),
       ),
       PopupMenuItem(
         value: 'copy',
         child: ListTile(
-          leading: Icon(Icons.copy),
+          leading: Icon(UniconsLine.copy),
           title: Text('Copy from...'),
         ),
       ),
       PopupMenuItem(
         value: 'deletetempquote',
         child: ListTile(
-          leading: Icon(Icons.delete_forever),
+          leading: Icon(UniconsLine.trash),
           title: Text('Delete'),
         ),
       ),
@@ -179,14 +179,14 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         PopupMenuItem(
           value: 'validate',
           child: ListTile(
-            leading: Icon(Icons.check),
+            leading: Icon(UniconsLine.check),
             title: Text('Validate'),
           ),
         ),
         PopupMenuItem(
           value: 'reject',
           child: ListTile(
-            leading: Icon(Icons.close),
+            leading: Icon(UniconsLine.times),
             title: Text('Reject'),
           ),
         ),
@@ -318,7 +318,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       containerWidget: (context, animation, child) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Material(
               clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadius.circular(12.0),
@@ -399,8 +399,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     if (widget.canManage) {
       actions.addAll([
         SwipeAction(
-          title: 'Validate',
-          icon: Icon(Icons.check, color: Colors.white),
+          title: 'ok',
+          icon: Icon(UniconsLine.check, color: Colors.white),
           color: stateColors.validation,
           onTap: (CompletionHandler handler) {
             handler(false);
@@ -408,8 +408,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
           },
         ),
         SwipeAction(
-          title: 'Reject',
-          icon: Icon(Icons.cancel, color: Colors.white),
+          title: 'reject',
+          icon: Icon(UniconsLine.times, color: Colors.white),
           color: stateColors.secondary,
           onTap: (CompletionHandler handler) {
             handler(false);
@@ -421,8 +421,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
 
     actions.add(
       SwipeAction(
-        title: 'Delete',
-        icon: Icon(Icons.delete, color: Colors.white),
+        title: 'delete',
+        icon: Icon(UniconsLine.trash, color: Colors.white),
         color: stateColors.deletion,
         nestedAction: SwipeNestedAction(title: "Confirm?"),
         onTap: (CompletionHandler handler) {
@@ -441,8 +441,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
 
     actions.addAll([
       SwipeAction(
-        title: 'Copy from...',
-        icon: Icon(Icons.copy, color: Colors.white),
+        title: 'copy from...',
+        icon: Icon(UniconsLine.copy, color: Colors.white),
         color: stateColors.primary,
         onTap: (CompletionHandler handler) {
           handler(false);
@@ -450,8 +450,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
         },
       ),
       SwipeAction(
-        title: 'Edit',
-        icon: Icon(Icons.edit, color: Colors.white),
+        title: 'edit',
+        icon: Icon(UniconsLine.edit, color: Colors.white),
         color: stateColors.secondary,
         onTap: (CompletionHandler handler) {
           handler(false);
