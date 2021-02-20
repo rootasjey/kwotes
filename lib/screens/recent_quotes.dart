@@ -487,9 +487,8 @@ class RecentQuotesState extends State<RecentQuotes> {
 
       setState(() {});
 
-      showSnack(
+      Snack.e(
         context: context,
-        type: SnackType.error,
         message: "Sorry, there was an issue while deleting quotes. "
             "Try again later or contact the support of the issue persist.",
       );

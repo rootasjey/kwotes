@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -454,10 +453,9 @@ class _UpdateEmailState extends State<UpdateEmail> {
       if (!await valuesAvailabilityCheck()) {
         setState(() => isUpdating = false);
 
-        showSnack(
+        Snack.e(
           context: context,
           message: 'The email entered is not available.',
-          type: SnackType.error,
         );
 
         return;
@@ -488,10 +486,9 @@ class _UpdateEmailState extends State<UpdateEmail> {
           isUpdating = false;
         });
 
-        showSnack(
+        Snack.e(
           context: context,
           message: "[code: ${exception.code}] - ${exception.message}",
-          type: SnackType.error,
         );
 
         return;
@@ -510,11 +507,10 @@ class _UpdateEmailState extends State<UpdateEmail> {
         isUpdating = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message:
             "Error while updating your email. Please try again later or contact us.",
-        type: SnackType.error,
       );
     }
   }
@@ -525,30 +521,27 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
   bool inputValuesOk() {
     if (email.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Email cannot be empty.",
-        type: SnackType.error,
       );
 
       return false;
     }
 
     if (password.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Password cannot be empty.",
-        type: SnackType.error,
       );
 
       return false;
     }
 
     if (!UsersActions.checkEmailFormat(email)) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "The value specified is not a valid email.",
-        type: SnackType.error,
       );
 
       return false;

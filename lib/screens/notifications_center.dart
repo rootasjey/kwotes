@@ -12,7 +12,6 @@ import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/app_notification.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
@@ -485,11 +484,10 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
           .get();
 
       if (!snapshot.exists) {
-        showSnack(
+        Snack.e(
           context: context,
           message:
               "Sorry, we couldn't get the quote in validation. It may have been deleted.",
-          type: SnackType.error,
         );
 
         return;
@@ -511,11 +509,10 @@ class _NotificationsCenterState extends State<NotificationsCenter> {
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message:
             "Sorry, there was an error while navigating to notification's target.",
-        type: SnackType.error,
       );
     }
   }

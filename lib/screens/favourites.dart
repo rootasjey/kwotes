@@ -370,10 +370,9 @@ class _FavouritesState extends State<Favourites> {
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'There was an issue while fetching your favourites.',
-        type: SnackType.error,
       );
     }
   }
@@ -417,10 +416,9 @@ class _FavouritesState extends State<Favourites> {
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'There was an issue while fetching your favourites.',
-        type: SnackType.error,
       );
     }
   }
@@ -450,11 +448,10 @@ class _FavouritesState extends State<Favourites> {
         quotes.insert(index, quote);
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message:
             "There was an issue while removing the quote from your favourites.",
-        type: SnackType.error,
       );
     }
   }

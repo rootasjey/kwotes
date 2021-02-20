@@ -213,10 +213,9 @@ class _EditAuthorState extends State<EditAuthor> {
       await authorDoc.reference.update(DataQuoteInputs.author.toJSON());
       setState(() => isSaving = false);
 
-      showSnack(
+      Snack.s(
         context: context,
         message: "Author's data was successfully saved.",
-        type: SnackType.success,
         primaryAction: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: TextButton(
@@ -239,11 +238,10 @@ class _EditAuthorState extends State<EditAuthor> {
         isSaving = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "There was an issue while saving your modifications. "
             "Please try again or contact us if the issue persists.",
-        type: SnackType.error,
       );
     }
   }

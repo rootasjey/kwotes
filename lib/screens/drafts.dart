@@ -438,10 +438,9 @@ class _DraftsState extends State<Drafts> {
     if (!success) {
       drafts.insert(index, draft);
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Couldn't delete the temporary quote.",
-        type: SnackType.error,
       );
     }
   }

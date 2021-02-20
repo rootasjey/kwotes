@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -197,11 +196,10 @@ class _TopicsState extends State<Topics> {
               final topic = appTopicsColors.shuffle(max: 1)?.first;
 
               if (topic == null) {
-                showSnack(
+                Snack.e(
                   context: context,
                   message:
                       "Couldn't navigate to topic page because topics list is empty",
-                  type: SnackType.error,
                 );
                 return;
               }

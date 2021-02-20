@@ -143,20 +143,18 @@ class TempQuotesActions {
     BuildContext context,
   }) async {
     if (DataQuoteInputs.quote.name.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "The quote's content cannot be empty.",
-        type: SnackType.error,
       );
 
       return false;
     }
 
     if (DataQuoteInputs.quote.topics.length == 0) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "You must select at least 1 topics for the quote.",
-        type: SnackType.error,
       );
 
       return false;

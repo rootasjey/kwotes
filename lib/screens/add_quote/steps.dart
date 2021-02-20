@@ -551,20 +551,18 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
   bool badQuoteFormat() {
     if (DataQuoteInputs.quote.name.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "The quote's content cannot be empty.",
-        type: SnackType.error,
       );
 
       return true;
     }
 
     if (DataQuoteInputs.quote.topics.length == 0) {
-      showSnack(
+      Snack.e(
         context: context,
         message: 'You must select at least 1 topics for the quote.',
-        type: SnackType.error,
       );
 
       return true;
@@ -683,13 +681,12 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
 
     final success = await TempQuotesActions.proposeQuote(context: context);
 
-    showSnack(
+    Snack.s(
       context: context,
       message: TempQuotesActions.getResultMessage(
         actionIntent: actionIntent,
         actionResult: actionResult,
       ),
-      type: SnackType.success,
     );
 
     if (success) {
@@ -770,12 +767,11 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           .get();
 
       if (!quoteDoc.exists) {
-        showSnack(
+        Snack.e(
           context: context,
           message:
               "Sorry, the quote ${DataQuoteInputs.quote.id} does not exist. "
               "It may have been deleted.",
-          type: SnackType.error,
         );
         return;
       }
@@ -797,10 +793,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         fabIcon = Icon(UniconsLine.message);
       });
 
-      showSnack(
+      Snack.s(
         context: context,
         message: "Your changes has been successfully saved!",
-        type: SnackType.success,
       );
     } catch (error) {
       appLogger.e(error);
@@ -811,21 +806,19 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isFabVisible = true;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Sorry, we couldn't save your modifications for this quote. "
             "Please try again or contact us if the issue persists.",
-        type: SnackType.error,
       );
     }
   }
 
   void saveQuoteDraft() async {
     if (DataQuoteInputs.quote.name.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "The quote's content cannot be empty.",
-        type: SnackType.error,
       );
 
       return;

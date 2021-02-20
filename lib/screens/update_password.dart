@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -389,31 +388,28 @@ class _UpdatePasswordState extends State<UpdatePassword> {
 
       setState(() => isUpdating = false);
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Error while updating your password. "
             "Please try again or contact us.",
-        type: SnackType.error,
       );
     }
   }
 
   bool inputValuesOk() {
     if (password.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Password cannot be empty.",
-        type: SnackType.error,
       );
 
       return false;
     }
 
     if (newPassword.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "New password cannot be empty.",
-        type: SnackType.error,
       );
 
       return false;

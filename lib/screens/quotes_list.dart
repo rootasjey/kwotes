@@ -383,10 +383,9 @@ class _QuotesListState extends State<QuotesList> {
           .get();
 
       if (!docListSnap.exists) {
-        showSnack(
+        Snack.e(
           context: context,
           message: "This list doesn't' exist anymore",
-          type: SnackType.error,
         );
 
         if (widget.onResult != null) {
@@ -532,11 +531,10 @@ class _QuotesListState extends State<QuotesList> {
         quotes.insert(index, quote);
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Sorry, could not remove the quote from your list."
             " Please try again later.",
-        type: SnackType.error,
       );
     }
   }
@@ -551,10 +549,9 @@ class _QuotesListState extends State<QuotesList> {
     );
 
     if (!success) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Sorry, we couldn't update your list. Please try again later.",
-        type: SnackType.error,
       );
 
       return;

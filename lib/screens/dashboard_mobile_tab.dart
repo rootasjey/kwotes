@@ -5,7 +5,6 @@ import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:flash/flash.dart';
@@ -351,10 +350,9 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
         await appStorage.clearUserAuthData();
         await stateUser.signOut();
 
-        showSnack(
+        Snack.s(
           context: context,
           message: 'You have been successfully disconnected.',
-          type: SnackType.success,
         );
       },
     );

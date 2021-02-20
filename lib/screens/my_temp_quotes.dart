@@ -269,10 +269,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   tempQuotes.insert(index, tempQuote);
                 });
 
-                showSnack(
+                Snack.e(
                   context: context,
                   message: "Couldn't delete the temporary quote",
-                  type: SnackType.error,
                 );
               },
               onBeforeValidate: () {
@@ -289,10 +288,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                   tempQuotes.insert(index, tempQuote);
                 });
 
-                showSnack(
+                Snack.e(
                   context: context,
                   message: "Couldn't validate your temporary quote.",
-                  type: SnackType.error,
                 );
               },
               onNavBack: () {
@@ -342,10 +340,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 tempQuotes.insert(index, tempQuote);
               });
 
-              showSnack(
+              Snack.e(
                 context: context,
                 message: "Couldn't delete the temporary quote",
-                type: SnackType.error,
               );
             },
             onBeforeValidate: () {
@@ -362,10 +359,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
                 tempQuotes.insert(index, tempQuote);
               });
 
-              showSnack(
+              Snack.e(
                 context: context,
                 message: "Couldn't validate your temporary quote.",
-                type: SnackType.error,
               );
             },
             onNavBack: () {

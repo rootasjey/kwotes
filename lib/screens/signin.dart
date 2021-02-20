@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/users.dart';
@@ -320,20 +319,18 @@ class _SigninState extends State<Signin> {
 
   bool inputValuesOk() {
     if (!UsersActions.checkEmailFormat(email)) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "The value specified is not a valid email",
-        type: SnackType.error,
       );
 
       return false;
     }
 
     if (password.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Password cannot be empty",
-        type: SnackType.error,
       );
 
       return false;
@@ -363,9 +360,8 @@ class _SigninState extends State<Signin> {
           isConnecting = false;
         });
 
-        showSnack(
+        Snack.e(
           context: context,
-          type: SnackType.error,
           message: 'The password is incorrect or the user does not exists.',
         );
 
@@ -391,9 +387,8 @@ class _SigninState extends State<Signin> {
     } catch (error) {
       appLogger.d(error);
 
-      showSnack(
+      Snack.e(
         context: context,
-        type: SnackType.error,
         message: 'The password is incorrect or the user does not exists.',
       );
 

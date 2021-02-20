@@ -6,7 +6,6 @@ import 'package:figstyle/components/sliver_edge_padding.dart';
 import 'package:figstyle/components/sliver_empty_view.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/edit_list_payload.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/flash_helper.dart';
@@ -398,10 +397,9 @@ class _QuotesListsState extends State<QuotesLists> {
     FlashHelper.dismissProgress(id: 'create_list');
 
     if (quotesList == null) {
-      showSnack(
+      Snack.e(
         context: context,
         message: 'There was and issue while creating the list. Try again later',
-        type: SnackType.error,
       );
 
       return;
@@ -424,10 +422,9 @@ class _QuotesListsState extends State<QuotesLists> {
     if (!success) {
       setState(() => userQuotesLists.insert(index, quotesList));
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'There was and issue while deleting the list. Try again later',
-        type: SnackType.error,
       );
 
       return;
@@ -551,10 +548,9 @@ class _QuotesListsState extends State<QuotesLists> {
         quotesList.isPublic = oldIsPublic;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Sorry, could not update your list. Please try again later.",
-        type: SnackType.error,
       );
 
       return;

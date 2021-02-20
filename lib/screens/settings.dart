@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
@@ -846,20 +845,18 @@ class _SettingsState extends State<Settings> {
         isLoadingAvatarUrl = false;
       });
 
-      showSnack(
+      Snack.s(
         context: context,
         message: 'Your image has been successfully updated.',
-        type: SnackType.success,
       );
     } catch (error) {
       debugPrint(error.toString());
 
       setState(() => isLoadingAvatarUrl = false);
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'Oops, there was an error: ${error.toString()}',
-        type: SnackType.error,
       );
     }
   }
@@ -877,10 +874,9 @@ class _SettingsState extends State<Settings> {
       isLoadingLang = false;
     });
 
-    showSnack(
+    Snack.s(
       context: context,
       message: 'Your language has been successfully updated.',
-      type: SnackType.success,
     );
   }
 }

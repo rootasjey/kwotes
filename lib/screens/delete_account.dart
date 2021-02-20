@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -440,10 +439,9 @@ class DeleteAccountState extends State<DeleteAccount> {
           isDeleting = false;
         });
 
-        showSnack(
+        Snack.e(
           context: context,
           message: "[code: ${exception.code}] - ${exception.message}",
-          type: SnackType.error,
         );
 
         return;
@@ -466,20 +464,18 @@ class DeleteAccountState extends State<DeleteAccount> {
         isDeleting = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: (error as PlatformException).message,
-        type: SnackType.error,
       );
     }
   }
 
   bool inputValuesOk() {
     if (password.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Password cannot be empty.",
-        type: SnackType.error,
       );
 
       return false;

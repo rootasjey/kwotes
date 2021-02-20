@@ -526,11 +526,11 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
         onSelected: (newValue) {
           Language.setLang(newValue);
-          showSnack(
+
+          Snack.s(
             context: context,
             message: "Your language has been successfully updated"
                 " to ${Language.frontend(newValue)}",
-            type: SnackType.success,
           );
         },
         itemBuilder: (context) => Language.available().map((value) {
@@ -853,21 +853,23 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
               break;
             case AppBarSettings.en:
               Language.setLang('en');
-              showSnack(
+
+              Snack.s(
                 context: context,
                 message: "Your language has been successfully updated"
                     " to ${Language.frontend('en')}",
-                type: SnackType.success,
               );
+
               break;
             case AppBarSettings.fr:
               Language.setLang('fr');
-              showSnack(
+
+              Snack.s(
                 context: context,
                 message: "Your language has been successfully updated"
                     " to ${Language.frontend('fr')}",
-                type: SnackType.success,
               );
+
               break;
             default:
           }

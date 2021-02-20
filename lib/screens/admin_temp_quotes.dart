@@ -404,9 +404,8 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
       setState(() {});
 
-      showSnack(
+      Snack.e(
         context: context,
-        type: SnackType.error,
         message: "Sorry, there was an issue while validating the quote(s). "
             "Try again later or contact the support of the issue persist.",
       );

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/lists.dart';
 import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/user_quotes_list.dart';
 import 'package:figstyle/utils/flash_helper.dart';
@@ -173,10 +172,9 @@ class _UserListsState extends State<UserLists> {
   }
 
   void addQuoteToList({String listId}) async {
-    showSnack(
+    Snack.s(
       context: context,
       title: "Add",
-      type: SnackType.success,
       message: "Your quote has been successfully added!",
     );
 
@@ -186,10 +184,9 @@ class _UserListsState extends State<UserLists> {
     );
 
     if (!success) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "There was an error while adding the quote to the list.",
-        type: SnackType.error,
       );
 
       return;
@@ -216,17 +213,16 @@ class _UserListsState extends State<UserLists> {
     FlashHelper.dismissProgress(id: 'create_list');
 
     if (createdList == null) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "There was and issue while creating the list. "
             "Try again later or contact us if the problem persists.",
-        type: SnackType.error,
       );
 
       return;
     }
 
-    showSnack(
+    Snack.e(
       context: context,
       title: "Create",
       message: "Your list $newListName has been successfully created!",
@@ -283,10 +279,9 @@ class _UserListsState extends State<UserLists> {
         hasErrors = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'Cannot retrieve your lists right now',
-        type: SnackType.error,
       );
     }
   }
@@ -341,10 +336,9 @@ class _UserListsState extends State<UserLists> {
         hasErrors = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'Cannot retrieve more lists.',
-        type: SnackType.error,
       );
     }
   }

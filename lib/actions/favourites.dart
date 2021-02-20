@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
@@ -20,10 +19,9 @@ class FavActions {
       final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
-        showSnack(
+        Snack.e(
           context: context,
           message: "You're not connected to add this quote to your favourites.",
-          type: SnackType.error,
         );
 
         return false;
@@ -74,10 +72,9 @@ class FavActions {
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message: 'Sorry, an error prevented the quote to be favourited.',
-        type: SnackType.error,
       );
 
       return false;
@@ -118,11 +115,10 @@ class FavActions {
       final userAuth = stateUser.userAuth;
 
       if (userAuth == null) {
-        showSnack(
+        Snack.e(
           context: context,
           message:
               "You're not connected to remove this quote from your favourites.",
-          type: SnackType.error,
         );
 
         return false;
@@ -154,10 +150,9 @@ class FavActions {
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Sorry, the quote couldn't be unfavourited.",
-        type: SnackType.error,
       );
 
       return false;

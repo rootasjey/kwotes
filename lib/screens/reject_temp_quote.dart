@@ -3,7 +3,6 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/screens/signin.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -201,10 +200,9 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
           .get();
 
       if (!snapshot.exists) {
-        showSnack(
+        Snack.e(
           context: context,
           message: "This temporary quote's author doesn't exist anymore.",
-          type: SnackType.error,
         );
         return;
       }
@@ -267,10 +265,9 @@ class _RejectTempQuoteState extends State<RejectTempQuote> {
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Couldn't send notification. Please try again later.",
-        type: SnackType.error,
       );
     }
   }

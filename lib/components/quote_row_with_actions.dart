@@ -712,10 +712,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     final quote = widget.quote;
 
     if (widget.quote.starred) {
-      showSnack(
+      Snack.s(
         context: context,
         title: "Favourites",
-        type: SnackType.success,
         icon: Icon(UniconsLine.heart_break, color: Colors.pink),
         message: "This quote has been successfully unliked!",
       );
@@ -743,10 +742,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         widget.onAfterRemoveFromFavourites(success);
       }
     } else {
-      showSnack(
+      Snack.e(
         context: context,
         title: "Favourites",
-        type: SnackType.success,
         icon: Icon(UniconsLine.heart, color: Colors.pink),
         message: "This quote has been successfully liked!",
       );
@@ -778,10 +776,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
   void showBottomSheetList() {
     if (!stateUser.isUserConnected) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "You must sign in to add this quote to a list.",
-        type: SnackType.error,
       );
 
       return;

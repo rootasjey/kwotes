@@ -7,7 +7,6 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/screens/add_quote/reference.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -209,10 +208,9 @@ class _EditReferenceState extends State<EditReference> {
       await referenceDoc.reference.update(DataQuoteInputs.reference.toJSON());
       setState(() => isSaving = false);
 
-      showSnack(
+      Snack.s(
         context: context,
         message: "Reference's data was successfully saved.",
-        type: SnackType.success,
         primaryAction: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: TextButton(
@@ -235,11 +233,10 @@ class _EditReferenceState extends State<EditReference> {
         isSaving = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "There was an issue while saving your modifications. "
             "Please try again or contact us if the issue persists.",
-        type: SnackType.error,
       );
     }
   }

@@ -3,7 +3,6 @@ import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -260,20 +259,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   bool inputValuesOk() {
     if (email.isEmpty) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "Email field can't be empty. Please enter your email.",
-        type: SnackType.error,
       );
 
       return false;
     }
 
     if (!UsersActions.checkEmailFormat(email)) {
-      showSnack(
+      Snack.e(
         context: context,
         message: "The value specified is not a valid email",
-        type: SnackType.error,
       );
 
       return false;
@@ -305,9 +302,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         isLoading = false;
       });
 
-      showSnack(
+      Snack.e(
         context: context,
-        type: SnackType.error,
         message: "Sorry, this email doesn't exist.",
       );
     }

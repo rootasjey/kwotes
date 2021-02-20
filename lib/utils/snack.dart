@@ -1,4 +1,3 @@
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
@@ -93,48 +92,4 @@ class Snack {
       primaryAction: primaryAction,
     );
   }
-}
-
-Future showSnack({
-  @required BuildContext context,
-  String title = '',
-  Widget icon,
-  @required String message,
-  SnackType type = SnackType.info,
-  Widget primaryAction,
-}) {
-  if (type == SnackType.error) {
-    return FlashHelper.groundedBottom(
-      context,
-      title: title,
-      message: message,
-      icon: icon != null
-          ? icon
-          : Icon(
-              UniconsLine.times,
-              color: Colors.pink,
-            ),
-      primaryAction: primaryAction,
-    );
-  } else if (type == SnackType.success) {
-    return FlashHelper.groundedBottom(
-      context,
-      title: title,
-      message: message,
-      icon: icon != null
-          ? icon
-          : Icon(
-              UniconsLine.check,
-              color: Colors.green,
-            ),
-      primaryAction: primaryAction,
-    );
-  }
-  return FlashHelper.groundedBottom(
-    context,
-    title: title,
-    message: message,
-    icon: icon,
-    primaryAction: primaryAction,
-  );
 }

@@ -357,18 +357,16 @@ class _QuotidianRowState extends State<QuotidianRow> {
         widget.onAfterDelete(true);
       }
 
-      showSnack(
+      Snack.s(
         context: context,
         message: "The quotidian has been successfully deleted.",
-        type: SnackType.success,
       );
     } catch (error) {
       debugPrint(error.toString());
 
-      showSnack(
+      Snack.e(
         context: context,
         message: "Sorry, an error occurred while deleting the quotidian.",
-        type: SnackType.error,
       );
 
       if (widget.onAfterDelete != null) {

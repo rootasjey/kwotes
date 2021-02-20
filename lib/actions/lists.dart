@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/types/background_op.dart';
-import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/background_op_manager.dart';
 import 'package:figstyle/utils/flash_helper.dart';
@@ -131,10 +130,9 @@ class ListsActions {
     } catch (error) {
       appLogger.e(error);
       BackgroundOpManager.setOpDone(id);
-      showSnack(
+      Snack.e(
         context: BackgroundOpManager.context,
         message: 'There was and issue while deleting the list. Try again later',
-        type: SnackType.error,
       );
 
       return false;
