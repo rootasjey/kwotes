@@ -39,42 +39,25 @@ class AddQuoteAuthor extends StatefulWidget {
 class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   bool prefilledInputs = false;
   bool isLoadingSuggestions = false;
+
   final double beginY = 10.0;
 
-  TextEditingController affiliateUrlController;
-  TextEditingController amazonUrlController;
-  TextEditingController facebookUrlController;
-  TextEditingController nameController;
-  TextEditingController instaController;
-  TextEditingController jobController;
-  TextEditingController summaryController;
-  TextEditingController twitchUrlController;
-  TextEditingController twitterUrlController;
-  TextEditingController websiteUrlController;
-  TextEditingController wikiUrlController;
-  TextEditingController youtubeUrlController;
-
-  TextEditingController bornCityController;
-  TextEditingController bornCountryController;
-  TextEditingController deathCityController;
-  TextEditingController deathCountryController;
-
+  TextEditingController cityController;
+  TextEditingController countryController;
   TextEditingController linkInputController;
+  TextEditingController textController;
 
-  FocusNode nameFocusNode;
-  FocusNode jobFocusNode;
-  FocusNode summaryFocusNode;
-  FocusNode bornCityFocusNode;
-  FocusNode bornCountryFocusNode;
-  FocusNode deathCityFocusNode;
-  FocusNode deathCountryFocusNode;
+  FocusNode textFocusNode;
+  FocusNode cityFocusNode;
+  FocusNode countryFocusNode;
+
+  List<AuthorSuggestion> authorsSuggestions = [];
+  List<ReferenceSuggestion> referencesSuggestions = [];
 
   String tapToEditStr = 'Tap to edit';
   String tempImgUrl = '';
 
   Timer searchTimer;
-  List<AuthorSuggestion> authorsSuggestions = [];
-  List<ReferenceSuggestion> referencesSuggestions = [];
 
   @override
   void initState() {
@@ -83,22 +66,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
     setState(() {
       prefilledInputs = DataQuoteInputs.author.id.isNotEmpty;
-
-      amazonUrlController.text = DataQuoteInputs.author.urls.amazon;
-      facebookUrlController.text = DataQuoteInputs.author.urls.facebook;
-      nameController.text = DataQuoteInputs.author.name;
-      jobController.text = DataQuoteInputs.author.job;
-      instaController.text = DataQuoteInputs.author.urls.instagram;
-      summaryController.text = DataQuoteInputs.author.summary;
-      twitchUrlController.text = DataQuoteInputs.author.urls.twitch;
-      twitterUrlController.text = DataQuoteInputs.author.urls.twitter;
-      websiteUrlController.text = DataQuoteInputs.author.urls.website;
-      wikiUrlController.text = DataQuoteInputs.author.urls.wikipedia;
-      youtubeUrlController.text = DataQuoteInputs.author.urls.youtube;
-      bornCityController.text = DataQuoteInputs.author.born.city;
-      bornCountryController.text = DataQuoteInputs.author.born.country;
-      deathCityController.text = DataQuoteInputs.author.death.city;
-      deathCountryController.text = DataQuoteInputs.author.death.country;
     });
 
     super.initState();
@@ -113,65 +80,32 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   void initFocusNodes() {
-    nameFocusNode = FocusNode();
-    jobFocusNode = FocusNode();
-    summaryFocusNode = FocusNode();
-    bornCityFocusNode = FocusNode();
-    bornCountryFocusNode = FocusNode();
-    deathCityFocusNode = FocusNode();
-    deathCountryFocusNode = FocusNode();
+    textFocusNode = FocusNode();
+    cityFocusNode = FocusNode();
+    countryFocusNode = FocusNode();
   }
 
   void initInputs() {
-    affiliateUrlController = TextEditingController();
-    amazonUrlController = TextEditingController();
-    facebookUrlController = TextEditingController();
-    nameController = TextEditingController();
-    instaController = TextEditingController();
-    jobController = TextEditingController();
-    summaryController = TextEditingController();
-    twitchUrlController = TextEditingController();
-    twitterUrlController = TextEditingController();
-    websiteUrlController = TextEditingController();
-    wikiUrlController = TextEditingController();
-    youtubeUrlController = TextEditingController();
-
-    bornCityController = TextEditingController();
-    bornCountryController = TextEditingController();
-    deathCityController = TextEditingController();
-    deathCountryController = TextEditingController();
-
+    cityController = TextEditingController();
+    countryController = TextEditingController();
     linkInputController = TextEditingController();
+    textController = TextEditingController();
+
+    textController.text = DataQuoteInputs.author.name;
+    cityController.text = DataQuoteInputs.author.born.city;
+    countryController.text = DataQuoteInputs.author.born.country;
   }
 
   void disposeFocusNodes() {
-    nameFocusNode.dispose();
-    jobFocusNode.dispose();
-    summaryFocusNode.dispose();
-    bornCityFocusNode.dispose();
-    bornCountryFocusNode.dispose();
-    deathCityFocusNode.dispose();
-    deathCountryFocusNode.dispose();
+    textFocusNode.dispose();
+    cityFocusNode.dispose();
+    countryFocusNode.dispose();
   }
 
   void disposeInputs() {
-    affiliateUrlController.dispose();
-    amazonUrlController.dispose();
-    facebookUrlController.dispose();
-    nameController.dispose();
-    instaController.dispose();
-    jobController.dispose();
-    summaryController.dispose();
-    twitchUrlController.dispose();
-    twitterUrlController.dispose();
-    websiteUrlController.dispose();
-    wikiUrlController.dispose();
-    youtubeUrlController.dispose();
-
-    bornCityController.dispose();
-    bornCountryController.dispose();
-    deathCityController.dispose();
-    deathCountryController.dispose();
+    textController.dispose();
+    cityController.dispose();
+    countryController.dispose();
     linkInputController.dispose();
   }
 
@@ -345,6 +279,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget bornInput({ScrollController scrollController}) {
+    cityController.text = DataQuoteInputs.author.born.city;
+    countryController.text = DataQuoteInputs.author.born.country;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -418,8 +355,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   padding: EdgeInsets.only(top: 30.0),
                   child: TextField(
                     autofocus: true,
-                    controller: bornCountryController,
-                    focusNode: bornCountryFocusNode,
+                    controller: countryController,
+                    focusNode: countryFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
@@ -442,8 +379,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     bottom: 32.0,
                   ),
                   child: TextField(
-                    controller: bornCityController,
-                    focusNode: bornCityFocusNode,
+                    controller: cityController,
+                    focusNode: cityFocusNode,
                     textInputAction: TextInputAction.done,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
@@ -468,9 +405,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     DataQuoteInputs.author.born.country = '';
                     DataQuoteInputs.author.born.date = null;
 
-                    bornCityController.clear();
-                    bornCountryController.clear();
-                    bornCityFocusNode.requestFocus();
+                    cityController.clear();
+                    countryController.clear();
+                    cityFocusNode.requestFocus();
                   },
                 ),
               ],
@@ -487,18 +424,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       child: FlatButton.icon(
         onPressed: () {
           DataQuoteInputs.clearAuthor();
-
-          amazonUrlController.clear();
-          facebookUrlController.clear();
-          jobController.clear();
-          nameController.clear();
-          summaryController.clear();
-          twitchUrlController.clear();
-          twitterUrlController.clear();
-          websiteUrlController.clear();
-          wikiUrlController.clear();
-          youtubeUrlController.clear();
-
+          textController.clear();
           authorsSuggestions.clear();
 
           prefilledInputs = false;
@@ -507,7 +433,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
           setState(() {});
 
-          nameFocusNode.requestFocus();
+          textFocusNode.requestFocus();
         },
         icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
         label: Opacity(
@@ -521,6 +447,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget deathInput({ScrollController scrollController}) {
+    cityController.text = DataQuoteInputs.author.death.city;
+    countryController.text = DataQuoteInputs.author.death.country;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -587,8 +516,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   padding: EdgeInsets.only(top: 30.0),
                   child: TextField(
                     autofocus: true,
-                    controller: deathCountryController,
-                    focusNode: deathCountryFocusNode,
+                    controller: countryController,
+                    focusNode: countryFocusNode,
                     textInputAction: TextInputAction.next,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
@@ -611,8 +540,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     bottom: 32.0,
                   ),
                   child: TextField(
-                    controller: deathCityController,
-                    focusNode: deathCityFocusNode,
+                    controller: cityController,
+                    focusNode: cityFocusNode,
                     textInputAction: TextInputAction.done,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
@@ -637,9 +566,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     DataQuoteInputs.author.death.country = '';
                     DataQuoteInputs.author.death.date = null;
 
-                    deathCityController.clear();
-                    deathCountryController.clear();
-                    deathCityFocusNode.requestFocus();
+                    cityController.clear();
+                    countryController.clear();
+                    cityFocusNode.requestFocus();
                   },
                 ),
               ],
@@ -711,7 +640,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 await showCupertinoModalBottomSheet(
                     context: context,
                     builder: (context) {
-                      nameController.text = authorName ?? '';
+                      textController.text = authorName ?? '';
                       return nameInput();
                     });
 
@@ -777,6 +706,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget jobInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.author.job;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -784,45 +715,47 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         children: [
           Padding(
             padding: const EdgeInsets.all(40.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SheetHeader(
-                title: "Job",
-                subTitle: "Job or role in real life or "
-                    "in the artistic material",
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 60.0),
-                child: TextField(
-                  autofocus: true,
-                  controller: jobController,
-                  focusNode: jobFocusNode,
-                  textInputAction: TextInputAction.done,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    icon: Icon(UniconsLine.bag),
-                    labelText: "e.g. Housekeeper, Lawyer, Student, Teacher",
-                    alignLabelWithHint: true,
-                  ),
-                  minLines: 1,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  onChanged: (newValue) {
-                    DataQuoteInputs.author.job = newValue;
-                  },
-                  onSubmitted: (_) => context.router.pop,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SheetHeader(
+                  title: "Job",
+                  subTitle: "Job or role in real life or "
+                      "in the artistic material",
                 ),
-              ),
-              FormActionInputs(
-                onCancel: () {
-                  DataQuoteInputs.author.job = '';
-                  jobController.clear();
-                  jobFocusNode.requestFocus();
-                },
-              ),
-            ]),
+                Padding(
+                  padding: EdgeInsets.only(top: 60.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: textController,
+                    focusNode: textFocusNode,
+                    textInputAction: TextInputAction.done,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(UniconsLine.bag),
+                      labelText: "e.g. Housekeeper, Lawyer, Student, Teacher",
+                      alignLabelWithHint: true,
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (newValue) {
+                      DataQuoteInputs.author.job = newValue;
+                    },
+                    onSubmitted: (_) => context.router.pop,
+                  ),
+                ),
+                FormActionInputs(
+                  onCancel: () {
+                    DataQuoteInputs.author.job = '';
+                    textController.clear();
+                    textFocusNode.requestFocus();
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -1101,7 +1034,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         await showCupertinoModalBottomSheet(
             context: context,
             builder: (context) {
-              nameController.text = isAuthorNameValid ? authorName : '';
+              textController.text = isAuthorNameValid ? authorName : '';
               return nameInput();
             });
 
@@ -1111,6 +1044,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget nameInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.author.name;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -1133,8 +1068,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                         padding: const EdgeInsets.only(top: 60.0),
                         child: TextField(
                           autofocus: true,
-                          controller: nameController,
-                          focusNode: nameFocusNode,
+                          controller: textController,
+                          focusNode: textFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             icon: Icon(UniconsLine.user),
@@ -1161,8 +1096,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       FormActionInputs(
                         onCancel: () {
                           DataQuoteInputs.author.name = '';
-                          nameController.clear();
-                          nameFocusNode.requestFocus();
+                          textController.clear();
+                          textFocusNode.requestFocus();
                         },
                       ),
                       authorSuggestions(),
@@ -1198,7 +1133,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       icon: Icon(UniconsLine.image),
       subtitleString: subtitleString,
       onTap: () async {
-        nameController.text = referenceName;
+        textController.text = referenceName;
         await showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => referenceNameInput(),
@@ -1233,8 +1168,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                         padding: EdgeInsets.only(top: 60.0),
                         child: TextField(
                           autofocus: true,
-                          controller: nameController,
-                          focusNode: nameFocusNode,
+                          controller: textController,
+                          focusNode: textFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             icon: Icon(UniconsLine.user),
@@ -1261,8 +1196,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       FormActionInputs(
                         onCancel: () {
                           DataQuoteInputs.reference.name = '';
-                          nameController.clear();
-                          nameFocusNode.requestFocus();
+                          textController.clear();
+                          textFocusNode.requestFocus();
                         },
                       ),
                       referenceSuggestions(),
@@ -1342,6 +1277,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   Widget summaryInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.author.summary;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -1360,8 +1297,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
-                    controller: summaryController,
-                    focusNode: summaryFocusNode,
+                    controller: textController,
+                    focusNode: textFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.subject),
@@ -1381,8 +1318,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 FormActionInputs(
                   onCancel: () {
                     DataQuoteInputs.author.summary = '';
-                    summaryController.clear();
-                    summaryFocusNode.requestFocus();
+                    textController.clear();
+                    textFocusNode.requestFocus();
                   },
                 )
               ],
@@ -1486,7 +1423,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       await showCupertinoModalBottomSheet(
           context: context,
           builder: (context) {
-            nameController.text = '';
+            textController.text = '';
             return referenceNameInput();
           });
 

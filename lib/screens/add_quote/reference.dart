@@ -29,26 +29,10 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   bool isLoadingSuggestions = false;
   final beginY = 10.0;
 
-  FocusNode nameFocusNode;
-  FocusNode primaryTypeFocusNode;
-  FocusNode secondaryTypeFocusNode;
-  FocusNode summaryFocusNode;
-
-  TextEditingController amazonUrlController;
-  TextEditingController facebookUrlController;
-  TextEditingController nameController;
-  TextEditingController netflixUrlController;
-  TextEditingController primaryTypeController;
-  TextEditingController primeVideoUrlController;
-  TextEditingController secondaryTypeController;
-  TextEditingController summaryController;
-  TextEditingController twitterUrlController;
-  TextEditingController twitchUrlController;
-  TextEditingController websiteUrlController;
-  TextEditingController wikiUrlController;
-  TextEditingController youtubeUrlController;
+  FocusNode textFocusNode;
 
   TextEditingController linkInputController;
+  TextEditingController textController;
 
   List<ReferenceSuggestion> referencesSuggestions = [];
 
@@ -62,23 +46,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     initFocusNodes();
     initInputs();
 
-    setState(() {
-      prefilledInputs = DataQuoteInputs.reference.id.isNotEmpty;
-
-      amazonUrlController.text = DataQuoteInputs.reference.urls.amazon;
-      facebookUrlController.text = DataQuoteInputs.reference.urls.facebook;
-      nameController.text = DataQuoteInputs.reference.name;
-      netflixUrlController.text = DataQuoteInputs.reference.urls.netflix;
-      primeVideoUrlController.text = DataQuoteInputs.reference.urls.primeVideo;
-      primaryTypeController.text = DataQuoteInputs.reference.type.primary;
-      secondaryTypeController.text = DataQuoteInputs.reference.type.secondary;
-      summaryController.text = DataQuoteInputs.reference.summary;
-      twitterUrlController.text = DataQuoteInputs.reference.urls.twitter;
-      twitchUrlController.text = DataQuoteInputs.reference.urls.twitch;
-      websiteUrlController.text = DataQuoteInputs.reference.urls.website;
-      wikiUrlController.text = DataQuoteInputs.reference.urls.wikipedia;
-      youtubeUrlController.text = DataQuoteInputs.reference.urls.youtube;
-    });
+    setState(() {});
 
     super.initState();
   }
@@ -91,50 +59,23 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   void initFocusNodes() {
-    nameFocusNode = FocusNode();
-    primaryTypeFocusNode = FocusNode();
-    secondaryTypeFocusNode = FocusNode();
-    summaryFocusNode = FocusNode();
+    textFocusNode = FocusNode();
   }
 
   void initInputs() {
-    amazonUrlController = TextEditingController();
-    facebookUrlController = TextEditingController();
-    nameController = TextEditingController();
-    netflixUrlController = TextEditingController();
-    primaryTypeController = TextEditingController();
-    primeVideoUrlController = TextEditingController();
-    secondaryTypeController = TextEditingController();
-    summaryController = TextEditingController();
-    twitterUrlController = TextEditingController();
-    twitchUrlController = TextEditingController();
-    websiteUrlController = TextEditingController();
-    wikiUrlController = TextEditingController();
-    youtubeUrlController = TextEditingController();
     linkInputController = TextEditingController();
+    textController = TextEditingController();
+
+    prefilledInputs = DataQuoteInputs.reference.id.isNotEmpty;
+    textController.text = DataQuoteInputs.reference.name;
   }
 
   void disposeFocusNodes() {
-    nameFocusNode.dispose();
-    primaryTypeFocusNode.dispose();
-    secondaryTypeFocusNode.dispose();
-    summaryFocusNode.dispose();
+    textFocusNode.dispose();
   }
 
   void disposeInputs() {
-    amazonUrlController.dispose();
-    facebookUrlController.dispose();
-    nameController.dispose();
-    netflixUrlController.dispose();
-    primaryTypeController.dispose();
-    primeVideoUrlController.dispose();
-    secondaryTypeController.dispose();
-    summaryController.dispose();
-    twitterUrlController.dispose();
-    twitchUrlController.dispose();
-    websiteUrlController.dispose();
-    wikiUrlController.dispose();
-    youtubeUrlController.dispose();
+    textController.dispose();
     linkInputController.dispose();
   }
 
@@ -192,7 +133,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               await showCupertinoModalBottomSheet(
                   context: context,
                   builder: (context) {
-                    nameController.text = referenceName ?? '';
+                    textController.text = referenceName ?? '';
                     return nameInput();
                   });
 
@@ -357,21 +298,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     return FlatButton.icon(
       onPressed: () {
         DataQuoteInputs.clearReference();
-
-        amazonUrlController.clear();
-        facebookUrlController.clear();
-        nameController.clear();
-        netflixUrlController.clear();
-        primaryTypeController.clear();
-        primeVideoUrlController.clear();
-        secondaryTypeController.clear();
-        summaryController.clear();
-        twitchUrlController.clear();
-        twitterUrlController.clear();
-        websiteUrlController.clear();
-        wikiUrlController.clear();
-        youtubeUrlController.clear();
-
+        textController.clear();
         referencesSuggestions.clear();
 
         prefilledInputs = false;
@@ -380,7 +307,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
         setState(() {});
 
-        nameFocusNode.requestFocus();
+        textFocusNode.requestFocus();
       },
       icon: Opacity(
         opacity: 0.6,
@@ -712,6 +639,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget nameInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.reference.name;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -734,8 +663,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         padding: EdgeInsets.only(top: 60.0),
                         child: TextField(
                           autofocus: true,
-                          controller: nameController,
-                          focusNode: nameFocusNode,
+                          controller: textController,
+                          focusNode: textFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             icon: Icon(UniconsLine.user),
@@ -762,8 +691,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       FormActionInputs(
                         onCancel: () {
                           DataQuoteInputs.reference.name = '';
-                          nameController.clear();
-                          nameFocusNode.requestFocus();
+                          textController.clear();
+                          textFocusNode.requestFocus();
                         },
                       ),
                       suggestions(),
@@ -808,6 +737,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget primaryTypeInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.reference.type.primary;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -826,8 +757,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
-                    controller: primaryTypeController,
-                    focusNode: primaryTypeFocusNode,
+                    controller: textController,
+                    focusNode: textFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.circle),
@@ -847,8 +778,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 FormActionInputs(
                   onCancel: () {
                     DataQuoteInputs.reference.type.primary = '';
-                    primaryTypeController.clear();
-                    primaryTypeFocusNode.requestFocus();
+                    textController.clear();
+                    textFocusNode.requestFocus();
                   },
                 ),
               ],
@@ -945,6 +876,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget secondaryTypeInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.reference.type.secondary;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -963,8 +896,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
-                    controller: secondaryTypeController,
-                    focusNode: secondaryTypeFocusNode,
+                    controller: textController,
+                    focusNode: textFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.pentagon),
@@ -984,8 +917,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 FormActionInputs(
                   onCancel: () {
                     DataQuoteInputs.reference.type.secondary = '';
-                    secondaryTypeController.clear();
-                    secondaryTypeFocusNode.requestFocus();
+                    textController.clear();
+                    textFocusNode.requestFocus();
                   },
                 ),
               ],
@@ -1068,6 +1001,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget summaryInput({ScrollController scrollController}) {
+    textController.text = DataQuoteInputs.reference.summary;
+
     return Scaffold(
       body: ListView(
         physics: ClampingScrollPhysics(),
@@ -1086,8 +1021,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   padding: EdgeInsets.only(top: 60.0),
                   child: TextField(
                     autofocus: true,
-                    controller: summaryController,
-                    focusNode: summaryFocusNode,
+                    controller: textController,
+                    focusNode: textFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.subject),
@@ -1107,8 +1042,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                 FormActionInputs(
                   onCancel: () {
                     DataQuoteInputs.reference.summary = '';
-                    summaryController.clear();
-                    summaryFocusNode.requestFocus();
+                    textController.clear();
+                    textFocusNode.requestFocus();
                   },
                 ),
               ],
