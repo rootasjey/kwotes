@@ -1619,7 +1619,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                       children: <Widget>[
                         SheetHeader(
                           title: "Author illustration",
-                          subTitle: "Enter a http link",
+                          subTitle: "Enter a valid URL",
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 40.0),
@@ -1683,7 +1683,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               children: [
                 SheetHeader(
                   title: "Link",
-                  subTitle: "Enter a http link",
+                  subTitle: "Enter a valid URL",
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 60.0),

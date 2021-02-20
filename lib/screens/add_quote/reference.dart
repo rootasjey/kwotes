@@ -1184,7 +1184,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                     children: <Widget>[
                       SheetHeader(
                         title: "Reference illustration",
-                        subTitle: "Enter a http link",
+                        subTitle: "Enter a valid URL",
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 40.0),
@@ -1256,7 +1256,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               children: [
                 SheetHeader(
                   title: "Link",
-                  subTitle: "Enter a http link",
+                  subTitle: "Enter a valid URL",
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 60.0),
