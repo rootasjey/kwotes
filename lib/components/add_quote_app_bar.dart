@@ -80,7 +80,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
         elevation: 2.0,
         backgroundColor: stateColors.softBackground,
         icon: Icon(
-          Icons.help_outline,
+          UniconsLine.question,
           size: 20.0,
           color: stateColors.primary,
         ),
