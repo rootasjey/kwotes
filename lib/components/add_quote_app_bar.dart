@@ -8,6 +8,7 @@ import 'package:figstyle/components/app_icon.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:unicons/unicons.dart';
 
 class AddQuoteAppBar extends StatefulWidget {
   final Function onTapIconHeader;
@@ -234,7 +235,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           const PopupMenuItem(
               value: DashboardPageRoute(children: [FavouritesRoute()]),
               child: ListTile(
-                leading: Icon(Icons.favorite),
+                leading: Icon(UniconsLine.heart),
                 title: Text(
                   'Favourites',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -243,7 +244,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           const PopupMenuItem(
               value: DashboardPageRoute(children: [QuotesListsRoute()]),
               child: ListTile(
-                leading: Icon(Icons.list),
+                leading: Icon(UniconsLine.list_ul),
                 title: Text(
                   'Lists',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -252,7 +253,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           const PopupMenuItem(
             value: DashboardPageRoute(children: [DraftsRoute()]),
             child: ListTile(
-              leading: Icon(Icons.edit),
+              leading: Icon(UniconsLine.edit),
               title: Text(
                 'Drafts',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -262,7 +263,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           const PopupMenuItem(
             value: DashboardPageRoute(children: [MyPublishedQuotesRoute()]),
             child: ListTile(
-              leading: Icon(Icons.cloud_done),
+              leading: Icon(UniconsLine.cloud_upload),
               title: Text(
                 'Published',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -272,7 +273,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           const PopupMenuItem(
               value: DashboardPageRoute(children: [MyTempQuotesRoute()]),
               child: ListTile(
-                leading: Icon(Icons.timelapse),
+                leading: Icon(UniconsLine.clock),
                 title: Text(
                   'In Validation',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -281,7 +282,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           PopupMenuItem(
             value: NavigationHelper.getSettingsRoute(),
             child: ListTile(
-              leading: Icon(Icons.settings),
+              leading: Icon(UniconsLine.setting),
               title: Text(
                 'Settings',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -291,7 +292,7 @@ class _AddQuoteAppBarState extends State<AddQuoteAppBar> {
           const PopupMenuItem(
             value: SignOutRoute(),
             child: ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: Icon(UniconsLine.ship),
               title: Text(
                 'Sign out',
                 style: TextStyle(fontWeight: FontWeight.bold),

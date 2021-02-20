@@ -7,6 +7,7 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/side_menu_item.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:unicons/unicons.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -17,31 +18,31 @@ class _DashboardPageState extends State<DashboardPage> {
   final _sideMenuItems = <SideMenuItem>[
     SideMenuItem(
       destination: FavouritesRoute(),
-      iconData: Icons.favorite,
+      iconData: UniconsLine.heart,
       label: 'Favourites',
       hoverColor: Colors.red,
     ),
     SideMenuItem(
       destination: QuotesListsDeepRoute(),
-      iconData: Icons.list,
+      iconData: UniconsLine.list_ul,
       label: 'Lists',
       hoverColor: Colors.blue.shade700,
     ),
     SideMenuItem(
       destination: DraftsRoute(),
-      iconData: Icons.edit,
+      iconData: UniconsLine.edit,
       label: 'Drafts',
       hoverColor: Colors.pink.shade200,
     ),
     SideMenuItem(
       destination: MyPublishedQuotesRoute(),
-      iconData: Icons.publish_outlined,
+      iconData: UniconsLine.cloud_upload,
       label: 'My Published',
       hoverColor: Colors.green,
     ),
     SideMenuItem(
       destination: MyTempQuotesRoute(),
-      iconData: Icons.timelapse,
+      iconData: UniconsLine.clock,
       label: 'My Temporary',
       hoverColor: Colors.yellow.shade800,
     ),
@@ -49,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
       destination: DashboardSettingsDeepRoute(
         children: [DashboardSettingsRoute()],
       ),
-      iconData: Icons.settings,
+      iconData: UniconsLine.setting,
       label: 'Settings',
       hoverColor: Colors.blueGrey,
     ),
@@ -170,12 +171,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(Icons.add, color: Colors.white),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                      ),
+                      Icon(UniconsLine.plus, color: Colors.white),
+                      Padding(padding: const EdgeInsets.only(left: 10.0)),
                       Text(
-                        'New quote',
+                        'Add quote',
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -207,13 +206,13 @@ class _DashboardPageState extends State<DashboardPage> {
             )
           ],
         ),
-        iconData: Icons.timelapse,
+        iconData: UniconsLine.clock_two,
         label: 'Admin Temp Quotes',
         hoverColor: Colors.red,
       ),
       SideMenuItem(
         destination: AdminDeepRoute(children: [QuotidiansRoute()]),
-        iconData: Icons.wb_sunny,
+        iconData: UniconsLine.sunset,
         label: 'Quotidians',
         hoverColor: Colors.red,
       ),
