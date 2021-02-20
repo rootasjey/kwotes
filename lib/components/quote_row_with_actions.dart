@@ -3,7 +3,6 @@ import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
-import 'package:figstyle/utils/flash_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/actions/favourites.dart';
@@ -181,7 +180,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       leadingActions: leadingActions,
       maxLines: widget.maxLines,
       onLongPress: onLongPress,
-      onSelected: onSelected,
+      onSelected: onPopupItemSelected,
       overflow: widget.overflow,
       padding: widget.padding,
       quoteId: widget.quoteId,
@@ -197,6 +196,9 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
   void confirmAndDeletePubQuote() async {
     final author = widget.quote.author;
     final reference = widget.quote.reference;
+
+    int flex =
+        MediaQuery.of(context).size.width < Constants.maxMobileWidth ? 5 : 1;
 
     showCustomModalBottomSheet(
       context: context,
@@ -268,13 +270,22 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       },
       containerWidget: (context, animation, child) {
         return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Material(
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(12.0),
-              child: child,
-            ),
+          child: Row(
+            children: [
+              Spacer(),
+              Expanded(
+                flex: flex,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Material(
+                    clipBehavior: Clip.antiAlias,
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: child,
+                  ),
+                ),
+              ),
+              Spacer(),
+            ],
           ),
         );
       },
@@ -382,17 +393,19 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     if (widget.canManage) {
       popupItems.addAll([
         PopupMenuItem(
-            value: 'addquotidian',
-            child: ListTile(
-              leading: Icon(UniconsLine.sunset),
-              title: Text('Add to quotidians'),
-            )),
+          value: 'addquotidian',
+          child: ListTile(
+            leading: Icon(UniconsLine.sunset),
+            title: Text('Add to quotidians'),
+          ),
+        ),
         PopupMenuItem(
-            value: 'deletequote',
-            child: ListTile(
-              leading: Icon(UniconsLine.trash),
-              title: Text('Delete'),
-            )),
+          value: 'deletequote',
+          child: ListTile(
+            leading: Icon(UniconsLine.trash),
+            title: Text('Delete'),
+          ),
+        ),
       ]);
     }
 
@@ -634,7 +647,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
               Spacer(),
               Expanded(
                 flex: flex,
-                child: Container(
+                child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Material(
                     clipBehavior: Clip.antiAlias,
@@ -651,7 +664,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     );
   }
 
-  void onSelected(value) async {
+  void onPopupItemSelected(value) async {
     final quote = widget.quote;
 
     switch (value) {
@@ -705,28 +718,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
         break;
       case 'deletequote':
-        // Dialog for large screens layout.
-        FlashHelper.simpleDialog(
-          context,
-          title: 'Confirm deletion?',
-          message:
-              'The published quote will be deleted. This action is irreversible.',
-          negativeAction: (context, controller, setState) {
-            return FlatButton(
-              child: Text('NO'),
-              onPressed: () => controller.dismiss(),
-            );
-          },
-          positiveAction: (context, controller, setState) {
-            return FlatButton(
-              child: Text('DELETE'),
-              onPressed: () {
-                controller.dismiss();
-                deletePubQuote();
-              },
-            );
-          },
-        );
+        confirmAndDeletePubQuote();
         break;
       default:
     }
