@@ -276,7 +276,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
                     ),
                   ),
                 ],
-                onSelected: (value) {
+                onPopupItemSelected: (value) {
                   switch (value) {
                     case 'share':
                       ShareActions.shareQuote(

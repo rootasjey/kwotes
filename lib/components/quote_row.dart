@@ -39,7 +39,9 @@ class QuoteRow extends StatefulWidget {
   final Function fetchIsFav;
   final Function itemBuilder;
   final Function onLongPress;
-  final Function onSelected;
+
+  /// Fired when an item from the popup menu is selected.
+  final Function onPopupItemSelected;
 
   final ItemComponentType componentType;
 
@@ -83,7 +85,7 @@ class QuoteRow extends StatefulWidget {
     this.leadingActions = defaultActions,
     this.maxLines = 6,
     this.onLongPress,
-    this.onSelected,
+    this.onPopupItemSelected,
     this.overflow = TextOverflow.ellipsis,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 70.0,
@@ -285,7 +287,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                           color: _iconColor,
                         ),
                       ),
-                      onSelected: widget.onSelected,
+                      onSelected: widget.onPopupItemSelected,
                       itemBuilder: widget.itemBuilder,
                     ),
                   ),
@@ -431,7 +433,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                                     )
                                   : Icon(Icons.more_vert),
                             ),
-                            onSelected: widget.onSelected,
+                            onSelected: widget.onPopupItemSelected,
                             itemBuilder: widget.itemBuilder,
                           ),
                         ],
@@ -518,7 +520,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                           color: _textColor,
                         ),
                       ),
-                      onSelected: widget.onSelected,
+                      onSelected: widget.onPopupItemSelected,
                       itemBuilder: widget.itemBuilder,
                     ),
                   ),

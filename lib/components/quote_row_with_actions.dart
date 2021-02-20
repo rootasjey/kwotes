@@ -180,7 +180,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       leadingActions: leadingActions,
       maxLines: widget.maxLines,
       onLongPress: onLongPress,
-      onSelected: onPopupItemSelected,
+      onPopupItemSelected: onPopupItemSelected,
       overflow: widget.overflow,
       padding: widget.padding,
       quoteId: widget.quoteId,
