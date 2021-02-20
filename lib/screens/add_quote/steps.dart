@@ -56,7 +56,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   bool isSubmitting = false;
   bool stepChanged = false;
 
-  FocusNode keyboardFocusNode = FocusNode();
+  FocusNode keyboardFocusNode;
+  FocusNode showNavBackConfirmFocusNode;
 
   Icon fabIcon = Icon(UniconsLine.message);
 
@@ -82,6 +83,8 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
   void initState() {
     super.initState();
     currentStep = widget.step;
+    keyboardFocusNode = FocusNode();
+    showNavBackConfirmFocusNode = FocusNode();
 
     checkAuth();
 
@@ -89,6 +92,13 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       fabText = 'Save quote';
       fabIcon = Icon(UniconsLine.save);
     }
+  }
+
+  @override
+  void dispose() {
+    keyboardFocusNode.dispose();
+    showNavBackConfirmFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -103,14 +113,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         // or other single matching key events will override it.
 
         // <-- Previous step
-        if (keyEvent.isKeyPressed(LogicalKeyboardKey.alt) &&
+        if (keyEvent.isAltPressed &&
             keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
           cancel();
           return;
         }
 
         // Next step -->
-        if (keyEvent.isKeyPressed(LogicalKeyboardKey.alt) &&
+        if (keyEvent.isAltPressed &&
             keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
           next();
           return;
@@ -857,11 +867,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     showDialog(
       context: context,
       builder: (_) {
-        final focusNode = FocusNode();
-
         return RawKeyboardListener(
           autofocus: true,
-          focusNode: focusNode,
+          focusNode: showNavBackConfirmFocusNode,
           onKey: (keyEvent) {
             if (keyEvent.isKeyPressed(LogicalKeyboardKey.enter) ||
                 keyEvent.isKeyPressed(LogicalKeyboardKey.space)) {
