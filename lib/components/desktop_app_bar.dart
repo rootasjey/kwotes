@@ -362,7 +362,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         ),
       ],
       onSelected: (value) {
-        context.router.root.navigate(value);
+        context.router.root.push(value);
       },
     );
   }
@@ -510,7 +510,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
           return;
         }
 
-        context.router.root.navigate(pageRouteInfo);
+        context.router.root.push(pageRouteInfo);
       },
     );
   }
