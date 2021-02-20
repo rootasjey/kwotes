@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/user_lists.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/flash_helper.dart';
@@ -319,7 +320,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       PopupMenuItem(
         value: 'share',
         child: ListTile(
-          leading: Icon(Icons.share),
+          leading: Icon(UniconsLine.share),
           title: Text('Share'),
         ),
       ),
@@ -330,14 +331,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         PopupMenuItem(
           value: 'addtofavourites',
           child: ListTile(
-            leading: Icon(Icons.favorite_border),
+            leading: Icon(UniconsLine.heart),
             title: Text('Like'),
           ),
         ),
         PopupMenuItem(
           value: 'addtolist',
           child: ListTile(
-            leading: Icon(Icons.playlist_add),
+            leading: Icon(UniconsLine.book_medical),
             title: Text('Add to...'),
           ),
         ),
@@ -347,14 +348,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         PopupMenuItem(
           value: 'removefromfavourites',
           child: ListTile(
-            leading: Icon(Icons.favorite),
+            leading: Icon(UniconsLine.heart_break),
             title: Text('Remove from favourites'),
           ),
         ),
         PopupMenuItem(
           value: 'addtolist',
           child: ListTile(
-            leading: Icon(Icons.playlist_add),
+            leading: Icon(UniconsLine.book_medical),
             title: Text('Add to...'),
           ),
         ),
@@ -364,14 +365,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         PopupMenuItem(
           value: 'addtofavourites',
           child: ListTile(
-            leading: Icon(Icons.favorite_border),
+            leading: Icon(UniconsLine.heart),
             title: Text('Add to favourites'),
           ),
         ),
         PopupMenuItem(
           value: 'addtolist',
           child: ListTile(
-            leading: Icon(Icons.playlist_add),
+            leading: Icon(UniconsLine.book_medical),
             title: Text('Add to...'),
           ),
         ),
@@ -383,14 +384,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         PopupMenuItem(
             value: 'addquotidian',
             child: ListTile(
-              leading: Icon(Icons.wb_sunny),
+              leading: Icon(UniconsLine.sunset),
               title: Text('Add to quotidians'),
             )),
         PopupMenuItem(
             value: 'deletequote',
             child: ListTile(
-              leading: Icon(Icons.delete_forever),
-              title: Text('Delete published'),
+              leading: Icon(UniconsLine.trash),
+              title: Text('Delete'),
             )),
       ]);
     }
@@ -403,8 +404,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     final actions = [
       SwipeAction(
-        title: 'Share',
-        icon: Icon(Icons.ios_share, color: Colors.white),
+        title: 'share',
+        icon: Icon(UniconsLine.share, color: Colors.white),
         color: Colors.blue,
         onTap: (CompletionHandler handler) {
           handler(false);
@@ -416,21 +417,23 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     if (widget.canManage) {
       actions.addAll([
         SwipeAction(
-          title: 'Quotidian',
-          icon: Icon(Icons.wb_sunny, color: Colors.white),
+          title: 'quotidian',
+          icon: Icon(UniconsLine.sunset, color: Colors.white),
           color: Colors.yellow.shade800,
           onTap: (CompletionHandler handler) async {
             handler(false);
+
+            Snack.s(
+              context: context,
+              message: "Added as quotidian",
+            );
+
             final success = await QuotidiansActions.add(
               quote: quote,
               lang: quote.lang,
             );
 
             if (success) {
-              Snack.s(
-                context: context,
-                message: "Added as quotidian",
-              );
               return;
             }
 
@@ -441,8 +444,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           },
         ),
         SwipeAction(
-          title: 'Delete',
-          icon: Icon(Icons.delete_outline, color: Colors.white),
+          title: 'delete',
+          icon: Icon(UniconsLine.trash, color: Colors.white),
           color: stateColors.deletion,
           onTap: (CompletionHandler handler) {
             handler(false);
@@ -464,8 +467,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     actions.add(
       SwipeAction(
-        title: 'Add to...',
-        icon: Icon(Icons.playlist_add, color: Colors.white),
+        title: 'add to...',
+        icon: Icon(UniconsLine.book_medical, color: Colors.white),
         color: Color(0xff5cc9f5),
         onTap: (CompletionHandler handler) {
           handler(false);
@@ -478,8 +481,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       actions.insert(
         0,
         SwipeAction(
-          title: 'Unlike',
-          icon: Icon(Icons.favorite, color: Colors.white),
+          title: 'unlike',
+          icon: Icon(UniconsLine.heart, color: Colors.white),
           color: Color(0xff6638f0),
           onTap: (CompletionHandler handler) {
             handler(false);
@@ -491,10 +494,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       actions.insert(
         0,
         SwipeAction(
-          title: widget.quote.starred ? 'Unlike' : 'Like',
+          title: widget.quote.starred ? 'unlike' : 'like',
           icon: widget.quote.starred
-              ? Icon(Icons.favorite, color: Colors.white)
-              : Icon(Icons.favorite_border, color: Colors.white),
+              ? Icon(UniconsLine.heart_break, color: Colors.white)
+              : Icon(UniconsLine.heart, color: Colors.white),
           color: Color(0xff6638f0),
           onTap: (CompletionHandler handler) {
             handler(false);
@@ -506,8 +509,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
     if (widget.quotePageType == QuotePageType.list) {
       actions.add(SwipeAction(
-        title: 'Remove',
-        icon: Icon(Icons.remove_circle, color: Colors.white),
+        title: 'remove',
+        icon: Icon(UniconsLine.minus, color: Colors.white),
         color: Colors.pink,
         onTap: (CompletionHandler handler) {
           handler(false);
@@ -567,6 +570,27 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     if (widget.canManage) {
       children.addAll([
         ListTile(
+          title: Text('Edit'),
+          trailing: Icon(UniconsLine.edit),
+          onTap: () {
+            context.router.pop();
+            context.router.root.push(
+              DashboardPageRoute(children: [
+                AdminDeepRoute(children: [
+                  AdminEditDeepRoute(
+                    children: [
+                      EditQuoteRoute(
+                        quoteId: widget.quote.id,
+                        quote: widget.quote,
+                      ),
+                    ],
+                  )
+                ])
+              ]),
+            );
+          },
+        ),
+        ListTile(
           title: Text('Delete'),
           trailing: Icon(
             UniconsLine.trash,
@@ -579,7 +603,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           },
         ),
         ListTile(
-          title: Text('Next quotidian'),
+          title: Text('Add to quotidian'),
           trailing: Icon(UniconsLine.sunset),
           onTap: () {
             context.router.pop();
