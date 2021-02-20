@@ -1,8 +1,8 @@
+import 'package:figstyle/components/lang_popup_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/utils/language.dart';
+import 'package:unicons/unicons.dart';
 
 class AddQuoteContent extends StatefulWidget {
   final Function onSaveDraft;
@@ -65,15 +65,15 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         spacing: 20.0,
         runSpacing: 10.0,
         children: <Widget>[
-          langSelect(),
-          clearAction(isSmall: isSmall),
-          saveDraftAction(isSmall: isSmall),
+          langButton(),
+          clearButton(isSmall: isSmall),
+          saveDraftButton(isSmall: isSmall),
         ],
       ),
     );
   }
 
-  Widget clearAction({bool isSmall = false}) {
+  Widget clearButton({bool isSmall = false}) {
     if (isSmall) {
       return IconButton(
         tooltip: 'Clear content',
@@ -89,46 +89,48 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       );
     }
 
-    return OutlinedButton.icon(
-      focusNode: clearFocusNode,
-      onPressed: () {
-        DataQuoteInputs.quote.name = '';
-        nameController.clear();
-        nameFocusNode.requestFocus();
-      },
-      icon: Opacity(
-        opacity: 0.6,
-        child: Icon(Icons.delete_sweep),
-      ),
-      label: Opacity(
-        opacity: 0.6,
-        child: Text(
-          'Clear content',
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: OutlinedButton.icon(
+        focusNode: clearFocusNode,
+        onPressed: () {
+          DataQuoteInputs.quote.name = '';
+          nameController.clear();
+          nameFocusNode.requestFocus();
+        },
+        icon: Opacity(
+          opacity: 0.6,
+          child: Icon(UniconsLine.times),
+        ),
+        label: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Clear',
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget langSelect() {
-    return DropdownButton<String>(
-      value: DataQuoteInputs.quote.lang,
-      style: TextStyle(
-        color: stateColors.primary,
-        fontSize: 20.0,
+  Widget langButton() {
+    return SizedBox(
+      height: 46.0,
+      child: Card(
+        elevation: 2.0,
+        child: LangPopupMenuButton(
+          opacity: 0.6,
+          padding: EdgeInsets.zero,
+          lang: DataQuoteInputs.quote.lang,
+          onLangChanged: (newValue) {
+            setState(() {
+              DataQuoteInputs.quote.lang = newValue;
+            });
+          },
+        ),
       ),
-      icon: Icon(Icons.language),
-      iconEnabledColor: stateColors.primary,
-      onChanged: (newValue) {
-        setState(() {
-          DataQuoteInputs.quote.lang = newValue;
-        });
-      },
-      items: Language.available().map<DropdownMenuItem<String>>((value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value.toUpperCase()),
-        );
-      }).toList(),
     );
   }
 
@@ -153,7 +155,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     );
   }
 
-  Widget saveDraftAction({bool isSmall = false}) {
+  Widget saveDraftButton({bool isSmall = false}) {
     if (isSmall) {
       return IconButton(
         tooltip: 'Save draft',
@@ -165,14 +167,25 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
       );
     }
 
-    return OutlinedButton.icon(
-      focusNode: clearFocusNode,
-      onPressed: widget.onSaveDraft,
-      icon: Opacity(opacity: 0.6, child: Icon(Icons.save_alt)),
-      label: Opacity(
-        opacity: 0.6,
-        child: Text(
-          'Save draft',
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: OutlinedButton.icon(
+        focusNode: clearFocusNode,
+        onPressed: widget.onSaveDraft,
+        icon: Opacity(
+          opacity: 0.6,
+          child: Icon(
+            UniconsLine.save,
+          ),
+        ),
+        label: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Opacity(
+            opacity: 0.6,
+            child: Text(
+              'Save draft',
+            ),
+          ),
         ),
       ),
     );

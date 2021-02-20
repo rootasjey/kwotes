@@ -6,18 +6,20 @@ class LangPopupMenuButton extends StatelessWidget {
   final String lang;
   final Function(String) onLangChanged;
   final double opacity;
+  final EdgeInsets padding;
 
   const LangPopupMenuButton({
     Key key,
     @required this.lang,
     @required this.onLangChanged,
     this.opacity = 1.0,
+    this.padding = const EdgeInsets.only(top: 2.0),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 2.0),
+      padding: padding,
       child: Opacity(
         opacity: opacity,
         child: PopupMenuButton<String>(
