@@ -130,7 +130,6 @@ class DraftsActions {
           'name': DataQuoteInputs.reference.name,
         },
         'references': references,
-        'region': DataQuoteInputs.region,
         'topics': topics,
         'user': {
           'id': userAuth.uid,
@@ -206,7 +205,6 @@ class DraftsActions {
           'name': DataQuoteInputs.reference.name,
         },
         'references': references,
-        'region': DataQuoteInputs.region,
         'topics': topics,
         'user': {
           'id': userAuth.uid,

@@ -22,8 +22,6 @@ class DataQuoteInputs {
   /// If not empty, the reference already exists.
   static Reference reference = Reference.empty();
 
-  static String region = '';
-
   static void clearAll() {
     isEditingPubQuote = false;
     isOfflineDraft = false;
@@ -84,7 +82,5 @@ class DataQuoteInputs {
     } else {
       comment = '';
     }
-
-    region = tempQuote.region;
   }
 }

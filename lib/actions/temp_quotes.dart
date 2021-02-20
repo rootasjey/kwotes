@@ -22,7 +22,6 @@ class TempQuotesActions {
       'lang': DataQuoteInputs.quote.lang,
       'name': DataQuoteInputs.quote.name,
       'reference': DataQuoteInputs.reference.toJSON(withId: true),
-      'region': DataQuoteInputs.region,
       'topics': topics,
       'user': {
         'id': userAuth.uid,
@@ -244,7 +243,6 @@ class TempQuotesActions {
       'lang': DataQuoteInputs.quote.lang,
       'name': DataQuoteInputs.quote.name,
       'reference': DataQuoteInputs.reference.toJSON(withId: true),
-      'region': DataQuoteInputs.region,
       'topics': topics,
       'updatedAt': DateTime.now(),
     });
