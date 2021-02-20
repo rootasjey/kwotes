@@ -89,7 +89,6 @@ export const validate = functions
           name: reference.name,
         },
         name: tempQuoteData.name,
-        region: tempQuoteData.region,
         stats: {
           likes: 0,
           shares: 0,
