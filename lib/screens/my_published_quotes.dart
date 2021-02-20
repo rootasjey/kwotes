@@ -272,7 +272,9 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
 
   Widget listView() {
     final isConnected = stateUser.isUserConnected;
-    final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.maxMobileWidth;
+    final horPadding = isMobile ? 0.0 : 70.0;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -285,6 +287,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
             isConnected: isConnected,
             key: ObjectKey(index),
             useSwipeActions: true,
+            showPopupMenuButton: !isMobile,
             color: stateColors.appBackground,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
