@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
@@ -9,33 +10,53 @@ import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class TempQuotesActions {
-  static Future addNewTempQuote({
+  static Future<bool> addNewTempQuote({
     List<String> comments,
     Map<String, bool> topics,
   }) async {
     final userAuth = stateUser.userAuth;
 
-    await FirebaseFirestore.instance.collection('tempquotes').add({
-      'author': DataQuoteInputs.author.toJSON(withId: true),
-      'comments': comments,
-      'createdAt': DateTime.now(),
-      'lang': DataQuoteInputs.quote.lang,
-      'name': DataQuoteInputs.quote.name,
-      'reference': DataQuoteInputs.reference.toJSON(withId: true),
-      'topics': topics,
-      'user': {
-        'id': userAuth.uid,
-      },
-      'updatedAt': DateTime.now(),
-      'validation': {
-        'comment': {
-          'name': '',
+    try {
+      final callable = CloudFunctions(
+        app: Firebase.app(),
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'tempQuotes-create',
+      );
+
+      final resp = await callable.call({
+        'tempQuote': {
+          'author': DataQuoteInputs.author.toJSON(withId: true),
+          'comments': comments,
+          'createdAt': DateTime.now(),
+          'lang': DataQuoteInputs.quote.lang,
+          'name': DataQuoteInputs.quote.name,
+          'reference': DataQuoteInputs.reference.toJSON(withId: true),
+          'topics': DataQuoteInputs.quote.topics,
+          'user': {
+            'id': userAuth.uid,
+          },
           'updatedAt': DateTime.now(),
+          'validation': {
+            'comment': {
+              'name': '',
+              'updatedAt': DateTime.now(),
+            },
+            'status': 'proposed',
+            'updatedAt': DateTime.now(),
+          }
         },
-        'status': 'proposed',
-        'updatedAt': DateTime.now(),
-      }
-    });
+      });
+
+      final isOk = resp.data['success'] as bool;
+      return isOk;
+    } on CloudFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
+      return false;
+    } catch (error) {
+      appLogger.e(error);
+      return false;
+    }
   }
 
   static Future<bool> deleteTempQuote({
@@ -171,42 +192,51 @@ class TempQuotesActions {
       topics[topic] = true;
     });
 
+    bool success = false;
+
     try {
       if (DataQuoteInputs.quote.id.isEmpty) {
-        await addNewTempQuote(
+        success = await addNewTempQuote(
           comments: comments,
           topics: topics,
         );
       } else {
-        await saveExistingTempQuote(
+        success = await saveExistingTempQuote(
           comments: comments,
           topics: topics,
         );
       }
 
-      return true;
+      return success;
     } catch (error) {
       debugPrint(error.toString());
       return false;
     }
   }
 
-  static Future saveExistingTempQuote({
+  static Future<bool> saveExistingTempQuote({
     List<String> comments,
     Map<String, bool> topics,
   }) async {
-    await FirebaseFirestore.instance
-        .collection('tempquotes')
-        .doc(DataQuoteInputs.quote.id)
-        .update({
-      'author': DataQuoteInputs.author.toJSON(withId: true),
-      'comments': comments,
-      'lang': DataQuoteInputs.quote.lang,
-      'name': DataQuoteInputs.quote.name,
-      'reference': DataQuoteInputs.reference.toJSON(withId: true),
-      'topics': topics,
-      'updatedAt': DateTime.now(),
-    });
+    try {
+      await FirebaseFirestore.instance
+          .collection('tempquotes')
+          .doc(DataQuoteInputs.quote.id)
+          .update({
+        'author': DataQuoteInputs.author.toJSON(withId: true),
+        'comments': comments,
+        'lang': DataQuoteInputs.quote.lang,
+        'name': DataQuoteInputs.quote.name,
+        'reference': DataQuoteInputs.reference.toJSON(withId: true),
+        'topics': topics,
+        'updatedAt': DateTime.now(),
+      });
+
+      return true;
+    } catch (error) {
+      appLogger.e(error);
+      return false;
+    }
   }
 
   static Future<bool> validateTempQuote({
@@ -231,10 +261,10 @@ class TempQuotesActions {
       final isOk = resp.data['success'] as bool;
       return isOk;
     } on CloudFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
       return false;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       return false;
     }
   }

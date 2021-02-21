@@ -54,6 +54,7 @@ class Reference {
 
   factory Reference.fromJSON(Map<String, dynamic> data) {
     Urls _urls;
+
     if (data['urls'] != null) {
       _urls = Urls.fromJSON(data['urls']);
     } else {
@@ -61,6 +62,7 @@ class Reference {
     }
 
     ReferenceType _type;
+
     if (data['type'] != null) {
       _type = ReferenceType.fromJSON(data['type']);
     } else {
@@ -68,6 +70,7 @@ class Reference {
     }
 
     Release _release;
+
     if (data['release'] != null) {
       _release = Release.fromJSON(data['release']);
     } else {

@@ -23,7 +23,8 @@ class Release {
     if (data['original'].runtimeType != Timestamp) {
       original = DateTime.fromMillisecondsSinceEpoch(
           data['original']['_seconds'] * 1000);
-    } else {
+    } else if (data['original'] != null &&
+        data['original'].runtimeType == Timestamp) {
       original = (data['original'] as Timestamp)?.toDate();
     }
 

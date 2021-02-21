@@ -13,20 +13,20 @@ class PointInTime {
     this.beforeJC = false,
   });
 
-  factory PointInTime.fromJSON(Map<String, dynamic> json) {
+  factory PointInTime.fromJSON(Map<String, dynamic> data) {
     DateTime date;
 
-    if (json['date'].runtimeType == Timestamp) {
-      date = (json['date'] as Timestamp)?.toDate();
-    } else if (json['date'] != null && json['date']['_seconds'] != null) {
+    if (data['date'].runtimeType == Timestamp) {
+      date = (data['date'] as Timestamp)?.toDate();
+    } else if (data['date'] != null && data['date']['_seconds'] != null) {
       date =
-          DateTime.fromMillisecondsSinceEpoch(json['date']['_seconds'] * 1000);
+          DateTime.fromMillisecondsSinceEpoch(data['date']['_seconds'] * 1000);
     }
 
     return PointInTime(
-      beforeJC: json['beforeJC'],
-      country: json['country'],
-      city: json['city'],
+      beforeJC: data['beforeJC'],
+      country: data['country'],
+      city: data['city'],
       date: date,
     );
   }
