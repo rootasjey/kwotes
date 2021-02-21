@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:figstyle/actions/drafts.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/reject_temp_quote.dart';
 import 'package:figstyle/state/colors.dart';
@@ -37,9 +38,11 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final Function onTap;
 
   final Function onBeforeDelete;
+  final Function onBeforeDeleteDraft;
   final Function onBeforeValidate;
   final Function(bool) onAfterValidate;
   final Function(bool) onAfterDelete;
+  final Function(bool) onAfterDeleteDraft;
   final Function onNavBack;
 
   final ItemComponentType componentType;
@@ -76,6 +79,8 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.showPopupMenuButton = false,
     this.stackChildren = const [],
     this.useSwipeActions = false,
+    this.onBeforeDeleteDraft,
+    this.onAfterDeleteDraft,
   });
 
   @override
@@ -132,6 +137,9 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       case 'deletetempquote':
         deleteAction(tempQuote);
         break;
+      case 'deletedraft':
+        deleteDraftAction(tempQuote);
+        break;
       case 'edit':
         editAction(tempQuote);
         break;
@@ -165,14 +173,25 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
           title: Text('Copy from...'),
         ),
       ),
-      PopupMenuItem(
+    ];
+
+    if (widget.isDraft) {
+      popupItems.add(PopupMenuItem(
+        value: 'deletedraft',
+        child: ListTile(
+          leading: Icon(UniconsLine.trash),
+          title: Text('Delete'),
+        ),
+      ));
+    } else {
+      popupItems.add(PopupMenuItem(
         value: 'deletetempquote',
         child: ListTile(
           leading: Icon(UniconsLine.trash),
           title: Text('Delete'),
         ),
-      ),
-    ];
+      ));
+    }
 
     if (widget.canManage) {
       popupItems.addAll([
@@ -220,6 +239,36 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     }
   }
 
+  void deleteDraftAction(TempQuote draft) async {
+    if (widget.onBeforeDeleteDraft != null) {
+      widget.onBeforeDeleteDraft();
+    }
+
+    bool success = false;
+
+    if (draft.isOffline) {
+      success = DraftsActions.deleteOfflineItem(
+        createdAt: draft.createdAt.toString(),
+      );
+    } else {
+      success = await DraftsActions.deleteItem(
+        context: context,
+        draft: draft,
+      );
+    }
+
+    if (!success) {
+      Snack.e(
+        context: context,
+        message: "Couldn't delete the temporary quote.",
+      );
+    }
+
+    if (widget.onAfterDeleteDraft != null) {
+      widget.onAfterDeleteDraft(success);
+    }
+  }
+
   void editAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote);
 
@@ -244,7 +293,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   }
 
   void onLongPress() {
-    final children = [
+    final childrenActions = [
       ListTile(
         title: Text('Edit'),
         trailing: Icon(
@@ -265,7 +314,21 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
           copyFromAction(widget.tempQuote);
         },
       ),
-      ListTile(
+    ];
+
+    if (widget.isDraft) {
+      childrenActions.add(ListTile(
+        title: Text('Delete'),
+        trailing: Icon(
+          UniconsLine.trash,
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+          deleteDraftAction(widget.tempQuote);
+        },
+      ));
+    } else {
+      childrenActions.add(ListTile(
         title: Text('Delete'),
         trailing: Icon(
           UniconsLine.trash,
@@ -274,11 +337,11 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
           Navigator.of(context).pop();
           deleteAction(widget.tempQuote);
         },
-      ),
-    ];
+      ));
+    }
 
     if (widget.canManage) {
-      children.addAll([
+      childrenActions.addAll([
         ListTile(
           title: Text('Validate'),
           trailing: Icon(
@@ -310,7 +373,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
             top: false,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: children,
+              children: childrenActions,
             ),
           ),
         );
@@ -419,18 +482,33 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       ]);
     }
 
-    actions.add(
-      SwipeAction(
-        title: 'delete',
-        icon: Icon(UniconsLine.trash, color: Colors.white),
-        color: stateColors.deletion,
-        nestedAction: SwipeNestedAction(title: "Confirm?"),
-        onTap: (CompletionHandler handler) {
-          handler(false);
-          deleteAction(widget.tempQuote);
-        },
-      ),
-    );
+    if (widget.isDraft) {
+      actions.add(
+        SwipeAction(
+          title: 'delete',
+          icon: Icon(UniconsLine.trash, color: Colors.white),
+          color: stateColors.deletion,
+          nestedAction: SwipeNestedAction(title: "Confirm?"),
+          onTap: (CompletionHandler handler) {
+            handler(false);
+            deleteDraftAction(widget.tempQuote);
+          },
+        ),
+      );
+    } else {
+      actions.add(
+        SwipeAction(
+          title: 'delete',
+          icon: Icon(UniconsLine.trash, color: Colors.white),
+          color: stateColors.deletion,
+          nestedAction: SwipeNestedAction(title: "Confirm?"),
+          onTap: (CompletionHandler handler) {
+            handler(false);
+            deleteAction(widget.tempQuote);
+          },
+        ),
+      );
+    }
 
     return actions;
   }

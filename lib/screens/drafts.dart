@@ -43,6 +43,10 @@ class _DraftsState extends State<Drafts> {
   List<TempQuote> drafts = [];
   List<TempQuote> offlineDrafts = [];
 
+  /// Quotes which are being deleted.
+  /// Useful reference if a rollback is necessary.
+  Map<int, TempQuote> processingQuotes = Map();
+
   ScrollController scrollController = ScrollController();
   final String pageRoute = RouteNames.DraftsRoute;
 
@@ -245,11 +249,9 @@ class _DraftsState extends State<Drafts> {
 
   Widget listView() {
     double horPadding = 70.0;
-    bool useSwipeActions = false;
 
     if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
       horPadding = 0.0;
-      useSwipeActions = true;
     }
 
     return SliverList(
@@ -261,9 +263,37 @@ class _DraftsState extends State<Drafts> {
             tempQuote: draft,
             isDraft: true,
             key: ObjectKey(index),
-            useSwipeActions: useSwipeActions,
+            useSwipeActions: true,
+            showPopupMenuButton: true,
             onTap: () => editDraft(draft),
             padding: EdgeInsets.symmetric(horizontal: horPadding),
+            onBeforeDeleteDraft: () {
+              processingQuotes.putIfAbsent(index, () => draft);
+              setState(() => drafts.removeAt(index));
+
+              Snack.s(
+                context: context,
+                message: "Draft deleted.",
+              );
+            },
+            onAfterDeleteDraft: (success) {
+              if (success) {
+                return;
+              }
+
+              if (processingQuotes.containsKey(index)) {
+                drafts.insert(
+                  index,
+                  processingQuotes.entries.elementAt(index).value,
+                );
+              }
+
+              Snack.e(
+                context: context,
+                message: "Couldn't delete this draft quote. "
+                    "Please try again or contact us if the problem persists.",
+              );
+            },
           );
         },
         childCount: drafts.length,
