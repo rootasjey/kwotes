@@ -5,7 +5,7 @@ class FromReference {
 
   /// Reference's name.
   /// This property doesn't exist in Firestore,
-  /// and is used mainly <hen editing author
+  /// and is used mainly when editing author
   /// (better indication to which reference the author belongs to).
   String name;
 

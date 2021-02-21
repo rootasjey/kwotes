@@ -690,23 +690,18 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     }
 
     final success = await TempQuotesActions.proposeQuote(context: context);
+    postProcessPropose(success);
+  }
 
-    Snack.s(
-      context: context,
-      message: TempQuotesActions.getResultMessage(
-        actionIntent: actionIntent,
-        actionResult: actionResult,
-      ),
-    );
-
+  void postProcessPropose(bool success) async {
     if (success) {
       setState(() {
         actionResult = AddQuoteType.tempquote;
         isSubmitting = false;
         isFabVisible = true;
 
-        DataQuoteInputs.clearQuoteData();
         currentStep = 0;
+        DataQuoteInputs.clearQuoteData();
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
@@ -722,6 +717,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         );
       }
 
+      Snack.s(
+        context: context,
+        message: TempQuotesActions.getResultMessage(
+          actionIntent: actionIntent,
+          actionResult: actionResult,
+        ),
+      );
+
       fabIcon = Icon(UniconsLine.message);
       return;
     }
@@ -733,6 +736,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isFabVisible = true;
         isSubmitting = false;
         fabIcon = Icon(UniconsLine.message);
+
+        currentStep = 0;
+        DataQuoteInputs.clearQuoteData();
       });
 
       return;
@@ -748,6 +754,9 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
         isSubmitting = false;
         isFabVisible = true;
         fabIcon = Icon(UniconsLine.message);
+
+        currentStep = 0;
+        DataQuoteInputs.clearQuoteData();
       });
 
       if (DataQuoteInputs.isOfflineDraft) {
@@ -755,6 +764,14 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
           createdAt: DataQuoteInputs.draft.createdAt.toString(),
         );
       }
+
+      Snack.s(
+        context: context,
+        message: TempQuotesActions.getResultMessage(
+          actionIntent: actionIntent,
+          actionResult: actionResult,
+        ),
+      );
 
       return;
     }
@@ -766,7 +783,18 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       fabIcon = Icon(UniconsLine.message);
       isSubmitting = false;
       isFabVisible = true;
+
+      currentStep = 0;
+      DataQuoteInputs.clearQuoteData();
     });
+
+    Snack.s(
+      context: context,
+      message: TempQuotesActions.getResultMessage(
+        actionIntent: actionIntent,
+        actionResult: actionResult,
+      ),
+    );
   }
 
   void savePubQuote() async {
