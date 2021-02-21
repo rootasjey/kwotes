@@ -45,7 +45,6 @@ class FavActions {
       }
 
       final referenceId = quote.reference != null ? quote.reference.id : '';
-
       final referenceName = quote.reference != null ? quote.reference.name : '';
 
       await FirebaseFirestore.instance
