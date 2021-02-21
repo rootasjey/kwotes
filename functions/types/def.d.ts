@@ -3,6 +3,10 @@ interface AddAppParams {
   description: string;
 }
 
+interface AddTempQuoteParams {
+  tempQuote: ITempQuote;
+}
+
 interface CreateListParams {
   quoteIds: string[];
   idToken: string;
@@ -57,6 +61,88 @@ interface GetRandomAuthorsParams {
 interface GetRandomReferencesParams {
   /** Id to exclude when fetching random references. */
   except?: string;
+}
+
+interface IAuthor {
+  born: IPointInTime
+  death: IPointInTime
+  fromReference: {
+    id: string;
+  };
+  isFictional: boolean;
+  id?: string;
+  job: string;
+  name: string;
+  summary: string;
+  urls: IUrls;
+}
+
+interface IFromReference {
+  id: string;
+}
+
+interface IPointInTime {
+  beforeJC: boolean;
+  city: string;
+  country: string;
+  date?: FirebaseFirestore.Timestamp;
+}
+
+interface IReference {
+  id?: string;
+  lang: string;
+  name: string;
+  release: IRelease;
+  summary: string;
+  type: IReferenceType;
+  urls: IUrls;
+}
+
+interface IRelease {
+  original?: FirebaseFirestore.Timestamp;
+  beforeJC: boolean;
+}
+
+interface IReferenceType {
+  primary: string;
+  secondary: string;
+}
+
+interface ITempQuote {
+  author: IAuthor;
+  comments: string[];
+  createdAt: Date;
+  id?: string;
+  lang: string;
+  name: string;
+  reference: IReference;
+  topics: string[];
+  user: {
+    id: string;
+  };
+  updatedAt: Date;
+  validation: {
+    comment: {
+      name: string;
+      updatedAt: Date;
+    },
+    status: string;
+    updatedAt: Date;
+  };
+}
+
+interface IUrls {
+  amazon: string;
+  facebook: string;
+  image: string;
+  instagram: string;
+  netflix: string;
+  primeVideo: string;
+  twitch: string;
+  twitter: string;
+  website: string;
+  wikipedia: string;
+  youtube: string;
 }
 
 interface NotifFuncParams {
@@ -116,4 +202,9 @@ interface UpdateStatsParams {
 
 interface UpdateUsernameParams {
   newUsername: string;
+}
+
+interface ValidateTempQuoteParams {
+  idToken: string;
+  tempQuoteId: string;
 }
