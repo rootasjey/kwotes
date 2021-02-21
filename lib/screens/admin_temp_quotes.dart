@@ -41,7 +41,6 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
 
   ScrollController scrollController = ScrollController();
 
-  String actionStr = "deleting";
   String pageRoute = RouteNames.AdminTempQuotesRoute;
   String lang = 'en';
 
@@ -250,13 +249,21 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
                 tempQuote: tempQuote,
                 actionType: TempQuoteUIActionType.delete,
               ),
-              onAfterDelete: onAfterProcessingTempQuote,
+              onAfterDelete: (success) => onAfterProcessingTempQuote(
+                success,
+                index: index,
+                operation: "deleting",
+              ),
               onBeforeValidate: () => onBeforeProcessingTempQuote(
                 index: index,
                 tempQuote: tempQuote,
                 actionType: TempQuoteUIActionType.validate,
               ),
-              onAfterValidate: onAfterProcessingTempQuote,
+              onAfterValidate: (success) => onAfterProcessingTempQuote(
+                success,
+                index: index,
+                operation: "validating",
+              ),
               onNavBack: () {
                 SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                   fetch();
@@ -296,13 +303,21 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
               tempQuote: tempQuote,
               actionType: TempQuoteUIActionType.delete,
             ),
-            onAfterDelete: onAfterProcessingTempQuote,
+            onAfterDelete: (success) => onAfterProcessingTempQuote(
+              success,
+              index: index,
+              operation: "deleting",
+            ),
             onBeforeValidate: () => onBeforeProcessingTempQuote(
               index: index,
               tempQuote: tempQuote,
               actionType: TempQuoteUIActionType.validate,
             ),
-            onAfterValidate: onAfterProcessingTempQuote,
+            onAfterValidate: (success) => onAfterProcessingTempQuote(
+              success,
+              index: index,
+              operation: "validating",
+            ),
             onNavBack: () {
               SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                 fetch();
@@ -396,17 +411,20 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     }
   }
 
-  void onAfterProcessingTempQuote(bool success) {
+  void onAfterProcessingTempQuote(
+    bool success, {
+    int index,
+    String operation = 'validating',
+  }) {
     if (!success) {
-      processingQuotes.forEach((key, value) {
-        tempQuotes.insert(key, value);
-      });
+      final dataToRestore = processingQuotes.values.elementAt(index);
+      tempQuotes.insert(index, dataToRestore);
 
       setState(() {});
 
       Snack.e(
         context: context,
-        message: "Sorry, there was an issue while validating the quote(s). "
+        message: "Sorry, there was an issue while $operation the quote(s). "
             "Try again later or contact the support of the issue persist.",
       );
     }
@@ -419,10 +437,12 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
     TempQuote tempQuote,
     TempQuoteUIActionType actionType,
   }) {
+    Snack.s(
+      context: context,
+      message: "Your temporary quote has successfully deleted.",
+    );
+
     setState(() {
-      actionStr = actionType == TempQuoteUIActionType.delete
-          ? "deleting"
-          : "validating";
       processingQuotes.putIfAbsent(index, () => tempQuote);
       tempQuotes.remove(tempQuote);
     });

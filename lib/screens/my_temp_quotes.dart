@@ -44,6 +44,10 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   List<TempQuote> tempQuotes = [];
 
+  /// Quotes which are being deleted.
+  /// Useful reference if a rollback is necessary.
+  Map<int, TempQuote> processingQuotes = Map();
+
   @override
   initState() {
     super.initState();
@@ -255,25 +259,15 @@ class MyTempQuotesState extends State<MyTempQuotes> {
               componentType: ItemComponentType.card,
               tempQuote: tempQuote,
               elevation: Constants.cardElevation,
-              onBeforeDelete: () {
-                setState(() {
-                  tempQuotes.removeAt(index);
-                });
-              },
-              onAfterDelete: (success) {
-                if (success) {
-                  return;
-                }
-
-                setState(() {
-                  tempQuotes.insert(index, tempQuote);
-                });
-
-                Snack.e(
-                  context: context,
-                  message: "Couldn't delete the temporary quote",
-                );
-              },
+              onBeforeDelete: () => onBeforeProcessingTempQuote(
+                index: index,
+                tempQuote: tempQuote,
+                actionType: TempQuoteUIActionType.delete,
+              ),
+              onAfterDelete: (success) => onAfterProcessingTempQuote(
+                success,
+                index: index,
+              ),
               onBeforeValidate: () {
                 setState(() {
                   tempQuotes.removeAt(index);
@@ -326,25 +320,15 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             padding: EdgeInsets.symmetric(horizontal: horPadding),
             key: ObjectKey(index),
             useSwipeActions: useSwipeActions,
-            onBeforeDelete: () {
-              setState(() {
-                tempQuotes.removeAt(index);
-              });
-            },
-            onAfterDelete: (success) {
-              if (success) {
-                return;
-              }
-
-              setState(() {
-                tempQuotes.insert(index, tempQuote);
-              });
-
-              Snack.e(
-                context: context,
-                message: "Couldn't delete the temporary quote",
-              );
-            },
+            onBeforeDelete: () => onBeforeProcessingTempQuote(
+              index: index,
+              tempQuote: tempQuote,
+              actionType: TempQuoteUIActionType.delete,
+            ),
+            onAfterDelete: (success) => onAfterProcessingTempQuote(
+              success,
+              index: index,
+            ),
             onBeforeValidate: () {
               setState(() {
                 tempQuotes.removeAt(index);
@@ -502,5 +486,38 @@ class MyTempQuotesState extends State<MyTempQuotes> {
       debugPrint(error.toString());
       setState(() => isLoadingMore = false);
     }
+  }
+
+  void onAfterProcessingTempQuote(bool success, {int index}) {
+    if (!success) {
+      final dataToRestore = processingQuotes.values.elementAt(index);
+      tempQuotes.insert(index, dataToRestore);
+
+      setState(() {});
+
+      Snack.e(
+        context: context,
+        message: "Sorry, there was an issue while validating the quote(s). "
+            "Try again later or contact the support of the issue persist.",
+      );
+    }
+
+    processingQuotes.clear();
+  }
+
+  void onBeforeProcessingTempQuote({
+    int index,
+    TempQuote tempQuote,
+    TempQuoteUIActionType actionType,
+  }) {
+    Snack.s(
+      context: context,
+      message: "Your temporary quote has successfully deleted.",
+    );
+
+    setState(() {
+      processingQuotes.putIfAbsent(index, () => tempQuote);
+      tempQuotes.remove(tempQuote);
+    });
   }
 }
