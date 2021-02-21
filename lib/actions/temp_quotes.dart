@@ -10,11 +10,13 @@ import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/snack.dart';
 
 class TempQuotesActions {
-  static Future<bool> addNewTempQuote({
-    List<String> comments,
-    Map<String, bool> topics,
-  }) async {
+  static Future<bool> addNewTempQuote() async {
     final userAuth = stateUser.userAuth;
+    final comments = <String>[];
+
+    if (DataQuoteInputs.comment.isNotEmpty) {
+      comments.add(DataQuoteInputs.comment);
+    }
 
     try {
       final callable = CloudFunctions(
@@ -180,31 +182,13 @@ class TempQuotesActions {
       return false;
     }
 
-    final comments = <String>[];
-
-    if (DataQuoteInputs.comment.isNotEmpty) {
-      comments.add(DataQuoteInputs.comment);
-    }
-
-    final topics = Map<String, bool>();
-
-    DataQuoteInputs.quote.topics.forEach((topic) {
-      topics[topic] = true;
-    });
-
     bool success = false;
 
     try {
       if (DataQuoteInputs.quote.id.isEmpty) {
-        success = await addNewTempQuote(
-          comments: comments,
-          topics: topics,
-        );
+        success = await addNewTempQuote();
       } else {
-        success = await saveExistingTempQuote(
-          comments: comments,
-          topics: topics,
-        );
+        success = await saveExistingTempQuote();
       }
 
       return success;
@@ -214,25 +198,52 @@ class TempQuotesActions {
     }
   }
 
-  static Future<bool> saveExistingTempQuote({
-    List<String> comments,
-    Map<String, bool> topics,
-  }) async {
+  static Future<bool> saveExistingTempQuote() async {
+    final userAuth = stateUser.userAuth;
+    final comments = <String>[];
+
+    if (DataQuoteInputs.comment.isNotEmpty) {
+      comments.add(DataQuoteInputs.comment);
+    }
+
     try {
-      await FirebaseFirestore.instance
-          .collection('tempquotes')
-          .doc(DataQuoteInputs.quote.id)
-          .update({
-        'author': DataQuoteInputs.author.toJSON(withId: true),
-        'comments': comments,
-        'lang': DataQuoteInputs.quote.lang,
-        'name': DataQuoteInputs.quote.name,
-        'reference': DataQuoteInputs.reference.toJSON(withId: true),
-        'topics': topics,
-        'updatedAt': DateTime.now(),
+      final callable = CloudFunctions(
+        app: Firebase.app(),
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'tempQuotes-update',
+      );
+
+      final resp = await callable.call({
+        'tempQuote': {
+          'author': DataQuoteInputs.author.toJSON(withId: true),
+          'comments': comments,
+          'createdAt': DateTime.now(),
+          'id': DataQuoteInputs.quote.id,
+          'lang': DataQuoteInputs.quote.lang,
+          'name': DataQuoteInputs.quote.name,
+          'reference': DataQuoteInputs.reference.toJSON(withId: true),
+          'topics': DataQuoteInputs.quote.topics,
+          'user': {
+            'id': userAuth.uid,
+          },
+          'updatedAt': DateTime.now(),
+          'validation': {
+            'comment': {
+              'name': '',
+              'updatedAt': DateTime.now(),
+            },
+            'status': 'proposed',
+            'updatedAt': DateTime.now(),
+          }
+        },
       });
 
-      return true;
+      final isOk = resp.data['success'] as bool;
+      return isOk;
+    } on CloudFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
+      return false;
     } catch (error) {
       appLogger.e(error);
       return false;
