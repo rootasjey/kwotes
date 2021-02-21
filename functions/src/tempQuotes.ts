@@ -5,7 +5,7 @@ import { checkUserIsSignedIn } from './utils';
 const firestore = adminApp.firestore();
 
 /**
- * Creata a new temporary quote.
+ * Create a new temporary quote.
  * Check all parameters and deep nested properties.
  */
 export const create = functions
@@ -19,7 +19,7 @@ export const create = functions
       throw new functions.https.HttpsError(
         'invalid-argument',
         `The function must be called with a valid [tempQuote] parameter 
-        reprensing the temporary quote to send.`,
+        reprensing the temporary quote to create.`,
       );
     }
 
@@ -104,6 +104,126 @@ export const create = functions
         success: true,
         tempQuote: {
           id: tempQuoteDoc.id,
+        },
+      };
+
+    } catch (error) {
+      throw new functions.https.HttpsError(
+        'internal',
+        `Sorry, there was an error while proposing your quote. ${error}`,
+      );
+    }
+  });
+
+/**
+ * Update an existing temporary quote.
+ * Check all parameters and deep nested properties.
+ */
+export const update = functions
+  .region('europe-west3')
+  .https
+  .onCall(async (data: AddTempQuoteParams, context) => {
+    const userAuth = context.auth;
+    const { tempQuote } = data;
+
+    if (!tempQuote) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `The function must be called with a valid [tempQuote] parameter 
+        reprensing the temporary quote to send.`,
+      );
+    }
+
+    if (!tempQuote.id) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `The function must be called with a valid [tempQuote.id] parameter 
+        reprensing the temporary quote's id to update.`,
+      );
+    }
+
+    if (!userAuth) {
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        `The function must be called from an authenticated user.`,
+      );
+    }
+
+    const userDoc = await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .get();
+
+    const userData = userDoc.data();
+
+    if (!userDoc.exists || !userData) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        `You caught a ghost. This user doesn't exist.`,
+      );
+    }
+
+    const userRights = userData.rights;
+    const proposeQuoteRight = userRights['user:proposequote'];
+
+    if (!proposeQuoteRight) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        `You don't have the right to perform this action.`,
+      );
+    }
+
+    const topics: Record<string, boolean> = {};
+    
+    for (const topic of tempQuote.topics) {
+      topics[topic] = true;
+    }
+
+    const name = typeof tempQuote.name === 'string' ? tempQuote.name : '';
+
+    if (!name) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `The [name] property cannot be empty. 
+        Please provide a valid quote string content.`
+      );
+    }
+
+    const author = sanitizeAuthor(tempQuote.author);
+    const reference = sanitizeReference(tempQuote.reference);
+    const lang = sanitizeLang(tempQuote.lang);
+    const comments = sanitizeComments(tempQuote.comments);
+
+    try {
+      await firestore
+        .collection('tempquotes')
+        .doc(tempQuote.id)
+        .update({
+          author,
+          comments,
+          createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+          lang,
+          name,
+          reference,
+          topics,
+          user: {
+            id: userAuth.uid,
+          },
+          updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
+          validation: {
+            comment: {
+              name: '',
+              updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
+            },
+            status: '',
+            updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
+          },
+        });
+
+      return {
+        success: true,
+        tempQuote: {
+          id: tempQuote.id,
         },
       };
 
