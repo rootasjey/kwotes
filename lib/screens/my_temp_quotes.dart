@@ -302,11 +302,9 @@ class MyTempQuotesState extends State<MyTempQuotes> {
 
   Widget listView() {
     double horPadding = 70.0;
-    bool useSwipeActions = false;
 
     if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
       horPadding = 0.0;
-      useSwipeActions = true;
     }
 
     return SliverList(
@@ -319,7 +317,8 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             isDraft: false,
             padding: EdgeInsets.symmetric(horizontal: horPadding),
             key: ObjectKey(index),
-            useSwipeActions: useSwipeActions,
+            useSwipeActions: true,
+            showPopupMenuButton: true,
             onBeforeDelete: () => onBeforeProcessingTempQuote(
               index: index,
               tempQuote: tempQuote,
