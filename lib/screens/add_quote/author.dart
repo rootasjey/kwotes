@@ -744,7 +744,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     onChanged: (newValue) {
                       DataQuoteInputs.author.job = newValue;
                     },
-                    onSubmitted: (_) => context.router.pop,
+                    onSubmitted: (_) => context.router.pop(),
                   ),
                 ),
                 FormActionInputs(
