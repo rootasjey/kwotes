@@ -59,7 +59,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.canManage = false,
     this.cardSize = 250.0,
     this.componentType = ItemComponentType.row,
-    this.elevation = 0.0,
+    this.elevation,
     this.isDraft = false,
     this.itemBuilder,
     this.key,

@@ -257,9 +257,11 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    if (widget.isDraft) chipDraftInfo(),
                     Expanded(
                       flex: 2,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
@@ -268,15 +270,14 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                               fontSize: 18.0,
                             ),
                           ),
-                          Padding(padding: const EdgeInsets.only(top: 10.0)),
-                          Opacity(
-                            opacity: .5,
-                            child: Text(
-                              author == null || author.name.isEmpty
-                                  ? ''
-                                  : author.name,
+                          if (author != null && author.name.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Opacity(
+                                opacity: 0.5,
+                                child: Text(author.name),
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -305,11 +306,6 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
                       ),
                   ],
                 ),
-                if (widget.isDraft)
-                  Positioned(
-                    right: 2.5,
-                    child: chipDraftInfo(),
-                  ),
               ],
             ),
           ),
