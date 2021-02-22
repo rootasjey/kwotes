@@ -578,13 +578,20 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }) {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 30.0),
-      leading: Icon(
-        iconData,
-        color: stateColors.primary,
+      leading: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 6.0,
+        ),
+        child: Icon(
+          iconData,
+          color: stateColors.primary,
+        ),
       ),
       title: Text(
         textTitle,
-        style: TextStyle(fontSize: 20.0),
+        style: TextStyle(
+          fontSize: 20.0,
+        ),
       ),
       onTap: onTap,
     );
