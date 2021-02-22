@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
+import 'package:figstyle/screens/random_quotes.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -14,7 +15,6 @@ import 'package:figstyle/screens/dashboard_mobile_tab.dart';
 import 'package:figstyle/screens/discover.dart';
 import 'package:figstyle/screens/recent_quotes.dart';
 import 'package:figstyle/screens/search.dart';
-import 'package:figstyle/screens/topics.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -44,7 +44,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
     ),
     Search(),
     Discover(),
-    Topics(),
+    RandomQuotes(),
     DashboardMobileTab(),
   ];
 
@@ -181,31 +181,31 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.timelapse,
+              UniconsLine.clock,
             ),
             label: 'Recent',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
+              UniconsLine.search,
             ),
             label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.lightbulb_outline,
+              UniconsLine.telescope,
             ),
             label: 'Discover',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.tag,
+              UniconsLine.arrow_random,
             ),
-            label: 'Topics',
+            label: 'Random',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.perm_identity,
+              UniconsLine.user,
             ),
             label: 'Account',
           ),

@@ -15,10 +15,10 @@ import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class RandomQuotes extends StatefulWidget {
   @override
@@ -103,7 +103,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
         foregroundColor: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(top: 4.0),
-          child: FaIcon(FontAwesomeIcons.random),
+          child: Icon(UniconsLine.arrow_random),
         ),
       ),
       body: Overlay(initialEntries: [
@@ -123,7 +123,11 @@ class _RandomQuotesState extends State<RandomQuotes> {
         bodyTitle(),
         bodyContent(),
         bodyFooter(),
-        SliverPadding(padding: const EdgeInsets.only(bottom: 300.0)),
+        SliverPadding(
+          padding: const EdgeInsets.only(
+            bottom: 300.0,
+          ),
+        ),
       ],
     );
   }
@@ -155,6 +159,9 @@ class _RandomQuotesState extends State<RandomQuotes> {
             child: Center(
               child: Container(
                 width: maxWidth,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 60.0,
+                ),
                 child: Opacity(
                   opacity: 0.6,
                   child: Row(
@@ -186,12 +193,15 @@ class _RandomQuotesState extends State<RandomQuotes> {
   }
 
   Widget bodyTitle() {
+    final showIconButton =
+        MediaQuery.of(context).size.width >= Constants.maxMobileWidth;
+
     return SliverPadding(
-      padding: const EdgeInsets.only(
-        top: 60.0,
+      padding: EdgeInsets.only(
+        top: showIconButton ? 60.0 : 20.0,
         bottom: 40.0,
-        left: 10.0,
-        right: 10.0,
+        left: 60.0,
+        right: 60.0,
       ),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
@@ -209,21 +219,22 @@ class _RandomQuotesState extends State<RandomQuotes> {
                       style: TextStyle(fontSize: 50.0),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 40.0,
-                      top: 12.0,
+                  if (showIconButton)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 40.0,
+                        top: 12.0,
+                      ),
+                      child: IconButton(
+                        color: stateColors.accent,
+                        tooltip: "Get new random quotes",
+                        onPressed: () {
+                          currentFetchAttempts = 0;
+                          fetch();
+                        },
+                        icon: Icon(UniconsLine.arrow_random),
+                      ),
                     ),
-                    child: IconButton(
-                      color: stateColors.accent,
-                      tooltip: "Get new random quotes",
-                      onPressed: () {
-                        currentFetchAttempts = 0;
-                        fetch();
-                      },
-                      icon: FaIcon(FontAwesomeIcons.random),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -232,9 +243,11 @@ class _RandomQuotesState extends State<RandomQuotes> {
             child: SizedBox(
               width: maxWidth,
               child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
+                padding: EdgeInsets.only(
+                  top: showIconButton ? 20.0 : 0.0,
+                ),
                 child: Opacity(
-                  opacity: 0.5,
+                  opacity: 0.4,
                   child: Text(
                     "We picked two random quotes for you. "
                     "You can roll the dices again with the random button above.",
@@ -302,8 +315,8 @@ class _RandomQuotesState extends State<RandomQuotes> {
       padding: paddingListView,
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
             children: quotes.mapIndexed((quote, index) {
               return FadeInX(
                 beginX: 10.0,
@@ -348,6 +361,9 @@ class _RandomQuotesState extends State<RandomQuotes> {
   }
 
   Widget vQuotesListView() {
+    final width = MediaQuery.of(context).size.width;
+    final horizontal = width < Constants.maxMobileWidth ? 20.0 : 70.0;
+
     return SliverPadding(
       padding: paddingListView,
       sliver: SliverList(
@@ -368,8 +384,8 @@ class _RandomQuotesState extends State<RandomQuotes> {
                       showBorder: true,
                       canManage: stateUser.canManageQuotes,
                       isConnected: stateUser.isUserConnected,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 70.0,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontal,
                         vertical: 40.0,
                       ),
                       componentType: ItemComponentType.card,
