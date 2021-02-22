@@ -24,6 +24,36 @@ class _ChangelogState extends State<Changelog> {
     changelogItemsList.addAll([
       itemChangelogTemplate(
         textTitle: Constants.appVersion,
+        date: DateTime(2021, 02, 22),
+        children: [
+          descriptionRow(
+              "• Add random quotes (replace topics section on mobile)"),
+          descriptionRow("• Fix an issue preventing deleting drafts"),
+          descriptionRow("• Improve key binding for add quote desktop layout"),
+          descriptionRow("• Improve 'add quote' page layout"),
+          descriptionRow("• Improve quote page layout on mobile"),
+          descriptionRow("• Improve lists management"),
+          descriptionRow("• Fix missing email & username on settings page"),
+          descriptionRow(
+              "• Fix bottom sheet not dismissed after selecting add quote to list"),
+          descriptionRow("• Fix on boarding sign in scenario"),
+          descriptionRow("• On boarding message is now more discrete"),
+          descriptionRow("• Use new snack bar layout"),
+          descriptionRow("• Use new cloud function to propose quotes"),
+          descriptionRow(
+              "• Add quotes, authors, references deletion and edition"),
+          descriptionRow("• Fix language dropdown on various pages"),
+          descriptionRow("• Add a button to shuffle accent color"),
+          descriptionRow("• Update data schemes (for database compatibility)"),
+          descriptionRow(
+              "• Add swipe action on desktop layout for quote row item"),
+          descriptionRow("• Update some texts and fix typos"),
+          descriptionRow(
+              "• Increase maximum quotes proposals per day (from 1 to 30)"),
+        ],
+      ),
+      itemChangelogTemplate(
+        textTitle: "2.20.0",
         date: DateTime(2021, 01, 24),
         children: [
           descriptionRow("• Add routing system (for better navigation)"),
