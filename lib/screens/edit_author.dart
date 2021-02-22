@@ -101,7 +101,7 @@ class _EditAuthorState extends State<EditAuthor> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: AddQuoteAuthor(
-        editMode: EditAuthorMode.editAuthor,
+        editMode: EditDataMode.editAuthor,
       ),
     );
   }

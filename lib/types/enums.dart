@@ -65,13 +65,15 @@ enum DiscoverType {
 }
 
 /// Gives information on data type we're editing
-/// on [addquote/author] page.
-enum EditAuthorMode {
+enum EditDataMode {
   /// Adding author data along side a new quote.
   addQuote,
 
   /// Edit an author independently.
   editAuthor,
+
+  /// Edit a reference independently.
+  editReference,
 }
 
 /// Game lifecycle.

@@ -25,11 +25,11 @@ class AddQuoteAuthor extends StatefulWidget {
   /// on [addquote/author] page.
   /// e.g. if we're editing an author withing a quote
   /// or a published author (indepeendently of other data).
-  final EditAuthorMode editMode;
+  final EditDataMode editMode;
 
   const AddQuoteAuthor({
     Key key,
-    this.editMode = EditAuthorMode.addQuote,
+    this.editMode = EditDataMode.addQuote,
   }) : super(key: key);
 
   @override
@@ -67,7 +67,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
     setState(() {
       prefilledInputs = DataQuoteInputs.author.id.isNotEmpty &&
-          widget.editMode == EditAuthorMode.addQuote;
+          widget.editMode == EditDataMode.addQuote;
     });
   }
 
@@ -1413,7 +1413,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   void onFictionalChanged(bool isChecked) async {
-    final isEditAuthorMode = widget.editMode == EditAuthorMode.editAuthor;
+    final isEditAuthorMode = widget.editMode == EditDataMode.editAuthor;
 
     if (prefilledInputs && !isEditAuthorMode) {
       return null;
@@ -1488,7 +1488,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   void onTapNameSuggestions(AuthorSuggestion authorSuggestion) {
-    if (widget.editMode == EditAuthorMode.addQuote) {
+    if (widget.editMode == EditDataMode.addQuote) {
       DataQuoteInputs.author = authorSuggestion.author;
       prefilledInputs = true;
       tapToEditStr = '-';

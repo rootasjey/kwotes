@@ -5,6 +5,7 @@ import 'package:figstyle/components/form_action_inputs.dart';
 import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/fade_in_x.dart';
@@ -20,6 +21,13 @@ import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
 
 class AddQuoteReference extends StatefulWidget {
+  final EditDataMode editMode;
+
+  const AddQuoteReference({
+    Key key,
+    this.editMode = EditDataMode.addQuote,
+  }) : super(key: key);
+
   @override
   _AddQuoteReferenceState createState() => _AddQuoteReferenceState();
 }
@@ -66,7 +74,9 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     linkInputController = TextEditingController();
     textController = TextEditingController();
 
-    prefilledInputs = DataQuoteInputs.reference.id.isNotEmpty;
+    prefilledInputs = DataQuoteInputs.reference.id.isNotEmpty &&
+        widget.editMode == EditDataMode.addQuote;
+
     textController.text = DataQuoteInputs.reference.name;
   }
 

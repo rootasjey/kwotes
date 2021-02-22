@@ -7,6 +7,7 @@ import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/screens/add_quote/reference.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/snack.dart';
@@ -95,7 +96,9 @@ class _EditReferenceState extends State<EditReference> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: AddQuoteReference(),
+      child: AddQuoteReference(
+        editMode: EditDataMode.editReference,
+      ),
     );
   }
 
