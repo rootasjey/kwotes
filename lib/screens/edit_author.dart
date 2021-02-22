@@ -47,6 +47,10 @@ class _EditAuthorState extends State<EditAuthor> {
       fetch();
     } else {
       author = widget.author;
+      if (DataQuoteInputs.author.id != author.id) {
+        DataQuoteInputs.author = author;
+      }
+
       fillDataInputs();
     }
   }
