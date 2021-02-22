@@ -1573,6 +1573,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           onChanged: (newValue) {
                             tempImgUrl = newValue;
                           },
+                          onSubmitted: (_) {
+                            setState(() {
+                              DataQuoteInputs.author.urls.image = tempImgUrl;
+                            });
+
+                            context.router.pop();
+                          },
                         ),
                       ],
                     ),
