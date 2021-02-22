@@ -552,10 +552,21 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         ),
         if (reference.urls.wikipedia?.isNotEmpty)
-          OutlineButton.icon(
+          OutlineButton(
             onPressed: () => launch(reference.urls.wikipedia),
-            icon: Icon(Icons.open_in_new),
-            label: Text('More on Wikipedia'),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('More on Wikipedia'),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Icon(UniconsLine.external_link_alt),
+                  ),
+                ],
+              ),
+            ),
           ),
         Divider(
           height: 80.0,
