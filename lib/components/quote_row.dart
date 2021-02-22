@@ -61,6 +61,8 @@ class QuoteRow extends StatefulWidget {
 
   final Quote quote;
 
+  final ShapeBorder shape;
+
   /// Specify explicitly the quote'is
   /// because quote's id in favourites reflect
   /// the favourite's id and no the quote.
@@ -94,6 +96,7 @@ class QuoteRow extends StatefulWidget {
     this.quote,
     this.quoteId,
     this.quoteFontSize = 24.0,
+    this.shape,
     this.showAuthor = false,
     this.showBorder = false,
     this.stackChildren = const [],
@@ -228,6 +231,15 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   }
 
   Widget cardLayout() {
+    ShapeBorder shape;
+    if (widget.shape != null) {
+      shape = widget.shape;
+    } else if (widget.showBorder) {
+      shape = Border(bottom: BorderSide(color: _accentColor, width: 2.0));
+    } else {
+      shape = Border();
+    }
+
     return Container(
       width: widget.cardWidth,
       height: widget.cardHeight,
@@ -237,9 +249,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
           elevation: elevation,
           margin: EdgeInsets.zero,
           color: _cardBackgroundColor,
-          shape: widget.showBorder
-              ? Border(bottom: BorderSide(color: _accentColor, width: 2.0))
-              : Border(),
+          shape: shape,
           child: InkWell(
             onTap: onQuoteTap,
             onLongPress: widget.onLongPress,

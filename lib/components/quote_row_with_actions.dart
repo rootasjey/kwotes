@@ -94,6 +94,8 @@ class QuoteRowWithActions extends StatefulWidget {
   /// Typcally an Icon or a small Container.
   final Widget leading;
 
+  final ShapeBorder shape;
+
   QuoteRowWithActions({
     this.canManage = false,
     this.cardWidth,
@@ -123,6 +125,7 @@ class QuoteRowWithActions extends StatefulWidget {
     this.quoteFontSize = 20.0,
     this.quoteId,
     this.quotePageType = QuotePageType.published,
+    this.shape,
     this.showAuthor = false,
     this.showBorder = false,
     this.showPopupMenuButton = false,
@@ -186,6 +189,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
       quoteId: widget.quoteId,
       quoteFontSize: widget.quoteFontSize,
       showAuthor: widget.showAuthor,
+      shape: widget.shape,
       showBorder: widget.showBorder,
       stackChildren: widget.stackChildren,
       trailingActions: trailingActions,
