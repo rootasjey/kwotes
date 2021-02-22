@@ -249,7 +249,7 @@ class _AuthorPageState extends State<AuthorPage> {
                     FadeInY(
                       beginY: -20.0,
                       endY: 0.0,
-                      child: summaryContainer(),
+                      child: summaryTextBlock(),
                     ),
                 ],
               ),
@@ -375,44 +375,6 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget summaryCard() {
-    return FadeInX(
-      beginX: 50.0,
-      delay: 0.seconds,
-      child: Tooltip(
-        message: isSummaryVisible ? "Hide summary" : "Show summary",
-        child: Material(
-          elevation: 4.0,
-          shape: CircleBorder(),
-          clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            onTap: () {
-              setState(() => isSummaryVisible = !isSummaryVisible);
-
-              if (isSummaryVisible) {
-                Future.delayed(
-                  250.milliseconds,
-                  () => _pageScrollController.animateTo(
-                    500.0,
-                    duration: 250.milliseconds,
-                    curve: Curves.bounceIn,
-                  ),
-                );
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Icon(
-                Icons.list_alt_outlined,
-                size: 30.0,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget links() {
     final urls = author.urls;
     if (urls.areLinksEmpty()) {
@@ -420,7 +382,7 @@ class _AuthorPageState extends State<AuthorPage> {
         padding: const EdgeInsets.symmetric(
           horizontal: 15.0,
         ),
-        child: summaryCard(),
+        child: summaryButtonCard(),
       );
     }
 
@@ -432,7 +394,7 @@ class _AuthorPageState extends State<AuthorPage> {
         spacing: 20.0,
         runSpacing: 20.0,
         children: <Widget>[
-          summaryCard(),
+          summaryButtonCard(),
           if (urls.website.isNotEmpty)
             linkCircleButton(
               delay: 0,
@@ -565,7 +527,45 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
-  Widget summaryContainer() {
+  Widget summaryButtonCard() {
+    return FadeInX(
+      beginX: 50.0,
+      delay: 0.seconds,
+      child: Tooltip(
+        message: isSummaryVisible ? "Hide summary" : "Show summary",
+        child: Material(
+          elevation: 4.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: () {
+              setState(() => isSummaryVisible = !isSummaryVisible);
+
+              if (isSummaryVisible) {
+                Future.delayed(
+                  250.milliseconds,
+                  () => _pageScrollController.animateTo(
+                    500.0,
+                    duration: 250.milliseconds,
+                    curve: Curves.bounceIn,
+                  ),
+                );
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Icon(
+                Icons.list_alt_outlined,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget summaryTextBlock() {
     final width = MediaQuery.of(context).size.width < 600.0 ? 600.0 : 800;
 
     return Column(
