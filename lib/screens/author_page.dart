@@ -375,55 +375,64 @@ class _AuthorPageState extends State<AuthorPage> {
     );
   }
 
+  Widget summaryCard() {
+    return FadeInX(
+      beginX: 50.0,
+      delay: 0.seconds,
+      child: Tooltip(
+        message: isSummaryVisible ? "Hide summary" : "Show summary",
+        child: Material(
+          elevation: 4.0,
+          shape: CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: () {
+              setState(() => isSummaryVisible = !isSummaryVisible);
+
+              if (isSummaryVisible) {
+                Future.delayed(
+                  250.milliseconds,
+                  () => _pageScrollController.animateTo(
+                    500.0,
+                    duration: 250.milliseconds,
+                    curve: Curves.bounceIn,
+                  ),
+                );
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Icon(
+                Icons.list_alt_outlined,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget links() {
     final urls = author.urls;
     if (urls.areLinksEmpty()) {
       return Padding(
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15.0,
+        ),
+        child: summaryCard(),
       );
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+      ),
       child: Wrap(
         spacing: 20.0,
         runSpacing: 20.0,
         children: <Widget>[
-          FadeInX(
-            beginX: 50.0,
-            delay: 0.seconds,
-            child: Tooltip(
-              message: isSummaryVisible ? "Hide summary" : "Show summary",
-              child: Material(
-                elevation: 4.0,
-                shape: CircleBorder(),
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () {
-                    setState(() => isSummaryVisible = !isSummaryVisible);
-
-                    if (isSummaryVisible) {
-                      Future.delayed(
-                        250.milliseconds,
-                        () => _pageScrollController.animateTo(
-                          500.0,
-                          duration: 250.milliseconds,
-                          curve: Curves.bounceIn,
-                        ),
-                      );
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Icon(
-                      Icons.list_alt_outlined,
-                      size: 30.0,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          summaryCard(),
           if (urls.website.isNotEmpty)
             linkCircleButton(
               delay: 0,
