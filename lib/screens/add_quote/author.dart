@@ -65,7 +65,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     initInputs();
 
     setState(() {
-      prefilledInputs = DataQuoteInputs.author.id.isNotEmpty;
+      prefilledInputs = DataQuoteInputs.author.id.isNotEmpty &&
+          widget.editMode == EditAuthorMode.addQuote;
     });
 
     super.initState();
