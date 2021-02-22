@@ -213,7 +213,7 @@ class ReferencePageState extends State<ReferencePage> {
                     FadeInY(
                       beginY: -20.0,
                       endY: 0.0,
-                      child: summaryContainer(),
+                      child: summaryTextBlock(),
                     ),
                 ],
               ),
@@ -280,6 +280,7 @@ class ReferencePageState extends State<ReferencePage> {
     if (urls.areLinksEmpty()) {
       return Padding(
         padding: EdgeInsets.zero,
+        child: summaryButtonCard(),
       );
     }
 
@@ -287,28 +288,7 @@ class ReferencePageState extends State<ReferencePage> {
       spacing: 20.0,
       runSpacing: 20.0,
       children: <Widget>[
-        Tooltip(
-          message: 'summary',
-          child: SizedBox(
-            height: 80.0,
-            width: 80.0,
-            child: Card(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              child: InkWell(
-                onTap: () =>
-                    setState(() => isSummaryVisible = !isSummaryVisible),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Icon(
-                    Icons.list_alt_outlined,
-                    size: 30.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        summaryButtonCard(),
         if (urls.website.isNotEmpty)
           linkSquareButton(
             delay: 0,
@@ -354,7 +334,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         if (urls.primeVideo.isNotEmpty)
           linkSquareButton(
-            delay: 006,
+            delay: 600,
             name: 'Prime Video',
             url: urls.primeVideo,
             imageUrl: 'assets/images/prime-video.png',
@@ -502,7 +482,31 @@ class ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget summaryContainer() {
+  Widget summaryButtonCard() {
+    return Tooltip(
+      message: 'summary',
+      child: SizedBox(
+        height: 80.0,
+        width: 80.0,
+        child: Card(
+          elevation: 4.0,
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: () => setState(() => isSummaryVisible = !isSummaryVisible),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Icon(
+                Icons.list_alt_outlined,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget summaryTextBlock() {
     final width = MediaQuery.of(context).size.width < 600.0 ? 600.0 : 800;
 
     return Column(
