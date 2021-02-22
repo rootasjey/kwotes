@@ -208,7 +208,14 @@ class _EditReferenceState extends State<EditReference> {
     });
 
     try {
-      await referenceDoc.reference.update(DataQuoteInputs.reference.toJSON());
+      if (referenceDoc == null) {
+        await FirebaseFirestore.instance
+            .collection('reference')
+            .doc(reference.id)
+            .update(DataQuoteInputs.reference.toJSON());
+      } else {
+        await referenceDoc.reference.update(DataQuoteInputs.reference.toJSON());
+      }
       setState(() => isSaving = false);
 
       Snack.s(

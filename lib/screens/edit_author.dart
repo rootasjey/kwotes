@@ -214,7 +214,15 @@ class _EditAuthorState extends State<EditAuthor> {
     });
 
     try {
-      await authorDoc.reference.update(DataQuoteInputs.author.toJSON());
+      if (authorDoc == null) {
+        await FirebaseFirestore.instance
+            .collection('authors')
+            .doc(author.id)
+            .update(DataQuoteInputs.author.toJSON());
+      } else {
+        await authorDoc.reference.update(DataQuoteInputs.author.toJSON());
+      }
+
       setState(() => isSaving = false);
 
       Snack.s(
