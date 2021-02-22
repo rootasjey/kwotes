@@ -492,7 +492,20 @@ class ReferencePageState extends State<ReferencePage> {
           elevation: 4.0,
           clipBehavior: Clip.hardEdge,
           child: InkWell(
-            onTap: () => setState(() => isSummaryVisible = !isSummaryVisible),
+            onTap: () {
+              setState(() => isSummaryVisible = !isSummaryVisible);
+
+              if (isSummaryVisible) {
+                Future.delayed(
+                  250.milliseconds,
+                  () => _pageScrollController.animateTo(
+                    500.0,
+                    duration: 250.milliseconds,
+                    curve: Curves.bounceIn,
+                  ),
+                );
+              }
+            },
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Icon(
