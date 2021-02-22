@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/page_app_bar.dart';
+import 'package:figstyle/components/tile_button.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/brightness.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/push_notifications.dart';
@@ -175,6 +178,7 @@ class _SettingsState extends State<Settings> {
       child: Column(
         children: <Widget>[
           themeSwitcher(),
+          shuffeColorButton(),
           notificationSection(),
           Padding(
               padding: const EdgeInsets.only(
@@ -578,6 +582,52 @@ class _SettingsState extends State<Settings> {
                   value,
                 ));
           }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget shuffeColorButton() {
+    return FadeInY(
+      delay: 300.milliseconds,
+      beginY: 10.0,
+      child: Container(
+        width: 400.0,
+        child: TileButton(
+          iconData: UniconsLine.paint_tool,
+          textTitle: 'Shuffle accent color',
+          trailing: Padding(
+            padding: const EdgeInsets.only(
+              right: 8.0,
+            ),
+            child: ClipOval(
+              child: Material(
+                color: stateColors.accent,
+                child: SizedBox(
+                  width: 15,
+                  height: 15,
+                ),
+              ),
+            ),
+          ),
+          onTap: () {
+            final color = appTopicsColors.shuffle(max: 1).firstOrElse(
+                  () => TopicColor(
+                    name: 'blue',
+                    decimal: Colors.blue.value,
+                    hex: Colors.blue.value.toRadixString(16),
+                  ),
+                );
+
+            stateColors.setAccentColor(Color(color.decimal));
+
+            Snack.s(
+              context: context,
+              message: "A new accent color has been selected.",
+            );
+
+            setState(() {});
+          },
         ),
       ),
     );

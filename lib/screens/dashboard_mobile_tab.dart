@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
+import 'package:figstyle/components/tile_button.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
+import 'package:figstyle/state/topics_colors.dart';
+import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/navigation_helper.dart';
 import 'package:flash/flash.dart';
@@ -94,7 +97,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget aboutButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.question,
       textTitle: 'About',
       onTap: () {
@@ -119,7 +122,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           );
         },
       ),
-      tileButton(
+      TileButton(
         iconData: UniconsLine.clock,
         textTitle: 'Admin validation',
         onTap: () {
@@ -138,7 +141,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           );
         },
       ),
-      tileButton(
+      TileButton(
         iconData: UniconsLine.sunset,
         textTitle: 'Quotidians',
         onTap: () {
@@ -215,6 +218,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           tempQuotesButton(),
           favButton(),
           pubQuotesButton(),
+          shuffeColorButton(),
           settingsButton(),
           signOutButton(),
           aboutButton(),
@@ -288,7 +292,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget draftsButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.edit,
       textTitle: 'Drafts',
       onTap: () {
@@ -302,7 +306,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget favButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.heart,
       textTitle: 'Favourites',
       onTap: () {
@@ -335,6 +339,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          shuffeColorButton(),
           settingsButton(),
           aboutButton(),
         ],
@@ -343,7 +348,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget signOutButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.signout,
       textTitle: 'Sign out',
       onTap: () async {
@@ -359,7 +364,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget listsButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.list_ul,
       textTitle: 'Lists',
       onTap: () {
@@ -446,7 +451,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget pubQuotesButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.upload,
       textTitle: 'Published',
       onTap: () {
@@ -460,13 +465,52 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget settingsButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.setting,
       textTitle: 'Settings',
       onTap: () {
         context.router.push(
           NavigationHelper.getSettingsRoute(showAppBar: true),
         );
+      },
+    );
+  }
+
+  Widget shuffeColorButton() {
+    return TileButton(
+      iconData: UniconsLine.paint_tool,
+      textTitle: 'Shuffle accent color',
+      trailing: Padding(
+        padding: const EdgeInsets.only(
+          right: 24.0,
+        ),
+        child: ClipOval(
+          child: Material(
+            color: stateColors.accent,
+            child: SizedBox(
+              width: 15,
+              height: 15,
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        final color = appTopicsColors.shuffle(max: 1).firstOrElse(
+              () => TopicColor(
+                name: 'blue',
+                decimal: Colors.blue.value,
+                hex: Colors.blue.value.toRadixString(16),
+              ),
+            );
+
+        stateColors.setAccentColor(Color(color.decimal));
+
+        Snack.s(
+          context: context,
+          message: "A new accent color has been selected.",
+        );
+
+        setState(() {});
       },
     );
   }
@@ -558,7 +602,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget tempQuotesButton() {
-    return tileButton(
+    return TileButton(
       iconData: UniconsLine.clock,
       textTitle: 'In validation',
       onTap: () {
@@ -568,32 +612,6 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
           ),
         );
       },
-    );
-  }
-
-  Widget tileButton({
-    @required IconData iconData,
-    @required String textTitle,
-    @required VoidCallback onTap,
-  }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 30.0),
-      leading: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 6.0,
-        ),
-        child: Icon(
-          iconData,
-          color: stateColors.primary,
-        ),
-      ),
-      title: Text(
-        textTitle,
-        style: TextStyle(
-          fontSize: 20.0,
-        ),
-      ),
-      onTap: onTap,
     );
   }
 
