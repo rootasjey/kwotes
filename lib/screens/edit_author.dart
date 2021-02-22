@@ -174,10 +174,7 @@ class _EditAuthorState extends State<EditAuthor> {
       authorData['id'] = authorDoc.id;
       author = Author.fromJSON(authorData);
 
-      setState(() {
-        isLoading = false;
-        fillDataInputs();
-      });
+      fillDataInputs();
     } catch (error) {
       appLogger.d(error);
 
@@ -200,7 +197,10 @@ class _EditAuthorState extends State<EditAuthor> {
 
     await fetchFromReference();
 
-    DataQuoteInputs.author = author;
+    setState(() {
+      DataQuoteInputs.author = author;
+      isLoading = false;
+    });
   }
 
   void saveAuthor() async {

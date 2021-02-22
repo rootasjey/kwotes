@@ -61,6 +61,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
   @override
   void initState() {
+    super.initState();
     initFocusNodes();
     initInputs();
 
@@ -68,8 +69,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       prefilledInputs = DataQuoteInputs.author.id.isNotEmpty &&
           widget.editMode == EditAuthorMode.addQuote;
     });
-
-    super.initState();
   }
 
   @override
