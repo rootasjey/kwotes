@@ -1542,6 +1542,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     showMaterialModalBottomSheet(
         context: context,
         builder: (context) {
+          linkInputController.text = DataQuoteInputs.reference.urls.image;
+
           return Scaffold(
             body: ListView(
               physics: ClampingScrollPhysics(),
@@ -1568,12 +1570,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                         ),
                         TextField(
                           autofocus: true,
+                          controller: linkInputController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText:
-                                DataQuoteInputs.author.urls.image.length > 0
-                                    ? DataQuoteInputs.author.urls.image
-                                    : 'URL',
+                            labelText: "https://example.com/image.png",
                           ),
                           onChanged: (newValue) {
                             tempImgUrl = newValue;

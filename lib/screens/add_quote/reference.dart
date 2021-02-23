@@ -1118,7 +1118,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
     showMaterialModalBottomSheet(
       context: context,
       builder: (context) {
-        final imageUrl = DataQuoteInputs.reference.urls.image;
+        linkInputController.text = DataQuoteInputs.reference.urls.image;
 
         return Scaffold(
           body: ListView(
@@ -1149,7 +1149,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                         controller: linkInputController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: imageUrl.isNotEmpty ? imageUrl : 'URL',
+                          labelText: "https://example.com/image.png",
                         ),
                         onChanged: (newValue) {
                           tempImgUrl = newValue;
