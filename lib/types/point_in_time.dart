@@ -34,13 +34,18 @@ class PointInTime {
     );
   }
 
-  Map<String, dynamic> toJSON() {
+  Map<String, dynamic> toJSON({bool dateAsInt = false}) {
     final data = Map<String, dynamic>();
 
     data['beforeJC'] = beforeJC;
     data['country'] = country;
     data['city'] = city;
-    data['date'] = date;
+
+    if (dateAsInt) {
+      data['date'] = date.millisecondsSinceEpoch;
+    } else {
+      data['date'] = date;
+    }
 
     return data;
   }

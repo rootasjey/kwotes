@@ -28,7 +28,10 @@ class TempQuotesActions {
 
       final resp = await callable.call({
         'tempQuote': {
-          'author': DataQuoteInputs.author.toJSON(withId: true),
+          'author': DataQuoteInputs.author.toJSON(
+            withId: true,
+            dateAsInt: true,
+          ),
           'comments': comments,
           'createdAt': DateTime.now(),
           'lang': DataQuoteInputs.quote.lang,
@@ -219,7 +222,10 @@ class TempQuotesActions {
 
       final resp = await callable.call({
         'tempQuote': {
-          'author': DataQuoteInputs.author.toJSON(withId: true),
+          'author': DataQuoteInputs.author.toJSON(
+            withId: true,
+            dateAsInt: true,
+          ),
           'comments': comments,
           'createdAt': DateTime.now(),
           'id': DataQuoteInputs.quote.id,

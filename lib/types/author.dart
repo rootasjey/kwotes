@@ -90,15 +90,15 @@ class Author {
     );
   }
 
-  Map<String, dynamic> toJSON({bool withId = false}) {
+  Map<String, dynamic> toJSON({bool withId = false, bool dateAsInt = false}) {
     Map<String, dynamic> data = Map();
 
     if (withId) {
       data['id'] = id;
     }
 
-    data['born'] = born.toJSON();
-    data['death'] = death.toJSON();
+    data['born'] = born.toJSON(dateAsInt: dateAsInt);
+    data['death'] = death.toJSON(dateAsInt: dateAsInt);
     data['fromReference'] = fromReference.toJSON();
     data['isFictional'] = isFictional;
     data['job'] = job;
