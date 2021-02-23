@@ -777,7 +777,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Website',
             icon: Icon(
               UniconsLine.globe,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.website?.isNotEmpty,
             onTap: () {
@@ -799,7 +798,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 name: 'Wikipedia',
                 icon: FaIcon(
                   FontAwesomeIcons.wikipediaW,
-                  color: stateColors.primary.withOpacity(0.6),
                 ),
                 active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
                 onTap: () {
@@ -821,7 +819,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Amazon',
             icon: Icon(
               UniconsLine.amazon,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.amazon.isNotEmpty,
             onTap: () {
@@ -841,7 +838,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Facebook',
             icon: Icon(
               UniconsLine.facebook,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.facebook.isNotEmpty,
             onTap: () {
@@ -861,7 +857,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Instagram',
             icon: Icon(
               UniconsLine.instagram,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.instagram.isNotEmpty,
             onTap: () {
@@ -903,7 +898,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Prime Video',
             icon: Icon(
               UniconsLine.video,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.primeVideo.isNotEmpty,
             onTap: () {
@@ -923,7 +917,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Twitch',
             icon: FaIcon(
               FontAwesomeIcons.twitch,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.twitch.isNotEmpty,
             onTap: () {
@@ -943,7 +936,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'Twitter',
             icon: Icon(
               UniconsLine.twitter,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.twitter.isNotEmpty,
             onTap: () {
@@ -963,7 +955,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             name: 'YouTube',
             icon: Icon(
               UniconsLine.youtube,
-              color: stateColors.primary.withOpacity(0.6),
             ),
             active: DataQuoteInputs.author.urls.youtube.isNotEmpty,
             onTap: () {
@@ -1003,18 +994,37 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           color: stateColors.softBackground,
           child: InkWell(
             onTap: prefilledInputs ? showPrefilledAlert : onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: icon != null
-                  ? icon
-                  : Image.asset(
-                      imageUrl,
-                      width: 20.0,
-                      height: 20.0,
-                      color: active
-                          ? stateColors.secondary
-                          : stateColors.foreground,
+            child: Stack(
+              children: [
+                Opacity(
+                  opacity: active ? 0.8 : 0.3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: icon != null
+                        ? icon
+                        : Image.asset(
+                            imageUrl,
+                            width: 16.0,
+                            height: 16.0,
+                            color: stateColors.foreground,
+                          ),
+                  ),
+                ),
+                if (active)
+                  Positioned(
+                    top: 8.0,
+                    left: 8.0,
+                    child: ClipOval(
+                      child: Material(
+                        color: stateColors.primary,
+                        child: SizedBox(
+                          width: 12,
+                          height: 12,
+                        ),
+                      ),
                     ),
+                  ),
+              ],
             ),
           ),
         ),
