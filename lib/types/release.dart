@@ -20,7 +20,10 @@ class Release {
       );
     }
 
-    if (data['original'].runtimeType != Timestamp) {
+    if (data['original'].runtimeType == int) {
+      original = DateTime.fromMillisecondsSinceEpoch(data['original']);
+    } else if (data['original'].runtimeType != Timestamp &&
+        data['original']['_seconds'] != null) {
       original = DateTime.fromMillisecondsSinceEpoch(
           data['original']['_seconds'] * 1000);
     } else if (data['original'] != null &&
