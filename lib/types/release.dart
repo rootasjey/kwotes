@@ -41,7 +41,7 @@ class Release {
     final Map<String, dynamic> data = Map();
 
     data['original'] = original;
-    data['beforeJC'] = beforeJC;
+    data['beforeJC'] = beforeJC ?? false;
 
     return data;
   }
