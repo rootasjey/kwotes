@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -264,7 +265,7 @@ class _AuthorPageState extends State<AuthorPage> {
     int delay = 0,
     String name,
     String url,
-    String imageUrl,
+    Widget icon,
   }) {
     return FadeInX(
       beginX: 50.0,
@@ -279,11 +280,7 @@ class _AuthorPageState extends State<AuthorPage> {
             onTap: () => launch(url),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Image.asset(
-                imageUrl,
-                width: 30.0,
-                color: stateColors.foreground,
-              ),
+              child: icon,
             ),
           ),
         ),
@@ -400,70 +397,78 @@ class _AuthorPageState extends State<AuthorPage> {
               delay: 0,
               name: 'Website',
               url: urls.website,
-              imageUrl: 'assets/images/world-globe.png',
+              icon: Icon(UniconsLine.globe),
             ),
           if (urls.wikipedia.isNotEmpty)
             linkCircleButton(
               delay: 100,
               name: 'Wikipedia',
               url: urls.wikipedia,
-              imageUrl: 'assets/images/wikipedia-light.png',
+              icon: FaIcon(FontAwesomeIcons.wikipediaW),
             ),
           if (urls.amazon.isNotEmpty)
             linkCircleButton(
               delay: 200,
               name: 'Amazon',
               url: urls.amazon,
-              imageUrl: 'assets/images/amazon.png',
+              icon: Icon(UniconsLine.amazon),
             ),
           if (urls.facebook.isNotEmpty)
             linkCircleButton(
               delay: 300,
               name: 'Facebook',
               url: urls.facebook,
-              imageUrl: 'assets/images/facebook.png',
+              icon: Icon(UniconsLine.facebook),
             ),
           if (urls.instagram.isNotEmpty)
             linkCircleButton(
               delay: 400,
               name: 'Instagram',
               url: urls.instagram,
-              imageUrl: 'assets/images/instagram.png',
+              icon: Icon(UniconsLine.instagram),
             ),
           if (urls.netflix.isNotEmpty)
             linkCircleButton(
               delay: 500,
               name: 'Netflix',
               url: urls.netflix,
-              imageUrl: 'assets/images/netflix.png',
+              icon: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Image.asset(
+                  'assets/images/netflix.png',
+                  width: 16.0,
+                  height: 16.0,
+                  color: stateColors.foreground,
+                ),
+              ),
             ),
           if (urls.primeVideo.isNotEmpty)
             linkCircleButton(
               delay: 600,
               name: 'Prime Video',
               url: urls.primeVideo,
-              imageUrl: 'assets/images/prime-video.png',
+              icon: Icon(UniconsLine.video),
             ),
           if (urls.twitch.isNotEmpty)
             linkCircleButton(
               delay: 700,
               name: 'Twitch',
               url: urls.twitch,
-              imageUrl: 'assets/images/twitch.png',
+              icon: FaIcon(FontAwesomeIcons.twitch),
             ),
           if (urls.twitter.isNotEmpty)
             linkCircleButton(
               delay: 800,
               name: 'Twitter',
               url: urls.twitter,
-              imageUrl: 'assets/images/twitter.png',
+              icon: Icon(UniconsLine.twitter),
             ),
           if (urls.youtube.isNotEmpty)
             linkCircleButton(
               delay: 900,
               name: 'Youtube',
               url: urls.youtube,
-              imageUrl: 'assets/images/youtube.png',
+              icon: Icon(UniconsLine.youtube),
             ),
         ],
       ),
@@ -555,7 +560,7 @@ class _AuthorPageState extends State<AuthorPage> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Icon(
-                Icons.list_alt_outlined,
+                UniconsLine.list_ul,
                 size: 30.0,
               ),
             ),
