@@ -9,7 +9,6 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference_suggestion.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/colors.dart';
@@ -791,25 +790,21 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
               );
             },
           ),
-          Observer(
-            builder: (_) {
-              return linkCircleButton(
-                delay: 200,
-                name: 'Wikipedia',
-                icon: FaIcon(
-                  FontAwesomeIcons.wikipediaW,
-                ),
-                active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
-                onTap: () {
-                  showLinkInputSheet(
-                    labelText: 'Wikipedia',
-                    initialValue: DataQuoteInputs.author.urls.wikipedia,
-                    onSave: (String inputUrl) {
-                      setState(() {
-                        DataQuoteInputs.author.urls.wikipedia = inputUrl;
-                      });
-                    },
-                  );
+          linkCircleButton(
+            delay: 200,
+            name: 'Wikipedia',
+            icon: FaIcon(
+              FontAwesomeIcons.wikipediaW,
+            ),
+            active: DataQuoteInputs.author.urls.wikipedia.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Wikipedia',
+                initialValue: DataQuoteInputs.author.urls.wikipedia,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.author.urls.wikipedia = inputUrl;
+                  });
                 },
               );
             },

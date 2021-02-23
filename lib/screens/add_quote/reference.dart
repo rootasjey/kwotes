@@ -7,7 +7,6 @@ import 'package:figstyle/components/sheet_header.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
@@ -411,23 +410,19 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
               );
             },
           ),
-          Observer(
-            builder: (_) {
-              return linkSquareButton(
-                delay: 200,
-                name: 'Wikipedia',
-                active: DataQuoteInputs.reference.urls.wikipedia.isNotEmpty,
-                icon: FaIcon(FontAwesomeIcons.wikipediaW),
-                onTap: () {
-                  showLinkInputSheet(
-                    labelText: 'Wikipedia',
-                    initialValue: DataQuoteInputs.reference.urls.wikipedia,
-                    onSave: (String inputUrl) {
-                      setState(() {
-                        DataQuoteInputs.reference.urls.wikipedia = inputUrl;
-                      });
-                    },
-                  );
+          linkSquareButton(
+            delay: 200,
+            name: 'Wikipedia',
+            active: DataQuoteInputs.reference.urls.wikipedia.isNotEmpty,
+            icon: FaIcon(FontAwesomeIcons.wikipediaW),
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'Wikipedia',
+                initialValue: DataQuoteInputs.reference.urls.wikipedia,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.wikipedia = inputUrl;
+                  });
                 },
               );
             },
