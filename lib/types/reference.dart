@@ -88,7 +88,8 @@ class Reference {
     );
   }
 
-  Map<String, dynamic> toJSON({bool withId = false}) {
+  Map<String, dynamic> toJSON(
+      {bool withId = false, bool dateAsNumber = false}) {
     final Map<String, dynamic> data = Map();
 
     if (withId) {
@@ -97,7 +98,7 @@ class Reference {
 
     data['lang'] = lang;
     data['name'] = name;
-    data['release'] = release.toJSON();
+    data['release'] = release.toJSON(dateAsNumber: dateAsNumber);
     data['summary'] = summary;
     data['type'] = type.toJSON();
     data['urls'] = urls.toJSON();

@@ -33,7 +33,10 @@ class TempQuotesActions {
           'createdAt': DateTime.now(),
           'lang': DataQuoteInputs.quote.lang,
           'name': DataQuoteInputs.quote.name,
-          'reference': DataQuoteInputs.reference.toJSON(withId: true),
+          'reference': DataQuoteInputs.reference.toJSON(
+            withId: true,
+            dateAsNumber: true,
+          ),
           'topics': DataQuoteInputs.quote.topics,
           'user': {
             'id': userAuth.uid,
@@ -222,7 +225,10 @@ class TempQuotesActions {
           'id': DataQuoteInputs.quote.id,
           'lang': DataQuoteInputs.quote.lang,
           'name': DataQuoteInputs.quote.name,
-          'reference': DataQuoteInputs.reference.toJSON(withId: true),
+          'reference': DataQuoteInputs.reference.toJSON(
+            withId: true,
+            dateAsNumber: true,
+          ),
           'topics': DataQuoteInputs.quote.topics,
           'user': {
             'id': userAuth.uid,

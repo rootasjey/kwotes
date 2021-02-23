@@ -37,10 +37,15 @@ class Release {
     );
   }
 
-  Map<String, dynamic> toJSON() {
+  Map<String, dynamic> toJSON({bool dateAsNumber = false}) {
     final Map<String, dynamic> data = Map();
 
-    data['original'] = original;
+    if (dateAsNumber) {
+      data['original'] = original.millisecondsSinceEpoch;
+    } else {
+      data['original'] = original;
+    }
+
     data['beforeJC'] = beforeJC ?? false;
 
     return data;
