@@ -299,35 +299,35 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         if (urls.wikipedia.isNotEmpty)
           linkSquareButton(
-            delay: 100,
+            delay: 50,
             name: 'Wikipedia',
             url: urls.wikipedia,
             icon: FaIcon(FontAwesomeIcons.wikipediaW),
           ),
         if (urls.amazon.isNotEmpty)
           linkSquareButton(
-            delay: 200,
+            delay: 100,
             name: 'Amazon',
             url: urls.amazon,
             icon: Icon(UniconsLine.amazon),
           ),
         if (urls.facebook.isNotEmpty)
           linkSquareButton(
-            delay: 300,
+            delay: 150,
             name: 'Facebook',
             url: urls.facebook,
             icon: Icon(UniconsLine.facebook),
           ),
         if (urls.instagram.isNotEmpty)
           linkSquareButton(
-            delay: 400,
+            delay: 200,
             name: 'Instagram',
             url: urls.instagram,
             icon: Icon(UniconsLine.instagram),
           ),
         if (urls.netflix.isNotEmpty)
           linkSquareButton(
-            delay: 500,
+            delay: 250,
             name: 'Netflix',
             url: urls.netflix,
             icon: Padding(
@@ -342,28 +342,28 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         if (urls.primeVideo.isNotEmpty)
           linkSquareButton(
-            delay: 600,
+            delay: 300,
             name: 'Prime Video',
             url: urls.primeVideo,
             icon: Icon(UniconsLine.video),
           ),
         if (urls.twitch.isNotEmpty)
           linkSquareButton(
-            delay: 700,
+            delay: 350,
             name: 'Twitch',
             url: urls.twitch,
             icon: FaIcon(FontAwesomeIcons.twitch),
           ),
         if (urls.twitter.isNotEmpty)
           linkSquareButton(
-            delay: 800,
+            delay: 400,
             name: 'Twitter',
             url: urls.twitter,
             icon: Icon(UniconsLine.twitter),
           ),
         if (urls.youtube.isNotEmpty)
           linkSquareButton(
-            delay: 900,
+            delay: 450,
             name: 'Youtube',
             url: urls.youtube,
             icon: Icon(UniconsLine.youtube),

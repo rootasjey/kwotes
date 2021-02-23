@@ -401,35 +401,35 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           if (urls.wikipedia.isNotEmpty)
             linkCircleButton(
-              delay: 100,
+              delay: 50,
               name: 'Wikipedia',
               url: urls.wikipedia,
               icon: FaIcon(FontAwesomeIcons.wikipediaW),
             ),
           if (urls.amazon.isNotEmpty)
             linkCircleButton(
-              delay: 200,
+              delay: 100,
               name: 'Amazon',
               url: urls.amazon,
               icon: Icon(UniconsLine.amazon),
             ),
           if (urls.facebook.isNotEmpty)
             linkCircleButton(
-              delay: 300,
+              delay: 150,
               name: 'Facebook',
               url: urls.facebook,
               icon: Icon(UniconsLine.facebook),
             ),
           if (urls.instagram.isNotEmpty)
             linkCircleButton(
-              delay: 400,
+              delay: 200,
               name: 'Instagram',
               url: urls.instagram,
               icon: Icon(UniconsLine.instagram),
             ),
           if (urls.netflix.isNotEmpty)
             linkCircleButton(
-              delay: 500,
+              delay: 250,
               name: 'Netflix',
               url: urls.netflix,
               icon: Padding(
@@ -444,28 +444,28 @@ class _AuthorPageState extends State<AuthorPage> {
             ),
           if (urls.primeVideo.isNotEmpty)
             linkCircleButton(
-              delay: 600,
+              delay: 350,
               name: 'Prime Video',
               url: urls.primeVideo,
               icon: Icon(UniconsLine.video),
             ),
           if (urls.twitch.isNotEmpty)
             linkCircleButton(
-              delay: 700,
+              delay: 400,
               name: 'Twitch',
               url: urls.twitch,
               icon: FaIcon(FontAwesomeIcons.twitch),
             ),
           if (urls.twitter.isNotEmpty)
             linkCircleButton(
-              delay: 800,
+              delay: 450,
               name: 'Twitter',
               url: urls.twitter,
               icon: Icon(UniconsLine.twitter),
             ),
           if (urls.youtube.isNotEmpty)
             linkCircleButton(
-              delay: 900,
+              delay: 500,
               name: 'Youtube',
               url: urls.youtube,
               icon: Icon(UniconsLine.youtube),
