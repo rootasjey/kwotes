@@ -333,7 +333,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
       onTap: () {
         final author = widget.quote.author;
 
-        context.router.push(
+        context.router.root.push(
           AuthorsDeepRoute(children: [
             AuthorPageRoute(
               authorId: author.id,

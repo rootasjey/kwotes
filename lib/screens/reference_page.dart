@@ -468,7 +468,6 @@ class ReferencePageState extends State<ReferencePage> {
                     ),
                     child: QuoteRowWithActions(
                       quote: quote,
-                      quoteId: quote.id,
                       quoteFontSize: 18.0,
                       isConnected: isConnected,
                       key: ObjectKey(index),
