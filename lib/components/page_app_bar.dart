@@ -67,7 +67,7 @@ class PageAppBar extends StatefulWidget {
     this.textTitle,
     this.textSubTitle,
     this.title,
-    this.titlePadding = const EdgeInsets.only(top: 24.0),
+    this.titlePadding = const EdgeInsets.only(top: 16.0),
     this.toolbarHeight,
   }) : super(key: key);
 
@@ -286,10 +286,21 @@ class _PageAppBarState extends State<PageAppBar> {
         children: [
           if (showNavBackIcon)
             CircleButton(
-                onTap: context.router.pop,
-                icon: Icon(Icons.arrow_back, color: stateColors.foreground)),
+              onTap: context.router.pop,
+              icon: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 4.0,
+                ),
+                child: Icon(
+                  UniconsLine.arrow_left,
+                  color: stateColors.foreground,
+                ),
+              ),
+            ),
           AppIcon(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
             size: 30.0,
             onTap: widget.onIconPressed ??
                 () {
