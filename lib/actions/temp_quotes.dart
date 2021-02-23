@@ -35,7 +35,7 @@ class TempQuotesActions {
           'name': DataQuoteInputs.quote.name,
           'reference': DataQuoteInputs.reference.toJSON(
             withId: true,
-            dateAsNumber: true,
+            dateAsInt: true,
           ),
           'topics': DataQuoteInputs.quote.topics,
           'user': {
@@ -227,7 +227,7 @@ class TempQuotesActions {
           'name': DataQuoteInputs.quote.name,
           'reference': DataQuoteInputs.reference.toJSON(
             withId: true,
-            dateAsNumber: true,
+            dateAsInt: true,
           ),
           'topics': DataQuoteInputs.quote.topics,
           'user': {
