@@ -594,27 +594,41 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             clipBehavior: Clip.hardEdge,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
-              side: BorderSide(
-                color: stateColors.foreground.withOpacity(0.1),
-                width: 2.0,
-              ),
+              side: BorderSide.none,
             ),
             child: InkWell(
               onTap: prefilledInputs ? showPrefilledAlert : onTap,
-              child: Opacity(
-                opacity: 0.6,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: icon != null
-                      ? icon
-                      : Image.asset(
-                          imageUrl,
-                          width: 20.0,
-                          color: active
-                              ? stateColors.secondary
-                              : stateColors.foreground,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Opacity(
+                    opacity: active ? 0.8 : 0.3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: icon != null
+                          ? icon
+                          : Image.asset(
+                              imageUrl,
+                              width: 16.0,
+                              color: stateColors.foreground,
+                            ),
+                    ),
+                  ),
+                  if (active)
+                    Positioned(
+                      top: 8.0,
+                      left: 8.0,
+                      child: ClipOval(
+                        child: Material(
+                          color: stateColors.primary,
+                          child: SizedBox(
+                            width: 12,
+                            height: 12,
+                          ),
                         ),
-                ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
