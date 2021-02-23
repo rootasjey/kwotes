@@ -210,7 +210,7 @@ class _EditReferenceState extends State<EditReference> {
     try {
       if (referenceDoc == null) {
         await FirebaseFirestore.instance
-            .collection('reference')
+            .collection('references')
             .doc(reference.id)
             .update(DataQuoteInputs.reference.toJSON());
       } else {
