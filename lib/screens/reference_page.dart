@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -294,71 +295,78 @@ class ReferencePageState extends State<ReferencePage> {
             delay: 0,
             name: 'Website',
             url: urls.website,
-            imageUrl: 'assets/images/world-globe.png',
+            icon: Icon(UniconsLine.globe),
           ),
         if (urls.wikipedia.isNotEmpty)
           linkSquareButton(
             delay: 100,
             name: 'Wikipedia',
             url: urls.wikipedia,
-            // icon: FaIcon(FontAwesomeIcons.wikipediaW),
-            imageUrl: 'assets/images/wikipedia-light.png',
+            icon: FaIcon(FontAwesomeIcons.wikipediaW),
           ),
         if (urls.amazon.isNotEmpty)
           linkSquareButton(
             delay: 200,
             name: 'Amazon',
             url: urls.amazon,
-            imageUrl: 'assets/images/amazon.png',
+            icon: Icon(UniconsLine.amazon),
           ),
         if (urls.facebook.isNotEmpty)
           linkSquareButton(
             delay: 300,
             name: 'Facebook',
             url: urls.facebook,
-            imageUrl: 'assets/images/facebook.png',
+            icon: Icon(UniconsLine.facebook),
           ),
         if (urls.instagram.isNotEmpty)
           linkSquareButton(
             delay: 400,
             name: 'Instagram',
             url: urls.instagram,
-            imageUrl: 'assets/images/instagram.png',
+            icon: Icon(UniconsLine.instagram),
           ),
         if (urls.netflix.isNotEmpty)
           linkSquareButton(
             delay: 500,
             name: 'Netflix',
             url: urls.netflix,
-            imageUrl: 'assets/images/netflix.png',
+            icon: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Image.asset(
+                'assets/images/netflix.png',
+                width: 16.0,
+                height: 16.0,
+                color: stateColors.foreground,
+              ),
+            ),
           ),
         if (urls.primeVideo.isNotEmpty)
           linkSquareButton(
             delay: 600,
             name: 'Prime Video',
             url: urls.primeVideo,
-            imageUrl: 'assets/images/prime-video.png',
+            icon: Icon(UniconsLine.video),
           ),
         if (urls.twitch.isNotEmpty)
           linkSquareButton(
             delay: 700,
             name: 'Twitch',
             url: urls.twitch,
-            imageUrl: 'assets/images/twitch.png',
+            icon: FaIcon(FontAwesomeIcons.twitch),
           ),
         if (urls.twitter.isNotEmpty)
           linkSquareButton(
             delay: 800,
             name: 'Twitter',
             url: urls.twitter,
-            imageUrl: 'assets/images/twitter.png',
+            icon: Icon(UniconsLine.twitter),
           ),
         if (urls.youtube.isNotEmpty)
           linkSquareButton(
             delay: 900,
             name: 'Youtube',
             url: urls.youtube,
-            imageUrl: 'assets/images/youtube.png',
+            icon: Icon(UniconsLine.youtube),
           ),
       ],
     );
@@ -390,7 +398,7 @@ class ReferencePageState extends State<ReferencePage> {
                     ? icon
                     : Image.asset(
                         imageUrl,
-                        width: 30.0,
+                        width: 16.0,
                         color: stateColors.foreground,
                       ),
               ),
@@ -509,7 +517,7 @@ class ReferencePageState extends State<ReferencePage> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Icon(
-                Icons.list_alt_outlined,
+                UniconsLine.list_ul,
                 size: 30.0,
               ),
             ),
