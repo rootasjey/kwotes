@@ -802,6 +802,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
 
   Widget releaseDate() {
     final selectedDate = DataQuoteInputs.reference.release.original;
+    final beforeJC = DataQuoteInputs.reference.release.beforeJC ?? false;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
@@ -838,7 +839,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                   style: TextStyle(fontSize: 16)),
               subtitle:
                   Text('(e.g. year -500)', style: TextStyle(fontSize: 13)),
-              value: DataQuoteInputs.reference.release.beforeJC,
+              value: beforeJC,
               onChanged: prefilledInputs
                   ? null
                   : (newValue) {
