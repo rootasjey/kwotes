@@ -4,6 +4,7 @@ import 'package:figstyle/types/partial_user.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/types/urls.dart';
 import 'package:figstyle/types/validation.dart';
+import 'package:figstyle/types/validation_comment.dart';
 
 class TempQuote {
   Author author;
@@ -141,10 +142,20 @@ class TempQuote {
 
   Map<String, dynamic> toJSON() {
     final Map<String, dynamic> data = Map();
-    final Map<String, bool> topicsMap = Map();
 
-    for (var topic in topics) {
-      topicsMap.putIfAbsent(topic, () => true);
+    Validation _validation;
+
+    if (validation != null) {
+      _validation = validation;
+    } else {
+      _validation = Validation(
+        comment: ValidationComment(
+          moderatorId: '',
+          name: '',
+        ),
+        status: '',
+        updatedAt: DateTime.now(),
+      );
     }
 
     data['author'] = author.toJSON();
@@ -155,11 +166,11 @@ class TempQuote {
     data['reference'] = reference.toJSON();
     data['name'] = name;
     data['region'] = region;
-    data['topics'] = topicsMap;
+    data['topics'] = topics;
     data['updatedAt'] = DateTime.now();
     data['urls'] = urls.toJSON();
     data['user'] = user.toJSON();
-    data['validation'] = validation.toJSON();
+    data['validation'] = _validation.toJSON();
 
     return data;
   }

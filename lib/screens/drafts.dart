@@ -267,6 +267,35 @@ class _DraftsState extends State<Drafts> {
             showPopupMenuButton: true,
             onTap: () => editDraft(draft),
             padding: EdgeInsets.symmetric(horizontal: horPadding),
+            onBeforeAddTempQuoteFromDraft: () {
+              processingQuotes.putIfAbsent(index, () => draft);
+              setState(() => drafts.removeAt(index));
+
+              Snack.s(
+                context: context,
+                message:
+                    "Draft has been saved as temporary quote for validation.",
+              );
+            },
+            onAfterAddTempQuoteFromDraft: (success) {
+              if (success) {
+                deleteDraftAfterSubmitAsTempQuote(draft);
+                return;
+              }
+
+              if (processingQuotes.containsKey(index)) {
+                drafts.insert(
+                  index,
+                  processingQuotes.entries.elementAt(index).value,
+                );
+              }
+
+              Snack.e(
+                context: context,
+                message: "Couldn't submit this draft as a temporary quote. "
+                    "Please try again or contact us if the problem persists.",
+              );
+            },
             onBeforeDeleteDraft: () {
               processingQuotes.putIfAbsent(index, () => draft);
               setState(() => drafts.removeAt(index));
@@ -471,6 +500,19 @@ class _DraftsState extends State<Drafts> {
       Snack.e(
         context: context,
         message: "Couldn't delete the temporary quote.",
+      );
+    }
+  }
+
+  void deleteDraftAfterSubmitAsTempQuote(TempQuote draft) async {
+    if (draft.isOffline) {
+      DraftsActions.deleteOfflineItem(
+        createdAt: draft.createdAt.toString(),
+      );
+    } else {
+      await DraftsActions.deleteItem(
+        context: context,
+        draft: draft,
       );
     }
   }

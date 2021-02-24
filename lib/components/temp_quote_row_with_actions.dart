@@ -40,9 +40,11 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final Function onBeforeDelete;
   final Function onBeforeDeleteDraft;
   final Function onBeforeValidate;
+  final Function onBeforeAddTempQuoteFromDraft;
   final Function(bool) onAfterValidate;
   final Function(bool) onAfterDelete;
   final Function(bool) onAfterDeleteDraft;
+  final Function(bool) onAfterAddTempQuoteFromDraft;
   final Function onNavBack;
 
   final ItemComponentType componentType;
@@ -81,6 +83,8 @@ class TempQuoteRowWithActions extends StatefulWidget {
     this.useSwipeActions = false,
     this.onBeforeDeleteDraft,
     this.onAfterDeleteDraft,
+    this.onBeforeAddTempQuoteFromDraft,
+    this.onAfterAddTempQuoteFromDraft,
   });
 
   @override
@@ -152,6 +156,9 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
       case 'reject':
         rejectAction(tempQuote);
         break;
+      case 'submitdraft':
+        submitDraftAsTempQuote(tempQuote);
+        break;
       default:
         break;
     }
@@ -176,13 +183,22 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     ];
 
     if (widget.isDraft) {
-      popupItems.add(PopupMenuItem(
-        value: 'deletedraft',
-        child: ListTile(
-          leading: Icon(UniconsLine.trash),
-          title: Text('Delete'),
+      popupItems.addAll([
+        PopupMenuItem(
+          value: 'deletedraft',
+          child: ListTile(
+            leading: Icon(UniconsLine.trash),
+            title: Text('Delete'),
+          ),
         ),
-      ));
+        PopupMenuItem(
+          value: 'submitdraft',
+          child: ListTile(
+            leading: Icon(UniconsLine.cloud_upload),
+            title: Text('Sumbit as temp quote'),
+          ),
+        ),
+      ]);
     } else {
       popupItems.add(PopupMenuItem(
         value: 'deletetempquote',
@@ -317,16 +333,28 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     ];
 
     if (widget.isDraft) {
-      childrenActions.add(ListTile(
-        title: Text('Delete'),
-        trailing: Icon(
-          UniconsLine.trash,
+      childrenActions.addAll([
+        ListTile(
+          title: Text('Delete'),
+          trailing: Icon(
+            UniconsLine.trash,
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            deleteDraftAction(widget.tempQuote);
+          },
         ),
-        onTap: () {
-          Navigator.of(context).pop();
-          deleteDraftAction(widget.tempQuote);
-        },
-      ));
+        ListTile(
+          title: Text('Submit as temp. quote'),
+          trailing: Icon(
+            UniconsLine.cloud_upload,
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            submitDraftAsTempQuote(widget.tempQuote);
+          },
+        ),
+      ]);
     } else {
       childrenActions.add(ListTile(
         title: Text('Delete'),
@@ -434,6 +462,20 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     }
   }
 
+  void submitDraftAsTempQuote(TempQuote tempQuote) async {
+    if (widget.onBeforeAddTempQuoteFromDraft != null) {
+      widget.onBeforeAddTempQuoteFromDraft();
+    }
+
+    final success = await TempQuotesActions.addTempQuoteFromDraft(
+      tempQuote: tempQuote,
+    );
+
+    if (widget.onAfterAddTempQuoteFromDraft != null) {
+      widget.onAfterAddTempQuoteFromDraft(success);
+    }
+  }
+
   void validateAction(TempQuote tempQuote) async {
     if (widget.onBeforeValidate != null) {
       widget.onBeforeValidate();
@@ -483,7 +525,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     }
 
     if (widget.isDraft) {
-      actions.add(
+      actions.addAll([
         SwipeAction(
           title: 'delete',
           icon: Icon(UniconsLine.trash, color: Colors.white),
@@ -494,7 +536,16 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
             deleteDraftAction(widget.tempQuote);
           },
         ),
-      );
+        SwipeAction(
+          title: 'submit',
+          icon: Icon(UniconsLine.cloud_upload, color: Colors.white),
+          color: stateColors.validation,
+          onTap: (CompletionHandler handler) {
+            handler(false);
+            submitDraftAsTempQuote(widget.tempQuote);
+          },
+        ),
+      ]);
     } else {
       actions.add(
         SwipeAction(

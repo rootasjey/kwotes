@@ -67,6 +67,32 @@ class TempQuotesActions {
     }
   }
 
+  /// Submit a new temporary quote from a saved draft
+  /// (etheir offline or online).
+  static Future<bool> addTempQuoteFromDraft({TempQuote tempQuote}) async {
+    try {
+      final callable = CloudFunctions(
+        app: Firebase.app(),
+        region: 'europe-west3',
+      ).getHttpsCallable(
+        functionName: 'tempQuotes-create',
+      );
+
+      final resp = await callable.call({
+        'tempQuote': tempQuote.toJSON(),
+      });
+
+      final isOk = resp.data['success'] as bool;
+      return isOk;
+    } on CloudFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
+      return false;
+    } catch (error) {
+      appLogger.e(error);
+      return false;
+    }
+  }
+
   static Future<bool> deleteTempQuote({
     BuildContext context,
     TempQuote tempQuote,
