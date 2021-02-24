@@ -10,8 +10,6 @@ import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/temp_quote_row_with_actions.dart';
-import 'package:figstyle/components/empty_content.dart';
-import 'package:figstyle/components/fade_in_y.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/router/route_names.dart';
 import 'package:figstyle/state/colors.dart';

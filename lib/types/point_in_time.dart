@@ -40,6 +40,10 @@ class PointInTime {
     data['country'] = country;
     data['city'] = city;
 
+    if (date == null) {
+      return data;
+    }
+
     if (dateAsInt) {
       data['date'] = date.millisecondsSinceEpoch;
     } else {
