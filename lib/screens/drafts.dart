@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/components/sliver_edge_padding.dart';
+import 'package:figstyle/components/sliver_empty_view.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:figstyle/types/temp_quote.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class Drafts extends StatefulWidget {
   @override
@@ -177,30 +179,14 @@ class _DraftsState extends State<Drafts> {
   }
 
   Widget emptyView() {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        FadeInY(
-          delay: 100.milliseconds,
-          beginY: 50.0,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: EmptyContent(
-              icon: Opacity(
-                opacity: .8,
-                child: Icon(
-                  Icons.edit,
-                  size: 60.0,
-                  color: Color(0xFFFF005C),
-                ),
-              ),
-              title: 'No drafts',
-              subtitle:
-                  'You can save them when you are not ready to propose your quotes.',
-              onRefresh: () => fetch(),
-            ),
-          ),
-        ),
-      ]),
+    return SliverEmptyView(
+      icon: Icon(
+        UniconsLine.edit,
+        size: 40.0,
+      ),
+      titleString: "No drafts",
+      descriptionString:
+          "You can save them when you are not ready to propose your quotes",
     );
   }
 
