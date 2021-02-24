@@ -341,43 +341,58 @@ class _DraftsState extends State<Drafts> {
     );
   }
 
-  Widget moreButton({int index, TempQuote draft}) {
-    return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert),
-      onSelected: (value) async {
-        if (value == 'delete') {
-          deleteAction(draft: draft, index: index);
-          return;
-        }
+  void deleteAction({TempQuote draft, int index}) async {
+    setState(() => drafts.removeAt(index));
 
-        if (value == 'edit') {
-          editDraft(draft);
-          return;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem(
-          value: 'delete',
-          child: ListTile(
-            leading: Icon(Icons.delete),
-            title: Text(
-              'Delete',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'edit',
-          child: ListTile(
-            leading: Icon(Icons.edit),
-            title: Text(
-              'Edit',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ],
+    bool success = false;
+
+    if (draft.isOffline) {
+      success = DraftsActions.deleteOfflineItem(
+          createdAt: draft.createdAt.toString());
+    } else {
+      success = await DraftsActions.deleteItem(
+        context: context,
+        draft: draft,
+      );
+    }
+
+    if (!success) {
+      drafts.insert(index, draft);
+
+      Snack.e(
+        context: context,
+        message: "Couldn't delete the temporary quote.",
+      );
+    }
+  }
+
+  void deleteDraftAfterSubmitAsTempQuote(TempQuote draft) async {
+    if (draft.isOffline) {
+      DraftsActions.deleteOfflineItem(
+        createdAt: draft.createdAt.toString(),
+      );
+    } else {
+      await DraftsActions.deleteItem(
+        context: context,
+        draft: draft,
+      );
+    }
+  }
+
+  void editDraft(TempQuote draft) async {
+    DataQuoteInputs.isOfflineDraft = draft.isOffline;
+    DataQuoteInputs.draft = draft;
+    DataQuoteInputs.populateWithTempQuote(draft);
+
+    await context.router.root.push(
+      DashboardPageRoute(
+        children: [
+          AddQuoteStepsRoute(),
+        ],
+      ),
     );
+
+    fetch();
   }
 
   Future fetch() async {
@@ -477,101 +492,6 @@ class _DraftsState extends State<Drafts> {
   void fetchOffline() {
     final savedDrafts = DraftsActions.getOfflineData();
     drafts.addAll(savedDrafts);
-  }
-
-  void deleteAction({TempQuote draft, int index}) async {
-    setState(() => drafts.removeAt(index));
-
-    bool success = false;
-
-    if (draft.isOffline) {
-      success = DraftsActions.deleteOfflineItem(
-          createdAt: draft.createdAt.toString());
-    } else {
-      success = await DraftsActions.deleteItem(
-        context: context,
-        draft: draft,
-      );
-    }
-
-    if (!success) {
-      drafts.insert(index, draft);
-
-      Snack.e(
-        context: context,
-        message: "Couldn't delete the temporary quote.",
-      );
-    }
-  }
-
-  void deleteDraftAfterSubmitAsTempQuote(TempQuote draft) async {
-    if (draft.isOffline) {
-      DraftsActions.deleteOfflineItem(
-        createdAt: draft.createdAt.toString(),
-      );
-    } else {
-      await DraftsActions.deleteItem(
-        context: context,
-        draft: draft,
-      );
-    }
-  }
-
-  Widget quotePopupMenuButton({
-    TempQuote draft,
-    int index,
-    Color color,
-  }) {
-    return PopupMenuButton<String>(
-      icon: Icon(
-        Icons.more_horiz,
-        color: color,
-      ),
-      onSelected: (value) {
-        if (value == 'edit') {
-          editDraft(draft);
-          return;
-        }
-
-        if (value == 'delete') {
-          showDeleteDialog(
-            draft: draft,
-            index: index,
-          );
-          return;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem(
-            value: 'edit',
-            child: ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Edit'),
-            )),
-        PopupMenuItem(
-            value: 'delete',
-            child: ListTile(
-              leading: Icon(Icons.delete_sweep),
-              title: Text('Delete'),
-            )),
-      ],
-    );
-  }
-
-  void editDraft(TempQuote draft) async {
-    DataQuoteInputs.isOfflineDraft = draft.isOffline;
-    DataQuoteInputs.draft = draft;
-    DataQuoteInputs.populateWithTempQuote(draft);
-
-    await context.router.root.push(
-      DashboardPageRoute(
-        children: [
-          AddQuoteStepsRoute(),
-        ],
-      ),
-    );
-
-    fetch();
   }
 
   void showDeleteDialog({TempQuote draft, int index}) {
