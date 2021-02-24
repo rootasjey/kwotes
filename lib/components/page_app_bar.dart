@@ -187,7 +187,7 @@ class _PageAppBarState extends State<PageAppBar> {
               padding: const EdgeInsets.only(left: 8.0),
               child: IconButton(
                 color: stateColors.foreground,
-                icon: Icon(Icons.close),
+                icon: Icon(UniconsLine.times),
                 onPressed: context.router.pop,
               ),
             ),
@@ -205,7 +205,13 @@ class _PageAppBarState extends State<PageAppBar> {
               padding: const EdgeInsets.only(right: 8.0),
               child: CircleButton(
                 onTap: context.router.pop,
-                icon: Icon(Icons.arrow_back, color: stateColors.foreground),
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 3.0),
+                  child: Icon(
+                    UniconsLine.arrow_left,
+                    color: stateColors.foreground,
+                  ),
+                ),
               ),
             ),
             TextButton.icon(
@@ -289,7 +295,7 @@ class _PageAppBarState extends State<PageAppBar> {
               onTap: context.router.pop,
               icon: Padding(
                 padding: const EdgeInsets.only(
-                  bottom: 4.0,
+                  bottom: 3.0,
                 ),
                 child: Icon(
                   UniconsLine.arrow_left,
