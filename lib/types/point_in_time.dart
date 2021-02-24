@@ -18,8 +18,7 @@ class PointInTime {
 
     if (data['original'].runtimeType == int) {
       date = DateTime.fromMillisecondsSinceEpoch(data['original']);
-    } else if (data['date'].runtimeType == Timestamp &&
-        data['original']['_seconds'] != null) {
+    } else if (data['date'].runtimeType == Timestamp) {
       date = (data['date'] as Timestamp)?.toDate();
     } else if (data['date'] != null && data['date']['_seconds'] != null) {
       date =
