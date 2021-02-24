@@ -19,7 +19,10 @@ class ReferenceSuggestion {
       String year = '';
 
       year = reference.release.original.year.toString();
-      year = reference.release.beforeJC ? '-$year' : year;
+
+      if (reference.release.beforeJC != null) {
+        year = reference.release.beforeJC ? '-$year' : year;
+      }
 
       name = '$name ($year)';
     }

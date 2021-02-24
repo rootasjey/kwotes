@@ -1,5 +1,6 @@
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/utils/app_logger.dart';
 
 class AuthorSuggestion {
   final Author author;
@@ -23,7 +24,10 @@ class AuthorSuggestion {
 
       if (reference.release != null && reference.release.original != null) {
         year = reference.release.original.year.toString();
-        year = reference.release.beforeJC ? '-$year' : year;
+
+        if (reference.release.beforeJC != null) {
+          year = reference.release.beforeJC ? '-$year' : year;
+        }
       }
 
       name = '$name (${reference.name} — $year)';
@@ -35,13 +39,19 @@ class AuthorSuggestion {
       String deathStr = '';
 
       if (bornDate != null) {
-        bornStr =
-            author.born.beforeJC ? '-${bornDate.year}' : '${bornDate.year}';
+        bornStr = "${bornDate.year}";
+
+        if (author.born.beforeJC != null) {
+          bornStr = author.born.beforeJC ? '-$bornStr' : '$bornStr';
+        }
       }
 
       if (deathDate != null) {
-        deathStr =
-            author.death.beforeJC ? '-${deathDate.year}' : '${deathDate.year}';
+        deathStr = "${deathDate.year}";
+
+        if (author.death.beforeJC != null) {
+          deathStr = author.death.beforeJC ? '-$deathStr' : '$deathStr';
+        }
       }
 
       if (bornStr.isNotEmpty || deathStr.isNotEmpty) {
