@@ -1542,7 +1542,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     showMaterialModalBottomSheet(
         context: context,
         builder: (context) {
-          linkInputController.text = DataQuoteInputs.reference.urls.image;
+          linkInputController.text = DataQuoteInputs.author.urls.image;
 
           return Scaffold(
             body: ListView(
