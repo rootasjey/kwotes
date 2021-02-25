@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/lang_popup_menu_button.dart';
 import 'package:figstyle/router/app_router.gr.dart';
+import 'package:figstyle/utils/app_logger.dart';
+import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/base_page_app_bar.dart';
 import 'package:figstyle/components/circle_button.dart';
@@ -84,15 +86,15 @@ class _PageAppBarState extends State<PageAppBar> {
 
     if (widget.onLangChanged != null &&
         (widget.lang == null || widget.lang.isEmpty)) {
-      debugPrint("Please specify a value for the 'lang' property.");
+      appLogger.d("Please specify a value for the 'lang' property.");
     }
 
     if (widget.onItemsLayoutSelected != null && widget.itemsLayout == null) {
-      debugPrint("Please specify a value for the 'itemsLayout' property.");
+      appLogger.d("Please specify a value for the 'itemsLayout' property.");
     }
 
     if (widget.onDescendingChanged != null && widget.descending == null) {
-      debugPrint("Please specify a value for the 'descending' property.");
+      appLogger.d("Please specify a value for the 'descending' property.");
     }
   }
 
@@ -107,6 +109,9 @@ class _PageAppBarState extends State<PageAppBar> {
     } else {
       showNavBackIcon = false;
     }
+
+    final isScreenSmall =
+        MediaQuery.of(context).size.width < Constants.maxMobileWidth;
 
     return BasePageAppBar(
       expandedHeight: widget.expandedHeight,
@@ -125,6 +130,9 @@ class _PageAppBarState extends State<PageAppBar> {
                 LangPopupMenuButton(
                   opacity: 0.6,
                   lang: widget.lang,
+                  padding: isScreenSmall
+                      ? const EdgeInsets.only(top: 6.0)
+                      : const EdgeInsets.only(top: 2.0),
                   onLangChanged: widget.onLangChanged,
                 ),
               if (showItemsLayout) itemsLayoutSelector(),
@@ -234,18 +242,23 @@ class _PageAppBarState extends State<PageAppBar> {
 
     return Padding(
       padding: widget.titlePadding,
-      child: TextButton.icon(
-        onPressed: widget.onTitlePressed,
-        icon: AppIcon(
-          padding: EdgeInsets.zero,
-          size: 30.0,
-        ),
-        label: Text(
-          widget.textTitle,
-          style: TextStyle(
-            fontSize: 22.0,
+      child: Row(
+        children: [
+          AppIcon(
+            padding: const EdgeInsets.only(
+              right: 8.0,
+            ),
+            size: 30.0,
           ),
-        ),
+          Text(
+            widget.textTitle,
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
