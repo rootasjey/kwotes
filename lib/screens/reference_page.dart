@@ -254,34 +254,30 @@ class ReferencePageState extends State<ReferencePage> {
 
     return SliverList(
       delegate: SliverChildListDelegate([
-        LayoutBuilder(
-          builder: (context, constrains) {
-            return Container(
-              alignment: AlignmentDirectional.center,
-              padding: const EdgeInsets.only(bottom: 60.0),
-              child: Column(
-                children: <Widget>[
-                  FadeInY(
-                    beginY: beginY,
-                    delay: 200.milliseconds,
-                    child: types(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 45.0,
-                    ),
-                    child: links(),
-                  ),
-                  if (isSummaryVisible)
-                    FadeInY(
-                      beginY: -20.0,
-                      endY: 0.0,
-                      child: summaryTextBlock(),
-                    ),
-                ],
+        Container(
+          alignment: AlignmentDirectional.center,
+          padding: const EdgeInsets.only(bottom: 60.0),
+          child: Column(
+            children: <Widget>[
+              FadeInY(
+                beginY: beginY,
+                delay: 200.milliseconds,
+                child: types(),
               ),
-            );
-          },
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 45.0,
+                ),
+                child: links(),
+              ),
+              if (isSummaryVisible)
+                FadeInY(
+                  beginY: -20.0,
+                  endY: 0.0,
+                  child: summaryTextBlock(),
+                ),
+            ],
+          ),
         ),
       ]),
     );
@@ -663,38 +659,83 @@ class ReferencePageState extends State<ReferencePage> {
 
   Widget types() {
     final type = reference.type;
+    String primaryType = '';
+    String secondaryType = '';
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Column(
-        children: <Widget>[
-          Opacity(
-            opacity: 0.8,
-            child: Text(
-              type.primary,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          if (type.secondary != null && type.secondary.length > 0)
-            Padding(
-              padding: EdgeInsets.only(top: 5.0),
-              child: Opacity(
-                opacity: 0.5,
-                child: Text(
-                  type.secondary,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w300,
+    if (type == null || type.primary == null) {
+      return Container();
+    }
+
+    primaryType = type.primary ?? '';
+    secondaryType = type.secondary ?? '';
+
+    return Container(
+      padding: const EdgeInsets.all(24.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Icon(
+                      UniconsLine.circle,
+                      color: stateColors.primary,
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: Opacity(
+                      opacity: 0.8,
+                      child: Text(
+                        primaryType,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-        ],
+              Container(
+                padding: const EdgeInsets.only(bottom: 8.0),
+              ),
+              if (secondaryType.isNotEmpty)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        UniconsLine.pentagon,
+                        color: stateColors.primary,
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.0),
+                        child: Opacity(
+                          opacity: 0.5,
+                          child: Text(
+                            secondaryType,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
