@@ -25,6 +25,7 @@ import 'package:figstyle/types/topic_color.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class TopicPage extends StatefulWidget {
   /// Color's name.
@@ -433,6 +434,7 @@ class _TopicPageState extends State<TopicPage> {
   Widget smallView() {
     final width = MediaQuery.of(context).size.width;
     final leftOffset = width < 500.00 ? 0.6 : 0.0;
+    final topPadding = width < Constants.maxMobileWidth ? 0.0 : 60.0;
 
     return InnerDrawer(
       key: _innerDrawerKey,
@@ -450,7 +452,7 @@ class _TopicPageState extends State<TopicPage> {
       ),
       scaffold: Material(
         child: Padding(
-          padding: const EdgeInsets.only(top: 60.0),
+          padding: EdgeInsets.only(top: topPadding),
           child: mainContent(),
         ),
       ),
@@ -480,11 +482,7 @@ class _TopicPageState extends State<TopicPage> {
                 delegate: SliverChildListDelegate.fixed([Container()]),
               ),
             ),
-            DesktopAppBar(
-              automaticallyImplyLeading: false,
-              showAppIcon: false,
-              leftPaddingFirstDropdown: 0.0,
-            ),
+            topSideBar(),
             SliverPadding(
               padding: const EdgeInsets.all(20.0),
               sliver: SliverList(
@@ -494,6 +492,36 @@ class _TopicPageState extends State<TopicPage> {
           ],
         );
       },
+    );
+  }
+
+  Widget topSideBar() {
+    final width = MediaQuery.of(context).size.width;
+
+    if (width < Constants.maxMobileWidth) {
+      return SliverPadding(
+        padding: const EdgeInsets.only(top: 32.0),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate.fixed([
+            ElevatedButton.icon(
+              onPressed: () {
+                _innerDrawerKey.currentState.close();
+              },
+              icon: Icon(UniconsLine.times),
+              label: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text("CLOSE"),
+              ),
+            ),
+          ]),
+        ),
+      );
+    }
+
+    return DesktopAppBar(
+      automaticallyImplyLeading: false,
+      showAppIcon: false,
+      leftPaddingFirstDropdown: 0.0,
     );
   }
 
