@@ -14,12 +14,10 @@ class QuotesActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'quotes-deleteQuotes',
-      );
+      ).httpsCallable('quotes-deleteQuotes');
 
       final response = await callable.call({
         'quoteIds': [quote.id],

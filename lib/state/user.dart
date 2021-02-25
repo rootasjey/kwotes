@@ -4,6 +4,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/router/app_router.dart';
 import 'package:figstyle/types/cloud_func_error.dart';
 import 'package:figstyle/types/update_email_resp.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:figstyle/utils/app_storage.dart';
@@ -86,11 +87,11 @@ abstract class StateUserBase with Store {
       canManageAuthors = rights['user:manageauthor'];
       canManageReferences = rights['user:managereference'];
       setUsername(userData['name']);
-    } on CloudFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+    } on FirebaseFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
       setAllRightsToFalse();
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error.toString());
       setAllRightsToFalse();
     }
   }
@@ -102,12 +103,10 @@ abstract class StateUserBase with Store {
 
   Future<UpdateEmailResp> deleteAccount(String idToken) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-deleteAccount',
-      );
+      ).httpsCallable('users-deleteAccount');
 
       final response = await callable.call({
         'idToken': idToken,
@@ -116,8 +115,8 @@ abstract class StateUserBase with Store {
       signOut();
 
       return UpdateEmailResp.fromJSON(response.data);
-    } on CloudFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+    } on FirebaseFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
 
       return UpdateEmailResp(
         success: false,
@@ -127,7 +126,7 @@ abstract class StateUserBase with Store {
         ),
       );
     } on PlatformException catch (exception) {
-      debugPrint(exception.toString());
+      appLogger.e(exception.toString());
 
       return UpdateEmailResp(
         success: false,
@@ -137,7 +136,7 @@ abstract class StateUserBase with Store {
         ),
       );
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error.toString());
 
       return UpdateEmailResp(
         success: false,
@@ -254,7 +253,7 @@ abstract class StateUserBase with Store {
 
     if (redirectOnComplete) {
       if (context == null) {
-        debugPrint("Please specify a context value to the"
+        appLogger.e("Please specify a context value to the"
             " [userState.signOut] function.");
         return;
       }
@@ -270,12 +269,10 @@ abstract class StateUserBase with Store {
 
   Future<UpdateEmailResp> updateEmail(String email, String idToken) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-updateEmail',
-      );
+      ).httpsCallable('users-updateEmail');
 
       final response = await callable.call({
         'newEmail': email,
@@ -286,8 +283,8 @@ abstract class StateUserBase with Store {
       await stateUser.signin(email: email);
 
       return UpdateEmailResp.fromJSON(response.data);
-    } on CloudFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+    } on FirebaseFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
       return UpdateEmailResp(
         success: false,
         error: CloudFuncError(
@@ -296,7 +293,7 @@ abstract class StateUserBase with Store {
         ),
       );
     } on PlatformException catch (exception) {
-      debugPrint(exception.toString());
+      appLogger.e(exception.toString());
       return UpdateEmailResp(
         success: false,
         error: CloudFuncError(
@@ -305,7 +302,7 @@ abstract class StateUserBase with Store {
         ),
       );
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error.toString());
 
       return UpdateEmailResp(
         success: false,
@@ -319,12 +316,10 @@ abstract class StateUserBase with Store {
 
   Future<UpdateEmailResp> updateUsername(String newUsername) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-updateUsername',
-      );
+      ).httpsCallable('users-updateUsername');
 
       final response = await callable.call({
         'newUsername': newUsername,
@@ -333,8 +328,8 @@ abstract class StateUserBase with Store {
       appStorage.setUserName(newUsername);
 
       return UpdateEmailResp.fromJSON(response.data);
-    } on CloudFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+    } on FirebaseFunctionsException catch (exception) {
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
       return UpdateEmailResp(
         success: false,
         error: CloudFuncError(
@@ -343,7 +338,7 @@ abstract class StateUserBase with Store {
         ),
       );
     } on PlatformException catch (exception) {
-      debugPrint(exception.toString());
+      appLogger.e(exception.toString());
 
       return UpdateEmailResp(
         success: false,
@@ -353,7 +348,7 @@ abstract class StateUserBase with Store {
         ),
       );
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error.toString());
 
       return UpdateEmailResp(
         success: false,

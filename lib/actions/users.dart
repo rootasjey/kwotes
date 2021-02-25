@@ -10,17 +10,15 @@ class UsersActions {
   /// Check email availability accross the app.
   static Future<bool> checkEmailAvailability(String email) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-checkEmailAvailability',
-      );
+      ).httpsCallable('users-checkEmailAvailability');
 
       final resp = await callable.call({'email': email});
       final isOk = resp.data['isAvailable'] as bool;
       return isOk;
-    } on CloudFunctionsException catch (exception) {
+    } on FirebaseFunctionsException catch (exception) {
       debugPrint("[code: ${exception.code}] - ${exception.message}");
       return false;
     } catch (error) {
@@ -36,12 +34,10 @@ class UsersActions {
     @required String password,
   }) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-createAccount',
-      );
+      ).httpsCallable('users-createAccount');
 
       final response = await callable.call({
         'username': username,
@@ -50,7 +46,7 @@ class UsersActions {
       });
 
       return CreateAccountResp.fromJSON(response.data);
-    } on CloudFunctionsException catch (exception) {
+    } on FirebaseFunctionsException catch (exception) {
       debugPrint("[code: ${exception.code}] - ${exception.message}");
       return CreateAccountResp(
         success: false,
@@ -80,17 +76,15 @@ class UsersActions {
   /// Check username availability.
   static Future<bool> checkUsernameAvailability(String username) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'users-checkUsernameAvailability',
-      );
+      ).httpsCallable('users-checkUsernameAvailability');
 
       final resp = await callable.call({'name': username});
       final isOk = resp.data['isAvailable'] as bool;
       return isOk;
-    } on CloudFunctionsException catch (exception) {
+    } on FirebaseFunctionsException catch (exception) {
       debugPrint("[code: ${exception.code}] - ${exception.message}");
       return false;
     } catch (error) {

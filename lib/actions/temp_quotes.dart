@@ -19,12 +19,10 @@ class TempQuotesActions {
     }
 
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'tempQuotes-create',
-      );
+      ).httpsCallable('tempQuotes-create');
 
       final resp = await callable.call({
         'tempQuote': {
@@ -58,9 +56,6 @@ class TempQuotesActions {
 
       final isOk = resp.data['success'] as bool;
       return isOk;
-    } on CloudFunctionsException catch (exception) {
-      appLogger.e("[code: ${exception.code}] - ${exception.message}");
-      return false;
     } catch (error) {
       appLogger.e(error);
       return false;
@@ -71,12 +66,10 @@ class TempQuotesActions {
   /// (etheir offline or online).
   static Future<bool> addTempQuoteFromDraft({TempQuote tempQuote}) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'tempQuotes-create',
-      );
+      ).httpsCallable('tempQuotes-create');
 
       final resp = await callable.call({
         'tempQuote': tempQuote.toJSON(),
@@ -84,9 +77,6 @@ class TempQuotesActions {
 
       final isOk = resp.data['success'] as bool;
       return isOk;
-    } on CloudFunctionsException catch (exception) {
-      appLogger.e("[code: ${exception.code}] - ${exception.message}");
-      return false;
     } catch (error) {
       appLogger.e(error);
       return false;
@@ -239,12 +229,10 @@ class TempQuotesActions {
     }
 
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'tempQuotes-update',
-      );
+      ).httpsCallable('tempQuotes-update');
 
       final resp = await callable.call({
         'tempQuote': {
@@ -279,9 +267,6 @@ class TempQuotesActions {
 
       final isOk = resp.data['success'] as bool;
       return isOk;
-    } on CloudFunctionsException catch (exception) {
-      appLogger.e("[code: ${exception.code}] - ${exception.message}");
-      return false;
     } catch (error) {
       appLogger.e(error);
       return false;
@@ -293,12 +278,10 @@ class TempQuotesActions {
     String uid,
   }) async {
     try {
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'tempQuotes-validate',
-      );
+      ).httpsCallable('tempQuotes-validate');
 
       final idToken = await stateUser.userAuth.getIdToken();
 
@@ -309,9 +292,6 @@ class TempQuotesActions {
 
       final isOk = resp.data['success'] as bool;
       return isOk;
-    } on CloudFunctionsException catch (exception) {
-      appLogger.e("[code: ${exception.code}] - ${exception.message}");
-      return false;
     } catch (error) {
       appLogger.e(error);
       return false;

@@ -14,12 +14,10 @@ class AuthorsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'authors-deleteAuthors',
-      );
+      ).httpsCallable('authors-deleteAuthors');
 
       final response = await callable.call({
         'authorIds': [author.id],

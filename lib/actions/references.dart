@@ -14,12 +14,10 @@ class ReferencesActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'references-deleteReferences',
-      );
+      ).httpsCallable('references-deleteReferences');
 
       final response = await callable.call({
         'referenceIds': [reference.id],

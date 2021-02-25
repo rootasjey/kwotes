@@ -77,7 +77,7 @@ class _FooterState extends State<Footer> {
           textValue: 'GitHub',
           onTap: () async {
             onBeforeNav();
-            await launch('https://github.com/outofcontextapp/app');
+            await launch('https://github.com/rootasjey/fig.style');
           },
         ),
       ],

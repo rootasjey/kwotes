@@ -22,12 +22,10 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'lists-addQuotes',
-      );
+      ).httpsCallable('lists-addQuotes');
 
       final response = await callable.call({
         'listId': listId,
@@ -56,12 +54,10 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'lists-createList',
-      );
+      ).httpsCallable('lists-createList');
 
       final response = await callable.call({
         'name': name,
@@ -104,12 +100,10 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'lists-deleteList',
-      );
+      ).httpsCallable('lists-deleteList');
 
       final response = await callable.call({
         'listId': id,
@@ -148,12 +142,10 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'lists-removeQuotes',
-      );
+      ).httpsCallable('lists-removeQuotes');
 
       final response = await callable.call({
         'listId': id,
@@ -183,12 +175,10 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = CloudFunctions(
+      final callable = FirebaseFunctions.instanceFor(
         app: Firebase.app(),
         region: 'europe-west3',
-      ).getHttpsCallable(
-        functionName: 'lists-updateList',
-      );
+      ).httpsCallable('lists-updateList');
 
       final response = await callable.call({
         'idToken': idToken,
