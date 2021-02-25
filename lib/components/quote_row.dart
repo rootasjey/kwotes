@@ -235,7 +235,12 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
     if (widget.shape != null) {
       shape = widget.shape;
     } else if (widget.showBorder) {
-      shape = Border(bottom: BorderSide(color: _accentColor, width: 2.0));
+      shape = Border(
+        bottom: BorderSide(
+          color: _accentColor,
+          width: 2.0,
+        ),
+      );
     } else {
       shape = Border();
     }
@@ -279,7 +284,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                       overflow: widget.overflow,
                       style: TextStyle(
                         fontSize: widget.quoteFontSize,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                         color: _textColor,
                       ),
                     ),
@@ -288,7 +293,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                 if (widget.itemBuilder != null)
                   Positioned(
                     right: 0.0,
-                    bottom: 0.0,
+                    top: 0.0,
                     child: PopupMenuButton<String>(
                       icon: Opacity(
                         opacity: 0.6,
@@ -305,7 +310,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                 if (widget.showAuthor)
                   Positioned(
                     left: 0.0,
-                    bottom: 15.0,
+                    bottom: 8.0,
                     child: Padding(
                       padding: widget.padding != null
                           ? EdgeInsets.only(
@@ -343,7 +348,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         );
       },
       child: Opacity(
-        opacity: 0.6,
+        opacity: 0.4,
         child: Text(
           widget.quote.author.name,
           overflow: TextOverflow.ellipsis,
