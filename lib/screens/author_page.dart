@@ -110,7 +110,9 @@ class _AuthorPageState extends State<AuthorPage> {
 
   Widget appBar() {
     if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
-      return PageAppBar();
+      return PageAppBar(
+        expandedHeight: 70.0,
+      );
     }
 
     return DesktopAppBar();
