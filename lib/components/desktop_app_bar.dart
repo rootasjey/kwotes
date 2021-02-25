@@ -62,7 +62,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
       builder: (context, constrains) {
         final isNarrow = constrains.crossAxisExtent < 600.0;
         useIconButton = constrains.crossAxisExtent < 1000.0;
-        useGroupedDropdown = constrains.crossAxisExtent < 800.0;
+        useGroupedDropdown = constrains.crossAxisExtent < 900.0;
 
         bool showUserMenu = !isNarrow;
 

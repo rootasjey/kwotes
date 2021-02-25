@@ -4,6 +4,7 @@ import 'package:figstyle/actions/quotes.dart';
 import 'package:figstyle/actions/quotidians.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/components/user_lists.dart';
 import 'package:figstyle/router/app_router.gr.dart';
@@ -97,7 +98,7 @@ class _QuotePageState extends State<QuotePage> {
         physics: ClampingScrollPhysics(),
         controller: _pageScrollController,
         slivers: <Widget>[
-          DesktopAppBar(),
+          appBar(),
           SliverList(
             delegate: SliverChildListDelegate.fixed([
               body(),
@@ -201,6 +202,14 @@ class _QuotePageState extends State<QuotePage> {
         );
       },
     );
+  }
+
+  Widget appBar() {
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      return PageAppBar();
+    }
+
+    return DesktopAppBar();
   }
 
   Widget authorAndReference() {

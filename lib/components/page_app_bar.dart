@@ -176,18 +176,24 @@ class _PageAppBarState extends State<PageAppBar> {
             Expanded(
               child: Align(
                 alignment: Alignment.topLeft,
-                child: TextButton.icon(
-                  onPressed: widget.onTitlePressed,
-                  icon: AppIcon(
-                    padding: EdgeInsets.zero,
-                    size: 30.0,
-                  ),
-                  label: Text(
-                    widget.textTitle,
-                    style: TextStyle(
-                      fontSize: 22.0,
+                child: Row(
+                  children: [
+                    AppIcon(
+                      padding: const EdgeInsets.only(
+                        right: 8.0,
+                      ),
+                      size: 30.0,
                     ),
-                  ),
+                    if (widget.textTitle != null)
+                      Text(
+                        widget.textTitle,
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -222,19 +228,21 @@ class _PageAppBarState extends State<PageAppBar> {
                 ),
               ),
             ),
-            TextButton.icon(
-              onPressed: widget.onTitlePressed,
-              icon: AppIcon(
-                padding: EdgeInsets.zero,
-                size: 30.0,
+            AppIcon(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
               ),
-              label: Text(
+              size: 30.0,
+            ),
+            if (widget.textTitle != null)
+              Text(
                 widget.textTitle,
                 style: TextStyle(
+                  color: Colors.blue,
                   fontSize: 22.0,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
           ],
         ),
       );
@@ -250,14 +258,15 @@ class _PageAppBarState extends State<PageAppBar> {
             ),
             size: 30.0,
           ),
-          Text(
-            widget.textTitle,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22.0,
-              fontWeight: FontWeight.w600,
+          if (widget.textTitle != null)
+            Text(
+              widget.textTitle,
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 22.0,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -332,16 +341,17 @@ class _PageAppBarState extends State<PageAppBar> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  widget.title != null
-                      ? widget.title
-                      : Text(
-                          widget.textTitle,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: stateColors.foreground,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                  if (widget.title != null)
+                    widget.title
+                  else if (widget.textTitle != null)
+                    Text(
+                      widget.textTitle,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: stateColors.foreground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   Opacity(
                     opacity: 0.6,
                     child: Text(
