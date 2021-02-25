@@ -60,8 +60,7 @@ class _AuthorAvatarState extends State<AuthorAvatar>
             shape: CircleBorder(),
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
-            child: AnimatedContainer(
-              duration: 150.milliseconds,
+            child: Container(
               width: avatarSize,
               height: avatarSize,
               child: Ink.image(
