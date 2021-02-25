@@ -575,6 +575,7 @@ class _QuotePageState extends State<QuotePage> {
             size: cardSize,
             color: Color(topicColor.decimal),
             tooltip: topicColor.name,
+            name: topicColor.name,
           );
         }).toList(),
       ),

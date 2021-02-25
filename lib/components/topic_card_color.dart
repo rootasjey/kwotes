@@ -26,7 +26,7 @@ class TopicCardColor extends StatefulWidget {
     this.color,
     this.displayName = '',
     this.elevation = 1.0,
-    this.name = '',
+    @required this.name,
     this.onColorTap,
     this.onTextTap,
     this.outline = false,
