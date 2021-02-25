@@ -716,7 +716,7 @@ class _QuotePageState extends State<QuotePage> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
+      padding: const EdgeInsets.all(40.0),
       child: Wrap(
         spacing: 5.0,
         children: buttonsList,
