@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/references.dart';
 import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/reference_avatar.dart';
 import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/router/app_router.gr.dart';
@@ -95,7 +96,7 @@ class ReferencePageState extends State<ReferencePage> {
         child: CustomScrollView(
           controller: _pageScrollController,
           slivers: <Widget>[
-            DesktopAppBar(),
+            appBar(),
             heroSection(),
             textsPanels(),
             userActions(),
@@ -106,6 +107,14 @@ class ReferencePageState extends State<ReferencePage> {
         ),
       ),
     );
+  }
+
+  Widget appBar() {
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      return PageAppBar();
+    }
+
+    return DesktopAppBar();
   }
 
   /// Reference's picture profile (avatar) and name.
@@ -285,90 +294,93 @@ class ReferencePageState extends State<ReferencePage> {
       );
     }
 
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
-      children: <Widget>[
-        summaryButtonCard(),
-        if (urls.website.isNotEmpty)
-          linkSquareButton(
-            delay: 0,
-            name: 'Website',
-            url: urls.website,
-            icon: Icon(UniconsLine.globe),
-          ),
-        if (urls.wikipedia.isNotEmpty)
-          linkSquareButton(
-            delay: 50,
-            name: 'Wikipedia',
-            url: urls.wikipedia,
-            icon: FaIcon(FontAwesomeIcons.wikipediaW),
-          ),
-        if (urls.amazon.isNotEmpty)
-          linkSquareButton(
-            delay: 100,
-            name: 'Amazon',
-            url: urls.amazon,
-            icon: Icon(UniconsLine.amazon),
-          ),
-        if (urls.facebook.isNotEmpty)
-          linkSquareButton(
-            delay: 150,
-            name: 'Facebook',
-            url: urls.facebook,
-            icon: Icon(UniconsLine.facebook),
-          ),
-        if (urls.instagram.isNotEmpty)
-          linkSquareButton(
-            delay: 200,
-            name: 'Instagram',
-            url: urls.instagram,
-            icon: Icon(UniconsLine.instagram),
-          ),
-        if (urls.netflix.isNotEmpty)
-          linkSquareButton(
-            delay: 250,
-            name: 'Netflix',
-            url: urls.netflix,
-            icon: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image.asset(
-                'assets/images/netflix.png',
-                width: 16.0,
-                height: 16.0,
-                color: stateColors.foreground,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Wrap(
+        spacing: 20.0,
+        runSpacing: 20.0,
+        children: <Widget>[
+          summaryButtonCard(),
+          if (urls.website.isNotEmpty)
+            linkSquareButton(
+              delay: 0,
+              name: 'Website',
+              url: urls.website,
+              icon: Icon(UniconsLine.globe),
+            ),
+          if (urls.wikipedia.isNotEmpty)
+            linkSquareButton(
+              delay: 50,
+              name: 'Wikipedia',
+              url: urls.wikipedia,
+              icon: FaIcon(FontAwesomeIcons.wikipediaW),
+            ),
+          if (urls.amazon.isNotEmpty)
+            linkSquareButton(
+              delay: 100,
+              name: 'Amazon',
+              url: urls.amazon,
+              icon: Icon(UniconsLine.amazon),
+            ),
+          if (urls.facebook.isNotEmpty)
+            linkSquareButton(
+              delay: 150,
+              name: 'Facebook',
+              url: urls.facebook,
+              icon: Icon(UniconsLine.facebook),
+            ),
+          if (urls.instagram.isNotEmpty)
+            linkSquareButton(
+              delay: 200,
+              name: 'Instagram',
+              url: urls.instagram,
+              icon: Icon(UniconsLine.instagram),
+            ),
+          if (urls.netflix.isNotEmpty)
+            linkSquareButton(
+              delay: 250,
+              name: 'Netflix',
+              url: urls.netflix,
+              icon: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Image.asset(
+                  'assets/images/netflix.png',
+                  width: 16.0,
+                  height: 16.0,
+                  color: stateColors.foreground,
+                ),
               ),
             ),
-          ),
-        if (urls.primeVideo.isNotEmpty)
-          linkSquareButton(
-            delay: 300,
-            name: 'Prime Video',
-            url: urls.primeVideo,
-            icon: Icon(UniconsLine.video),
-          ),
-        if (urls.twitch.isNotEmpty)
-          linkSquareButton(
-            delay: 350,
-            name: 'Twitch',
-            url: urls.twitch,
-            icon: FaIcon(FontAwesomeIcons.twitch),
-          ),
-        if (urls.twitter.isNotEmpty)
-          linkSquareButton(
-            delay: 400,
-            name: 'Twitter',
-            url: urls.twitter,
-            icon: Icon(UniconsLine.twitter),
-          ),
-        if (urls.youtube.isNotEmpty)
-          linkSquareButton(
-            delay: 450,
-            name: 'Youtube',
-            url: urls.youtube,
-            icon: Icon(UniconsLine.youtube),
-          ),
-      ],
+          if (urls.primeVideo.isNotEmpty)
+            linkSquareButton(
+              delay: 300,
+              name: 'Prime Video',
+              url: urls.primeVideo,
+              icon: Icon(UniconsLine.video),
+            ),
+          if (urls.twitch.isNotEmpty)
+            linkSquareButton(
+              delay: 350,
+              name: 'Twitch',
+              url: urls.twitch,
+              icon: FaIcon(FontAwesomeIcons.twitch),
+            ),
+          if (urls.twitter.isNotEmpty)
+            linkSquareButton(
+              delay: 400,
+              name: 'Twitter',
+              url: urls.twitter,
+              icon: Icon(UniconsLine.twitter),
+            ),
+          if (urls.youtube.isNotEmpty)
+            linkSquareButton(
+              delay: 450,
+              name: 'Youtube',
+              url: urls.youtube,
+              icon: Icon(UniconsLine.youtube),
+            ),
+        ],
+      ),
     );
   }
 
@@ -688,9 +700,7 @@ class ReferencePageState extends State<ReferencePage> {
     return SliverList(
       delegate: SliverChildListDelegate.fixed([
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 40.0,
-          ),
+          padding: const EdgeInsets.all(40.0),
           child: Wrap(
             alignment: WrapAlignment.center,
             spacing: 5.0,

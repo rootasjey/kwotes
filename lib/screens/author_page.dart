@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/authors.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/author_avatar.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -94,7 +95,7 @@ class _AuthorPageState extends State<AuthorPage> {
           child: CustomScrollView(
             controller: _pageScrollController,
             slivers: <Widget>[
-              DesktopAppBar(),
+              appBar(),
               heroSection(),
               textsPanels(),
               langDropdown(),
@@ -105,6 +106,14 @@ class _AuthorPageState extends State<AuthorPage> {
             ],
           )),
     );
+  }
+
+  Widget appBar() {
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      return PageAppBar();
+    }
+
+    return DesktopAppBar();
   }
 
   Widget backButton() {
