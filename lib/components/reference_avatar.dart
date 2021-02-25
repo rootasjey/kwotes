@@ -49,32 +49,40 @@ class _ReferenceAvatarState extends State<ReferenceAvatar>
 
     return OpenContainer(
       closedColor: Colors.transparent,
+      closedElevation: 0.0,
       closedBuilder: (context, openContainer) {
         return ScaleTransition(
           scale: scaleAnimation,
-          child: SizedBox(
+          child: Container(
             width: avatarWidth,
             height: avatarHeight,
-            child: Ink.image(
-              height: avatarHeight,
-              width: avatarWidth,
-              fit: BoxFit.cover,
-              image: isImageUrlOk
-                  ? NetworkImage(
-                      imageUrl,
-                    )
-                  : AssetImage('assets/images/reference.png'),
-              child: InkWell(
-                onTap: openContainer,
-                onHover: (isHover) {
-                  if (isHover) {
-                    scaleAnimationController.forward();
-                    return;
-                  }
+            child: Card(
+              elevation: 6.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: Ink.image(
+                height: avatarHeight,
+                width: avatarWidth,
+                fit: BoxFit.cover,
+                image: isImageUrlOk
+                    ? NetworkImage(
+                        imageUrl,
+                      )
+                    : AssetImage('assets/images/reference.png'),
+                child: InkWell(
+                  onTap: openContainer,
+                  onHover: (isHover) {
+                    if (isHover) {
+                      scaleAnimationController.forward();
+                      return;
+                    }
 
-                  scaleAnimationController.reverse();
-                  return;
-                },
+                    scaleAnimationController.reverse();
+                    return;
+                  },
+                ),
               ),
             ),
           ),
