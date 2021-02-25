@@ -28,6 +28,7 @@ import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/language.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
@@ -102,7 +103,11 @@ class ReferencePageState extends State<ReferencePage> {
             userActions(),
             langDropdown(),
             quotesListView(),
-            SliverPadding(padding: const EdgeInsets.only(bottom: 200.0)),
+            SliverPadding(
+              padding: const EdgeInsets.only(
+                bottom: 200.0,
+              ),
+            ),
           ],
         ),
       ),
@@ -132,6 +137,8 @@ class ReferencePageState extends State<ReferencePage> {
 
     referenceImageUrl = referenceImageUrl ?? '';
     referenceName = referenceName ?? '';
+
+    final original = reference?.release?.original;
 
     return SliverPadding(
       padding: const EdgeInsets.only(top: 100.0),
@@ -166,9 +173,53 @@ class ReferencePageState extends State<ReferencePage> {
                     ),
                   ),
                 ),
+              if (original != null) originalRelease(original),
             ],
           ),
         ]),
+      ),
+    );
+  }
+
+  Widget originalRelease(DateTime original) {
+    return Opacity(
+      opacity: 0.4,
+      child: InkWell(
+        onTap: () {
+          showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => Material(
+              child: Container(
+                padding: const EdgeInsets.all(40.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: Icon(UniconsLine.clock),
+                    ),
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        Jiffy(original).yMMMMd,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        child: Text(
+          original.year.toString(),
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
