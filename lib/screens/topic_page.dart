@@ -129,14 +129,10 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final screenWidth = MediaQuery.of(context).size.width;
-        smallViewVisible = screenWidth < 1000.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    smallViewVisible = screenWidth < 1000.0;
 
-        return smallViewVisible ? smallView() : wideView();
-      },
-    );
+    return smallViewVisible ? smallView() : wideView();
   }
 
   Widget appBar() {
