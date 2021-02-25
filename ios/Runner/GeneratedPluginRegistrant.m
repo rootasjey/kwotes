@@ -10,8 +10,8 @@
 @import cloud_firestore;
 #endif
 
-#if __has_include(<cloud_functions/CloudFunctionsPlugin.h>)
-#import <cloud_functions/CloudFunctionsPlugin.h>
+#if __has_include(<cloud_functions/FLTFirebaseFunctionsPlugin.h>)
+#import <cloud_functions/FLTFirebaseFunctionsPlugin.h>
 #else
 @import cloud_functions;
 #endif
@@ -86,7 +86,7 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FLTFirebaseFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseFirestorePlugin"]];
-  [CloudFunctionsPlugin registerWithRegistrar:[registry registrarForPlugin:@"CloudFunctionsPlugin"]];
+  [FLTFirebaseFunctionsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseFunctionsPlugin"]];
   [FLTFirebaseAnalyticsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAnalyticsPlugin"]];
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
