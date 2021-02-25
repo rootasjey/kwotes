@@ -416,9 +416,6 @@ class _TopicPageState extends State<TopicPage> {
         child: CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
-            SliverPadding(
-              padding: const EdgeInsets.only(top: 40.0),
-            ),
             appBar(),
             quotesListViewContainer(),
           ],
@@ -430,7 +427,6 @@ class _TopicPageState extends State<TopicPage> {
   Widget smallView() {
     final width = MediaQuery.of(context).size.width;
     final leftOffset = width < 500.00 ? 0.6 : 0.0;
-    final topPadding = width < Constants.maxMobileWidth ? 0.0 : 60.0;
 
     return InnerDrawer(
       key: _innerDrawerKey,
@@ -446,12 +442,7 @@ class _TopicPageState extends State<TopicPage> {
           child: topicsItemsList(),
         ),
       ),
-      scaffold: Material(
-        child: Padding(
-          padding: EdgeInsets.only(top: topPadding),
-          child: mainContent(),
-        ),
-      ),
+      scaffold: mainContent(),
     );
   }
 
