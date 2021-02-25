@@ -5,68 +5,6 @@ import { checkUserIsSignedIn } from './utils';
 const firestore = adminApp.firestore();
 
 /**
- * TO DELETE. Fix wrong property name issue.
- */
-export const configUpdateProp = functions
-  .region('europe-west3')
-  .https
-  .onRequest(async (req, resp) => {
-    let processed = 0;
-    let updated = 0;
-    let normalzed = 0;
-
-    const referenceSnap = await firestore
-      .collection('references')
-      .get();
-
-    if (referenceSnap.empty) {
-      resp.json({ success: true });
-    }
-
-    for await (const doc of referenceSnap.docs) {
-      const docData = doc.data();
-
-      if (!docData) {
-        continue;
-      }
-
-      processed++;
-
-      let release = docData.release;
-      
-      if (!release) {
-        release = {};
-        await doc.ref.update({
-          release: {
-            beforeJC: false,
-            release: null,
-          }
-        });
-        continue;
-      }
-
-      const beforeJS = docData.release.beforeJS;
-
-      if (beforeJS) {
-        await doc.ref.update({
-          release: {
-            beforeJC: beforeJS,
-            beforeJS: adminApp.firestore.FieldValue.delete(),
-          }
-        });
-        
-        updated++;
-      }
-    }
-
-    resp.json({
-      normalzed,
-      processed,
-      updated,
-    })
-  });
-
-/**
  * Create a new temporary quote.
  * Check all parameters and deep nested properties.
  */
