@@ -483,18 +483,27 @@ class _SearchState extends State<Search> {
             ),
             label: Opacity(
               opacity: 0.6,
-              child: Text(
-                'Clear input',
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'Clear input',
+                ),
               ),
             ),
           ),
           OutlinedButton.icon(
-              onPressed: () => FocusScope.of(context).unfocus(),
-              label: Text(''),
-              icon: Opacity(
-                opacity: 0.6,
-                child: Icon(Icons.keyboard_hide),
-              )),
+            onPressed: () => FocusScope.of(context).unfocus(),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+              ),
+              child: Text(''),
+            ),
+            icon: Opacity(
+              opacity: 0.6,
+              child: Icon(Icons.keyboard_hide),
+            ),
+          ),
           OutlinedButton.icon(
             onPressed: () {
               launch('https://www.algolia.com/');
@@ -504,10 +513,13 @@ class _SearchState extends State<Search> {
               width: 20.0,
               height: 20.0,
             ),
-            label: Opacity(
-              opacity: 0.6,
-              child: Text(
-                'Search by Algolia',
+            label: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Opacity(
+                opacity: 0.6,
+                child: Text(
+                  'Search by Algolia',
+                ),
               ),
             ),
           ),
