@@ -6,12 +6,14 @@ import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/components/sliver_loading_view.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
   final scrollController = ScrollController();
 
   /// How many documents can be fetched.
-  final int documentsLimit = 6;
+  final int documentsLimit = 20;
 
   /// Specifies the maximum random quotes to display.
   final int maxRandomQuotes = 2;
@@ -51,7 +53,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
   ReactionDisposer langReaction;
 
   /// Useful to change layout appropriately.
-  ScreenLayout _screenLayout = ScreenLayout.wide;
+  ScreenLayout _screenLayout = ScreenLayout.small;
 
   String lang = Language.en;
 
@@ -74,9 +76,6 @@ class _RandomQuotesState extends State<RandomQuotes> {
   void initProps() {
     currentFetchAttempts = 0;
     lang = stateUser.lang;
-    // _screenLayout = MediaQuery.of(context).size.width > Constants.maxMobileWidth
-    //     ? ScreenLayout.wide
-    //     : ScreenLayout.small;
 
     langReaction = reaction((_) => stateUser.lang, (newLang) {
       lang = newLang;
@@ -93,6 +92,8 @@ class _RandomQuotesState extends State<RandomQuotes> {
 
   @override
   Widget build(BuildContext context) {
+    refreshScreenLayout();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -116,10 +117,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
     return CustomScrollView(
       controller: scrollController,
       slivers: <Widget>[
-        DesktopAppBar(
-          title: 'References',
-          automaticallyImplyLeading: true,
-        ),
+        appBar(),
         bodyTitle(),
         bodyContent(),
         bodyFooter(),
@@ -129,6 +127,23 @@ class _RandomQuotesState extends State<RandomQuotes> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget appBar() {
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      return PageAppBar(
+        textTitle: "Dice roll",
+        expandedHeight: 70.0,
+        titlePadding: EdgeInsets.only(
+          left: 16.0,
+        ),
+      );
+    }
+
+    return DesktopAppBar(
+      title: 'References',
+      automaticallyImplyLeading: true,
     );
   }
 
@@ -145,7 +160,6 @@ class _RandomQuotesState extends State<RandomQuotes> {
       return emptyView();
     }
 
-    checkAndChooseLayout();
     return layoutSelector();
   }
 
@@ -159,8 +173,8 @@ class _RandomQuotesState extends State<RandomQuotes> {
             child: Center(
               child: Container(
                 width: maxWidth,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 60.0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: _screenLayout == ScreenLayout.small ? 16.0 : 60.0,
                 ),
                 child: Opacity(
                   opacity: 0.6,
@@ -193,15 +207,15 @@ class _RandomQuotesState extends State<RandomQuotes> {
   }
 
   Widget bodyTitle() {
-    final showIconButton =
-        MediaQuery.of(context).size.width >= Constants.maxMobileWidth;
+    final showIconButton = _screenLayout == ScreenLayout.wide;
+    final horPadding = _screenLayout == ScreenLayout.small ? 24.0 : 60.0;
 
     return SliverPadding(
       padding: EdgeInsets.only(
-        top: showIconButton ? 60.0 : 20.0,
+        top: showIconButton ? 60.0 : 8.0,
         bottom: 40.0,
-        left: 60.0,
-        right: 60.0,
+        left: horPadding,
+        right: horPadding,
       ),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
@@ -400,22 +414,6 @@ class _RandomQuotesState extends State<RandomQuotes> {
     );
   }
 
-  void checkAndChooseLayout() {
-    final width = MediaQuery.of(context).size.width;
-
-    if (_screenLayout == ScreenLayout.wide &&
-        width <= Constants.maxMobileWidth) {
-      _screenLayout = ScreenLayout.small;
-      return;
-    }
-
-    if (_screenLayout == ScreenLayout.small &&
-        width > Constants.maxMobileWidth) {
-      _screenLayout = ScreenLayout.wide;
-      return;
-    }
-  }
-
   void chooseLayoutIndex() {
     if (_screenLayout == ScreenLayout.small) {
       layoutIndex = 0;
@@ -468,14 +466,27 @@ class _RandomQuotesState extends State<RandomQuotes> {
       boxQuotes.shuffle();
       quotes.addAll(boxQuotes.take(maxRandomQuotes));
 
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     } catch (err) {
-      debugPrint(err.toString());
+      appLogger.e(err);
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void refreshScreenLayout() {
+    _screenLayout = MediaQuery.of(context).size.width < Constants.maxMobileWidth
+        ? ScreenLayout.small
+        : ScreenLayout.wide;
+
+    if (_screenLayout == ScreenLayout.small) {
+      paddingListView = const EdgeInsets.only(
+        top: 40.0,
+        left: 16.0,
+        right: 16.0,
+        bottom: 16.0,
+      );
     }
   }
 }
