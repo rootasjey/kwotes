@@ -12,6 +12,7 @@ import 'package:figstyle/types/quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:mobx/mobx.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 class QuoteRow extends StatefulWidget {
   /// Specify this only when componentType = ComponentType.Card.
@@ -298,7 +299,7 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                       icon: Opacity(
                         opacity: 0.6,
                         child: Icon(
-                          Icons.more_vert,
+                          UniconsLine.ellipsis_h,
                           color: _iconColor,
                         ),
                       ),
