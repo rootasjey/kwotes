@@ -1,4 +1,5 @@
 import 'package:figstyle/components/desktop_app_bar.dart';
+import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/types/changelog_item.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -24,6 +25,33 @@ class _ChangelogState extends State<Changelog> {
     changelogItemsList.addAll([
       itemChangelogTemplate(
         textTitle: Constants.appVersion,
+        date: DateTime(2021, 02, 26),
+        children: [
+          descriptionRow("• Fix multiple date conversion issues"),
+          descriptionRow("• Update link cards style (e.g. on author page)"),
+          descriptionRow(
+              "• Fix author image link input keeping last (other input) value"),
+          descriptionRow("• Fix author navigation from reference page"),
+          descriptionRow("• Fix nav. back icon clipped on PageAppBar"),
+          descriptionRow("• Fix app bar overflow sometimes"),
+          descriptionRow("• Fix icons alignment on app bar"),
+          descriptionRow("• Reduce top padding on topic page"),
+          descriptionRow(
+              "• Add a close button on side bar, at the top, on topic page"),
+          descriptionRow(
+              "• Show author's name on quote card (when available) (grid layout)"),
+          descriptionRow("• Update font on quote card (grid layout)"),
+          descriptionRow("• Add release date on reference page"),
+          descriptionRow("• Fix navigation (from quote page) to topic page"),
+          descriptionRow("• Update Firebase dependencies"),
+          descriptionRow("• Update types layout on reference page"),
+          descriptionRow("• Update data schemes (for database compatibility)"),
+          descriptionRow("• Add visual feedback when saving draft"),
+          descriptionRow("• Update random quotes page for mobile"),
+        ],
+      ),
+      itemChangelogTemplate(
+        textTitle: "2.47.1",
         date: DateTime(2021, 02, 22),
         children: [
           descriptionRow(
@@ -65,62 +93,6 @@ class _ChangelogState extends State<Changelog> {
           descriptionRow("• Update footer component and about page (web)"),
         ],
       ),
-      itemChangelogTemplate(
-        textTitle: "2.0.0",
-        date: DateTime(2020, 12, 01),
-        children: [
-          descriptionRow("• Re-design add quote experience"),
-          descriptionRow("• Re-design icon assets"),
-          descriptionRow("• Fix push notifications"),
-          descriptionRow("• Add share image quote"),
-          descriptionRow("• Update quote page & other pages layout"),
-          descriptionRow("• Add search by quotes, authors, references"),
-          descriptionRow("• Add changelog"),
-          descriptionRow("• Add swipe actions on quote tiles"),
-          descriptionRow("• Re-work application icon"),
-          descriptionRow("• Add onboarding"),
-          descriptionRow("• Update first app's page"),
-          descriptionRow("• Use better image preview"),
-          descriptionRow("• Bug fixes and other improvements"),
-        ],
-      ),
-      itemChangelogTemplate(
-        textTitle: "1.3.0",
-        date: DateTime(2020, 07, 22),
-        children: [
-          descriptionRow(
-              "• Minor UI update: add a top right close button on quotidian page"),
-        ],
-      ),
-      itemChangelogTemplate(
-        textTitle: "1.2.3",
-        date: DateTime(2020, 07, 08),
-        children: [
-          descriptionRow(
-              "• Fix an issue where a draft without topics wouldn't show"),
-          descriptionRow("• Speed up topics animation on add quote page"),
-        ],
-      ),
-      itemChangelogTemplate(
-        textTitle: "1.2.1",
-        date: DateTime(2020, 06, 17),
-        children: [
-          descriptionRow(
-              "• Fix a visual bug where link cards on author page would have a longer height than expected"),
-        ],
-      ),
-      itemChangelogTemplate(
-        textTitle: "1.2.0",
-        date: DateTime(2020, 06, 15),
-        children: [
-          descriptionRow("• Add help center link"),
-          descriptionRow("• Update design"),
-          descriptionRow("• Add inputs format checks for username & email"),
-          descriptionRow("• Add availability checks for email & username"),
-          descriptionRow("• Better error messages"),
-          descriptionRow("• Bug fixes"),
-        ],
-      ),
     ]);
   }
 
@@ -129,19 +101,21 @@ class _ChangelogState extends State<Changelog> {
     final width = MediaQuery.of(context).size.width;
 
     double horPadding = 80.0;
+    double vertPadding = 60.0;
 
     if (width < Constants.maxMobileWidth) {
       horPadding = 20.0;
+      vertPadding = 12.0;
     }
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          DesktopAppBar(),
+          appBar(),
           SliverPadding(
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
-              vertical: 60.0,
+              vertical: vertPadding,
             ),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed([
@@ -155,6 +129,14 @@ class _ChangelogState extends State<Changelog> {
         ],
       ),
     );
+  }
+
+  Widget appBar() {
+    if (MediaQuery.of(context).size.width < Constants.maxMobileWidth) {
+      return PageAppBar(textTitle: "App versions");
+    }
+
+    return DesktopAppBar();
   }
 
   ChangelogItem itemChangelogTemplate({
@@ -261,7 +243,7 @@ class _ChangelogState extends State<Changelog> {
                 spacing: 20.0,
                 children: [
                   Text(
-                    "See releases online",
+                    "See more releases online",
                     style: TextStyle(
                       fontSize: 15,
                       decoration: TextDecoration.underline,
