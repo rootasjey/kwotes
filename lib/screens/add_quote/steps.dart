@@ -872,7 +872,15 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       setState(() {
         actionResult = AddQuoteType.draft;
         isSubmitting = false;
+        isFabVisible = true;
+        currentStep = 0;
+        DataQuoteInputs.clearQuoteData();
       });
+
+      Snack.s(
+        context: context,
+        message: "Your draft has been successfully saved online.",
+      );
 
       if (DataQuoteInputs.isOfflineDraft) {
         DraftsActions.deleteOfflineItem(
@@ -888,7 +896,15 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
     setState(() {
       actionResult = AddQuoteType.offline;
       isSubmitting = false;
+      isFabVisible = true;
+      currentStep = 0;
+      DataQuoteInputs.clearAll();
     });
+
+    Snack.s(
+      context: context,
+      message: "Your draft has been successfully saved offline.",
+    );
   }
 
   void showNavBackConfirm() {

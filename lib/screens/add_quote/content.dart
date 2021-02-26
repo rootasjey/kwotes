@@ -84,7 +84,7 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
         },
         icon: Opacity(
           opacity: 0.6,
-          child: Icon(Icons.delete_sweep),
+          child: Icon(UniconsLine.times),
         ),
       );
     }
@@ -159,10 +159,13 @@ class _AddQuoteContentState extends State<AddQuoteContent> {
     if (isSmall) {
       return IconButton(
         tooltip: 'Save draft',
-        onPressed: widget.onSaveDraft,
+        onPressed: () {
+          nameController.clear();
+          widget.onSaveDraft?.call();
+        },
         icon: Opacity(
           opacity: 0.6,
-          child: Icon(Icons.save_alt),
+          child: Icon(UniconsLine.save),
         ),
       );
     }
