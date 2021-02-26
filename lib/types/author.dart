@@ -90,7 +90,10 @@ class Author {
     );
   }
 
-  Map<String, dynamic> toJSON({bool withId = false, bool dateAsInt = false}) {
+  Map<String, dynamic> toJSON({
+    bool withId = false,
+    bool dateAsInt = false,
+  }) {
     Map<String, dynamic> data = Map();
 
     if (withId) {

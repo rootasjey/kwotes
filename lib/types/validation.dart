@@ -39,7 +39,7 @@ class Validation {
 
     data['comment'] = comment.toJSON();
     data['status'] = status;
-    data['updatedAt'] = updatedAt;
+    data['updatedAt'] = updatedAt.millisecondsSinceEpoch;
 
     return data;
   }

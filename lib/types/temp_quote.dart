@@ -140,7 +140,7 @@ class TempQuote {
     reference = newReference;
   }
 
-  Map<String, dynamic> toJSON() {
+  Map<String, dynamic> toJSON({bool dateAsInt = false}) {
     final Map<String, dynamic> data = Map();
 
     Validation _validation;
@@ -158,16 +158,16 @@ class TempQuote {
       );
     }
 
-    data['author'] = author.toJSON();
+    data['author'] = author.toJSON(dateAsInt: dateAsInt);
     data['comments'] = comments;
-    data['createdAt'] = createdAt;
+    data['createdAt'] = createdAt.millisecondsSinceEpoch;
     data['isOffline'] = isOffline;
     data['lang'] = lang;
-    data['reference'] = reference.toJSON();
+    data['reference'] = reference.toJSON(dateAsInt: dateAsInt);
     data['name'] = name;
     data['region'] = region;
     data['topics'] = topics;
-    data['updatedAt'] = DateTime.now();
+    data['updatedAt'] = DateTime.now().millisecondsSinceEpoch;
     data['urls'] = urls.toJSON();
     data['user'] = user.toJSON();
     data['validation'] = _validation.toJSON();

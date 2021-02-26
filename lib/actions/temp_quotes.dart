@@ -72,7 +72,7 @@ class TempQuotesActions {
       ).httpsCallable('tempQuotes-create');
 
       final resp = await callable.call({
-        'tempQuote': tempQuote.toJSON(),
+        'tempQuote': tempQuote.toJSON(dateAsInt: true),
       });
 
       final isOk = resp.data['success'] as bool;
