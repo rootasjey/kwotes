@@ -304,8 +304,11 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
   void copyFromAction(TempQuote tempQuote) async {
     DataQuoteInputs.populateWithTempQuote(tempQuote, copy: true);
 
-    context.router.root
-        .navigate(DashboardPageRoute(children: [AddQuoteStepsRoute()]));
+    context.router.root.push(
+      DashboardPageRoute(
+        children: [AddQuoteStepsRoute()],
+      ),
+    );
   }
 
   void onLongPress() {
