@@ -1,5 +1,5 @@
 class Constants {
-  static const appVersion = '2.66.2';
+  static const appVersion = '2.66.3';
   static const appBuildNumber = 12;
   static const cardElevation = 2.0;
   static const maxMobileWidth = 700.0;
