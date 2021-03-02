@@ -65,10 +65,11 @@ export const checkEmailAvailability = functions
   .onCall(async (data) => {
     const email: string = data.email;
 
-    if (!(typeof email === 'string') || email.length === 0) {
+    if (typeof email !== 'string' || email.length === 0) {
       throw new functions.https.HttpsError(
         'invalid-argument', 
-        `The function must be called with one (string) argument "email" which is the email to check.`,
+        `The function must be called with one (string)
+         argument [email] which is the email to check.`,
       );
     }
 
@@ -94,17 +95,19 @@ export const checkUsernameAvailability = functions
   .onCall(async (data) => {
     const name: string = data.name;
 
-    if (!(typeof name === 'string') || name.length === 0) {
+    if (typeof name !== 'string' || name.length === 0) {
       throw new functions.https.HttpsError(
         'invalid-argument', 
-        `The function must be called with one (string) argument "name" which is the name to check.`,
+        `The function must be called with one (string)
+         argument "name" which is the name to check.`,
       );
     }
 
     if (!validateNameFormat(name)) {
       throw new functions.https.HttpsError(
         'invalid-argument', 
-        `The function must be called with a valid name with at least 3 alpha-numeric characters (underscore is allowed) (A-Z, 0-9, _).`,
+        `The function must be called with a valid [name]
+         with at least 3 alpha-numeric characters (underscore is allowed) (A-Z, 0-9, _).`,
       );
     }
 
@@ -131,107 +134,100 @@ export const createAccount = functions
     if (!checkCreateAccountData(data)) {
       throw new functions.https.HttpsError(
         'invalid-argument', 
-        `The function must be called with 3 string arguments "username", "email" and "password".`,
+        `The function must be called with 3 string 
+        arguments [username], [email] and [password].`,
       );
     }
 
     const { username, password, email } = data;
 
-    try {
-      const userRecord = await adminApp
-      .auth()
-      .createUser({
-        displayName: username,
-        password: password,
-        email: email,
-        emailVerified: false,
-      });
+    const userRecord = await adminApp
+    .auth()
+    .createUser({
+      displayName: username,
+      password: password,
+      email: email,
+      emailVerified: false,
+    });
 
-      await adminApp.firestore()
-      .collection('users')
-      .doc(userRecord.uid)
-      .set({
-        developer: {
-          apps: {
-            current: 0,
-            limit: 5,
-          },
-          isProgramActive: false,
-          payment: {
-            isActive: false,
-            plan: 'free',
-            stripeId: '',
-          }
-        },
-        email: email,
-        lang: 'en',
-        name: username,
-        nameLowerCase: username.toLowerCase(),
-        pricing: 'free',
-        quota: {
+    await adminApp.firestore()
+    .collection('users')
+    .doc(userRecord.uid)
+    .set({
+      developer: {
+        apps: {
           current: 0,
-          date: new Date(),
-          limit: 20,
+          limit: 5,
         },
-        rights: {
-          'user:managedata'     : false,
-          'user:manageauthor'   : false,
-          'user:managequote'    : false,
-          'user:managequotidian': false,
-          'user:managereference': false,
-          'user:proposequote'   : true,
-          'user:readquote'      : true,
-          'user:validatequote'  : false,
-        },
-        settings: {
-          notifications: {
-            email: {
-              tempQuotes: true,
-              quotidians: false,
-            },
-            push: {
-              quotidians: true,
-              tempQuotes: true,
-            }
+        isProgramActive: false,
+        payment: {
+          isActive: false,
+          plan: 'free',
+          stripeId: '',
+        }
+      },
+      email: email,
+      lang: 'en',
+      name: username,
+      nameLowerCase: username.toLowerCase(),
+      pricing: 'free',
+      quota: {
+        current: 0,
+        date: new Date(),
+        limit: 20,
+      },
+      rights: {
+        'user:managedata'     : false,
+        'user:manageauthor'   : false,
+        'user:managequote'    : false,
+        'user:managequotidian': false,
+        'user:managereference': false,
+        'user:proposequote'   : true,
+        'user:readquote'      : true,
+        'user:validatequote'  : false,
+      },
+      settings: {
+        notifications: {
+          email: {
+            tempQuotes: true,
+            quotidians: false,
           },
-        },
-        stats: {
-          fav: 0,
-          lists: 0,
-          proposed: 0,
-          published: 0,
-          tempQuotes: 0,
-          notifications: {
-            total: 0,
-            unread: 0,
+          push: {
+            quotidians: true,
+            tempQuotes: true,
           }
         },
-        urls: {
-          image: '',
-          twitter: '',
-          facebook: '',
-          instagram: '',
-          twitch: '',
-          website: '',
-          wikipedia: '',
-          youtube: '',
-        },
-        uid: userRecord.uid,
-      });
+      },
+      stats: {
+        fav: 0,
+        lists: 0,
+        proposed: 0,
+        published: 0,
+        tempQuotes: 0,
+        notifications: {
+          total: 0,
+          unread: 0,
+        }
+      },
+      urls: {
+        image: '',
+        twitter: '',
+        facebook: '',
+        instagram: '',
+        twitch: '',
+        website: '',
+        wikipedia: '',
+        youtube: '',
+      },
+      uid: userRecord.uid,
+    });
 
-      return {
-        user: {
-          id: userRecord.uid, 
-          email,
-        },
-      };
-
-    } catch (error) {
-      throw new functions.https.HttpsError(
-        'internal', 
-        `There was an internal error while creating your account. Please try again or contact us if the problem persists".`,
-      );
-    }
+    return {
+      user: {
+        id: userRecord.uid, 
+        email,
+      },
+    };
   });
 
 function checkCreateAccountData(data: any) {
@@ -241,13 +237,15 @@ function checkCreateAccountData(data: any) {
 
   const keys = Object.keys(data);
 
-  if (keys.indexOf('username') < 0 
-    || keys.indexOf('email') < 0 
-    || keys.indexOf('password') < 0) {
+  if (!keys.includes('username') 
+    || !keys.includes('email') 
+    || !keys.includes('password')) {
     return false;
   }
 
-  if (!data['username'] || !data['email'] || !data['password']) {
+  if (typeof data['username'] !== 'string' || 
+    typeof data['email'] !== 'string' || 
+    typeof data['password'] !== 'string') {
     return false;
   }
 
@@ -360,50 +358,51 @@ export const updateEmail = functions
     const { idToken, newEmail } = data;
 
     if (!userAuth) {
-      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-        'an authenticated user (1).');
+      throw new functions.https.HttpsError(
+        'unauthenticated', 
+        `The function must be called from an authenticated user (1).`,
+      );
     }
 
     await checkUserIsSignedIn(context, idToken);
-
     const isFormatOk = validateEmailFormat(newEmail);
 
     if (!newEmail || !isFormatOk) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'a valid "newEmail" argument. The value you specified is not in a correct email format.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with a valid [newEmail] argument. 
+        The value you specified is not in a correct email format.`,
+      );
     }
 
     const isEmailTaken = await isUserExistsByEmail(newEmail);
 
     if (isEmailTaken) {
-      throw new functions.https.HttpsError('invalid-argument', 'The email specified ' +
-        'is not available. Try specify a new one in the "newEmail" argument.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The email specified is not available.
+         Try specify a new one in the "newEmail" argument.`,
+        );
     }
 
-    try {
-      await adminApp
-        .auth()
-        .updateUser(userAuth.uid, {
-          email: newEmail,
-          emailVerified: false,
-        });
+    await adminApp
+      .auth()
+      .updateUser(userAuth.uid, {
+        email: newEmail,
+        emailVerified: false,
+      });
 
-      await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .update({
-          email: newEmail,
-        });
+    await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .update({
+        email: newEmail,
+      });
 
-      return {
-        success: true,
-        user: { id: userAuth.uid },
-      };
-
-    } catch (error) {
-      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
-        'while creating your account. Please try again or contact us if the problem persists".');
-    }
+    return {
+      success: true,
+      user: { id: userAuth.uid },
+    };
   });
 
 /**
@@ -418,48 +417,51 @@ export const updateUsername = functions
     const userAuth = context.auth;
     
     if (!userAuth) {
-      throw new functions.https.HttpsError('unauthenticated', 'The function must be called from ' +
-      'an authenticated user.');
+      throw new functions.https.HttpsError(
+        'unauthenticated', 
+        `The function must be called from an authenticated user.`,
+      );
     }
 
     const { newUsername } = data;
     const isFormatOk = validateNameFormat(newUsername);
 
     if (!newUsername || !isFormatOk) {
-      throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'a valid "newUsername". The value you specified is not in a correct format.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with a valid [newUsername].
+         The value you specified is not in a correct format.`,
+      );
     }
 
     const isUsernameTaken = await isUserExistsByUsername(newUsername.toLowerCase());
 
     if (isUsernameTaken) {
-      throw new functions.https.HttpsError('invalid-argument', 'The name specified ' +
-        'is not available. Please try with a new one.');
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The name specified is not available.
+         Please try with a new one.`,
+      );
     }
 
-    try {
-      await adminApp
-        .auth()
-        .updateUser(userAuth.uid, {
-          displayName: newUsername,
-        });
+    await adminApp
+      .auth()
+      .updateUser(userAuth.uid, {
+        displayName: newUsername,
+      });
 
-      await firestore
-        .collection('users')
-        .doc(userAuth.uid)
-        .update({
-          name: newUsername,
-          nameLowerCase: newUsername.toLowerCase(),
-        });
+    await firestore
+      .collection('users')
+      .doc(userAuth.uid)
+      .update({
+        name: newUsername,
+        nameLowerCase: newUsername.toLowerCase(),
+      });
 
-      return {
-        success: true,
-        user: { id: userAuth.uid },
-      };
-    } catch (error) {
-      throw new functions.https.HttpsError('internal', 'There was an internal error ' +
-        'while creating your account. Please try again or contact us if the problem persists".');
-    }
+    return {
+      success: true,
+      user: { id: userAuth.uid },
+    };
   });
 
 function validateEmailFormat(email: string) {
