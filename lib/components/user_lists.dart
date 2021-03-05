@@ -105,8 +105,9 @@ class _UserListsState extends State<UserLists> {
   Widget createListButton() {
     return ListTile(
       onTap: () async {
-        final res = await showCreateListDialog(context);
-        if (res != null && res) {
+        final isListCreated = await showCreateListDialog(context);
+
+        if (isListCreated != null && isListCreated) {
           Navigator.pop(context);
         }
       },
@@ -196,9 +197,9 @@ class _UserListsState extends State<UserLists> {
   void createListAndAddQuote(BuildContext context) async {
     FlashHelper.showProgress(
       context,
-      title: "Delete",
+      title: "Create",
       progressId: 'create_list',
-      message: "Deleting the list $newListName...",
+      message: "Creating list $newListName...",
       icon: Icon(UniconsLine.plus),
       duration: 60.seconds,
     );
