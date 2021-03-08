@@ -663,7 +663,7 @@ class _AddQuoteStepsState extends State<AddQuoteSteps> {
       return;
     }
 
-    rootRouter.navigate(route);
+    rootRouter.pop();
   }
 
   void next() {
