@@ -489,7 +489,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         color: Color(0xff5cc9f5),
         onTap: (CompletionHandler handler) {
           handler(false);
-          showBottomSheetList();
+          showAddToList();
         },
       ),
     );
@@ -567,7 +567,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             context.router.pop();
 
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              showBottomSheetList();
+              showAddToList();
             });
           },
         ),
@@ -688,7 +688,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
         break;
       case 'addtolist':
-        showBottomSheetList();
+        showAddToList();
         break;
       case 'removefromfavourites':
         if (widget.onBeforeRemoveFromFavourites != null) {
@@ -794,7 +794,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     }
   }
 
-  void showBottomSheetList() {
+  void showAddToList() {
     if (!stateUser.isUserConnected) {
       Snack.e(
         context: context,

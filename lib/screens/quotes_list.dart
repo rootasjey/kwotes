@@ -293,46 +293,6 @@ class _QuotesListState extends State<QuotesList> {
     );
   }
 
-  Widget popupMenuButton() {
-    return PopupMenuButton(
-      onSelected: (value) {
-        switch (value) {
-          case 'delete':
-            showDeleteListDialog(
-              context: context,
-              listName: quotesList.name,
-              onCancel: context.router.pop,
-              onConfirm: () {
-                context.router.pop();
-                deleteCurrentList();
-              },
-            );
-            break;
-          case 'edit':
-            _showEditListDialog();
-            break;
-          default:
-        }
-      },
-      itemBuilder: (context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem(
-          value: 'delete',
-          child: ListTile(
-            leading: Icon(Icons.delete_outline),
-            title: Text('Delete'),
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'edit',
-          child: ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Edit'),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget listView() {
     final horPadding = MediaQuery.of(context).size.width < 700.00 ? 0.0 : 70.0;
 
