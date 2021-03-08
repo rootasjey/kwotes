@@ -241,7 +241,7 @@ class TempQuotesActions {
             dateAsInt: true,
           ),
           'comments': comments,
-          'createdAt': DateTime.now(),
+          'createdAt': DateTime.now().millisecondsSinceEpoch,
           'id': DataQuoteInputs.quote.id,
           'lang': DataQuoteInputs.quote.lang,
           'name': DataQuoteInputs.quote.name,
@@ -253,14 +253,14 @@ class TempQuotesActions {
           'user': {
             'id': userAuth.uid,
           },
-          'updatedAt': DateTime.now(),
+          'updatedAt': DateTime.now().millisecondsSinceEpoch,
           'validation': {
             'comment': {
               'name': '',
-              'updatedAt': DateTime.now(),
+              'updatedAt': DateTime.now().millisecondsSinceEpoch,
             },
             'status': 'proposed',
-            'updatedAt': DateTime.now(),
+            'updatedAt': DateTime.now().millisecondsSinceEpoch,
           }
         },
       });
