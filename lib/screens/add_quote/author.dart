@@ -1360,7 +1360,8 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   void onNameChanged(String newValue, childSetState) {
-    if (DataQuoteInputs.author.id.isNotEmpty &&
+    if (widget.editMode != EditDataMode.editAuthor &&
+        DataQuoteInputs.author.id.isNotEmpty &&
         DataQuoteInputs.author.name != newValue) {
       prefilledInputs = false;
       DataQuoteInputs.clearAuthor();
