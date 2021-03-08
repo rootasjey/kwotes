@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/actions/references.dart';
 import 'package:figstyle/actions/share.dart';
+import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/reference_avatar.dart';
 import 'package:figstyle/components/square_action.dart';
@@ -773,20 +774,24 @@ class ReferencePageState extends State<ReferencePage> {
           icon: Icon(UniconsLine.edit),
           borderColor: Colors.amber,
           tooltip: "Edit author",
-          onTap: () => context.router.root.push(
-            DashboardPageRoute(children: [
-              AdminDeepRoute(children: [
-                AdminEditDeepRoute(
-                  children: [
-                    EditReferenceRoute(
-                      referenceId: reference.id,
-                      reference: reference,
-                    ),
-                  ],
-                )
-              ])
-            ]),
-          ),
+          onTap: () {
+            DataQuoteInputs.isEditingPubQuote = false;
+
+            context.router.root.push(
+              DashboardPageRoute(children: [
+                AdminDeepRoute(children: [
+                  AdminEditDeepRoute(
+                    children: [
+                      EditReferenceRoute(
+                        referenceId: reference.id,
+                        reference: reference,
+                      ),
+                    ],
+                  )
+                ])
+              ]),
+            );
+          },
         ),
       ]);
     }
