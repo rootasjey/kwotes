@@ -391,6 +391,13 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
             title: Text('Add to...'),
           ),
         ),
+        PopupMenuItem(
+          value: 'remove_from_list',
+          child: ListTile(
+            leading: Icon(UniconsLine.minus),
+            title: Text('Remove'),
+          ),
+        ),
       ]);
     }
 
@@ -582,6 +589,26 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           },
         ),
       ]);
+    }
+
+    if (widget.quotePageType == QuotePageType.list) {
+      children.add(
+        ListTile(
+          title: Text('Remove'),
+          trailing: Icon(
+            UniconsLine.minus,
+          ),
+          onTap: () {
+            context.router.pop();
+
+            if (widget.onRemoveFromList != null) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                widget.onRemoveFromList();
+              });
+            }
+          },
+        ),
+      );
     }
 
     if (widget.canManage) {
