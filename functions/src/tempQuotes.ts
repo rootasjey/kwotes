@@ -75,44 +75,36 @@ export const create = functions
     const lang = sanitizeLang(tempQuote.lang);
     const comments = sanitizeComments(tempQuote.comments);
 
-    try {
-      const tempQuoteDoc = await firestore
-        .collection('tempquotes')
-        .add({
-          author,
-          comments,
-          createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
-          lang,
-          name,
-          reference,
-          topics,
-          user: {
-            id: userAuth.uid,
-          },
-          updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
-          validation: {
-            comment: {
-              name: '',
-              updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
-            },
-            status: '',
+    const tempQuoteDoc = await firestore
+      .collection('tempquotes')
+      .add({
+        author,
+        comments,
+        createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+        lang,
+        name,
+        reference,
+        topics,
+        user: {
+          id: userAuth.uid,
+        },
+        updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
+        validation: {
+          comment: {
+            name: '',
             updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
           },
-        });
-
-      return {
-        success: true,
-        tempQuote: {
-          id: tempQuoteDoc.id,
+          status: '',
+          updatedAt: adminApp.firestore.FieldValue.serverTimestamp(),
         },
-      };
+      });
 
-    } catch (error) {
-      throw new functions.https.HttpsError(
-        'internal',
-        `Sorry, there was an error while proposing your quote. ${error}`,
-      );
-    }
+    return {
+      success: true,
+      tempQuote: {
+        id: tempQuoteDoc.id,
+      },
+    };
   });
 
 /**
@@ -469,7 +461,7 @@ async function createOrGetReference(data: any) {
 
   const { reference } = data;
 
-  if (!reference) {
+  if (!reference || (!reference.name && !reference.id)) {
     return payload;
   }
 
