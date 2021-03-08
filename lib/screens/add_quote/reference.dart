@@ -1075,7 +1075,8 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   void onNameChanged(String newValue, childSetState) {
-    if (DataQuoteInputs.reference.id.isNotEmpty &&
+    if (widget.editMode != EditDataMode.editReference &&
+        DataQuoteInputs.reference.id.isNotEmpty &&
         DataQuoteInputs.reference.name != newValue) {
       prefilledInputs = false;
       DataQuoteInputs.clearReference();
