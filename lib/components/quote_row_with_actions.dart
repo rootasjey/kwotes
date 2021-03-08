@@ -344,14 +344,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     if (widget.quotePageType == QuotePageType.published && widget.isConnected) {
       popupItems.addAll([
         PopupMenuItem(
-          value: 'addtofavourites',
+          value: 'add_to_favourites',
           child: ListTile(
             leading: Icon(UniconsLine.heart),
             title: Text('Like'),
           ),
         ),
         PopupMenuItem(
-          value: 'addtolist',
+          value: 'add_to_list',
           child: ListTile(
             leading: Icon(UniconsLine.book_medical),
             title: Text('Add to...'),
@@ -361,14 +361,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     } else if (widget.quotePageType == QuotePageType.favourites) {
       popupItems.addAll([
         PopupMenuItem(
-          value: 'removefromfavourites',
+          value: 'remove_from_favourites',
           child: ListTile(
             leading: Icon(UniconsLine.heart_break),
             title: Text('Remove from favourites'),
           ),
         ),
         PopupMenuItem(
-          value: 'addtolist',
+          value: 'add_to_list',
           child: ListTile(
             leading: Icon(UniconsLine.book_medical),
             title: Text('Add to...'),
@@ -378,14 +378,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     } else if (widget.quotePageType == QuotePageType.list) {
       popupItems.addAll([
         PopupMenuItem(
-          value: 'addtofavourites',
+          value: 'add_to_favourites',
           child: ListTile(
             leading: Icon(UniconsLine.heart),
             title: Text('Add to favourites'),
           ),
         ),
         PopupMenuItem(
-          value: 'addtolist',
+          value: 'add_to_list',
           child: ListTile(
             leading: Icon(UniconsLine.book_medical),
             title: Text('Add to...'),
@@ -672,7 +672,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     final quote = widget.quote;
 
     switch (value) {
-      case 'addtofavourites':
+      case 'add_to_favourites':
         if (widget.onBeforeAddToFavourites != null) {
           widget.onBeforeAddToFavourites();
         }
@@ -687,10 +687,10 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         }
 
         break;
-      case 'addtolist':
+      case 'add_to_list':
         showAddToList();
         break;
-      case 'removefromfavourites':
+      case 'remove_from_favourites':
         if (widget.onBeforeRemoveFromFavourites != null) {
           widget.onBeforeRemoveFromFavourites();
         }
@@ -705,7 +705,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
         }
 
         break;
-      case 'removefromlist':
+      case 'remove_from_list':
         widget.onRemoveFromList(quote);
         break;
       case 'share':
