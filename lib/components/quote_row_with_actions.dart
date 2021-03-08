@@ -57,11 +57,9 @@ class QuoteRowWithActions extends StatefulWidget {
   final Function onAfterAddToFavourites;
   final Function(bool) onAfterDeletePubQuote;
   final Function onAfterRemoveFromFavourites;
-  final Function onAfterRemoveFromList;
   final Function onBeforeAddToFavourites;
   final Function onBeforeDeletePubQuote;
   final Function onBeforeRemoveFromFavourites;
-  final Function onBeforeRemoveFromList;
   final Function onRemoveFromList;
 
   final EdgeInsets padding;
@@ -109,11 +107,9 @@ class QuoteRowWithActions extends StatefulWidget {
     this.onAfterAddToFavourites,
     this.onAfterDeletePubQuote,
     this.onAfterRemoveFromFavourites,
-    this.onAfterRemoveFromList,
     this.onBeforeAddToFavourites,
     this.onBeforeDeletePubQuote,
     this.onBeforeRemoveFromFavourites,
-    this.onBeforeRemoveFromList,
     this.onRemoveFromList,
     this.overflow = TextOverflow.ellipsis,
     this.padding = const EdgeInsets.symmetric(
