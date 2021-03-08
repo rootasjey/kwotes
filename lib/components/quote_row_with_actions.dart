@@ -400,14 +400,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     if (widget.canManage) {
       popupItems.addAll([
         PopupMenuItem(
-          value: 'addquotidian',
+          value: 'add_quotidian',
           child: ListTile(
             leading: Icon(UniconsLine.sunset),
             title: Text('Add to quotidians'),
           ),
         ),
         PopupMenuItem(
-          value: 'deletequote',
+          value: 'delete_quote',
           child: ListTile(
             leading: Icon(UniconsLine.trash),
             title: Text('Delete'),
@@ -737,14 +737,14 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
           quote: quote,
         );
         break;
-      case 'addquotidian':
+      case 'add_quotidian':
         QuotidiansActions.add(
           quote: quote,
           lang: quote.lang,
         );
 
         break;
-      case 'deletequote':
+      case 'delete_quote':
         confirmAndDeletePubQuote();
         break;
       default:
