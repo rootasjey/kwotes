@@ -2,6 +2,7 @@ class Urls {
   String amazon;
   String facebook;
   String image;
+  String imdb;
   String instagram;
   String netflix;
   String primeVideo;
@@ -15,6 +16,7 @@ class Urls {
     this.amazon = '',
     this.facebook = '',
     this.image = '',
+    this.imdb = '',
     this.instagram = '',
     this.netflix = '',
     this.primeVideo = '',
@@ -28,8 +30,9 @@ class Urls {
   bool areLinksEmpty() {
     return amazon.isEmpty &&
         facebook.isEmpty &&
-        netflix.isEmpty &&
+        imdb.isEmpty &&
         instagram.isEmpty &&
+        netflix.isEmpty &&
         primeVideo.isEmpty &&
         twitch.isEmpty &&
         twitter.isEmpty &&
@@ -38,19 +41,20 @@ class Urls {
         youtube.isEmpty;
   }
 
-  factory Urls.fromJSON(Map<String, dynamic> json) {
+  factory Urls.fromJSON(Map<String, dynamic> data) {
     return Urls(
-      amazon: json['amazon'] ?? '',
-      facebook: json['facebook'] ?? '',
-      image: json['image'] ?? '',
-      instagram: json['instagram'] ?? '',
-      netflix: json['netflix'] ?? '',
-      primeVideo: json['primeVideo'] ?? '',
-      twitch: json['twitch'] ?? '',
-      twitter: json['twitter'] ?? '',
-      website: json['website'] ?? '',
-      wikipedia: json['wikipedia'] ?? '',
-      youtube: json['youtube'] ?? '',
+      amazon: data['amazon'] ?? '',
+      facebook: data['facebook'] ?? '',
+      image: data['image'] ?? '',
+      imdb: data['imdb'] ?? '',
+      instagram: data['instagram'] ?? '',
+      netflix: data['netflix'] ?? '',
+      primeVideo: data['primeVideo'] ?? '',
+      twitch: data['twitch'] ?? '',
+      twitter: data['twitter'] ?? '',
+      website: data['website'] ?? '',
+      wikipedia: data['wikipedia'] ?? '',
+      youtube: data['youtube'] ?? '',
     );
   }
 
@@ -60,6 +64,7 @@ class Urls {
     data['amazon'] = amazon;
     data['facebook'] = facebook;
     data['image'] = image;
+    data['imdb'] = imdb;
     data['instagram'] = instagram;
     data['netflix'] = netflix;
     data['primeVideo'] = primeVideo;

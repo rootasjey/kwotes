@@ -463,6 +463,23 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
           ),
           linkSquareButton(
             delay: 500,
+            name: 'IMDB',
+            icon: Icon(UniconsLine.film),
+            active: DataQuoteInputs.reference.urls.imdb.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'IMDB',
+                initialValue: DataQuoteInputs.reference.urls.imdb,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.reference.urls.imdb = inputUrl;
+                  });
+                },
+              );
+            },
+          ),
+          linkSquareButton(
+            delay: 600,
             name: 'Instagram',
             icon: Icon(UniconsLine.instagram),
             active: DataQuoteInputs.reference.urls.instagram.isNotEmpty,
@@ -479,7 +496,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 600,
+            delay: 700,
             name: 'Netflix',
             imageUrl: 'assets/images/netflix.png',
             active: DataQuoteInputs.reference.urls.netflix.isNotEmpty,
@@ -496,7 +513,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 700,
+            delay: 800,
             name: 'Prime Video',
             icon: Icon(UniconsLine.video),
             active: DataQuoteInputs.reference.urls.primeVideo.isNotEmpty,
@@ -513,7 +530,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 700,
+            delay: 900,
             name: 'Twitch',
             icon: FaIcon(FontAwesomeIcons.twitch),
             active: DataQuoteInputs.reference.urls.twitch.isNotEmpty,
@@ -530,7 +547,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 800,
+            delay: 1000,
             name: 'Twitter',
             icon: Icon(UniconsLine.twitter),
             active: DataQuoteInputs.reference.urls.twitter.isNotEmpty,
@@ -547,7 +564,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
             },
           ),
           linkSquareButton(
-            delay: 900,
+            delay: 1100,
             name: 'YouTube',
             icon: Icon(UniconsLine.youtube),
             active: DataQuoteInputs.reference.urls.youtube.isNotEmpty,

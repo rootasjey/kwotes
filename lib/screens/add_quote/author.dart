@@ -849,6 +849,25 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ),
           linkCircleButton(
             delay: 500,
+            name: 'IMDB',
+            icon: Icon(
+              UniconsLine.film,
+            ),
+            active: DataQuoteInputs.author.urls.imdb.isNotEmpty,
+            onTap: () {
+              showLinkInputSheet(
+                labelText: 'IMDB',
+                initialValue: DataQuoteInputs.author.urls.imdb,
+                onSave: (String inputUrl) {
+                  setState(() {
+                    DataQuoteInputs.author.urls.imdb = inputUrl;
+                  });
+                },
+              );
+            },
+          ),
+          linkCircleButton(
+            delay: 600,
             name: 'Instagram',
             icon: Icon(
               UniconsLine.instagram,
@@ -867,7 +886,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 600,
+            delay: 700,
             name: 'Netflix',
             icon: Image.asset(
               'assets/images/netflix.png',
@@ -889,7 +908,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 700,
+            delay: 800,
             name: 'Prime Video',
             icon: Icon(
               UniconsLine.video,
@@ -908,7 +927,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 800,
+            delay: 900,
             name: 'Twitch',
             icon: FaIcon(
               FontAwesomeIcons.twitch,
@@ -927,7 +946,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 900,
+            delay: 1000,
             name: 'Twitter',
             icon: Icon(
               UniconsLine.twitter,
@@ -946,7 +965,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
             },
           ),
           linkCircleButton(
-            delay: 1000,
+            delay: 1100,
             name: 'YouTube',
             icon: Icon(
               UniconsLine.youtube,
