@@ -1,14 +1,17 @@
 import 'package:figstyle/types/from_reference.dart';
+import 'package:figstyle/types/image_property.dart';
 import 'package:figstyle/types/point_in_time.dart';
 import 'package:figstyle/types/urls.dart';
 
 class Author {
   /// Useful if the author is fictional.
   final FromReference fromReference;
-  final String id;
 
   final PointInTime born;
   final PointInTime death;
+
+  final String id;
+  final ImageProperty image;
 
   /// True if the author is fictional.
   bool isFictional;
@@ -24,6 +27,7 @@ class Author {
     this.death,
     this.fromReference,
     this.id = '',
+    this.image,
     this.isFictional = false,
     this.job = '',
     this.name = '',
@@ -37,6 +41,7 @@ class Author {
       death: PointInTime(),
       fromReference: FromReference(),
       id: '',
+      image: ImageProperty.empty(),
       isFictional: false,
       job: '',
       name: '',
@@ -54,6 +59,7 @@ class Author {
       death: PointInTime(),
       fromReference: FromReference(),
       id: id,
+      image: ImageProperty.empty(),
       isFictional: false,
       job: '',
       name: name,
@@ -77,11 +83,14 @@ class Author {
         ? FromReference.fromJSON(data['fromReference'])
         : FromReference();
 
+    final image = ImageProperty.fromJSON(data['image']);
+
     return Author(
       born: born,
       death: death,
       fromReference: fromReference,
       id: data['id'] ?? '',
+      image: image,
       isFictional: data['isFictional'] ?? false,
       job: data['job'],
       name: data['name'],
@@ -104,6 +113,7 @@ class Author {
     data['death'] = death.toJSON(dateAsInt: dateAsInt);
     data['fromReference'] = fromReference.toJSON();
     data['isFictional'] = isFictional;
+    data['image'] = image.toJSON();
     data['job'] = job;
     data['name'] = name;
     data['summary'] = summary;

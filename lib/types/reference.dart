@@ -1,3 +1,4 @@
+import 'package:figstyle/types/image_property.dart';
 import 'package:figstyle/types/reference_type.dart';
 import 'package:figstyle/types/release.dart';
 import 'package:figstyle/types/urls.dart';
@@ -7,6 +8,7 @@ class Reference {
   Release release;
 
   final String id;
+  final ImageProperty image;
   String lang;
   String name;
   String summary;
@@ -17,6 +19,7 @@ class Reference {
 
   Reference({
     this.id = '',
+    this.image,
     this.lang = 'en',
     this.name = '',
     this.release,
@@ -28,6 +31,7 @@ class Reference {
   factory Reference.empty() {
     return Reference(
       id: '',
+      image: ImageProperty.empty(),
       lang: 'en',
       name: '',
       release: Release(),
@@ -43,6 +47,7 @@ class Reference {
   }) {
     return Reference(
       id: id,
+      image: ImageProperty.empty(),
       lang: 'en',
       name: name,
       release: Release(),
@@ -77,8 +82,11 @@ class Reference {
       _release = Release();
     }
 
+    final image = ImageProperty.fromJSON(data['image']);
+
     return Reference(
       id: data['id'] ?? '',
+      image: image,
       lang: data['lang'],
       name: data['name'] ?? '',
       release: _release,
@@ -95,6 +103,7 @@ class Reference {
       data['id'] = id;
     }
 
+    data['image'] = image.toJSON();
     data['lang'] = lang;
     data['name'] = name;
     data['release'] = release.toJSON(dateAsInt: dateAsInt);
