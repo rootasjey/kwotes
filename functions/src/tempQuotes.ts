@@ -405,7 +405,7 @@ async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
     return author;
   }
 
-  const newAuthorDoc = await firestore
+  const addedAuthorSnap = await firestore
     .collection('authors')
     .add({
       ...author,
@@ -421,7 +421,7 @@ async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
   return {
     ...author,
     ...{
-      id: newAuthorDoc.id,
+      id: addedAuthorSnap.id,
     }
   }
 }
@@ -432,92 +432,28 @@ async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
  * @param data - Firestore's reference data.
  */
 async function createOrGetReference(data: any) {
-  const payload: IReference = {
-    id: '',
-    image: {
-    credits: {
-        company: '',
-        location: '',
-        name: '',
-        photographer: '',
-        url: '',
-      },
-    },
-    lang: 'en',
-    name: '',
-    release: {
-      beforeJC: false,
-    },
-    summary: '',
-    type: {
-      primary: '',
-      secondary: '',
-    },
-    urls: {
-      amazon: '',
-      facebook: '',
-      image: '',
-      imdb: '',
-      instagram: '',
-      netflix: '',
-      primeVideo: '',
-      twitch: '',
-      twitter: '',
-      website: '',
-      wikipedia: '',
-      youtube: '',
-    },
-  };
-
   const reference: IReference = data.reference;
 
   if (!reference || (!reference.name && !reference.id)) {
-    return payload;
+    return genEmptyReference();
   }
 
   if (reference.id) {
-    return { ...payload, ...{
-      id: reference.id,
-      name: reference.name,
-    }};
+    return reference;
   }
 
-  const newReferenceDoc = await firestore
+  const addedReferenceSnap = await firestore
     .collection('references')
-    .add({ ...payload, ...{
-      createdAt: adminApp.firestore.Timestamp.now(),
-      image: reference.image,
-      lang: reference.lang ?? 'en',
-      name: reference.name,
-      release: {
-        original: reference.release.original,
-        beforeJC: reference.release.beforeJC,
+    .add({
+      ...reference, 
+      ...{
+        createdAt: adminApp.firestore.Timestamp.now(),
+        updatedAt: adminApp.firestore.Timestamp.now(),
       },
-      summary: reference.summary,
-      type: {
-        primary: reference.type.primary,
-        secondary: reference.type.secondary,
-      },
-      updatedAt: adminApp.firestore.Timestamp.now(),
-      urls: {
-        amazon    : reference.urls.amazon,
-        facebook  : reference.urls.facebook,
-        image     : reference.urls.image,
-        imdb      : reference.urls.imdb,
-        instagram : reference.urls.instagram,
-        netflix   : reference.urls.netflix,
-        primeVideo: reference.urls.primeVideo,
-        twitch    : reference.urls.twitch,
-        twitter   : reference.urls.twitter,
-        website   : reference.urls.website,
-        wikipedia : reference.urls.wikipedia,
-        youtube   : reference.urls.youtube,
-      },
-    }});
+    });
 
-  payload.id = newReferenceDoc.id;
-  payload.name = reference.name;
-  return payload;
+  reference.id = addedReferenceSnap.id;
+  return reference;
 }
 
 /**
@@ -743,6 +679,10 @@ function genEmptyPointInTime():IPointInTime {
 
 function sanitizeLang(lang: string) {
   const available = ['en', 'fr'];
+
+  if (typeof lang !== 'string') {
+    return 'en'; 
+  }
 
   if (available.includes(lang)) {
     return lang;
