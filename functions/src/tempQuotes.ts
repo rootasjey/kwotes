@@ -181,10 +181,10 @@ export const update = functions
       );
     }
 
-    const author = sanitizeAuthor(tempQuote.author);
+    const author    = sanitizeAuthor(tempQuote.author);
     const reference = sanitizeReference(tempQuote.reference);
-    const lang = sanitizeLang(tempQuote.lang);
-    const comments = sanitizeComments(tempQuote.comments);
+    const lang      = sanitizeLang(tempQuote.lang);
+    const comments  = sanitizeComments(tempQuote.comments);
 
     try {
       await firestore
@@ -378,9 +378,9 @@ async function createComments(
  * @param refDoc - Firestore TempQuote document.
  */
 async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
-  const author = tempQuoteData.author;
+  const author: IAuthor = tempQuoteData.author;
 
-  if (author.name.length === 0 && author.id.length === 0) {
+  if (!author.name && !author.id) {
     const anonymousAuthorDoc = await firestore
       .collection('authors')
       .doc('TySUhQPqndIkiVHWVYq1')
@@ -401,7 +401,7 @@ async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
     }};
   }
 
-  if (author.id.length > 0) {
+  if (author.id) {
     return author;
   }
 
@@ -432,8 +432,17 @@ async function createOrGetAuthor(tempQuoteData: any, refDoc: any) {
  * @param data - Firestore's reference data.
  */
 async function createOrGetReference(data: any) {
-  const payload = {
+  const payload: IReference = {
     id: '',
+    image: {
+    credits: {
+        company: '',
+        location: '',
+        name: '',
+        photographer: '',
+        url: '',
+      },
+    },
     lang: 'en',
     name: '',
     release: {
@@ -448,6 +457,7 @@ async function createOrGetReference(data: any) {
       amazon: '',
       facebook: '',
       image: '',
+      imdb: '',
       instagram: '',
       netflix: '',
       primeVideo: '',
@@ -459,13 +469,13 @@ async function createOrGetReference(data: any) {
     },
   };
 
-  const { reference } = data;
+  const reference: IReference = data.reference;
 
   if (!reference || (!reference.name && !reference.id)) {
     return payload;
   }
 
-  if (reference.id.length > 0) {
+  if (reference.id) {
     return { ...payload, ...{
       id: reference.id,
       name: reference.name,
@@ -476,6 +486,7 @@ async function createOrGetReference(data: any) {
     .collection('references')
     .add({ ...payload, ...{
       createdAt: adminApp.firestore.Timestamp.now(),
+      image: reference.image,
       lang: reference.lang ?? 'en',
       name: reference.name,
       release: {
@@ -492,6 +503,7 @@ async function createOrGetReference(data: any) {
         amazon    : reference.urls.amazon,
         facebook  : reference.urls.facebook,
         image     : reference.urls.image,
+        imdb      : reference.urls.imdb,
         instagram : reference.urls.instagram,
         netflix   : reference.urls.netflix,
         primeVideo: reference.urls.primeVideo,
@@ -520,6 +532,7 @@ function sanitizeAuthor(author: IAuthor): IAuthor {
   const born          = sanitizePointInTime(author.born);
   const death         = sanitizePointInTime(author.death);
   const fromReference = sanitizeFromReference(author.fromReference);
+  const image         = sanitizeImageCredits(author.image);
   const urls          = sanitizeUrls(author.urls);
 
   const isFictional = typeof author.isFictional === 'boolean' ? author.isFictional  : false;
@@ -530,6 +543,7 @@ function sanitizeAuthor(author: IAuthor): IAuthor {
 
   return {
     born,
+    image,
     death,
     fromReference,
     isFictional, 
@@ -559,6 +573,46 @@ function sanitizeComments(comments: Array<string>) {
   return comments;
 }
 
+function sanitizeImageCredits(imageProp: ImageProp): ImageProp {
+  const credits = imageProp?.credits;
+
+  if (!imageProp || !credits) {
+    return {
+      credits: {
+        company: '',
+        location: '',
+        name: '',
+        photographer: '',
+        url: '',
+      },
+    };
+  }
+
+  const company       = typeof credits.company      ===  'string' ? credits.company       : '';
+  const location      = typeof credits.location     ===  'string' ? credits.location      : '';
+  const name          = typeof credits.name         ===  'string' ? credits.name          : '';
+  const photographer  = typeof credits.photographer ===  'string' ? credits.photographer  : '';
+  const url           = typeof credits.url          ===  'string' ? credits.url           : '';
+  
+  const imageCredits: ImageProp = {
+    credits: {
+      company,
+      location,
+      name,
+      photographer,
+      url,
+    }
+  };
+
+  const date = sanitizeDate(credits.date);
+
+  if (date) {
+    imageCredits.credits.date = date;
+  }
+
+  return imageCredits;
+}
+
 /**
  * Return a sanitized [urls] object (all fields are checked).
  * @param urls - Data to check.
@@ -569,6 +623,7 @@ function sanitizeUrls(urls: IUrls): IUrls {
       amazon      : '',
       facebook    : '',
       image       : '',
+      imdb        : '',
       instagram   : '',
       netflix     : '',
       primeVideo  : '',
@@ -583,6 +638,7 @@ function sanitizeUrls(urls: IUrls): IUrls {
   const amazon      = typeof urls.amazon      === 'string'  ? urls.amazon     : '';
   const facebook    = typeof urls.facebook    === 'string'  ? urls.facebook   : '';
   const image       = typeof urls.image       === 'string'  ? urls.image      : '';
+  const imdb        = typeof urls.imdb        === 'string'  ? urls.imdb      : '';
   const instagram   = typeof urls.instagram   === 'string'  ? urls.instagram  : '';
   const netflix     = typeof urls.netflix     === 'string'  ? urls.netflix    : '';
   const primeVideo  = typeof urls.primeVideo  === 'string'  ? urls.primeVideo : '';
@@ -596,6 +652,7 @@ function sanitizeUrls(urls: IUrls): IUrls {
     amazon,
     facebook,
     image,
+    imdb,
     instagram,
     netflix,
     primeVideo,
@@ -707,6 +764,7 @@ function sanitizeReference(reference: IReference): IReference {
   const name    = typeof reference.name     === 'string' ? reference.name     : '';
   const summary = typeof reference.summary  === 'string' ? reference.summary  : '';
   
+  const image   = sanitizeImageCredits(reference.image);
   const lang    = sanitizeLang(reference.lang);
   const release = sanitizeRelease(reference.release);
   const type    = sanitizeReferenceType(reference.type);
@@ -714,6 +772,7 @@ function sanitizeReference(reference: IReference): IReference {
 
   return {
     id,
+    image,
     lang,
     name,
     release,
@@ -787,6 +846,15 @@ function genEmptyAuthor(): IAuthor {
     fromReference: {
       id: '',
     },
+    image: {
+      credits: {
+        company: '',
+        location: '',
+        name: '',
+        photographer: '',
+        url: '',
+      },
+    },
     isFictional: false,
     id: '',
     job: '',
@@ -796,6 +864,7 @@ function genEmptyAuthor(): IAuthor {
       amazon: '',
       facebook: '',
       image: '',
+      imdb : '',
       instagram: '',
       netflix: '',
       primeVideo: '',
@@ -814,6 +883,15 @@ function genEmptyAuthor(): IAuthor {
 function genEmptyReference(): IReference  {
   return {
     id: '',
+    image: {
+      credits: {
+        company: '',
+        location: '',
+        name: '',
+        photographer: '',
+        url: '',
+      },
+    },
     lang: '',
     name: '',
     release: {
@@ -828,6 +906,7 @@ function genEmptyReference(): IReference  {
       amazon: '',
       facebook: '',
       image: '',
+      imdb: '',
       instagram: '',
       netflix: '',
       primeVideo: '',

@@ -69,12 +69,26 @@ interface IAuthor {
   fromReference: {
     id: string;
   };
+  image: ImageProp;
   isFictional: boolean;
   id?: string;
   job: string;
   name: string;
   summary: string;
   urls: IUrls;
+}
+
+interface ImageCredits {
+  company: string;
+  date?: FirebaseFirestore.Timestamp;
+  location: string;
+  name: string;
+  photographer: string;
+  url: string;
+}
+
+interface ImageProp {
+  credits: ImageCredits;
 }
 
 interface IFromReference {
@@ -90,6 +104,7 @@ interface IPointInTime {
 
 interface IReference {
   id?: string;
+  image: ImageProp;
   lang: string;
   name: string;
   release: IRelease;
@@ -135,6 +150,7 @@ interface IUrls {
   amazon: string;
   facebook: string;
   image: string;
+  imdb: string;
   instagram: string;
   netflix: string;
   primeVideo: string;
