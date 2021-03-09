@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/components/form_action_inputs.dart';
+import 'package:figstyle/components/image_credits_view.dart';
 import 'package:figstyle/components/input_card.dart';
 import 'package:figstyle/components/sheet_header.dart';
 import 'package:figstyle/router/app_router.gr.dart';
@@ -174,6 +175,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       child: Column(
         children: <Widget>[
           avatar(),
+          imageCreditsButton(),
           nameCardInput(),
           primaryTypeCardInput(),
           secondaryTypeCardInput(),
@@ -326,6 +328,25 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         opacity: 0.6,
         child: Text(
           'Clear all inputs',
+        ),
+      ),
+    );
+  }
+
+  Widget imageCreditsButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: FlatButton.icon(
+        onPressed: onTapImageCredits,
+        icon: Opacity(
+          opacity: 0.6,
+          child: Icon(UniconsLine.image_question),
+        ),
+        label: Opacity(
+          opacity: 0.6,
+          child: Text(
+            'Add image credits',
+          ),
         ),
       ),
     );
@@ -1089,6 +1110,56 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         ],
       ),
     );
+  }
+
+  void onTapImageCredits() async {
+    if (prefilledInputs) {
+      showPrefilledAlert();
+      return;
+    }
+
+    await showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) {
+        final credits = DataQuoteInputs.reference.image.credits;
+
+        return ImageCreditsView(
+          scrollController: ModalScrollController.of(context),
+          selectedDate: credits.date,
+          credits: credits,
+          beforeJC: credits.beforeJC,
+          onArtistChanged: (artist) {
+            DataQuoteInputs.reference.image.credits.artist = artist;
+          },
+          onBeforeJCChanged: (beforeJC) {
+            DataQuoteInputs.reference.image.credits.beforeJC = beforeJC;
+          },
+          onCompanyChanged: (company) {
+            DataQuoteInputs.reference.image.credits.company = company;
+          },
+          onDateChanged: (date) {
+            DataQuoteInputs.reference.image.credits.date = date;
+          },
+          onLocationChanged: (location) {
+            DataQuoteInputs.reference.image.credits.location = location;
+          },
+          onNameChanged: (name) {
+            DataQuoteInputs.reference.image.credits.name = name;
+          },
+          onUrlChanged: (url) {
+            DataQuoteInputs.reference.image.credits.url = url;
+          },
+          onClear: () {
+            setState(() {
+              DataQuoteInputs.clearReferenceImageCredits();
+            });
+          },
+          onSubmit: (_) => context.router.pop(),
+        );
+      },
+    );
+
+    setState(() {});
   }
 
   void onNameChanged(String newValue, childSetState) {
