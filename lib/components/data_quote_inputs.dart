@@ -1,4 +1,5 @@
 import 'package:figstyle/types/author.dart';
+import 'package:figstyle/types/image_credits.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/types/temp_quote.dart';
@@ -58,6 +59,14 @@ class DataQuoteInputs {
 
   static void clearTopics() {
     quote.topics.clear();
+  }
+
+  static void clearAuthorImageCredits() {
+    author.image.credits = ImageCredits.empty();
+  }
+
+  static void clearReferenceImageCredits() {
+    reference.image.credits = ImageCredits.empty();
   }
 
   static populateWithTempQuote(TempQuote tempQuote, {bool copy = false}) {

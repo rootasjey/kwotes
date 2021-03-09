@@ -45,6 +45,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   TextEditingController countryController;
   TextEditingController linkInputController;
   TextEditingController textController;
+  TextEditingController imageCreditArtistController;
 
   FocusNode textFocusNode;
   FocusNode cityFocusNode;
@@ -89,6 +90,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     countryController = TextEditingController();
     linkInputController = TextEditingController();
     textController = TextEditingController();
+    imageCreditArtistController = TextEditingController();
 
     textController.text = DataQuoteInputs.author.name;
     cityController.text = DataQuoteInputs.author.born.city;
@@ -102,10 +104,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   }
 
   void disposeInputs() {
-    textController.dispose();
     cityController.dispose();
     countryController.dispose();
     linkInputController.dispose();
+    textController.dispose();
+    imageCreditArtistController.dispose();
   }
 
   @override
@@ -589,12 +592,255 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
+  Widget imageCreditsButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: FlatButton.icon(
+        onPressed: prefilledInputs
+            ? showPrefilledAlert
+            : () async {
+                await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return imageCreditsInput(
+                        scrollController: ModalScrollController.of(context),
+                      );
+                    });
+
+                setState(() {});
+              },
+        icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+        label: Opacity(
+          opacity: 0.6,
+          child: Text(
+            'Add image credits',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget imageCreditsInput({ScrollController scrollController}) {
+    countryController.text = DataQuoteInputs.author.image.credits.company;
+    cityController.text = DataQuoteInputs.author.image.credits.location;
+    linkInputController.text = DataQuoteInputs.author.image.credits.url;
+    textController.text = DataQuoteInputs.author.image.credits.name;
+    imageCreditArtistController.text =
+        DataQuoteInputs.author.image.credits.artist;
+
+    return Scaffold(
+      body: ListView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SheetHeader(
+                  title: "Credits",
+                  subTitle: "Give back the image credits to its author.",
+                ),
+                StatefulBuilder(
+                  builder: (context, childSetState) {
+                    var selectedDate =
+                        DataQuoteInputs.author.image.credits.date;
+
+                    return Padding(
+                      padding: EdgeInsets.only(top: 60.0),
+                      child: Wrap(
+                        spacing: 10.0,
+                        runSpacing: 10.0,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: () async {
+                              final picked = await showDatePicker(
+                                context: context,
+                                initialEntryMode: DatePickerEntryMode.input,
+                                initialDate: selectedDate ?? DateTime.now(),
+                                firstDate: DateTime(0),
+                                lastDate: DateTime.now(),
+                              );
+
+                              childSetState(() => DataQuoteInputs
+                                  .author.image.credits.date = picked);
+                            },
+                            icon: Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Icon(UniconsLine.calender),
+                            ),
+                            label: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                selectedDate != null
+                                    ? selectedDate
+                                        .toLocal()
+                                        .toString()
+                                        .split(' ')[0]
+                                    : 'Select a new date for this photo',
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 400.0,
+                            child: CheckboxListTile(
+                              title: Text('Before J-C (Jesus Christ)'),
+                              subtitle: Text('(e.g. year -500)'),
+                              value:
+                                  DataQuoteInputs.author.image.credits.beforeJC,
+                              onChanged: (newValue) {
+                                childSetState(() {
+                                  DataQuoteInputs
+                                      .author.image.credits.beforeJC = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: textController,
+                    focusNode: textFocusNode,
+                    textCapitalization: TextCapitalization.sentences,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      icon: Icon(UniconsLine.image),
+                      labelText: "Image name",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      DataQuoteInputs.author.image.credits.name = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    controller: linkInputController,
+                    textCapitalization: TextCapitalization.sentences,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      icon: Icon(UniconsLine.link),
+                      labelText: "Original url",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      DataQuoteInputs.author.image.credits.url = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: TextField(
+                    controller: countryController,
+                    textCapitalization: TextCapitalization.sentences,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      icon: Icon(UniconsLine.building),
+                      labelText: "Company",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      DataQuoteInputs.author.image.credits.company = newValue;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 16.0,
+                    bottom: 32.0,
+                  ),
+                  child: TextField(
+                    controller: cityController,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(UniconsLine.map),
+                      labelText: "Location (e.g. Cannes festival)",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      DataQuoteInputs.author.image.credits.location = newValue;
+                    },
+                    onSubmitted: (_) => context.router.pop(),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 16.0,
+                    bottom: 32.0,
+                  ),
+                  child: TextField(
+                    controller: imageCreditArtistController,
+                    textInputAction: TextInputAction.done,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      icon: Icon(UniconsLine.user_md),
+                      labelText: "Artist",
+                    ),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    onChanged: (newValue) {
+                      DataQuoteInputs.author.image.credits.artist = newValue;
+                    },
+                    onSubmitted: (_) => context.router.pop(),
+                  ),
+                ),
+                FormActionInputs(
+                  cancelTextString: 'Clear inputs',
+                  onCancel: () {
+                    DataQuoteInputs.clearAuthorImageCredits();
+
+                    cityController.clear();
+                    countryController.clear();
+                    textController.clear();
+                    linkInputController.clear();
+                    imageCreditArtistController.clear();
+
+                    textFocusNode.requestFocus();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget normalEditView() {
     return Container(
       width: 600.0,
       child: Column(
         children: <Widget>[
           avatar(),
+          imageCreditsButton(),
           nameCardInput(),
           jobCardInput(),
           clearButton(),
