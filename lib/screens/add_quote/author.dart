@@ -609,7 +609,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
                 setState(() {});
               },
-        icon: Opacity(opacity: 0.6, child: Icon(Icons.clear)),
+        icon: Opacity(
+          opacity: 0.6,
+          child: Icon(UniconsLine.image_question),
+        ),
         label: Opacity(
           opacity: 0.6,
           child: Text(
@@ -712,7 +715,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.image),
-                      labelText: "Image name",
+                      labelText: "Name",
                     ),
                     minLines: 1,
                     maxLines: 1,
@@ -725,14 +728,14 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 30.0),
+                  padding: EdgeInsets.only(top: 16.0),
                   child: TextField(
                     controller: linkInputController,
                     textCapitalization: TextCapitalization.sentences,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       icon: Icon(UniconsLine.link),
-                      labelText: "Original url",
+                      labelText: "Source URL",
                     ),
                     minLines: 1,
                     maxLines: 1,
@@ -745,7 +748,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 30.0),
+                  padding: EdgeInsets.only(top: 16.0),
                   child: TextField(
                     controller: countryController,
                     textCapitalization: TextCapitalization.sentences,
@@ -765,10 +768,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 16.0,
-                    bottom: 32.0,
-                  ),
+                  padding: EdgeInsets.only(top: 16.0),
                   child: TextField(
                     controller: cityController,
                     textInputAction: TextInputAction.next,
@@ -785,7 +785,6 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     onChanged: (newValue) {
                       DataQuoteInputs.author.image.credits.location = newValue;
                     },
-                    onSubmitted: (_) => context.router.pop(),
                   ),
                 ),
                 Padding(
