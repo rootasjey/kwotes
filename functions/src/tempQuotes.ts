@@ -515,27 +515,30 @@ function sanitizeImageCredits(imageProp: ImageProp): ImageProp {
   if (!imageProp || !credits) {
     return {
       credits: {
+        beforeJC: false,
         company: '',
         location: '',
         name: '',
-        photographer: '',
+        artist: '',
         url: '',
       },
     };
   }
 
+  const beforeJC      = typeof credits.beforeJC     ===  'boolean'? credits.beforeJC      : false;
   const company       = typeof credits.company      ===  'string' ? credits.company       : '';
   const location      = typeof credits.location     ===  'string' ? credits.location      : '';
   const name          = typeof credits.name         ===  'string' ? credits.name          : '';
-  const photographer  = typeof credits.photographer ===  'string' ? credits.photographer  : '';
+  const artist        = typeof credits.artist       ===  'string' ? credits.artist        : '';
   const url           = typeof credits.url          ===  'string' ? credits.url           : '';
   
   const imageCredits: ImageProp = {
     credits: {
+      beforeJC,
       company,
       location,
       name,
-      photographer,
+      artist,
       url,
     }
   };
@@ -788,10 +791,11 @@ function genEmptyAuthor(): IAuthor {
     },
     image: {
       credits: {
+        beforeJC: false,
         company: '',
         location: '',
         name: '',
-        photographer: '',
+        artist: '',
         url: '',
       },
     },
@@ -825,10 +829,11 @@ function genEmptyReference(): IReference  {
     id: '',
     image: {
       credits: {
+        beforeJC: false,
         company: '',
         location: '',
         name: '',
-        photographer: '',
+        artist: '',
         url: '',
       },
     },

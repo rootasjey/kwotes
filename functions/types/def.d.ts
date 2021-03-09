@@ -79,11 +79,12 @@ interface IAuthor {
 }
 
 interface ImageCredits {
+  beforeJC: boolean;
   company: string;
   date?: FirebaseFirestore.Timestamp;
   location: string;
   name: string;
-  photographer: string;
+  artist: string;
   url: string;
 }
 
