@@ -25,6 +25,18 @@ class _ChangelogState extends State<Changelog> {
     changelogItemsList.addAll([
       itemChangelogTemplate(
         textTitle: Constants.appVersion,
+        date: DateTime(2021, 03, 11),
+        children: [
+          descriptionRow(
+              "• Add image credits input for author & reference images"),
+          descriptionRow("• Add IMDB field for author & reference"),
+          descriptionRow("• Fix an issue preventing to go back"
+              " from 'add quote' page with keys shortcuts"),
+          descriptionRow("• Other fixes & improvements"),
+        ],
+      ),
+      itemChangelogTemplate(
+        textTitle: "2.68.7",
         date: DateTime(2021, 02, 26),
         children: [
           descriptionRow("• Fix multiple date conversion issues"),
@@ -78,19 +90,6 @@ class _ChangelogState extends State<Changelog> {
           descriptionRow("• Update some texts and fix typos"),
           descriptionRow(
               "• Increase maximum quotes proposals per day (from 1 to 30)"),
-        ],
-      ),
-      itemChangelogTemplate(
-        textTitle: "2.20.0",
-        date: DateTime(2021, 01, 24),
-        children: [
-          descriptionRow("• Add routing system (for better navigation)"),
-          descriptionRow("• Update icons"),
-          descriptionRow("• Use better authentication management"
-              " (-> real time updates)"),
-          descriptionRow("• Re-design quote page (web)"),
-          descriptionRow("• Update user dashboard layout (web)"),
-          descriptionRow("• Update footer component and about page (web)"),
         ],
       ),
     ]);
