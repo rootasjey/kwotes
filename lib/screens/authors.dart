@@ -277,7 +277,7 @@ class _AuthorsState extends State<Authors> {
 
   Widget searchActions() {
     return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
-      RaisedButton.icon(
+      ElevatedButton.icon(
         onPressed: () {
           searchInputValue = '';
           lastSearchValue = '';

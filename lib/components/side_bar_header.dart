@@ -134,15 +134,17 @@ class _SideBarHeaderState extends State<SideBarHeader> {
   Widget guestView() {
     return Row(
       children: <Widget>[
-        RaisedButton(
+        ElevatedButton(
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => Signin()));
           },
-          color: Colors.black12,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(7.0),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.black12,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(7.0),
+              ),
             ),
           ),
           child: Container(

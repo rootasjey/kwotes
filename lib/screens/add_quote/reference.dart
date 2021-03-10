@@ -306,7 +306,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   }
 
   Widget clearButton() {
-    return FlatButton.icon(
+    return TextButton.icon(
       onPressed: () {
         DataQuoteInputs.clearReference();
         textController.clear();
@@ -336,7 +336,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget imageCreditsButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: FlatButton.icon(
+      child: TextButton.icon(
         onPressed: onTapImageCredits,
         icon: Opacity(
           opacity: 0.6,

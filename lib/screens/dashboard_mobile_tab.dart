@@ -518,17 +518,22 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   Widget signinButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
-      child: FlatButton(
+      child: TextButton(
         onPressed: () {
           context.router.push(SigninRoute());
         },
-        textColor: stateColors.primary,
-        shape: RoundedRectangleBorder(
+        style: TextButton.styleFrom(
+          textStyle: TextStyle(
+            color: stateColors.primary,
+          ),
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
             side: BorderSide(
               color: stateColors.primary,
               width: 2.0,
-            )),
+            ),
+          ),
+        ),
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: 220.0,
@@ -559,17 +564,22 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
   }
 
   Widget signupButton() {
-    return FlatButton(
+    return TextButton(
       onPressed: () {
         context.router.push(SignupRoute());
       },
-      textColor: stateColors.secondary,
-      shape: RoundedRectangleBorder(
+      style: TextButton.styleFrom(
+        textStyle: TextStyle(
+          color: stateColors.secondary,
+        ),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
           side: BorderSide(
             color: Colors.orange.shade600,
             width: 2.0,
-          )),
+          ),
+        ),
+      ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: 220.0,
@@ -624,7 +634,7 @@ class _DashboardMobileTabState extends State<DashboardMobileTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FlatButton(
+          TextButton(
             onPressed: () =>
                 setState(() => isAccountAdvVisible = !isAccountAdvVisible),
             child: Opacity(

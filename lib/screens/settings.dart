@@ -400,7 +400,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget emailButton() {
-    return FlatButton(
+    return TextButton(
       onPressed: () async {
         context.router.push(
           AccountUpdateDeepRoute(
@@ -505,7 +505,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget updateUsernameButton(bool isUserConnected) {
-    return FlatButton(
+    return TextButton(
       onPressed: () {
         context.router.push(
           AccountUpdateDeepRoute(
@@ -763,7 +763,7 @@ class _SettingsState extends State<Settings> {
 
     return AlertDialog(
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },

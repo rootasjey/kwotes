@@ -44,7 +44,7 @@ class _AddQuoteTopicsState extends State<AddQuoteTopics> {
   Widget clearButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: FlatButton.icon(
+      child: TextButton.icon(
           onPressed: () {
             setState(() => DataQuoteInputs.clearTopics());
           },

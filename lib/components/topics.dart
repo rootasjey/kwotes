@@ -81,7 +81,7 @@ class _TopicsState extends State<Topics> {
   Widget allTopicsButton() {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
-      child: RaisedButton.icon(
+      child: ElevatedButton.icon(
         onPressed: () {
           final topicName = appTopicsColors.shuffle(max: 1).first.name;
 
@@ -95,12 +95,14 @@ class _TopicsState extends State<Topics> {
             ),
           );
         },
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(7.0),
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(7.0),
+            ),
           ),
+          primary: Colors.black12,
         ),
-        color: Colors.black12,
         icon: Opacity(opacity: 0.6, child: Icon(Icons.filter_none)),
         label: Opacity(
           opacity: .6,

@@ -330,7 +330,7 @@ class QuotidiansState extends State<Quotidians> {
         bottom: false,
         child: Stack(
           children: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () {
                 final renderObject =
                     headerKey.currentContext.findRenderObject();
@@ -360,7 +360,7 @@ class QuotidiansState extends State<Quotidians> {
             ),
             Positioned(
               right: 0.0,
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () {
                   deleteMonthDialog(
                     yearMonth,
@@ -507,7 +507,7 @@ class QuotidiansState extends State<Quotidians> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -525,12 +525,14 @@ class QuotidiansState extends State<Quotidians> {
                   ),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   deleteMonth(grouped);
                 },
-                color: Colors.red,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,

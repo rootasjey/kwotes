@@ -627,7 +627,7 @@ class _AuthorPageState extends State<AuthorPage> {
           ),
         ),
         if (author.urls.wikipedia?.isNotEmpty)
-          OutlineButton(
+          OutlinedButton(
             onPressed: () => launch(author.urls.wikipedia),
             child: Padding(
               padding: const EdgeInsets.all(12.0),

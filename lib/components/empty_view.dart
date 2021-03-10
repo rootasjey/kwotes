@@ -37,9 +37,7 @@ class EmptyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          if (icon != null)
-            icon,
-
+          if (icon != null) icon,
           Padding(
             padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             child: Text(
@@ -50,24 +48,22 @@ class EmptyView extends StatelessWidget {
               ),
             ),
           ),
-
           Opacity(
-            opacity: 0.6,
-            child: FlatButton(
-              onPressed: () {
-                if (onTapDescription != null) {
-                  onTapDescription();
-                }
-              },
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20.0,
+              opacity: 0.6,
+              child: TextButton(
+                onPressed: () {
+                  if (onTapDescription != null) {
+                    onTapDescription();
+                  }
+                },
+                child: Text(
+                  description,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
-              ),
-            )
-          ),
+              )),
         ],
       ),
     );

@@ -139,7 +139,7 @@ class _UserListsState extends State<UserLists> {
       child: Column(
         children: <Widget>[
           Text('There was an issue while loading your lists.'),
-          FlatButton(
+          TextButton(
             onPressed: () {
               if (onPressed != null) {
                 onPressed();
@@ -396,7 +396,7 @@ class _UserListsState extends State<UserLists> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   onPressed: () {
                     return Navigator.of(context).pop(false);
                   },
@@ -404,8 +404,10 @@ class _UserListsState extends State<UserLists> {
                     'Cancel',
                   ),
                 ),
-                RaisedButton(
-                  color: Colors.green,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                  ),
                   onPressed: () {
                     createListAndAddQuote(context);
                     return Navigator.of(context).pop(true);

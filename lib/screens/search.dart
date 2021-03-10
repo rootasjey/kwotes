@@ -298,7 +298,7 @@ class _SearchState extends State<Search> {
             ),
           ),
         ),
-        OutlineButton.icon(
+        OutlinedButton.icon(
           onPressed: () {
             switch (subject) {
               case 'quotes':

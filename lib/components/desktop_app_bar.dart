@@ -882,12 +882,14 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   }
 
   Widget signinButton() {
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: () => context.router.root.push(SigninRoute()),
-      color: stateColors.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
+      style: ElevatedButton.styleFrom(
+        primary: stateColors.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(7.0),
+          ),
         ),
       ),
       child: Container(
@@ -911,7 +913,7 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
   Widget signupButton() {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: FlatButton(
+      child: TextButton(
         onPressed: () => context.router.root.push(SignupRoute()),
         child: Padding(
           padding: const EdgeInsets.symmetric(

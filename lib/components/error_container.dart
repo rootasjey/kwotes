@@ -19,7 +19,6 @@ class ErrorContainer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Icon(Icons.sentiment_neutral, size: iconSize),
-
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 60.0),
             child: Opacity(
@@ -32,12 +31,13 @@ class ErrorContainer extends StatelessWidget {
               ),
             ),
           ),
-
-          FlatButton(
+          TextButton(
             onPressed: onRefresh,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: stateColors.primary),
-              borderRadius: BorderRadius.circular(2.0),
+            style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: stateColors.primary),
+                borderRadius: BorderRadius.circular(2.0),
+              ),
             ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -50,7 +50,7 @@ class ErrorContainer extends StatelessWidget {
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }

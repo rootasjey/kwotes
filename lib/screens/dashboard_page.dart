@@ -149,17 +149,19 @@ class _DashboardPageState extends State<DashboardPage> {
           Positioned(
             left: 40.0,
             bottom: 20.0,
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {
                 DataQuoteInputs.clearAll();
                 router.navigate(AddQuoteStepsRoute());
               },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(30.0),
+              style: ElevatedButton.styleFrom(
+                primary: stateColors.accent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(30.0),
+                  ),
                 ),
               ),
-              color: stateColors.accent,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 12.0,

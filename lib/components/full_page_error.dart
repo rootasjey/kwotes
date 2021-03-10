@@ -33,7 +33,7 @@ class FullPageError extends StatelessWidget {
               ),
             ),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },

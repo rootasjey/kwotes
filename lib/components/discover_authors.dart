@@ -70,15 +70,20 @@ class _DiscoverAuthorsState extends State<DiscoverAuthors> {
   }
 
   Widget allAuthorsButton() {
-    return RaisedButton.icon(
-      onPressed: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => Authors())),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7.0),
+    return ElevatedButton.icon(
+      onPressed: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => Authors(),
         ),
       ),
-      color: Colors.black12,
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(7.0),
+          ),
+        ),
+        primary: Colors.black12,
+      ),
       icon: Opacity(opacity: 0.6, child: Icon(Icons.list)),
       label: Opacity(
         opacity: .6,

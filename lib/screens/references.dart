@@ -231,7 +231,7 @@ class _ReferencesState extends State<References> {
 
   Widget searchActions() {
     return Wrap(spacing: 20.0, runSpacing: 20.0, children: [
-      RaisedButton.icon(
+      ElevatedButton.icon(
         onPressed: () {
           searchInputValue = '';
           lastSearchValue = '';

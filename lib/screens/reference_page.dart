@@ -474,7 +474,7 @@ class ReferencePageState extends State<ReferencePage> {
   Widget name() {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
-      child: FlatButton(
+      child: TextButton(
         onPressed: () {
           setState(() {
             nameEllipsis = nameEllipsis == TextOverflow.ellipsis
@@ -634,7 +634,7 @@ class ReferencePageState extends State<ReferencePage> {
           ),
         ),
         if (reference.urls.wikipedia?.isNotEmpty)
-          OutlineButton(
+          OutlinedButton(
             onPressed: () => launch(reference.urls.wikipedia),
             child: Padding(
               padding: const EdgeInsets.all(12.0),

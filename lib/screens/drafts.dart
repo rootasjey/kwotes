@@ -494,16 +494,18 @@ class _DraftsState extends State<Drafts> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(3.0),
+                    style: ElevatedButton.styleFrom(
+                      primary: stateColors.softBackground,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(3.0),
+                        ),
                       ),
                     ),
-                    color: stateColors.softBackground,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 30.0,
@@ -518,15 +520,17 @@ class _DraftsState extends State<Drafts> {
                     ),
                   ),
                   Padding(padding: const EdgeInsets.only(left: 15.0)),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       deleteAction(draft: draft, index: index);
                     },
-                    color: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(3.0),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(3.0),
+                        ),
                       ),
                     ),
                     child: Padding(

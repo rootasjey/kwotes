@@ -139,7 +139,7 @@ class _SigninState extends State<Signin> {
     return FadeInY(
       delay: 100.milliseconds,
       beginY: 50.0,
-      child: FlatButton(
+      child: TextButton(
         onPressed: () => context.router.push(ForgotPasswordRoute()),
         child: Opacity(
           opacity: 0.6,
@@ -217,7 +217,7 @@ class _SigninState extends State<Signin> {
       beginY: 50.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: FlatButton(
+        child: TextButton(
             onPressed: () {
               context.router.navigate(
                 SignupRoute(onSignupResult: widget.onSigninResult),
@@ -280,12 +280,14 @@ class _SigninState extends State<Signin> {
       beginY: 50.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 80.0),
-        child: RaisedButton(
+        child: ElevatedButton(
           onPressed: () => signInProcess(),
-          color: stateColors.accent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(7.0),
+          style: ElevatedButton.styleFrom(
+            primary: stateColors.accent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(7.0),
+              ),
             ),
           ),
           child: Container(

@@ -424,7 +424,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   Widget clearButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: FlatButton.icon(
+      child: TextButton.icon(
         onPressed: () {
           DataQuoteInputs.clearAuthor();
           textController.clear();
@@ -596,7 +596,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
   Widget imageCreditsButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: FlatButton.icon(
+      child: TextButton.icon(
         onPressed: onTapImageCredits,
         icon: Opacity(
           opacity: 0.6,

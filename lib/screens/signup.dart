@@ -445,12 +445,14 @@ class _SignupState extends State<Signup> {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 60.0),
-          child: RaisedButton(
+          child: ElevatedButton(
             onPressed: () => signUpProcess(),
-            color: stateColors.accent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(7.0),
+            style: ElevatedButton.styleFrom(
+              primary: stateColors.accent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(7.0),
+                ),
               ),
             ),
             child: Container(
@@ -489,7 +491,7 @@ class _SignupState extends State<Signup> {
       beginY: 50.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: FlatButton(
+        child: TextButton(
           onPressed: () => context.router.navigate(SigninRoute()),
           child: Opacity(
             opacity: 0.6,
