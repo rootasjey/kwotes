@@ -1423,7 +1423,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         authorsSuggestions.clear();
       });
 
-      final query = algolia.index('authors').search(newValue);
+      final query = algolia.index('authors').query(newValue);
       final snapshot = await query.getObjects();
 
       if (snapshot.empty) {
@@ -1515,8 +1515,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
         referencesSuggestions.clear();
       });
 
-      final query = algolia.index('references').search(newValue);
-
+      final query = algolia.index('references').query(newValue);
       final snapshot = await query.getObjects();
 
       if (snapshot.empty) {

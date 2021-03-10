@@ -627,7 +627,7 @@ class _AuthorsState extends State<Authors> {
     try {
       final query = algolia
           .index('authors')
-          .search(searchInputValue)
+          .query(searchInputValue)
           .setHitsPerPage(limit)
           .setPage(searchResultsPageNumber);
 
@@ -693,7 +693,7 @@ class _AuthorsState extends State<Authors> {
     try {
       final query = algolia
           .index('authors')
-          .search(searchInputValue)
+          .query(searchInputValue)
           .setHitsPerPage(limit)
           .setPage(searchResultsPageNumber);
 

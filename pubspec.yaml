@@ -23,20 +23,20 @@ environment:
 
 dependencies:
   adaptive_theme: 1.1.0
-  algolia: 0.1.7
-  animations: 1.1.2
+  algolia: 1.0.1
+  animations: 2.0.0
   auto_route:  1.0.0-beta.7
   badges: 1.1.4
-  cloud_firestore: 0.14.4
-  cloud_functions: 0.7.2
+  cloud_firestore: 1.0.1
+  cloud_functions: 1.0.0
   cross_local_storage: 1.1.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.0
-  firebase_auth: 0.18.4+1
-  firebase_core: 0.5.3
-  firebase_analytics: 6.3.0
+  firebase_auth: 1.0.1
+  firebase_core: 1.0.1
+  firebase_analytics: 7.1.1
   flash: 1.3.1
   flutter:
     sdk: flutter
@@ -46,9 +46,9 @@ dependencies:
   flutter_sticky_header: 0.4.2
   flutter_swipe_action_cell: 1.2.2
   font_awesome_flutter: 8.10.0
-  google_fonts: 1.1.0
+  google_fonts: 2.0.0
   introduction_screen: 1.0.9
-  jiffy: 3.0.1
+  jiffy: 4.0.0
   like_button: 1.0.4
   logger: 0.9.4
   mobx: 1.2.1+4
@@ -58,18 +58,20 @@ dependencies:
   photo_view: 0.10.2
   quick_actions: 0.4.0+10
   share: 0.6.3+5
-  share_files_and_screenshot_widgets: 1.0.3
+  share_files_and_screenshot_widgets:
+    git: https://github.com/rootasjey/Share-Files-And-Screenshot-Widgets-Flutter.git
   simple_animations: 2.4.2
   sticky_headers: 0.1.8+1
   supercharged: 1.12.0
   unicons: 1.0.1
-  url_launcher: 5.4.10
+  url_launcher: 6.0.2
 
 dev_dependencies:
   auto_route_generator: 1.0.0-beta.7
   build_runner:
-  flutter_launcher_icons: 0.8.1
-  flutter_rename_app: 1.0.0
+  flutter_launcher_icons: 0.9.0
+  flutter_rename_app:
+    git: https://github.com/rootasjey/flutter_rename_app.git
   flutter_test:
     sdk: flutter
 

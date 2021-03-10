@@ -1183,7 +1183,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
         referencesSuggestions.clear();
       });
 
-      final query = algolia.index('references').search(newValue);
+      final query = algolia.index('references').query(newValue);
       final snapshot = await query.getObjects();
 
       if (snapshot.empty) {

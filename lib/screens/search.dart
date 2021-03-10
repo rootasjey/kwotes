@@ -666,7 +666,7 @@ class _SearchState extends State<Search> {
     try {
       final query = algolia
           .index('authors')
-          .search(_searchInputValue)
+          .query(_searchInputValue)
           .setHitsPerPage(10)
           .setPage(0);
 
@@ -720,7 +720,7 @@ class _SearchState extends State<Search> {
     try {
       final query = algolia
           .index('quotes')
-          .search(_searchInputValue)
+          .query(_searchInputValue)
           .setHitsPerPage(10)
           .setPage(0);
 
@@ -756,7 +756,7 @@ class _SearchState extends State<Search> {
     try {
       final query = algolia
           .index('references')
-          .search(_searchInputValue)
+          .query(_searchInputValue)
           .setHitsPerPage(10)
           .setPage(0);
 

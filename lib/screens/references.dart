@@ -606,7 +606,7 @@ class _ReferencesState extends State<References> {
     try {
       final query = algolia
           .index('references')
-          .search(searchInputValue)
+          .query(searchInputValue)
           .setHitsPerPage(limit)
           .setPage(searchResultsPageNumber);
 
@@ -655,7 +655,7 @@ class _ReferencesState extends State<References> {
     try {
       final query = algolia
           .index('references')
-          .search(searchInputValue)
+          .query(searchInputValue)
           .setHitsPerPage(limit)
           .setPage(searchResultsPageNumber);
 
