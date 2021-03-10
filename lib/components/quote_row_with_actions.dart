@@ -149,8 +149,8 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
     List<PopupMenuEntry<String>> popupItems;
     Function itemBuilder;
 
-    List<SwipeAction> leadingActions = defaultActions;
-    List<SwipeAction> trailingActions = defaultActions;
+    List<SwipeAction> leadingActions;
+    List<SwipeAction> trailingActions;
 
     if (widget.useSwipeActions) {
       leadingActions = getLeadingActions();
@@ -480,7 +480,7 @@ class _QuoteRowWithActionsState extends State<QuoteRowWithActions> {
 
   List<SwipeAction> getTrailingActions() {
     if (!widget.isConnected) {
-      return defaultActions;
+      return null;
     }
 
     final actions = <SwipeAction>[];

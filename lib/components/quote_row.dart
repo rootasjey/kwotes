@@ -86,7 +86,7 @@ class QuoteRow extends StatefulWidget {
     this.itemBuilder,
     this.key,
     this.leading,
-    this.leadingActions = defaultActions,
+    this.leadingActions,
     this.maxLines = 6,
     this.onLongPress,
     this.onPopupItemSelected,
@@ -102,7 +102,7 @@ class QuoteRow extends StatefulWidget {
     this.showAuthor = false,
     this.showBorder = false,
     this.stackChildren = const [],
-    this.trailingActions = defaultActions,
+    this.trailingActions,
     this.useSwipeActions = false,
   });
 

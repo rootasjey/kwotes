@@ -56,7 +56,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
     List<PopupMenuEntry<String>> popupItems;
     Function itemBuilder;
 
-    List<SwipeAction> trailingActions = defaultActions;
+    List<SwipeAction> trailingActions;
 
     if (widget.useSwipeActions) {
       trailingActions = getTrailingActions();

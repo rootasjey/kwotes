@@ -44,7 +44,7 @@ dependencies:
   flutter_mobx: 1.0.1
   flutter_snake_navigationbar: 0.4.4
   flutter_sticky_header: 0.4.2
-  flutter_swipe_action_cell: 1.2.2
+  flutter_swipe_action_cell: 1.3.4
   font_awesome_flutter: 8.10.0
   google_fonts: 2.0.0
   introduction_screen: 1.0.9

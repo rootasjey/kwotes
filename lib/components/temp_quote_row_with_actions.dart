@@ -100,8 +100,8 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
     List<PopupMenuEntry<String>> popupItems;
     Function itemBuilder;
 
-    List<SwipeAction> leadingActions = defaultActions;
-    List<SwipeAction> trailingActions = defaultActions;
+    List<SwipeAction> leadingActions;
+    List<SwipeAction> trailingActions;
 
     if (widget.useSwipeActions) {
       leadingActions = getLeadingActions();

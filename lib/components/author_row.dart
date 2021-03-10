@@ -55,7 +55,7 @@ class _AuthorRowState extends State<AuthorRow> {
     List<PopupMenuEntry<String>> popupItems;
     Function itemBuilder;
 
-    List<SwipeAction> trailingActions = defaultActions;
+    List<SwipeAction> trailingActions;
 
     if (widget.useSwipeActions) {
       trailingActions = getTrailingActions();
