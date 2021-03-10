@@ -73,7 +73,7 @@ class _OnBoardingState extends State<OnBoarding> {
             padding: const EdgeInsets.only(top: 60.0),
             child: Center(
               child: Image.asset(
-                "assets/images/app-icon-512-alt.png",
+                "assets/images/app_icon/512_alt.png",
                 height: 500.0,
                 width: 500.0,
               ),

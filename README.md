@@ -1,5 +1,5 @@
 <p align="middle">
-  <img src="./assets/images/app-icon-512-alt.png" title="fig.style icon" width="400"/>
+  <img src="./assets/images/app_icon/512_alt.png" title="fig.style icon" width="400"/>
 </p>
 
 <p align="middle">5 seconds of emotion</p>

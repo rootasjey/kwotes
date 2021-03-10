@@ -142,7 +142,7 @@ class _AboutState extends State<About> {
                     height: size,
                     width: size,
                     fit: BoxFit.cover,
-                    image: AssetImage('assets/images/app-icon-512-alt.png'),
+                    image: AssetImage('assets/images/app_icon/512_alt.png'),
                     child: InkWell(
                       onTap: openContainer,
                     ),
@@ -152,7 +152,7 @@ class _AboutState extends State<About> {
               openBuilder: (context, callback) {
                 return ImageHero(
                   imageProvider:
-                      AssetImage('assets/images/app-icon-512-alt.png'),
+                      AssetImage('assets/images/app_icon/512_alt.png'),
                 );
               },
             ),
@@ -422,7 +422,7 @@ class _AboutState extends State<About> {
                     clipBehavior: Clip.hardEdge,
                     color: Colors.transparent,
                     child: Ink.image(
-                      image: AssetImage('assets/images/jeje-profile.jpg'),
+                      image: AssetImage('assets/images/jeje.jpg'),
                       fit: BoxFit.cover,
                       width: 200.0,
                       height: 200.0,
@@ -434,7 +434,7 @@ class _AboutState extends State<About> {
                 },
                 openBuilder: (context, callback) {
                   return ImageHero(
-                    imageProvider: AssetImage('assets/images/jeje-profile.jpg'),
+                    imageProvider: AssetImage('assets/images/jeje.jpg'),
                   );
                 },
               ),
@@ -715,7 +715,7 @@ class _AboutState extends State<About> {
                     padding: const EdgeInsets.all(25.0),
                     child: Column(
                       children: <Widget>[
-                        Image.asset('assets/images/app-icon-64.png'),
+                        Image.asset('assets/images/app_icon/64.png'),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

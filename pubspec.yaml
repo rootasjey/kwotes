@@ -100,21 +100,20 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-    - assets/images/app-icon-32.png
-    - assets/images/app-icon-64.png
-    - assets/images/app-icon-90.png
-    - assets/images/app-icon-512.png
-    - assets/images/app-icon-512-alt.png
-    - assets/images/app-icon-animation.gif
+    - assets/images/app_icon/32.png
+    - assets/images/app_icon/64.png
+    - assets/images/app_icon/90.png
+    - assets/images/app_icon/512.png
+    - assets/images/app_icon/512_alt.png
+    - assets/images/app_icon/animation.gif
     - assets/images/citations365_lockscreen.png
-    - assets/images/fig.style_logo.png
     - assets/images/ia_portrait.jpg
     - assets/images/natasha_remarchuk/community.png
     - assets/images/natasha_remarchuk/features.png
     - assets/images/natasha_remarchuk/notifications.png
     - assets/images/natasha_remarchuk/signin.png
     - assets/images/olha_khomich/not_found.png
-    - assets/images/jeje-profile.jpg
+    - assets/images/jeje.jpg
     - assets/images/netflix.png
     - google_fonts/
 

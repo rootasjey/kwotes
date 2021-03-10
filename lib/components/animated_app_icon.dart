@@ -8,7 +8,7 @@ class AnimatedAppIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/images/app-icon-animation.gif',
+      'assets/images/app_icon/animation.gif',
       height: size,
       width: size,
     );
