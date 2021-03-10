@@ -47,17 +47,17 @@ dependencies:
   flutter_swipe_action_cell: 1.3.4
   font_awesome_flutter: 8.12.0
   google_fonts: 2.0.0
-  introduction_screen: 1.0.9
+  introduction_screen: 2.0.0
   jiffy: 4.0.0
-  like_button: 1.0.4
+  like_button: 2.0.1
   logger: 0.9.4
   mobx: 1.2.1+4
   mobx_codegen: 1.1.2
-  modal_bottom_sheet: 1.0.0+1
-  onesignal_flutter: 2.6.1
-  photo_view: 0.10.2
-  quick_actions: 0.4.0+10
-  share: 0.6.3+5
+  modal_bottom_sheet: 2.0.0
+  onesignal_flutter: 2.6.3
+  photo_view: 0.11.1
+  quick_actions: 0.5.0
+  share: 2.0.1
   share_files_and_screenshot_widgets:
     git: https://github.com/rootasjey/Share-Files-And-Screenshot-Widgets-Flutter.git
   simple_animations: 2.4.2
