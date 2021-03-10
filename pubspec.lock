@@ -70,14 +70,14 @@ packages:
       name: auto_route
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-beta.7"
+    version: "1.0.0-beta.10"
   auto_route_generator:
     dependency: "direct dev"
     description:
       name: auto_route_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-beta.7"
+    version: "1.0.0-beta.11"
   badges:
     dependency: "direct main"
     description:
