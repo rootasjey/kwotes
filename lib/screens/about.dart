@@ -283,27 +283,16 @@ class _AboutState extends State<About> {
             hoverColor: stateColors.primary,
           ),
           CreditItem(
-            textValue: 'Icons by iconmonstr',
-            onTap: () => launch('https://iconmonstr.com'),
-            iconData: UniconsLine.palette,
-            hoverColor: stateColors.primary,
-          ),
-          CreditItem(
-            textValue: 'Icons by Orion Icon Library',
-            onTap: () => launch('https://orioniconlibrary.com'),
-            iconData: UniconsLine.palette,
-            hoverColor: stateColors.primary,
-          ),
-          CreditItem(
-            textValue: 'Icons by Pixel Perfect',
-            onTap: () =>
-                launch('https://www.flaticon.com/authors/pixel-perfect'),
-            iconData: UniconsLine.palette,
-            hoverColor: stateColors.primary,
-          ),
-          CreditItem(
             textValue: 'Illustrations by Natasha Remarchuk from Icons8',
-            onTap: () => launch('https://icons8.com/'),
+            onTap: () => launch(
+                'https://icons8.com/illustrations/author/5e7e24ce01d0360013bb7479'),
+            iconData: UniconsLine.image,
+            hoverColor: Colors.pink,
+          ),
+          CreditItem(
+            textValue: 'Illustration by Olha Khomich from Icons8',
+            onTap: () => launch(
+                'https://icons8.com/illustrations/author/5eb2a7bd01d0360019f124e7'),
             iconData: UniconsLine.image,
             hoverColor: Colors.pink,
           ),

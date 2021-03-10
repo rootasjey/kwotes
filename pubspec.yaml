@@ -100,52 +100,22 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-    - assets/images/amazon.png
     - assets/images/app-icon-32.png
     - assets/images/app-icon-64.png
     - assets/images/app-icon-90.png
     - assets/images/app-icon-512.png
     - assets/images/app-icon-512-alt.png
     - assets/images/app-icon-animation.gif
-    - assets/images/boy-dark.png
-    - assets/images/boy-light.png
     - assets/images/citations365_lockscreen.png
-    - assets/images/delete-user-dark.png
-    - assets/images/delete-user-light.png
-    - assets/images/employee-dark.png
-    - assets/images/employee-light.png
-    - assets/images/facebook.png
     - assets/images/fig.style_logo.png
     - assets/images/ia_portrait.jpg
-    - assets/images/illus_community.png
-    - assets/images/illus_features.png
-    - assets/images/illus_notifications.png
-    - assets/images/illus_signin.png
-    - assets/images/instagram.png
-    - assets/images/lady-light.png
-    - assets/images/lady-dark.png
-    - assets/images/layers-dark.png
-    - assets/images/layers-light.png
-    - assets/images/lock-dark.png
-    - assets/images/lock-light.png
+    - assets/images/natasha_remarchuk/community.png
+    - assets/images/natasha_remarchuk/features.png
+    - assets/images/natasha_remarchuk/notifications.png
+    - assets/images/natasha_remarchuk/signin.png
     - assets/images/jeje-profile.jpg
     - assets/images/netflix.png
     - assets/images/page-not-found-4.png
-    - assets/images/prime-video.png
-    - assets/images/profile-dark.png
-    - assets/images/profile-light.png
-    - assets/images/reference.png
-    - assets/images/twitch.png
-    - assets/images/twitter.png
-    - assets/images/user-m.png
-    - assets/images/user-dark.png
-    - assets/images/user-light.png
-    - assets/images/world-globe.png
-    - assets/images/write-email-dark.png
-    - assets/images/write-email-light.png
-    - assets/images/wikipedia-dark.png
-    - assets/images/wikipedia-light.png
-    - assets/images/youtube.png
     - google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -100,7 +100,7 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
           image: Center(
             child: Image.asset(
-              'assets/images/illus_features.png',
+              'assets/images/natasha_remarchuk/features.png',
               semanticLabel: 'Features illustration',
               width: illusSize,
               height: illusSize,
@@ -125,7 +125,7 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
           image: Center(
             child: Image.asset(
-              'assets/images/illus_community.png',
+              'assets/images/natasha_remarchuk/community.png',
               semanticLabel: 'Community illustration',
               width: illusSize,
               height: illusSize,
@@ -245,7 +245,7 @@ class _OnBoardingState extends State<OnBoarding> {
             padding: EdgeInsets.only(top: paddingTop),
             child: Center(
               child: Image.asset(
-                'assets/images/illus_notifications.png',
+                'assets/images/natasha_remarchuk/notifications.png',
                 semanticLabel: 'Notifications illustration',
                 width: illusSize,
                 height: illusSize,
@@ -318,7 +318,7 @@ class _OnBoardingState extends State<OnBoarding> {
       ),
       image: Center(
         child: Image.asset(
-          'assets/images/illus_signin.png',
+          'assets/images/natasha_remarchuk/signin.png',
           semanticLabel: 'Account illustration',
           width: illusSize,
           height: illusSize,
