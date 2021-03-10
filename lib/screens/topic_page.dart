@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/constants.dart';
@@ -108,7 +109,7 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Future<String> getRandomTopic() async {
-    final tColor = appTopicsColors.shuffle(max: 1).firstOrNull();
+    final tColor = appTopicsColors.shuffle(max: 1).firstOrNull;
     return tColor != null ? tColor.name : '';
   }
 

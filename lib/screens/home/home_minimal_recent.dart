@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
@@ -319,7 +320,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
                 runSpacing: 40.0,
                 alignment: WrapAlignment.center,
                 children:
-                    heroQuotes.sublist(0, maxCount).mapIndexed((quote, index) {
+                    heroQuotes.sublist(0, maxCount).mapIndexed((index, quote) {
                   if (index > 0) {
                     return QuoteRowWithActions(
                       quote: quote,

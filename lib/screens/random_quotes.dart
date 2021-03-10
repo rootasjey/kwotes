@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/error_container.dart';
@@ -331,7 +332,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
         delegate: SliverChildListDelegate.fixed([
           Wrap(
             alignment: WrapAlignment.center,
-            children: quotes.mapIndexed((quote, index) {
+            children: quotes.mapIndexed((index, quote) {
               return FadeInX(
                 beginX: 10.0,
                 delay: index.milliseconds * 100,
@@ -382,7 +383,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
       padding: paddingListView,
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed(quotes.mapIndexed(
-          (quote, index) {
+          (index, quote) {
             return Center(
               child: FadeInY(
                 beginY: 10.0,
