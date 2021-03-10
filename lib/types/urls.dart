@@ -41,7 +41,28 @@ class Urls {
         youtube.isEmpty;
   }
 
+  factory Urls.empty() {
+    return Urls(
+      amazon: '',
+      facebook: '',
+      image: '',
+      imdb: '',
+      instagram: '',
+      netflix: '',
+      primeVideo: '',
+      twitch: '',
+      twitter: '',
+      website: '',
+      wikipedia: '',
+      youtube: '',
+    );
+  }
+
   factory Urls.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return Urls.empty();
+    }
+
     return Urls(
       amazon: data['amazon'] ?? '',
       facebook: data['facebook'] ?? '',

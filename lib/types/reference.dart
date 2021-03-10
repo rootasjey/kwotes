@@ -34,10 +34,10 @@ class Reference {
       image: ImageProperty.empty(),
       lang: 'en',
       name: '',
-      release: Release(),
+      release: Release.empty(),
       summary: '',
       type: ReferenceType(),
-      urls: Urls(),
+      urls: Urls.empty(),
     );
   }
 
@@ -50,49 +50,32 @@ class Reference {
       image: ImageProperty.empty(),
       lang: 'en',
       name: name,
-      release: Release(),
+      release: Release.empty(),
       summary: '',
       type: ReferenceType(),
-      urls: Urls(),
+      urls: Urls.empty(),
     );
   }
 
   factory Reference.fromJSON(Map<String, dynamic> data) {
-    Urls _urls;
-
-    if (data['urls'] != null) {
-      _urls = Urls.fromJSON(data['urls']);
-    } else {
-      _urls = Urls();
-    }
-
-    ReferenceType _type;
-
-    if (data['type'] != null) {
-      _type = ReferenceType.fromJSON(data['type']);
-    } else {
-      _type = ReferenceType();
-    }
-
-    Release _release;
-
-    if (data['release'] != null) {
-      _release = Release.fromJSON(data['release']);
-    } else {
-      _release = Release();
+    if (data == null) {
+      return Reference.empty();
     }
 
     final image = ImageProperty.fromJSON(data['image']);
+    Release release = Release.fromJSON(data['release']);
+    ReferenceType type = ReferenceType.fromJSON(data['type']);
+    final urls = Urls.fromJSON(data['urls']);
 
     return Reference(
       id: data['id'] ?? '',
       image: image,
       lang: data['lang'],
       name: data['name'] ?? '',
-      release: _release,
+      release: release,
       summary: data['summary'] ?? '',
-      type: _type,
-      urls: _urls,
+      type: type,
+      urls: urls,
     );
   }
 

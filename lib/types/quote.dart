@@ -39,42 +39,48 @@ class Quote {
   }
 
   factory Quote.fromJSON(Map<String, dynamic> data) {
-    List<String> _topics = [];
-
-    Author _author;
-    if (data['author'] != null) {
-      _author = Author.fromJSON(data['author']);
+    if (data == null) {
+      return Quote.empty();
     }
 
-    Reference _reference;
-    if (data['reference'] != null) {
-      _reference = Reference.fromJSON(data['reference']);
-    }
-
-    if (data['topics'] != null) {
-      if (data['topics'] is Iterable<dynamic>) {
-        for (var tag in data['topics']) {
-          _topics.add(tag);
-        }
-      } else {
-        Map<String, dynamic> mapTopics = data['topics'];
-
-        mapTopics.forEach((key, value) {
-          _topics.add(key);
-        });
-      }
-    }
+    final author = Author.fromJSON(data['author']);
+    final reference = Reference.fromJSON(data['reference']);
+    final topics = parseTopics(data['topics']);
 
     return Quote(
-      author: _author,
-      id: data['id'],
-      lang: data['lang'],
-      name: data['name'],
-      reference: _reference,
+      author: author,
+      id: data['id'] ?? '',
+      lang: data['lang'] ?? 'en',
+      name: data['name'] ?? '',
+      reference: reference,
       quoteId: data['quoteId'] ?? '',
       starred: data['starred'] ?? false,
-      topics: _topics,
+      topics: topics,
     );
+  }
+
+  static List<String> parseTopics(dynamic data) {
+    final topics = <String>[];
+
+    if (data == null) {
+      return topics;
+    }
+
+    if (data is Iterable<dynamic>) {
+      for (String tag in data) {
+        topics.add(tag);
+      }
+
+      return topics;
+    }
+
+    Map<String, dynamic> mapTopics = data;
+
+    mapTopics.forEach((key, value) {
+      topics.add(key);
+    });
+
+    return topics;
   }
 
   Map<String, dynamic> toJSON({

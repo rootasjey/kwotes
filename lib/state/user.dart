@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/types/cloud_func_error.dart';
 import 'package:figstyle/types/update_email_resp.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/push_notifications.dart';
@@ -118,33 +117,13 @@ abstract class StateUserBase with Store {
     } on FirebaseFunctionsException catch (exception) {
       appLogger.e("[code: ${exception.code}] - ${exception.message}");
 
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.details['code'],
-          message: exception.details['message'],
-        ),
-      );
+      return UpdateEmailResp.fromException(exception);
     } on PlatformException catch (exception) {
       appLogger.e(exception.toString());
-
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.details['code'],
-          message: exception.details['message'],
-        ),
-      );
+      return UpdateEmailResp.fromPlatformException(exception);
     } catch (error) {
       appLogger.e(error.toString());
-
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: '',
-          message: error.toString(),
-        ),
-      );
+      return UpdateEmailResp.fromMessage(error.toString());
     }
   }
 
@@ -285,32 +264,13 @@ abstract class StateUserBase with Store {
       return UpdateEmailResp.fromJSON(response.data);
     } on FirebaseFunctionsException catch (exception) {
       appLogger.e("[code: ${exception.code}] - ${exception.message}");
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.details['code'],
-          message: exception.details['message'],
-        ),
-      );
+      return UpdateEmailResp.fromException(exception);
     } on PlatformException catch (exception) {
       appLogger.e(exception.toString());
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.details['code'],
-          message: exception.details['message'],
-        ),
-      );
+      return UpdateEmailResp.fromPlatformException(exception);
     } catch (error) {
-      appLogger.e(error.toString());
-
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: '',
-          message: error.toString(),
-        ),
-      );
+      appLogger.e(error);
+      return UpdateEmailResp.fromMessage(error.toString());
     }
   }
 
@@ -330,33 +290,13 @@ abstract class StateUserBase with Store {
       return UpdateEmailResp.fromJSON(response.data);
     } on FirebaseFunctionsException catch (exception) {
       appLogger.e("[code: ${exception.code}] - ${exception.message}");
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.details['code'],
-          message: exception.details['message'],
-        ),
-      );
+      return UpdateEmailResp.fromException(exception);
     } on PlatformException catch (exception) {
-      appLogger.e(exception.toString());
-
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.details['code'],
-          message: exception.details['message'],
-        ),
-      );
+      appLogger.e(exception);
+      return UpdateEmailResp.fromPlatformException(exception);
     } catch (error) {
-      appLogger.e(error.toString());
-
-      return UpdateEmailResp(
-        success: false,
-        error: CloudFuncError(
-          code: '',
-          message: error.toString(),
-        ),
-      );
+      appLogger.e(error);
+      return UpdateEmailResp.fromMessage(error.toString());
     }
   }
 }

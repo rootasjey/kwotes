@@ -10,8 +10,8 @@ class AuthorSuggestion {
     this.reference,
   });
 
-  factory AuthorSuggestion.fromJSON(Map<String, dynamic> json) {
-    final author = Author.fromJSON(json);
+  factory AuthorSuggestion.fromJSON(Map<String, dynamic> data) {
+    final author = Author.fromJSON(data);
     return AuthorSuggestion(author: author);
   }
 

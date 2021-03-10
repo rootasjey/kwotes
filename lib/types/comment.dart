@@ -1,4 +1,5 @@
 import 'package:figstyle/types/partial_user.dart';
+import 'package:figstyle/utils/date_helper.dart';
 
 class Comment {
   final String commentId;
@@ -19,15 +20,27 @@ class Comment {
     this.user,
   });
 
-  factory Comment.fromJSON(Map<String, dynamic> json) {
-    final _user = PartialUser.fromJSON(json['user']);
+  factory Comment.empty() {
+    return Comment(
+      createdAt: DateTime.now(),
+      id: '',
+      name: '',
+      updatedAt: DateTime.now(),
+      user: PartialUser.empty(),
+    );
+  }
+
+  factory Comment.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return Comment.empty();
+    }
 
     return Comment(
-      createdAt : json['createdAt'],
-      id        : json['id'],
-      name      : json['name'],
-      updatedAt : json['updatedAt'],
-      user      : _user,
+      createdAt: DateHelper.fromFirestore(data['createdAt']),
+      id: data['id'] ?? '',
+      name: data['name'] ?? '',
+      updatedAt: DateHelper.fromFirestore(data['updatedAt']),
+      user: PartialUser.fromJSON(data['user']),
     );
   }
 }

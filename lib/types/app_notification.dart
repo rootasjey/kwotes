@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/date_helper.dart';
 
 class AppNotification {
   final String id;
@@ -28,16 +28,33 @@ class AppNotification {
     this.updatedAt,
   });
 
-  factory AppNotification.fromJSON(Map<String, dynamic> data) {
+  factory AppNotification.empty() {
     return AppNotification(
-      body: data['body'],
-      createdAt: (data['createdAt'] as Timestamp)?.toDate(),
-      id: data['id'],
-      isRead: data['isRead'],
-      path: data['path'],
-      subject: data['subject'],
-      title: data['title'],
-      updatedAt: (data['updatedAt'] as Timestamp)?.toDate(),
+      body: '',
+      createdAt: DateTime.now(),
+      id: '',
+      isRead: false,
+      path: '',
+      subject: '',
+      title: '',
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  factory AppNotification.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return AppNotification.empty();
+    }
+
+    return AppNotification(
+      body: data['body'] ?? '',
+      createdAt: DateHelper.fromFirestore(data['createdAt']),
+      id: data['id'] ?? '',
+      isRead: data['isRead'] ?? false,
+      path: data['path'] ?? '',
+      subject: data['subject'] ?? '',
+      title: data['title'] ?? '',
+      updatedAt: DateHelper.fromFirestore(data['updatedAt']),
     );
   }
 }

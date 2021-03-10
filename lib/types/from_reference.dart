@@ -14,9 +14,13 @@ class FromReference {
     this.name = '',
   });
 
-  factory FromReference.fromJSON(Map<String, dynamic> json) {
+  factory FromReference.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return FromReference();
+    }
+
     return FromReference(
-      id: json['id'] ?? '',
+      id: data['id'] ?? '',
     );
   }
 

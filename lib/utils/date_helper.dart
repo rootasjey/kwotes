@@ -9,11 +9,17 @@ class DateHelper {
   static DateTime fromFirestore(dynamic data) {
     DateTime date = DateTime.now();
 
+    if (data == null) {
+      return date;
+    }
+
     try {
       if (data.runtimeType == int) {
         date = DateTime.fromMillisecondsSinceEpoch(data);
       } else if (data.runtimeType == Timestamp) {
         date = (data as Timestamp)?.toDate();
+      } else if (data.runtimeType == String) {
+        date = DateTime.parse(data);
       } else if (data != null && data['_seconds'] != null) {
         date = DateTime.fromMillisecondsSinceEpoch(data['_seconds'] * 1000);
       }

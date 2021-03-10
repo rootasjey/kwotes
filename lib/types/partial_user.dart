@@ -9,7 +9,19 @@ class PartialUser {
     this.email = '',
   });
 
+  factory PartialUser.empty() {
+    return PartialUser(
+      id: '',
+      name: '',
+      email: '',
+    );
+  }
+
   factory PartialUser.fromJSON(Map<dynamic, dynamic> data) {
+    if (data == null) {
+      return PartialUser.empty();
+    }
+
     return PartialUser(
       id: data['id'] ?? '',
       name: data['name'] ?? '',

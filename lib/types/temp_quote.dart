@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/partial_user.dart';
 import 'package:figstyle/types/reference.dart';
 import 'package:figstyle/types/urls.dart';
 import 'package:figstyle/types/validation.dart';
 import 'package:figstyle/types/validation_comment.dart';
+import 'package:figstyle/utils/date_helper.dart';
 
 class TempQuote {
   Author author;
@@ -48,88 +48,99 @@ class TempQuote {
     this.validation,
   });
 
+  factory TempQuote.empty() {
+    return TempQuote(
+      author: Author.empty(),
+      comments: [],
+      createdAt: DateTime.now(),
+      id: '',
+      isOffline: false,
+      lang: 'en',
+      reference: Reference.empty(),
+      name: '',
+      region: '',
+      topics: [],
+      updatedAt: DateTime.now(),
+      urls: Urls.empty(),
+      user: PartialUser.empty(),
+      validation: Validation.empty(),
+    );
+  }
+
   factory TempQuote.fromJSON(Map<String, dynamic> data) {
-    List<String> _topicsList = [];
-    if (data['topics'] != null) {
-      final Map<String, dynamic> topics = data['topics'];
-      topics.forEach((key, value) {
-        _topicsList.add(key);
-      });
+    if (data == null) {
+      return TempQuote.empty();
     }
 
-    Author _author;
-    if (data['author'] != null) {
-      _author = Author.fromJSON(data['author']);
-    }
-
-    Reference _reference;
-    if (data['reference'] != null) {
-      _reference = Reference.fromJSON(data['reference']);
-    } else if (data['mainReference'] != null) {
-      // Keep for drafts. To delete later.
-      _reference = Reference.fromJSON(data['mainReference']);
-    }
-
-    Urls _urls;
-    if (data['urls'] != null) {
-      _urls = Urls.fromJSON(data['urls']);
-    } else {
-      _urls = Urls();
-    }
-
-    PartialUser _user;
-    if (data['user'] != null) {
-      _user = PartialUser.fromJSON(data['user']);
-    }
-
-    Validation _validation;
-    if (data['validation'] != null) {
-      Validation.fromJSON(data['validation']);
-    }
-
-    final List<dynamic> rawComments = data['comments'];
-    final comments = <String>[];
-
-    if (rawComments != null) {
-      rawComments.forEach((rawComment) {
-        comments.add(rawComment);
-      });
-    }
-
-    DateTime _createdAt;
-    if (data['createdAt'].runtimeType == String) {
-      _createdAt = DateTime.parse(data['createdAt']);
-    } else {
-      _createdAt = (data['createdAt'] as Timestamp).toDate();
-    }
-
-    DateTime _updatedAt;
-    if (data['updatedAt'].runtimeType == String) {
-      DateTime.parse(data['updatedAt']);
-    } else {
-      _updatedAt = (data['updatedAt'] as Timestamp).toDate();
-    }
+    final author = Author.fromJSON(data['author']);
+    final comments = parseComments(data['comments']);
+    final createdAt = DateHelper.fromFirestore(data['createdAt']);
+    final reference = parseReference(data);
+    final topics = parseTopics(data['topics']);
+    final user = PartialUser.fromJSON(data['user']);
+    final validation = Validation.fromJSON(data['validation']);
+    final updatedAt = DateHelper.fromFirestore(data['updatedAt']);
+    final urls = Urls.fromJSON(data['urls']);
 
     return TempQuote(
-      author: _author,
+      author: author,
       comments: comments,
-      createdAt: _createdAt,
+      createdAt: createdAt,
       id: data['id'] ?? '',
       isOffline: data['isOffline'] ?? false,
       lang: data['lang'] ?? 'en',
-      reference: _reference,
+      reference: reference,
       name: data['name'] ?? '',
       region: data['region'],
-      topics: _topicsList,
-      updatedAt: _updatedAt,
-      urls: _urls,
-      user: _user,
-      validation: _validation,
+      topics: topics,
+      updatedAt: updatedAt,
+      urls: urls,
+      user: user,
+      validation: validation,
     );
   }
 
   void addComment(String comment) {
     comments.add(comment);
+  }
+
+  static List<String> parseComments(dynamic data) {
+    final comments = <String>[];
+
+    if (data == null) {
+      return comments;
+    }
+
+    (data as List<dynamic>).forEach((comment) {
+      comments.add(comment);
+    });
+
+    return comments;
+  }
+
+  static Reference parseReference(data) {
+    if (data['reference'] != null) {
+      return Reference.fromJSON(data['reference']);
+    } else if (data['mainReference'] != null) {
+      // Keep for drafts. To delete later.
+      return Reference.fromJSON(data['mainReference']);
+    }
+
+    return Reference.empty();
+  }
+
+  static List<String> parseTopics(dynamic data) {
+    final topics = <String>[];
+
+    if (data == null) {
+      return topics;
+    }
+
+    (data as Map<String, dynamic>).forEach((key, value) {
+      topics.add(key);
+    });
+
+    return topics;
   }
 
   void setAuthor(Author newAuthor) {

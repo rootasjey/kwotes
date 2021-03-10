@@ -10,10 +10,14 @@ class ReferenceType {
     this.secondary = '',
   });
 
-  factory ReferenceType.fromJSON(Map<String, dynamic> json) {
+  factory ReferenceType.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return ReferenceType();
+    }
+
     return ReferenceType(
-      primary: json['primary'] ?? '',
-      secondary: json['secondary'] ?? '',
+      primary: data['primary'] ?? '',
+      secondary: data['secondary'] ?? '',
     );
   }
 

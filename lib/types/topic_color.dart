@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TopicColor {
   final String name;
   final int decimal;
@@ -9,13 +11,25 @@ class TopicColor {
     this.name,
   });
 
+  factory TopicColor.empty() {
+    return TopicColor(
+      decimal: 0,
+      hex: 0.toRadixString(16),
+      name: '',
+    );
+  }
+
   factory TopicColor.fromJSON(Map<String, dynamic> json) {
-    int _decimal = json['color'];
+    if (json == null) {
+      return TopicColor.empty();
+    }
+
+    int decimal = json['color'] ?? Colors.green.value;
 
     return TopicColor(
-      decimal: _decimal,
-      hex: _decimal.toRadixString(16),
-      name: json['name'],
+      decimal: decimal,
+      hex: decimal.toRadixString(16),
+      name: json['name'] ?? '',
     );
   }
 }

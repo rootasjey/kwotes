@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:figstyle/types/cloud_func_error.dart';
 import 'package:figstyle/types/create_account_resp.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +19,10 @@ class UsersActions {
       final isOk = resp.data['isAvailable'] as bool;
       return isOk;
     } on FirebaseFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
       return false;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       return false;
     }
   }
@@ -47,22 +47,10 @@ class UsersActions {
 
       return CreateAccountResp.fromJSON(response.data);
     } on FirebaseFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
-      return CreateAccountResp(
-        success: false,
-        error: CloudFuncError(
-          code: exception.code,
-          message: exception.message,
-        ),
-      );
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
+      return CreateAccountResp.fromException(exception);
     } catch (error) {
-      return CreateAccountResp(
-        success: false,
-        error: CloudFuncError(
-          code: '',
-          message: error.toString(),
-        ),
-      );
+      return CreateAccountResp.fromMessage(error.toString());
     }
   }
 
@@ -85,10 +73,10 @@ class UsersActions {
       final isOk = resp.data['isAvailable'] as bool;
       return isOk;
     } on FirebaseFunctionsException catch (exception) {
-      debugPrint("[code: ${exception.code}] - ${exception.message}");
+      appLogger.e("[code: ${exception.code}] - ${exception.message}");
       return false;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       return false;
     }
   }

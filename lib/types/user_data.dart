@@ -10,32 +10,48 @@ class UserData {
   String token;
 
   UserData({
-    this.email  = '',
-    this.id     = '',
+    this.email = '',
+    this.id = '',
     this.imgUrl = '',
-    this.lang   = '',
-    this.name   = '',
-    this.rights = const[],
-    this.token  = '',
+    this.lang = '',
+    this.name = '',
+    this.rights = const [],
+    this.token = '',
   });
 
-  factory UserData.fromJSON(Map<String, dynamic> json) {
-    List<String> rightsList = [];
+  factory UserData.empty() {
+    return UserData(
+      email: '',
+      id: '',
+      imgUrl: '',
+      lang: '',
+      name: '',
+      rights: [],
+      token: '',
+    );
+  }
 
-    if (json['rights'] != null) {
-      for (var right in json['rights']) {
-        rightsList.add(right);
+  factory UserData.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return UserData.empty();
+    }
+
+    List<String> rights = [];
+
+    if (data['rights'] != null) {
+      for (var right in data['rights']) {
+        rights.add(right);
       }
     }
 
     return UserData(
-      email : json['email'],
-      id    : json['id'],
-      imgUrl: json['imgUrl'],
-      lang  : json['lang'],
-      name  : json['name'],
-      rights: rightsList,
-      token : json['token'],
+      email: data['email'] ?? '',
+      id: data['id'] ?? '',
+      imgUrl: data['imgUrl'] ?? '',
+      lang: data['lang'] ?? '',
+      name: data['name'] ?? '',
+      rights: rights,
+      token: data['token'] ?? '',
     );
   }
 
@@ -52,13 +68,13 @@ class UserData {
       jsonRights.add(right);
     }
 
-    json['email']   = email;
-    json['id']      = id;
-    json['imgUrl']  = imgUrl;
-    json['lang']    = lang;
-    json['name']    = name;
-    json['rights']  = jsonRights;
-    json['token']   = token;
+    json['email'] = email;
+    json['id'] = id;
+    json['imgUrl'] = imgUrl;
+    json['lang'] = lang;
+    json['name'] = name;
+    json['rights'] = jsonRights;
+    json['token'] = token;
 
     return json;
   }

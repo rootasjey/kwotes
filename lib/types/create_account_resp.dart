@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/types/cloud_func_error.dart';
 import 'package:figstyle/types/partial_user.dart';
 
@@ -14,15 +15,48 @@ class CreateAccountResp {
     this.user,
   });
 
-  factory CreateAccountResp.fromJSON(Map<dynamic, dynamic> data) {
+  factory CreateAccountResp.empty() {
     return CreateAccountResp(
+      success: false,
+      user: PartialUser.empty(),
+      error: CloudFuncError.empty(),
+    );
+  }
+
+  factory CreateAccountResp.fromException(
+      FirebaseFunctionsException exception) {
+    if (exception == null) {
+      return CreateAccountResp.empty();
+    }
+
+    return CreateAccountResp(
+      error: CloudFuncError.fromException(exception),
+      success: false,
+      user: PartialUser.empty(),
+    );
+  }
+
+  factory CreateAccountResp.fromJSON(Map<dynamic, dynamic> data) {
+    if (data == null) {
+      return CreateAccountResp.empty();
+    }
+
+    return CreateAccountResp(
+      error: CloudFuncError.fromJSON(data['error']),
       success: data['success'] ?? true,
-      user: data['user'] != null
-          ? PartialUser.fromJSON(data['user'])
-          : PartialUser(),
-      error: data['error'] != null
-          ? CloudFuncError.fromJSON(data['error'])
-          : CloudFuncError(),
+      user: PartialUser.fromJSON(data['user']),
+    );
+  }
+
+  factory CreateAccountResp.fromMessage(String message) {
+    if (message == null) {
+      return CreateAccountResp.empty();
+    }
+
+    return CreateAccountResp(
+      error: CloudFuncError.fromMessage(message),
+      success: false,
+      user: PartialUser.empty(),
     );
   }
 }

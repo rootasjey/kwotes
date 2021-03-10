@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/date_helper.dart';
 
 class Release {
   /// Original release.
@@ -10,30 +10,23 @@ class Release {
     this.beforeJC = false,
   });
 
+  factory Release.empty() {
+    return Release(
+      original: DateTime.now(),
+      beforeJC: false,
+    );
+  }
+
   factory Release.fromJSON(Map<String, dynamic> data) {
-    DateTime original;
-
-    if (data['original'] == null) {
-      return Release(
-        original: original,
-        beforeJC: data['beforeJC'],
-      );
+    if (data == null) {
+      return Release.empty();
     }
 
-    if (data['original'].runtimeType == int) {
-      original = DateTime.fromMillisecondsSinceEpoch(data['original']);
-    } else if (data['original'] != null &&
-        data['original'].runtimeType == Timestamp) {
-      original = (data['original'] as Timestamp)?.toDate();
-    } else if (data['original'].runtimeType != Timestamp &&
-        data['original']['_seconds'] != null) {
-      original = DateTime.fromMillisecondsSinceEpoch(
-          data['original']['_seconds'] * 1000);
-    }
+    DateTime original = DateHelper.fromFirestore(data['original']);
 
     return Release(
       original: original,
-      beforeJC: data['beforeJC'],
+      beforeJC: data['beforeJC'] ?? false,
     );
   }
 

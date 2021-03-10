@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/date_helper.dart';
 
 class UserQuotesList {
   final DateTime createdAt;
@@ -19,15 +19,29 @@ class UserQuotesList {
     this.updatedAt,
   });
 
-  factory UserQuotesList.fromJSON(Map<String, dynamic> json) {
+  factory UserQuotesList.empty() {
     return UserQuotesList(
-      createdAt   : (json['createdAt'] as Timestamp).toDate(),
-      iconUrl     : json['iconUrl'] ?? '',
-      id          : json['id'],
-      isPublic    : json['isPublic'],
-      description : json['description'] ?? '',
-      name        : json['name'] ?? '',
-      updatedAt   : (json['updatedAt'] as Timestamp).toDate(),
+      createdAt: DateTime.now(),
+      iconUrl: '',
+      id: '',
+      name: '',
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  factory UserQuotesList.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return UserQuotesList.empty();
+    }
+
+    return UserQuotesList(
+      createdAt: DateHelper.fromFirestore(data['createdAt']),
+      iconUrl: data['iconUrl'] ?? '',
+      id: data['id'] ?? '',
+      isPublic: data['isPublic'] ?? false,
+      description: data['description'] ?? '',
+      name: data['name'] ?? '',
+      updatedAt: DateHelper.fromFirestore(data['updatedAt']),
     );
   }
 }

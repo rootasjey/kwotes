@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figstyle/types/quote.dart';
+import 'package:figstyle/utils/date_helper.dart';
 
 class Quotidian {
   final DateTime createdAt;
@@ -18,14 +18,29 @@ class Quotidian {
     this.updatedAt,
   });
 
-  factory Quotidian.fromJSON(Map<String, dynamic> json) {
+  factory Quotidian.empty() {
     return Quotidian(
-      createdAt : (json['createdAt'] as Timestamp).toDate(),
-      date      : (json['date'] as Timestamp).toDate(),
-      id        : json['id'],
-      lang      : json['lang'],
-      quote     : Quote.fromJSON(json['quote']),
-      updatedAt : (json['updatedAt'] as Timestamp).toDate(),
+      createdAt: DateTime.now(),
+      date: DateTime.now(),
+      id: '',
+      lang: 'en',
+      quote: Quote.empty(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  factory Quotidian.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return Quotidian.empty();
+    }
+
+    return Quotidian(
+      createdAt: DateHelper.fromFirestore(data['createdAt']),
+      date: DateHelper.fromFirestore(data['date']),
+      id: data['id'] ?? '',
+      lang: data['lang'] ?? 'en',
+      quote: Quote.fromJSON(data['quote']),
+      updatedAt: DateHelper.fromFirestore(data['updatedAt']),
     );
   }
 
@@ -33,10 +48,10 @@ class Quotidian {
     Map<String, dynamic> json = Map();
 
     json['createdAt'] = createdAt;
-    json['date']      = date;
-    json['id']        = id;
-    json['lang']      = lang;
-    json['quote']     = quote.toJSON();
+    json['date'] = date;
+    json['id'] = id;
+    json['lang'] = lang;
+    json['quote'] = quote.toJSON();
     json['updatedAt'] = updatedAt;
 
     return json;

@@ -37,8 +37,8 @@ class Author {
 
   factory Author.empty() {
     return Author(
-      born: PointInTime(),
-      death: PointInTime(),
+      born: PointInTime.empty(),
+      death: PointInTime.empty(),
       fromReference: FromReference(),
       id: '',
       image: ImageProperty.empty(),
@@ -46,7 +46,7 @@ class Author {
       job: '',
       name: '',
       summary: '',
-      urls: Urls(),
+      urls: Urls.empty(),
     );
   }
 
@@ -64,26 +64,20 @@ class Author {
       job: '',
       name: name,
       summary: '',
-      urls: Urls(),
+      urls: Urls.empty(),
     );
   }
 
   factory Author.fromJSON(Map<String, dynamic> data) {
-    final urls = data['urls'] != null ? Urls.fromJSON(data['urls']) : Urls();
+    if (data == null) {
+      return Author.empty();
+    }
 
-    final born = data['born'] != null
-        ? PointInTime.fromJSON(data['born'])
-        : PointInTime();
-
-    final death = data['death'] != null
-        ? PointInTime.fromJSON(data['death'])
-        : PointInTime();
-
-    final fromReference = data['fromReference'] != null
-        ? FromReference.fromJSON(data['fromReference'])
-        : FromReference();
-
+    final born = PointInTime.fromJSON(data['born']);
+    final death = PointInTime.fromJSON(data['death']);
+    final fromReference = FromReference.fromJSON(data['fromReference']);
     final image = ImageProperty.fromJSON(data['image']);
+    final urls = Urls.fromJSON(data['urls']);
 
     return Author(
       born: born,
@@ -92,9 +86,9 @@ class Author {
       id: data['id'] ?? '',
       image: image,
       isFictional: data['isFictional'] ?? false,
-      job: data['job'],
-      name: data['name'],
-      summary: data['summary'],
+      job: data['job'] ?? '',
+      name: data['name'] ?? '',
+      summary: data['summary'] ?? '',
       urls: urls,
     );
   }

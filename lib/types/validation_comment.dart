@@ -10,10 +10,21 @@ class ValidationComment {
     this.moderatorId = '',
   });
 
-  factory ValidationComment.fromJSON(Map<String, dynamic> json) {
+  factory ValidationComment.empty() {
     return ValidationComment(
-      name: json['name'],
-      moderatorId: json['moderatorid'] != null ? json['moderatorid'] : '',
+      name: '',
+      moderatorId: '',
+    );
+  }
+
+  factory ValidationComment.fromJSON(Map<String, dynamic> data) {
+    if (data == null) {
+      return ValidationComment.empty();
+    }
+
+    return ValidationComment(
+      name: data['name'] ?? '',
+      moderatorId: data['moderatorid'] ?? '',
     );
   }
 
