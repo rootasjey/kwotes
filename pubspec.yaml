@@ -77,8 +77,8 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: "launcher_icon"
-  image_path_android: "assets/images/app-launch-icon-android.png"
-  image_path_ios: "assets/images/app-launch-icon-ios.jpg"
+  image_path_android: "assets/images/app_icon/android.png"
+  image_path_ios: "assets/images/app_icon/ios.jpg"
 
 flutter_rename_app:
   application_name: fig.style
