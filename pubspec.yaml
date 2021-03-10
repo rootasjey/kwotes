@@ -113,9 +113,9 @@ flutter:
     - assets/images/natasha_remarchuk/features.png
     - assets/images/natasha_remarchuk/notifications.png
     - assets/images/natasha_remarchuk/signin.png
+    - assets/images/olha_khomich/not_found.png
     - assets/images/jeje-profile.jpg
     - assets/images/netflix.png
-    - assets/images/page-not-found-4.png
     - google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -85,7 +85,7 @@ class _UndefinedPageState extends State<UndefinedPage> {
         bottom: 80.0,
       ),
       child: Image(
-        image: AssetImage('assets/images/page-not-found-4.png'),
+        image: AssetImage('assets/images/olha_khomich/not_found.png'),
         width: 350.0,
         height: 350.0,
       ),
