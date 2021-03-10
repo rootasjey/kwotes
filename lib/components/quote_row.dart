@@ -5,6 +5,7 @@ import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/types/reference.dart';
+import 'package:figstyle/utils/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/topics_colors.dart';
 import 'package:figstyle/types/enums.dart';
@@ -279,14 +280,17 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
                   padding: widget.padding,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.quote.name,
-                      maxLines: widget.maxLines,
-                      overflow: widget.overflow,
-                      style: TextStyle(
-                        fontSize: widget.quoteFontSize,
-                        fontWeight: FontWeight.w400,
-                        color: _textColor,
+                    child: Opacity(
+                      opacity: 0.8,
+                      child: Text(
+                        widget.quote.name,
+                        maxLines: widget.maxLines,
+                        overflow: widget.overflow,
+                        style: FontsUtils.mainStyle(
+                          color: _textColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: widget.quoteFontSize,
+                        ),
                       ),
                     ),
                   ),
@@ -353,8 +357,10 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
         child: Text(
           widget.quote.author.name,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: FontsUtils.mainStyle(
             color: _textColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -362,10 +368,14 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
   }
 
   Widget quoteName() {
-    return Text(
-      widget.quote.name,
-      style: TextStyle(
-        fontSize: widget.quoteFontSize,
+    return Opacity(
+      opacity: 0.8,
+      child: Text(
+        widget.quote.name,
+        style: FontsUtils.mainStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: widget.quoteFontSize,
+        ),
       ),
     );
   }
