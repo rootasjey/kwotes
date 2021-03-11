@@ -65,6 +65,7 @@ dependencies:
   supercharged: 2.0.0
   unicons: 1.0.1
   url_launcher: 6.0.2
+  url_strategy: 0.2.0
 
 dev_dependencies:
   auto_route_generator: 1.0.0-beta.11
