@@ -258,7 +258,7 @@ class ReferencePageState extends State<ReferencePage> {
       delegate: SliverChildListDelegate([
         Container(
           alignment: AlignmentDirectional.center,
-          padding: const EdgeInsets.only(bottom: 60.0),
+          padding: const EdgeInsets.only(bottom: 30.0),
           child: Column(
             children: <Widget>[
               FadeInY(
@@ -289,46 +289,54 @@ class ReferencePageState extends State<ReferencePage> {
     Widget child;
 
     if (isLoading) {
-      child = Padding(
-        padding: EdgeInsets.zero,
-      );
+      child = Container();
     } else {
-      child = Padding(
-        padding: const EdgeInsets.only(top: 0.0),
-        child: DropdownButton<String>(
-          elevation: 2,
-          value: lang,
-          isDense: true,
-          underline: Container(
-            height: 0,
-            color: Colors.deepPurpleAccent,
-          ),
-          icon: Icon(Icons.keyboard_arrow_down),
-          style: TextStyle(
-            color: stateColors.foreground.withOpacity(0.6),
-            fontSize: 20.0,
-            fontFamily: GoogleFonts.raleway().fontFamily,
-          ),
-          onChanged: (String newLang) {
-            lang = newLang;
-            fetchQuotes();
-            appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
-          },
-          items: ['en', 'fr'].map((String value) {
-            return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value.toUpperCase(),
-                ));
-          }).toList(),
+      child = DropdownButton<String>(
+        elevation: 2,
+        value: lang,
+        isDense: true,
+        underline: Container(
+          height: 0,
+          color: Colors.deepPurpleAccent,
         ),
+        icon: Icon(Icons.keyboard_arrow_down),
+        style: TextStyle(
+          color: stateColors.foreground.withOpacity(0.6),
+          fontSize: 20.0,
+          fontFamily: GoogleFonts.raleway().fontFamily,
+        ),
+        onChanged: (String newLang) {
+          lang = newLang;
+          fetchQuotes();
+          appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+        },
+        items: ['en', 'fr'].map((String value) {
+          return DropdownMenuItem(
+              value: value,
+              child: Text(
+                value.toUpperCase(),
+              ));
+        }).toList(),
       );
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(
+        bottom: 20.0,
+      ),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
+          Center(
+            child: SizedBox(
+              width: 80.0,
+              child: Divider(thickness: 2.0),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 30.0,
+            ),
+          ),
           Center(child: child),
         ]),
       ),
@@ -487,9 +495,9 @@ class ReferencePageState extends State<ReferencePage> {
           reference.name,
           textAlign: TextAlign.center,
           overflow: nameEllipsis,
-          style: TextStyle(
+          style: FontsUtils.mainStyle(
             fontSize: 25.0,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
