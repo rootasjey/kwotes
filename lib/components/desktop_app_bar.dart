@@ -282,16 +282,27 @@ class _DesktopAppBarState extends State<DesktopAppBar> {
         developerEntry(
           value: AppBarDevelopers.github,
           icon: Icon(
-            UniconsLine.github,
+            UniconsLine.github_alt,
             color: stateColors.foreground.withOpacity(0.6),
           ),
           textData: 'GitHub',
+        ),
+        developerEntry(
+          value: AppBarDevelopers.portal,
+          icon: Icon(
+            UniconsLine.brackets_curly,
+            color: stateColors.foreground.withOpacity(0.6),
+          ),
+          textData: 'API',
         ),
       ],
       onSelected: (value) {
         switch (value) {
           case AppBarDevelopers.github:
             launch('https://github.com/rootasjey/fig.style');
+            break;
+          case AppBarDevelopers.portal:
+            launch('https://dev.fig.style');
             break;
           default:
         }
