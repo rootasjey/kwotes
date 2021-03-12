@@ -10,6 +10,7 @@ import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -672,7 +673,9 @@ class ReferencePageState extends State<ReferencePage> {
 
     return Container(
       padding: const EdgeInsets.all(24.0),
+      width: 400.0,
       child: Card(
+        elevation: 0.0,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -693,9 +696,9 @@ class ReferencePageState extends State<ReferencePage> {
                       child: Text(
                         primaryType,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
+                        style: FontsUtils.mainStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -724,9 +727,9 @@ class ReferencePageState extends State<ReferencePage> {
                           child: Text(
                             secondaryType,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: FontsUtils.mainStyle(
                               fontSize: 14.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
