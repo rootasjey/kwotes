@@ -7,15 +7,19 @@ import 'package:figstyle/components/empty_content.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/fade_in_y.dart';
+import 'package:figstyle/components/lang_popup_menu_button.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
 import 'package:figstyle/components/sliver_loading_view.dart';
+import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/utils/app_logger.dart';
+import 'package:figstyle/utils/app_storage.dart';
 import 'package:figstyle/utils/constants.dart';
+import 'package:figstyle/utils/fonts.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -47,6 +51,8 @@ class _RandomQuotesState extends State<RandomQuotes> {
   /// Maximum tries allowed if not quotes are found in a fetch.
   final int maxFetchAttempts = 5;
 
+  final pageRoute = RandomQuotesRoute.name;
+
   /// Current fetch attempt.
   int currentFetchAttempts = 0;
 
@@ -76,13 +82,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
 
   void initProps() {
     currentFetchAttempts = 0;
-    lang = stateUser.lang;
-
-    langReaction = reaction((_) => stateUser.lang, (newLang) {
-      lang = newLang;
-      currentFetchAttempts = 0;
-      fetch();
-    });
+    lang = appStorage.getPageLang(pageRoute: pageRoute);
   }
 
   @override
@@ -119,7 +119,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
       controller: scrollController,
       slivers: <Widget>[
         appBar(),
-        bodyTitle(),
+        header(),
         bodyContent(),
         bodyFooter(),
         SliverPadding(
@@ -207,7 +207,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
     );
   }
 
-  Widget bodyTitle() {
+  Widget header() {
     final showIconButton = _screenLayout == ScreenLayout.wide;
     final horPadding = _screenLayout == ScreenLayout.small ? 24.0 : 60.0;
 
@@ -255,22 +255,55 @@ class _RandomQuotesState extends State<RandomQuotes> {
             ),
           ),
           Center(
-            child: SizedBox(
+            child: Container(
               width: maxWidth,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: showIconButton ? 20.0 : 0.0,
-                ),
-                child: Opacity(
-                  opacity: 0.4,
-                  child: Text(
-                    "We picked two random quotes for you. "
-                    "You can roll the dices again with the random button above.",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
+              padding: EdgeInsets.only(
+                top: showIconButton ? 20.0 : 0.0,
+              ),
+              child: Opacity(
+                opacity: 0.4,
+                child: Text(
+                  "We picked two random quotes for you. "
+                  "You can roll the dices again with the random button above.",
+                  style: TextStyle(
+                    fontSize: 16.0,
                   ),
                 ),
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: maxWidth,
+              padding: EdgeInsets.only(
+                top: showIconButton ? 20.0 : 8.0,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        "Quotes language: ",
+                        style: FontsUtils.mainStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  LangPopupMenuButton(
+                    lang: lang,
+                    onLangChanged: (newLang) {
+                      appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
+                      setState(() => lang = newLang);
+                      currentFetchAttempts = 0;
+                      fetch();
+                    },
+                  ),
+                ],
               ),
             ),
           ),
