@@ -30,10 +30,14 @@ class _ChangelogState extends State<Changelog> {
           descriptionRow(
               "• Add image credits input for author & reference images"),
           descriptionRow("• Add IMDB field for author & reference"),
-          descriptionRow("• Fix an issue preventing to go back"
+          descriptionRow("• (web/desktop) Fix an issue preventing to go back"
               " from 'add quote' page with keys shortcuts"),
           descriptionRow("• Upgrade Flutter engine to 2.0.1"
               " and dependencies"),
+          descriptionRow("• Update random quotes page with more displayed"
+              " quotes and better layout on large screens."),
+          descriptionRow("• (web) Add dev portal link"),
+          descriptionRow("• (web) Remove hashtag in URL"),
           descriptionRow("• Other fixes & improvements"),
         ],
       ),
