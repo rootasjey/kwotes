@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/screens/image_share.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -97,7 +98,7 @@ class ShareActions {
                   Icons.text_fields_rounded,
                 ),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  context.router.pop();
                   shareTextMobile(context: context, quote: quote);
                 },
               ),
@@ -107,7 +108,7 @@ class ShareActions {
                   Icons.link,
                 ),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  context.router.pop();
                   shareLinkMobile(context: context, quote: quote);
                 },
               ),
@@ -115,7 +116,7 @@ class ShareActions {
                 title: Text('Image'),
                 trailing: Icon(Icons.image_outlined),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  context.router.pop();
 
                   showCupertinoModalBottomSheet(
                     context: context,
@@ -176,8 +177,7 @@ class ShareActions {
     @required Quote quote,
   }) {
     final RenderBox box = context.findRenderObject();
-
-    String sharingText = "${Constants.baseQuoteUrl}${quote.id}";
+    final sharingText = "${Constants.baseQuoteUrl}${quote.id}";
 
     Share.share(
       sharingText,
@@ -204,10 +204,13 @@ class ShareActions {
 
     final hashtags = Constants.twitterShareHashtags;
 
+    final url = "&url=${Constants.baseQuoteUrl}${quote.id}";
+
     await launch(
       "${Constants.baseTwitterShareUrl}"
       "$sharingText"
-      "$hashtags",
+      "$hashtags"
+      "$url",
     );
   }
 

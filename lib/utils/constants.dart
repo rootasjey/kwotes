@@ -7,13 +7,13 @@ class Constants {
 
   /// Twitter web intent API -> [hashtags] section.
   /// More info at https://twitter.com/intent/tweet.
-  static const twitterShareHashtags = "&hashtags=quote,figstyle";
+  static const twitterShareHashtags = "&hashtags=quote,citation,figstyle";
 
   /// Twitter web intent API.
   /// More info at https://twitter.com/intent/tweet.
   static const baseTwitterShareUrl = "https://twitter.com/intent/tweet"
       "?via=fig_style&text=";
-  static const baseAuthorUrl = "https://fig.style/#/authors/";
+  static const baseAuthorUrl = "https://fig.style/authors/";
   static const baseQuoteUrl = "https://fig.style/quotes/";
-  static const baseReferenceUrl = "https://fig.style/#/references/";
+  static const baseReferenceUrl = "https://fig.style/references/";
 }
