@@ -46,7 +46,7 @@ class _RandomQuotesState extends State<RandomQuotes> {
   final int documentsLimit = 20;
 
   /// Specifies the maximum random quotes to display.
-  final int maxRandomQuotes = 2;
+  final int maxRandomQuotes = 4;
 
   /// Maximum tries allowed if not quotes are found in a fetch.
   final int maxFetchAttempts = 5;
@@ -363,19 +363,19 @@ class _RandomQuotesState extends State<RandomQuotes> {
       padding: paddingListView,
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
-          Wrap(
-            alignment: WrapAlignment.center,
-            children: quotes.mapIndexed((index, quote) {
-              return FadeInX(
-                beginX: 10.0,
-                delay: index.milliseconds * 100,
-                child: Center(
-                  child: SizedBox(
-                    width: cardWidth,
+          Center(
+            child: SizedBox(
+              width: 700.0,
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: quotes.mapIndexed((index, quote) {
+                  return FadeInX(
+                    beginX: 10.0,
+                    delay: index.milliseconds * 100,
                     child: QuoteRowWithActions(
                       quote: quote,
                       elevation: 2.0,
-                      cardHeight: 400.0,
+                      cardHeight: cardWidth,
                       cardWidth: cardWidth,
                       showAuthor: true,
                       showBorder: true,
@@ -387,10 +387,10 @@ class _RandomQuotesState extends State<RandomQuotes> {
                         vertical: 20.0,
                       ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
         ]),
       ),
@@ -409,9 +409,6 @@ class _RandomQuotesState extends State<RandomQuotes> {
   }
 
   Widget vQuotesListView() {
-    final width = MediaQuery.of(context).size.width;
-    final horizontal = width < Constants.maxMobileWidth ? 20.0 : 70.0;
-
     return SliverPadding(
       padding: paddingListView,
       sliver: SliverList(
@@ -421,23 +418,21 @@ class _RandomQuotesState extends State<RandomQuotes> {
               child: FadeInY(
                 beginY: 10.0,
                 delay: index.milliseconds * 100,
-                child: Padding(
+                child: Container(
+                  width: maxWidth,
                   padding: const EdgeInsets.only(bottom: 40.0),
-                  child: SizedBox(
-                    width: maxWidth,
-                    child: QuoteRowWithActions(
-                      quote: quote,
-                      elevation: 2.0,
-                      showAuthor: true,
-                      showBorder: true,
-                      canManage: stateUser.canManageQuotes,
-                      isConnected: stateUser.isUserConnected,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: horizontal,
-                        vertical: 40.0,
-                      ),
-                      componentType: ItemComponentType.card,
+                  child: QuoteRowWithActions(
+                    quote: quote,
+                    elevation: 2.0,
+                    showAuthor: true,
+                    showBorder: true,
+                    canManage: stateUser.canManageQuotes,
+                    isConnected: stateUser.isUserConnected,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 28.0,
                     ),
+                    componentType: ItemComponentType.card,
                   ),
                 ),
               ),
