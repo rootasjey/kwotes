@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/types/author.dart';
@@ -183,10 +184,16 @@ class _CircleAuthorState extends State<CircleAuthor>
   }
 
   void onTap(Author author) {
-    AuthorPageRoute(
-      authorId: author.id,
-      authorImageUrl: author.urls.image,
-      authorName: author.name,
-    ).show(context);
+    context.router.push(
+      AuthorsDeepRoute(
+        children: [
+          AuthorPageRoute(
+            authorId: author.id,
+            authorImageUrl: author.urls.image,
+            authorName: author.name,
+          ),
+        ],
+      ),
+    );
   }
 }
