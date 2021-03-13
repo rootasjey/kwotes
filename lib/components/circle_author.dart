@@ -3,6 +3,7 @@ import 'package:figstyle/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:unicons/unicons.dart';
 
 /// A widget which displays an author's image url
 /// in an circle shape. Delivered with hover animation.
@@ -93,17 +94,11 @@ class _CircleAuthorState extends State<CircleAuthor>
                   image: NetworkImage(author.urls.image),
                   fit: BoxFit.cover,
                 )
-              : Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 80.0,
-                    vertical: 40.0,
-                  ),
-                  child: Opacity(
-                    opacity: 0.6,
-                    child: Icon(
-                      Icons.library_books,
-                      size: 60.0,
-                    ),
+              : Opacity(
+                  opacity: 0.6,
+                  child: Icon(
+                    UniconsLine.user,
+                    size: 60.0,
                   ),
                 ),
         ),
