@@ -5,51 +5,52 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i1;
+import 'package:flutter/foundation.dart' as _i43;
 import 'package:flutter/material.dart' as _i2;
-import 'auth_guard.dart' as _i3;
-import 'no_auth_guard.dart' as _i4;
-import 'admin_auth_guard.dart' as _i5;
-import '../screens/home/home.dart' as _i6;
+
 import '../screens/about.dart' as _i7;
+import '../screens/add_quote/steps.dart' as _i24;
+import '../screens/admin_temp_quotes.dart' as _i33;
+import '../screens/author_page.dart' as _i20;
+import '../screens/authors.dart' as _i19;
 import '../screens/changelog.dart' as _i8;
 import '../screens/contact.dart' as _i9;
 import '../screens/dashboard_page.dart' as _i10;
-import '../screens/on_boarding.dart' as _i11;
-import '../screens/forgot_password.dart' as _i12;
-import '../screens/settings.dart' as _i13;
-import '../screens/search.dart' as _i14;
-import '../screens/signin.dart' as _i15;
-import '../screens/signup.dart' as _i16;
-import '../screens/tos.dart' as _i17;
-import '../screens/undefined_page.dart' as _i18;
-import '../screens/authors.dart' as _i19;
-import '../screens/author_page.dart' as _i20;
-import '../screens/recent_quotes.dart' as _i21;
-import '../screens/random_quotes.dart' as _i22;
-import '../screens/quote_page.dart' as _i23;
-import '../screens/add_quote/steps.dart' as _i24;
+import '../screens/delete_account.dart' as _i36;
 import '../screens/drafts.dart' as _i25;
-import '../screens/favourites.dart' as _i26;
-import '../screens/my_published_quotes.dart' as _i27;
-import '../screens/my_temp_quotes.dart' as _i28;
-import '../screens/quotidians.dart' as _i29;
 import '../screens/edit_author.dart' as _i30;
 import '../screens/edit_quote.dart' as _i31;
 import '../screens/edit_reference.dart' as _i32;
-import '../screens/admin_temp_quotes.dart' as _i33;
-import '../screens/quotes_lists.dart' as _i34;
+import '../screens/favourites.dart' as _i26;
+import '../screens/forgot_password.dart' as _i12;
+import '../screens/home/home.dart' as _i6;
+import '../screens/my_published_quotes.dart' as _i27;
+import '../screens/my_temp_quotes.dart' as _i28;
+import '../screens/on_boarding.dart' as _i11;
+import '../screens/quote_page.dart' as _i23;
 import '../screens/quotes_list.dart' as _i35;
-import '../screens/delete_account.dart' as _i36;
+import '../screens/quotes_lists.dart' as _i34;
+import '../screens/quotidians.dart' as _i29;
+import '../screens/random_quotes.dart' as _i22;
+import '../screens/recent_quotes.dart' as _i21;
+import '../screens/reference_page.dart' as _i42;
+import '../screens/references.dart' as _i41;
+import '../screens/search.dart' as _i14;
+import '../screens/settings.dart' as _i13;
+import '../screens/signin.dart' as _i15;
+import '../screens/signup.dart' as _i16;
+import '../screens/topic_page.dart' as _i40;
+import '../screens/tos.dart' as _i17;
+import '../screens/undefined_page.dart' as _i18;
 import '../screens/update_email.dart' as _i37;
 import '../screens/update_password.dart' as _i38;
 import '../screens/update_username.dart' as _i39;
-import '../screens/topic_page.dart' as _i40;
-import '../screens/references.dart' as _i41;
-import '../screens/reference_page.dart' as _i42;
-import 'package:flutter/foundation.dart' as _i43;
-import '../types/quote.dart' as _i44;
 import '../types/author.dart' as _i45;
+import '../types/quote.dart' as _i44;
 import '../types/reference.dart' as _i46;
+import 'admin_auth_guard.dart' as _i5;
+import 'auth_guard.dart' as _i3;
+import 'no_auth_guard.dart' as _i4;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter(
@@ -541,7 +542,7 @@ class HomeRoute extends _i1.PageRouteInfo {
   HomeRoute({this.mobileInitialIndex = 0}) : super(name, path: '/');
 
   HomeRoute.fromMatch(_i1.RouteMatch match)
-      : mobileInitialIndex = null,
+      : mobileInitialIndex = 0,
         super.fromMatch(match);
 
   final int mobileInitialIndex;
@@ -604,7 +605,7 @@ class OnBoardingRoute extends _i1.PageRouteInfo {
   OnBoardingRoute({this.isDesktop = false}) : super(name, path: '/onboarding');
 
   OnBoardingRoute.fromMatch(_i1.RouteMatch match)
-      : isDesktop = null,
+      : isDesktop = false,
         super.fromMatch(match);
 
   final bool isDesktop;
@@ -742,8 +743,8 @@ class AuthorPageRoute extends _i1.PageRouteInfo {
 
   AuthorPageRoute.fromMatch(_i1.RouteMatch match)
       : authorId = match.pathParams.getString('authorId'),
-        authorImageUrl = null,
-        authorName = null,
+        authorImageUrl = '',
+        authorName = '',
         super.fromMatch(match);
 
   final String authorId;
@@ -760,7 +761,7 @@ class RecentQuotesRoute extends _i1.PageRouteInfo {
       : super(name, path: 'recent');
 
   RecentQuotesRoute.fromMatch(_i1.RouteMatch match)
-      : showNavBackIcon = null,
+      : showNavBackIcon = true,
         super.fromMatch(match);
 
   final bool showNavBackIcon;
