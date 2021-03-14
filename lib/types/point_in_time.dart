@@ -27,7 +27,7 @@ class PointInTime {
       return PointInTime.empty();
     }
 
-    DateTime date = DateHelper.fromFirestore(data['original']);
+    DateTime date = DateHelper.fromFirestore(data['date']);
 
     return PointInTime(
       beforeJC: data['beforeJC'],
