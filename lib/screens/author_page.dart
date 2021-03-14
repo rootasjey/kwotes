@@ -5,6 +5,7 @@ import 'package:figstyle/actions/authors.dart';
 import 'package:figstyle/actions/share.dart';
 import 'package:figstyle/components/author_avatar.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:figstyle/components/lang_popup_menu_button.dart';
 import 'package:figstyle/components/page_app_bar.dart';
 import 'package:figstyle/components/square_action.dart';
 import 'package:figstyle/router/app_router.gr.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:figstyle/components/error_container.dart';
 import 'package:figstyle/components/loading_animation.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
@@ -325,43 +325,26 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget langDropdown() {
-    Widget child;
-
     if (isLoading) {
-      child = Container();
-    } else {
-      child = Padding(
-        padding: const EdgeInsets.only(top: 0.0),
-        child: DropdownButton<String>(
-          elevation: 2,
-          value: lang,
-          isDense: true,
-          underline: Container(
-            height: 0,
-            color: Colors.deepPurpleAccent,
-          ),
-          icon: Icon(Icons.keyboard_arrow_down),
-          style: TextStyle(
-            color: stateColors.foreground.withOpacity(0.6),
-            fontSize: 20.0,
-            fontFamily: GoogleFonts.raleway().fontFamily,
-          ),
-          onChanged: (String newLang) {
-            lang = newLang;
-            fetchQuotes();
-            appStorage.setPageLang(lang: lang, pageRoute: pageRoute);
-          },
-          items: ['en', 'fr'].map((String value) {
-            return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value.toUpperCase(),
-                ));
-          }).toList(),
+      return SliverPadding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate.fixed([
+            Center(
+              child: SizedBox(
+                width: 80.0,
+                child: Divider(thickness: 2.0),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 30.0,
+              ),
+            ),
+          ]),
         ),
       );
     }
-
     return SliverPadding(
       padding: const EdgeInsets.only(bottom: 20.0),
       sliver: SliverList(
@@ -377,7 +360,22 @@ class _AuthorPageState extends State<AuthorPage> {
               bottom: 30.0,
             ),
           ),
-          Center(child: child),
+          Center(
+            child: LangPopupMenuButton(
+              lang: lang,
+              elevation: 2.0,
+              onLangChanged: (newLang) {
+                lang = newLang;
+
+                fetchQuotes();
+
+                appStorage.setPageLang(
+                  lang: lang,
+                  pageRoute: pageRoute,
+                );
+              },
+            ),
+          ),
         ]),
       ),
     );
