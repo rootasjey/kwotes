@@ -850,6 +850,7 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
   Widget releaseDate() {
     final selectedDate = DataQuoteInputs.reference.release.original;
     final beforeJC = DataQuoteInputs.reference.release.beforeJC ?? false;
+    final showPlaceholder = DataQuoteInputs.reference.release.dateEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
@@ -867,31 +868,45 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
                       lastDate: DateTime.now(),
                     );
 
-                    setState(() =>
-                        DataQuoteInputs.reference.release.original = picked);
+                    setState(() {
+                      DataQuoteInputs.reference.release.original = picked;
+                      DataQuoteInputs.reference.release.dateEmpty =
+                          picked == null;
+                    });
                   },
             icon: Icon(Icons.calendar_today),
             label: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: Text(selectedDate != null
-                  ? selectedDate.toLocal().toString().split(' ')[0]
-                  : 'Select a new date'),
+              child: Text(
+                showPlaceholder
+                    ? 'Select a new date'
+                    : selectedDate.toLocal().toString().split(' ')[0],
+              ),
             ),
           ),
           Container(
             width: 300.0,
             padding: const EdgeInsets.only(top: 12.0),
             child: CheckboxListTile(
-              title: Text('Before J-C (Jesus Christ)',
-                  style: TextStyle(fontSize: 16)),
-              subtitle:
-                  Text('(e.g. year -500)', style: TextStyle(fontSize: 13)),
+              title: Text(
+                'Before J-C (Jesus Christ)',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              subtitle: Text(
+                '(e.g. year -500)',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+              ),
               value: beforeJC,
               onChanged: prefilledInputs
                   ? null
                   : (newValue) {
-                      setState(() => DataQuoteInputs
-                          .reference.release.beforeJC = newValue);
+                      setState(() {
+                        DataQuoteInputs.reference.release.beforeJC = newValue;
+                      });
                     },
             ),
           ),
