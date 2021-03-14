@@ -6,11 +6,18 @@ class PointInTime {
   String city;
   DateTime date;
 
+  /// True if the Firestore [date] value is null or doesn't exist.
+  /// In this app, the [date] property will never be null (null safety).
+  ///
+  /// This property doesn't exist in Firestore.
+  bool dateEmpty;
+
   PointInTime({
     this.beforeJC = false,
     this.city = '',
     this.country = '',
     this.date,
+    this.dateEmpty = true,
   });
 
   factory PointInTime.empty() {
@@ -19,6 +26,7 @@ class PointInTime {
       country: '',
       city: '',
       date: DateTime.now(),
+      dateEmpty: true,
     );
   }
 
@@ -34,6 +42,7 @@ class PointInTime {
       country: data['country'],
       city: data['city'],
       date: date,
+      dateEmpty: data['date'] == null,
     );
   }
 
@@ -44,7 +53,7 @@ class PointInTime {
     data['country'] = country;
     data['city'] = city;
 
-    if (date == null) {
+    if (date == null || dateEmpty) {
       return data;
     }
 

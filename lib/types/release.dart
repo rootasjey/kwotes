@@ -5,15 +5,23 @@ class Release {
   DateTime original;
   bool beforeJC;
 
+  /// True if the Firestore [date] value is null or doesn't exist.
+  /// In this app, the [date] property will never be null (null safety).
+  ///
+  /// This property doesn't exist in Firestore.
+  bool dateEmpty;
+
   Release({
     this.original,
     this.beforeJC = false,
+    this.dateEmpty = true,
   });
 
   factory Release.empty() {
     return Release(
       original: DateTime.now(),
       beforeJC: false,
+      dateEmpty: true,
     );
   }
 
@@ -27,6 +35,7 @@ class Release {
     return Release(
       original: original,
       beforeJC: data['beforeJC'] ?? false,
+      dateEmpty: data['original'] == null,
     );
   }
 
@@ -35,7 +44,7 @@ class Release {
 
     data['beforeJC'] = beforeJC ?? false;
 
-    if (original == null) {
+    if (original == null || dateEmpty) {
       return data;
     }
 
