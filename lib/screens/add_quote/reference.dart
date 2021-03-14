@@ -856,33 +856,51 @@ class _AddQuoteReferenceState extends State<AddQuoteReference> {
       padding: const EdgeInsets.only(bottom: 24.0),
       child: Column(
         children: [
-          OutlinedButton.icon(
-            onPressed: prefilledInputs
-                ? showPrefilledAlert
-                : () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialEntryMode: DatePickerEntryMode.input,
-                      initialDate: selectedDate ?? DateTime.now(),
-                      firstDate: DateTime(0),
-                      lastDate: DateTime.now(),
-                    );
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              OutlinedButton.icon(
+                onPressed: prefilledInputs
+                    ? showPrefilledAlert
+                    : () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialEntryMode: DatePickerEntryMode.input,
+                          initialDate: selectedDate ?? DateTime.now(),
+                          firstDate: DateTime(0),
+                          lastDate: DateTime.now(),
+                        );
 
+                        setState(() {
+                          DataQuoteInputs.reference.release.original = picked;
+                          DataQuoteInputs.reference.release.dateEmpty =
+                              picked == null;
+                        });
+                      },
+                icon: Icon(Icons.calendar_today),
+                label: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    showPlaceholder
+                        ? 'Select a new date'
+                        : selectedDate.toLocal().toString().split(' ')[0],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: IconButton(
+                  tooltip: "Clear release date",
+                  onPressed: () {
                     setState(() {
-                      DataQuoteInputs.reference.release.original = picked;
-                      DataQuoteInputs.reference.release.dateEmpty =
-                          picked == null;
+                      DataQuoteInputs.reference.release.dateEmpty = true;
+                      DataQuoteInputs.reference.release.beforeJC = false;
                     });
                   },
-            icon: Icon(Icons.calendar_today),
-            label: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                showPlaceholder
-                    ? 'Select a new date'
-                    : selectedDate.toLocal().toString().split(' ')[0],
+                  icon: Icon(UniconsLine.times),
+                ),
               ),
-            ),
+            ],
           ),
           Container(
             width: 300.0,
