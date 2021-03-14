@@ -419,7 +419,6 @@ class _QuoteRowState extends State<QuoteRow> with TickerProviderStateMixin {
           onHover: (isHover) {
             setState(() {
               elevation = isHover ? getHoverElevation() : getElevation();
-              _cardBackgroundColor = isHover ? _accentColor : null;
             });
           },
           child: Padding(
