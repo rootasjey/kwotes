@@ -222,13 +222,13 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
       tapToEditLocalStr = 'Edit';
     }
 
-    final bornStr = born != null && born.date != null
-        ? born.date.toLocal().toString().split(' ')[0]
-        : tapToEditLocalStr;
+    final bornStr = born.dateEmpty
+        ? tapToEditLocalStr
+        : born.date.toLocal().toString().split(' ')[0];
 
-    final deathStr = death != null && death.date != null
-        ? death.date.toLocal().toString().split(' ')[0]
-        : tapToEditLocalStr;
+    final deathStr = death.dateEmpty
+        ? tapToEditLocalStr
+        : death.date.toLocal().toString().split(' ')[0];
 
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
@@ -301,6 +301,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
                   var selectedDate = DataQuoteInputs.author.born.date;
+                  final showPlaceholder = DataQuoteInputs.author.born.dateEmpty;
 
                   return Padding(
                     padding: EdgeInsets.only(top: 60.0),
@@ -318,8 +319,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                               lastDate: DateTime.now(),
                             );
 
-                            childSetState(() =>
-                                DataQuoteInputs.author.born.date = picked);
+                            childSetState(() {
+                              DataQuoteInputs.author.born.date = picked;
+                              DataQuoteInputs.author.born.dateEmpty =
+                                  picked == null;
+                            });
                           },
                           icon: Padding(
                             padding: const EdgeInsets.only(bottom: 4.0),
@@ -327,14 +331,12 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                           ),
                           label: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              selectedDate != null
-                                  ? selectedDate
-                                      .toLocal()
-                                      .toString()
-                                      .split(' ')[0]
-                                  : 'Select a new date',
-                            ),
+                            child: Text(showPlaceholder
+                                ? 'Select a new date'
+                                : selectedDate
+                                    .toLocal()
+                                    .toString()
+                                    .split(' ')[0]),
                           ),
                         ),
                         SizedBox(
@@ -407,6 +409,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     DataQuoteInputs.author.born.city = '';
                     DataQuoteInputs.author.born.country = '';
                     DataQuoteInputs.author.born.date = null;
+                    DataQuoteInputs.author.born.dateEmpty = true;
 
                     cityController.clear();
                     countryController.clear();
@@ -469,6 +472,9 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 ),
                 StatefulBuilder(builder: (context, childSetState) {
                   final selectedDate = DataQuoteInputs.author.death.date;
+                  final showPlaceholder =
+                      DataQuoteInputs.author.death.dateEmpty;
+
                   return Padding(
                     padding: EdgeInsets.only(top: 60.0),
                     child: Wrap(
@@ -485,18 +491,21 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                               lastDate: DateTime.now(),
                             );
 
-                            childSetState(() =>
-                                DataQuoteInputs.author.death.date = picked);
+                            childSetState(() {
+                              DataQuoteInputs.author.death.date = picked;
+                              DataQuoteInputs.author.death.dateEmpty =
+                                  picked == null;
+                            });
                           },
                           icon: Icon(Icons.calendar_today),
                           label: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Text(selectedDate != null
-                                ? selectedDate
+                            child: Text(showPlaceholder
+                                ? 'Select a new date'
+                                : selectedDate
                                     .toLocal()
                                     .toString()
-                                    .split(' ')[0]
-                                : 'Select a new date'),
+                                    .split(' ')[0]),
                           ),
                         ),
                         SizedBox(
@@ -506,8 +515,10 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                             subtitle: Text('(e.g. year -500)'),
                             value: DataQuoteInputs.author.death.beforeJC,
                             onChanged: (newValue) {
-                              childSetState(() => DataQuoteInputs
-                                  .author.death.beforeJC = newValue);
+                              childSetState(() {
+                                DataQuoteInputs.author.death.beforeJC =
+                                    newValue;
+                              });
                             },
                           ),
                         ),
@@ -568,6 +579,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                     DataQuoteInputs.author.death.city = '';
                     DataQuoteInputs.author.death.country = '';
                     DataQuoteInputs.author.death.date = null;
+                    DataQuoteInputs.author.death.dateEmpty = true;
 
                     cityController.clear();
                     countryController.clear();
