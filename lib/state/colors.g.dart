@@ -39,6 +39,21 @@ mixin _$StateColors on StateColorsBase, Store {
     });
   }
 
+  final _$tileBackgroundAtom = Atom(name: 'StateColorsBase.tileBackground');
+
+  @override
+  Color get tileBackground {
+    _$tileBackgroundAtom.reportRead();
+    return super.tileBackground;
+  }
+
+  @override
+  set tileBackground(Color value) {
+    _$tileBackgroundAtom.reportWrite(value, super.tileBackground, () {
+      super.tileBackground = value;
+    });
+  }
+
   final _$backgroundAtom = Atom(name: 'StateColorsBase.background');
 
   @override
@@ -129,6 +144,7 @@ mixin _$StateColors on StateColorsBase, Store {
     return '''
 accent: ${accent},
 appBackground: ${appBackground},
+tileBackground: ${tileBackground},
 background: ${background},
 foreground: ${foreground},
 iconExt: ${iconExt},
