@@ -9,6 +9,7 @@ import 'package:figstyle/components/sheet_header.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/reference_suggestion.dart';
+import 'package:figstyle/utils/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
@@ -211,14 +212,11 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     final born = DataQuoteInputs.author.born;
     final death = DataQuoteInputs.author.death;
 
-    double spacing = 20.0;
-    double width = 150.0;
+    double width = 200.0;
 
     String tapToEditLocalStr = tapToEditStr;
 
     if (MediaQuery.of(context).size.width < 600.0) {
-      spacing = 0.0;
-      width = 120.0;
       tapToEditLocalStr = 'Edit';
     }
 
@@ -232,49 +230,74 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      child: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
+      child: Column(
         children: [
-          InputCard(
-            elevation: 1.0,
-            width: width,
-            titleString: 'Born',
-            subtitleString: bornStr,
-            padding: EdgeInsets.zero,
-            icon: Icon(UniconsLine.play),
-            onTap: prefilledInputs
-                ? showPrefilledAlert
-                : () async {
-                    await showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return bornInput(
-                            scrollController: ModalScrollController.of(context),
-                          );
-                        });
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InputCard(
+                elevation: 1.0,
+                width: width,
+                titleString: 'Born',
+                subtitleString: bornStr,
+                padding: EdgeInsets.zero,
+                icon: Icon(UniconsLine.play),
+                onTap: prefilledInputs
+                    ? showPrefilledAlert
+                    : () async {
+                        await showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return bornInput(
+                                scrollController:
+                                    ModalScrollController.of(context),
+                              );
+                            });
 
-                    setState(() {});
-                  },
+                        setState(() {});
+                      },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: IconButton(
+                  tooltip: "Clear born date",
+                  onPressed: clearBornInputs,
+                  icon: Icon(UniconsLine.times),
+                ),
+              ),
+            ],
           ),
-          InputCard(
-            elevation: 1.0,
-            width: width,
-            titleString: 'Death',
-            subtitleString: deathStr,
-            padding: EdgeInsets.zero,
-            icon: Icon(UniconsLine.square_shape),
-            onTap: prefilledInputs
-                ? showPrefilledAlert
-                : () async {
-                    await showCupertinoModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return deathInput();
-                        });
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InputCard(
+                elevation: 1.0,
+                width: width,
+                titleString: 'Death',
+                subtitleString: deathStr,
+                padding: EdgeInsets.zero,
+                icon: Icon(UniconsLine.square_shape),
+                onTap: prefilledInputs
+                    ? showPrefilledAlert
+                    : () async {
+                        await showCupertinoModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return deathInput();
+                            });
 
-                    setState(() {});
-                  },
+                        setState(() {});
+                      },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: IconButton(
+                  tooltip: "Clear death date",
+                  onPressed: clearDeathInputs,
+                  icon: Icon(UniconsLine.times),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -405,16 +428,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 ),
                 FormActionInputs(
                   cancelTextString: 'Clear inputs',
-                  onCancel: () {
-                    DataQuoteInputs.author.born.city = '';
-                    DataQuoteInputs.author.born.country = '';
-                    DataQuoteInputs.author.born.date = null;
-                    DataQuoteInputs.author.born.dateEmpty = true;
-
-                    cityController.clear();
-                    countryController.clear();
-                    cityFocusNode.requestFocus();
-                  },
+                  onCancel: clearBornInputs,
                 ),
               ],
             ),
@@ -424,7 +438,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
     );
   }
 
-  Widget clearButton() {
+  Widget clearAllButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: TextButton.icon(
@@ -575,16 +589,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
                 ),
                 FormActionInputs(
                   cancelTextString: 'Clear inputs',
-                  onCancel: () {
-                    DataQuoteInputs.author.death.city = '';
-                    DataQuoteInputs.author.death.country = '';
-                    DataQuoteInputs.author.death.date = null;
-                    DataQuoteInputs.author.death.dateEmpty = true;
-
-                    cityController.clear();
-                    countryController.clear();
-                    cityFocusNode.requestFocus();
-                  },
+                  onCancel: clearDeathInputs,
                 ),
               ],
             ),
@@ -633,7 +638,7 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           imageCreditsButton(),
           nameCardInput(),
           jobCardInput(),
-          clearButton(),
+          clearAllButton(),
           bornAndDeathCards(),
           summaryCardInput(),
           fictionalCharacterBox(),
@@ -1411,6 +1416,40 @@ class _AddQuoteAuthorState extends State<AddQuoteAuthor> {
           ),
         )
       ],
+    );
+  }
+
+  void clearBornInputs() {
+    DataQuoteInputs.author.born.city = '';
+    DataQuoteInputs.author.born.beforeJC = false;
+    DataQuoteInputs.author.born.country = '';
+    DataQuoteInputs.author.born.date = null;
+    DataQuoteInputs.author.born.dateEmpty = true;
+
+    cityController.clear();
+    countryController.clear();
+    cityFocusNode.requestFocus();
+
+    Snack.i(
+      context: context,
+      message: "Born inputs cleared",
+    );
+  }
+
+  void clearDeathInputs() {
+    DataQuoteInputs.author.death.city = '';
+    DataQuoteInputs.author.death.beforeJC = false;
+    DataQuoteInputs.author.death.country = '';
+    DataQuoteInputs.author.death.date = null;
+    DataQuoteInputs.author.death.dateEmpty = true;
+
+    cityController.clear();
+    countryController.clear();
+    cityFocusNode.requestFocus();
+
+    Snack.i(
+      context: context,
+      message: "Death inputs cleared",
     );
   }
 
