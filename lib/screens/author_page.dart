@@ -239,36 +239,22 @@ class _AuthorPageState extends State<AuthorPage> {
 
     return SliverList(
       delegate: SliverChildListDelegate([
-        LayoutBuilder(
-          builder: (context, constrains) {
-            return Container(
-              alignment: AlignmentDirectional.center,
-              padding: const EdgeInsets.only(bottom: 40.0),
-              child: Column(
-                children: <Widget>[
-                  FadeInY(
-                    beginY: beginY,
-                    delay: 200.milliseconds,
-                    child: job(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 60.0,
-                    ),
-                    child: links(),
-                  ),
-                  userActions(),
-                  if (isSummaryVisible)
-                    FadeInY(
-                      beginY: -20.0,
-                      endY: 0.0,
-                      child: summaryTextBlock(),
-                    ),
-                ],
-              ),
-            );
-          },
-        ),
+        Container(
+          alignment: AlignmentDirectional.center,
+          child: Column(
+            children: <Widget>[
+              job(),
+              links(),
+              userActions(),
+              if (isSummaryVisible)
+                FadeInY(
+                  beginY: -20.0,
+                  endY: 0.0,
+                  child: summaryTextBlock(),
+                ),
+            ],
+          ),
+        )
       ]),
     );
   }
@@ -319,15 +305,19 @@ class _AuthorPageState extends State<AuthorPage> {
   }
 
   Widget job() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Opacity(
-        opacity: 0.5,
-        child: Text(
-          author.job,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 18.0,
+    return FadeInY(
+      beginY: beginY,
+      delay: 200.milliseconds,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Opacity(
+          opacity: 0.5,
+          child: Text(
+            author.job,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
           ),
         ),
       ),
@@ -338,9 +328,7 @@ class _AuthorPageState extends State<AuthorPage> {
     Widget child;
 
     if (isLoading) {
-      child = Padding(
-        padding: EdgeInsets.zero,
-      );
+      child = Container();
     } else {
       child = Padding(
         padding: const EdgeInsets.only(top: 0.0),
@@ -378,6 +366,17 @@ class _AuthorPageState extends State<AuthorPage> {
       padding: const EdgeInsets.only(bottom: 20.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate.fixed([
+          Center(
+            child: SizedBox(
+              width: 80.0,
+              child: Divider(thickness: 2.0),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 30.0,
+            ),
+          ),
           Center(child: child),
         ]),
       ),
@@ -701,7 +700,7 @@ class _AuthorPageState extends State<AuthorPage> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
+      padding: const EdgeInsets.all(40.0),
       child: Wrap(
         spacing: 5.0,
         children: buttonsList,
