@@ -375,7 +375,7 @@ class RecentQuotesState extends State<RecentQuotes> {
               key: ObjectKey(index),
               useSwipeActions: true,
               quoteFontSize: quoteFontSize,
-              color: stateColors.appBackground,
+              color: stateColors.tileBackground,
               padding: EdgeInsets.symmetric(
                 horizontal: horizontal,
               ),

@@ -252,6 +252,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
                 return QuoteRowWithActions(
                   quote: quote,
                   quoteId: quote.id,
+                  color: stateColors.tileBackground,
                 );
               },
               childCount: quotes.length,
@@ -267,6 +268,7 @@ class _QuotesByAuthorRefState extends State<QuotesByAuthorRef> {
               return QuoteRow(
                 quote: quote,
                 quoteId: quote.id,
+                color: stateColors.tileBackground,
                 itemBuilder: (context) => <PopupMenuEntry<String>>[
                   PopupMenuItem(
                     value: 'share',

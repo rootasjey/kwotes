@@ -68,7 +68,7 @@ class _AuthorRowState extends State<AuthorRow> {
       padding: widget.padding,
       child: Card(
         elevation: elevation,
-        color: stateColors.appBackground,
+        color: stateColors.tileBackground,
         child: InkWell(
           onTap: () {
             AuthorPageRoute(

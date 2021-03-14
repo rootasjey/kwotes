@@ -69,7 +69,7 @@ class _ReferenceRowState extends State<ReferenceRow> {
       padding: widget.padding,
       child: Card(
         elevation: elevation,
-        color: stateColors.appBackground,
+        color: stateColors.tileBackground,
         child: InkWell(
           onTap: () {
             context.router.root.push(

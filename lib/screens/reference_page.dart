@@ -543,7 +543,7 @@ class ReferencePageState extends State<ReferencePage> {
                       isConnected: isConnected,
                       key: ObjectKey(index),
                       useSwipeActions: width < Constants.maxMobileWidth,
-                      color: stateColors.appBackground,
+                      color: stateColors.tileBackground,
                       padding: EdgeInsets.symmetric(
                         horizontal: horPadding,
                         vertical: 10.0,
