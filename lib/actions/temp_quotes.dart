@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/utils/app_logger.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:figstyle/utils/cloud.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/data_quote_inputs.dart';
 import 'package:figstyle/state/user.dart';
@@ -19,12 +18,7 @@ class TempQuotesActions {
     }
 
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('tempQuotes-create');
-
-      final resp = await callable.call({
+      final resp = await Cloud.fun('tempQuotes-create').call({
         'tempQuote': {
           'author': DataQuoteInputs.author.toJSON(
             withId: true,
@@ -54,8 +48,7 @@ class TempQuotesActions {
         },
       });
 
-      final isOk = resp.data['success'] as bool;
-      return isOk;
+      return resp.data['success'] as bool;
     } catch (error) {
       appLogger.e(error);
       return false;
@@ -66,17 +59,11 @@ class TempQuotesActions {
   /// (etheir offline or online).
   static Future<bool> addTempQuoteFromDraft({TempQuote tempQuote}) async {
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('tempQuotes-create');
-
-      final resp = await callable.call({
+      final resp = await Cloud.fun('tempQuotes-create').call({
         'tempQuote': tempQuote.toJSON(dateAsInt: true),
       });
 
-      final isOk = resp.data['success'] as bool;
-      return isOk;
+      return resp.data['success'] as bool;
     } catch (error) {
       appLogger.e(error);
       return false;
@@ -229,12 +216,7 @@ class TempQuotesActions {
     }
 
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('tempQuotes-update');
-
-      final resp = await callable.call({
+      final resp = await Cloud.fun('tempQuotes-update').call({
         'tempQuote': {
           'author': DataQuoteInputs.author.toJSON(
             withId: true,
@@ -278,14 +260,9 @@ class TempQuotesActions {
     String uid,
   }) async {
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('tempQuotes-validate');
-
       final idToken = await stateUser.userAuth.getIdToken();
 
-      final resp = await callable.call({
+      final resp = await Cloud.fun('tempQuotes-validate').call({
         'tempQuoteId': tempQuote.id,
         'idToken': idToken,
       });

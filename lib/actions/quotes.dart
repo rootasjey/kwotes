@@ -1,7 +1,6 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/utils/app_logger.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:figstyle/utils/cloud.dart';
 import 'package:figstyle/types/quote.dart';
 
 class QuotesActions {
@@ -14,12 +13,7 @@ class QuotesActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('quotes-deleteQuotes');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('quotes-deleteQuotes').call({
         'quoteIds': [quote.id],
         'idToken': idToken,
         'deleteAuthor': deleteAuthor,
@@ -27,8 +21,7 @@ class QuotesActions {
       });
 
       final responseData = response.data;
-      final bool success = responseData['success'];
-      return success;
+      return responseData['success'] as bool;
     } catch (error) {
       appLogger.e("[QuotesActions] Delete quotes failed");
       appLogger.e(error);

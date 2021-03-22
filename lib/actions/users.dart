@@ -1,7 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/types/create_account_resp.dart';
 import 'package:figstyle/utils/app_logger.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:figstyle/utils/cloud.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,14 +10,10 @@ class UsersActions {
   /// Check email availability accross the app.
   static Future<bool> checkEmailAvailability(String email) async {
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('users-checkEmailAvailability');
+      final resp = await Cloud.fun('users-checkEmailAvailability')
+          .call({'email': email});
 
-      final resp = await callable.call({'email': email});
-      final isOk = resp.data['isAvailable'] as bool;
-      return isOk;
+      return resp.data['isAvailable'] as bool;
     } on FirebaseFunctionsException catch (exception) {
       appLogger.e("[code: ${exception.code}] - ${exception.message}");
       return false;
@@ -34,12 +30,7 @@ class UsersActions {
     @required String password,
   }) async {
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('users-createAccount');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('users-createAccount').call({
         'username': username,
         'password': password,
         'email': email,
@@ -64,12 +55,8 @@ class UsersActions {
   /// Check username availability.
   static Future<bool> checkUsernameAvailability(String username) async {
     try {
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('users-checkUsernameAvailability');
-
-      final resp = await callable.call({'name': username});
+      final resp = await Cloud.fun('users-checkUsernameAvailability')
+          .call({'name': username});
       final isOk = resp.data['isAvailable'] as bool;
       return isOk;
     } on FirebaseFunctionsException catch (exception) {

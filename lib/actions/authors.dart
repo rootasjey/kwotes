@@ -1,8 +1,7 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/author.dart';
 import 'package:figstyle/utils/app_logger.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:figstyle/utils/cloud.dart';
 
 class AuthorsActions {
   static Future<bool> delete({
@@ -14,12 +13,7 @@ class AuthorsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('authors-deleteAuthors');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('authors-deleteAuthors').call({
         'authorIds': [author.id],
         'idToken': idToken,
       });

@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:figstyle/types/background_op.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/background_op_manager.dart';
+import 'package:figstyle/utils/cloud.dart';
 import 'package:figstyle/utils/flash_helper.dart';
 import 'package:figstyle/utils/snack.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
@@ -22,12 +21,7 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('lists-addQuotes');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('lists-addQuotes').call({
         'listId': listId,
         'idToken': idToken,
         'quoteIds': quoteIds,
@@ -54,12 +48,7 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('lists-createList');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('lists-createList').call({
         'name': name,
         'description': description,
         'isPublic': isPublic,
@@ -100,12 +89,7 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('lists-deleteList');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('lists-deleteList').call({
         'listId': id,
         'idToken': idToken,
       });
@@ -142,12 +126,7 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('lists-removeQuotes');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('lists-removeQuotes').call({
         'listId': id,
         'idToken': idToken,
         'quoteIds': [quote.id],
@@ -175,12 +154,7 @@ class ListsActions {
       final userAuth = stateUser.userAuth;
       final idToken = await userAuth.getIdToken();
 
-      final callable = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: 'europe-west3',
-      ).httpsCallable('lists-updateList');
-
-      final response = await callable.call({
+      final response = await Cloud.fun('lists-updateList').call({
         'idToken': idToken,
         'listId': id,
         'name': name,
