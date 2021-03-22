@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:figstyle/components/animated_app_icon.dart';
 import 'package:figstyle/components/desktop_app_bar.dart';
 import 'package:figstyle/components/quote_row_with_actions.dart';
@@ -8,6 +9,7 @@ import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/enums.dart';
 import 'package:figstyle/types/quote.dart';
 import 'package:figstyle/types/quotidian.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -174,7 +176,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
           Opacity(
             opacity: 0.6,
             child: Text(
-              'Loading...',
+              "loading".tr(),
               style: TextStyle(
                 fontSize: 30.0,
                 // fontWeight: FontWeight.w900,
@@ -198,7 +200,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
               Opacity(
                 opacity: 0.6,
                 child: Text(
-                  'Recent...',
+                  "recent_dot".tr(),
                   style: TextStyle(
                     fontSize: 60.0,
                     fontWeight: FontWeight.w900,
@@ -219,7 +221,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
             child: Opacity(
               opacity: 0.8,
               child: Text(
-                "There's no recent quotes",
+                "recent_none".tr(),
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
@@ -229,7 +231,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
           Opacity(
             opacity: 0.6,
             child: Text(
-              "Maybe your this language has been added recently",
+              "lang_recent_add_maybe".tr(),
               style: TextStyle(
                 fontSize: 18.0,
               ),
@@ -252,7 +254,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
               Opacity(
                 opacity: 0.6,
                 child: Text(
-                  'Recent...',
+                  "recent_dot".tr(),
                   style: TextStyle(
                     fontSize: 60.0,
                     fontWeight: FontWeight.w900,
@@ -273,7 +275,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
             child: Opacity(
               opacity: 0.8,
               child: Text(
-                "There was an error while loading",
+                "loading_error".tr(),
                 style: TextStyle(
                   fontSize: 26.0,
                 ),
@@ -283,7 +285,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
           Opacity(
             opacity: 0.6,
             child: Text(
-              "Check your connection and try again.",
+              "connection_check_try".tr(),
               style: TextStyle(
                 fontSize: 18.0,
               ),
@@ -353,7 +355,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
                         child: Opacity(
                           opacity: 0.6,
                           child: Text(
-                            "This is the quote of the day",
+                            "quote_of_the_day".tr(),
                             style: TextStyle(
                               color: stateColors.primary,
                             ),
@@ -452,8 +454,8 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
         heroQuotes.add(quotidian.quote);
       });
     } catch (error, stackTrace) {
-      debugPrint('error => $error');
-      debugPrint(stackTrace.toString());
+      appLogger.e('error => $error');
+      appLogger.e(stackTrace);
     }
   }
 
@@ -488,7 +490,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
         hasNext = snapshot.docs.length == recentLimit;
       });
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
     }
   }
 
@@ -531,7 +533,7 @@ class _HomeMinimalRecentState extends State<HomeMinimalRecent> {
         hasNext = snapshot.docs.length == recentLimit;
       });
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
 
       setState(() {
         isLoadingMore = false;

@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/screens/notifications_center.dart';
 import 'package:figstyle/screens/random_quotes.dart';
@@ -123,17 +124,17 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
         quickActions.setShortcutItems([
           ShortcutItem(
             type: 'action_add_quote',
-            localizedTitle: 'New quote',
+            localizedTitle: "new_quote".tr(),
             icon: 'ic_shortcut_add',
           ),
           ShortcutItem(
             type: 'action_search',
-            localizedTitle: 'Search',
+            localizedTitle: "search".tr(),
             icon: 'ic_shortcut_search',
           ),
           ShortcutItem(
             type: 'action_favourites',
-            localizedTitle: 'Favourites',
+            localizedTitle: "favourites".tr(),
             icon: 'ic_shortcut_favorite',
           ),
         ]);
@@ -141,7 +142,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
         quickActions.setShortcutItems([
           ShortcutItem(
             type: 'action_search',
-            localizedTitle: 'Search',
+            localizedTitle: "search".tr(),
             icon: 'ic_shortcut_search',
           ),
         ]);
@@ -180,34 +181,24 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
         unselectedItemColor: stateColors.accent,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              UniconsLine.clock,
-            ),
-            label: 'Recent',
+            icon: Icon(UniconsLine.clock),
+            label: "recent".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              UniconsLine.search,
-            ),
-            label: 'Search',
+            icon: Icon(UniconsLine.search),
+            label: "search".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              UniconsLine.telescope,
-            ),
-            label: 'Discover',
+            icon: Icon(UniconsLine.telescope),
+            label: "discover".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              UniconsLine.arrow_random,
-            ),
-            label: 'Random',
+            icon: Icon(UniconsLine.arrow_random),
+            label: "random".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              UniconsLine.user,
-            ),
-            label: 'Account',
+            icon: Icon(UniconsLine.user),
+            label: "account",
           ),
         ],
       ),
@@ -318,7 +309,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
           child: FlashBar(
             icon: Icon(UniconsLine.chat_info),
             title: Text(
-              'Welcome!',
+              "welcome_ex".tr(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
@@ -326,9 +317,7 @@ class _HomeMobileState extends State<HomeMobile> with WidgetsBindingObserver {
             ),
             message: Opacity(
               opacity: 0.5,
-              child: Text(
-                "Come on board if it's your first time.",
-              ),
+              child: Text("on_boarding_come".tr()),
             ),
             showProgressIndicator: false,
             primaryAction: Row(
