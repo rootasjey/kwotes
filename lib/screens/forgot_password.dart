@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:figstyle/actions/users.dart';
 import 'package:figstyle/components/fade_in_x.dart';
 import 'package:figstyle/router/app_router.gr.dart';
 import 'package:figstyle/state/colors.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/components/loading_animation.dart';
@@ -30,7 +32,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       body: CustomScrollView(
         slivers: <Widget>[
           DesktopAppBar(
-            title: "Recover account",
+            title: "account_recover".tr(),
             automaticallyImplyLeading: true,
           ),
           SliverList(
@@ -38,7 +40,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 60.0, bottom: 300.0),
+                    padding: const EdgeInsets.only(
+                      top: 60.0,
+                      bottom: 300.0,
+                    ),
                     child: SizedBox(
                       width: 320,
                       child: body(),
@@ -62,7 +67,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       return Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: LoadingAnimation(
-          textTitle: 'Sending email...',
+          textTitle: "email_sending".tr(),
         ),
       );
     }
@@ -85,14 +90,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
         Container(
           width: width > 400.0 ? 320.0 : 280.0,
-          // padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
+                padding: const EdgeInsets.only(
+                  top: 30.0,
+                  bottom: 10.0,
+                ),
                 child: Text(
-                  "A password reset link has been sent to your mail box",
+                  "email_password_reset_link".tr(),
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -100,7 +107,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
               Opacity(
                 opacity: .6,
-                child: Text('Please check your spam folder too'),
+                child: Text("email_check_spam".tr()),
               ),
             ],
           ),
@@ -116,7 +123,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             child: Opacity(
               opacity: .6,
               child: Text(
-                'Return to home',
+                "back_home".tr(),
               ),
             ),
           ),
@@ -160,7 +167,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               onFieldSubmitted: (value) => sendResetLink(),
               validator: (value) {
                 if (value.isEmpty) {
-                  return 'Email login cannot be empty';
+                  return "email_empty_forbidden".tr();
                 }
 
                 return null;
@@ -185,7 +192,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 right: 20.0,
               ),
               child: IconButton(
-                onPressed: () => context.router.pop(),
+                onPressed: context.router.pop,
                 icon: Icon(Icons.arrow_back),
               ),
             ),
@@ -199,7 +206,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child: Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    'Forgot Password',
+                    "password_forgot".tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 25.0,
@@ -213,7 +220,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child: Opacity(
                   opacity: 0.6,
                   child: Text(
-                    'We will send a reset link to your mail box',
+                    "password_forgot_reset_process".tr(),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                   ),
@@ -248,7 +255,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('SEND LINK'),
+                Text("link_send".tr()),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Icon(Icons.send),
@@ -265,7 +272,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (email.isEmpty) {
       Snack.e(
         context: context,
-        message: "Email field can't be empty. Please enter your email.",
+        message: "email_empty_no_valid".tr(),
       );
 
       return false;
@@ -274,7 +281,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (!UsersActions.checkEmailFormat(email)) {
       Snack.e(
         context: context,
-        message: "The value specified is not a valid email",
+        message: "email_not_valid".tr(),
       );
 
       return false;
@@ -300,7 +307,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         isCompleted = true;
       });
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
 
       setState(() {
         isLoading = false;
@@ -308,7 +315,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
       Snack.e(
         context: context,
-        message: "Sorry, this email doesn't exist.",
+        message: "email_doesnt_exist".tr(),
       );
     }
   }

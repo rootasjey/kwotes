@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:figstyle/state/user.dart';
 import 'package:figstyle/types/quote.dart';
@@ -44,8 +45,8 @@ class FavActions {
         return true;
       }
 
-      final referenceId = quote.reference != null ? quote.reference.id : '';
-      final referenceName = quote.reference != null ? quote.reference.name : '';
+      final referenceId = quote.reference?.id ?? '';
+      final referenceName = quote.reference?.name ?? '';
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -69,7 +70,7 @@ class FavActions {
 
       return true;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
 
       Snack.e(
         context: context,
@@ -97,7 +98,7 @@ class FavActions {
 
       return doc.exists;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
       return false;
     }
   }
@@ -147,7 +148,7 @@ class FavActions {
 
       return true;
     } catch (error) {
-      debugPrint(error.toString());
+      appLogger.e(error);
 
       Snack.e(
         context: context,
