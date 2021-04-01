@@ -40,6 +40,7 @@ class QuoteRowWithActions extends StatefulWidget {
   /// If true, the popup menu will be displayed whatever [useSwipeActions] value.
   final bool showPopupMenuButton;
 
+  /// Component's background color.
   final Color color;
 
   /// Card's width if [componentType] equals [card].

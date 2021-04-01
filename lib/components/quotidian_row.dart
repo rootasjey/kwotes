@@ -192,7 +192,7 @@ class _QuotidianRowState extends State<QuotidianRow> {
       padding: widget.padding,
       child: Card(
         elevation: elevation,
-        color: stateColors.appBackground,
+        color: stateColors.tileBackground,
         child: InkWell(
           onTap: () => onTap(quote.id),
           onHover: (isHover) {

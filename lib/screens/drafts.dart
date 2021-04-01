@@ -248,6 +248,7 @@ class _DraftsState extends State<Drafts> {
             isDraft: true,
             key: ObjectKey(index),
             useSwipeActions: true,
+            color: stateColors.tileBackground,
             showPopupMenuButton: true,
             onTap: () => editDraft(draft),
             padding: EdgeInsets.symmetric(horizontal: horPadding),

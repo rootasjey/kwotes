@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figstyle/state/colors.dart';
 import 'package:figstyle/utils/app_logger.dart';
 import 'package:figstyle/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -296,6 +297,7 @@ class AdminTempQuotesState extends State<AdminTempQuotes> {
             canManage: true,
             padding: EdgeInsets.symmetric(horizontal: horPadding),
             key: ObjectKey(index),
+            color: stateColors.tileBackground,
             showPopupMenuButton: showPopupMenuButton,
             useSwipeActions: true,
             onBeforeDelete: () => onBeforeProcessingTempQuote(

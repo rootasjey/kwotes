@@ -29,6 +29,7 @@ class QuoteRow extends StatefulWidget {
   /// and deactivate popup menu button.
   final bool useSwipeActions;
 
+  /// Component's background color.
   final Color color;
 
   final double cardWidth;

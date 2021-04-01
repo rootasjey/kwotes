@@ -317,6 +317,7 @@ class MyTempQuotesState extends State<MyTempQuotes> {
             isDraft: false,
             padding: EdgeInsets.symmetric(horizontal: horPadding),
             key: ObjectKey(index),
+            color: stateColors.tileBackground,
             useSwipeActions: true,
             showPopupMenuButton: true,
             onBeforeDelete: () => onBeforeProcessingTempQuote(

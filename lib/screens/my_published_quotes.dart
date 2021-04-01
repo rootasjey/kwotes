@@ -288,7 +288,7 @@ class MyPublishedQuotesState extends State<MyPublishedQuotes> {
             key: ObjectKey(index),
             useSwipeActions: true,
             showPopupMenuButton: !isMobile,
-            color: stateColors.appBackground,
+            color: stateColors.tileBackground,
             padding: EdgeInsets.symmetric(
               horizontal: horPadding,
             ),

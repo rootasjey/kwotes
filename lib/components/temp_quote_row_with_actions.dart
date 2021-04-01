@@ -21,6 +21,9 @@ class TempQuoteRowWithActions extends StatefulWidget {
   final bool canManage;
   final bool isDraft;
 
+  /// Component's background color.
+  final Color color;
+
   final double cardSize;
   final double elevation;
 
@@ -60,6 +63,7 @@ class TempQuoteRowWithActions extends StatefulWidget {
   TempQuoteRowWithActions({
     this.canManage = false,
     this.cardSize = 250.0,
+    this.color,
     this.componentType = ItemComponentType.row,
     this.elevation,
     this.isDraft = false,
@@ -118,6 +122,7 @@ class _TempQuoteRowWithActionsState extends State<TempQuoteRowWithActions> {
 
     return TempQuoteRow(
       key: widget.key,
+      color: widget.color,
       elevation: widget.elevation,
       padding: widget.padding,
       cardSize: widget.cardSize,

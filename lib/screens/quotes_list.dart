@@ -309,7 +309,7 @@ class _QuotesListState extends State<QuotesList> {
               return QuoteRowWithActions(
                 quote: quote,
                 quoteId: quote.quoteId,
-                color: stateColors.appBackground,
+                color: stateColors.tileBackground,
                 canManage: canManage,
                 isConnected: isConnected,
                 key: ObjectKey(index),

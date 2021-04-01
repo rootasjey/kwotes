@@ -12,6 +12,9 @@ class TempQuoteRow extends StatefulWidget {
   /// and deactivate popup menu button.
   final bool useSwipeActions;
 
+  /// Component's background color.
+  final Color color;
+
   final double cardSize;
   final double elevation;
 
@@ -39,6 +42,7 @@ class TempQuoteRow extends StatefulWidget {
 
   TempQuoteRow({
     this.cardSize = 250.0,
+    this.color,
     this.elevation = 0.0,
     @required this.tempQuote,
     this.itemBuilder,
@@ -106,6 +110,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
       child: Card(
         elevation: elevation,
         margin: EdgeInsets.zero,
+        color: widget.color,
         child: InkWell(
           onLongPress: widget.onLongPress,
           onTap: widget.onTap,
@@ -240,7 +245,7 @@ class _TempQuoteRowState extends State<TempQuoteRow> {
       padding: widget.padding,
       child: Card(
         elevation: elevation,
-        color: stateColors.appBackground,
+        color: widget.color,
         child: InkWell(
           onLongPress: widget.onLongPress,
           onTap: widget.onTap,

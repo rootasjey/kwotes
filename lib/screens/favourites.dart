@@ -286,7 +286,7 @@ class _FavouritesState extends State<Favourites> {
           return QuoteRowWithActions(
             quote: quote,
             quoteId: quote.quoteId,
-            color: stateColors.appBackground,
+            color: stateColors.tileBackground,
             isConnected: true,
             key: ObjectKey(index),
             useSwipeActions: useSwipeActions,
