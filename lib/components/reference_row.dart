@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/actions/share.dart';
-import 'package:figstyle/router/app_router.gr.dart';
+import 'package:fig_style/actions/share.dart';
+import 'package:fig_style/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/reference.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/types/reference.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 class ReferenceRow extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/reference.dart';
+import 'package:fig_style/types/author.dart';
+import 'package:fig_style/types/reference.dart';
 
 class AuthorSuggestion {
   final Author author;

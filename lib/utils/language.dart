@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/app_storage.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/app_storage.dart';
 
 class Language {
   /// Current application's language.

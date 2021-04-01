@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/push_notifications.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/push_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

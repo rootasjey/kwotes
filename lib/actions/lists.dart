@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/types/background_op.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/background_op_manager.dart';
-import 'package:figstyle/utils/cloud.dart';
-import 'package:figstyle/utils/flash_helper.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/types/background_op.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/background_op_manager.dart';
+import 'package:fig_style/utils/cloud.dart';
+import 'package:fig_style/utils/flash_helper.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/user_quotes_list.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/types/user_quotes_list.dart';
 
 /// Network interface for user's quotes lists.
 class ListsActions {

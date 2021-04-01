@@ -1,6 +1,6 @@
-import 'package:figstyle/components/footer.dart';
+import 'package:fig_style/components/footer.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/desktop_app_bar.dart';
+import 'package:fig_style/components/desktop_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 

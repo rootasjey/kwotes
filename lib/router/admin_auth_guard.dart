@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/state/user.dart';
+import 'package:fig_style/router/app_router.dart';
+import 'package:fig_style/state/user.dart';
 
 class AdminAuthGuard extends AutoRouteGuard {
   @override

@@ -1,7 +1,7 @@
-import 'package:figstyle/components/lang_popup_menu_button.dart';
+import 'package:fig_style/components/lang_popup_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:figstyle/components/data_quote_inputs.dart';
+import 'package:fig_style/components/data_quote_inputs.dart';
 import 'package:unicons/unicons.dart';
 
 class AddQuoteContent extends StatefulWidget {

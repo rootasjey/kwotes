@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/reference_card.dart';
-import 'package:figstyle/components/fade_in_x.dart';
-import 'package:figstyle/screens/references.dart';
-import 'package:figstyle/types/reference.dart';
+import 'package:fig_style/components/reference_card.dart';
+import 'package:fig_style/components/fade_in_x.dart';
+import 'package:fig_style/screens/references.dart';
+import 'package:fig_style/types/reference.dart';
 
 List<Reference> _references = [];
 

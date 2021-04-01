@@ -1,7 +1,7 @@
-import 'package:figstyle/components/sheet_header.dart';
+import 'package:fig_style/components/sheet_header.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/state/colors.dart';
+import 'package:fig_style/components/data_quote_inputs.dart';
+import 'package:fig_style/state/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddQuoteComment extends StatefulWidget {

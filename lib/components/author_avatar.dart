@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:figstyle/components/image_hero.dart';
+import 'package:fig_style/components/image_hero.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 

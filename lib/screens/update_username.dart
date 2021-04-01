@@ -2,18 +2,18 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/animated_app_icon.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/sliver_edge_padding.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/components/animated_app_icon.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/components/sliver_edge_padding.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/actions/users.dart';
+import 'package:fig_style/components/page_app_bar.dart';
+import 'package:fig_style/screens/signin.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class UpdateUsername extends StatefulWidget {

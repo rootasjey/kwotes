@@ -1,4 +1,4 @@
-import 'package:figstyle/state/colors.dart';
+import 'package:fig_style/state/colors.dart';
 import 'package:flutter/material.dart';
 
 class SquareAction extends StatelessWidget {

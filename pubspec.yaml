@@ -1,4 +1,4 @@
-name: figstyle
+name: fig_style
 description: 5 seconds of emotion
 licence: MPL-2.0
 
@@ -84,8 +84,8 @@ flutter_icons:
   image_path_ios: "assets/images/app_icon/ios.jpg"
 
 flutter_rename_app:
-  application_name: fig.style
-  dart_package_name: figstyle
+  application_name: fig_style
+  dart_package_name: fig_style
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

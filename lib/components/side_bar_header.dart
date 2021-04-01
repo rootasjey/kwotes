@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/router/app_router.dart';
+import 'package:fig_style/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
+import 'package:fig_style/router/route_names.dart';
+import 'package:fig_style/screens/signin.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
 
 class SideBarHeader extends StatefulWidget {
   @override

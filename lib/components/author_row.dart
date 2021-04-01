@@ -1,8 +1,8 @@
-import 'package:figstyle/actions/share.dart';
-import 'package:figstyle/router/app_router.gr.dart';
+import 'package:fig_style/actions/share.dart';
+import 'package:fig_style/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/author.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/types/author.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 class AuthorRow extends StatefulWidget {

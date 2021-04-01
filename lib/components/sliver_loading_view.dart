@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/loading_animation.dart';
+import 'package:fig_style/components/loading_animation.dart';
 
 class SliverLoadingView extends StatelessWidget {
   @override

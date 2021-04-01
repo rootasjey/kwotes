@@ -2,16 +2,16 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/screens/authors.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/quote.dart';
+import 'package:fig_style/router/app_router.dart';
+import 'package:fig_style/screens/authors.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/author.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/quote.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/references.dart';
-import 'package:figstyle/types/reference.dart';
+import 'package:fig_style/screens/references.dart';
+import 'package:fig_style/types/reference.dart';
 import 'package:mobx/mobx.dart';
 
 Map<Reference, Quote> _referencesMap = {};

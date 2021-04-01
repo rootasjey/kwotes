@@ -1,4 +1,4 @@
-import 'package:figstyle/utils/date_helper.dart';
+import 'package:fig_style/utils/date_helper.dart';
 
 class AppNotification {
   final String id;

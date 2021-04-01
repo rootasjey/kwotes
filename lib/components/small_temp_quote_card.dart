@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:figstyle/types/temp_quote.dart';
+import 'package:fig_style/types/temp_quote.dart';
 
 class SmallTempQuoteCard extends StatefulWidget {
   final Function onDelete;

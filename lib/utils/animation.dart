@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/types/font_size.dart';
-import 'package:figstyle/types/quote.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/types/font_size.dart';
+import 'package:fig_style/types/quote.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 /// Create a widget animating a quote's name.

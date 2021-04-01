@@ -1,7 +1,7 @@
-import 'package:figstyle/components/sheet_header.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/edit_list_payload.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/components/sheet_header.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/types/edit_list_payload.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/sliver_edge_padding.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/components/sliver_edge_padding.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/actions/favourites.dart';
-import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/components/quote_row_with_actions.dart';
-import 'package:figstyle/components/empty_content.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/actions/favourites.dart';
+import 'package:fig_style/components/page_app_bar.dart';
+import 'package:fig_style/components/quote_row_with_actions.dart';
+import 'package:fig_style/components/empty_content.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/components/loading_animation.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/router/route_names.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Favourites extends StatefulWidget {

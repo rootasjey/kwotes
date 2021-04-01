@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/user.dart';
+import 'package:fig_style/screens/signin.dart';
+import 'package:fig_style/state/user.dart';
 
 void checkConnectedOrNavSignin({BuildContext context}) async {
   try {

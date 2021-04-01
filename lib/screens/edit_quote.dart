@@ -1,15 +1,15 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/animated_app_icon.dart';
-import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/screens/add_quote/reference.dart';
-import 'package:figstyle/screens/add_quote/steps.dart';
-import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/utils/app_logger.dart';
+import 'package:fig_style/components/animated_app_icon.dart';
+import 'package:fig_style/components/data_quote_inputs.dart';
+import 'package:fig_style/components/page_app_bar.dart';
+import 'package:fig_style/screens/add_quote/reference.dart';
+import 'package:fig_style/screens/add_quote/steps.dart';
+import 'package:fig_style/types/author.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/types/reference.dart';
+import 'package:fig_style/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 

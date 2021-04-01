@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/utils/app_logger.dart';
+import 'package:fig_style/utils/app_logger.dart';
 
 /// Helper for date and time conversions.
 class DateHelper {

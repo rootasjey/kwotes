@@ -1,7 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:figstyle/types/create_account_resp.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/cloud.dart';
+import 'package:fig_style/types/create_account_resp.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/cloud.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

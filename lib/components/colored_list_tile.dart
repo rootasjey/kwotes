@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/colors.dart';
+import 'package:fig_style/state/colors.dart';
 
 class ColoredListTile extends StatefulWidget {
   final Color hoverColor;

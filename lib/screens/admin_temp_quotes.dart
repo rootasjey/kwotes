@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:figstyle/components/error_container.dart';
-import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/components/sliver_loading_view.dart';
-import 'package:figstyle/components/temp_quote_row_with_actions.dart';
-import 'package:figstyle/components/empty_content.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/router/route_names.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/auth.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/components/error_container.dart';
+import 'package:fig_style/components/page_app_bar.dart';
+import 'package:fig_style/components/sliver_loading_view.dart';
+import 'package:fig_style/components/temp_quote_row_with_actions.dart';
+import 'package:fig_style/components/empty_content.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/router/route_names.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/temp_quote.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/auth.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class AdminTempQuotes extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:figstyle/types/image_credits.dart';
+import 'package:fig_style/types/image_credits.dart';
 
 class ImageProperty {
   ImageCredits credits;

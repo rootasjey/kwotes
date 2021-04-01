@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/types/quotidian.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/topics_colors.dart';
+import 'package:fig_style/types/quotidian.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 class QuotidianRow extends StatefulWidget {

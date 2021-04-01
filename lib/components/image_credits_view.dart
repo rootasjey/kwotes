@@ -1,6 +1,6 @@
-import 'package:figstyle/components/form_action_inputs.dart';
-import 'package:figstyle/components/sheet_header.dart';
-import 'package:figstyle/types/image_credits.dart';
+import 'package:fig_style/components/form_action_inputs.dart';
+import 'package:fig_style/components/sheet_header.dart';
+import 'package:fig_style/types/image_credits.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 

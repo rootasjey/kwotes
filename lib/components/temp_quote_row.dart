@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/temp_quote.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/topics_colors.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/temp_quote.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 class TempQuoteRow extends StatefulWidget {

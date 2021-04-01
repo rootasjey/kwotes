@@ -1,4 +1,4 @@
-import 'package:figstyle/utils/flash_helper.dart';
+import 'package:fig_style/utils/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 

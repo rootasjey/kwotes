@@ -1,5 +1,5 @@
-import 'package:figstyle/types/partial_user.dart';
-import 'package:figstyle/utils/date_helper.dart';
+import 'package:fig_style/types/partial_user.dart';
+import 'package:fig_style/utils/date_helper.dart';
 
 class Comment {
   final String commentId;

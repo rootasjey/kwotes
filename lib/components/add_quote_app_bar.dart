@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/utils/navigation_helper.dart';
+import 'package:fig_style/router/app_router.dart';
+import 'package:fig_style/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/components/circle_button.dart';
-import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
+import 'package:fig_style/components/circle_button.dart';
+import 'package:fig_style/components/app_icon.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:unicons/unicons.dart';
 

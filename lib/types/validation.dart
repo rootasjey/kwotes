@@ -1,5 +1,5 @@
-import 'package:figstyle/types/validation_comment.dart';
-import 'package:figstyle/utils/date_helper.dart';
+import 'package:fig_style/types/validation_comment.dart';
+import 'package:fig_style/utils/date_helper.dart';
 
 class Validation {
   final ValidationComment comment;

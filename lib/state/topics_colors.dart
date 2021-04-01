@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/types/topic_color.dart';
+import 'package:fig_style/types/topic_color.dart';
 import 'package:mobx/mobx.dart';
 
 part 'topics_colors.g.dart';

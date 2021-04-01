@@ -1,14 +1,14 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/components/lang_popup_menu_button.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/components/lang_popup_menu_button.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/base_page_app_bar.dart';
-import 'package:figstyle/components/circle_button.dart';
-import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/types/enums.dart';
+import 'package:fig_style/components/base_page_app_bar.dart';
+import 'package:fig_style/components/circle_button.dart';
+import 'package:fig_style/components/app_icon.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/types/enums.dart';
 import 'package:unicons/unicons.dart';
 
 class PageAppBar extends StatefulWidget {

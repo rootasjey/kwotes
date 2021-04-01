@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/types/update_email_resp.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/push_notifications.dart';
+import 'package:fig_style/router/app_router.dart';
+import 'package:fig_style/types/update_email_resp.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/push_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:figstyle/utils/app_storage.dart';
+import 'package:fig_style/utils/app_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

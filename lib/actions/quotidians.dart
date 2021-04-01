@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/types/quote.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/types/quote.dart';
 
 /// Network interface for quotidians.
 class QuotidiansActions {

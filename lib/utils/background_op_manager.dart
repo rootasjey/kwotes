@@ -1,4 +1,4 @@
-import 'package:figstyle/types/background_op.dart';
+import 'package:fig_style/types/background_op.dart';
 import 'package:flutter/widgets.dart';
 
 /// A simple background operation manager

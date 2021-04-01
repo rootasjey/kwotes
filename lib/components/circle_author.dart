@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/router/app_router.gr.dart';
+import 'package:fig_style/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/types/author.dart';
+import 'package:fig_style/types/author.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
 

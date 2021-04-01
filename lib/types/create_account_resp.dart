@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:figstyle/types/cloud_func_error.dart';
-import 'package:figstyle/types/partial_user.dart';
+import 'package:fig_style/types/cloud_func_error.dart';
+import 'package:fig_style/types/partial_user.dart';
 
 class CreateAccountResp {
   bool success;

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/utils/app_logger.dart';
+import 'package:fig_style/utils/app_logger.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/quotidian.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/types/quotidian.dart';
+import 'package:fig_style/utils/snack.dart';
 
 /// Network interface for user's favourites.
 class FavActions {

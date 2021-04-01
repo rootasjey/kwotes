@@ -1,16 +1,16 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/components/desktop_app_bar.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/utils/app_logger.dart';
+import 'package:fig_style/components/desktop_app_bar.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/utils/app_logger.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/actions/users.dart';
-import 'package:figstyle/components/fade_in_x.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/loading_animation.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/actions/users.dart';
+import 'package:fig_style/components/fade_in_x.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/components/loading_animation.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class Signin extends StatefulWidget {

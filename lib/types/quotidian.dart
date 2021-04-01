@@ -1,5 +1,5 @@
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/date_helper.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/utils/date_helper.dart';
 
 class Quotidian {
   final DateTime createdAt;

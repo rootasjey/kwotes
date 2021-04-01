@@ -1,5 +1,5 @@
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/state/colors.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/state/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'package:figstyle/router/app_router.gr.dart';
+import 'package:fig_style/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/language.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/language.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatefulWidget {

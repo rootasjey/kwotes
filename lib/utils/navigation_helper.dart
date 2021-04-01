@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/storage_keys.dart';
+import 'package:fig_style/router/app_router.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 

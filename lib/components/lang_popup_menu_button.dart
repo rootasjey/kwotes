@@ -1,5 +1,5 @@
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/utils/language.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/utils/language.dart';
 import 'package:flutter/material.dart';
 
 class LangPopupMenuButton extends StatelessWidget {

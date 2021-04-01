@@ -1,7 +1,7 @@
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/cloud.dart';
-import 'package:figstyle/types/quote.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/cloud.dart';
+import 'package:fig_style/types/quote.dart';
 
 class QuotesActions {
   static Future<bool> delete({

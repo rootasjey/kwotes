@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:figstyle/screens/home/home_minimal_recent.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/screens/home/home_minimal_recent.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/screens/home/home_mobile.dart';
+import 'package:fig_style/screens/home/home_mobile.dart';
 
 class Home extends StatefulWidget {
   final int mobileInitialIndex;

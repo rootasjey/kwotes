@@ -7,7 +7,7 @@ class Constants {
 
   /// Twitter web intent API -> [hashtags] section.
   /// More info at https://twitter.com/intent/tweet.
-  static const twitterShareHashtags = "&hashtags=quote,citation,figstyle";
+  static const twitterShareHashtags = "&hashtags=quote,citation,fig_style";
 
   /// Twitter web intent API.
   /// More info at https://twitter.com/intent/tweet.

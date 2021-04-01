@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/screens/image_share.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/screens/image_share.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/reference.dart';
+import 'package:fig_style/types/author.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/types/reference.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';

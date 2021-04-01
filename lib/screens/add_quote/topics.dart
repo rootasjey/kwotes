@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/screens/add_quote/author.dart';
-import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/topics_colors.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/screens/add_quote/author.dart';
+import 'package:fig_style/components/data_quote_inputs.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/topics_colors.dart';
 import 'package:supercharged/supercharged.dart';
 
 class AddQuoteTopics extends StatefulWidget {

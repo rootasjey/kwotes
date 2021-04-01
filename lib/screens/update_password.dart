@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/components/animated_app_icon.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/components/animated_app_icon.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/components/page_app_bar.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/utils/snack.dart';
 import 'package:supercharged/supercharged.dart';
 
 class UpdatePassword extends StatefulWidget {

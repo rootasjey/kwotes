@@ -1,7 +1,7 @@
-import 'package:figstyle/types/image_property.dart';
-import 'package:figstyle/types/reference_type.dart';
-import 'package:figstyle/types/release.dart';
-import 'package:figstyle/types/urls.dart';
+import 'package:fig_style/types/image_property.dart';
+import 'package:fig_style/types/reference_type.dart';
+import 'package:fig_style/types/release.dart';
+import 'package:fig_style/types/urls.dart';
 
 class Reference {
   /// When this reference was released.

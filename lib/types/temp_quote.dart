@@ -1,10 +1,10 @@
-import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/partial_user.dart';
-import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/types/urls.dart';
-import 'package:figstyle/types/validation.dart';
-import 'package:figstyle/types/validation_comment.dart';
-import 'package:figstyle/utils/date_helper.dart';
+import 'package:fig_style/types/author.dart';
+import 'package:fig_style/types/partial_user.dart';
+import 'package:fig_style/types/reference.dart';
+import 'package:fig_style/types/urls.dart';
+import 'package:fig_style/types/validation.dart';
+import 'package:fig_style/types/validation_comment.dart';
+import 'package:fig_style/utils/date_helper.dart';
 
 class TempQuote {
   Author author;

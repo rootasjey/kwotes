@@ -1,10 +1,10 @@
-import 'package:figstyle/components/desktop_app_bar.dart';
-import 'package:figstyle/components/empty_content.dart';
-import 'package:figstyle/components/error_container.dart';
-import 'package:figstyle/components/fade_in_y.dart';
-import 'package:figstyle/components/sliver_loading_view.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/quote.dart';
+import 'package:fig_style/components/desktop_app_bar.dart';
+import 'package:fig_style/components/empty_content.dart';
+import 'package:fig_style/components/error_container.dart';
+import 'package:fig_style/components/fade_in_y.dart';
+import 'package:fig_style/components/sliver_loading_view.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/quote.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 

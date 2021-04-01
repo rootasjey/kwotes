@@ -1,5 +1,5 @@
-import 'package:figstyle/components/circle_button.dart';
-import 'package:figstyle/state/colors.dart';
+import 'package:fig_style/components/circle_button.dart';
+import 'package:fig_style/state/colors.dart';
 import 'package:flutter/material.dart';
 
 class SheetHeader extends StatelessWidget {

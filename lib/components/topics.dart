@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/quote_row_with_actions.dart';
-import 'package:figstyle/router/app_router.gr.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/language.dart';
+import 'package:fig_style/components/quote_row_with_actions.dart';
+import 'package:fig_style/router/app_router.gr.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/utils/language.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/topic_card_color.dart';
-import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/types/topic_color.dart';
+import 'package:fig_style/components/topic_card_color.dart';
+import 'package:fig_style/state/topics_colors.dart';
+import 'package:fig_style/types/topic_color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/utils/app_logger.dart';
-import 'package:figstyle/utils/cloud.dart';
+import 'package:fig_style/utils/app_logger.dart';
+import 'package:fig_style/utils/cloud.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/utils/snack.dart';
+import 'package:fig_style/components/data_quote_inputs.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/temp_quote.dart';
+import 'package:fig_style/utils/snack.dart';
 
 class TempQuotesActions {
   static Future<bool> addNewTempQuote() async {

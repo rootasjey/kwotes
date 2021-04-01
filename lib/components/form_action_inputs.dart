@@ -1,5 +1,5 @@
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 

@@ -1,7 +1,7 @@
-import 'package:figstyle/types/from_reference.dart';
-import 'package:figstyle/types/image_property.dart';
-import 'package:figstyle/types/point_in_time.dart';
-import 'package:figstyle/types/urls.dart';
+import 'package:fig_style/types/from_reference.dart';
+import 'package:fig_style/types/image_property.dart';
+import 'package:fig_style/types/point_in_time.dart';
+import 'package:fig_style/types/urls.dart';
 
 class Author {
   /// Useful if the author is fictional.

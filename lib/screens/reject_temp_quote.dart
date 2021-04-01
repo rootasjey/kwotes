@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:figstyle/components/page_app_bar.dart';
-import 'package:figstyle/screens/signin.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/temp_quote.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/snack.dart';
-import 'package:figstyle/utils/storage_keys.dart';
+import 'package:fig_style/components/page_app_bar.dart';
+import 'package:fig_style/screens/signin.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/temp_quote.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/snack.dart';
+import 'package:fig_style/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
 
 class RejectTempQuote extends StatefulWidget {

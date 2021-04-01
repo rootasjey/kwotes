@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:figstyle/components/data_quote_inputs.dart';
-import 'package:figstyle/components/desktop_app_bar.dart';
-import 'package:figstyle/router/app_router.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/user.dart';
-import 'package:figstyle/types/side_menu_item.dart';
-import 'package:figstyle/utils/constants.dart';
+import 'package:fig_style/components/data_quote_inputs.dart';
+import 'package:fig_style/components/desktop_app_bar.dart';
+import 'package:fig_style/router/app_router.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/user.dart';
+import 'package:fig_style/types/side_menu_item.dart';
+import 'package:fig_style/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 

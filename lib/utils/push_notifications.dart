@@ -1,7 +1,7 @@
-import 'package:figstyle/utils/api_keys.dart';
-import 'package:figstyle/utils/app_storage.dart';
-import 'package:figstyle/utils/language.dart';
-import 'package:figstyle/utils/storage_keys.dart';
+import 'package:fig_style/utils/api_keys.dart';
+import 'package:fig_style/utils/app_storage.dart';
+import 'package:fig_style/utils/language.dart';
+import 'package:fig_style/utils/storage_keys.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

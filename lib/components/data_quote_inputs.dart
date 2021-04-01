@@ -1,8 +1,8 @@
-import 'package:figstyle/types/author.dart';
-import 'package:figstyle/types/image_credits.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/types/reference.dart';
-import 'package:figstyle/types/temp_quote.dart';
+import 'package:fig_style/types/author.dart';
+import 'package:fig_style/types/image_credits.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/types/reference.dart';
+import 'package:fig_style/types/temp_quote.dart';
 
 class DataQuoteInputs {
   /// If not empty, the author already exists.

@@ -1,7 +1,7 @@
 import 'package:cross_local_storage/cross_local_storage.dart';
-import 'package:figstyle/utils/storage_keys.dart';
+import 'package:fig_style/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/types/enums.dart';
+import 'package:fig_style/types/enums.dart';
 
 class AppStorage {
   static LocalStorageInterface _localStorage;

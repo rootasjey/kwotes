@@ -1,10 +1,10 @@
-import 'package:figstyle/components/app_icon.dart';
-import 'package:figstyle/state/colors.dart';
-import 'package:figstyle/state/topics_colors.dart';
-import 'package:figstyle/types/enums.dart';
-import 'package:figstyle/types/quote.dart';
-import 'package:figstyle/utils/animation.dart';
-import 'package:figstyle/utils/app_storage.dart';
+import 'package:fig_style/components/app_icon.dart';
+import 'package:fig_style/state/colors.dart';
+import 'package:fig_style/state/topics_colors.dart';
+import 'package:fig_style/types/enums.dart';
+import 'package:fig_style/types/quote.dart';
+import 'package:fig_style/utils/animation.dart';
+import 'package:fig_style/utils/app_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:share_files_and_screenshot_widgets/share_files_and_screenshot_widgets.dart';
 

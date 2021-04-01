@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:figstyle/components/circle_author.dart';
-import 'package:figstyle/components/fade_in_x.dart';
-import 'package:figstyle/screens/authors.dart';
-import 'package:figstyle/types/author.dart';
+import 'package:fig_style/components/circle_author.dart';
+import 'package:fig_style/components/fade_in_x.dart';
+import 'package:fig_style/screens/authors.dart';
+import 'package:fig_style/types/author.dart';
 
 List<Author> _authorsList = [];
 
