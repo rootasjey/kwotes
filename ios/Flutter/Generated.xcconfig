@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=/Users/rootasjey/dev/flutter
-FLUTTER_APPLICATION_PATH=/Users/rootasjey/GitHub/fig.style
+FLUTTER_APPLICATION_PATH=/Users/rootasjey/GitHub/fig_style
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
