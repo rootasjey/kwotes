@@ -21,7 +21,7 @@
     "firebase-admin": "9.5.0",
     "firebase-functions": "3.13.2",
     "firebase-tools": "9.6.1",
-    "got": "11.8.2"
+    "got": "11.8.5"
   },
   "devDependencies": {
     "tslint": "6.1.3",
