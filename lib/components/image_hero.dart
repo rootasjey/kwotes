@@ -1,21 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
+import "package:flutter/material.dart";
+import "package:photo_view/photo_view.dart";
 
 class ImageHero extends StatefulWidget {
   const ImageHero({
-    this.imageProvider,
+    super.key,
+    required this.imageProvider,
     this.backgroundDecoration,
     this.minScale = 0.3,
     this.maxScale = 2.0,
   });
 
   final ImageProvider imageProvider;
-  final Decoration backgroundDecoration;
+  final BoxDecoration? backgroundDecoration;
   final dynamic minScale;
   final dynamic maxScale;
 
   @override
-  _ImageHeroState createState() => _ImageHeroState();
+  createState() => _ImageHeroState();
 }
 
 class _ImageHeroState extends State<ImageHero> {
@@ -27,7 +28,8 @@ class _ImageHeroState extends State<ImageHero> {
     super.initState();
 
     photoViewController.outputStateStream.listen((event) {
-      if (event.scale < widget.minScale && !isPop) {
+      final double scale = event.scale ?? 1.0;
+      if (scale < widget.minScale && !isPop) {
         isPop = true;
         Navigator.of(context).pop();
       }

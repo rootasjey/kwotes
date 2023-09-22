@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/memorare.iml" filepath="$PROJECT_DIR$/memorare.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/memorare_android.iml" filepath="$PROJECT_DIR$/android/memorare_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kwotes.iml" filepath="$PROJECT_DIR$/kwotes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/kwotes_android.iml" filepath="$PROJECT_DIR$/android/kwotes_android.iml" />
     </modules>
   </component>
 </project>

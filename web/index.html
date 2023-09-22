@@ -1,61 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Outside the frame">
+  <meta name="description" content="5 seconds of emotion.">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="fig.style">
-  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="kwotes">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
   <!-- Favicon -->
-  <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
-  <link rel="apple-touch-icon" href="/icons/192.png">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>fig.style</title>
+  <title>kwotes</title>
+  <link rel="manifest" href="manifest.json">
 
-  <base href="/">
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
 </head>
 <body>
-  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-  
-  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
-  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-functions.js"></script>
-
-  <!-- This script installs service_worker.js to provide PWA functionality to
-          application. For more information, see:
-          https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script>
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-      apiKey: "",
-      authDomain: "",
-      databaseURL: "",
-      projectId: "",
-      storageBucket: "",
-      messagingSenderId: "",
-      appId: "",
-      measurementId: "",
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/flutter_service_worker.js');
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
       });
-    }
+    });
   </script>
-
-  <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

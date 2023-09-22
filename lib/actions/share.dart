@@ -1,20 +1,17 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:fig_style/screens/image_share.dart';
-import 'package:fig_style/utils/constants.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:fig_style/types/author.dart';
-import 'package:fig_style/types/quote.dart';
-import 'package:fig_style/types/reference.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
+import "package:beamer/beamer.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
+import "package:kwotes/screens/image_share.dart";
+import "package:kwotes/types/author.dart";
+import "package:kwotes/types/quote.dart";
+import "package:kwotes/types/reference.dart";
+import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
 
 /// Interface for share to external sources.
 class ShareActions {
   static void shareAuthor({
-    @required BuildContext context,
-    @required Author author,
+    required BuildContext context,
+    required Author author,
   }) {
     if (kIsWeb) {
       shareAuthorWeb(author: author);
@@ -28,47 +25,47 @@ class ShareActions {
   }
 
   static void shareAuthorMobile({
-    @required BuildContext context,
-    @required Author author,
+    required BuildContext context,
+    required Author author,
   }) {
-    final RenderBox box = context.findRenderObject();
-    String sharingText = author.name;
-    final authorUrl = "${Constants.baseAuthorUrl}${author.id}";
+    // final RenderObject? box = context.findRenderObject();
+    // String sharingText = author.name;
+    // final authorUrl = "${Constants.authorUrl}/${author.id}";
 
-    if (author.job != null && author.job.isNotEmpty) {
-      sharingText += " (${author.job})";
-    }
+    // if (author.job.isNotEmpty) {
+    //   sharingText += " (${author.job})";
+    // }
 
-    sharingText += " - URL: $authorUrl";
+    // sharingText += " - URL: $authorUrl";
 
-    Share.share(
-      sharingText,
-      subject: 'fig.style',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
+    // Share.share(
+    //   sharingText,
+    //   subject: "kwotes",
+    //   // sharePositionOrigin: box?.localToGlobal(Offset.zero) & box?.size,
+    // );
   }
 
-  static void shareAuthorWeb({@required Author author}) async {
-    String sharingText = author.name;
-    final authorUrl = "${Constants.baseAuthorUrl}${author.id}";
+  static void shareAuthorWeb({required Author author}) async {
+    // String sharingText = author.name;
+    // final authorUrl = "${Constants.authorUrl}/${author.id}";
 
-    if (author.job != null && author.job.isNotEmpty) {
-      sharingText += ' (${author.job})';
-    }
+    // if (author.job.isNotEmpty) {
+    //   sharingText += " (${author.job})";
+    // }
 
-    final hashtags = Constants.twitterShareHashtags;
+    // final hashtags = Constants.twitterShareHashtags;
 
-    await launch(
-      "${Constants.baseTwitterShareUrl}"
-      "$sharingText"
-      "$hashtags"
-      "&url=$authorUrl",
-    );
+    // await launch(
+    //   "${Constants.baseTwitterShareUrl}"
+    //   "$sharingText"
+    //   "$hashtags"
+    //   "&url=$authorUrl",
+    // );
   }
 
   static void shareQuote({
-    @required BuildContext context,
-    @required Quote quote,
+    required BuildContext context,
+    required Quote quote,
   }) {
     if (kIsWeb) {
       ShareActions.shareQuoteWeb(quote: quote);
@@ -82,8 +79,8 @@ class ShareActions {
   }
 
   static void shareQuoteMobile({
-    @required BuildContext context,
-    @required Quote quote,
+    required BuildContext context,
+    required Quote quote,
   }) {
     showCustomModalBottomSheet(
       context: context,
@@ -93,30 +90,30 @@ class ShareActions {
             top: false,
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               ListTile(
-                title: Text('Text'),
-                trailing: Icon(
+                title: const Text("Text"),
+                trailing: const Icon(
                   Icons.text_fields_rounded,
                 ),
                 onTap: () {
-                  context.router.pop();
+                  Beamer.of(context).popRoute();
                   shareTextMobile(context: context, quote: quote);
                 },
               ),
               ListTile(
-                title: Text('Link'),
-                trailing: Icon(
+                title: const Text("Link"),
+                trailing: const Icon(
                   Icons.link,
                 ),
                 onTap: () {
-                  context.router.pop();
+                  Beamer.of(context).popRoute();
                   shareLinkMobile(context: context, quote: quote);
                 },
               ),
               ListTile(
-                title: Text('Image'),
-                trailing: Icon(Icons.image_outlined),
+                title: const Text("Image"),
+                trailing: const Icon(Icons.image_outlined),
                 onTap: () {
-                  context.router.pop();
+                  Beamer.of(context).popRoute();
 
                   showCupertinoModalBottomSheet(
                     context: context,
@@ -147,76 +144,76 @@ class ShareActions {
   }
 
   static void shareTextMobile({
-    @required BuildContext context,
-    @required Quote quote,
+    required BuildContext context,
+    required Quote quote,
   }) {
-    final RenderBox box = context.findRenderObject();
-    final quoteName = quote.name;
-    final authorName = quote.author?.name ?? '';
-    final referenceName = quote.reference?.name ?? '';
+    // final RenderObject? box = context.findRenderObject();
+    // final quoteName = quote.name;
+    // final authorName = quote.author.name;
+    // final referenceName = quote.reference.name;
 
-    String sharingText = quoteName;
+    // String sharingText = quoteName;
 
-    if (authorName != null && authorName.length > 0) {
-      sharingText += ' — $authorName';
-    }
+    // if (authorName.isNotEmpty) {
+    //   sharingText += " — $authorName";
+    // }
 
-    if (referenceName != null && referenceName.length > 0) {
-      sharingText += ' — $referenceName';
-    }
+    // if (referenceName.isNotEmpty) {
+    //   sharingText += " — $referenceName";
+    // }
 
-    Share.share(
-      sharingText,
-      subject: 'fig.style',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
+    // Share.share(
+    //   sharingText,
+    //   subject: "fig.style",
+    //   sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    // );
   }
 
   static void shareLinkMobile({
-    @required BuildContext context,
-    @required Quote quote,
+    required BuildContext context,
+    required Quote quote,
   }) {
-    final RenderBox box = context.findRenderObject();
-    final sharingText = "${Constants.baseQuoteUrl}${quote.id}";
+    // final RenderObject? box = context.findRenderObject();
+    // final sharingText = "${Constants.quoteUrl}/${quote.id}";
 
-    Share.share(
-      sharingText,
-      subject: 'fig.style',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
+    // Share.share(
+    //   sharingText,
+    //   subject: "fig.style",
+    //   sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    // );
   }
 
   /// Sahre the target quote to twitter.
-  static Future shareQuoteWeb({@required Quote quote}) async {
-    final quoteName = quote.name;
-    final authorName = quote.author?.name ?? '';
-    final referenceName = quote.reference?.name ?? '';
+  static Future shareQuoteWeb({required Quote quote}) async {
+    // final quoteName = quote.name;
+    // final authorName = quote.author.name;
+    // final referenceName = quote.reference.name;
 
-    String sharingText = quoteName;
+    // String sharingText = quoteName;
 
-    if (authorName.isNotEmpty) {
-      sharingText += ' — $authorName';
-    }
+    // if (authorName.isNotEmpty) {
+    //   sharingText += " — $authorName";
+    // }
 
-    if (referenceName != null && referenceName.length > 0) {
-      sharingText += ' — $referenceName';
-    }
+    // if (referenceName != null && referenceName.length > 0) {
+    //   sharingText += " — $referenceName";
+    // }
 
-    final hashtags = Constants.twitterShareHashtags;
+    // final hashtags = Constants.twitterShareHashtags;
 
-    final url = "&url=${Constants.baseQuoteUrl}${quote.id}";
+    // final url = "&url=${Constants.baseQuoteUrl}${quote.id}";
 
-    await launch(
-      "${Constants.baseTwitterShareUrl}"
-      "$sharingText"
-      "$hashtags"
-      "$url",
-    );
+    // await launch(
+    //   "${Constants.baseTwitterShareUrl}"
+    //   "$sharingText"
+    //   "$hashtags"
+    //   "$url",
+    // );
   }
 
   static void shareReference({
-    @required BuildContext context,
-    @required Reference reference,
+    required BuildContext context,
+    required Reference reference,
   }) {
     if (kIsWeb) {
       shareReferenceWeb(
@@ -233,44 +230,44 @@ class ShareActions {
   }
 
   static void shareReferenceWeb({
-    @required BuildContext context,
-    @required Reference reference,
+    required BuildContext context,
+    required Reference reference,
   }) async {
-    String sharingText = reference.name;
-    final referenceUrl = '${Constants.baseReferenceUrl}${reference.id}';
+    // String sharingText = reference.name;
+    // final referenceUrl = "${Constants.referenceUrl}/${reference.id}";
 
-    if (reference.type.primary.isNotEmpty) {
-      sharingText += ' (${reference.type.primary})';
-    }
+    // if (reference.type.primary.isNotEmpty) {
+    //   sharingText += " (${reference.type.primary})";
+    // }
 
-    final hashtags = Constants.twitterShareHashtags;
+    // final hashtags = Constants.twitterShareHashtags;
 
-    await launch(
-      "${Constants.baseTwitterShareUrl}"
-      "$sharingText"
-      "$hashtags"
-      "&url=$referenceUrl",
-    );
+    // await launch(
+    //   "${Constants.baseTwitterShareUrl}"
+    //   "$sharingText"
+    //   "$hashtags"
+    //   "&url=$referenceUrl",
+    // );
   }
 
   static void shareReferenceMobile({
-    @required BuildContext context,
-    @required Reference reference,
+    required BuildContext context,
+    required Reference reference,
   }) {
-    final RenderBox box = context.findRenderObject();
-    String sharingText = reference.name;
-    final referenceUrl = '${Constants.baseReferenceUrl}${reference.id}';
+    // final RenderObject? box = context.findRenderObject();
+    // String sharingText = reference.name;
+    // final referenceUrl = "${Constants.referenceUrl}/${reference.id}";
 
-    if (reference.type.primary.isNotEmpty) {
-      sharingText += ' (${reference.type.primary})';
-    }
+    // if (reference.type.primary.isNotEmpty) {
+    //   sharingText += " (${reference.type.primary})";
+    // }
 
-    sharingText += ' - URL: $referenceUrl';
+    // sharingText += " - URL: $referenceUrl";
 
-    Share.share(
-      sharingText,
-      subject: 'fig.style',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
+    // Share.share(
+    //   sharingText,
+    //   subject: "fig.style",
+    //   sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    // );
   }
 }

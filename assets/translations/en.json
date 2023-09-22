@@ -5,89 +5,792 @@
   "about_me_1": "I'm Jérémie CORPINOT, a freelance developer living in France.",
   "about_me_2": "I'm originally from Guadeloupe and one day I traveled to Paris to study Architecture. But that didn't work out very weel as I never passed the entrance exam. So, I went to Versailles University where I was graduated with a Master in Computer Sciences.",
   "about_me_3": "I love drawings, video games, heroic-fantasy books, to name a few. I started my freelancer journey in June, 2019 in order to work on what really matters.",
-  "account": "Account",
-  "account_deletion_after": "What happens after?",
-  "account_deletion_point_1": "Your personal data will be deleted",
-  "account_deletion_point_2": "Your published quotes will stay on the platform",
-  "account_deletion_point_3": "Your username will (slowly) be dissaciated with the published quotes",
-  "account_recover": "Recover account",
-  "avertising": "Advertising",
-  "avertising_content": "The web & mobile apps may contain advertising to generate revenues. Advertisers may collect additional data on your navigation and preferences. We don't own, control or manage this part of your personal data.",
+  "account": {
+    "already_have": "I already have an account",
+    "create": "Create account",
+    "delete": {
+      "error": "An error occurred while deleting your account",
+      "name": "Delete account",
+      "success": "Your account has been deleted",
+      "tips": "This action is irreversible. You will loose all data associated with your account. Type your password if you want to continue."
+    },
+    "deletion_after": "What happens after?",
+    "deletion_point_1": "Your personal data will be deleted",
+    "deletion_point_2": "Your published quotes will stay on the platform",
+    "deletion_point_3": "Your username will (slowly) be dissaciated with the published quotes",
+    "dont_own": "I don't own an account yet",
+    "name": "Account",
+    "recover": "Recover account"
+  },
+  "action_irreversible": "Cette action est irreversible",
+  "advertising": "Advertising",
+  "advertising_content": "The web & mobile apps may contain advertising to generate revenues. Advertisers may collect additional data on your navigation and preferences. We don't own, control or manage this part of your personal data.",
   "all_settings": "All settings",
   "analytics": "analytics",
   "analytics_content": "The web & mobile apps collect usage data to improve the apps & services. However, personal data is never purposely shared or sell to third parties.",
   "apps": "Apps",
   "are_you_sure": "Are you sure?",
+  "author": {
+    "delete": {
+      "confirm": "Confirm delete?",
+      "error": "An error occurred while deleting author",
+      "name": "Delete author",
+      "success": "Author has been deleted"
+    },
+    "name": "Author",
+    "copy": {
+      "name": "Copy author's name",
+      "url": "Copy author's url"
+    }
+  },
   "back": "Back",
   "back_home": "Back to home",
   "body_empty_forbidden_restrictions": "Body cannot be empty. @:body_restrictions",
   "body_restrictions": "Please enter a body with more than 3 characters.",
   "brightness": "Brightness",
   "cancel": "Cancel",
+  "caracterization": "Caracterization",
+  "close": "Close",
+  "color": {
+    "copy": {
+      "hex": "Copy hex value",
+      "name": "Copy color",
+      "rgba": "Copy RGBA value",
+      "success": {
+        "default": "Color successfully copied!",
+        "name": "{} color successfully copied!",
+        "hex": "hexadicimal color successfully copied!",
+        "rgba": "RGBA color successfully copied!",
+        "value": "32-bit value color successfully copied!"
+      },
+      "value": "Copy 32-bit value"
+    },
+    "name": "Color",
+    "palette": "Color palette"
+  },
   "connection_check_try": "Check your connection and try again.",
   "confirm": "Confirm",
   "contact": "Contact",
   "cookies": "Cookies",
   "cookies_content": "The application uses only necessaries cookies for usage statistiques. It's anonymized and don't track specific users. We don't volontary share cookies with third-party. We don't have id advertising.",
-  "copy_link": "Copy link",
-  "copy_link_success": "Link successfully copied!",
+  "create": "Create",
   "dark": "Dark",
   "dashboard": "Dashboard",
+  "description": {
+    "name": "Description",
+    "optional": "Description (optional)"
+  },
   "developers": "Developers",
   "discover": "Discover",
-  "email_check_spam": "Please check your spam folder too",
-  "email_doesnt_exist": "Sorry, this email doesn't exist.",
-  "email_empty_forbidden": "Email cannot be empty",
-  "email_not_valid": "The value entered is not a valid email address",
-  "email_empty_no_valid": "The email field is empty. Please enter a valid email address.",
-  "email_password_reset_link": "A password reset link has been sent to your mail box",
-  "email_response_soon": "You will receive an email response shortly",
-  "email_send_me": "Send me an email",
-  "email_sending": "Sending email...",
-  "email_use_other": "Use another email",
-  "email_user_use": "No, your email will NOT be used to send you spam or shared with thrid-parties",
+  "drafts": {
+    "description": "Unfinished work",
+    "name": "Drafts"
+  },
+  "email": {
+    "check_spam": "Please check your spam folder too",
+    "doesnt_exist": "Sorry, this email doesn't exist.",
+    "empty_forbidden": "Email cannot be empty",
+    "empty_no_valid": "The email field is empty. Please enter a valid email address.",
+    "name": "Email",
+    "new": "New email",
+    "not_valid": "The value entered is not a valid email address",
+    "password_reset_link": "A password reset link has been sent to your mail box",
+    "response_soon": "You will receive an email response shortly",
+    "sending": "Sending email",
+    "send_me": "Send me an email",
+    "send_reset_link": "Send reset link",
+    "sending_password_recovery_email": "Sending password recovery to your email inbox",
+    "update": "Update email",
+    "update_tips": "Enter your new email address below with your password to confirm this change.",
+    "use_other": "Use another email",
+    "user_use": "No, your email will NOT be used to send you spam or shared with thrid-parties"
+  },
+  "empty_quote": {
+    "home": "There's no quotes yet.\n There's probably an network issue.",
+    "search": "No quote found for your search."
+  },
   "ending": "Ending",
-  "favourites": "Favourites",
+  "favourites": {
+    "description": "All liked quotes",
+    "name": "Favourites"
+  },
+  "fictional": "Fictional",
+  "genres": {
+    "article": "Article",
+    "bd": "BD",
+    "blog": "Blog",
+    "book": "Book",
+    "comic": "Comic",
+    "film": "Film",
+    "graphic_novel": "Graphic novel",
+    "game": "Game",
+    "music": "Music",
+    "news": "News",
+    "novel": "Novel",
+    "other": "Other",
+    "painting": "Painting",
+    "paper": "Paper",
+    "play": "Play",
+    "poem": "Poem",
+    "photo": "Photo",
+    "podcast": "Podcast",
+    "post": "Post",
+    "poetry": "Poetry",
+    "short_story": "Short story",
+    "tv_series": "TV series",
+    "video_game": "Video game",
+    "video": "Video",
+    "website": "Website"
+  },
+  "home": "Home",
   "iap": "In-app purchases",
   "iap_content": "The apps contain in-app purchases which offer additional features.",
+  "in_validation": {
+    "description": "Your quotes in validation",
+    "name": "In validation"
+  },
+  "input": {
+    "error": {
+      "alphanumerical": "Please use only alpha-numerical (A-Z, 0-9) characters and hypen (-) and underscore (_)",
+      "email_not_available": "This email is not available",
+      "email_not_valid": "This email entered is not valid",
+      "empty": "This field cannot be empty",
+      "invalid": "This field is invalid",
+      "minimum_length": "Please use at least {} characters",
+      "password_required": "Your password is required",
+      "required": "This field is required",
+      "username_not_available": "This username is not available"
+    }
+  },
+  "job": "Job",
+  "kwotes_leading": "kwotes •",
   "lang_recent_add_maybe": "Maybe your this language has been added recently",
-  "language": "Language",
+  "language": {
+    "locale": {
+      "autoDetect": "Auto detect",
+      "ar": "عرب",
+      "de": "Deutch",
+      "en": "English",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "no": "Norsk",
+      "pt": "Português",
+      "ru": "Русский",
+      "es": "Español",
+      "sk": "Slovenčina",
+      "sv": "Svenska"
+    },
+    "name": "Language"
+  },
   "light": "Light",
-  "link_send": "Send link",
+  "link": {
+    "copy": {
+      "name": "Copy link",
+      "success": "Link successfully copied!"
+    },
+    "name": "Link",
+    "send": {
+      "name": "Send link",
+      "success": "Link successfully sent!"
+    }
+  },
+  "list": {
+    "add": {
+      "quote": {
+        "zero": "Add {} quote to list(s)",
+        "one": "Add {} quote to list(s)",
+        "two": "Add {} quotes to list(s)",
+        "many": "Add {} quotes to list(s)",
+        "other": "Add {} quotes to list(s)"
+      },
+      "hint": "Select at least one list",
+      "to": {
+        "zero": "No list selected",
+        "one": "Add to list",
+        "two": "Add to lists",
+        "many": "Add to lists",
+        "other": "Add to lists"
+      }
+    },
+    "create": {
+      "close": "Close create panel",
+      "description": "Create a list of quotes",
+      "failed": "An error occurred while creating your list",
+      "ing": "Creating list",
+      "name": "Create list",
+      "hints": {
+        "names": {
+          "0": "Good quotes, bad quotes",
+          "1": "Chill up quotes",
+          "2": "Love quotes <3",
+          "3": "Lesson learned",
+          "4": "Motivational quotes",
+          "5": "I keep thinking about it",
+          "6": "Wake up morning",
+          "7": "Good night, sleep well",
+          "8": "Self reflexion"
+        },
+        "descriptions": {
+          "0": "Mixed up feelings, but I still love them.",
+          "1": "When I'm down, I just think about these quotes.",
+          "2": "They fill my heart with joy.",
+          "3": "I have to keep these ones close.",
+          "4": "I can climb anything.",
+          "5": "My mind spins in barel.",
+          "6": "To start with a mind full of energy.",
+          "7": "A nice thought before going in my dreams.",
+          "8": "A little something to think about."
+        }
+      },
+      "validate": "Validate the creation"
+    },
+    "delete": {
+      "failed": "An error occurred while deleting your list",
+      "name": "Delete list"
+    },
+    "description": "Put some quotes together",
+    "edit": {
+      "name": "Edit list"
+    },
+    "empty": "This list is empty.",
+    "error": {
+      "add": {
+        "quote": {
+          "name": "An error occurred while adding your quote to the list",
+          "named": "Failed to add quote to the list {}"
+        }
+      },
+      "create": {
+        "name": "An error occurred while creating your list",
+        "named": "Failed to create the list {}"
+      },
+      "name": {
+        "empty": "A list must have a name."
+      },
+      "update": {
+        "name": "An error occurred while updating your list"
+      }
+    },
+    "name": "List",
+    "save": {
+      "name": "Save list"
+    },
+    "show_all": {
+      "name": "Show all lists"
+    }
+  },
+  "lists": {
+    "description": "Put some quotes together",
+    "name": "Lists"
+  },
   "loading": "Loading...",
   "loading_error": "There was an error while loading",
+  "logout": "Logout",
+  "name": "Name",
   "next": "Next",
   "new_quote": "New quote",
   "on_boarding_come": "Come on board if it's your first time.",
-  "password_empty_forbidden": "Password cannot be empty.",
-  "password_forgot": "Forgot Password",
-  "password_forgot_reset_process": "We will send a reset link to your mail box.",
-  "quit": "Quitter",
+  "page_title": {
+    "about": "@:kwotes_leading About",
+    "add_quote": "@:kwotes_leading Add quote",
+    "any": "@:kwotes_leading {}",
+    "color_palette": "@:kwotes_leading Color palette",
+    "color_detail": "@:kwotes_leading Color: {}",
+    "dashboard": "@:kwotes_leading Dashboard",
+    "delete_account": "@:kwotes_leading Delete account",
+    "drafts": "@:kwotes_leading Drafts",
+    "favourites": "@:kwotes_leading Favourites",
+    "forgot_password": "@:kwotes_leading Forgot Password",
+    "home": "@:kwotes_leading Home",
+    "in_validation": "@:kwotes_leading In validation",
+    "list": "@:kwotes_leading {}",
+    "lists": "@:kwotes_leading Lists",
+    "post": "@:kwotes_leading Post",
+    "posts": "@:kwotes_leading Posts",
+    "project": "@:kwotes_leading Project",
+    "projects": "@:kwotes_leading Projects",
+    "published": "@:kwotes_leading Published",
+    "search": "@:kwotes_leading Search",
+    "settings": "@:kwotes_leading Settings",
+    "signin": "@:kwotes_leading Signin",
+    "signup": "@:kwotes_leading Signup",
+    "tos": "@:kwotes_leading Term of Services",
+    "update_email": "@:kwotes_leading Update email",
+    "update_password": "@:kwotes_leading Update password",
+    "update_username": "@:kwotes_leading Update username"
+  },
+  "password": {
+    "confirm": "Confirm password",
+    "current": "Current password",
+    "empty_forbidden": "Password cannot be empty.",
+    "error": {
+      "current_empty": "The field is empty. Please enter your current password.",
+      "minimum_length": "Password must be at least {} characters long.",
+      "new_empty": "The field is empty. Please enter your new password.",
+      "not_valid": "The value entered is not a valid password.",
+      "required": "Password is required."
+    },
+    "empty_no_valid": "The password field is empty. Please enter a valid password.",
+    "forgot": "Forgot password",
+    "forgot_reset_process": "We will send a reset link to your mail box.",
+    "name": "Password",
+    "new": "New password",
+    "not_valid": "The value entered is not a valid password",
+    "update": {
+      "error": "Error updating password",
+      "name": "Update password",
+      "success": "Password successfully updated!",
+      "tips": {
+        "and": "and",
+        "minimum_length": "Your password must be at least {} characters long",
+        "lower_case": "contain at least one lowercase letter",
+        "number": "one number",
+        "special": "special character",
+        "upper_case": "uppercase letter"
+      }
+    }
+  },
+  "published": {
+    "description": "Your contribution to the world.",
+    "name": "Published"
+  },
+  "quit": "Quit",
+  "quote": {
+    "add": {
+      "a": "Add a quote",
+      "author": {
+        "avatar": "Author's profile picture",
+        "dates": {
+          "0": {
+            "birth": "November 7, 1913", "death": "January 4, 1960"
+          },
+          "1": {
+            "birth": "June 29, 1900", "death": "July 31, 1944"
+          },
+          "2": {
+            "birth": "April 9, 1821", "death": "August 31, 1867"
+          },
+          "3": {
+            "birth": "January 19, 1809", "death": "October 7, 1849"
+          },
+          "4": {
+            "birth": "June 25, 1903", "death": "January 21, 1950"
+          },
+          "5": {
+            "birth": "October 21, 1929", "death": "January 22, 2018"
+          },
+          "6": {
+            "birth": "January 2, 1882", "death": "November 4, 1941"
+          },
+          "7": {
+            "birth": "November 30, 1835", "death": "April 21, 1910"
+          },
+          "8": {
+            "birth": "October 16, 1854", "death": "November 30, 1900"
+          },
+          "9": {
+            "birth": "September 21, 1947", "death": ""
+          },
+          "birth": "When this author was born?",
+          "death": "When this author died?",
+          "negative": {
+            "birth": {
+              "true": "BCE",
+              "false": "CE",
+              "explanation": {
+                "true": "Born before Common Era",
+                "false": "Born after Common Era"
+              }
+            },
+            "death": {
+              "true": "BCE",
+              "false": "CE",
+              "explanation": {
+                "true": "Died before Common Era",
+                "false": "Died after Common Era"
+              }
+            }
+          }
+        },
+        "fictional": {
+          "explanation": {
+            "false": "This author exists in the real world",
+            "true": "This author does not exist in the real world"
+          },
+          "false": "Fictional: Nope",
+          "true": "Fictional: Yes"
+        },
+        "jobs": {
+          "0": "French philosopher, author, dramatist, and journalist",
+          "1": "French writer, poet, and aviator",
+          "2": "French poet, critic, and painter",
+          "3": "American writer, literary critic",
+          "4": "English novelist et journalist",
+          "5": "American fantasy and science fiction author",
+          "6": "Irish novelist",
+          "7": "American writer",
+          "8": "Irish poet and playwright",
+          "9": "American writer"
+        },
+        "name": "Add author",
+        "names": {
+          "0": "Albert Camus",
+          "1": "Antoine de Saint-Exupery",
+          "2": "Charles Baudelaire",
+          "3": "Edgar Allan Poe",
+          "4": "George Orwell",
+          "5": "Ursula K. Le Guin",
+          "6": "James Joyce",
+          "7": "Mark Twain",
+          "8": "Oscar Wilde",
+          "9": "Stephen King"
+        },
+        "summaries": {
+          "0": "Albert Camus was a French philosopher, author, dramatist, and journalist. He was the recipient of the 1957 Nobel Prize in Literature at the age of 44, the second-youngest recipient in history. His works include The Stranger, The Plague, The Myth of Sisyphus, The Fall, and The Rebel.",
+          "1": "Antoine de Saint-Exupery was a French writer, poet, and aviator. His most famous works include The Little Prince and The Little Prince in the 20th Century.",
+          "2": "Charles Pierre Baudelaire was a French poet who also worked as an essayist, art critic and translator. His poems are described as exhibiting mastery of rhyme and rhythm, containing an exoticism inherited from Romantics, and are based on observations of real life. His most famous work is Les Fleurs du mal.",
+          "3": "Edgar Allan Poe was an American writer, poet, author, editor, and literary critic who is best known for his poetry and short stories, particularly his tales of mystery and the macabre. He is widely regarded as a central figure of Romanticism and Gothic fiction in the United States, and of American literature. His most famous works include The Tell-Tale Heart and The Cask of Amontillado.",
+          "4": "Eric Arthur Blair, better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is characterised by lucid prose, social criticism, opposition to totalitarianism, and support of democratic socialism. His most famous works include Nineteen Eighty-Four and Animal Farm.",
+          "5": "Ursula Kroeber Le Guin was an American author best known for her works of speculative fiction, including science fiction works set in her Hainish universe, and the Earthsea fantasy series.",
+          "6": "James Joyce was a famous writer from Ireland who wrote many books and poems. He lived a long time ago, from 1882 to 1941. His writing was very special because he used new and different ways of telling stories. Some people really liked his writing, but others found it hard to understand. Even though he is not alive anymore, many people still read his books today! His most famous work is Ulysses.",
+          "7": "Mark Twain was a famous American writer who lived a long time ago. He wrote many funny stories and books that people still enjoy reading today. Some of his most famous works include \"The Adventures of Tom Sawyer\" and \"Adventures of Huckleberry Finn\". Mark Twain had a great sense of humor and he used it to make people laugh while also teaching them important lessons about life.",
+          "8": "Oscar Wilde was a famous writer from Ireland who lived in the late 1800s. He wrote plays, poems, and stories that were very popular during his time and are still read today. He was known for his wit and humor, but also for being different from other people of his time because he dressed in fancy clothes and had unconventional ideas about love and life. Unfortunately, Oscar Wilde's life ended tragically when he was sent to jail for being gay, which was against the law at that time. Despite this, he remains an important figure in literature and history.",
+          "9": "Stephen King is a famous American writer who has written many scary and thrilling books. He was born in 1947 and has been writing for over 40 years. Some of his most popular books include \"Carrie,\" \"The Shining,\" and \"It.\" His stories often have supernatural elements and are known for keeping readers on the edge of their seats. Many of his books have also been turned into movies or TV shows."
+        }
+      },
+      "draft": {
+        "failed": "Failed to create draft"
+      },
+      "links": {
+        "example": {
+          "amazon": "https://www.amazon.com/...",
+          "imdb": "https://www.imdb.com/name/",
+          "facebook": "https://www.facebook.com/example",
+          "image": "https://example.com/image.jpg",
+          "instagram": "https://www.instagram.com/example",
+          "netflix": "https://www.netflix.com/example",
+          "prime_video": "https://www.primevideo.com/example",
+          "twitch": "https://www.twitch.tv/example",
+          "twitter": "https://twitter.com/example",
+          "web": "https://www.example.com",
+          "website": "https://example.com",
+          "wikipedia": "https://en.wikipedia.org/wiki/Example",
+          "youtube": "https://www.youtube.com/example"
+        },
+        "amazon": "Amazon",
+        "facebook": "Facebook",
+        "imdb": "IMDb",
+        "instagram": "Instagram",
+        "more": "More links",
+        "netflix": "Netflix",
+        "prime_video": "Prime Video",
+        "twitch": "Twitch",
+        "twitter": "Twitter",
+        "youtube": "Youtube",
+        "web": "Website",
+        "website": "Website",
+        "wikipedia": "Wikipedia"
+      },
+      "name": "Add quote",
+      "page": {
+        "0": "Add quote content",
+        "1": "Add topic(s)",
+        "2": "Add author",
+        "3": "Add reference",
+        "next": "Next page",
+        "previous": "Previous page"
+      },
+      "reference": {
+        "avatar": "Reference's illustration",
+        "dates": {
+          "0": {
+            "original": "19 September 2012", "translation": "27 May 2014"
+          },
+          "1": {
+            "original": "21 June 1857"
+          },
+          "2": {
+            "original": "April 6, 1943"
+          },
+          "3": {
+            "original": "November 1846"
+          },
+          "4": {
+            "original": "17 August 1945"
+          },
+          "5": {
+            "original": "January 1843"
+          },
+          "6": {
+            "original": "8 June 1949"
+          },
+          "7": {
+            "original": "1876"
+          },
+          "8": {
+            "original": "December 10, 1884"
+          },
+          "9": {
+            "original": "2 February 1922"
+          },
+          "release": "When this reference was released?",
+          "negative": {
+            "release": {
+              "true": "BCE",
+              "false": "CE",
+              "explanation": {
+                "true": "Released before Common Era",
+                "false": "Released after Common Era"
+              }
+            }
+          }
+        },
+        "genre": {
+          "primary": "Primary genre",
+          "secondary": "Sub genre"
+        },
+        "genres": {
+          "primary": {
+            "0": "Novel",
+            "1": "Poetry",
+            "2": "Novel",
+            "3": "Short story",
+            "4": "Novel",
+            "5": "Short story",
+            "6": "Novel",
+            "7": "Novel",
+            "8": "Novel",
+            "9": "Novel"
+          },
+          "secondary": {
+            "0": "Police",
+            "1": "Lyric",
+            "2": "...",
+            "3": "Horror",
+            "4": "Dystopic",
+            "5": "Horror",
+            "6": "Dystopic",
+            "7": "Adventure",
+            "8": "Picaresque",
+            "9": "Modernist"
+          }
+        },
+        "name": "Add reference",
+        "names": {
+          "0": "The Truth About the Harry Quebert Affair",
+          "1": "Les Fleurs du mal",
+          "2": "The Little Prince",
+          "3": "The Cask of Amontillado",
+          "4": "Animal Farm",
+          "5": "The Tell-Tale Heart",
+          "6": "Nineteen Eighty-Four",
+          "7": "The Adventures of Tom Sawyer",
+          "8": "Adventures of Huckleberry Finn",
+          "9": "Ulysses"
+        },
+        "summaries": {
+          "0": "The Truth About the Harry Quebert Affair is a novel by Swiss author Joël Dicker. It was published in the United States on 27 May 2014, by Penguin Books. The original French version, La vérité sur l'affaire Harry Quebert, has sold more than one million copies. The novel is set in a coastal New Hampshire town (called Aurora in the original version and Somerset in the English translation). The protagonist, Marcus Goldman, is a successful young novelist who needs inspiration for his next book. Marcus heads to New Hampshire to stay with his college professor, Harry Quebert, to focus on his writing. When the body of 15-year-old Nola Kellergan is found 33 years after she went missing and Quebert is accused of her murder, Marcus works to uncover the truth. The result of his investigation becomes his next book.",
+          "1": "Les Fleurs du mal is a volume of French poetry by Charles Baudelaire. Les Fleurs du mal includes nearly all Baudelaire's poetry, written from 1840 until his death in August 1867. First published in 1857, it was important in the symbolist—including painting—and modernist movements.",
+          "2": "The Little Prince is a novella written and illustrated by French aristocrat, writer, and military pilot Antoine de Saint-Exupéry. It was first published in English and French in the United States by Reynal & Hitchcock in April 1943 and was published posthumously in France following liberation. The story follows a young prince who visits various planets, including Earth, and addresses themes of loneliness, friendship, love, and loss. Despite its style as a children's book, The Little Prince makes observations about life, adults, and human nature.",
+          "3": "\"The Cask of Amontillado\" is a short story by the American writer Edgar Allan Poe, first published in the November 1846 issue of Godey's Lady's Book. The story, set in an unnamed Italian city at carnival time, is about a man taking fatal revenge on a friend who, he believes, has insulted him.",
+          "4": "Animal Farm is a beast fable, in the form of a satirical allegorical novella, by George Orwell, first published in England on 17 August 1945. It tells the story of a group of anthropomorphic farm animals who rebel against their human farmer, hoping to create a society where the animals can be equal, free, and happy.",
+          "5": "\"The Tell-Tale Heart\" is a short story by American writer Edgar Allan Poe, first published in 1843. It is related by an unnamed narrator who endeavors to convince the reader of the narrator's sanity while simultaneously describing a murder the narrator committed.",
+          "6": "Nineteen Eighty-Four is a dystopian social science fiction novel and cautionary tale by English writer George Orwell. It was published on 8 June 1949 by Secker & Warburg as Orwell's ninth and final book completed in his lifetime.",
+          "7": "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, which is based on Hannibal, Missouri, where Twain lived as a boy.",
+          "8": "Adventures of Huckleberry Finn is a novel by American author Mark Twain, which was first published in the United Kingdom in December 1884 and in the United States in February 1885. The book is noted for \"changing the course of children's literature\" in the United States for the \"deeply felt portrayal of boyhood\". It is also known for its colorful description of people and places along the Mississippi River.",
+          "9": "Ulysses is a modernist novel by Irish writer James Joyce. Parts of it were first serialized in the American journal The Little Review from March 1918 to December 1920, and the entire work was published in Paris by Sylvia Beach on 2 February 1922, Joyce's fortieth birthday. Ulysses chronicles the appointments and encounters of the itinerant Leopold Bloom in Dublin in the course of an ordinary day, 16 June 1904. Ulysses is the Latinised name of Odysseus, the hero of Homer's epic poem the Odyssey, and the novel establishes a series of parallels between the poem and the novel, with structural correspondences between the characters and experiences of Bloom and Odysseus."
+        }
+      }
+    },
+    "add_topics": "Select some of the available topics to categorize the quote.",
+    "clear_all": "Clear all",
+    "clear_topics": "Clear topics",
+    "copy": {
+      "name": "Copy quote",
+      "success": "Quote successfully copied!",
+      "url": "Copy quote URL"
+    },
+    "copy_from": {
+      "name": "Copy from"
+    },
+    "delete": {
+      "confirm": "Confirm deletion?",
+      "draft": "Delete draft",
+      "name": "Delete quote"
+    },
+    "edit": "Edit quote",
+    "empty": {
+      "name": "No text yet."
+    },
+    "erase_all": "Erase all",
+    "error": {
+      "name": {
+        "empty": "Quote's content cannot be empty. You must enter a quote.",
+        "minimum_length": "Quote's content must be at least 3 characters long."
+      },
+      "topics": {
+        "empty": "You must select at least one topic."
+      },
+      "user": {
+        "not_admin": "You must be an admin to validate a quote.",
+        "unauthenticated": "You must be logged in to create a quote."
+      }
+    },
+    "favourite": {
+      "add": {
+        "failed": "Failed to add quote to favourites.",
+        "name": "Add to favourites",
+        "success": "Quote successfully added to favourites!"
+      },
+      "remove": {
+        "failed": "Failed to remove quote from favourites.",
+        "name": "Remove from favourites",
+        "success": "Quote successfully removed from favourites!"
+      }
+    },
+    "fetch": {
+      "draft": {
+        "failed": "Failed to fetch draft"
+      },
+      "failed": "Failed to fetch quote",
+      "name": "Fetch quote"
+    },
+    "like": {
+      "name": "Like"
+    },
+    "name": "Quote",
+    "new": "New quote",
+    "not_found": "The quote was not found in the list.",
+    "open_random": "Click/Tap on a letter to open a quote.",
+    "remove": {
+      "failed": "Failed to remove quote.",
+      "ing": "Removing the quote",
+      "name": "Remove quote",
+      "success": "Quote successfully removed!"
+    },
+    "save": {
+      "failed": "Failed to save quote. Please try again.",
+      "ing": "Saving the quote",
+      "name": "Save quote",
+      "success": "Quote successfully saved!"
+    },
+    "shuffle": "Shuffle quotes",
+    "start_typing": "Type your quote",
+    "submit": {
+      "failed": "Failed to submit quote. Please try again.",
+      "ing": "Submitting the quote for validation",
+      "name": "Submit",
+      "ok": "This quote will be sent for validation",
+      "required": "You must enter a quote and select at least one topic",
+      "success": "Quote successfully submitted!"
+    },
+    "unlike": {
+      "name": "Unlike"
+    },
+    "update": {
+      "failed": "Failed to update quote. Please try again.",
+      "ing": "Updating the quote",
+      "name": "Update",
+      "success": "Quote successfully udpated!"
+    },
+    "validate": {
+      "failed": "Failed to validate quote. Please try again.",
+      "ing": "Validating the quote",
+      "name": "Validate quote",
+      "success": "Quote successfully validated!"
+    }
+  },
   "quote_of_the_day": "This is the quote of the day",
   "random": "Random",
   "recent": "Recent",
   "recent_dot": "Recent...",
   "recent_none": "There's no recent quotes",
+  "reference": {
+    "delete": {
+      "a": "Delete a reference",
+      "confirm": "Confirm deletion?",
+      "failed": "Failed to delete reference.",
+      "name": "Delete reference",
+      "success": "Reference successfully deleted!"
+    },
+    "copy": {
+      "name": "Copy reference's name",
+      "url": "Copy reference's URL"
+    },
+    "name": "Reference"
+  },
+  "release_date": "Release date",
   "report_bug": "Report a bug",
   "resources": "Resources",
-  "search": "Search",
-  "settings": "Settings",
-  "settings_subtitle": "You can change your preferences here",
+  "search": {
+    "authors": "Search authors",
+    "clear": "Clear",
+    "empty_quotes": "No quote found for your search.",
+    "ing": "Searching",
+    "name": "Search",
+    "quotes": "Search quotes",
+    "references": "Search references",
+    "random_words": {
+      "0": "emotion",
+      "1": "love",
+      "2": "fun",
+      "3": "introspection",
+      "4": "inspiration",
+      "5": "insight",
+      "6": "language",
+      "7": "work",
+      "8": "life",
+      "9": "social",
+      "10": "music",
+      "11": "philosophy"
+    },
+    "result_count": {
+      "zero": "No result found",
+      "one": "1 result found",
+      "many": "{} results found",
+      "other": "{} results found"
+    },
+    "some_topics": "Some topics"
+  },
+  "see_related_quotes": "See related quotes",
+  "settings": {
+    "description": "Customize your experience",
+    "name": "Settings"
+  },
   "share_on_twitter": "Share on Twitter",
   "signin": "Sign in",
+  "signin_again": "Please sign in again",
+  "signin_existing_account": "Already have an account?",
   "signup": "Sign up",
   "skip": "Skip",
+  "suggestions": "Suggestions",
+  "summary": "Summary",
+  "system": "System",
+  "theme": "Theme",
+  "title": "Title",
   "tos": "Privacy & Terms",
   "tos_title": "Terms of service",
-  "tos_1": "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, fig.style, and other sites we own and operate including mobile apps.",
-  "tos_2": "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.",
-  "tos_3": "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.",
+  "tos_1": "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, kwotes, and other sites we own and operate including mobile apps.",
+  "tos_2": "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we're collecting it and how it will be used.",
+  "tos_3": "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we'll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.",
   "tos_4": "We don’t share any personally identifying information publicly or with third-parties, except when required to by law.",
   "tos_5": "Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.",
   "tos_6": "You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with some of your desired services.",
   "tos_7": "Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.",
   "tos_8": "This policy is effective as of 1 May 2020.",
   "tos_created_with": "Privacy Policy created with GetTerms.",
+  "username": {
+    "name": "Username",
+    "new": "New username",
+    "update": {
+      "error": "Error updating username",
+      "name": "Update username",
+      "success": "Username successfully updated!",
+      "tips": "You can choose a new username as long as it is available, at least 3 characters long, only contains alpha-numeric characters, hyphen (-) and underscore (_)."
+    }
+  },
+  "welcome_back": "Welcome back",
   "welcome_ex": "Welcome!",
   "zoom": "Zoom"
 }

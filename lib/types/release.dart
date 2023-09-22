@@ -1,9 +1,19 @@
-import 'package:fig_style/utils/date_helper.dart';
+import "dart:convert";
+
+import "package:kwotes/globals/utils.dart";
 
 class Release {
+  Release({
+    required this.original,
+    required this.beforeCommonEra,
+    required this.dateEmpty,
+  });
+
   /// Original release.
   DateTime original;
-  bool beforeJC;
+
+  /// True if the date is negative.
+  bool beforeCommonEra;
 
   /// True if the Firestore [date] value is null or doesn't exist.
   /// In this app, the [date] property will never be null (null safety).
@@ -11,49 +21,62 @@ class Release {
   /// This property doesn't exist in Firestore.
   bool dateEmpty;
 
-  Release({
-    this.original,
-    this.beforeJC = false,
-    this.dateEmpty = true,
-  });
+  Release copyWith({
+    DateTime? original,
+    bool? beforeCommonEra,
+    bool? dateEmpty,
+  }) {
+    return Release(
+      original: original ?? this.original,
+      beforeCommonEra: beforeCommonEra ?? this.beforeCommonEra,
+      dateEmpty: dateEmpty ?? this.dateEmpty,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "original": original,
+      "before_common_era": beforeCommonEra,
+    };
+  }
 
   factory Release.empty() {
     return Release(
       original: DateTime.now(),
-      beforeJC: false,
+      beforeCommonEra: false,
       dateEmpty: true,
     );
   }
 
-  factory Release.fromJSON(Map<String, dynamic> data) {
-    if (data == null) {
-      return Release.empty();
-    }
-
-    DateTime original = DateHelper.fromFirestore(data['original']);
+  factory Release.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return Release.empty();
 
     return Release(
-      original: original,
-      beforeJC: data['beforeJC'] ?? false,
-      dateEmpty: data['original'] == null,
+      original: Utils.tictac.fromFirestore(map["original"]),
+      beforeCommonEra: map["before_common_era"] ?? false,
+      dateEmpty: map["original"] == null ? true : false,
     );
   }
 
-  Map<String, dynamic> toJSON({bool dateAsInt = false}) {
-    final Map<String, dynamic> data = Map();
+  String toJson() => json.encode(toMap());
 
-    data['beforeJC'] = beforeJC ?? false;
+  factory Release.fromJson(String source) =>
+      Release.fromMap(json.decode(source) as Map<String, dynamic>);
 
-    if (original == null || dateEmpty) {
-      return data;
-    }
+  @override
+  String toString() =>
+      "Release(original: $original, beforeCommonEra: $beforeCommonEra, dateEmpty: $dateEmpty)";
 
-    if (dateAsInt) {
-      data['original'] = original.millisecondsSinceEpoch;
-    } else {
-      data['original'] = original;
-    }
+  @override
+  bool operator ==(covariant Release other) {
+    if (identical(this, other)) return true;
 
-    return data;
+    return other.original == original &&
+        other.beforeCommonEra == beforeCommonEra &&
+        other.dateEmpty == dateEmpty;
   }
+
+  @override
+  int get hashCode =>
+      original.hashCode ^ beforeCommonEra.hashCode ^ dateEmpty.hashCode;
 }

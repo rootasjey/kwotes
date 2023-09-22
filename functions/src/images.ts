@@ -1,5 +1,5 @@
-import * as FileType from 'file-type';
 import * as functions from 'firebase-functions';
+import { fromStream } from 'file-type';
 import got from 'got';
 
 import { adminApp } from './adminApp';
@@ -16,7 +16,7 @@ const firestore = adminApp.firestore();
 
 // Author
 // ------
-export const onAddAuthorPP = functions
+export const onAddAuthorPofilePicture = functions
   .region('europe-west3')
   .firestore
   .document('authors/{authorId}')
@@ -25,10 +25,9 @@ export const onAddAuthorPP = functions
     const onlineURL = data.urls.image;
 
     if (!onlineURL) { return; }
-
     const bucket = adminApp.storage().bucket();
     const stream = got.stream(onlineURL);
-    const fileType = await FileType.fromStream(stream);
+    const fileType = await fromStream(stream);
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
@@ -57,7 +56,7 @@ export const onAddAuthorPP = functions
       });
   });
 
-export const onUpdateAuthorPP = functions
+export const onUpdateAuthorProfilePicture = functions
   .region('europe-west3')
   .firestore
   .document('authors/{authorId}')
@@ -66,7 +65,6 @@ export const onUpdateAuthorPP = functions
     const afterData = snapshot.after.data();
     
     const onlineURL: string = afterData.urls.image;
-
     if (!onlineURL) { return; }
 
     // Image URL didn't change.
@@ -88,7 +86,7 @@ export const onUpdateAuthorPP = functions
     }
 
     const stream = got.stream(onlineURL);
-    const fileType = await FileType.fromStream(stream);
+    const fileType = await fromStream(stream);
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
@@ -117,7 +115,7 @@ export const onUpdateAuthorPP = functions
       });
   });
 
-export const onDeleteAuthorPP = functions
+export const onDeleteAuthorProfilePicture = functions
   .region('europe-west3')
   .firestore
   .document('authors/{authorId}')
@@ -145,7 +143,7 @@ export const onDeleteAuthorPP = functions
 
 // Reference
 // ---------
-export const onAddReferencePP = functions
+export const onAddReferenceProfilePicture = functions
   .region('europe-west3')
   .firestore
   .document('references/{referenceId}')
@@ -156,7 +154,7 @@ export const onAddReferencePP = functions
     if (!onlineURL) { return; }
 
     const stream = got.stream(onlineURL);
-    const fileType = await FileType.fromStream(stream);
+    const fileType = await fromStream(stream);
     const bucket = adminApp.storage().bucket();
 
     // -- Upload, Naming, & Update Firestore
@@ -186,7 +184,7 @@ export const onAddReferencePP = functions
       });
   });
 
-export const onUpdateReferencePP = functions
+export const onUpdateReferenceProfilePicture = functions
   .region('europe-west3')
   .firestore
   .document('references/{referenceId}')
@@ -217,7 +215,7 @@ export const onUpdateReferencePP = functions
     }
 
     const stream = got.stream(onlineURL);
-    const fileType = await FileType.fromStream(stream);
+    const fileType = await fromStream(stream);
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
@@ -246,7 +244,7 @@ export const onUpdateReferencePP = functions
       });
   });
 
-export const onDeleteReferencePP = functions
+export const onDeleteReferenceProfilePicture = functions
   .region('europe-west3')
   .firestore
   .document('references/{referenceId}')

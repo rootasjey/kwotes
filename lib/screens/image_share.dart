@@ -1,21 +1,19 @@
-import 'package:fig_style/components/app_icon.dart';
-import 'package:fig_style/state/colors.dart';
-import 'package:fig_style/state/topics_colors.dart';
-import 'package:fig_style/types/enums.dart';
-import 'package:fig_style/types/quote.dart';
-import 'package:fig_style/utils/animation.dart';
-import 'package:fig_style/utils/app_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:share_files_and_screenshot_widgets/share_files_and_screenshot_widgets.dart';
+import "package:flutter/material.dart";
+import "package:kwotes/components/icons/app_icon.dart";
+import "package:kwotes/types/quote.dart";
 
 class ImageShare extends StatefulWidget {
-  final ScrollController scrollController;
+  const ImageShare({
+    super.key,
+    required this.scrollController,
+    required this.quote,
+  });
+
+  final ScrollController? scrollController;
   final Quote quote;
 
-  ImageShare({this.scrollController, this.quote});
-
   @override
-  _ImageShareState createState() => _ImageShareState();
+  createState() => _ImageShareState();
 }
 
 class _ImageShareState extends State<ImageShare> {
@@ -23,11 +21,11 @@ class _ImageShareState extends State<ImageShare> {
 
   final gradientColors = <Color>[];
 
-  GlobalKey previewContainer = new GlobalKey();
+  GlobalKey previewContainer = GlobalKey();
 
-  ImageShareColor imageShareColor;
+  // ImageShareColor imageShareColor;
 
-  ImageShareTextColor imageShareTextColor;
+  // ImageShareTextColor imageShareTextColor;
 
   @override
   void initState() {
@@ -38,10 +36,10 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   void initColors() {
-    widget.quote.topics.forEach((topic) {
-      final topicColor = appTopicsColors.find(topic);
-      gradientColors.add(Color(topicColor.decimal));
-    });
+    // for (var topic in widget.quote.topics) {
+    //   final topicColor = appTopicsColors.find(topic);
+    //   gradientColors.add(Color(topicColor.decimal));
+    // }
 
     setState(() {
       accentColor = gradientColors.first;
@@ -49,8 +47,8 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   void initProps() {
-    imageShareColor = appStorage.getImageShareColor();
-    imageShareTextColor = appStorage.getImageShareTextColors();
+    // imageShareColor = appStorage.getImageShareColor();
+    // imageShareTextColor = appStorage.getImageShareTextColors();
   }
 
   @override
@@ -58,41 +56,41 @@ class _ImageShareState extends State<ImageShare> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final quote = widget.quote;
+          // final quote = widget.quote;
 
-          ShareFilesAndScreenshotWidgets().shareScreenshot(
-            previewContainer,
-            1024,
-            "fig.style - quote - ${quote.id}",
-            "fig.style_quote_${quote.id}.png",
-            "image/png",
-            text: "fig.style - quote",
-          );
+          // ShareFilesAndScreenshotWidgets().shareScreenshot(
+          //   previewContainer,
+          //   1024,
+          //   "fig.style - quote - ${quote.id}",
+          //   "fig.style_quote_${quote.id}.png",
+          //   "image/png",
+          //   text: "fig.style - quote",
+          // );
         },
         backgroundColor: accentColor,
         foregroundColor: Colors.white,
-        child: Icon(
+        child: const Icon(
           Icons.ios_share,
         ),
       ),
       body: CustomScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         controller: widget.scrollController,
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: stateColors.softBackground,
+            // backgroundColor: stateColors.softBackground,
             automaticallyImplyLeading: false,
-            title: Text(
-              'Share image',
+            title: const Text(
+              "Share image",
               style: TextStyle(
-                color: stateColors.foreground,
-              ),
+                  // color: stateColors.foreground,
+                  ),
             ),
             actions: [
               IconButton(
-                color: stateColors.foreground,
-                icon: Icon(Icons.close),
+                // color: stateColors.foreground,
+                icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -116,36 +114,36 @@ class _ImageShareState extends State<ImageShare> {
         RepaintBoundary(
           key: previewContainer,
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: size,
               child: Card(
                 color: getBackgroundColor(),
                 elevation: 2.0,
                 child: Container(
-                  decoration: imageShareColor == ImageShareColor.gradient
-                      ? BoxDecoration(gradient: getGradientColor())
-                      : BoxDecoration(),
+                  // decoration: imageShareColor == ImageShareColor.gradient
+                  //     ? BoxDecoration(gradient: getGradientColor())
+                  //     : BoxDecoration(),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                     vertical: 30.0,
                   ),
                   child: Column(
                     children: [
-                      Align(
+                      const Align(
                         alignment: Alignment.topLeft,
                         child: AppIcon(
                           size: 40.0,
-                          padding: const EdgeInsets.only(
+                          margin: EdgeInsets.only(
                             left: 16.0,
                             bottom: 20.0,
                           ),
                         ),
                       ),
-                      createHeroQuoteAnimation(
-                        quote: quote,
-                        isMobile: true,
-                        screenWidth: size - 20.0,
-                        screenHeight: size - 20.0,
+                      Text(
+                        quote.name,
+                        // isMobile: true,
+                        // screenWidth: size - 20.0,
+                        // screenHeight: size - 20.0,
                         style: TextStyle(
                           color: getForegroundColor(),
                         ),
@@ -169,8 +167,7 @@ class _ImageShareState extends State<ImageShare> {
                           ),
                         ),
                       ),
-                      if (quote.reference != null &&
-                          quote.reference.name.isNotEmpty)
+                      if (quote.reference.name.isNotEmpty)
                         Opacity(
                           opacity: 0.6,
                           child: Text(
@@ -209,12 +206,12 @@ class _ImageShareState extends State<ImageShare> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 12.0),
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
+                  padding: EdgeInsets.only(right: 4.0),
                   child: Icon(Icons.image_outlined),
                 ),
                 Expanded(
@@ -233,28 +230,31 @@ class _ImageShareState extends State<ImageShare> {
             alignment: WrapAlignment.center,
             children: [
               colorCard(
+                gradient: const LinearGradient(colors: []),
                 onTap: () {
-                  setState(() {
-                    imageShareColor = ImageShareColor.light;
-                  });
+                  // setState(() {
+                  //   imageShareColor = ImageShareColor.light;
+                  // });
                 },
-                color: Color(0xffeeeeee),
+                color: const Color(0xffeeeeee),
                 title: "Light",
               ),
               colorCard(
+                gradient: const LinearGradient(colors: []),
                 onTap: () {
-                  setState(() {
-                    imageShareColor = ImageShareColor.dark;
-                  });
+                  // setState(() {
+                  //   imageShareColor = ImageShareColor.dark;
+                  // });
                 },
-                color: Color(0xff101010),
+                color: const Color(0xff101010),
                 title: "Dark",
               ),
               colorCard(
+                gradient: const LinearGradient(colors: []),
                 onTap: () {
-                  setState(() {
-                    imageShareColor = ImageShareColor.colored;
-                  });
+                  // setState(() {
+                  //   imageShareColor = ImageShareColor.colored;
+                  // });
                 },
                 color: accentColor,
                 title: "Colored",
@@ -262,9 +262,9 @@ class _ImageShareState extends State<ImageShare> {
               if (gradientColors.length > 1)
                 colorCard(
                   onTap: () {
-                    setState(() {
-                      imageShareColor = ImageShareColor.gradient;
-                    });
+                    // setState(() {
+                    //   imageShareColor = ImageShareColor.gradient;
+                    // });
                   },
                   title: "Gradient",
                   color: Colors.transparent,
@@ -291,12 +291,12 @@ class _ImageShareState extends State<ImageShare> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 12.0),
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
+                  padding: EdgeInsets.only(right: 4.0),
                   child: Icon(Icons.text_fields),
                 ),
                 Expanded(
@@ -316,12 +316,12 @@ class _ImageShareState extends State<ImageShare> {
             children: [
               textColorCard(
                 onTap: () {
-                  setState(() {
-                    imageShareTextColor = ImageShareTextColor.auto;
-                  });
+                  // setState(() {
+                  //   imageShareTextColor = ImageShareTextColor.auto;
+                  // });
                 },
                 color: Colors.transparent,
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [Colors.white, Colors.black],
@@ -329,21 +329,23 @@ class _ImageShareState extends State<ImageShare> {
                 title: "Auto",
               ),
               textColorCard(
+                gradient: const LinearGradient(colors: []),
                 onTap: () {
-                  setState(() {
-                    imageShareTextColor = ImageShareTextColor.light;
-                  });
+                  // setState(() {
+                  //   imageShareTextColor = ImageShareTextColor.light;
+                  // });
                 },
-                color: Color(0xffeeeeee),
+                color: const Color(0xffeeeeee),
                 title: "Light",
               ),
               textColorCard(
+                gradient: const LinearGradient(colors: []),
                 onTap: () {
-                  setState(() {
-                    imageShareTextColor = ImageShareTextColor.dark;
-                  });
+                  // setState(() {
+                  //   imageShareTextColor = ImageShareTextColor.dark;
+                  // });
                 },
-                color: Color(0xff101010),
+                color: const Color(0xff101010),
                 title: "Dark",
               ),
             ],
@@ -354,10 +356,10 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   Widget colorCard({
-    @required Color color,
-    Gradient gradient,
-    @required String title,
-    @required VoidCallback onTap,
+    required Color color,
+    required Gradient gradient,
+    required String title,
+    required VoidCallback onTap,
   }) {
     return Column(
       children: [
@@ -375,7 +377,7 @@ class _ImageShareState extends State<ImageShare> {
               child: InkWell(
                 onTap: () {
                   onTap();
-                  appStorage.setImageShareColor(imageShareColor);
+                  // appStorage.setImageShareColor(imageShareColor);
                 },
               ),
             ),
@@ -385,7 +387,7 @@ class _ImageShareState extends State<ImageShare> {
           padding: const EdgeInsets.only(top: 8.0),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -395,10 +397,10 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   Widget textColorCard({
-    @required Color color,
-    Gradient gradient,
-    @required String title,
-    @required VoidCallback onTap,
+    required Color color,
+    required Gradient gradient,
+    required String title,
+    required VoidCallback onTap,
   }) {
     return Column(
       children: [
@@ -416,7 +418,7 @@ class _ImageShareState extends State<ImageShare> {
               child: InkWell(
                 onTap: () {
                   onTap();
-                  appStorage.setImageShareTextColor(imageShareTextColor);
+                  // appStorage.setImageShareTextColor(imageShareTextColor);
                 },
               ),
             ),
@@ -426,7 +428,7 @@ class _ImageShareState extends State<ImageShare> {
           padding: const EdgeInsets.only(top: 8.0),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -436,23 +438,24 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   Color getBackgroundColor() {
-    if (imageShareColor == ImageShareColor.dark) {
-      return stateColors.dark;
-    }
+    return Colors.transparent;
+    // if (imageShareColor == ImageShareColor.dark) {
+    //   return stateColors.dark;
+    // }
 
-    if (imageShareColor == ImageShareColor.light) {
-      return stateColors.light;
-    }
+    // if (imageShareColor == ImageShareColor.light) {
+    //   return stateColors.light;
+    // }
 
-    if (imageShareColor == ImageShareColor.colored) {
-      return accentColor;
-    }
+    // if (imageShareColor == ImageShareColor.colored) {
+    //   return accentColor;
+    // }
 
-    if (imageShareColor == ImageShareColor.gradient) {
-      return Colors.transparent;
-    }
+    // if (imageShareColor == ImageShareColor.gradient) {
+    //   return Colors.transparent;
+    // }
 
-    return stateColors.dark;
+    // return stateColors.dark;
   }
 
   Gradient getGradientColor() {
@@ -464,45 +467,45 @@ class _ImageShareState extends State<ImageShare> {
   }
 
   Color getDividerColor() {
-    if (imageShareColor == ImageShareColor.colored) {
-      return Colors.white;
-    }
+    // if (imageShareColor == ImageShareColor.colored) {
+    //   return Colors.white;
+    // }
 
-    if (imageShareColor == ImageShareColor.gradient) {
-      return Colors.white;
-    }
+    // if (imageShareColor == ImageShareColor.gradient) {
+    //   return Colors.white;
+    // }
 
     return accentColor;
   }
 
   Color getForegroundColor() {
-    if (imageShareTextColor == ImageShareTextColor.dark) {
-      return Colors.black;
-    }
+    // if (imageShareTextColor == ImageShareTextColor.dark) {
+    //   return Colors.black;
+    // }
 
-    if (imageShareTextColor == ImageShareTextColor.light) {
-      return Colors.white;
-    }
+    // if (imageShareTextColor == ImageShareTextColor.light) {
+    //   return Colors.white;
+    // }
 
     return getAutoForegroundColor();
   }
 
   Color getAutoForegroundColor() {
-    if (imageShareColor == ImageShareColor.dark) {
-      return Colors.white;
-    }
+    // if (imageShareColor == ImageShareColor.dark) {
+    //   return Colors.white;
+    // }
 
-    if (imageShareColor == ImageShareColor.light) {
-      return Colors.black;
-    }
+    // if (imageShareColor == ImageShareColor.light) {
+    //   return Colors.black;
+    // }
 
-    if (imageShareColor == ImageShareColor.colored) {
-      return Colors.white;
-    }
+    // if (imageShareColor == ImageShareColor.colored) {
+    //   return Colors.white;
+    // }
 
-    if (imageShareColor == ImageShareColor.gradient) {
-      return Colors.white;
-    }
+    // if (imageShareColor == ImageShareColor.gradient) {
+    //   return Colors.white;
+    // }
 
     return Colors.white;
   }

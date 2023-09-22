@@ -1,23 +1,26 @@
 import * as functions from 'firebase-functions';
+import { deepEqual } from 'fast-equals';
 import { adminApp } from './adminApp';
-import { checkUserIsSignedIn } from './utils';
+import { 
+  checkUserIsSignedIn,
+  sanitizeTopics,
+} from './utils';
 
 const firestore = adminApp.firestore();
 
-export const configDeleteOldReference = functions
+export const configUpdateCollection = functions
   .region('europe-west3')
   .https
   .onRequest(async ({}, resp) => {
     const limit = 200;
     let offset = 0;
-
     let hasNext = true;
 
     const maxIterations = 100;
     let currIteration = 0;
     let totalCount = 0;
     let updatedCount = 0;
-    let missingDataCount = 0;
+    const missingDataCount = 0;
 
     while (hasNext && currIteration < maxIterations) {
       const quotesSnap = await firestore
@@ -34,9 +37,27 @@ export const configDeleteOldReference = functions
         const quoteData = quoteDoc.data();
         if (!quoteData) { continue; }
 
+        const reference = quoteData.reference || quoteData.mainReference;
+        const language = quoteData.lang || quoteData.language;
+        const created_at = quoteData.createdAt || quoteData.created_at;
+        const updated_at = quoteData.updatedAt || quoteData.updated_at;
+        const metrics = quoteData.stats || quoteData.metrics;
+
+        // Update & Delete unecessaries fields.
         await quoteDoc.ref.update({
+          created_at,
+          createdAt: adminApp.firestore.FieldValue.delete(),
+          language,
+          lang: adminApp.firestore.FieldValue.delete(),
+          links: adminApp.firestore.FieldValue.delete(),
           random: adminApp.firestore.FieldValue.delete(),
           mainReference: adminApp.firestore.FieldValue.delete(),
+          metrics,
+          reference,
+          region: adminApp.firestore.FieldValue.delete(),
+          stats: adminApp.firestore.FieldValue.delete(),
+          updated_at,
+          updatedAt: adminApp.firestore.FieldValue.delete(),
         });
 
         updatedCount++;
@@ -45,6 +66,7 @@ export const configDeleteOldReference = functions
       currIteration++;
       offset += quotesSnap.size;
       totalCount += quotesSnap.size;
+      functions.logger.info(`offset: ${offset} | currIteration: ${currIteration} | totalCount: ${totalCount}.`);
     }
 
     resp.send({
@@ -53,6 +75,99 @@ export const configDeleteOldReference = functions
       'Docs counted': totalCount,
       'Docs updated:': updatedCount,
       'Docs with missing data:': missingDataCount,
+    });
+  });
+
+/**
+ * Trigger when a new quote is created.
+ * Check all parameters and deep nested properties.
+ * Process author and reference.
+ */
+export const onCreate = functions
+  .region("europe-west3")
+  .firestore
+  .document("quotes/{quoteId}")
+  .onCreate(async (snapshot, context) => {
+    const data = snapshot.data();
+    const objectId: string = snapshot.id;
+
+    // 1. Check user existence and rights.
+    const userId: string = data.user.id;
+    const userSnapshot = await firestore
+      .collection("users")
+      .doc(userId)
+      .get();
+
+    const userData = userSnapshot.data();
+    if (!userSnapshot.exists || !userData) {
+      await snapshot.ref.delete();
+      throw new functions.https.HttpsError(
+        "not-found",
+        `User ${userId} not found. Deleted quote ${objectId}.`,
+      );
+    }
+
+    const userRights = userData.rights;
+    const proposeQuoteRight = userRights["user:propose_quotes"];
+
+    if (!proposeQuoteRight) {
+      await snapshot.ref.delete();
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        `User ${userId} doesn't have the right to perform this action.,`
+      );
+    }
+    
+    // 2. Check reference.
+    // Check if the reference exists or create a new one if not.
+    // We need to do this before author creation in case the author is fictional
+    // we'll be able to link them to the reference.
+    const reference = await createOrGetReference(data.reference);
+    
+    // 3. Check author
+    // Check if the author exists or create a new one if not.
+    const author = await createOrGetAuthor(data.author, reference.id);
+
+    return snapshot.ref.update({
+      author,
+      created_at: adminApp.firestore.Timestamp.now(),
+      metrics: {
+        likes: 0,
+        shares: 0,
+      },
+      reference,
+      topics: sanitizeTopics(data.topics),
+      updated_at: adminApp.firestore.Timestamp.now(),
+    });
+  })
+
+export const onUpdate = functions
+  .region("europe-west3")
+  .firestore
+  .document("quotes/{quoteId}")
+  .onUpdate(async (snapshot, context) => {
+    if (!snapshot.after.exists) { return; }
+    if (snapshot.after.isEqual(snapshot.before)) {
+      functions.logger.info('(1) Quote unchanged. Exited at snapshot.after.isEqual.');
+      return;
+    }
+
+    const beforeData = snapshot.before.data();
+    const afterData = snapshot.after.data();
+
+    if (areQuotesEqual(beforeData, afterData)) {
+      functions.logger.info('(2) Quote unchanged. Exited at areQuotesEqual.');
+      return;
+    }
+
+    const author = afterData.author.id
+      ? afterData.author 
+      : { id: 'TySUhQPqndIkiVHWVYq1', name: 'Anonymous' };
+
+    return snapshot.after.ref.update({
+      author,
+      topics: sanitizeTopics(afterData.topics),
+      updated_at: adminApp.firestore.Timestamp.now(),
     });
   });
 
@@ -119,7 +234,7 @@ export const deleteQuotes = functions
     }
 
     const userRights = userData.rights;
-    const manageQuoteRight = userRights['user:managequote'];
+    const manageQuoteRight = userRights['user:manage_quotes'];
 
     if (!manageQuoteRight) {
       throw new functions.https.HttpsError(
@@ -148,7 +263,6 @@ export const deleteQuotes = functions
 
       const authorId: string = quoteData.author.id;
       const referenceId: string = quoteData.reference.id;
-
       await quoteDoc.ref.delete();
 
       const payload: Record<string, any> = {
@@ -217,4 +331,149 @@ async function deleteQuoteReference(referenceId: string) {
   }
 
   await referenceDoc.ref.delete();
+}
+
+/**
+ * Return the author with the associated [id] if not empty.
+ * Otherwise, create a new author with the specified fields.
+ * @param tempQuoteData - Firestore TempQuote's data.
+ * @param refDoc - Firestore TempQuote document.
+ */
+async function createOrGetAuthor(author: IAuthor, referenceId: string = ''): Promise<{ id: string, name: string }> {
+  if (!author.name && !author.id) {
+    const anonymousAuthorDoc = await firestore
+      .collection('authors')
+      .doc('TySUhQPqndIkiVHWVYq1')
+      .get();
+
+    const anonymousAuthorData = anonymousAuthorDoc.data();
+    if (!anonymousAuthorDoc.exists || !anonymousAuthorData) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `Couldn't retrieve anonymous author. Please try again later or contact us.`,
+      );
+    }
+
+    return {
+      id: anonymousAuthorDoc.id,
+      name: anonymousAuthorData.name,
+    };
+  }
+
+  if (author.id) {
+    const existingAuthorSnapshot = await firestore
+      .collection("authors")
+      .doc(author.id)
+      .get();
+
+    const existingAuthorData = existingAuthorSnapshot.data();
+    if (!existingAuthorSnapshot.exists || !existingAuthorData) {
+      return {
+        id: '',
+        name: '',
+      };
+    }
+
+    return {
+      id: existingAuthorSnapshot.id,
+      name: existingAuthorData.name,
+    }
+  }
+
+  const newAuthorSnapshot = await firestore
+    .collection('authors')
+    .add({
+      ...author,
+      ...{
+        created_at: adminApp.firestore.Timestamp.now(),
+        updated_at: adminApp.firestore.Timestamp.now(),
+        from_reference: {
+          id: author.is_fictional ? referenceId : '',
+        },
+      },
+    });
+
+  const newAuthorDocument = await newAuthorSnapshot.get();
+  const newAuthorData = newAuthorDocument.data();
+
+  return {
+    id: newAuthorSnapshot.id,
+    name: newAuthorData?.name ?? '',
+  }
+}
+
+/**
+ * Return the reference with the associated [id] if not empty.
+ * Otherwise, create a new reference with the specified fields.
+ * @param data - Firestore's reference data.
+ */
+async function createOrGetReference(reference: IReference): Promise<{ id: string, name: string }> {
+  if (!reference || (!reference.name && !reference.id)) {
+    return {
+      id: '',
+      name: '',
+    };
+  }
+
+  if (reference.id) {
+    const existingReferenceSnapshot = await firestore
+      .collection("references")
+      .doc(reference.id)
+      .get();
+
+    const existingReferenceData = existingReferenceSnapshot.data();
+    if (!existingReferenceSnapshot.exists || !existingReferenceData) {
+      return {
+        id: '',
+        name: '',
+      };
+    }
+    
+    return {
+      id: existingReferenceSnapshot.id,
+      name: existingReferenceData.name as string,
+    }
+  }
+
+  const newReferenceSnapshot = await firestore
+    .collection("references")
+    .add({
+      ...reference,
+      ...{
+        created_at: adminApp.firestore.Timestamp.now(),
+        updated_at: adminApp.firestore.Timestamp.now(),
+      },
+    });
+
+  const newReferenceDocument = await newReferenceSnapshot.get();
+  const newReferenceData = newReferenceDocument.data();
+  
+  return {
+    id: newReferenceSnapshot.id,
+    name: newReferenceData?.name ?? '',
+  }
+}
+
+
+/**
+ * Compare two quotes data on update and return true if they are equal.
+ * @param before Data before update
+ * @param after Data after update
+ * @returns Returns true if the data are equal
+ */
+function areQuotesEqual(before: FirebaseFirestore.DocumentData, after: FirebaseFirestore.DocumentData) {
+  functions.logger.info(`
+  deepEqual(before.author, after.author): ${deepEqual(before.author, after.author)} | 
+  before.language === after.language: ${before.language === after.language} | 
+  deepEqual(before.metrics, after.metrics): ${deepEqual(before.metrics, after.metrics)} | 
+  deepEqual(before.reference, after.reference): ${deepEqual(before.reference, after.reference)} | 
+  deepEqual(before.topics, after.topics): ${deepEqual(before.topics, after.topics)}`
+  );
+  return (
+    deepEqual(before.author, after.author)
+    && before.language === after.language
+    && deepEqual(before.metrics, after.metrics)
+    && deepEqual(before.reference, after.reference)
+    && deepEqual(before.topics, after.topics)
+  );
 }

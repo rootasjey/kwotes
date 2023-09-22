@@ -1,129 +1,183 @@
-import 'package:fig_style/types/from_reference.dart';
-import 'package:fig_style/types/image_property.dart';
-import 'package:fig_style/types/point_in_time.dart';
-import 'package:fig_style/types/urls.dart';
+import "dart:convert";
+
+import "package:kwotes/types/from_reference.dart";
+import "package:kwotes/types/image_property.dart";
+import "package:kwotes/types/point_in_time.dart";
+import "package:kwotes/types/urls.dart";
 
 class Author {
+  Author({
+    required this.fromReference,
+    required this.birth,
+    required this.death,
+    required this.id,
+    required this.image,
+    required this.isFictional,
+    required this.job,
+    required this.name,
+    required this.summary,
+    required this.urls,
+  });
+
   /// Useful if the author is fictional.
   final FromReference fromReference;
 
-  final PointInTime born;
+  /// Author's birth date.
+  final PointInTime birth;
+
+  /// Author's death date.
   final PointInTime death;
 
+  /// Author's unique identifier.
   final String id;
+
+  /// Author's image.
   final ImageProperty image;
 
   /// True if the author is fictional.
-  bool isFictional;
+  final bool isFictional;
 
-  String job;
-  String name;
-  String summary;
+  /// Author's job title.
+  final String job;
 
+  /// Author's name.
+  final String name;
+
+  /// Author's summary.
+  final String summary;
+
+  /// Author's URLs (e.g. social networks).
   final Urls urls;
 
-  Author({
-    this.born,
-    this.death,
-    this.fromReference,
-    this.id = '',
-    this.image,
-    this.isFictional = false,
-    this.job = '',
-    this.name = '',
-    this.summary = '',
-    this.urls,
-  });
-
-  factory Author.empty() {
-    return Author(
-      born: PointInTime.empty(),
-      death: PointInTime.empty(),
-      fromReference: FromReference(),
-      id: '',
-      image: ImageProperty.empty(),
-      isFictional: false,
-      job: '',
-      name: '',
-      summary: '',
-      urls: Urls.empty(),
-    );
-  }
-
-  factory Author.fromIdName({
-    id = '',
-    name = '',
+  /// Copy the current instance with passed new values.
+  Author copyWith({
+    FromReference? fromReference,
+    PointInTime? birth,
+    PointInTime? death,
+    String? id,
+    ImageProperty? image,
+    bool? isFictional,
+    String? job,
+    String? name,
+    String? summary,
+    Urls? urls,
   }) {
     return Author(
-      born: PointInTime(),
-      death: PointInTime(),
-      fromReference: FromReference(),
-      id: id,
+      fromReference: fromReference ?? this.fromReference,
+      birth: birth ?? this.birth,
+      death: death ?? this.death,
+      id: id ?? this.id,
+      image: image ?? this.image,
+      isFictional: isFictional ?? this.isFictional,
+      job: job ?? this.job,
+      name: name ?? this.name,
+      summary: summary ?? this.summary,
+      urls: urls ?? this.urls,
+    );
+  }
+
+  /// Convert the current instance to a map.
+  Map<String, dynamic> toMap({
+    bool minimal = false,
+  }) {
+    if (minimal) {
+      return {
+        "id": id,
+        "name": name,
+      };
+    }
+
+    return {
+      "from_reference": fromReference.toMap(),
+      "birth": birth.toMap(),
+      "death": death.toMap(),
+      "id": id,
+      "image": image.toMap(),
+      "is_fictional": isFictional,
+      "job": job,
+      "name": name,
+      "summary": summary,
+      "urls": urls.toMap(),
+    };
+  }
+
+  /// Create an empty instance.
+  factory Author.empty() {
+    return Author(
+      fromReference: FromReference.empty(),
+      birth: PointInTime.empty(),
+      death: PointInTime.empty(),
+      id: "",
       image: ImageProperty.empty(),
       isFictional: false,
-      job: '',
-      name: name,
-      summary: '',
+      job: "",
+      name: "",
+      summary: "",
       urls: Urls.empty(),
     );
   }
 
-  factory Author.fromJSON(Map<String, dynamic> data) {
-    if (data == null) {
+  /// Create an instance from a map.
+  factory Author.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
       return Author.empty();
     }
 
-    final born = PointInTime.fromJSON(data['born']);
-    final death = PointInTime.fromJSON(data['death']);
-    final fromReference = FromReference.fromJSON(data['fromReference']);
-    final image = ImageProperty.fromJSON(data['image']);
-    final urls = Urls.fromJSON(data['urls']);
-
     return Author(
-      born: born,
-      death: death,
-      fromReference: fromReference,
-      id: data['id'] ?? '',
-      image: image,
-      isFictional: data['isFictional'] ?? false,
-      job: data['job'] ?? '',
-      name: data['name'] ?? '',
-      summary: data['summary'] ?? '',
-      urls: urls,
+      fromReference: FromReference.fromMap(map["from_reference"]),
+      birth: PointInTime.fromMap(map["birth"]),
+      death: PointInTime.fromMap(map["death"]),
+      id: map["id"] ?? "",
+      image: ImageProperty.fromMap(map["image"]),
+      isFictional: map["is_fictional"] ?? false,
+      job: map["job"] ?? "",
+      name: map["name"] ?? "",
+      summary: map["summary"] ?? "",
+      urls: Urls.fromMap(map["urls"]),
     );
   }
 
-  Map<String, dynamic> toJSON({
-    bool withId = false,
-    bool dateAsInt = false,
-  }) {
-    Map<String, dynamic> data = Map();
+  /// Convert the current instance to a JSON string.
+  String toJson() => json.encode(toMap());
 
-    if (withId) {
-      data['id'] = id;
-    }
+  /// Create an instance from a JSON string.
+  factory Author.fromJson(String source) =>
+      Author.fromMap(json.decode(source) as Map<String, dynamic>);
 
-    data['born'] = born.toJSON(dateAsInt: dateAsInt);
-    data['death'] = death.toJSON(dateAsInt: dateAsInt);
-    data['fromReference'] = fromReference.toJSON();
-    data['isFictional'] = isFictional;
-    data['image'] = image.toJSON();
-    data['job'] = job;
-    data['name'] = name;
-    data['summary'] = summary;
-    data['urls'] = urls.toJSON();
-
-    return data;
+  @override
+  String toString() {
+    return "Author(fromReference: $fromReference, birth: $birth, death: $death,"
+        "id: $id, image: $image, isFictional: $isFictional, job: $job, "
+        "name: $name, summary: $summary, urls: $urls)";
   }
 
-  /// Return a map with only [id] and [name] as properties.
-  /// Useful when converting author's data into a published quote.
-  Map<String, dynamic> toPartialJSON() {
-    Map<String, dynamic> data = Map();
+  @override
+  bool operator ==(covariant Author other) {
+    if (identical(this, other)) return true;
 
-    data['id'] = id;
-    data['name'] = name;
+    return other.fromReference == fromReference &&
+        other.birth == birth &&
+        other.death == death &&
+        other.id == id &&
+        other.image == image &&
+        other.isFictional == isFictional &&
+        other.job == job &&
+        other.name == name &&
+        other.summary == summary &&
+        other.urls == urls;
+  }
 
-    return data;
+  @override
+  int get hashCode {
+    return fromReference.hashCode ^
+        birth.hashCode ^
+        death.hashCode ^
+        id.hashCode ^
+        image.hashCode ^
+        isFictional.hashCode ^
+        job.hashCode ^
+        name.hashCode ^
+        summary.hashCode ^
+        urls.hashCode;
   }
 }

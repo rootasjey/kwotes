@@ -1,110 +1,156 @@
-import 'package:fig_style/types/image_property.dart';
-import 'package:fig_style/types/reference_type.dart';
-import 'package:fig_style/types/release.dart';
-import 'package:fig_style/types/urls.dart';
+import "dart:convert";
 
+import "package:kwotes/types/image_property.dart";
+import "package:kwotes/types/reference_type.dart";
+import "package:kwotes/types/release.dart";
+import "package:kwotes/types/urls.dart";
+
+/// Reference data model.
 class Reference {
-  /// When this reference was released.
-  Release release;
-
-  final String id;
-  final ImageProperty image;
-  String lang;
-  String name;
-  String summary;
-
-  ReferenceType type;
-
-  Urls urls;
-
   Reference({
-    this.id = '',
-    this.image,
-    this.lang = 'en',
-    this.name = '',
-    this.release,
-    this.summary = '',
-    this.type,
-    this.urls,
+    required this.release,
+    required this.id,
+    required this.image,
+    required this.language,
+    required this.name,
+    required this.summary,
+    required this.urls,
+    required this.type,
   });
 
-  factory Reference.empty() {
-    return Reference(
-      id: '',
-      image: ImageProperty.empty(),
-      lang: 'en',
-      name: '',
-      release: Release.empty(),
-      summary: '',
-      type: ReferenceType(),
-      urls: Urls.empty(),
-    );
-  }
+  /// When this reference was released.
+  final Release release;
 
-  factory Reference.fromIdName({
-    id: '',
-    name: '',
+  /// Unique identifier of this reference.
+  final String id;
+
+  /// Image properties of this reference.
+  final ImageProperty image;
+
+  /// Original language of this reference.
+  final String language;
+
+  /// Name of this reference.
+  final String name;
+
+  /// Summary of this reference.
+  final String summary;
+
+  /// Type of this reference.
+  final ReferenceType type;
+
+  /// Urls of this reference (e.g. Wikipedia, website).
+  final Urls urls;
+
+  Reference copyWith({
+    Release? release,
+    String? id,
+    ImageProperty? image,
+    String? language,
+    String? name,
+    String? summary,
+    ReferenceType? type,
+    Urls? urls,
   }) {
     return Reference(
-      id: id,
-      image: ImageProperty.empty(),
-      lang: 'en',
-      name: name,
-      release: Release.empty(),
-      summary: '',
-      type: ReferenceType(),
-      urls: Urls.empty(),
+      release: release ?? this.release,
+      id: id ?? this.id,
+      image: image ?? this.image,
+      language: language ?? this.language,
+      name: name ?? this.name,
+      summary: summary ?? this.summary,
+      type: type ?? this.type,
+      urls: urls ?? this.urls,
     );
   }
 
-  factory Reference.fromJSON(Map<String, dynamic> data) {
-    if (data == null) {
-      return Reference.empty();
+  /// Convert the current instance to a map.
+  Map<String, dynamic> toMap({
+    bool minimal = false,
+  }) {
+    if (minimal) {
+      return {
+        "id": id,
+        "name": name,
+      };
     }
 
-    final image = ImageProperty.fromJSON(data['image']);
-    Release release = Release.fromJSON(data['release']);
-    ReferenceType type = ReferenceType.fromJSON(data['type']);
-    final urls = Urls.fromJSON(data['urls']);
+    return <String, dynamic>{
+      "release": release.toMap(),
+      "id": id,
+      "image": image.toMap(),
+      "language": language,
+      "name": name,
+      "summary": summary,
+      "type": type.toMap(),
+      "urls": urls.toMap(),
+    };
+  }
+
+  /// Create an empty instance.
+  factory Reference.empty() {
+    return Reference(
+      release: Release.empty(),
+      id: "",
+      image: ImageProperty.empty(),
+      language: "",
+      name: "",
+      summary: "",
+      urls: Urls.empty(),
+      type: ReferenceType.empty(),
+    );
+  }
+
+  factory Reference.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return Reference.empty();
 
     return Reference(
-      id: data['id'] ?? '',
-      image: image,
-      lang: data['lang'],
-      name: data['name'] ?? '',
-      release: release,
-      summary: data['summary'] ?? '',
-      type: type,
-      urls: urls,
+      release: Release.fromMap(map["release"]),
+      id: map["id"] ?? "",
+      image: ImageProperty.fromMap(map["image"]),
+      language: map["language"] ?? "",
+      name: map["name"] ?? "",
+      summary: map["summary"] ?? "",
+      type: ReferenceType.fromMap(map["type"]),
+      urls: Urls.fromMap(map["urls"]),
     );
   }
 
-  Map<String, dynamic> toJSON({bool withId = false, bool dateAsInt = false}) {
-    final Map<String, dynamic> data = Map();
+  String toJson() => json.encode(toMap());
 
-    if (withId) {
-      data['id'] = id;
-    }
+  factory Reference.fromJson(String source) =>
+      Reference.fromMap(json.decode(source) as Map<String, dynamic>);
 
-    data['image'] = image.toJSON();
-    data['lang'] = lang;
-    data['name'] = name;
-    data['release'] = release.toJSON(dateAsInt: dateAsInt);
-    data['summary'] = summary;
-    data['type'] = type.toJSON();
-    data['urls'] = urls.toJSON();
-
-    return data;
+  @override
+  String toString() {
+    return "Reference("
+        "release: $release, id: $id, image: $image, lang: $language, "
+        "name: $name, summary: $summary, urls: $urls)";
   }
 
-  /// Return a map with only [id] and [name] as properties.
-  /// Useful wwhen converting reference"s data into a published quote.
-  Map<String, dynamic> toPartialJSON() {
-    Map<String, dynamic> data = Map();
+  @override
+  bool operator ==(covariant Reference other) {
+    if (identical(this, other)) return true;
 
-    data['id'] = id;
-    data['name'] = name;
+    return other.release == release &&
+        other.id == id &&
+        other.image == image &&
+        other.language == language &&
+        other.name == name &&
+        other.summary == summary &&
+        other.type == type &&
+        other.urls == urls;
+  }
 
-    return data;
+  @override
+  int get hashCode {
+    return release.hashCode ^
+        id.hashCode ^
+        image.hashCode ^
+        language.hashCode ^
+        name.hashCode ^
+        summary.hashCode ^
+        type.hashCode ^
+        urls.hashCode;
   }
 }

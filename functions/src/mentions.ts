@@ -30,8 +30,7 @@ export const onDeleteAuthor = functions
           id: '',
           name: '',
         }
-      }
-      );
+      });
     }
 
     return true;
@@ -104,8 +103,7 @@ export const onDeleteReference = functions
           id: '',
           name: '',
         }
-      }
-      );
+      });
     }
 
     return true;
@@ -132,17 +130,10 @@ export const onUpdateReference = functions
       return true;
     }
 
-    let allQuotesWithThisReference = await firestore
+    const allQuotesWithThisReference = await firestore
       .collection('quotes')
       .where('reference.id', '==', referenceId)
       .get();
-
-    if (allQuotesWithThisReference.empty) {
-      allQuotesWithThisReference = await firestore
-        .collection('quotes')
-        .where('reference.id', '==', referenceId)
-        .get();
-    }
 
     if (allQuotesWithThisReference.empty) {
       return true;

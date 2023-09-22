@@ -73,15 +73,27 @@ export const onReIndexQuote = functions
     const objectID = snapshot.after.id;
 
     // Prevent update index on stats changes
-    let statsChanged = false;
+    const beforeLikes: number = beforeData.likes
+      ?? beforeData.stats?.likes
+      ?? beforeData.metrics?.likes
+      ?? 0;
 
-    if ((beforeData.stats && afterData.stats)
-      && (beforeData.stats.likes !== afterData.stats.likes
-        || beforeData.stats.shares !== afterData.stats.shares)) {
-      statsChanged = true;
-    }
+    const afterLikes: number = afterData.likes
+      ?? afterData.stats?.likes
+      ?? afterData.metrics?.likes
+      ?? 0;
 
-    if (statsChanged) {
+    const beforeShares: number = beforeData.shares
+      ?? beforeData.stats?.shares
+      ?? beforeData.metrics?.shares
+      ?? 0;
+
+    const afterShares: number = afterData.shares
+      ?? afterData.stats?.shares
+      ?? afterData.metrics?.shares
+      ?? 0;
+
+    if ((beforeLikes !== afterLikes) || (beforeShares !== afterShares)) {
       return;
     }
 

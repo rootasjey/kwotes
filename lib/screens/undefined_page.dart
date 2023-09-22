@@ -1,144 +1,102 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:fig_style/components/desktop_app_bar.dart';
-import 'package:fig_style/router/app_router.gr.dart';
-import 'package:fig_style/state/colors.dart';
-import 'package:flutter/material.dart';
+import "package:beamer/beamer.dart";
+import "package:easy_localization/easy_localization.dart";
+import "package:flutter/material.dart";
+import "package:kwotes/globals/utils.dart";
+import "package:lottie/lottie.dart";
+import "package:kwotes/components/application_bar.dart";
+import "package:kwotes/components/buttons/dark_elevated_button.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/router/locations/home_location.dart";
 
 class UndefinedPage extends StatefulWidget {
+  const UndefinedPage({
+    super.key,
+    this.errorCode = "404",
+  });
+
+  final String errorCode;
+
   @override
-  _UndefinedPageState createState() => _UndefinedPageState();
+  State<StatefulWidget> createState() => _UndefinedPageState();
 }
 
 class _UndefinedPageState extends State<UndefinedPage> {
   @override
   Widget build(BuildContext context) {
+    String location = "";
+    final history = Beamer.of(context).beamingHistory;
+
+    if (history.isNotEmpty) {
+      final beamLocation = history.last;
+      location = beamLocation.state.routeInformation.location ?? "";
+    }
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          DesktopAppBar(),
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 60.0),
-            sliver: SliverList(
-                delegate: SliverChildListDelegate.fixed([
-              Column(
-                children: <Widget>[
-                  title(),
-                  subtitle(),
-                  navButton(),
-                  illustration(),
-                  quoteCard(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 300.0),
+          const ApplicationBar(),
+          SliverToBoxAdapter(
+            child: Column(
+              children: <Widget>[
+                Lottie.asset(
+                  "assets/animations/lost_in_space_astronaut.json",
+                  width: 400.0,
+                  height: 400.0,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Constants.colors.foregroundPalette.first
+                        .withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                ],
-              ),
-            ])),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget quoteCard() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: 500.0,
-        child: Card(
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: <Widget>[
-                  Opacity(
-                    opacity: 0.8,
-                    child: Text(
-                      // 'It is by getting lost that we learn.',
-                      'When we are lost, what matters is to find our way back.',
-                      style: TextStyle(
-                        fontSize: 30.0,
+                  child: Text(
+                    location,
+                    style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 100.0,
-                    child: Divider(
-                      height: 50.0,
-                      thickness: 1.0,
+                ),
+                Container(
+                  width: 500.0,
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Opacity(
+                    opacity: 0.8,
+                    child: Text(
+                      "route_error.${widget.errorCode}".tr(),
+                      textAlign: TextAlign.center,
+                      style: Utils.calligraphy.code(
+                        textStyle: const TextStyle(
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.w200,
+                        ),
+                      ),
                     ),
                   ),
-                  Opacity(
-                    opacity: 0.6,
-                    child: Text('fig.style'),
-                  ),
-                ],
-              ),
-            )),
-      ),
-    );
-  }
-
-  Widget illustration() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 50.0,
-        bottom: 80.0,
-      ),
-      child: Image(
-        image: AssetImage('assets/images/olha_khomich/not_found.png'),
-        width: 350.0,
-        height: 350.0,
-      ),
-    );
-  }
-
-  Widget navButton() {
-    return TextButton.icon(
-      onPressed: () => context.router.navigate(HomeRoute()),
-      icon: Icon(Icons.arrow_back),
-      label: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text('Return on the way'),
-      ),
-    );
-  }
-
-  Widget subtitle() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Opacity(
-        opacity: 0.6,
-        child: RichText(
-          text: TextSpan(
-            text: 'Route for ',
-            style: TextStyle(
-              fontSize: 18.0,
-              color: stateColors.foreground,
-            ),
-            children: [
-              TextSpan(
-                text: '${context.route.match}',
-                style: TextStyle(
-                  color: stateColors.secondary,
-                  fontWeight: FontWeight.w700,
                 ),
-              ),
-              TextSpan(
-                text: ' is not defined.',
-              )
-            ],
+                DarkElevatedButton.large(
+                  margin: const EdgeInsets.only(top: 24.0),
+                  onPressed: () => context.beamToNamed(HomeLocation.route),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "home_return".tr(),
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget title() {
-    return Text(
-      '404',
-      style: TextStyle(
-        fontSize: 120.0,
-        fontWeight: FontWeight.w600,
+        ],
       ),
     );
   }

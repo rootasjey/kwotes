@@ -1,40 +1,38 @@
-import 'package:fig_style/types/enums.dart';
-import 'package:flutter/material.dart';
-import 'package:simple_animations/simple_animations.dart';
-import 'package:supercharged/supercharged.dart';
+import "package:flutter/material.dart";
+import "package:simple_animations/simple_animations.dart";
 
 /// Animate translateX and opacity of a child widget.
 class FadeInX extends StatelessWidget {
-  final Duration delay;
-  final Widget child;
-
-  final double beginX;
-  final double endX;
-
-  FadeInX({
+  const FadeInX({
+    super.key,
     this.beginX = 0.0,
     this.child,
     this.delay = const Duration(seconds: 0),
     this.endX = 0.0,
   });
 
+  final double beginX;
+  final double endX;
+  final Duration delay;
+  final Widget? child;
+
   @override
   Widget build(BuildContext context) {
-    final tween = MultiTween<AniProps>()
-      ..add(AniProps.opacity, 0.0.tweenTo(1.0), 500.milliseconds)
-      ..add(AniProps.translateX, Tween(begin: beginX, end: endX),
-          500.milliseconds);
+    final MovieTween tween = MovieTween()
+      ..scene(duration: const Duration(milliseconds: (200)))
+          .tween("opacity", Tween(begin: 0.0, end: 1.0))
+          .tween("x", Tween(begin: beginX, end: endX));
 
-    return PlayAnimation<MultiTweenValues<AniProps>>(
+    return PlayAnimationBuilder<Movie>(
       tween: tween,
       delay: delay,
       duration: tween.duration,
       child: child,
-      builder: (context, child, value) {
+      builder: (BuildContext context, Movie value, Widget? child) {
         return Opacity(
-          opacity: value.get(AniProps.opacity),
+          opacity: value.get("opacity"),
           child: Transform.translate(
-            offset: Offset(value.get(AniProps.translateX), 0),
+            offset: Offset(value.get("x"), 0),
             child: child,
           ),
         );

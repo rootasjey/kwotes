@@ -4,13 +4,22 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "lib",
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "typeRoots": ["node_modules/@types"],
     "target": "es2017"
   },
+  "files": [
+    "node_modules/typescript/lib/lib.es6.d.ts"
+  ],
   "compileOnSave": true,
+  "exclude": [
+    "node_modules",
+    "node_modules/fast-equals/**/*"
+  ],
   "include": [
     "src",
-    "types"
+    "types/"
   ]
 }

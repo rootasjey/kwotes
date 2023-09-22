@@ -66,22 +66,24 @@ interface GetRandomReferencesParams {
 interface IAuthor {
   born: IPointInTime
   death: IPointInTime
-  fromReference: {
+  from_reference: {
     id: string;
   };
   image: ImageProp;
-  isFictional: boolean;
+  is_fictional: boolean;
   id?: string;
   job: string;
+  job_localized: {};
   name: string;
   summary: string;
+  summary_localized: {};
   urls: IUrls;
 }
 
 interface ImageCredits {
-  beforeJC: boolean;
+  before_common_era: boolean;
   company: string;
-  date?: FirebaseFirestore.Timestamp;
+  date?: FirebaseFirestore.Timestamp | null;
   location: string;
   name: string;
   artist: string;
@@ -97,16 +99,16 @@ interface IFromReference {
 }
 
 interface IPointInTime {
-  beforeJC: boolean;
+  before_common_era: boolean;
   city: string;
   country: string;
-  date?: FirebaseFirestore.Timestamp;
+  date?: FirebaseFirestore.Timestamp | null;
 }
 
 interface IReference {
   id?: string;
   image: ImageProp;
-  lang: string;
+  language: string;
   name: string;
   release: IRelease;
   summary: string;
@@ -115,8 +117,8 @@ interface IReference {
 }
 
 interface IRelease {
-  original?: FirebaseFirestore.Timestamp;
-  beforeJC: boolean;
+  original?: FirebaseFirestore.Timestamp | null;
+  before_common_era: boolean;
 }
 
 interface IReferenceType {
@@ -127,23 +129,23 @@ interface IReferenceType {
 interface ITempQuote {
   author: IAuthor;
   comments: string[];
-  createdAt: Date;
+  created_at: Date;
   id?: string;
-  lang: string;
+  language: string;
   name: string;
   reference: IReference;
   topics: string[];
   user: {
     id: string;
   };
-  updatedAt: Date;
+  updated_at: Date;
   validation: {
     comment: {
       name: string;
-      updatedAt: Date;
+      updated_at: Date;
     },
     status: string;
-    updatedAt: Date;
+    updated_at: Date;
   };
 }
 
@@ -151,10 +153,11 @@ interface IUrls {
   amazon: string;
   facebook: string;
   image: string;
+  image_name: string;
   imdb: string;
   instagram: string;
   netflix: string;
-  primeVideo: string;
+  prime_video: string;
   twitch: string;
   twitter: string;
   website: string;
@@ -172,6 +175,10 @@ interface RandomQuoteAuthoredParams {
   lang: string;
   guessType: 'author' | 'reference';
   previousQuestionsIds?: Array<string>;
+}
+
+interface TopicMap {
+  [key: string]: boolean;
 }
 
 interface UpdateEmailParams {

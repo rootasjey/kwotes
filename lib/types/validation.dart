@@ -1,47 +1,82 @@
-import 'package:fig_style/types/validation_comment.dart';
-import 'package:fig_style/utils/date_helper.dart';
+import "dart:convert";
 
+import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/validation_comment.dart";
+
+/// Quote's validation state.
 class Validation {
-  final ValidationComment comment;
-  final String status;
+  Validation({
+    required this.comment,
+    required this.status,
+    required this.updatedAt,
+  });
+
+  /// Last time this validation was updated.
   final DateTime updatedAt;
 
-  Validation({
-    this.comment,
-    this.status,
-    this.updatedAt,
-  });
+  /// Is the quote rejected?
+  final String status;
+
+  /// The validation comment.
+  final ValidationComment comment;
 
   factory Validation.empty() {
     return Validation(
       comment: ValidationComment.empty(),
-      status: '',
+      status: "",
       updatedAt: DateTime.now(),
     );
   }
 
-  factory Validation.fromJSON(Map<String, dynamic> data) {
-    if (data == null) {
-      return Validation.empty();
-    }
-
-    final comment = ValidationComment.fromJSON(data['comment']);
-    final updatedAt = DateHelper.fromFirestore(data['updatedAt']);
-
+  Validation copyWith({
+    ValidationComment? comment,
+    String? status,
+    DateTime? updatedAt,
+  }) {
     return Validation(
-      comment: comment,
-      status: data['status'],
-      updatedAt: updatedAt,
+      comment: comment ?? this.comment,
+      status: status ?? this.status,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
-  Map<String, dynamic> toJSON() {
-    final Map<String, dynamic> data = Map();
-
-    data['comment'] = comment.toJSON();
-    data['status'] = status;
-    data['updatedAt'] = updatedAt.millisecondsSinceEpoch;
-
-    return data;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "comment": comment.toMap(),
+      "status": status,
+    };
   }
+
+  factory Validation.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      return Validation.empty();
+    }
+
+    return Validation(
+      comment: ValidationComment.fromMap(map["comment"]),
+      status: map["status"] ?? "",
+      updatedAt: Utils.tictac.fromFirestore(map["updated_at"]),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Validation.fromJson(String source) =>
+      Validation.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      "Validation(comment: $comment, status: $status, updatedAt: $updatedAt)";
+
+  @override
+  bool operator ==(covariant Validation other) {
+    if (identical(this, other)) return true;
+
+    return other.comment == comment &&
+        other.status == status &&
+        other.updatedAt == updatedAt;
+  }
+
+  @override
+  int get hashCode => comment.hashCode ^ status.hashCode ^ updatedAt.hashCode;
 }

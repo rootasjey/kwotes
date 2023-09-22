@@ -1,39 +1,70 @@
+import "dart:convert";
+
+/// A comment for a quote validation status.
 class ValidationComment {
-  /// Comment content.
+  ValidationComment({
+    required this.name,
+    required this.moderatorId,
+  });
+
+  /// Comment's content.
   final String name;
 
   /// Moderator user's id.
   final String moderatorId;
 
-  ValidationComment({
-    this.name = '',
-    this.moderatorId = '',
-  });
-
-  factory ValidationComment.empty() {
+  ValidationComment copyWith({
+    String? name,
+    String? moderatorId,
+  }) {
     return ValidationComment(
-      name: '',
-      moderatorId: '',
+      name: name ?? this.name,
+      moderatorId: moderatorId ?? this.moderatorId,
     );
   }
 
-  factory ValidationComment.fromJSON(Map<String, dynamic> data) {
-    if (data == null) {
+  factory ValidationComment.empty() {
+    return ValidationComment(
+      name: "",
+      moderatorId: "",
+    );
+  }
+
+  /// Convert the current instance to a map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "name": name,
+      "moderator_id": moderatorId,
+    };
+  }
+
+  factory ValidationComment.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
       return ValidationComment.empty();
     }
 
     return ValidationComment(
-      name: data['name'] ?? '',
-      moderatorId: data['moderatorid'] ?? '',
+      name: map["name"] ?? "",
+      moderatorId: map["moderator_id"] ?? "",
     );
   }
 
-  Map<String, dynamic> toJSON() {
-    final Map<String, dynamic> data = Map();
+  String toJson() => json.encode(toMap());
 
-    data['name'] = name;
-    data['moderatorId'] = moderatorId;
+  factory ValidationComment.fromJson(String source) =>
+      ValidationComment.fromMap(json.decode(source) as Map<String, dynamic>);
 
-    return data;
+  @override
+  String toString() =>
+      "ValidationComment(name: $name, moderatorId: $moderatorId)";
+
+  @override
+  bool operator ==(covariant ValidationComment other) {
+    if (identical(this, other)) return true;
+
+    return other.name == name && other.moderatorId == moderatorId;
   }
+
+  @override
+  int get hashCode => name.hashCode ^ moderatorId.hashCode;
 }

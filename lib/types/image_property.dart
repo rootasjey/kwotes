@@ -1,31 +1,65 @@
-import 'package:fig_style/types/image_credits.dart';
+import "dart:convert";
+
+import "package:kwotes/types/image_credits.dart";
 
 class ImageProperty {
-  ImageCredits credits;
+  ImageProperty({
+    required this.credits,
+    required this.url,
+  });
 
-  ImageProperty({this.credits});
+  ImageCredits credits;
+  final String url;
+
+  ImageProperty copyWith({
+    ImageCredits? credits,
+    String? url,
+  }) {
+    return ImageProperty(
+      credits: credits ?? this.credits,
+      url: url ?? this.url,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "credits": credits.toMap(),
+    };
+  }
 
   factory ImageProperty.empty() {
     return ImageProperty(
       credits: ImageCredits.empty(),
+      url: "",
     );
   }
 
-  factory ImageProperty.fromJSON(Map<String, dynamic> data) {
-    if (data == null) {
+  factory ImageProperty.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
       return ImageProperty.empty();
     }
 
     return ImageProperty(
-      credits: ImageCredits.fromJSON(data['credits']),
+      credits: ImageCredits.fromMap(map["credits"]),
+      url: map["url"] ?? "",
     );
   }
 
-  Map<String, dynamic> toJSON() {
-    final data = Map<String, dynamic>();
+  String toJson() => json.encode(toMap());
 
-    data['credits'] = credits.toJSON();
+  factory ImageProperty.fromJson(String source) =>
+      ImageProperty.fromMap(json.decode(source) as Map<String, dynamic>);
 
-    return data;
+  @override
+  String toString() => "ImageProperty(credits: $credits)";
+
+  @override
+  bool operator ==(covariant ImageProperty other) {
+    if (identical(this, other)) return true;
+
+    return other.credits == credits && other.url == url;
   }
+
+  @override
+  int get hashCode => credits.hashCode ^ url.hashCode;
 }

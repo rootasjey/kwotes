@@ -1,20 +1,20 @@
 <p align="middle">
-  <img src="./assets/images/app_icon/512_alt.png" title="fig.style icon" width="400"/>
+  <img src="./assets/images/app_icon/512_alt.png" title="kwotes icon" width="400"/>
 </p>
 
 <p align="middle">5 seconds of emotion</p>
 
 <p align="middle">
-  <img src="./screenshots/presentation.png" title="fig.style home web" />
+  <img src="./screenshots/presentation.png" title="kwotes home web" />
 </p>
 
 # Status
 
-![Website](https://img.shields.io/website?down_color=lightgrey&down_message=offline&style=for-the-badge&up_color=blue&up_message=online&url=https%3A%2F%2Ffig.style)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/rootasjey/fig.style?style=for-the-badge)
-![GitHub Release Date](https://img.shields.io/github/release-date/rootasjey/fig.style?style=for-the-badge)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/rootasjey/fig.style/latest?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/rootasjey/fig.style?style=for-the-badge)
+![Website](https://img.shields.io/website?down_color=lightgrey&down_message=offline&style=for-the-badge&up_color=blue&up_message=online&url=https%3A%2F%2Fkwotes)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/rootasjey/kwotes?style=for-the-badge)
+![GitHub Release Date](https://img.shields.io/github/release-date/rootasjey/kwotes?style=for-the-badge)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/rootasjey/kwotes/latest?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/rootasjey/kwotes?style=for-the-badge)
 [![Codemagic build status](https://api.codemagic.io/apps/5fd420c277de1a00167ebea4/5fd420c277de1a00167ebea3/status_badge.svg)](https://codemagic.io/apps/5fd420c277de1a00167ebea4/5fd420c277de1a00167ebea3/latest_build)
 
 # Download
@@ -32,7 +32,7 @@
 </span>
 
 <span>
-  <a href="https://fig.style">
+  <a href="https://kwotes.fr">
     <img src="./screenshots/web_badge.png" title="Web" width="200"/>
   </a>
 </span>
@@ -68,9 +68,9 @@
 
 # Presentation
 
-[fig.style](https://fig.style) is a quotes app and service featuring one quote each day. It's available on web, Android, iOS & more to come. You can find quotes in English or French at the moment. More languages will be added later.
+[kwotes](https://kwotes.fr) is a quotes app and service featuring one quote each day. It's available on web, Android, iOS & more to come. You can find quotes in English or French at the moment. More languages will be added later.
 
-You can also try the APIs at [dev.fig.style](https://dev.fig.style).
+~~You can also try the APIs at [dev.fig.style](https://dev.fig.style).~~
 
 ## What's different from existing apps ?
 
@@ -195,7 +195,7 @@ Mozilla Public License 2.0.
 
 Please read the [LICENSE](./LICENSE) for more information.
 
-Please [ask](mailto:github@fig.style) if you have any doubt.
+Please open a pull request if you have any doubt.
 
 # Privacy Policy
 
@@ -219,4 +219,4 @@ Clicking on an author's name will show you their information.
 
 | Author | Search | Topics |
 | ------ | ------ | ------ |
-| <img src="./screenshots/mobile_author.png" title="fig.style mobile" width="300" /> | <img src="./screenshots/mobile_search.png" title="fig.style mobile" width="300" /> | <img src="./screenshots/mobile_topics.png" title="fig.style mobile" width="300" /> |
+| <img src="./screenshots/mobile_author.png" title="kwotes mobile" width="300" /> | <img src="./screenshots/mobile_search.png" title="kwotes mobile" width="300" /> | <img src="./screenshots/mobile_topics.png" title="kwotes mobile" width="300" /> |

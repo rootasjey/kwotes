@@ -5,26 +5,69 @@
   "about_me_1": "Bonjour, je suis Jérémie CORPINOT, un développeur freelance vivant en France.",
   "about_me_2": "Je suis originaire des Antilles et bien que voulais initialement étudier l'architecture, je me suis orienté vers des études de programmation à l'Université de Versailles.",
   "about_me_3": "J'adore le dessin, les jeux-vidéos, les livres parmis d'autres. J'ai débuté mon aventure de freelance en Juin 2019 dans le but de créer des projets qui me sont chers.",
-  "account": "Compte",
-  "account_deletion_after": "Que se passera-t-il après ?",
-  "account_deletion_point_1": "Vos données personnelles seront supprimées",
-  "account_deletion_point_2": "Vos citations publiées resterons sur la plateforme",
-  "account_deletion_point_3": "Your username will (slowly) be dissaciated with the published quotes",
-  "account_recover": "Récupérer son compte",
+  "account": {
+    "already_have": "J'ai déjà un compte",
+    "create": "Créer un compte",
+    "delete": {
+      "error": "Une erreur s'est produite lors de la suppression de votre compte",
+      "name": "Supprimer mon compte",
+      "success": "Votre compte a été supprimé",
+      "tips": "Cet action est irréversible. Vos données personnelles seront supprimées. Veuillez saisir votre mot de passe si vous voulez continuer."
+    },
+    "deletion_after": "Que se passera-t-il apres ?",
+    "deletion_point_1": "Vos données personnelles seront supprimées",
+    "deletion_point_2": "Vos citations publiées resteront sur la plateforme",
+    "deletion_point_3": "Votre nom d'utilisateur sera (slowly) dissaciated avec les publications des citations",
+    "dont_own": "Je n'ai pas de compte",
+    "name": "Compte",
+    "recover": "Récupérer mon compte"
+  },
   "action_irreversible": "Cette action est irreversible",
+  "advertising": "Publicité",
+  "advertising_content": "Les applications web et mobiles peuvent contenir de la publicité afin de générer des revenues. Les publicitaires peuvent ainsi collecter des données personnelles supplémentaires sur votre navigation et vos préférences. Nous ne controllons pas cette partie de la collecte de données.",
   "all_settings": "Tous les paramètres",
   "analytics": "analytiques",
   "analytics_content": "Les applications web et mobiles collectent des statistiques d'usage afin d'améliorer nos services. Cependant, vos données personnelles ne sont jamais volontairement partagées ou monétisées avec des tiers.",
-  "are_you_sure": "Êtes-vous sûr(e) ?",
-  "avertising": "Publicité",
-  "avertising_content": "Les applications web et mobiles peuvent contenir de la publicité afin de générer des revenues. Les publicitaires peuvent ainsi collecter des données personnelles supplémentaires sur votre navigation et vos préférences. Nous ne controllons pas cette partie de la collecte de données.",
   "apps": "Applications",
+  "are_you_sure": "Êtes-vous sûr(e) ?",
+  "author": {
+    "delete": {
+      "confirm": "Confirmer la suppression ?",
+      "error": "Une erreur s'est produite lors de la suppression de l'auteur",
+      "name": "Supprimer l'auteur",
+      "success": "L'auteur a été supprimé"
+    },
+    "name": "Auteur",
+    "copy": {
+      "name": "Copier le nom de l'auteur",
+      "url": "Copier le lien de l'auteur"
+    }
+  },
   "back": "Retour",
   "back_home": "Revenir à l'accueil",
   "body_empty_forbidden_restrictions": "Le contenu du message ne peut pas être vide. @:body_restrictions",
   "body_restrictions": "Veuillez saisir un message comportant plus de 3 caractères.",
   "brightness": "Luminosité",
   "cancel": "Annuler",
+  "caracterization": "Caractérisation",
+  "close": "Fermer",
+  "color": {
+    "copy": {
+      "hex": "Copier la valeur hexadécimale",
+      "name": "Copier la couleur",
+      "rgba": "Copier la valeur RGBA",
+      "success": {
+        "default": "Couleur copiée!",
+        "name": "La couleur {} a été copiée avec succès!",
+        "hex": "(hexadicimal) copiée avec succès!",
+        "rgba": "(RGBA) copiée avec succès!",
+        "value": "(32-bit) copiée avec succès!"
+      },
+      "value": "Copier la valeur 32-bit"
+    },
+    "name": "Couleur",
+    "palette": "Palette de couleurs"
+  },
   "connection_check_try": "Vérifiez votre connexion et réeesayez ultérieurement.",
   "confirm": "Confirmer",
   "contact": "Contact",
@@ -32,53 +75,716 @@
   "cookies_content": "Cette application utilise des cookies strictement nécessaires et anonymes pour des statistiques d'usage. Aucun cookie n'est volontairement partagé par des tiers. Nous n'utilisation de traceur publicitaire non plus.",
   "copy_link": "Copier le lien",
   "copy_link_success": "Le lien a été copié!",
+  "create": "Créer",
   "dark": "Sombre",
   "dashboard": "Tableau de bord",
+  "delete_account": "Supprimer le compte",
+  "description": {
+    "name": "Description",
+    "optional": "Description (optionnelle)"
+  },
   "developers": "Développeurs",
   "discover": "Explorer",
-  "email_check_spam": "Veuillez également vérifier votre de dossier de spam",
-  "email_doesnt_exist": "Désolés, cette adresse email n'existe pas.",
-  "email_empty_forbidden": "L'email ne peut pas être vide",
-  "email_empty_no_valid": "Le champ email est vide. Veuillez saisir une adresse email valide.",
-  "email_not_valid": "L'email saisie n'est pas valide",
-  "email_password_reset_link": "Un lien pour réinitialiser votre mot de passe vous a été envoyé dans votre boîte email",
-  "email_response_soon": "Vous allez recevoir une réponse par email bientôt",
-  "email_send_me": "Envoyez-moi un email",
-  "email_sending": "Envoie de l'email...",
-  "email_use_other": "Utiliser une autre adresse email",
-  "email_user_use": "Non, votre email ne sera pas utilisé pour vous envoyer du spam ni partagé avec des tiers",
+  "drafts": {
+    "description": "Mes ébauches",
+    "name": "Brouillons"
+  },
+  "email": {
+    "check_spam": "Veuillez vérifier votre dossier de spam",
+    "doesnt_exist": "Désolés, cette adresse email n'existe pas.",
+    "empty_forbidden": "L'email ne peut pas être vide",
+    "empty_no_valid": "Le champ email est vide. Veuillez saisir une adresse email valide.",
+    "password_reset_link": "Un lien pour réinitialiser votre mot de passe vous a été envoyé dans votre boîte email",
+    "response_soon": "Vous allez recevoir une réponse par email bientôt",
+    "name": "Email",
+    "new": "Nouvel email",
+    "send_me": "Envoyer un email",
+    "sending": "Envoi de l'email",
+    "sending_password_recovery": "Envoie du lien pour réinitialiser votre mot de passe",
+    "update": "Mettre à jour mon email",
+    "update_tips": "Entrez votre nouvelle adresse email ci-dessous ainsi que votre mot de passe pour confirmer ce changement.",
+    "use_other": "Utiliser une autre adresse email",
+    "user_use": "Non, votre email ne sera pas utilisé pour vous envoyer du spam ni partagé avec des tiers"
+  },
+  "empty_quote": {
+    "home": "Il n'y a aucune citations pour le moment.\n Il y a probablement un problème de connexion."
+  },
   "ending": "À la fin",
-  "favourites": "Favoris",
+  "favourites": {
+    "description": "Les citations appréciées",
+    "name": "Favoris"
+  },
+  "fictional": "Fictionnel",
+  "genres": {
+    "article": "Article",
+    "bd": "BD",
+    "blog": "Blog",
+    "book": "Livre",
+    "comic": "Comic",
+    "film": "Film",
+    "graphic_novel": "Roman graphique",
+    "game": "Jeu",
+    "music": "Musique",
+    "news": "Actualités",
+    "novel": "Roman",
+    "other": "Autre",
+    "painting": "Peinture",
+    "paper": "Papier",
+    "play": "Pièce de theatre",
+    "poem": "Poème",
+    "photo": "Photo",
+    "podcast": "Podcast",
+    "post": "Post",
+    "poetry": "Poésie",
+    "short_story": "Nouvelle",
+    "tv_series": "Série TV",
+    "video_game": "Jeu vidéo",
+    "video": "Video",
+    "website": "Site web"
+  },
+  "home": "Accueil",
   "iap": "Achats intégrés",
   "iap_content": "Cette app peut contenir des achats intégrés dans le but de vous fournir des fonctionnalités supplémentaires.",
+  "in_validation": {
+    "description": "Les citations en validation",
+    "name": "En validation"
+  },
+  "input": {
+    "error": {
+      "alpha_numerical": "Veuillez utiliser des caractères alphanumeriques (A-Z, 0-9), le tiret (-) et l'underscore (_) uniquement",
+      "empty": "Ce champ ne peut être vide",
+      "email_not_available": "Cette adresse email n'est pas disponible",
+      "email_not_valid": "L'adresse email saisie n'est pas valide",
+      "invalid": "Ce champ est invalide",
+      "minimum_length": "Veuillez utiliser au moins {} caractères",
+      "password_required": "Votre mot de passe est requis",
+      "required": "Ce champ est requis",
+      "username_not_available": "Ce nom d'utilisateur n'est pas disponible"
+    }
+  },
+  "job": "Profession",
+  "kwotes_leading": "kwotes •",
   "lang_recent_add_maybe": "Peut-être que cette langue a été ajoutée récemment",
-  "language": "Langue",
+  "language": {
+    "locale": {
+      "autoDetect": "Détection auto",
+      "af": "Afrikaans",
+      "ar": "عرب",
+      "de": "Deutch",
+      "en": "English",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "no": "Norsk",
+      "pt": "Português",
+      "ru": "Русский",
+      "es": "Español",
+      "sk": "Slovenčina",
+      "sv": "Svenska"
+    },
+    "name": "Language"
+  },
   "light": "Clair",
-  "link_send": "Envoyer le lien",
+  "link": {
+    "copy": {
+      "name": "Copy link",
+      "success": "Link successfully copied!"
+    },
+    "name": "Link",
+    "send": {
+      "name": "Send link",
+      "success": "Link successfully sent!"
+    }
+  },
+  "list": {
+    "add": {
+      "quote": {
+        "zero": "Ajouter {} citation à la liste",
+        "one": "Ajouter {} citation à la liste",
+        "two": "Ajouter {} citations à la liste",
+        "many": "Ajouter {} citations à la liste",
+        "other": "Ajouter {} citations à la liste"
+      },
+      "hint": "Sélectionner au moins une liste",
+      "to": {
+        "zero": "Aucune liste sélectionnée",
+        "one": "Ajouter à la liste",
+        "two": "Ajouter aux listes",
+        "many": "Ajouter aux listes",
+        "other": "Ajouter aux listes"
+      }
+    },
+    "create": {
+      "close": "Fermer le panneau de création",
+      "description": "Créer une liste de citations",
+      "failed": "Une erreur s'est produite lors de la création de la liste",
+      "ing": "Création de la liste",
+      "name": "Créer une liste",
+      "hints": {
+        "names": {
+          "0": "Les bonnes citations, et les mauvaises citations",
+          "1": "Citations qui remontent le moral",
+          "2": "Citation d'amour <3",
+          "3": "J'ai retenu la leçon",
+          "4": "Citation de motivation",
+          "5": "J'y pense tout le temps",
+          "6": "Réveil matinal",
+          "7": "Bonne nuit, dors bien",
+          "8": "Réflexion sur soi-même"
+        },
+        "descriptions": {
+          "0": "Sentiments partagés, mais je les aime.",
+          "1": "Qaund mon moral est bas, je pense à ces citations.",
+          "2": "Elle me remplissent de joie.",
+          "3": "Je dois les garder à porter de main.",
+          "4": "Je peux surmonter n'importe quelle épreuve.",
+          "5": "Mon esprit tourne en boucle.",
+          "6": "Une énergie débordante pour démarrer la journée.",
+          "7": "Une pensée agréable avant de rêver.",
+          "8": "Une petite chose pour capter mon attention."
+        }
+      },
+      "validate": "Valider la création"
+    },
+    "delete": {
+      "failed": "Une erreur s'est produite lors de la suppression de la liste",
+      "name": "Supprimer la liste"
+    },
+    "description": "Rangez des citations ensemble",
+    "edit": {
+      "name": "Éditer la liste"
+    },
+    "empty": "Cette liste est vide.",
+    "error": {
+      "add": {
+        "quote": {
+          "name": "Une erreur s'est produite lors de l'ajout de la citation à la liste",
+          "named": "Nous n'avons pas pu ajouter la citation à la liste {}"
+        }
+      },
+      "create": {
+        "name": "Une erreur s'est produite lors de la création de la liste",
+        "named": "Nous n'avons pas pu créer la liste {}"
+      },
+      "name": {
+        "empty": "Une liste doit avoir un nom."
+      },
+      "update": {
+        "name": "Une erreur s'est produite lors de la mise à jour de votre liste"
+      }
+    },
+    "name": "Liste",
+    "save": {
+      "name": "Enregistrer la liste"
+    },
+    "show_all": {
+      "name": "Afficher toutes les listes"
+    }
+  },
+  "lists": {
+    "description": "Rangez des citations ensemble",
+    "name": "Listes"
+  },
   "loading": "Chargement...",
   "loading_error": "Il y a eu une erreur durant le chargement",
+  "logout": "Déconnecter",
+  "name": "Nom",
   "next": "Suivant",
   "new_quote": "Nouvelle citation",
   "on_boarding_come": "Venez suivre les instructions basiques si ceci est votre première fois.",
-  "password_empty_forbidden": "Le mot de passe ne peut pas être vide.",
+  "page_title": {
+    "about": "@:kwotes_leading About",
+    "add_quote": "@:kwotes_leading Ajouter une citation",
+    "any": "@:kwotes_leading {}",
+    "color_palette": "@:kwotes_leading Palette de couleurs",
+    "color_detail": "@:kwotes_leading Couleur: {}",
+    "dashboard": "@:kwotes_leading Dashboard",
+    "delete_account": "@:kwotes_leading Suppression du compte",
+    "drafts": "@:kwotes_leading Brouillons",
+    "favourites": "@:kwotes_leading Favoris",
+    "forgot_password": "@:kwotes_leading Forgot Password",
+    "home": "@:kwotes_leading Home",
+    "in_validation": "@:kwotes_leading En Validation",
+    "list": "@:kwotes_leading {}",
+    "lists": "@:kwotes_leading Listes",
+    "post": "@:kwotes_leading Post",
+    "posts": "@:kwotes_leading Posts",
+    "project": "@:kwotes_leading Project",
+    "projects": "@:kwotes_leading Projects",
+    "published": "@:kwotes_leading Publiées",
+    "search": "@:kwotes_leading Search",
+    "settings": "@:kwotes_leading Settings",
+    "signin": "@:kwotes_leading Signin",
+    "signup": "@:kwotes_leading Signup",
+    "tos": "@:kwotes_leading Term of Services",
+    "update_email": "@:kwotes_leading Mise à jour de l'email",
+    "update_password": "@:kwotes_leading Mise à jour du mot de passe",
+    "update_username": "@:kwotes_leading Mise à jour du nom d'utilisateur"
+  },
+  "password": {
+    "confirm": "Confirmer le mot de passe",
+    "current": "Mot de passe actuel",
+    "empty_forbidden": "Le mot de passe ne peut pas être vide",
+    "empty_no_valid": "Le champ mot de passe est vide. Veuillez saisir un mot de passe valide.",
+    "error": {
+      "current_empty": "Le champ est vide. Veuillez saisir votre mot de passe actuel.",
+      "minimum_length": "Veuillez utiliser au moins {} caractères",
+      "new_empty": "Le champ est vide. Veuillez saisir votre mot de passe actuel.",
+      "not_valid": "Le mot de passe n'est pas valide",
+      "required": "Le mot de passe est requis"
+    },
+    "forgot": "Mot de passe oublié",
+    "forgot_reset_process": "Nous vous enverrons un lien de réinitialisation dans votre boîte de réception.",
+    "name": "Mot de passe",
+    "new": "Nouveau mot de passe",
+    "not_valid": "Le mot de passe n'est pas valide",
+    "update": {
+      "error": "Une erreur est survenue lors de la mise à jour de votre mot de passe",
+      "name": "Mettre à jour mon mot de passe",
+      "success": "Votre mot de passe a été mis à jour",
+      "tips": {
+        "and": "et",
+        "minimum_length": "Votre mot de passe devrait avoir au moins {} caractères",
+        "lower_case": "devrait contenir au moins une minuscule",
+        "number": "un chiffre",
+        "special": "un caractère spécial",
+        "upper_case": "une majuscule"
+      }
+    }
+  },
+  "published": {
+    "description": "Votre contribution au monde",
+    "name": "Publiées"
+  },
   "quit": "Quitter",
+  "quote": {
+    "add": {
+      "a": "Ajouter une citation",
+      "author": {
+        "avatar": "Photo de profil de l'auteur(e)",
+        "dates": {
+          "0": {
+            "birth": "November 7, 1913",
+            "death": "January 4, 1960"
+          },
+          "1": {
+            "birth": "June 29, 1900",
+            "death": "July 31, 1944"
+          },
+          "2": {
+            "birth": "April 9, 1821",
+            "death": "August 31, 1867"
+          },
+          "3": {
+            "birth": "January 19, 1809",
+            "death": "October 7, 1849"
+          },
+          "4": {
+            "birth": "June 25, 1903",
+            "death": "January 21, 1950"
+          },
+          "5": {
+            "birth": "October 21, 1929",
+            "death": "January 22, 2018"
+          },
+          "6": {
+            "birth": "January 2, 1882",
+            "death": "November 4, 1941"
+          },
+          "7": {
+            "birth": "November 30, 1835",
+            "death": "April 21, 1910"
+          },
+          "8": {
+            "birth": "October 16, 1854",
+            "death": "November 30, 1900"
+          },
+          "9": {
+            "birth": "September 21, 1947",
+            "death": ""
+          },
+          "birth": "Date de naissance ?",
+          "death": "Date de décès ?",
+          "negative": {
+            "birth": {
+              "true": "AEC",
+              "false": "EC",
+              "explanation": {
+                "true": "Né(e) avant l'Ère Commune",
+                "false": "Né(e) après l'Ère Commune"
+              }
+            },
+            "death": {
+              "true": "BCE",
+              "false": "CE",
+              "explanation": {
+                "true": "Mort(e) avant l'Ère Commune",
+                "false": "Mort(e) après l'Ère Commune"
+              }
+            }
+          }
+        },
+        "fictional": {
+          "explanation": {
+            "false": "Cet(te) auteur(e) existe dans le monde réel",
+            "true": "Cet(te) auteur(e) n'existe pas dans le monde réel"
+          },
+          "false": "Fictionnel: Non",
+          "true": "Fictionnel: Oui"
+        },
+        "jobs": {
+          "0": "Philosophe français, auteur, dramaturge et journaliste",
+          "1": "Écrivain français, poète et aviateur",
+          "2": "Poète français, critique et peintre",
+          "3": "Écrivain américain, critique littéraire",
+          "4": "Romancier britanique et journaliste",
+          "5": "Poète grecque",
+          "6": "Romancier et poète irlandais",
+          "7": "Écrivain américain",
+          "8": "Écrivain, romancier, dramaturge et poète irlandais",
+          "9": "Écrivain américain"
+        },
+        "name": "Ajouter un(e) auteur(e)",
+        "names": {
+          "0": "Albert Camus",
+          "1": "Antoine de Saint-Exupery",
+          "2": "Charles Baudelaire",
+          "3": "Edgar Allan Poe",
+          "4": "George Orwell",
+          "5": "Homer",
+          "6": "James Joyce",
+          "7": "Mark Twain",
+          "8": "Oscar Wilde",
+          "9": "Stephen King"
+        },
+        "summaries": {
+          "0": "Albert Camus était un écrivain, philosophe et journaliste français très célèbre. Il est né en 1913 en Algérie et a grandi dans une famille modeste. Camus a écrit de nombreux livres qui ont marqué la littérature française, dont le plus connu s'appelle \"L'Étranger\". Ce roman raconte l'histoire d'un homme qui se sent étranger à la société dans laquelle il vit.",
+          "1": "Antoine de Saint-Exupéry était un aviateur, écrivain et poète français. Il est né en 1900 et a vécu jusqu'en 1944. Il a commencé sa carrière comme pilote dans l'armée de l'air française, puis il est devenu pilote pour une compagnie aérienne. Pendant ses vols, il a écrit des livres sur ses expériences et ses observations du monde. Son livre le plus célèbre s'appelle \"Le Petit Prince\". C'est une histoire merveilleuse qui parle d'un petit prince venu d'une autre planète. Ce livre est très populaire dans le monde entier et il est traduit dans de nombreuses langues.",
+          "2": "Charles Baudelaire était un poète français du 19ème siècle. Il est connu pour son recueil de poèmes intitulé \"Les Fleurs du Mal\", qui a été publié en 1857. Baudelaire était considéré comme un poète maudit, car ses écrits étaient souvent sombres et controversés à l'époque. Ses poèmes parlaient de la beauté, de la mort, de l'amour et des vices de la société.",
+          "3": "Edgar Allan Poe était un écrivain américain célèbre du XIXe siècle. Il est connu pour ses histoires effrayantes et mystérieuses. Ses récits, tels que \"Le Corbeau\" et \"La Chute de la maison Usher\", sont remplis de suspense et d'horreur. Poe a également écrit des poèmes sombres et mélancoliques, comme \"Annabel Lee\" et \"Le Portrait ovale\". Son style d'écriture unique a influencé de nombreux auteurs après lui. Edgar Allan Poe reste une figure importante dans la littérature américaine, captivant les lecteurs avec son imagination macabre.",
+          "4": "George Orwell était un écrivain britannique très célèbre. Il est connu pour ses romans et essais qui ont souvent une critique sociale et politique. Son livre le plus connu s'appelle \"1984\" et parle d'un monde dystopique où le gouvernement contrôle tout. Un autre de ses livres populaires est \"La Ferme des animaux\", qui raconte l'histoire d'animaux qui se révoltent contre leurs propriétaires humains.",
+          "5": "Homère est un poète épique de la Grèce antique, célèbre pour avoir écrit deux grandes épopées : l'Iliade et l'Odyssée. L'Iliade raconte l'histoire de la guerre de Troie, où les Grecs se battent contre les Troyens. On y trouve des héros comme Achille, Hector et Ulysse. L'Odyssée, quant à elle, parle du voyage d'Ulysse pour rentrer chez lui après la guerre.",
+          "6": "James Joyce était un écrivain irlandais très talentueux. Il était romancier, auteur dramatique, poète, critique et professeur. Il est surtout connu pour son roman \"Ulysse\", qui raconte l'histoire d'une journée dans la vie de trois personnages à Dublin. Joyce utilisait une technique d'écriture innovante et expérimentale, ce qui le rendait unique parmi les écrivains de son époque.",
+          "7": "Mark Twain était un écrivain, journaliste et humoriste américain très célèbre. Il est connu pour ses romans captivants et ses histoires drôles. Mark Twain a écrit des livres comme \"Les Aventures de Tom Sawyer\" et \"Les Aventures de Huckleberry Finn\", qui sont toujours lus par les enfants du monde entier.",
+          "8": "Oscar Wilde était un écrivain irlandais célèbre du 19e siècle. Il est connu pour ses histoires fantastiques et son esprit vif. Wilde a écrit des pièces de théâtre, des poèmes et des romans qui sont toujours appréciés aujourd'hui. Son style d'écriture était souvent humoristique et plein de sarcasme. Il aimait aussi jouer avec les mots et les idées, ce qui rendait ses œuvres très originales.",
+          "9": "Stephen King est un écrivain américain célèbre du 1940. Il est connu pour son style unique de narration, ses romans populaires et ses livres d'horreur. Ses livres sont souvent adaptés au cinéma ou à la télévision. Stephen King a écrit de nombreux romans à succès, tels que \"Ça\", \"Shining\" et \"Simetierre\"."
+        }
+      },
+      "draft": {
+        "failed": "Un problème est survenu lors de la création du brouillon."
+      },
+      "links": {
+        "example": {
+          "amazon": "https://www.amazon.com/...",
+          "imdb": "https://www.imdb.com/name/",
+          "facebook": "https://www.facebook.com/example",
+          "image": "https://example.com/image.jpg",
+          "instagram": "https://www.instagram.com/example",
+          "netflix": "https://www.netflix.com/example",
+          "prime_video": "https://www.primevideo.com/example",
+          "twitch": "https://www.twitch.tv/example",
+          "twitter": "https://twitter.com/example",
+          "web": "https://www.example.com",
+          "website": "https://example.com",
+          "wikipedia": "https://en.wikipedia.org/wiki/Example",
+          "youtube": "https://www.youtube.com/example"
+        },
+        "amazon": "Amazon",
+        "facebook": "Facebook",
+        "imdb": "IMDb",
+        "instagram": "Instagram",
+        "more": "Plus de liens",
+        "netflix": "Netflix",
+        "prime_video": "Prime Video",
+        "twitch": "Twitch",
+        "twitter": "Twitter",
+        "youtube": "Youtube",
+        "web": "Website",
+        "website": "Website",
+        "wikipedia": "Wikipedia"
+      },
+      "name": "Ajouter la citation",
+      
+      "page": {
+        "0": "Ajout du contenu de la citation",
+        "1": "Catégorisation",
+        "2": "Ajout d'un auteur",
+        "3": "Ajout d'une référence",
+        "next": "Page suivante",
+        "previous": "Page précédente"
+      },
+      "reference": {
+        "avatar": "Illustration de la référence",
+        "dates": {
+          "0": {
+            "original": "19 September 2012",
+            "translation": "27 May 2014"
+          },
+          "1": {
+            "original": "21 June 1857"
+          },
+          "2": {
+            "original": "April 6, 1943"
+          },
+          "3": {
+            "original": "November 1846"
+          },
+          "4": {
+            "original": "17 August 1945"
+          },
+          "5": {
+            "original": "January 1843"
+          },
+          "6": {
+            "original": "8 June 1949"
+          },
+          "7": {
+            "original": "1876"
+          },
+          "8": {
+            "original": "December 10, 1884"
+          },
+          "9": {
+            "original": "2 February 1922"
+          },
+          "release": "Date de publication de cette référence",
+          "negative": {
+            "release": {
+              "true": "ACE",
+              "false": "EC",
+              "explanation": {
+                "true": "Publié avant l'Ère Commune",
+                "false": "Publié après l'Ère Commune"
+              }
+            }
+          }
+        },
+        "genre": {
+          "primary": "Genre principal",
+          "secondary": "Sous-genre"
+        },
+        "genres": {
+          "primary": {
+            "0": "Roman",
+            "1": "Poésie",
+            "2": "Roman",
+            "3": "Nouvelle",
+            "4": "Roman",
+            "5": "Nouvelle",
+            "6": "Roman",
+            "7": "Roman",
+            "8": "Roman",
+            "9": "Roman"
+          },
+          "secondary": {
+            "0": "Policier",
+            "1": "Lyrique",
+            "2": "...",
+            "3": "Horreur",
+            "4": "Dystopique",
+            "5": "Horreur",
+            "6": "Distopique",
+            "7": "Aventure",
+            "8": "Picaresque",
+            "9": "Moderniste"
+          }
+        },
+        "name": "Ajouter une référence",
+        "names": {
+          "0": "La vérité sur l'affaire Harry Quebert",
+          "1": "Les Fleurs du mal",
+          "2": "Le Petit Prince",
+          "3": "La Barrique d'amontillado",
+          "4": "La Ferme des animaux",
+          "5": "Le Cœur révélateur",
+          "6": "1984",
+          "7": "Les aventures de Tom Sawyer",
+          "8": "Les Aventures de Huckleberry Finn",
+          "9": "Ulysses"
+        },
+        "summaries": {
+          "0": "La Vérité sur l'affaire Harry Quebert est un roman policier de Joël Dicker paru le 19 septembre 2012 aux éditions de Fallois-L'Âge d'Homme et ayant reçu la même année le grand prix du roman de l'Académie française et le prix Goncourt des lycéens. L'histoire raconte comment Marcus Goldman, un jeune écrivain, va venir en aide à Harry Quebert, son ancien professeur d'université, soupçonné d'avoir assassiné une jeune fille de 15 ans.",
+          "1": "Les Fleurs du mal est un recueil de poèmes de Charles Baudelaire, reprenant la quasi-totalité de sa production en vers de 1840 jusqu'à sa mort, survenue fin août 1867. Publié le 21 juin 1857, le recueil scandalise aussitôt la société française. Son auteur subit un procès retentissant. Le jugement le condamne à une forte amende, réduite sur intervention de l'Impératrice ; il entraîne la censure de six pièces jugées immorales.",
+          "2": "Le Petit Prince est une œuvre de langue française, la plus connue d'Antoine de Saint-Exupéry. Publié en 1943 à New York simultanément à sa traduction anglaise, c'est une œuvre poétique et philosophique sous l'apparence d'un conte pour enfants. Le langage, simple et dépouillé, parce qu'il est destiné à être compris par des enfants, est en réalité pour le narrateur le véhicule privilégié d'une conception symbolique de la vie. Chaque chapitre relate une rencontre du petit prince qui laisse celui-ci perplexe, par rapport aux comportements absurdes des « grandes personnes ». Ces différentes rencontres peuvent être lues comme une allégorie.",
+          "3": "La Barrique d'amontillado (The Cask of Amontillado) est une nouvelle d'Edgar Allan Poe publiée pour la première fois en novembre 1846 dans la revue Godey's Lady's Book. L'histoire se déroule dans une ville italienne et à une époque indéterminée (probablement au XVIIIe siècle) et a pour sujet la vengeance mortelle d'un homme envers l'un de ses amis l'ayant insulté. Comme pour Le Chat noir et Le Cœur révélateur, l'histoire nous est contée du point de vue du meurtrier. Elle fait partie du recueil Nouvelles histoires extraordinaires dans sa traduction en français.",
+          "4": "La Ferme des animaux (titre original : Animal Farm. A Fairy Story) est un roman court de George Orwell, publié en 1945. Découpé en dix chapitres, il décrit une ferme dans laquelle les animaux se révoltent contre leur maître, prennent le pouvoir, chassent les hommes et vivent en autarcie. Il s'agit d'un apologue écrit sous la forme d'une fable animalière, mais également d'une dystopie. Dans ce roman, Orwell propose une satire de la révolution russe et une critique du régime soviétique, en particulier du stalinisme, et au-delà, des régimes autoritaires et du totalitarisme.",
+          "5": "Le Cœur révélateur (The Tell-Tale Heart), une nouvelle publiée par Edgar Allan Poe en 1843, est un récit écrit à la première personne dont le narrateur s'efforce de convaincre le lecteur de sa lucidité et de sa rationalité, mais qui souffre d'un mal qui « aiguise ses sens ».",
+          "6": "1984 (Nineteen Eighty-Four en anglais) est le plus célèbre roman de George Orwell, publié en 1949. Il décrit une Grande-Bretagne trente ans après une guerre nucléaire entre l'Est et l'Ouest censée avoir eu lieu dans les années 1950 et où s'est instauré un régime totalitaire fortement inspiré à la fois de certains éléments du stalinisme et du nazisme,. La liberté d'expression n'existe plus ; tous les comportements sont minutieusement surveillés grâce à des machines appelées « télécrans » et d'immenses affiches représentant le visage de « Big Brother » sont placardées dans les rues, avec l'inscription « Big Brother vous regarde » (« Big Brother is watching you »).",
+          "7": "Les Aventures de Tom Sawyer (titre original : The Adventures of Tom Sawyer) est le premier roman que Mark Twain écrit seul. Il est publié en 1876, d'abord en Angleterre en juin, puis aux États-Unis en décembre. Mark Twain y conte les aventures d'un garçon du sud des États-Unis, Tom Sawyer, vers 1844, avant la guerre de Sécession, dans la ville fictive de Saint-Petersburg au Missouri, sur la rive droite du Mississippi. En partie autobiographique, l'histoire s'inspire, du moins dans ses premiers chapitres, de l'enfance de l'auteur, passée à Hannibal au Missouri et recréée par la fiction autour du jeune protagoniste dont la personnalité domine le roman.",
+          "8": "Les Aventures de Huckleberry Finn est un roman picaresque de l'Américain Mark Twain, paru à Londres le 4 décembre 1884 sous le titre The Adventures of Huckleberry Finn, puis à New York en février de l'année suivante sous le titre Adventures of Huckleberry Finn. Le début et la fin du livre sont trompeurs : reprenant le ton léger des Aventures de Tom Sawyer, mettant en scène des personnages de ce roman, ils donnent à penser que l'on est en présence d'une « suite » et de « littérature pour enfants ». Mais le corps du récit n'a rien d'inoffensif. C'est une terrifiante plongée au plus sombre de la nature humaine, une violente remise en cause des normes sociales et de la religion.",
+          "9": "Ulysse (titre original Ulysses en anglais) est un roman de James Joyce, sorti dans un premier temps sous forme de feuilleton dans le magazine américain The Little Review entre mars 1918 et décembre 1920, avant d'être publié dans son intégralité le 2 février 1922 à Paris par la librairie Shakespeare and Company fondée par Sylvia Beach (cela restera l'unique parution de la librairie). Dès sa parution aux États-Unis, Ulysse a suscité la controverse notamment avec la plainte posée par la New York Society for the Suppression of Vice jugeant le livre obscène. Le livre fut interdit aux États-Unis jusqu'en 1934. Il ne cessera par la suite d'être commenté et sera l'objet de très nombreuses études."
+        }
+      }
+    },
+    "add_topics": "Ajouter des thèmes.",
+    "clear_all": "Effacer tout",
+    "clear_topics": "Effacer les thèmes",
+    "copy": {
+      "name": "Copier la citation",
+      "success": "La citation a été copiée !",
+      "url": "Copier le lien"
+    },
+    "copy_from": {
+      "name": "Copier à partir"
+    },
+    "delete": {
+      "confirm": "Confirmer la suppression ?",
+      "draft": "Supprimer le brouillon",
+      "name": "Supprimer la citation"
+    },
+    "edit": "Modifier la citation",
+    "empty": {
+      "name": "Aucun texte."
+    },
+    "erase_all": "Effacer tout",
+    "error": {
+      "name": {
+        "empty": "Le contenu d'une citation ne peut pas être vide. Vous devez saisir une citation.",
+        "minimum_length": "Votre citation doit contenir au moins 3 caractères."
+      },
+      "topics": {
+        "empty": "Vous devez sélectionner au moins un sujet de catégorisation."
+      },
+      "user": {
+        "not_admin": "Vous devez être un administrateur pour proposer une citation.",
+        "unauthenticated": "Vous devez vous connecter pour proposer une citation."
+      }
+    },
+    "favourite": {
+      "add": {
+        "failed": "Une erreur est survenue lors de l'ajout de la citation des favoris. Veuillez réessayer plus tard.",
+        "name": "Ajouter aux favoris",
+        "success": "Citation ajoutée aux favoris!"
+      },
+      "remove": {
+        "failed": "Une erreur est survenue lors du retrait de la citation des favoris. Veuillez réessayer plus tard.",
+        "name": "Retirer des favoris",
+        "success": "Citation retirée des favoris!"
+      }
+    },
+    "fetch": {
+      "draft": {
+        "failed": "Une erreur est survenue lors de la récupéreration du brouillon"
+      },
+      "failed": "Une erreur est survenue lors de la récupéreration de la citation",
+      "name": "Recuperer la citation"
+    },
+    "like": {
+      "name": "J'aime"
+    },
+    "name": "Citation",
+    "new": "Nouvelle citation",
+    "not_found": "The quote was not found in the list.",
+    "open_random": "Cliquez/Appuyez sur une lettre pour ouvrir une citation.",
+    "remove": {
+      "failed": "Un problème est survenu lors du retrait de la citation.",
+      "ing": "Retrait de la citation",
+      "name": "Retirer la citation",
+      "success": "Citation retirée avec succès !"
+    },
+    "save": {
+      "failed": "Une erreur est survenue lors de la sauvegarde de la citation. Veuillez réessayer plus tard.",
+      "ing": "Sauvegarde de la citation",
+      "name": "Sauvegarder la citation",
+      "success": "La citation a été sauvegardée !"
+    },
+    "shuffle": "Mélanger les citations",
+    "start_typing": "Écrivez votre citation",
+    "submit": {
+      "failed": "Une erreur est survenue lors de l'envoi de la citation. Veuillez essayer de nouveau.",
+      "ing": "Envoi de la citation en cours",
+      "name": "Envoyer",
+      "ok": "Cette citation sera envoyée pour validation",
+      "required": "Vous devez saisir une citation et sélectionner au moins un sujet de catégorisation.",
+      "success": "Votre citation a été envoyée!"
+    },
+    "unlike": {
+      "name": "Je n'aime plus"
+    },
+    "update": {
+      "failed": "Une erreur est survenue lors de la mise à jour de la citation. Veuillez essayer de nouveau.",
+      "ing": "Mise à jour en cours de la citation",
+      "name": "Mettre à jour",
+      "success": "La citation a été mise à jour avec succès!"
+    },
+    "validate": {
+      "failed": "Une erreur est survenue lors de la validation de la citation. Veuillez essayer de nouveau.",
+      "ing": "Validation de la citation",
+      "name": "Valider la citation",
+      "success": "La citation a été validée !"
+    }
+  },
   "quote_of_the_day": "Ceci est la citation du jour",
   "random": "Aléatoire",
   "recent": "Récent",
   "recent_dot": "Récent...",
   "recent_none": "Il n'y a pas de citations récentes",
+  "reference": {
+    "delete": {
+      "a": "Supprimer une référence",
+      "confirm": "Confirmer la suppression ?",
+      "failed": "Une erreur est survenue lors de la suppression de la référence",
+      "name": "Supprimer la référence",
+      "success": "La référence a été supprimée !"
+    },
+    "copy": {
+      "name": "Copier le nom de la référence",
+      "url": "Copier le lien de la référence"
+    },
+    "name": "Référence"
+  },
+  "release_date": "Date de sortie",
   "report_bug": "Signaler a bug",
   "resources": "Ressources",
-  "search": "Recherche",
-  "settings": "Paramètres",
-  "settings_subtitle": "Vous pouvez modifier vos préférences ici",
+  "search": {
+    "authors": "Recherche d'auteurs",
+    "clear": "Effacer",
+    "empty_quotes": "Aucune citation trouvée pour votre recherche.",
+    "ing": "En recherche",
+    "name": "Recherche",
+    "quotes": "Recherche de citations",
+    "references": "Recherche de références",
+    "random_words": {
+      "0": "emotion",
+      "1": "amour",
+      "2": "fun",
+      "3": "introspection",
+      "4": "inspiration",
+      "5": "insight",
+      "6": "langage",
+      "7": "travail",
+      "8": "vie",
+      "9": "social",
+      "10": "musique",
+      "11": "philosophie"
+    },
+    "result_count": {
+      "zero": "Aucun résultat trouvé",
+      "one": "1 résultat trouvé",
+      "many": "{} resultats trouvés",
+      "other": "{} resultats trouvés"
+    },
+    "some_topics": "Quelques thèmes"
+  },
+  "see_related_quotes": "Voir les citations liées",
+  "settings": {
+    "description": "Personnalisez votre expérience",
+    "name": "Paramètres"
+  },
   "share_on_twitter": "Partager sur Twitter",
   "skip": "Passer",
   "signin": "Se connecter",
+  "signin_again": "Veuillez vous reconnecter",
+  "signin_existing_account": "Connectez-vous avec votre compte existant",
   "signup": "S'inscrire",
+  "suggestions": "Suggestions",
+  "summary": "Résumé",
+  "system": "Système",
+  "theme": "Thème",
+  "title": "Titre",
   "tos": "CGU",
   "tos_title": "Contrat Général d'Utilisation",
-  "tos_1": "Votre confidentialité est important pour nous. C'est la mission de la société Jeremie Codes de respecter la confidentialité de vos données à propos des informations que nous collectons quand vous accéder à notre site web, fig.style, aux applications mobiles et autres services que nous possédons et que nous opérons.",
+  "tos_1": "Votre confidentialité est important pour nous. C'est la mission de la société Jeremie Codes de respecter la confidentialité de vos données à propos des informations que nous collectons quand vous accéder à notre site web, kwotes, aux applications mobiles et autres services que nous possédons et que nous opérons.",
   "tos_2": "Nous vous demanderons vos informations personnelles seulement quand nous en aurons vraiment besoin afin de vous proposer un meilleur service. Nous collectons ces données de manière légale et respectueuse, avec votre accord et en s'assurant que vous en soyez conscient. Nous vous dirons quand nous les collecterons et comment ces données seront utilisées.",
   "tos_3": "Nous stockerons les informations collectées autant que nécessaire afin de vous proposer un contenu adapté. Nous protégerons les données que nous stockons dans la mesure de moyens commerciaux acceptables afin d'empêcher la perte et le vol, ainsi que des accès non-autorisés, la divulgation, la copie, l'utilisation ou la modification.",
   "tos_4": "Nous ne partageons aucune information personnelle de manière publique ou avec des tierces parties, excepté quand requis par la loi.",
@@ -87,6 +793,17 @@
   "tos_7": "Votre utilisation prolongée de notre site web et nos applications sera comprise comme l'acceptation et l'adhésion à nos conditions générales d'utilisation, notre politique de confidentialité, ainsi que nos pratiques concernant l'utilisation de vos données. Si vous avez des questions à propos de l'utilisaiton des données personnelles et de vos données, vous pouvez nous contacter à feedback@fig.style.",
   "tos_8": "Cette politique est applicable depuis le 1 Mai 2020.",
   "tos_created_with": "Politique de confidentialité créée avec GetTerms.",
+  "username": {
+    "name": "Nom d'utilisateur",
+    "new": "Nouveau nom d'utilisateur",
+    "update": {
+      "error": "Une erreur est survenue lors de la mise à jour du nom d'utilisateur",
+      "name": "Mettre à jour mon nom d'utilisateur",
+      "success": "Votre nom d'utilisateur a été mis à jour !",
+      "tips": "Vous pouvez choisir un nouveau nom d'utilisateur s'il est disponible, contient au moins 3 caractères, et contenant uniquement des caractères alphanumériques, des tirets (-) et des tirets (_)."
+    }
+  },
+  "welcome_back": "Welcome back",
   "welcome_ex": "Bienvenu(e) !",
   "zoom": "Agrandir l'image"
 }

@@ -1,9 +1,9 @@
-name: fig_style
-description: 5 seconds of emotion
+name: kwotes
+description: 5 seconds of emotion.
 licence: MPL-2.0
 
 # The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
@@ -13,84 +13,92 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.80.0+14
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 3.0.0+15
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
 dependencies:
-  adaptive_theme: 2.0.0-nullsafety.1
-  algolia: 1.0.1
-  animations: 2.0.0
-  auto_route:  1.0.0-beta.10
-  badges: 1.2.0
-  cloud_firestore: 1.0.1
-  cloud_functions: 1.0.0
-  cross_local_storage: 2.0.1
+  adaptive_theme: ^3.3.0
+  algolia: ^1.1.2
+  animated_text_kit: ^4.2.2
+  beamer: ^1.5.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: 1.0.0
-  easy_localization: 3.0.0
-  firebase_auth: 1.0.1
-  firebase_core: 1.0.1
-  firebase_analytics: 7.1.1
-  flash: 1.5.0
+  cupertino_icons: ^1.0.2
+  cloud_firestore: ^4.8.3
+  cloud_functions: ^4.3.4
+  easy_localization: ^3.0.2
+  firebase_auth: ^4.7.1
+  firebase_analytics: ^10.4.4
+  firebase_core: ^2.15.0
+  firebase_storage: ^11.2.5
+  flex_list: ^1.0.0
   flutter:
     sdk: flutter
-  flutter_inner_drawer: 0.5.7+2
-  flutter_mobx: 1.0.1
-  flutter_snake_navigationbar: 0.4.4
-  flutter_sticky_header: 0.5.0
-  flutter_swipe_action_cell: 1.3.4
-  font_awesome_flutter: 8.12.0
-  google_fonts: 2.0.0
-  introduction_screen: 2.0.0
-  jiffy: 4.0.0
-  like_button: 2.0.1
-  logger: 0.9.4
-  mobx: 1.2.1+4
-  mobx_codegen: 1.1.2
-  modal_bottom_sheet: 2.0.0
-  onesignal_flutter: 2.6.3
-  photo_view: 0.11.1
-  quick_actions: 0.5.0
-  share: 2.0.1
-  share_files_and_screenshot_widgets:
-    git: https://github.com/rootasjey/Share-Files-And-Screenshot-Widgets-Flutter.git
-  simple_animations: 3.0.1
-  sticky_headers: 0.1.8+1
-  supercharged: 2.0.0
-  unicons: 1.0.1
-  url_launcher: 6.0.2
-  url_strategy: 0.2.0
+
+  flutter_animate: ^4.2.0+1
+  flutter_dotenv: ^5.1.0
+  flutter_improved_scrolling: ^0.0.3
+  flutter_langdetect: ^0.0.2
+  flutter_loggy: ^2.0.2
+  flutter_solidart: ^0.4.2
+  flutter_tabler_icons: ^1.2.0
+  font_awesome_flutter: ^10.5.0
+  glutton: ^2.0.0
+  google_fonts: ^5.1.0
+  jiffy: ^6.2.1
+  just_the_tooltip: ^0.0.12
+  loggy: ^2.0.3
+  lottie: ^2.5.0
+  modal_bottom_sheet: 3.0.0-pre
+  photo_view: ^0.14.0
+  random_text_reveal: ^0.0.6
+  shimmer_animation: ^2.1.0+1
+  simple_animations: ^5.0.2
+  sliver_tools: ^0.2.12
+  smooth_page_indicator: ^1.1.0
+  super_context_menu: ^0.6.4
+  text_wrap_auto_size: ^1.2.1
+  timer_snackbar: ^0.0.3
+  unicons: ^2.1.1
+  url_launcher: ^6.1.12
+  url_strategy: ^0.2.0
+  verbal_expressions: ^1.0.0
+  window_manager: ^0.3.5
 
 dev_dependencies:
-  auto_route_generator: 1.0.0-beta.11
-  build_runner:
-  flutter_launcher_icons: 0.9.0
-  flutter_rename_app:
-    git: https://github.com/rootasjey/flutter_rename_app.git
+  custom_lint: ^0.3.4
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
 
-flutter_icons:
-  android: "launcher_icon"
-  ios: "launcher_icon"
-  image_path_android: "assets/images/app_icon/android.png"
-  image_path_ios: "assets/images/app_icon/ios.jpg"
+  solidart_lint: ^0.2.0
 
-flutter_rename_app:
-  application_name: fig_style
-  dart_package_name: fig_style
+dependency_overrides:
+  http: ^1.0.0 # Because algolia uses an old version of http.
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-# The following section is specific to Flutter.
+# The following section is specific to Flutter packages.
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -99,10 +107,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
   assets:
+    - assets/animations/dots-loading.json
     - assets/images/app_icon/32.png
     - assets/images/app_icon/64.png
     - assets/images/app_icon/90.png
@@ -110,19 +116,13 @@ flutter:
     - assets/images/app_icon/512_alt.png
     - assets/images/app_icon/animation.gif
     - assets/images/citations365_lockscreen.png
-    - assets/images/ia_portrait.jpg
-    - assets/images/natasha_remarchuk/community.png
-    - assets/images/natasha_remarchuk/features.png
-    - assets/images/natasha_remarchuk/notifications.png
-    - assets/images/natasha_remarchuk/signin.png
-    - assets/images/olha_khomich/not_found.png
-    - assets/images/jeje.jpg
+    - assets/images/autoportrait.png
     - assets/images/netflix.png
     - assets/translations/
-    - google_fonts/
+    - var.env
 
   # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
+  # https://flutter.dev/assets-and-images/#resolution-aware
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages

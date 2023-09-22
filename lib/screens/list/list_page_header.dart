@@ -1,0 +1,258 @@
+import "package:easy_localization/easy_localization.dart";
+import "package:flutter/material.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
+
+/// In validation quotes page header.
+class ListPageHeader extends StatelessWidget {
+  const ListPageHeader({
+    super.key,
+    required this.listId,
+    required this.title,
+    required this.accentColor,
+    this.createMode = false,
+    this.focusName = true,
+    this.onCancelCreateMode,
+    this.onDescriptionChanged,
+    this.onEnterCreateMode,
+    this.onNameChanged,
+    this.onSave,
+    this.description = "",
+    this.nameController,
+    this.descriptionController,
+    this.descriptionHintText = "",
+  });
+
+  /// Show inputs if true.
+  final bool createMode;
+
+  /// Will focus name input if true.
+  final bool focusName;
+
+  /// Accent color.
+  final Color accentColor;
+
+  /// Callback fired when list's name has changed.
+  final void Function(String name)? onNameChanged;
+
+  /// Callback fired when list's description has changed.
+  final void Function(String description)? onDescriptionChanged;
+
+  /// Callback fired to save changes (name and description).
+  final void Function()? onSave;
+
+  /// Callback fired to enter create mode and show inputs.
+  final void Function(bool focusName)? onEnterCreateMode;
+
+  /// Callback fired to exit create mode.
+  final void Function()? onCancelCreateMode;
+
+  /// List's id for hero animation.
+  final String listId;
+
+  /// Description hint text.
+  final String descriptionHintText;
+
+  /// List's title.
+  final String title;
+
+  /// List's description.
+  final String description;
+
+  /// Controller for name input.
+  final TextEditingController? nameController;
+
+  /// Controller for description input.
+  final TextEditingController? descriptionController;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
+    if (createMode) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 48.0, bottom: 42.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                autofocus: focusName,
+                controller: nameController,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.words,
+                onChanged: onNameChanged,
+                textInputAction: TextInputAction.next,
+                style: Utils.calligraphy.title(
+                  textStyle: const TextStyle(
+                    fontSize: 74.0,
+                    fontWeight: FontWeight.w200,
+                    height: 1.0,
+                  ),
+                ),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: 0.5,
+                child: TextField(
+                  autofocus: !focusName,
+                  controller: descriptionController,
+                  textCapitalization: TextCapitalization.words,
+                  onChanged: onDescriptionChanged,
+                  textInputAction: TextInputAction.go,
+                  onSubmitted: (_) => onSave?.call(),
+                  style: Utils.calligraphy.body2(
+                    textStyle: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: foregroundColor?.withOpacity(0.4),
+                      height: 1.0,
+                    ),
+                  ),
+                  decoration: InputDecoration(
+                    filled: true,
+                    hintText: descriptionHintText,
+                    fillColor: accentColor.withOpacity(0.1),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: accentColor.withOpacity(0.6),
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: accentColor.withOpacity(1.0),
+                        width: 2.2,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: accentColor.withOpacity(0.6),
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Wrap(
+                  spacing: 12.0,
+                  runSpacing: 12.0,
+                  alignment: WrapAlignment.start,
+                  children: [
+                    TextButton(
+                        onPressed: onCancelCreateMode,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18.0,
+                            vertical: 14.0,
+                          ),
+                          backgroundColor: Colors.black12,
+                          foregroundColor:
+                              Theme.of(context).textTheme.bodyMedium?.color,
+                          textStyle: Utils.calligraphy.body4(
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          "cancel".tr(),
+                        )),
+                    TextButton(
+                      onPressed: onSave,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0,
+                          vertical: 14.0,
+                        ),
+                        backgroundColor: onSave != null ? accentColor : null,
+                        foregroundColor: accentColor.computeLuminance() > 0.4
+                            ? Colors.black87
+                            : Colors.white,
+                        textStyle: Utils.calligraphy.body4(
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "list.save.name".tr(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 48.0, bottom: 42.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Hero(
+              tag: listId,
+              child: Material(
+                color: Colors.transparent,
+                child: TextButton(
+                  onPressed: () => onEnterCreateMode?.call(true),
+                  child: Text.rich(
+                    TextSpan(text: title, children: [
+                      TextSpan(
+                        text: ".",
+                        style: TextStyle(
+                          color: Constants.colors.inValidation,
+                        ),
+                      ),
+                    ]),
+                    style: Utils.calligraphy.title(
+                      textStyle: TextStyle(
+                        fontSize: 74.0,
+                        fontWeight: FontWeight.w200,
+                        color: foregroundColor?.withOpacity(0.8),
+                        shadows: [
+                          Shadow(
+                            blurRadius: 0.5,
+                            offset: const Offset(-1.0, 1.0),
+                            color: Constants.colors.inValidation,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (description.isNotEmpty)
+              TextButton(
+                onPressed: () => onEnterCreateMode?.call(false),
+                child: Text(
+                  description,
+                  style: Utils.calligraphy.body2(
+                    textStyle: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: foregroundColor?.withOpacity(0.4),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
