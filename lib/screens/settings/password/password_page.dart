@@ -70,9 +70,7 @@ class _PasswordPageState extends State<PasswordPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    const EdgeInsets margin = EdgeInsets.only(
-      left: 48.0,
-    );
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     return Scaffold(
       body: BasicShortcuts(
@@ -80,15 +78,17 @@ class _PasswordPageState extends State<PasswordPage> with UiLoggy {
         onCancel: context.beamBack,
         child: CustomScrollView(
           slivers: [
-            const ApplicationBar(),
+            ApplicationBar(
+              isMobileSize: isMobileSize,
+            ),
             PasswordPageHeader(
-              margin: margin,
+              isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
               passwordChecks: _passwordChecks,
             ),
             PasswordPageBody(
-              margin: margin,
               currentPasswordController: _currentPasswordController,
+              isMobileSize: isMobileSize,
               newPasswordController: _newPasswordController,
               newPasswordFocusNode: _newPasswordFocusNode,
               pageState: _pageState,

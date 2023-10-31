@@ -10,22 +10,18 @@ class PasswordPageBody extends StatelessWidget {
     super.key,
     required this.currentPasswordController,
     required this.newPasswordController,
+    this.isMobileSize = false,
     this.newPasswordFocusNode,
     this.pageState = EnumPageState.idle,
-    this.currentPasswordErrorMessage = "",
     this.onCurrentPasswordChanged,
     this.onNewPasswordChanged,
-    this.margin = EdgeInsets.zero,
-    this.isMobileSize = false,
     this.onTapUpdateButton,
+    this.currentPasswordErrorMessage = "",
     this.newPasswordErrorMessage = "",
   });
 
   /// True if the screen's size is narrow.
   final bool isMobileSize;
-
-  /// Space around this widget.
-  final EdgeInsets margin;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -60,11 +56,11 @@ class PasswordPageBody extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(isMobileSize ? 12.0 : 40.0),
+        padding: EdgeInsets.all(isMobileSize ? 24.0 : 40.0),
         child: Column(
           children: [
             SizedBox(
-              width: 352.0,
+              width: isMobileSize ? null : 352.0,
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(
@@ -93,7 +89,7 @@ class PasswordPageBody extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.only(bottom: 12.0),
-              width: 352.0,
+              width: isMobileSize ? null : 352.0,
               child: Column(
                 children: [
                   OutlinedTextField(
@@ -126,25 +122,19 @@ class PasswordPageBody extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black87,
               ),
-              child: SizedBox(
-                width: 320.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Text(
-                        "password.update.name".tr().toUpperCase(),
-                        style: Utils.calligraphy.body(
-                          textStyle: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+              child: Container(
+                width: isMobileSize ? null : 352.0,
+                padding: const EdgeInsets.all(14.0),
+                child: Text(
+                  "password.update.name".tr().toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

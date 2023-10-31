@@ -7,10 +7,14 @@ import "package:kwotes/types/reference.dart";
 class ShowcaseReferences extends StatelessWidget {
   const ShowcaseReferences({
     super.key,
+    this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.references = const [],
     this.onTapReference,
   });
+
+  /// Adapt UI to mobile size.
+  final bool isMobileSize;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -41,6 +45,7 @@ class ShowcaseReferences extends StatelessWidget {
                   return ShowcaseText(
                     docId: reference.id,
                     textValue: reference.name,
+                    isMobileSize: isMobileSize,
                     foregroundColor: index % 2 == 0
                         ? foregroundColor?.withOpacity(0.1)
                         : foregroundColor?.withOpacity(0.2),

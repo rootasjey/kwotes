@@ -8,8 +8,8 @@ import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
+import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -41,6 +41,9 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> with UiLoggy {
+  /// Animate list's items if true.
+  bool _animateList = true;
+
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -93,6 +96,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     _accentColor = Constants.colors.getRandomFromPalette();
     _descriptionHintText =
         "list.create.hints.descriptions.${Random().nextInt(9)}".tr();
@@ -109,6 +113,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final Signal<UserFirestore> currentUser =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
@@ -129,23 +134,28 @@ class _ListPageState extends State<ListPage> with UiLoggy {
               behavior: const CustomScrollBehavior(),
               child: CustomScrollView(
                 slivers: [
-                  const ApplicationBar(),
-                  ListPageHeader(
-                    accentColor: _accentColor,
-                    createMode: _createMode,
-                    description: _quoteList.description,
-                    descriptionHintText: _descriptionHintText,
-                    descriptionController: _descriptionController,
-                    focusName: _focusNameInput,
-                    listId: widget.listId,
-                    nameController: _nameController,
-                    onEnterCreateMode: onEnterCreateMode,
-                    onNameChanged: onNameChanged,
-                    onSave: _nameController.text.isEmpty ? null : trySaveList,
-                    onCancelCreateMode: onCancelCreateMode,
-                    title: _quoteList.name,
+                  PageAppBar(
+                    isMobileSize: isMobileSize,
+                    childTitle: ListPageHeader(
+                      accentColor: _accentColor,
+                      createMode: _createMode,
+                      isMobileSize: isMobileSize,
+                      description: _quoteList.description,
+                      descriptionHintText: _descriptionHintText,
+                      descriptionController: _descriptionController,
+                      focusName: _focusNameInput,
+                      listId: widget.listId,
+                      nameController: _nameController,
+                      onEnterCreateMode: onEnterCreateMode,
+                      onNameChanged: onNameChanged,
+                      onSave: _nameController.text.isEmpty ? null : trySaveList,
+                      onCancelCreateMode: onCancelCreateMode,
+                      title: _quoteList.name,
+                    ),
                   ),
                   ListPageBody(
+                    animateList: _animateList,
+                    isMobileSize: isMobileSize,
                     pageState: _pageState,
                     quotes: _quotes,
                     onCopy: onCopy,
@@ -163,11 +173,6 @@ class _ListPageState extends State<ListPage> with UiLoggy {
         ),
       ),
     );
-  }
-
-  /// Copy a quote's name.
-  void onCopy(Quote quote) {
-    QuoteActions.copyQuote(quote);
   }
 
   /// Fetch data.
@@ -289,6 +294,16 @@ class _ListPageState extends State<ListPage> with UiLoggy {
         .startAfterDocument(lastDocument);
   }
 
+  void initProps() async {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+
+      setState(() {
+        _animateList = false;
+      });
+    });
+  }
+
   /// Exit create mode and hide text inputs.
   void onCancelCreateMode() {
     setState(() {
@@ -296,6 +311,11 @@ class _ListPageState extends State<ListPage> with UiLoggy {
       _nameController.text = "";
       _descriptionController.text = "";
     });
+  }
+
+  /// Copy a quote's name.
+  void onCopy(Quote quote) {
+    QuoteActions.copyQuote(quote);
   }
 
   /// Callback to enter create mode.
@@ -428,6 +448,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
           .update(_quoteList.toMapUpdate());
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
 
       setState(() {
         _quoteList = _quoteList.copyWith(

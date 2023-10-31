@@ -4,15 +4,16 @@ import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/application_bar.dart";
+import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/dashboard/dashboard_card.dart";
+import "package:kwotes/screens/dashboard/dashboard_fab.dart";
+import "package:kwotes/screens/signin/signin_page.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
-import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:unicons/unicons.dart";
 
@@ -21,103 +22,100 @@ class DashboardWelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Signal<UserFirestore> userFirestoreSignal =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final Topic randomTopic = Constants.colors.getRandomTopic();
+    final Color randomColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
+
+    final UserFirestore userFirestore =
+        context.observe<UserFirestore>(EnumSignalId.userFirestore);
+
+    if (userFirestore.id.isEmpty) {
+      return const SigninPage();
+    }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        elevation: 0.0,
-        hoverElevation: 4.0,
-        focusElevation: 0.0,
-        highlightElevation: 0.0,
-        splashColor: Colors.white,
-        onPressed: () => goToAddQuotePage(context),
-        backgroundColor: randomTopic.color,
-        icon: const Icon(TablerIcons.quote),
-        foregroundColor: randomTopic.color.computeLuminance() > 0.4
-            ? Colors.black
-            : Colors.white,
-        label: Text(
-          "quote.add.a".tr(),
-          style: Utils.calligraphy.body(
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
+      floatingActionButton: DashboardFab(
+        isMobileSize: isMobileSize,
+        onGoToAddQuotePage: onGoToAddQuotePage,
+        randomColor: randomColor,
       ),
       body: CustomScrollView(
         slivers: [
-          const ApplicationBar(),
           SliverList(
             delegate: SliverChildListDelegate.fixed([
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 16.0,
-                  left: 48.0,
-                ),
-                child: SignalBuilder(
-                  signal: userFirestoreSignal,
-                  builder: (
-                    BuildContext context,
-                    UserFirestore userFirestore,
-                    Widget? child,
-                  ) {
-                    return Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${"welcome_back".tr()},",
-                            style: TextStyle(
-                              color: foregroundColor?.withOpacity(0.5),
-                              fontWeight: FontWeight.w100,
-                              fontSize: 24.0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "\n${userFirestore.name}",
-                            style: TextStyle(
-                              color: foregroundColor?.withOpacity(0.7),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          TextSpan(
-                            text: ".",
-                            style: Utils.calligraphy.title(
-                              textStyle: TextStyle(
-                                color: randomTopic.color,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: Utils.calligraphy.title(
-                        textStyle: const TextStyle(
-                          fontSize: 54.0,
-                          height: 1.0,
-                        ),
-                      ),
-                    );
-                  },
+              const Align(
+                alignment: Alignment.topLeft,
+                child: AppIcon(
+                  margin: EdgeInsets.only(top: 24.0, left: 12.0),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                  top: 24.0,
-                  left: 48.0,
-                  bottom: 92.0,
-                ),
+                  padding: isMobileSize
+                      ? const EdgeInsets.only(top: 12.0, left: 24.0)
+                      : const EdgeInsets.only(
+                          top: 12.0,
+                          left: 48.0,
+                        ),
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "${"welcome_back".tr()},",
+                          style: TextStyle(
+                            color: foregroundColor?.withOpacity(0.4),
+                            fontWeight: FontWeight.w100,
+                            fontSize: isMobileSize ? 16.0 : 24.0,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "\n${userFirestore.name}",
+                          style: TextStyle(
+                            color: foregroundColor?.withOpacity(0.7),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ".",
+                          style: Utils.calligraphy.title(
+                            textStyle: TextStyle(
+                              color: randomColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    style: Utils.calligraphy.title(
+                      textStyle: TextStyle(
+                        fontSize: isMobileSize ? 42.0 : 54.0,
+                        height: 1.0,
+                      ),
+                    ),
+                  )),
+              Padding(
+                padding: isMobileSize
+                    ? const EdgeInsets.only(
+                        top: 36.0,
+                        left: 12.0,
+                        right: 12.0,
+                        bottom: 192.0,
+                      )
+                    : const EdgeInsets.only(
+                        top: 24.0,
+                        left: 48.0,
+                        right: 48.0,
+                        bottom: 92.0,
+                      ),
                 child: Wrap(
                   spacing: 12.0,
                   runSpacing: 12.0,
                   children: [
                     DashboardCard(
-                      elevation: 0.0,
+                      compact: isMobileSize,
                       iconData: UniconsLine.heart,
                       hoverColor: Constants.colors.likes,
                       textSubtitle: "favourites.description".tr(),
@@ -130,7 +128,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       },
                     ),
                     DashboardCard(
-                      elevation: 0.0,
+                      compact: isMobileSize,
                       hoverColor: Constants.colors.lists,
                       iconData: UniconsLine.list_ul,
                       textSubtitle: "lists.description".tr(),
@@ -143,12 +141,12 @@ class DashboardWelcomePage extends StatelessWidget {
                       },
                     ),
                     DashboardCard(
-                      elevation: 0.0,
+                      compact: isMobileSize,
                       hoverColor: Constants.colors.inValidation,
                       iconData: UniconsLine.clock,
                       textSubtitle: "in_validation.description".tr(),
                       textTitle: "in_validation.name".tr(),
-                      heroKey: "inValidation",
+                      heroKey: "in_validation",
                       onTap: () {
                         context.beamToNamed(
                           DashboardContentLocation.inValidationRoute,
@@ -156,7 +154,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       },
                     ),
                     DashboardCard(
-                      elevation: 0.0,
+                      compact: isMobileSize,
                       hoverColor: Constants.colors.published,
                       iconData: TablerIcons.send,
                       textSubtitle: "published.description".tr(),
@@ -169,7 +167,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       },
                     ),
                     DashboardCard(
-                      elevation: 0.0,
+                      compact: isMobileSize,
                       hoverColor: Constants.colors.drafts,
                       iconData: TablerIcons.note,
                       textSubtitle: "drafts.description".tr(),
@@ -182,7 +180,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       },
                     ),
                     DashboardCard(
-                      elevation: 0.0,
+                      compact: isMobileSize,
                       iconData: TablerIcons.settings,
                       hoverColor: Constants.colors.settings,
                       textSubtitle: "settings.description".tr(),
@@ -195,9 +193,9 @@ class DashboardWelcomePage extends StatelessWidget {
                       },
                     ),
                   ]
-                      .animate(interval: 75.ms)
+                      .animate(interval: 25.ms)
                       .fadeIn(duration: 200.ms, curve: Curves.decelerate)
-                      .slideX(begin: 0.2, end: 0.0),
+                      .slideY(begin: 0.2, end: 0.0),
                 ),
               ),
             ]),
@@ -208,7 +206,7 @@ class DashboardWelcomePage extends StatelessWidget {
   }
 
   /// Navigate to the add/edit quote page.
-  void goToAddQuotePage(BuildContext context) {
+  void onGoToAddQuotePage(BuildContext context) {
     NavigationStateHelper.quote = Quote.empty();
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
   }

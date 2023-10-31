@@ -28,7 +28,7 @@ class _UndefinedPageState extends State<UndefinedPage> {
 
     if (history.isNotEmpty) {
       final beamLocation = history.last;
-      location = beamLocation.state.routeInformation.location ?? "";
+      location = beamLocation.state.routeInformation.uri.toString();
     }
 
     return Scaffold(

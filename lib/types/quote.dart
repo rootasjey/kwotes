@@ -108,11 +108,11 @@ class Quote {
       "language": language.isEmpty ? "en" : language,
       "name": name,
       "reference": reference.toMap(minimal: true),
-      // if (operation == EnumQuoteOperation.create)
-      //   "metrics": {
-      //     "likes": likes,
-      //     "shares": shares,
-      //   },
+      if (operation == EnumQuoteOperation.restore)
+        "metrics": {
+          "likes": likes,
+          "shares": shares,
+        },
       "topics": topics.fold(<String, bool>{}, (
         Map<String, bool> previousValue,
         String topicString,
@@ -128,24 +128,6 @@ class Quote {
 
     return baseMap;
   }
-
-  /// Convert the current instance to a map suitable to draft collection.
-  // Map<String, dynamic> toMapDraft({String userId = ""}) {
-  //   final Map<String, dynamic> baseMap = toMap(userId: userId);
-  //   baseMap["author"] = author.toMap();
-  //   baseMap["reference"] = reference.toMap();
-  //   baseMap["validation"] = Validation.empty().toMap();
-  //   return baseMap;
-  // }
-
-  /// Convert the current instance to a map suitable to draft collection.
-  // Map<String, dynamic> toMapUpdateDraft({String userId = ""}) {
-  //   final Map<String, dynamic> baseMap = toMap(userId: userId, update: true);
-  //   baseMap["author"] = author.toMap();
-  //   baseMap["reference"] = reference.toMap();
-  //   baseMap["validation"] = Validation.empty().toMap();
-  //   return baseMap;
-  // }
 
   /// Convert the current instance to a map for user's favourites.
   Map<String, dynamic> toMapFavourite() {

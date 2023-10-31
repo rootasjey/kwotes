@@ -6,6 +6,9 @@ enum EnumQuoteOperation {
   /// Create a new draft quote.
   create,
 
+  /// Restore a deleted quote.
+  restore,
+
   /// Update an existing draft.
   update,
 

@@ -1,8 +1,10 @@
+import "package:flutter/foundation.dart";
 import "package:glutton/glutton.dart";
 import "package:kwotes/types/credentials.dart";
 import "package:kwotes/globals/constants/storage_keys.dart";
+import "package:kwotes/types/enums/enum_data_ownership.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
-import "package:kwotes/types/enums/enum_search_entity.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 
 class Vault {
   Future<bool> clearCredentials() {
@@ -54,17 +56,17 @@ class Vault {
     Glutton.eat(StorageKeys.heroImageControlVivisible, newValue);
   }
 
-  Future<bool> saveLastSearchType(EnumSearchEntity searchEntity) async {
+  Future<bool> saveLastSearchCategory(EnumSearchCategory searchEntity) async {
     return Glutton.eat(StorageKeys.lastSearchType, searchEntity.index);
   }
 
-  Future<EnumSearchEntity> getLastSearchType() async {
+  Future<EnumSearchCategory> getLastSearchCategory() async {
     final int index = await Glutton.vomit(
       StorageKeys.lastSearchType,
-      EnumSearchEntity.quote.index,
+      EnumSearchCategory.quote.index,
     );
 
-    return EnumSearchEntity.values[index];
+    return EnumSearchCategory.values[index];
   }
 
   /// Return the saved value for language selection.
@@ -84,12 +86,114 @@ class Vault {
   }
 
   /// Return the last saved value for app language.
-  Future<String> getLanguage() async {
-    return await Glutton.vomit(StorageKeys.language, "en");
+  Future<EnumLanguageSelection> getLanguage() async {
+    // return await Glutton.vomit(StorageKeys.language, "en");
+    final int index = await Glutton.vomit(StorageKeys.language, 0);
+    return EnumLanguageSelection.values[index];
   }
 
   /// Saves the app language.
-  void setLanguage(String locale) {
-    Glutton.eat(StorageKeys.language, locale);
+  void setLanguage(EnumLanguageSelection locale) {
+    Glutton.eat(StorageKeys.language, locale.index);
+  }
+
+  /// Return the last saved value for page language (e.g. published quotes page).
+  /// Default to `all`. Can also be `en`, `fr`, etc.
+  Future<EnumLanguageSelection> getPageLanguage() async {
+    final int index = await Glutton.vomit(StorageKeys.selectedPageLanguage, 0);
+    return EnumLanguageSelection.values[index];
+  }
+
+  /// Saves page language (e.g. published quotes page).
+  void setPageLanguage(EnumLanguageSelection locale) {
+    Glutton.eat(StorageKeys.selectedPageLanguage, locale.index);
+  }
+
+  /// Return the last saved value for header options.
+  Future<bool> geShowtHeaderOptions() async {
+    return await Glutton.vomit(StorageKeys.showHeaderOptions, true);
+  }
+
+  /// Saves header options state.
+  void setShowHeaderOptions(bool value) {
+    Glutton.eat(StorageKeys.showHeaderOptions, value);
+  }
+
+  /// Return the last saved value for header options.
+  Future<EnumDataOwnership> getDataOwnership() async {
+    final int savedIndex = await Glutton.vomit(
+        StorageKeys.dataOwnership, EnumDataOwnership.owned.index);
+
+    return EnumDataOwnership.values[savedIndex];
+  }
+
+  /// Saves header options state.
+  void setDataOwnership(EnumDataOwnership ownership) {
+    Glutton.eat(StorageKeys.dataOwnership, ownership.index);
+  }
+
+  void setHomePageTabIndex(int index) {
+    Glutton.eat(StorageKeys.homePageTabIndex, index);
+  }
+
+  Future<int> getHomePageTabIndex() async {
+    return await Glutton.vomit(StorageKeys.homePageTabIndex, 0);
+  }
+
+  void setAuthorMetadataOpened(bool isOpen) {
+    Glutton.eat(StorageKeys.authorMetadataOpened, isOpen);
+  }
+
+  Future<bool> getAuthorMetadataOpened() async {
+    return await Glutton.vomit(
+      StorageKeys.authorMetadataOpened,
+      true,
+    );
+  }
+
+  void setReferenceMetadataOpened(bool isOpen) {
+    Glutton.eat(StorageKeys.referenceMetadataOpened, isOpen);
+  }
+
+  Future<bool> getReferenceMetadataOpened() async {
+    return await Glutton.vomit(
+      StorageKeys.referenceMetadataOpened,
+      true,
+    );
+  }
+
+  void setAddAuthorMetadataOpened(bool isOpen) {
+    Glutton.eat(StorageKeys.addAuthorMetadataOpened, isOpen);
+  }
+
+  Future<bool> getAddAuthorMetadataOpened() async {
+    return await Glutton.vomit(
+      StorageKeys.addAuthorMetadataOpened,
+      true,
+    );
+  }
+
+  void setAddReferenceMetadataOpened(bool isOpen) {
+    Glutton.eat(StorageKeys.addAuthorMetadataOpened, isOpen);
+  }
+
+  Future<bool> getAddReferenceMetadataOpened() async {
+    return await Glutton.vomit(
+      StorageKeys.addAuthorMetadataOpened,
+      true,
+    );
+  }
+
+  void setBrightness(Brightness brightness) {
+    Glutton.eat(StorageKeys.brightness, brightness.index);
+  }
+
+  Future<Brightness> getBrightness() async {
+    final int index = await Glutton.vomit(
+      StorageKeys.brightness,
+      Brightness.light.index,
+    );
+
+    return Brightness.values[index];
   }
 }

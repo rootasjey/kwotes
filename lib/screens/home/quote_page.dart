@@ -92,6 +92,10 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       Text(_quote.name, style: Utils.calligraphy.body()),
     );
 
+    final bool isMobileSize =
+        windowSize.width < Utils.measurements.mobileWidthTreshold ||
+            windowSize.height < Utils.measurements.mobileWidthTreshold;
+
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
@@ -109,49 +113,56 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
           onInvoke: (LikeIntent intent) => onToggleFavourite(),
         ),
       },
-      child: QuotePageContainer(
-        borderColor: getTopicColor(),
-        heroTag: widget.quoteId,
-        onTapOutsideChild: context.beamBack,
-        child: Stack(
-          children: [
-            SignalBuilder(
-              signal: signalUserFirestore,
-              builder: (
-                BuildContext context,
-                UserFirestore userFirestore,
-                Widget? child,
-              ) {
-                return QuotePageBody(
-                  pageState: _pageState,
-                  quote: _quote,
-                  onDoubleTapQuote: onCopyQuote,
-                  onCopyQuote: onCopyQuote,
-                  onCopyAuthor: onCopyAuthorName,
-                  onCopyReference: onCopyReference,
-                  onTapAuthor: onTapAuthor,
-                  onTapReference: onTapReference,
-                  onCopyQuoteUrl: onCopyQuoteUrl,
-                  onCopyAuthorUrl: onCopyAuthorUrl,
-                  onCopyReferenceUrl: onCopyReferenceUrl,
-                  textWrapSolution: textWrapSolution,
-                  userFirestore: userFirestore,
-                );
-              },
-            ),
-            Positioned(
-              top: 24.0,
-              right: 24.0,
-              child: QuotePageActions(
-                copyIcon: copyIcon,
-                quote: _quote,
-                copyTooltip: copyTooltip,
-                onCopyQuote: onCopyQuote,
-                onToggleFavourite: onToggleFavourite,
-                onAddToList: onAddToList,
-              ),
-            ),
-          ],
+      child: SafeArea(
+        child: QuotePageContainer(
+          borderColor: getTopicColor(),
+          heroTag: widget.quoteId,
+          isMobileSize: isMobileSize,
+          onTapOutsideChild: context.beamBack,
+          child: SignalBuilder(
+            signal: signalUserFirestore,
+            builder: (
+              BuildContext context,
+              UserFirestore userFirestore,
+              Widget? child,
+            ) {
+              return Stack(
+                children: [
+                  QuotePageBody(
+                    pageState: _pageState,
+                    quote: _quote,
+                    onDoubleTapQuote: onCopyQuote,
+                    onCopyQuote: onCopyQuote,
+                    onCopyAuthor: onCopyAuthorName,
+                    onCopyReference: onCopyReference,
+                    onTapAuthor: onTapAuthor,
+                    onTapReference: onTapReference,
+                    onCopyQuoteUrl: onCopyQuoteUrl,
+                    onCopyAuthorUrl: onCopyAuthorUrl,
+                    onCopyReferenceUrl: onCopyReferenceUrl,
+                    textWrapSolution: textWrapSolution,
+                    userFirestore: userFirestore,
+                  ),
+                  Positioned(
+                    top: isMobileSize ? null : 24.0,
+                    right: isMobileSize ? 0.0 : 24.0,
+                    bottom: isMobileSize ? 24.0 : null,
+                    left: isMobileSize ? 0.0 : null,
+                    child: QuotePageActions(
+                      copyIcon: copyIcon,
+                      direction: isMobileSize ? Axis.horizontal : Axis.vertical,
+                      isAuthenticated: userFirestore.id.isNotEmpty,
+                      quote: _quote,
+                      copyTooltip: copyTooltip,
+                      onCopyQuote: onCopyQuote,
+                      onToggleFavourite: onToggleFavourite,
+                      onAddToList: onAddToList,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

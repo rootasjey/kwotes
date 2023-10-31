@@ -60,11 +60,13 @@ class EmailPageBody extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(isMobileSize ? 12.0 : 40.0),
+        padding: isMobileSize
+            ? const EdgeInsets.all(24.0)
+            : const EdgeInsets.all(40.0),
         child: Column(
           children: [
             SizedBox(
-              width: 352.0,
+              width: isMobileSize ? null : 352.0,
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(
@@ -100,8 +102,10 @@ class EmailPageBody extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-              width: 352.0,
+              padding: isMobileSize
+                  ? const EdgeInsets.only(top: 0.0, bottom: 12.0)
+                  : const EdgeInsets.only(top: 12.0, bottom: 12.0),
+              width: isMobileSize ? null : 352.0,
               child: Column(
                 children: [
                   OutlinedTextField(
@@ -143,6 +147,7 @@ class EmailPageBody extends StatelessWidget {
                       padding: const EdgeInsets.all(14.0),
                       child: Text(
                         "email.update".tr().toUpperCase(),
+                        overflow: TextOverflow.ellipsis,
                         style: Utils.calligraphy.body(
                           textStyle: const TextStyle(
                             fontSize: 15.0,

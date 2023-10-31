@@ -2,11 +2,10 @@ import "package:animated_text_kit/animated_text_kit.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:jiffy/jiffy.dart";
-import "package:kwotes/components/better_avatar.dart";
-import "package:kwotes/globals/constants.dart";
+import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/author/author_metadata_column.dart";
+import "package:kwotes/screens/author/author_metadata_row.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
@@ -14,44 +13,93 @@ class AuthorPageBody extends StatelessWidget {
   const AuthorPageBody({
     super.key,
     required this.author,
+    this.areMetadataOpen = true,
+    this.isMobileSize = false,
+    this.randomColor,
+    this.maxHeight = double.infinity,
     this.pageState = EnumPageState.idle,
     this.onTapSeeQuotes,
+    this.onTapAuthorName,
+    this.onToggleMetadata,
+    this.authorNameTextStyle = const TextStyle(),
   });
 
   /// Author data for this component.
   final Author author;
 
+  /// Expand this widget if true.
+  final bool areMetadataOpen;
+
+  /// Adapt UI for mobile size.
+  final bool isMobileSize;
+
+  /// Random topic color.
+  final Color? randomColor;
+
+  /// Max height.
+  final double maxHeight;
+
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
 
+  /// Callback fired when the author name is tapped.
+  final void Function()? onTapAuthorName;
+
   /// Callback fired when the "see related quotes" button is tapped.
   final void Function()? onTapSeeQuotes;
+
+  /// Callback fired to toggle author metadata widget size.
+  final void Function()? onToggleMetadata;
+
+  /// Author name text style.
+  final TextStyle authorNameTextStyle;
 
   @override
   Widget build(BuildContext context) {
     final Color foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
 
+    if (pageState == EnumPageState.loading) {
+      return LoadingView(
+        message: "${"author.loading".tr()}...",
+      );
+    }
+
     return SliverPadding(
-      padding: const EdgeInsets.only(
-        left: 48.0,
+      padding: EdgeInsets.only(
+        left: isMobileSize ? 24.0 : 48.0,
         right: 24.0,
+        bottom: 190.0,
       ),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
-          Hero(
-            tag: author.id,
-            child: Material(
-              color: Colors.transparent,
-              child: Text(
-                author.name,
-                style: Utils.calligraphy.title(
-                  textStyle: const TextStyle(
-                    fontSize: 68.0,
+          GestureDetector(
+            onTap: onTapAuthorName,
+            child: Padding(
+              padding: isMobileSize
+                  ? const EdgeInsets.only(bottom: 24.0)
+                  : EdgeInsets.zero,
+              child: Hero(
+                tag: author.id,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Text(
+                    author.name,
+                    style: Utils.calligraphy.title(
+                      textStyle: authorNameTextStyle,
+                    ),
                   ),
                 ),
               ),
             ),
+          ),
+          AuthorMetadaColumn(
+            author: author,
+            foregroundColor: foregroundColor,
+            isOpen: areMetadataOpen,
+            onToggleOpen: onToggleMetadata,
+            margin: const EdgeInsets.only(bottom: 24.0),
+            show: isMobileSize,
           ),
           AnimatedTextKit(
             isRepeatingAnimation: false,
@@ -63,128 +111,18 @@ class AuthorPageBody extends StatelessWidget {
                 curve: Curves.decelerate,
                 textStyle: Utils.calligraphy.body(
                   textStyle: TextStyle(
-                    fontSize: 24.0,
+                    fontSize: isMobileSize ? 16.0 : 24.0,
                     color: foregroundColor.withOpacity(0.6),
                   ),
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 24.0),
-            child: Wrap(
-              children: [
-                if (author.urls.image.isNotEmpty)
-                  Card(
-                    elevation: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          BetterAvatar(
-                            radius: 16.0,
-                            avatarMargin: EdgeInsets.zero,
-                            imageProvider: NetworkImage(author.urls.image),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (author.job.isNotEmpty)
-                  Card(
-                    elevation: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(
-                              TablerIcons.briefcase,
-                              color: foregroundColor.withOpacity(0.6),
-                            ),
-                          ),
-                          Text(author.job),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (!author.birth.dateEmpty)
-                  Card(
-                    elevation: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(
-                              TablerIcons.horse_toy,
-                              color: foregroundColor.withOpacity(0.6),
-                            ),
-                          ),
-                          Text(
-                            Jiffy.parseFromDateTime(author.birth.date).yMMMMd,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (!author.death.dateEmpty)
-                  Card(
-                    elevation: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(
-                              TablerIcons.skull,
-                              color: foregroundColor.withOpacity(0.6),
-                            ),
-                          ),
-                          Text(
-                            Jiffy.parseFromDateTime(author.death.date).yMMMMd,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (author.isFictional)
-                  Card(
-                    elevation: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(
-                              TablerIcons.wand,
-                              color: foregroundColor.withOpacity(0.6),
-                            ),
-                          ),
-                          Text("fictional".tr()),
-                        ],
-                      ),
-                    ),
-                  ),
-              ]
-                  .animate(interval: 100.ms)
-                  .fadeIn(duration: 300.ms, curve: Curves.decelerate)
-                  .slideX(begin: 0.2, end: 0.0),
-            ),
+          AuthorMetadaRow(
+            author: author,
+            foregroundColor: foregroundColor,
+            margin: const EdgeInsets.only(top: 24.0),
+            show: !isMobileSize,
           ),
           Align(
             alignment: Alignment.topLeft,
@@ -193,19 +131,19 @@ class AuthorPageBody extends StatelessWidget {
               child: TextButton(
                 onPressed: onTapSeeQuotes,
                 style: TextButton.styleFrom(
-                  foregroundColor: Constants.colors.getRandomFromPalette(),
+                  foregroundColor: randomColor,
                 ),
                 child: Text(
                   "see_related_quotes".tr(),
                   style: Utils.calligraphy.body(
-                    textStyle: const TextStyle(
-                      fontSize: 24.0,
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 24.0,
                     ),
                   ),
                 ),
               ),
             ),
-          ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.8, end: 0.0),
+          ).animate().slideY(begin: 0.8, end: 0.0, duration: 250.ms).fadeIn(),
         ]),
       ),
     );

@@ -16,10 +16,14 @@ class ListsPageCreate extends StatelessWidget {
     this.hintName = "",
     this.hintDescription = "",
     this.accentColor = Colors.amber,
+    this.isMobileSize = false,
   });
 
   /// Display this widget if true.
   final bool show;
+
+  /// Adapt UI for mobile size.
+  final bool isMobileSize;
 
   /// Accent color.
   final Color accentColor;
@@ -50,11 +54,17 @@ class ListsPageCreate extends StatelessWidget {
         curve: Curves.decelerate,
         child: Container(
           height: show ? null : 0.0,
-          padding: const EdgeInsets.only(
-            left: 24.0,
-            right: 90.0,
-            bottom: 24.0,
-          ),
+          padding: isMobileSize
+              ? const EdgeInsets.only(
+                  left: 24.0,
+                  right: 24.0,
+                  bottom: 24.0,
+                )
+              : const EdgeInsets.only(
+                  left: 24.0,
+                  right: 90.0,
+                  bottom: 24.0,
+                ),
           child: Material(
             shape: RoundedRectangleBorder(
               side: BorderSide(
@@ -77,8 +87,10 @@ class ListsPageCreate extends StatelessWidget {
                         onChanged: onNameChanged,
                         textInputAction: TextInputAction.next,
                         style: Utils.calligraphy.body(
-                          textStyle: const TextStyle(
-                              fontSize: 42.0, fontWeight: FontWeight.w200),
+                          textStyle: TextStyle(
+                            fontSize: isMobileSize ? 24.0 : 42.0,
+                            fontWeight: FontWeight.w200,
+                          ),
                         ),
                         decoration: InputDecoration(
                           hintText: hintName,

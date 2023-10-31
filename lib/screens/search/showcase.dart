@@ -4,7 +4,7 @@ import "package:kwotes/screens/search/showcase_quotes.dart";
 import "package:kwotes/screens/search/showcase_references.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
-import "package:kwotes/types/enums/enum_search_entity.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 
@@ -15,13 +15,17 @@ class Showcase extends StatelessWidget {
     this.references = const [],
     this.topicColors = const [],
     this.pageState = EnumPageState.idle,
-    this.searchEntity = EnumSearchEntity.quote,
+    this.searchCategory = EnumSearchCategory.quote,
     this.show = true,
     this.margin = EdgeInsets.zero,
     this.onTapAuthor,
     this.onTapReference,
     this.onTapTopicColor,
+    this.isMobileSize = false,
   });
+
+  /// Adapt UI to mobile size.
+  final bool isMobileSize;
 
   /// Show or hide the showcase.
   final bool show;
@@ -33,7 +37,7 @@ class Showcase extends StatelessWidget {
   final EnumPageState pageState;
 
   /// What type of entity we are searching.
-  final EnumSearchEntity searchEntity;
+  final EnumSearchCategory searchCategory;
 
   /// List of authors.
   final List<Author> authors;
@@ -59,16 +63,18 @@ class Showcase extends StatelessWidget {
       return const SliverToBoxAdapter();
     }
 
-    if (searchEntity == EnumSearchEntity.author) {
+    if (searchCategory == EnumSearchCategory.author) {
       return ShowcaseAuthors(
-        margin: margin,
         authors: authors,
+        isMobileSize: isMobileSize,
+        margin: margin,
         onTapAuthor: onTapAuthor,
       );
     }
 
-    if (searchEntity == EnumSearchEntity.reference) {
+    if (searchCategory == EnumSearchCategory.reference) {
       return ShowcaseReferences(
+        isMobileSize: isMobileSize,
         margin: margin,
         references: references,
         onTapReference: onTapReference,
@@ -76,6 +82,7 @@ class Showcase extends StatelessWidget {
     }
 
     return ShowcaseQuotes(
+      isMobileSize: isMobileSize,
       margin: margin,
       topicColors: topicColors,
       onTapTopicColor: onTapTopicColor,

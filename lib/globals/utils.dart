@@ -10,6 +10,7 @@ import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/globals/utils/search.dart";
 import "package:kwotes/globals/utils/tic_tac.dart";
 import "package:kwotes/globals/utils/vault.dart";
+import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/topic.dart";
 
@@ -78,7 +79,7 @@ class Utils {
 
     final List<Topic> list = [];
 
-    for (var doc in snapshot.docs) {
+    for (final QueryDocSnapMap doc in snapshot.docs) {
       final topicColor = Topic.fromMap(doc.data());
       list.add(topicColor);
     }

@@ -1,6 +1,8 @@
 import "dart:ui";
 
 import "package:adaptive_theme/adaptive_theme.dart";
+import "package:beamer/beamer.dart";
+import "package:dismissible_page/dismissible_page.dart";
 import "package:flutter/material.dart";
 
 class QuotePageContainer extends StatelessWidget {
@@ -9,10 +11,14 @@ class QuotePageContainer extends StatelessWidget {
     super.key,
     required this.borderColor,
     required this.child,
+    this.isMobileSize = false,
     this.borderRadius = const BorderRadius.all(Radius.circular(12.0)),
     this.heroTag = "",
     this.onTapOutsideChild,
   });
+
+  /// Adapt user interface to small screens.
+  final bool isMobileSize;
 
   /// Border radius for this widget.
   final BorderRadiusGeometry borderRadius;
@@ -42,23 +48,31 @@ class QuotePageContainer extends StatelessWidget {
         child: Container(
           color: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.all(42.0),
+            padding:
+                isMobileSize ? EdgeInsets.zero : const EdgeInsets.all(42.0),
             child: GestureDetector(
               onTap: () {},
               child: Hero(
                 tag: heroTag,
-                child: Material(
-                  elevation: 8.0,
-                  color: backgroundColor,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: borderColor, width: 2.0),
-                    borderRadius: borderRadius,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: borderRadius,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                      child: child,
+                child: DismissiblePage(
+                  onDismissed: context.beamBack,
+                  backgroundColor: Colors.transparent,
+                  child: Material(
+                    elevation: 8.0,
+                    color: backgroundColor,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: borderColor,
+                        width: isMobileSize ? 4.0 : 2.0,
+                      ),
+                      borderRadius: borderRadius,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: borderRadius,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                        child: child,
+                      ),
                     ),
                   ),
                 ),

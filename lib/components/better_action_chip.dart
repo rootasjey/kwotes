@@ -6,6 +6,7 @@ class BetterActionChip extends StatefulWidget {
     super.key,
     required this.label,
     this.backgroundColor,
+    this.margin = EdgeInsets.zero,
     this.onPressed,
     this.tooltip,
     this.avatar,
@@ -19,6 +20,9 @@ class BetterActionChip extends StatefulWidget {
   /// This controls the size of the shadow below the chip.
   /// Defaults to 0. The value is always non-negative.
   final double? elevation;
+
+  /// Space around this widget.
+  final EdgeInsets margin;
 
   /// Callback fired when the chip is tapped.
   final void Function()? onPressed;
@@ -73,14 +77,17 @@ class _BetterActionChipState extends State<BetterActionChip> {
           _elevation = _startElevation;
         });
       },
-      child: ActionChip(
-        tooltip: widget.tooltip,
-        elevation: _elevation,
-        pressElevation: 0.0,
-        onPressed: widget.onPressed,
-        avatar: widget.avatar,
-        label: widget.label,
-        backgroundColor: backgroundColor,
+      child: Padding(
+        padding: widget.margin,
+        child: ActionChip(
+          tooltip: widget.tooltip,
+          elevation: _elevation,
+          pressElevation: 0.0,
+          onPressed: widget.onPressed,
+          avatar: widget.avatar,
+          label: widget.label,
+          backgroundColor: backgroundColor,
+        ),
       ),
     );
   }

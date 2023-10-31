@@ -10,7 +10,11 @@ class TopicCard extends StatefulWidget {
     required this.topic,
     this.foregroundColor,
     this.onTapTopicColor,
+    this.isTiny = false,
   });
+
+  /// Card size is reduced if this is true.
+  final bool isTiny;
 
   /// Foreground color.
   final Color? foregroundColor;
@@ -50,6 +54,7 @@ class _TopicCardState extends State<TopicCard> {
     final Topic topicColor = widget.topic;
     final Color? foregroundColor = widget.foregroundColor;
     final Brightness brightness = Theme.of(context).brightness;
+    final double dimension = widget.isTiny ? 90.0 : 100.0;
 
     return Card(
       elevation: _cardElevation,
@@ -82,8 +87,8 @@ class _TopicCardState extends State<TopicCard> {
           });
         },
         child: Container(
-          width: 100.0,
-          height: 100.0,
+          width: dimension,
+          height: dimension,
           padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -97,6 +102,8 @@ class _TopicCardState extends State<TopicCard> {
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
                   topicColor.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Utils.calligraphy.body(
                     textStyle: TextStyle(
                       fontSize: 12.0,

@@ -2,17 +2,17 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
-import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class AccountSettings extends StatelessWidget {
   /// User account settings component.
   const AccountSettings({
     super.key,
+    required this.userFirestore,
+    this.isMobileSize = false,
     this.onTapUpdateEmail,
     this.onTapUpdatePassword,
     this.onTapUpdateUsername,
@@ -21,6 +21,9 @@ class AccountSettings extends StatelessWidget {
     this.onTapAccountDisplayedValue,
     this.enumAccountDisplayed = EnumAccountDisplayed.name,
   });
+
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
 
   /// Enum representing the account displayed text value on settings page.
   final EnumAccountDisplayed enumAccountDisplayed;
@@ -43,53 +46,48 @@ class AccountSettings extends StatelessWidget {
   /// Callback fired when the account displayed value is tapped.
   final void Function()? onTapAccountDisplayedValue;
 
+  final UserFirestore userFirestore;
+
   @override
   Widget build(BuildContext context) {
-    final Signal<UserFirestore> userFirestoreSignal =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
-    final Color accentColor = Constants.colors.getRandomFromPalette();
+
+    final Color accentColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
 
     return SliverPadding(
-      padding: const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
+      padding: isMobileSize
+          ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+          : const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
       sliver: SliverList.list(children: [
-        SignalBuilder(
-          signal: userFirestoreSignal,
-          builder: (
-            BuildContext context,
-            UserFirestore userFirestore,
-            Widget? child,
-          ) {
-            return Text.rich(
-              TextSpan(text: "${"account.name".tr()}: ", children: [
-                TextSpan(
-                  text: enumAccountDisplayed == EnumAccountDisplayed.name
-                      ? userFirestore.name
-                      : userFirestore.email,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = onTapAccountDisplayedValue,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      color: accentColor,
-                    ),
-                  ),
-                ),
-              ]),
+        Text.rich(
+          TextSpan(text: "${"account.name".tr()}: ", children: [
+            TextSpan(
+              text: enumAccountDisplayed == EnumAccountDisplayed.name
+                  ? userFirestore.name
+                  : userFirestore.email,
+              recognizer: TapGestureRecognizer()
+                ..onTap = onTapAccountDisplayedValue,
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontSize: 72.0,
-                  fontWeight: FontWeight.w100,
-                  color: foregroundColor?.withOpacity(0.6),
+                  color: accentColor,
                 ),
               ),
-            )
-                .animate(delay: 150.ms)
-                .fadeIn(duration: 150.ms)
-                .slideY(begin: 0.8, end: 0.0, duration: 150.ms);
-          },
-        ),
+            ),
+          ]),
+          style: Utils.calligraphy.body(
+            textStyle: TextStyle(
+              fontSize: isMobileSize ? 42.0 : 72.0,
+              fontWeight: FontWeight.w100,
+              color: foregroundColor,
+            ),
+          ),
+        )
+            .animate(delay: 150.ms)
+            .fadeIn(duration: 150.ms)
+            .slideY(begin: 0.8, end: 0.0, duration: 150.ms),
         Wrap(
           spacing: 12.0,
           runSpacing: 12.0,

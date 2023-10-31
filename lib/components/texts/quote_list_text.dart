@@ -15,6 +15,7 @@ class QuoteListText extends StatefulWidget {
     this.margin = EdgeInsets.zero,
     this.isEditing = false,
     this.isDeleting = false,
+    this.tiny = false,
     this.onCancelEditMode,
     this.onSaveChanges,
     this.onConfirmDelete,
@@ -23,6 +24,9 @@ class QuoteListText extends StatefulWidget {
 
   /// Show text input if true.
   final bool isEditing;
+
+  /// Reduce font size if this true.
+  final bool tiny;
 
   /// Show confirm delete button if true.
   final bool isDeleting;
@@ -96,8 +100,8 @@ class _QuoteListTextState extends State<QuoteListText> {
                   widget.onSaveChanges?.call(name, ""),
               textInputAction: TextInputAction.go,
               style: Utils.calligraphy.body(
-                textStyle: const TextStyle(
-                  fontSize: 54.0,
+                textStyle: TextStyle(
+                  fontSize: widget.tiny ? 36.0 : 54.0,
                   fontWeight: FontWeight.w200,
                 ),
               ),
@@ -196,7 +200,7 @@ class _QuoteListTextState extends State<QuoteListText> {
                   quoteList.name,
                   style: Utils.calligraphy.body(
                     textStyle: TextStyle(
-                      fontSize: 54.0,
+                      fontSize: widget.tiny ? 36.0 : 54.0,
                       fontWeight: FontWeight.w200,
                       color: quoteList.id.isNotEmpty
                           ? foregroundColor?.withOpacity(0.8)

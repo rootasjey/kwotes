@@ -7,7 +7,7 @@ import "package:kwotes/screens/search/search_quote_results_page.dart";
 import "package:kwotes/screens/search/search_reference_results_page.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
-import "package:kwotes/types/enums/enum_search_entity.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
 
@@ -18,7 +18,7 @@ class SearchPageBody extends StatelessWidget {
     this.quoteResults = const [],
     this.margin = EdgeInsets.zero,
     this.isQueryEmpty = true,
-    this.searchEntity = EnumSearchEntity.quote,
+    this.searchCategory = EnumSearchCategory.quote,
     this.authorResults = const [],
     this.onTapAuthor,
     this.onTapReference,
@@ -45,8 +45,8 @@ class SearchPageBody extends StatelessWidget {
   /// Space around this widget.
   final EdgeInsets margin;
 
-  /// What type of entity we are searching.
-  final EnumSearchEntity searchEntity;
+  /// The specific category we are searching.
+  final EnumSearchCategory searchCategory;
 
   /// Callback fired when author name is tapped.
   final void Function(Author author)? onTapAuthor;
@@ -76,7 +76,7 @@ class SearchPageBody extends StatelessWidget {
       );
     }
 
-    if (searchEntity == EnumSearchEntity.quote) {
+    if (searchCategory == EnumSearchCategory.quote) {
       return SearchQuoteResultsPage(
         margin: margin,
         quoteResults: quoteResults,
@@ -84,7 +84,7 @@ class SearchPageBody extends StatelessWidget {
       );
     }
 
-    if (searchEntity == EnumSearchEntity.author) {
+    if (searchCategory == EnumSearchCategory.author) {
       return SearchAuthorResultsPage(
         margin: margin,
         authorResults: authorResults,

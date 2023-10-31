@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
@@ -15,11 +16,19 @@ class ListPageBody extends StatelessWidget {
     super.key,
     required this.quotes,
     required this.userId,
+    this.animateList = false,
     this.pageState = EnumPageState.idle,
     this.onRemove,
     this.onTap,
     this.onCopy,
+    this.isMobileSize = false,
   });
+
+  /// Animate list's items if true.
+  final bool animateList;
+
+  /// Adapt UI for mobile size.
+  final bool isMobileSize;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -56,7 +65,9 @@ class ListPageBody extends StatelessWidget {
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 48.0, right: 72.0),
+      padding: isMobileSize
+          ? const EdgeInsets.only(left: 24.0, right: 24.0)
+          : const EdgeInsets.only(left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return const Divider(
@@ -71,7 +82,16 @@ class ListPageBody extends StatelessWidget {
               quote: quote,
               margin: const EdgeInsets.only(bottom: 0.0),
               onTap: onTap,
-            ),
+              tiny: isMobileSize,
+            )
+                .animate()
+                .slideY(
+                  begin: 0.8,
+                  end: 0.0,
+                  duration: animateList ? 150.ms : 0.ms,
+                  curve: Curves.decelerate,
+                )
+                .fadeIn(),
             menuProvider: (MenuRequest menuRequest) {
               return Menu(
                 children: [

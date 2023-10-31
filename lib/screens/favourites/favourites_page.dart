@@ -1,13 +1,12 @@
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
+import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -20,7 +19,6 @@ import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/quote.dart";
-import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 
@@ -32,6 +30,9 @@ class FavouritesPage extends StatefulWidget {
 }
 
 class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
+  /// Animate list's items if true.
+  bool _animateList = true;
+
   /// True if more results can be loaded.
   bool _hasNextPage = true;
 
@@ -56,6 +57,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
@@ -67,6 +69,8 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     return Scaffold(
       body: ImprovedScrolling(
         scrollController: _pageScrollController,
@@ -74,15 +78,25 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
         child: ScrollConfiguration(
           behavior: const CustomScrollBehavior(),
           child: CustomScrollView(
+            controller: _pageScrollController,
             slivers: [
-              const ApplicationBar(),
-              const FavouritesPageHeader(),
+              PageAppBar(
+                childTitle: FavouritesPageHeader(
+                  isMobileSize: isMobileSize,
+                ),
+              ),
               FavouritesPageBody(
+                animateList: _animateList,
+                isMobileSize: isMobileSize,
                 pageState: _pageState,
                 quotes: _quotes,
                 onCopy: onCopy,
                 onRemove: onRemove,
                 onTap: onTap,
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.only(bottom: 90.0),
+                sliver: SliverToBoxAdapter(),
               ),
             ],
           ),
@@ -115,15 +129,19 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
 
   /// Fetch quotes from firebase.
   void fetch() async {
-    final UserAuth? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
+    final Signal<UserFirestore> currentUser =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    if (currentUser.value.id.isEmpty) {
       return;
     }
 
-    final String userId = currentUser.uid;
+    _pageState = _lastDocument == null
+        ? EnumPageState.loading
+        : EnumPageState.loadingMore;
 
     try {
-      final QueryMap query = getQuery(userId);
+      final QueryMap query = getQuery(currentUser.value.id);
       final QuerySnapMap snapshot = await query.get();
 
       if (snapshot.docs.isEmpty) {
@@ -184,6 +202,8 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
           .delete();
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
+
       setState(() {
         _quotes.insert(index, quote);
       });
@@ -201,8 +221,8 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
       return;
     }
 
-    if (_pageState == EnumPageState.searching ||
-        _pageState == EnumPageState.searchingMore) {
+    if (_pageState == EnumPageState.loading ||
+        _pageState == EnumPageState.loadingMore) {
       return;
     }
 
@@ -220,5 +240,14 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
         quote.id,
       ),
     );
+  }
+
+  void initProps() async {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {
+        _animateList = false;
+      });
+    });
   }
 }

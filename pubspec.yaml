@@ -40,6 +40,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   cloud_firestore: ^4.8.3
   cloud_functions: ^4.3.4
+  dismissible_page: ^1.0.2
+  easy_image_viewer: ^1.2.1
   easy_localization: ^3.0.2
   firebase_auth: ^4.7.1
   firebase_analytics: ^10.4.4
@@ -66,6 +68,8 @@ dependencies:
   modal_bottom_sheet: 3.0.0-pre
   photo_view: ^0.14.0
   random_text_reveal: ^0.0.6
+  rive: ^0.11.17
+  salomon_bottom_bar: ^3.3.2
   shimmer_animation: ^2.1.0+1
   simple_animations: ^5.0.2
   sliver_tools: ^0.2.12
@@ -109,6 +113,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/animations/dots-loading.json
+    - assets/animations/like-button.riv
     - assets/images/app_icon/32.png
     - assets/images/app_icon/64.png
     - assets/images/app_icon/90.png
@@ -117,7 +122,6 @@ flutter:
     - assets/images/app_icon/animation.gif
     - assets/images/citations365_lockscreen.png
     - assets/images/autoportrait.png
-    - assets/images/netflix.png
     - assets/translations/
     - var.env
 

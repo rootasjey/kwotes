@@ -335,11 +335,10 @@ class Graphic {
             ),
           ),
         ),
-        width: 310.0,
         showCloseIcon: true,
         backgroundColor: backgroundColor,
         closeIconColor: foregroundColor?.withOpacity(0.6),
-        behavior: SnackBarBehavior.floating,
+        behavior: SnackBarBehavior.fixed,
       ),
     );
   }
@@ -356,11 +355,10 @@ class Graphic {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: text,
-        width: 310.0,
         showCloseIcon: true,
         backgroundColor: backgroundColor,
         closeIconColor: foregroundColor?.withOpacity(0.6),
-        behavior: SnackBarBehavior.floating,
+        behavior: SnackBarBehavior.fixed,
       ),
     );
   }

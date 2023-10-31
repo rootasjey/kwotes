@@ -8,6 +8,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
+import "package:kwotes/globals/utils/passage.dart";
 import "package:loggy/loggy.dart";
 import "package:url_strategy/url_strategy.dart";
 import "package:window_manager/window_manager.dart";
@@ -34,6 +35,7 @@ void main() async {
   await dotenv.load(fileName: "var.env");
 
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
+  Passage.homePageTabIndex = await Utils.vault.getHomePageTabIndex();
   setPathUrlStrategy();
 
   if (!kIsWeb) {
@@ -50,20 +52,27 @@ void main() async {
       );
     }
 
+    final Brightness savedBrightness = await Utils.vault.getBrightness();
+    final bool isDark = savedBrightness == Brightness.dark;
+
     if (Platform.isAndroid || Platform.isIOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarColor: Constants.colors.lightBackground,
-          systemNavigationBarColor: Colors.white,
-          systemNavigationBarDividerColor: Colors.transparent,
-        ),
-      );
+      final SystemUiOverlayStyle overlayStyle = isDark
+          ? SystemUiOverlayStyle(
+              statusBarColor: Constants.colors.dark,
+              systemNavigationBarColor: Colors.black26,
+              systemNavigationBarDividerColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            )
+          : SystemUiOverlayStyle(
+              statusBarColor: Constants.colors.lightBackground,
+              systemNavigationBarColor: Colors.white,
+              systemNavigationBarDividerColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+            );
+
+      SystemChrome.setSystemUIOverlayStyle(overlayStyle);
     }
   }
-
-  await Future.wait([Utils.fetchTopicsColors()]);
-  Constants.colors.fillForegroundPalette();
-  Constants.colors.foregroundPalette.shuffle();
 
   await langdetect.initLangDetect();
 

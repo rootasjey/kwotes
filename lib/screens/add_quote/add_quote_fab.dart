@@ -10,6 +10,7 @@ class AddQuoteFAB extends StatelessWidget {
     super.key,
     required this.quote,
     this.canManageQuotes = false,
+    this.isMobileSize = false,
     this.fabForegroundColor,
     this.fabBackgroundColor,
     this.isQuoteValid = false,
@@ -21,6 +22,9 @@ class AddQuoteFAB extends StatelessWidget {
 
   /// Check if the quote's required properties are valid (name & topics).
   final bool isQuoteValid;
+
+  /// Adapt user interface to moile size if true.
+  final bool isMobileSize;
 
   /// Foreground color of the fab.
   final Color? fabForegroundColor;
@@ -36,6 +40,27 @@ class AddQuoteFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isMobileSize) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 32.0),
+        child: FloatingActionButton(
+          onPressed: onSubmitQuote,
+          backgroundColor: fabBackgroundColor,
+          foregroundColor: fabForegroundColor,
+          tooltip: isQuoteValid
+              ? "quote.submit.ok".tr()
+              : "quote.submit.required".tr(),
+          elevation: 0.0,
+          disabledElevation: 0.0,
+          hoverElevation: 4.0,
+          focusElevation: 0.0,
+          highlightElevation: 0.0,
+          mini: true,
+          splashColor: Colors.white,
+          child: const Icon(UniconsLine.message),
+        ),
+      );
+    }
     return FloatingActionButton.extended(
       elevation: 0.0,
       disabledElevation: 0.0,

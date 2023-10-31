@@ -5,7 +5,7 @@ import "package:kwotes/screens/forgot_password/forgot_password_page.dart";
 
 class ForgotPasswordLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
-  static const String route = "/forgotpassword";
+  static const String route = "/forgot-password";
 
   @override
   List<String> get pathPatterns => [route];

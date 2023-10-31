@@ -3,8 +3,17 @@ enum EnumPageState {
   /// Check if the username is available.
   checkingUsername,
 
+  /// Check if the email is available.
+  checkingEmail,
+
+  /// Creating a new account.
+  creatingAccount,
+
   /// Creating a new list.
   creatingList,
+
+  /// An action has been completed.
+  done,
 
   /// Loading data.
   loading,

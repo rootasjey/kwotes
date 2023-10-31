@@ -24,7 +24,15 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   /// Beamer key to navigate sub-locations.
-  final _beamerKey = GlobalKey<BeamerState>();
+  final GlobalKey<BeamerState> _beamerKey = GlobalKey<BeamerState>();
+
+  /// Beamer delegate to navigate sub-locations.
+  /// NOTE: Create delegate outside build method.
+  final BeamerDelegate _routerDelegate = BeamerDelegate(
+    locationBuilder: BeamerLocationBuilder(beamLocations: [
+      DashboardContentLocation(),
+    ]),
+  );
 
   /// Keyboard shortcuts definition.
   final Map<LogicalKeySet, Intent> _shortcuts = {
@@ -75,6 +83,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
@@ -119,20 +129,17 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               Beamer(
                 key: _beamerKey,
-                routerDelegate: BeamerDelegate(
-                  locationBuilder: BeamerLocationBuilder(beamLocations: [
-                    DashboardContentLocation(),
-                  ]),
-                ),
+                routerDelegate: _routerDelegate,
               ),
-              Positioned(
-                right: 0.0,
-                top: 0.0,
-                bottom: 0.0,
-                child: DashboardSideMenu(
-                  beamerKey: _beamerKey,
+              if (!isMobileSize)
+                Positioned(
+                  right: 0.0,
+                  top: 0.0,
+                  bottom: 0.0,
+                  child: DashboardSideMenu(
+                    beamerKey: _beamerKey,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

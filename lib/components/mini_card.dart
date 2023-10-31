@@ -1,12 +1,10 @@
-import "dart:math";
-
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
-import "package:random_text_reveal/random_text_reveal.dart";
 
 /// A tiny card showing the first letter of a quote
 /// (displayed on home page).
@@ -14,14 +12,21 @@ class TinyCard extends StatefulWidget {
   const TinyCard({
     super.key,
     required this.quote,
+    this.screenSize = Size.infinite,
     this.onTap,
+    this.entranceDelay,
   });
+
+  /// Animation entrance delay.
+  final Duration? entranceDelay;
 
   /// Quote to display.
   final Quote quote;
 
   /// Callback fired when card is tapped.
   final void Function(Quote quote)? onTap;
+
+  final Size screenSize;
 
   @override
   State<TinyCard> createState() => _TinyCardState();
@@ -37,85 +42,47 @@ class _TinyCardState extends State<TinyCard> {
   /// Card's end elevation.
   final double _endElevation = 4.0;
 
-  ///  If true, explicitly cancel letter animation.
-  bool _animationFinished = false;
-
   @override
   Widget build(BuildContext context) {
     const BorderRadius borderRadius = BorderRadius.all(Radius.circular(4.0));
     final Color textColor =
         Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
 
-    final Size screenSize = MediaQuery.of(context).size;
-    final double screenWidth = screenSize.width;
-    final double screenHeight = screenSize.height;
-
-    final quoteName = widget.quote.name;
+    final String quoteName = widget.quote.name;
     final String firstChar = quoteName.characters.first;
 
-    return JustTheTooltip(
-      content: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ConstrainedBox(
-          constraints: BoxConstraints.loose(
-            Size(screenWidth * 0.75, screenHeight),
-          ),
-          child: Text(
-            quoteName,
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
-                color: textColor.withOpacity(0.6),
+    final Widget squareLetter = Hero(
+      tag: widget.quote.id,
+      child: Material(
+        elevation: _elevation,
+        borderRadius: borderRadius,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: InkWell(
+          onTap: () => widget.onTap?.call(widget.quote),
+          onHover: (isHover) {
+            setState(() {
+              _elevation = isHover ? _endElevation : _initialElevation;
+            });
+          },
+          borderRadius: borderRadius,
+          child: Container(
+            width: 24.0,
+            height: 24.0,
+            decoration: BoxDecoration(
+              borderRadius: borderRadius,
+              border: Border.all(
+                width: _elevation == _initialElevation ? 0.0 : 3.0,
+                color: _elevation == _initialElevation
+                    ? Colors.transparent
+                    : getTopicColor(),
               ),
             ),
-          ),
-        ),
-      ),
-      child: Hero(
-        tag: widget.quote.id,
-        child: Material(
-          elevation: _elevation,
-          borderRadius: borderRadius,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: InkWell(
-            onTap: () => widget.onTap?.call(widget.quote),
-            onHover: (isHover) {
-              setState(() {
-                _elevation = isHover ? _endElevation : _initialElevation;
-              });
-            },
-            borderRadius: borderRadius,
-            child: Container(
-              width: 24.0,
-              height: 24.0,
-              decoration: BoxDecoration(
-                borderRadius: borderRadius,
-                border: Border.all(
-                  width: _elevation == _initialElevation ? 0.0 : 3.0,
-                  color: _elevation == _initialElevation
-                      ? Colors.transparent
-                      : getTopicColor(),
-                ),
-              ),
-              child: Center(
-                child: RandomTextReveal(
-                  shouldPlayOnStart: _animationFinished ? false : true,
-                  initialText: _animationFinished ? firstChar : null,
-                  text: firstChar,
-                  duration: Duration(milliseconds: Random().nextInt(900) + 100),
-                  // duration: const Duration(milliseconds: 500),
-                  onFinished: () {
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      setState(() {
-                        _animationFinished = true;
-                      });
-                    });
-                  },
-                  style: Utils.calligraphy.body4(
-                    textStyle: const TextStyle(
-                      fontSize: 24.0,
-                    ),
+            child: Center(
+              child: Text(
+                firstChar,
+                style: Utils.calligraphy.body4(
+                  textStyle: const TextStyle(
+                    fontSize: 24.0,
                   ),
                 ),
               ),
@@ -123,6 +90,38 @@ class _TinyCardState extends State<TinyCard> {
           ),
         ),
       ),
+    )
+        .animate(
+          delay: widget.entranceDelay,
+        )
+        .fadeIn()
+        .slideY(begin: -0.1, end: 0.0)
+        .scaleXY(begin: 1.6, end: 1.0);
+
+    if (widget.screenSize.width < 700.0) {
+      return squareLetter;
+    }
+
+    return JustTheTooltip(
+      content: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: ConstrainedBox(
+          constraints: BoxConstraints.loose(
+            getSizeConstraints(widget.screenSize),
+          ),
+          child: Text(
+            quoteName,
+            style: Utils.calligraphy.body(
+              textStyle: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+                color: textColor.withOpacity(0.6),
+              ),
+            ),
+          ),
+        ),
+      ),
+      child: squareLetter,
     );
   }
 
@@ -140,5 +139,16 @@ class _TinyCardState extends State<TinyCard> {
     }
 
     return topic.color;
+  }
+
+  Size getSizeConstraints(Size screenSize) {
+    final double screenWidth = screenSize.width;
+    final double screenHeight = screenSize.height;
+
+    if (screenWidth > 700.0) {
+      return Size(300.0, screenHeight);
+    }
+
+    return Size(screenWidth * 0.54, screenHeight);
   }
 }

@@ -8,17 +8,23 @@ import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/quote_actions.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/components/empty_view.dart";
+import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/mini_card.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/author_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/screens/home/home_page_footer.dart";
+import "package:kwotes/screens/home/home_page_hero_quote.dart";
+import "package:kwotes/screens/home/latest_added_references.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
@@ -30,22 +36,48 @@ import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:super_context_menu/super_context_menu.dart";
+import "package:url_launcher/url_launcher.dart";
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    this.isMobileSize = false,
+  });
+
+  /// Adapt user interface to small screens.
+  final bool isMobileSize;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with UiLoggy {
+  /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
+
+  /// Quote amount to fetch.
+  int _maxQuoteCount = 40;
+
+  /// Amount of authors to fetch.
+  final int _maxAuthorCount = 3;
+
+  /// Amount of references to fetch.
+  final int _maxReferenceCount = 3;
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.isMobileSize) {
+      _maxQuoteCount = 20;
+    }
+
     if (NavigationStateHelper.randomQuotes.isEmpty) {
       fetchRandomQuotes();
+    }
+
+    if (NavigationStateHelper.latestAddedReferences.isEmpty) {
+      fetchLatestAddedReferences();
     }
   }
 
@@ -64,17 +96,43 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       );
     }
 
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
+    final Size screenSize = MediaQuery.of(context).size;
+
+    final Color? iconColor =
+        Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
 
     final Signal<UserFirestore> userFirestoreSignal =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
+    final Color randomColor = Constants.colors.getRandomFromPalette();
+
     return BasicShortcuts(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: fetchRandomQuotes,
+          backgroundColor: randomColor,
+          foregroundColor: randomColor.computeLuminance() < 0.5
+              ? Colors.white
+              : Colors.black,
+          tooltip: "quote.shuffle".tr(),
+          child: const Icon(TablerIcons.arrows_shuffle),
+        ),
         body: CustomScrollView(
           slivers: [
-            const ApplicationBar(),
+            const SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: AppIcon(
+                  margin: EdgeInsets.only(top: 42.0, left: 42.0),
+                ),
+              ),
+            ),
+            HomePageHeroQuote(
+              randomQuotes: NavigationStateHelper.randomQuotes,
+              textColor: iconColor,
+              onTapAuthor: onTapAuthor,
+              onTapQuote: onTapQuote,
+            ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 48.0,
@@ -92,6 +150,10 @@ class _HomePageState extends State<HomePage> with UiLoggy {
                     child: TinyCard(
                       quote: quote,
                       onTap: onTapQuote,
+                      screenSize: screenSize,
+                      entranceDelay: Duration(
+                        milliseconds: Random().nextInt(120),
+                      ),
                     ),
                     menuProvider: (MenuRequest request) {
                       return Menu(
@@ -114,110 +176,20 @@ class _HomePageState extends State<HomePage> with UiLoggy {
                 itemCount: NavigationStateHelper.randomQuotes.length,
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 48.0,
-                vertical: 24.0,
-              ),
-              sliver: SliverList.list(children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton(
-                    onPressed: onTapOpenRandomQuote,
-                    style: TextButton.styleFrom(
-                      foregroundColor: foregroundColor?.withOpacity(0.6),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8.0),
-                          child: Icon(TablerIcons.hand_finger),
-                        ),
-                        Text(
-                          "quote.open_random".tr(),
-                          style: Utils.calligraphy.body(
-                            textStyle: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton(
-                    onPressed: fetchRandomQuotes,
-                    style: TextButton.styleFrom(
-                      foregroundColor: foregroundColor?.withOpacity(0.6),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8.0),
-                          child: Icon(TablerIcons.arrows_shuffle),
-                        ),
-                        Text(
-                          "quote.shuffle".tr(),
-                          style: Utils.calligraphy.body(
-                            textStyle: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SignalBuilder(
-                    signal: userFirestoreSignal,
-                    builder: (
-                      BuildContext context,
-                      UserFirestore userFirestore,
-                      Widget? child,
-                    ) {
-                      if (!userFirestore.rights.canProposeQuote) {
-                        return Container();
-                      }
-
-                      return Align(
-                        alignment: Alignment.topLeft,
-                        child: TextButton(
-                          onPressed: () {
-                            Beamer.of(context).beamToNamed(
-                              "/dashboard/add-quote",
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: foregroundColor?.withOpacity(0.6),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: Icon(TablerIcons.plus),
-                              ),
-                              Text(
-                                "quote.add.a".tr(),
-                                style: Utils.calligraphy.body(
-                                  textStyle: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              ]),
+            LatestAddedReferences(
+              references: NavigationStateHelper.latestAddedReferences,
+              onTapReference: onTapReference,
+              textColor: iconColor,
+            ),
+            HomePageFooter(
+              iconColor: iconColor,
+              isMobileSize: widget.isMobileSize,
+              onAddQuote: onAddQuote,
+              onFetchRandomQuotes: fetchRandomQuotes,
+              onTapGitHub: onTapGitHub,
+              onTapSettings: onTapSettings,
+              onTapOpenRandomQuote: onTapOpenRandomQuote,
+              userFirestoreSignal: userFirestoreSignal,
             ),
           ],
         ),
@@ -226,12 +198,95 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   }
 
   Future<String> getLanguage() async {
-    final String languageCode = await Utils.vault.getLanguage();
-    if (Utils.linguistic.available().contains(languageCode)) {
-      return languageCode;
+    final EnumLanguageSelection savedLanguage = await Utils.vault.getLanguage();
+    if (Utils.linguistic.available().contains(savedLanguage)) {
+      return savedLanguage.name;
     }
 
     return "en";
+  }
+
+  Future<Author?> fetchAuthor(String authorId) async {
+    if (authorId.isEmpty) {
+      return null;
+    }
+
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("authors")
+          .doc(authorId)
+          .get();
+
+      final data = snapshot.data();
+      if (!snapshot.exists || data == null) {
+        return null;
+      }
+
+      data["id"] = snapshot.id;
+      return Author.fromMap(data);
+    } catch (error) {
+      loggy.error(error);
+      return null;
+    }
+  }
+
+  /// Fetches latest added authors.
+  void fetchLatestAddedAuthors() async {
+    try {
+      final QuerySnapMap snapshot = await FirebaseFirestore.instance
+          .collection("authors")
+          .orderBy("created_at", descending: true)
+          .limit(_maxAuthorCount)
+          .get();
+
+      if (snapshot.size == 0) {
+        return;
+      }
+
+      for (final DocumentSnapshotMap doc in snapshot.docs) {
+        final Json? data = doc.data();
+        if (data == null) {
+          continue;
+        }
+
+        data["id"] = doc.id;
+        NavigationStateHelper.latestAddedAuthors.add(Author.fromMap(data));
+      }
+
+      setState(() {});
+    } catch (error) {
+      loggy.error(error);
+    }
+  }
+
+  /// Fetches latest added references.
+  void fetchLatestAddedReferences() async {
+    try {
+      final QuerySnapMap snapshot = await FirebaseFirestore.instance
+          .collection("references")
+          .orderBy("created_at", descending: true)
+          .limit(_maxReferenceCount)
+          .get();
+
+      if (snapshot.size == 0) {
+        return;
+      }
+
+      for (final DocumentSnapshotMap doc in snapshot.docs) {
+        final Json? data = doc.data();
+        if (data == null) {
+          continue;
+        }
+
+        data["id"] = doc.id;
+        final Reference reference = Reference.fromMap(data);
+        NavigationStateHelper.latestAddedReferences.add(reference);
+      }
+
+      setState(() {});
+    } catch (error) {
+      loggy.error(error);
+    }
   }
 
   void fetchRandomQuotes() async {
@@ -262,7 +317,8 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       final RandomQuoteDocument randomQuoteDoc =
           RandomQuoteDocument.fromMap(map);
       randomQuoteDoc.items.shuffle();
-      final List<String> items = randomQuoteDoc.items.take(40).toList();
+      final List<String> items =
+          randomQuoteDoc.items.take(_maxQuoteCount).toList();
 
       for (final String quoteId in items) {
         final DocumentSnapshotMap quoteDoc = await FirebaseFirestore.instance
@@ -288,33 +344,10 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       });
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
       setState(() {
         _pageState = EnumPageState.idle;
       });
-    }
-  }
-
-  Future<Author?> fetchAuthor(String authorId) async {
-    if (authorId.isEmpty) {
-      return null;
-    }
-
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection("authors")
-          .doc(authorId)
-          .get();
-
-      final data = snapshot.data();
-      if (!snapshot.exists || data == null) {
-        return null;
-      }
-
-      data["id"] = snapshot.id;
-      return Author.fromMap(data);
-    } catch (error) {
-      loggy.error(error);
-      return null;
     }
   }
 
@@ -340,6 +373,13 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       loggy.error(error);
       return null;
     }
+  }
+
+  void onAddQuote() {
+    NavigationStateHelper.quote = Quote.empty();
+    Beamer.of(context).beamToNamed(
+      "/dashboard/add-quote",
+    );
   }
 
   void onCopyQuote(Quote quote) {
@@ -368,6 +408,32 @@ class _HomePageState extends State<HomePage> with UiLoggy {
 
     onTapQuote(
       quotes.elementAt(Random().nextInt(quotes.length)),
+    );
+  }
+
+  void onTapSettings() {
+    Beamer.of(context).beamToNamed("settings");
+  }
+
+  void onTapGitHub() {
+    launchUrl(Uri.parse(Constants.githubUrl));
+  }
+
+  void onTapAuthor(Author author) {
+    Beamer.of(context).beamToNamed(
+      AuthorLocation.route.replaceFirst(
+        ":authorId",
+        author.id,
+      ),
+    );
+  }
+
+  void onTapReference(Reference reference) {
+    Beamer.of(context).beamToNamed(
+      ReferenceLocation.route.replaceFirst(
+        ":referenceId",
+        reference.id,
+      ),
     );
   }
 }

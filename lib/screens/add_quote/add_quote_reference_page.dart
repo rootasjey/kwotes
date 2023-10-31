@@ -1,13 +1,12 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:jiffy/jiffy.dart";
 import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/better_action_chip.dart";
-import "package:kwotes/components/expand_input_chip.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/add_quote/add_reference_metadata_column.dart";
+import "package:kwotes/screens/add_quote/add_reference_metadata_wrap.dart";
 import "package:kwotes/screens/add_quote/genre_chips.dart";
-import "package:kwotes/screens/add_quote/reference_suggestion_row.dart";
+import "package:kwotes/screens/add_quote/reference_suggestions.dart";
 import "package:kwotes/screens/add_quote/url_wrap.dart";
 import "package:kwotes/types/reference.dart";
 
@@ -16,6 +15,8 @@ class AddQuoteReferencePage extends StatelessWidget {
   const AddQuoteReferencePage({
     super.key,
     required this.reference,
+    this.isMobileSize = false,
+    this.metadataOpened = true,
     this.nameFocusNode,
     this.randomReferenceInt = 0,
     this.lastUsedUrls = const [],
@@ -24,19 +25,23 @@ class AddQuoteReferencePage extends StatelessWidget {
     this.onPictureUrlChanged,
     this.onPrimaryGenreChanged,
     this.onSecondaryGenreChanged,
-    this.onTapReleasehDate,
+    this.onTapReleaseDate,
     this.onSummaryChanged,
     this.onUrlChanged,
     this.nameController,
     this.onDeleteQuote,
+    this.onToggleMetadata,
     this.onToggleNagativeReleaseDate,
     this.referenceSuggestions = const [],
     this.onTapSuggestion,
     this.summaryController,
   });
 
-  /// Main page data.
-  final Reference reference;
+  /// Expand metadata widget if true.
+  final bool metadataOpened;
+
+  /// Adapt user interface to moile size if true.
+  final bool isMobileSize;
 
   /// Random int for displaying hint texts.
   final int randomReferenceInt;
@@ -66,7 +71,10 @@ class AddQuoteReferencePage extends StatelessWidget {
   final void Function(Reference reference)? onTapSuggestion;
 
   /// Callback fired when release date chip is tapped.
-  final void Function()? onTapReleasehDate;
+  final void Function()? onTapReleaseDate;
+
+  /// Callback fired to toggle reference metadata widget size.
+  final void Function()? onToggleMetadata;
 
   /// Callback fired when negative release date chip is tapped.
   final void Function()? onToggleNagativeReleaseDate;
@@ -82,6 +90,9 @@ class AddQuoteReferencePage extends StatelessWidget {
 
   /// Right children of the application bar.
   final List<Widget> appBarRightChildren;
+
+  /// Main page data.
+  final Reference reference;
 
   /// Input controller for reference's name.
   final TextEditingController? nameController;
@@ -102,15 +113,23 @@ class AddQuoteReferencePage extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           ApplicationBar(
+            isMobileSize: isMobileSize,
             rightChildren: appBarRightChildren,
           ),
           SliverPadding(
-            padding: const EdgeInsets.only(
-              left: 48.0,
-              right: 90.0,
-              top: 24.0,
-              bottom: 240.0,
-            ),
+            padding: isMobileSize
+                ? const EdgeInsets.only(
+                    top: 24.0,
+                    left: 24.0,
+                    right: 24.0,
+                    bottom: 190.0,
+                  )
+                : const EdgeInsets.only(
+                    left: 48.0,
+                    right: 90.0,
+                    top: 24.0,
+                    bottom: 240.0,
+                  ),
             sliver: SliverList.list(
               children: [
                 TextField(
@@ -122,8 +141,8 @@ class AddQuoteReferencePage extends StatelessWidget {
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.words,
                   style: Utils.calligraphy.title(
-                    textStyle: const TextStyle(
-                      fontSize: 84.0,
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 42.0 : 84.0,
                       fontWeight: FontWeight.w600,
                       height: 1.0,
                     ),
@@ -153,50 +172,36 @@ class AddQuoteReferencePage extends StatelessWidget {
                   secondaryHintText:
                       "quote.add.reference.genres.secondary.$randomReferenceInt"
                           .tr(),
+                  show: !isMobileSize,
                 ),
-                ReferenceSuggestionRow(
+                ReferenceSuggestions(
+                  isMobileSize: isMobileSize,
                   selectedReference: reference,
                   references: referenceSuggestions,
                   onTapSuggestion: onTapSuggestion,
+                  margin: const EdgeInsets.symmetric(vertical: 12.0),
                 ),
-                Wrap(
-                  spacing: 12.0,
-                  runSpacing: 12.0,
-                  children: [
-                    ExpandInputChip(
-                      tooltip: "quote.add.reference.avatar".tr(),
-                      avatar: CircleAvatar(
-                        radius: 14.0,
-                        backgroundImage:
-                            const AssetImage("assets/images/autoportrait.png"),
-                        foregroundImage: reference.urls.image.isNotEmpty
-                            ? NetworkImage(reference.urls.image)
-                            : null,
-                      ),
-                      hintText: "quote.add.links.example.web".tr(),
-                      onTextChanged: onPictureUrlChanged,
-                    ),
-                    BetterActionChip(
-                      onPressed: onTapReleasehDate,
-                      tooltip: "quote.add.reference.dates.release".tr(),
-                      avatar: Icon(TablerIcons.cake, color: iconColor),
-                      label: Text(releaseText),
-                    ),
-                    BetterActionChip(
-                      avatar: reference.release.beforeCommonEra
-                          ? const Icon(TablerIcons.arrow_back)
-                          : const Icon(TablerIcons.arrow_forward),
-                      tooltip: "quote.add.reference.dates.negative.release"
-                              ".explanation.${reference.release.beforeCommonEra}"
-                          .tr(),
-                      label: Text(
-                        "quote.add.reference.dates.negative.release"
-                                ".${reference.release.beforeCommonEra}"
-                            .tr(),
-                      ),
-                      onPressed: onToggleNagativeReleaseDate,
-                    ),
-                  ],
+                AddReferenceMetadaColumn(
+                  isOpen: metadataOpened,
+                  onPrimaryGenreChanged: onPrimaryGenreChanged,
+                  onSecondaryGenreChanged: onSecondaryGenreChanged,
+                  onProfilePictureChanged: onPictureUrlChanged,
+                  onTapReleaseDate: onTapReleaseDate,
+                  onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
+                  onToggleOpen: onToggleMetadata,
+                  reference: reference,
+                  releaseText: releaseText,
+                  randomReferenceInt: randomReferenceInt,
+                  show: isMobileSize,
+                ),
+                AddReferenceMetadataWrap(
+                  show: !isMobileSize,
+                  reference: reference,
+                  iconColor: iconColor,
+                  onPictureUrlChanged: onPictureUrlChanged,
+                  onTapReleaseDate: onTapReleaseDate,
+                  releaseText: releaseText,
+                  onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
@@ -216,8 +221,12 @@ class AddQuoteReferencePage extends StatelessWidget {
                       ),
                     ),
                     decoration: InputDecoration(
-                      filled: true,
-                      hintMaxLines: 4,
+                      filled: false,
+                      contentPadding: const EdgeInsets.only(
+                        top: 24.0,
+                        right: 6.0,
+                      ),
+                      hintMaxLines: 8,
                       hintText:
                           "quote.add.reference.summaries.$randomReferenceInt"
                               .tr(),

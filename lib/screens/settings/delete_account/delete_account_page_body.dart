@@ -9,18 +9,14 @@ class DeleteAccountPageBody extends StatelessWidget {
   const DeleteAccountPageBody({
     super.key,
     required this.passwordController,
+    this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.errorMessage = "",
-    this.margin = EdgeInsets.zero,
-    this.isMobileSize = false,
     this.onTapUpdateButton,
   });
 
   /// True if the screen's size is narrow.
   final bool isMobileSize;
-
-  /// Space around this widget.
-  final EdgeInsets margin;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -40,12 +36,12 @@ class DeleteAccountPageBody extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(isMobileSize ? 12.0 : 40.0),
+        padding: EdgeInsets.all(isMobileSize ? 24.0 : 40.0),
         child: Column(
           children: [
             Container(
               margin: const EdgeInsets.only(bottom: 12.0),
-              width: 352.0,
+              width: isMobileSize ? null : 352.0,
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(

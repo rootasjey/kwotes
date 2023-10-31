@@ -8,6 +8,7 @@
   "account": {
     "already_have": "I already have an account",
     "create": "Create account",
+    "creating": "Creating account",
     "delete": {
       "error": "An error occurred while deleting your account",
       "name": "Delete account",
@@ -19,6 +20,12 @@
     "deletion_point_2": "Your published quotes will stay on the platform",
     "deletion_point_3": "Your username will (slowly) be dissaciated with the published quotes",
     "dont_own": "I don't own an account yet",
+    "error": {
+      "create": "An error occurred while creating your account",
+      "delete": "An error occurred while deleting your account",
+      "does_not_exist": "It seems that this account does not exist",
+      "update": "An error occurred while updating your account"
+    },
     "name": "Account",
     "recover": "Recover account"
   },
@@ -37,6 +44,11 @@
       "name": "Delete author",
       "success": "Author has been deleted"
     },
+    "error": {
+      "no_image": "This author has no image."
+    },
+    "latest_added": "Latest added authors",
+    "loading": "Loading author",
     "name": "Author",
     "copy": {
       "name": "Copy author's name",
@@ -75,6 +87,10 @@
   "cookies_content": "The application uses only necessaries cookies for usage statistiques. It's anonymized and don't track specific users. We don't volontary share cookies with third-party. We don't have id advertising.",
   "create": "Create",
   "dark": "Dark",
+  "date": {
+    "last_updated": "Last updated",
+    "name": "Date"
+  },
   "dashboard": "Dashboard",
   "description": {
     "name": "Description",
@@ -88,18 +104,20 @@
   },
   "email": {
     "check_spam": "Please check your spam folder too",
-    "doesnt_exist": "Sorry, this email doesn't exist.",
-    "empty_forbidden": "Email cannot be empty",
-    "empty_no_valid": "The email field is empty. Please enter a valid email address.",
+    "error": {
+      "doesnt_exist": "Sorry, this email doesn't exist.",
+      "empty_forbidden": "Email cannot be empty",
+      "empty": "The email field is empty. Please enter a valid email address.",
+      "not_valid": "The value entered is not a valid email address"
+    },
     "name": "Email",
     "new": "New email",
-    "not_valid": "The value entered is not a valid email address",
     "password_reset_link": "A password reset link has been sent to your mail box",
     "response_soon": "You will receive an email response shortly",
     "sending": "Sending email",
     "send_me": "Send me an email",
     "send_reset_link": "Send reset link",
-    "sending_password_recovery_email": "Sending password recovery to your email inbox",
+    "sending_password_recovery": "Sending password recovery to your email inbox",
     "update": "Update email",
     "update_tips": "Enter your new email address below with your password to confirm this change.",
     "use_other": "Use another email",
@@ -115,32 +133,44 @@
     "name": "Favourites"
   },
   "fictional": "Fictional",
-  "genres": {
-    "article": "Article",
-    "bd": "BD",
-    "blog": "Blog",
-    "book": "Book",
-    "comic": "Comic",
-    "film": "Film",
-    "graphic_novel": "Graphic novel",
-    "game": "Game",
-    "music": "Music",
-    "news": "News",
-    "novel": "Novel",
-    "other": "Other",
-    "painting": "Painting",
-    "paper": "Paper",
-    "play": "Play",
-    "poem": "Poem",
-    "photo": "Photo",
-    "podcast": "Podcast",
-    "post": "Post",
-    "poetry": "Poetry",
-    "short_story": "Short story",
-    "tv_series": "TV series",
-    "video_game": "Video game",
-    "video": "Video",
-    "website": "Website"
+  "genre": {
+      "name": "Genre",
+      "primary": {
+      "article": "Article",
+      "bd": "BD",
+      "blog": "Blog",
+      "book": "Book",
+      "comic": "Comic",
+      "film": "Film",
+      "graphic_novel": "Graphic novel",
+      "game": "Game",
+      "music": "Music",
+      "name": "Primary genre",
+      "news": "News",
+      "novel": "Novel",
+      "other": "Other",
+      "painting": "Painting",
+      "paper": "Paper",
+      "play": "Play",
+      "poem": "Poem",
+      "photo": "Photo",
+      "podcast": "Podcast",
+      "post": "Post",
+      "poetry": "Poetry",
+      "short_story": "Short story",
+      "tv series": "TV series",
+      "tv_series": "TV series",
+      "video_game": "Video game",
+      "video": "Video",
+      "website": "Website"
+    },
+    "secondary": {
+      "gothic horror": "Gothic horror",
+      "name": "Secondary genre",
+      "science-fiction": "Science fiction",
+      "supernatural drama": "Supernatural drama",
+      "tragicomedy": "Tragicomedy"
+    }
   },
   "home": "Home",
   "iap": "In-app purchases",
@@ -166,18 +196,25 @@
   "kwotes_leading": "kwotes •",
   "lang_recent_add_maybe": "Maybe your this language has been added recently",
   "language": {
+    "all": "All languages",
     "locale": {
       "autoDetect": "Auto detect",
+      "af": "Afrikaans",
       "ar": "عرب",
+      "bg": "Български",
+      "ca": "Català",
+      "cs": "Čeština",
+      "da": "Dansk",
       "de": "Deutch",
       "en": "English",
+      "es": "Español",
       "fr": "Français",
       "it": "Italiano",
       "nl": "Nederlands",
       "no": "Norsk",
       "pt": "Português",
+      "ro": "Română",
       "ru": "Русский",
-      "es": "Español",
       "sk": "Slovenčina",
       "sv": "Svenska"
     },
@@ -315,6 +352,8 @@
     "settings": "@:kwotes_leading Settings",
     "signin": "@:kwotes_leading Signin",
     "signup": "@:kwotes_leading Signup",
+    "terms_of_service": "@:kwotes_leading Terms of service",
+    "the_purpose": "@:kwotes_leading The purpose",
     "tos": "@:kwotes_leading Term of Services",
     "update_email": "@:kwotes_leading Update email",
     "update_password": "@:kwotes_leading Update password",
@@ -323,15 +362,16 @@
   "password": {
     "confirm": "Confirm password",
     "current": "Current password",
-    "empty_forbidden": "Password cannot be empty.",
     "error": {
       "current_empty": "The field is empty. Please enter your current password.",
+      "empty_forbidden": "Password cannot be empty.",
+      "empty_no_valid": "The password field is empty. Please enter a valid password.",
+      "incorrect": "Your current password is incorrect.",
       "minimum_length": "Password must be at least {} characters long.",
       "new_empty": "The field is empty. Please enter your new password.",
       "not_valid": "The value entered is not a valid password.",
       "required": "Password is required."
     },
-    "empty_no_valid": "The password field is empty. Please enter a valid password.",
     "forgot": "Forgot password",
     "forgot_reset_process": "We will send a reset link to your mail box.",
     "name": "Password",
@@ -354,6 +394,21 @@
   "published": {
     "description": "Your contribution to the world.",
     "name": "Published"
+  },
+  "purpose": {
+    "content": {
+      "0": "Most quotes apps & services focus on book references and old authors, but there are outstanding quotes in movies, TV series, video games, animés, comics, and so on.",
+      "1": "Today's culture is richer than ever and there're no reason to limit ourselves to one medium.",
+      "2": "This is why I started building",
+      "3": "kwotes",
+      "4": "It's a quotes application, platform and service.",
+      "5": "The frontend part is build with Flutter and aims to be multiplatform (iOS, Android, Web). You can find quotes in different languages (only English and French are available for now).",
+      "6": "We tried to make a simple and easy to use application with a clean user interface.",
+      "7": "The platform is community-driven so you can submit your own quotes or use the app as an online quotes storage.",
+      "8": "Quotes submitted are reviewed and validated by the staff. The application is free and open-source."
+    },
+    "name": "Purpose",
+    "the": "The Purpose"
   },
   "quit": "Quit",
   "quote": {
@@ -604,6 +659,10 @@
       }
     },
     "add_topics": "Select some of the available topics to categorize the quote.",
+    "all": {
+      "description": "Published quotes from all users",
+      "name": "All"
+    },
     "clear_all": "Clear all",
     "clear_topics": "Clear topics",
     "copy": {
@@ -617,7 +676,8 @@
     "delete": {
       "confirm": "Confirm deletion?",
       "draft": "Delete draft",
-      "name": "Delete quote"
+      "name": "Delete quote",
+      "success": "Quote successfully deleted!"
     },
     "edit": "Edit quote",
     "empty": {
@@ -656,6 +716,9 @@
       "failed": "Failed to fetch quote",
       "name": "Fetch quote"
     },
+    "language": {
+      "change": "Change language"
+    },
     "like": {
       "name": "Like"
     },
@@ -663,6 +726,10 @@
     "new": "New quote",
     "not_found": "The quote was not found in the list.",
     "open_random": "Click/Tap on a letter to open a quote.",
+    "owned": {
+      "description": "Published quotes from myself",
+      "name": "Owned"
+    },
     "remove": {
       "failed": "Failed to remove quote.",
       "ing": "Removing the quote",
@@ -718,6 +785,11 @@
       "name": "Copy reference's name",
       "url": "Copy reference's URL"
     },
+    "error": {
+      "no_image": "This reference has no image."
+    },
+    "latest_added": "Latest added references",
+    "loading": "Loading reference",
     "name": "Reference"
   },
   "release_date": "Release date",
@@ -753,6 +825,7 @@
     },
     "some_topics": "Some topics"
   },
+  "see_metadata": "See metadata",
   "see_related_quotes": "See related quotes",
   "settings": {
     "description": "Customize your experience",
@@ -769,18 +842,31 @@
   "system": "System",
   "theme": "Theme",
   "title": "Title",
-  "tos": "Privacy & Terms",
-  "tos_title": "Terms of service",
-  "tos_1": "Your privacy is important to us. It is Jeremie Codes' policy to respect your privacy regarding any information we may collect from you across our website, kwotes, and other sites we own and operate including mobile apps.",
-  "tos_2": "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we're collecting it and how it will be used.",
-  "tos_3": "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we'll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.",
-  "tos_4": "We don’t share any personally identifying information publicly or with third-parties, except when required to by law.",
-  "tos_5": "Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.",
-  "tos_6": "You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with some of your desired services.",
-  "tos_7": "Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.",
-  "tos_8": "This policy is effective as of 1 May 2020.",
-  "tos_created_with": "Privacy Policy created with GetTerms.",
+  "tos": {
+    "name": "Terms of service",
+    "title": "Terms of service",
+    "content": {
+      "0": "Your privacy is important to us. It is CODING BOX's policy to respect your privacy regarding any information we may collect from you across our website, kwotes, and other sites we own and operate including mobile apps.",
+      "1": "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we're collecting it and how it will be used.",
+      "2": "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we'll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.",
+      "3": "We don't share any personally identifying information publicly or with third-parties, except when required to by law.",
+      "4": "Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.",
+      "5": "You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with some of your desired services.",
+      "6": "Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.",
+      "7": "This policy is effective as of 1 May 2020."
+    },
+    "created_with": "Privacy Policy created with GetTerms."
+  },
+  "update": {
+    "name": "Update"
+  },
   "username": {
+    "error": {
+      "already_taken": "The username is already taken.",
+      "empty": "The username cannot be empty.",
+      "invalid": "The username is invalid.",
+      "minimum_length": "The username must be at least 3 characters long."
+    },
     "name": "Username",
     "new": "New username",
     "update": {
@@ -790,6 +876,7 @@
       "tips": "You can choose a new username as long as it is available, at least 3 characters long, only contains alpha-numeric characters, hyphen (-) and underscore (_)."
     }
   },
+  "version": "Version",
   "welcome_back": "Welcome back",
   "welcome_ex": "Welcome!",
   "zoom": "Zoom"

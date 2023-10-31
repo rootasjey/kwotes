@@ -61,6 +61,12 @@ class AddQuotePage extends StatefulWidget {
 }
 
 class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
+  /// Show author metadata if true.
+  bool _authorMetadataOpened = true;
+
+  /// Show reference metadata if true.
+  bool _referenceMetadataOpened = true;
+
   /// Show a tooltip indicating the page title if true.
   bool _showPageTitleTooltip = true;
 
@@ -187,9 +193,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   void initState() {
     super.initState();
     _pageViewController.addListener(onPageViewChanged);
+    initProps();
     fetchQuoteDocument();
     showPageTitle();
-    loadPreferences();
   }
 
   @override
@@ -214,6 +220,10 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final Size windowSize = MediaQuery.of(context).size;
+    final bool isMobileSize =
+        windowSize.width < Utils.measurements.mobileWidthTreshold ||
+            windowSize.height < Utils.measurements.mobileWidthTreshold;
+
     final String textValue = _contentController.text.isNotEmpty
         ? _contentController.text
         : "quote.start_typing".tr();
@@ -290,6 +300,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                   fabForegroundColor: fabForegroundColor,
                   fabBackgroundColor: fabBackgroundColor,
                   isQuoteValid: isQuoteValid,
+                  isMobileSize: isMobileSize,
                   quote: quote,
                   onSubmitQuote: onSubmitQuote,
                   canManageQuotes: userFirestore.rights.canManageQuotes,
@@ -311,6 +322,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     contentController: _contentController,
                     contentFocusNode: _contentFocusNode,
                     onContentChanged: onQuoteContentChanged,
+                    isMobileSize: isMobileSize,
                     onDeleteQuote: onDeleteDraft,
                     solution: solution,
                   ),
@@ -321,6 +333,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
                     ),
+                    isMobileSize: isMobileSize,
                     topics: Constants.colors.topics,
                     onSelected: onTopicSelected,
                     onClearTopic: onClearTopic,
@@ -332,10 +345,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
                     ),
+                    metadataOpened: _authorMetadataOpened,
                     author: NavigationStateHelper.quote.author,
                     authorSuggestions: _authorSearchResults,
-                    nameFocusNode: _authorNameFocusNode,
+                    isMobileSize: isMobileSize,
                     lastUsedUrls: _lastUsedAuthorUrls,
+                    nameFocusNode: _authorNameFocusNode,
                     onNameChanged: onAuthorNameChanged,
                     onJobChanged: onAuthorJobChanged,
                     onProfilePictureChanged: onAuthorPictureUrlChanged,
@@ -343,6 +358,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     onTapAuthorSuggestion: onTapAuthorSuggestion,
                     onTapBirthDate: onTapBirthDate,
                     onTapDeathDate: onTapDeathDate,
+                    onToggleMetadata: onToggleAuthorMetadata,
                     onToggleIsFictional: onToggleIsFictional,
                     onToggleNagativeBirthDate: onToggleNagativeBirthDate,
                     onToggleNagativeDeathDate: onToggleNagativeDeathDate,
@@ -358,7 +374,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
                     ),
+                    isMobileSize: isMobileSize,
                     lastUsedUrls: _lastUsedAuthorUrls,
+                    metadataOpened: _referenceMetadataOpened,
                     nameController: _referenceNameController,
                     nameFocusNode: _referenceNameFocusNode,
                     onNameChanged: onReferenceNameChanged,
@@ -367,7 +385,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     onSecondaryGenreChanged: onSecondaryGenreChanged,
                     onSummaryChanged: onReferenceSummaryChanged,
                     onTapSuggestion: onTapReferenceSuggestion,
-                    onTapReleasehDate: onTapReleasehDate,
+                    onTapReleaseDate: onTapReleasehDate,
+                    onToggleMetadata: onToggleReferenceMetadata,
                     onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
                     onUrlChanged: onReferenceUrlChanged,
                     randomReferenceInt: _randomReferenceIndex,
@@ -378,23 +397,25 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                 ],
               ),
               Positioned(
-                bottom: 12.0,
+                bottom: isMobileSize ? 0.0 : 12.0,
+                // bottom: isMobileSize ? null : 12.0,
+                // top: isMobileSize ? 84.0 : null,
                 left: 0.0,
                 right: 0.0,
-                child: Center(
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    onEnter: onMouseEnterPageIndicator,
-                    onExit: onMouseExitPageIndicator,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4.0,
-                        horizontal: 8.0,
-                      ),
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  onEnter: onMouseEnterPageIndicator,
+                  onExit: onMouseExitPageIndicator,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4.0,
+                      horizontal: 8.0,
+                    ),
+                    child: Center(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -410,7 +431,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                             count: _pageViewCount,
                             effect: ExpandingDotsEffect(
                               activeDotColor:
-                                  Constants.colors.foregroundPalette.first,
+                                  Constants.colors.getRandomFromPalette(
+                                withGoodContrast: true,
+                              ),
                             ),
                             onDotClicked: onDotIndicatorTapped,
                           ),
@@ -560,7 +583,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Fetch draft quote document in firestore.
   void fetchDraftQuote(DraftQuote quote) async {
     try {
-      final query = getDraftQuoteQuery(quote);
+      final DocumentMap query = getDraftQuoteQuery(quote);
       final DocumentSnapshotMap docSnap = await query.get();
 
       if (!docSnap.exists) {
@@ -572,6 +595,71 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         Utils.graphic.showSnackbar(
           context,
           message: "quote.fetch.draft.failed".tr(),
+        );
+        return;
+      }
+
+      setState(() {
+        _docRef = docSnap.reference;
+        populateFields(quote);
+      });
+
+      updateAuthorSuggestions(quote.author.name);
+      updateReferenceSuggestions(quote.reference.name);
+    } catch (error) {
+      loggy.error(error);
+    }
+  }
+
+  void populateFields(Quote quote) {
+    _contentController.text = quote.name;
+    _authorNameController.text = quote.author.name;
+    _authorSummaryController.text = quote.author.summary;
+    _referenceNameController.text = quote.reference.name;
+    _referenceSummaryController.text = quote.reference.summary;
+
+    initAutoLang();
+    _contentController.selection = TextSelection.fromPosition(
+      TextPosition(
+        affinity: TextAffinity.downstream,
+        offset: quote.name.length,
+      ),
+    );
+  }
+
+  /// Fetch quote document in firestore.
+  void fetchQuoteDocument() async {
+    final Quote quote = NavigationStateHelper.quote;
+    if (quote.id.isEmpty) {
+      tryCreateDraft();
+      return;
+    }
+
+    if (quote is DraftQuote) {
+      fetchDraftQuote(quote);
+      return;
+    }
+
+    fetchPublishedQuote(quote);
+  }
+
+  /// Fetch published quote document in firestore.
+  void fetchPublishedQuote(Quote quote) async {
+    try {
+      final DocumentSnapshotMap docSnap = await FirebaseFirestore.instance
+          .collection("quotes")
+          .doc(quote.id)
+          .get();
+
+      if (!docSnap.exists) {
+        loggy.error("Failed to fetch quote.");
+        if (!mounted) {
+          return;
+        }
+
+        Utils.graphic.showSnackbar(
+          context,
+          message: "quote.fetch.failed".tr(),
         );
         return;
       }
@@ -591,24 +679,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         _referenceNameController.text = quote.reference.name;
         _referenceSummaryController.text = quote.reference.summary;
       });
-
-      updateAuthorSuggestions(quote.author.name);
-      updateReferenceSuggestions(quote.reference.name);
     } catch (error) {
       loggy.error(error);
-    }
-  }
-
-  /// Fetch quote document in firestore.
-  void fetchQuoteDocument() async {
-    final quote = NavigationStateHelper.quote;
-    if (quote.id.isEmpty) {
-      tryCreateDraft();
-      return;
-    }
-
-    if (quote is DraftQuote) {
-      fetchDraftQuote(quote);
     }
   }
 
@@ -672,9 +744,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     return true;
   }
 
-  void loadPreferences() async {
+  /// Initialize props.
+  void initProps() async {
     _languageSelection = await Utils.vault.getLanguageSelection();
-    // setState(() {});
+    _authorMetadataOpened = await Utils.vault.getAddAuthorMetadataOpened();
+    _referenceMetadataOpened =
+        await Utils.vault.getAddReferenceMetadataOpened();
   }
 
   /// Callback fired when author's name has changed.
@@ -894,23 +969,28 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     updateQuoteDoc();
   }
 
+  void initAutoLang() {
+    final bool isLangAutoDetect =
+        _languageSelection == EnumLanguageSelection.autoDetect;
+
+    if (!isLangAutoDetect) return;
+    _autoDetectedLanguage = langdetect.detect(_contentController.text);
+  }
+
   /// Callback fired when quote's content has changed.
   void onQuoteContentChanged(String content) {
     final bool isLangAutoDetect =
         _languageSelection == EnumLanguageSelection.autoDetect;
 
     if (content.length >= 3 && isLangAutoDetect) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        setState(() {
-          _autoDetectedLanguage = langdetect.detect(content);
-        });
-      });
+      _autoDetectedLanguage = langdetect.detect(content);
 
       NavigationStateHelper.quote = NavigationStateHelper.quote.copyWith(
         language: _autoDetectedLanguage,
         name: content,
       );
 
+      WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
       updateQuoteDoc();
       return;
     }
@@ -1334,9 +1414,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         operation: EnumQuoteOperation.create,
       );
 
-      final ref =
-          await FirebaseFirestore.instance.collection("drafts").add(map);
-      loggy.info("new proposed quote: ${ref.id}");
+      await FirebaseFirestore.instance.collection("drafts").add(map);
 
       /// Delete user's draft
       /// because we copied it to the global drafts collection.
@@ -1440,6 +1518,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       return;
     }
 
+    final Quote navigationQuote = NavigationStateHelper.quote;
+
     try {
       final QuerySnapMap existingEmptyDrafts = await FirebaseFirestore.instance
           .collection("users")
@@ -1455,10 +1535,19 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         final Json emptyDraftMap = firstDraftDoc.data();
         emptyDraftMap["id"] = firstDraftDoc.id;
 
-        setState(() {
-          final DraftQuote newDraft = DraftQuote.fromMap(emptyDraftMap);
-          NavigationStateHelper.quote = newDraft;
-        });
+        // From "copy from" action.
+        if (navigationQuote.id.isEmpty && navigationQuote.name.isNotEmpty) {
+          emptyDraftMap.addAll(
+            navigationQuote.toMap(
+              operation: EnumQuoteOperation.create,
+              userId: userFirestoreSignal.value.id,
+            ),
+          );
+        }
+
+        final DraftQuote newDraft = DraftQuote.fromMap(emptyDraftMap);
+        setState(() => NavigationStateHelper.quote = newDraft);
+        populateFields(newDraft);
         return;
       }
 
@@ -1467,7 +1556,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
           .doc(userFirestoreSignal.value.id)
           .collection("drafts")
           .add(
-            DraftQuote.empty().toMap(
+            navigationQuote.toMap(
               operation: EnumQuoteOperation.create,
               userId: userFirestoreSignal.value.id,
             ),
@@ -1491,10 +1580,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         return;
       }
 
+      final DraftQuote newDraft = DraftQuote.fromMap(draftMap);
       setState(() {
-        final DraftQuote newDraft = DraftQuote.fromMap(draftMap);
         NavigationStateHelper.quote = newDraft;
       });
+
+      populateFields(newDraft);
     } catch (error) {
       loggy.error(error);
     }
@@ -1694,5 +1785,17 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         message: "quote.validate.failed".tr(),
       );
     }
+  }
+
+  /// Callback fired to toggle author metadata widget size.
+  void onToggleAuthorMetadata() {
+    Utils.vault.setAddAuthorMetadataOpened(!_authorMetadataOpened);
+    setState(() => _authorMetadataOpened = !_authorMetadataOpened);
+  }
+
+  /// Callback fired to toggle author metadata widget size.
+  void onToggleReferenceMetadata() {
+    Utils.vault.setAddReferenceMetadataOpened(!_referenceMetadataOpened);
+    setState(() => _referenceMetadataOpened = !_referenceMetadataOpened);
   }
 }

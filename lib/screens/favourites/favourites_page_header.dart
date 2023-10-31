@@ -6,36 +6,42 @@ import "package:kwotes/globals/utils.dart";
 /// Favourites page header.
 class FavouritesPageHeader extends StatelessWidget {
   /// Header part of favourites page.
-  const FavouritesPageHeader({super.key});
+  const FavouritesPageHeader({
+    super.key,
+    this.isMobileSize = false,
+  });
+
+  /// Reduce font size if true.
+  final bool isMobileSize;
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 48.0, bottom: 42.0),
-        child: Hero(
-          tag: "favourites",
-          child: Material(
-            color: Colors.transparent,
-            child: Text.rich(
-              TextSpan(text: "favourites.name".tr(), children: [
-                TextSpan(
-                  text: ".",
-                  style: TextStyle(
-                    color: Constants.colors.likes,
-                  ),
+    return Padding(
+      padding: isMobileSize
+          ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
+          : const EdgeInsets.only(left: 48.0, bottom: 42.0),
+      child: Hero(
+        tag: "favourites",
+        child: Material(
+          color: Colors.transparent,
+          child: Text.rich(
+            TextSpan(text: "favourites.name".tr(), children: [
+              TextSpan(
+                text: ".",
+                style: TextStyle(
+                  color: Constants.colors.likes,
                 ),
-              ]),
-              style: Utils.calligraphy.title(
-                textStyle: TextStyle(
-                  fontSize: 74.0,
-                  fontWeight: FontWeight.w200,
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.color
-                      ?.withOpacity(0.8),
-                ),
+              ),
+            ]),
+            style: Utils.calligraphy.title(
+              textStyle: TextStyle(
+                fontSize: isMobileSize ? 42.0 : 74.0,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.color
+                    ?.withOpacity(0.8),
               ),
             ),
           ),

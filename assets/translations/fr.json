@@ -8,6 +8,7 @@
   "account": {
     "already_have": "J'ai déjà un compte",
     "create": "Créer un compte",
+    "creating": "Création du compte",
     "delete": {
       "error": "Une erreur s'est produite lors de la suppression de votre compte",
       "name": "Supprimer mon compte",
@@ -19,6 +20,12 @@
     "deletion_point_2": "Vos citations publiées resteront sur la plateforme",
     "deletion_point_3": "Votre nom d'utilisateur sera (slowly) dissaciated avec les publications des citations",
     "dont_own": "Je n'ai pas de compte",
+    "error": {
+      "create": "Une erreur s'est produite lors de la création de votre compte",
+      "delete": "Une erreur s'est produite lors de la suppression de votre compte",
+      "does_not_exist": "Il semble que ce compte n'existe pas",
+      "update": "Une erreur s'est produite lors de la mise à jour de votre compte"
+    },
     "name": "Compte",
     "recover": "Récupérer mon compte"
   },
@@ -37,6 +44,11 @@
       "name": "Supprimer l'auteur",
       "success": "L'auteur a été supprimé"
     },
+    "error": {
+      "no_image": "Cet auteur n'a pas d'image."
+    },
+    "latest_added": "Derniers auteurs ajoutés",
+    "loading": "Chargement de l'auteur",
     "name": "Auteur",
     "copy": {
       "name": "Copier le nom de l'auteur",
@@ -77,6 +89,10 @@
   "copy_link_success": "Le lien a été copié!",
   "create": "Créer",
   "dark": "Sombre",
+  "date": {
+    "last_updated": "Dernière mise à jour",
+    "name": "Date"
+  },
   "dashboard": "Tableau de bord",
   "delete_account": "Supprimer le compte",
   "description": {
@@ -91,15 +107,19 @@
   },
   "email": {
     "check_spam": "Veuillez vérifier votre dossier de spam",
-    "doesnt_exist": "Désolés, cette adresse email n'existe pas.",
-    "empty_forbidden": "L'email ne peut pas être vide",
-    "empty_no_valid": "Le champ email est vide. Veuillez saisir une adresse email valide.",
+    "error": {
+      "doesnt_exist": "Désolés, cette adresse email n'existe pas.",
+      "empty_forbidden": "L'email ne peut pas être vide",
+      "empty": "Le champ email est vide. Veuillez saisir une adresse email valide.",
+      "not_valid": "L'adresse email saisie n'est pas valide"
+    },
     "password_reset_link": "Un lien pour réinitialiser votre mot de passe vous a été envoyé dans votre boîte email",
     "response_soon": "Vous allez recevoir une réponse par email bientôt",
     "name": "Email",
     "new": "Nouvel email",
     "send_me": "Envoyer un email",
     "sending": "Envoi de l'email",
+    "send_reset_link": "Envoyer le lien de réinitialisation",
     "sending_password_recovery": "Envoie du lien pour réinitialiser votre mot de passe",
     "update": "Mettre à jour mon email",
     "update_tips": "Entrez votre nouvelle adresse email ci-dessous ainsi que votre mot de passe pour confirmer ce changement.",
@@ -115,32 +135,44 @@
     "name": "Favoris"
   },
   "fictional": "Fictionnel",
-  "genres": {
-    "article": "Article",
-    "bd": "BD",
-    "blog": "Blog",
-    "book": "Livre",
-    "comic": "Comic",
-    "film": "Film",
-    "graphic_novel": "Roman graphique",
-    "game": "Jeu",
-    "music": "Musique",
-    "news": "Actualités",
-    "novel": "Roman",
-    "other": "Autre",
-    "painting": "Peinture",
-    "paper": "Papier",
-    "play": "Pièce de theatre",
-    "poem": "Poème",
-    "photo": "Photo",
-    "podcast": "Podcast",
-    "post": "Post",
-    "poetry": "Poésie",
-    "short_story": "Nouvelle",
-    "tv_series": "Série TV",
-    "video_game": "Jeu vidéo",
-    "video": "Video",
-    "website": "Site web"
+  "genre": {
+    "name": "Genre",
+    "primary": {
+      "article": "Article",
+      "bd": "BD",
+      "blog": "Blog",
+      "book": "Livre",
+      "comic": "Comic",
+      "film": "Film",
+      "graphic_novel": "Roman graphique",
+      "game": "Jeu",
+      "music": "Musique",
+      "name": "Genre principal",
+      "news": "Actualités",
+      "novel": "Roman",
+      "other": "Autre",
+      "painting": "Peinture",
+      "paper": "Papier",
+      "play": "Pièce de theatre",
+      "poem": "Poème",
+      "photo": "Photo",
+      "podcast": "Podcast",
+      "post": "Post",
+      "poetry": "Poésie",
+      "short_story": "Nouvelle",
+      "tv series": "Série TV",
+      "tv_series": "Série TV",
+      "video_game": "Jeu vidéo",
+      "video": "Video",
+      "website": "Site web"
+    },
+    "secondary": {
+      "gothic horror": "Horreur gothique",
+      "name": "Genre secondaire",
+      "science-fiction": "Science fiction",
+      "supernatural drama": "Drama surnaturel",
+      "tragicomedy": "Tragicomedie"
+    }
   },
   "home": "Accueil",
   "iap": "Achats intégrés",
@@ -166,19 +198,25 @@
   "kwotes_leading": "kwotes •",
   "lang_recent_add_maybe": "Peut-être que cette langue a été ajoutée récemment",
   "language": {
+    "all": "Toutes les langues",
     "locale": {
       "autoDetect": "Détection auto",
       "af": "Afrikaans",
       "ar": "عرب",
+      "bg": "Български",
+      "ca": "Català",
+      "cs": "Čeština",
+      "da": "Dansk",
       "de": "Deutch",
       "en": "English",
+      "es": "Español",
       "fr": "Français",
       "it": "Italiano",
       "nl": "Nederlands",
       "no": "Norsk",
       "pt": "Português",
+      "ro": "Română",
       "ru": "Русский",
-      "es": "Español",
       "sk": "Slovenčina",
       "sv": "Svenska"
     },
@@ -234,7 +272,7 @@
         },
         "descriptions": {
           "0": "Sentiments partagés, mais je les aime.",
-          "1": "Qaund mon moral est bas, je pense à ces citations.",
+          "1": "Quand mon moral est bas, je pense à ces citations.",
           "2": "Elle me remplissent de joie.",
           "3": "Je dois les garder à porter de main.",
           "4": "Je peux surmonter n'importe quelle épreuve.",
@@ -316,7 +354,9 @@
     "settings": "@:kwotes_leading Settings",
     "signin": "@:kwotes_leading Signin",
     "signup": "@:kwotes_leading Signup",
-    "tos": "@:kwotes_leading Term of Services",
+    "terms_of_service": "@:kwotes_leading Conditions Générales d'Utilisation",
+    "the_purpose": "@:kwotes_leading Le But",
+    "tos": "@:kwotes_leading Conditions Générales d'Utilisation",
     "update_email": "@:kwotes_leading Mise à jour de l'email",
     "update_password": "@:kwotes_leading Mise à jour du mot de passe",
     "update_username": "@:kwotes_leading Mise à jour du nom d'utilisateur"
@@ -324,10 +364,11 @@
   "password": {
     "confirm": "Confirmer le mot de passe",
     "current": "Mot de passe actuel",
-    "empty_forbidden": "Le mot de passe ne peut pas être vide",
-    "empty_no_valid": "Le champ mot de passe est vide. Veuillez saisir un mot de passe valide.",
     "error": {
       "current_empty": "Le champ est vide. Veuillez saisir votre mot de passe actuel.",
+      "empty_forbidden": "Le mot de passe ne peut pas être vide",
+      "empty_no_valid": "Le champ mot de passe est vide. Veuillez saisir un mot de passe valide.",
+      "incorrect": "Le mot de passe actuel est incorrect",
       "minimum_length": "Veuillez utiliser au moins {} caractères",
       "new_empty": "Le champ est vide. Veuillez saisir votre mot de passe actuel.",
       "not_valid": "Le mot de passe n'est pas valide",
@@ -355,6 +396,21 @@
   "published": {
     "description": "Votre contribution au monde",
     "name": "Publiées"
+  },
+  "purpose": {
+    "content": {
+      "0": "La plupart des applications de citations référencient essentiellement des livres et de vieux auteurs, mais il existe des citations merveilleuses dans les films, séries télévisées, jeux vidéo, animes, bandes dessinées et autres.",
+      "1": "La culture d'aujourd'hui est riche et variées et il n'y a aucune raison de se limiter à un seul medium.",
+      "2": "C'est pour cette raison que j'ai commencé à développer",
+      "3": "kwotes",
+      "4": "C'est un application, plateforme et service consacrés aux citations.",
+      "5": "La partie frontend est développé avec Flutter et a pour but d'être multiplatforme (iOS, Android, Web). Vous pouurrez trouver des citations dans plusieurs langues (seulement l'Anglais et le Français sont disponibles pour le moment).",
+      "6": "Nous avons essayé de faire une application facile et agréable à utiliser.",
+      "7": "Nous souhaitons aussi mettre en avant la partie crowd-sourcing de la plateforme, c'est pourquoi vous avez la possibilité, en tant qu'utilisateur, de publier vos propres citations. Vous pouvez aussi l'appli pour enregistrer vos brouillons de citations sans les publiées.",
+      "8": "Les citations soumises à validation sont modérées par l'équipe de la plateforme. L'application est gratuite et open source."
+    },
+    "name": "But",
+    "the": "Le But"
   },
   "quit": "Quitter",
   "quote": {
@@ -617,6 +673,10 @@
       }
     },
     "add_topics": "Ajouter des thèmes.",
+    "all": {
+      "description": "Les citations de tous les utilisateurs",
+      "name": "Toutes"
+    },
     "clear_all": "Effacer tout",
     "clear_topics": "Effacer les thèmes",
     "copy": {
@@ -630,7 +690,8 @@
     "delete": {
       "confirm": "Confirmer la suppression ?",
       "draft": "Supprimer le brouillon",
-      "name": "Supprimer la citation"
+      "name": "Supprimer la citation",
+      "success": "La citation a été supprimée !"
     },
     "edit": "Modifier la citation",
     "empty": {
@@ -669,13 +730,20 @@
       "failed": "Une erreur est survenue lors de la récupéreration de la citation",
       "name": "Recuperer la citation"
     },
+    "language": {
+      "change": "Changer la langue"
+    },
     "like": {
       "name": "J'aime"
     },
     "name": "Citation",
     "new": "Nouvelle citation",
     "not_found": "The quote was not found in the list.",
-    "open_random": "Cliquez/Appuyez sur une lettre pour ouvrir une citation.",
+    "open_random": "Appuyez sur une lettre pour ouvrir une citation.",
+    "owned": {
+      "description": "Les citations que j'ai publiées",
+      "name": "Les miennes"
+    },
     "remove": {
       "failed": "Un problème est survenu lors du retrait de la citation.",
       "ing": "Retrait de la citation",
@@ -731,6 +799,11 @@
       "name": "Copier le nom de la référence",
       "url": "Copier le lien de la référence"
     },
+    "error": {
+      "no_image": "Cette référence n'a pas d'image."
+    },
+    "latest_added":"Dernières références ajoutées",
+    "loading":"Chargement de la référence",
     "name": "Référence"
   },
   "release_date": "Date de sortie",
@@ -766,6 +839,7 @@
     },
     "some_topics": "Quelques thèmes"
   },
+  "see_metadata": "Voir les métadonnées",
   "see_related_quotes": "Voir les citations liées",
   "settings": {
     "description": "Personnalisez votre expérience",
@@ -782,18 +856,31 @@
   "system": "Système",
   "theme": "Thème",
   "title": "Titre",
-  "tos": "CGU",
-  "tos_title": "Contrat Général d'Utilisation",
-  "tos_1": "Votre confidentialité est important pour nous. C'est la mission de la société Jeremie Codes de respecter la confidentialité de vos données à propos des informations que nous collectons quand vous accéder à notre site web, kwotes, aux applications mobiles et autres services que nous possédons et que nous opérons.",
-  "tos_2": "Nous vous demanderons vos informations personnelles seulement quand nous en aurons vraiment besoin afin de vous proposer un meilleur service. Nous collectons ces données de manière légale et respectueuse, avec votre accord et en s'assurant que vous en soyez conscient. Nous vous dirons quand nous les collecterons et comment ces données seront utilisées.",
-  "tos_3": "Nous stockerons les informations collectées autant que nécessaire afin de vous proposer un contenu adapté. Nous protégerons les données que nous stockons dans la mesure de moyens commerciaux acceptables afin d'empêcher la perte et le vol, ainsi que des accès non-autorisés, la divulgation, la copie, l'utilisation ou la modification.",
-  "tos_4": "Nous ne partageons aucune information personnelle de manière publique ou avec des tierces parties, excepté quand requis par la loi.",
-  "tos_5": "Notre site peut contenir des liens redirigeant vers des sites externes que nous n'opérons pas. Soyez avertis que nous n'avons aucun controle sur le contenu et les pratiques de ces sites tiers, et nous ne pouvons accepter la responsabilité ou d'être tenus pour responsables légales envers leurs propres conditions générales d'utilisation et leur politique de confidentialité.",
-  "tos_6": "Vous êtres libre de refuser notre demande de collecte de vos informations personnelles, en comprenant que nous pouvons être dans l'impossibilité de vous proposer une bonne utilisation de nos applications et services, ou leur utilisation complète.",
-  "tos_7": "Votre utilisation prolongée de notre site web et nos applications sera comprise comme l'acceptation et l'adhésion à nos conditions générales d'utilisation, notre politique de confidentialité, ainsi que nos pratiques concernant l'utilisation de vos données. Si vous avez des questions à propos de l'utilisaiton des données personnelles et de vos données, vous pouvez nous contacter à feedback@fig.style.",
-  "tos_8": "Cette politique est applicable depuis le 1 Mai 2020.",
-  "tos_created_with": "Politique de confidentialité créée avec GetTerms.",
+  "tos": {
+    "name": "Conditions générales d'utilisation",
+    "title": "Contrat Général d'Utilisation",
+    "content": {
+      "0": "Votre confidentialité est important pour nous. C'est la mission de la société CODING BOX de respecter la confidentialité de vos données à propos des informations que nous collectons quand vous accéder à notre site web, kwotes, aux applications mobiles et autres services que nous possédons et que nous opérons.",
+      "1": "Nous vous demanderons vos informations personnelles seulement quand nous en aurons vraiment besoin afin de vous proposer un meilleur service. Nous collectons ces données de manière légale et respectueuse, avec votre accord et en s'assurant que vous en soyez conscient. Nous vous dirons quand nous les collecterons et comment ces données seront utilisées.",
+      "2": "Nous stockerons les informations collectées autant que nécessaire afin de vous proposer un contenu adapté. Nous protégerons les données que nous stockons dans la mesure de moyens commerciaux acceptables afin d'empêcher la perte et le vol, ainsi que des accès non-autorisés, la divulgation, la copie, l'utilisation ou la modification.",
+      "3": "Nous ne partageons aucune information personnelle de manière publique ou avec des tierces parties, excepté quand requis par la loi.",
+      "4": "Notre site peut contenir des liens redirigeant vers des sites externes que nous n'opérons pas. Soyez avertis que nous n'avons aucun controle sur le contenu et les pratiques de ces sites tiers, et nous ne pouvons accepter la responsabilité ou d'être tenus pour responsables légales envers leurs propres conditions générales d'utilisation et leur politique de confidentialité.",
+      "5": "Vous êtres libre de refuser notre demande de collecte de vos informations personnelles, en comprenant que nous pouvons être dans l'impossibilité de vous proposer une bonne utilisation de nos applications et services, ou leur utilisation complète.",
+      "6": "Votre utilisation prolongée de notre site web et nos applications sera comprise comme l'acceptation et l'adhésion à nos conditions générales d'utilisation, notre politique de confidentialité, ainsi que nos pratiques concernant l'utilisation de vos données. Si vous avez des questions à propos de l'utilisaiton des données personnelles et de vos données, vous pouvez nous contacter à feedback@fig.style.",
+      "7": "Cette politique est applicable depuis le 1 Mai 2020."
+    },
+    "created_with": "Politique de confidentialité créée avec GetTerms."
+  },
+  "update": {
+    "name": "Mettre à jour"
+  },
   "username": {
+    "error": {
+      "already_taken": "Ce nom d'utilisateur est déjà pris.",
+      "empty": "Le nom d'utilisateur ne peut pas être vide.",
+      "invalid":  "Ce nom d'utilisateur est invalide.",
+      "minimum_length": "Le nom d'utilisateur doit contenir au moins 3 caractères."
+    },
     "name": "Nom d'utilisateur",
     "new": "Nouveau nom d'utilisateur",
     "update": {
@@ -803,6 +890,7 @@
       "tips": "Vous pouvez choisir un nouveau nom d'utilisateur s'il est disponible, contient au moins 3 caractères, et contenant uniquement des caractères alphanumériques, des tirets (-) et des tirets (_)."
     }
   },
+  "version": "Version",
   "welcome_back": "Welcome back",
   "welcome_ex": "Bienvenu(e) !",
   "zoom": "Agrandir l'image"

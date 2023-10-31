@@ -66,11 +66,11 @@ class QuotePageBody extends StatelessWidget {
   /// Quote data for this component.
   final Quote quote;
 
-  /// User data for this component.
-  final UserFirestore userFirestore;
-
   /// Indicate text style (font size) for quote's name.
   final Solution textWrapSolution;
+
+  /// User data for this component.
+  final UserFirestore userFirestore;
 
   @override
   Widget build(BuildContext context) {
@@ -83,129 +83,90 @@ class QuotePageBody extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 24.0,
-              left: 42.0,
-              right: 52.0,
-              bottom: 24.0,
-            ),
-            child: ContextMenuWidget(
-              child: GestureDetector(
-                onDoubleTap: onDoubleTapQuote,
-                child: AnimatedTextKit(
-                  isRepeatingAnimation: false,
-                  displayFullTextOnTap: true,
-                  pause: const Duration(milliseconds: 0),
-                  animatedTexts: [
-                    FadeAnimatedText("", duration: 250.ms),
-                    TypewriterAnimatedText(
-                      quote.name,
-                      textStyle: textWrapSolution.style,
-                    ),
-                  ],
-                ),
-              ),
-              menuProvider: (MenuRequest request) {
-                return Menu(
-                  children: [
-                    MenuAction(
-                      title: "quote.copy.name".tr(),
-                      image: MenuImage.icon(TablerIcons.copy),
-                      callback: () => onCopyQuote?.call(),
-                    ),
-                    MenuAction(
-                      title: "quote.copy.url".tr(),
-                      image: MenuImage.icon(TablerIcons.link),
-                      callback: () => onCopyQuoteUrl?.call(),
-                    ),
-                    ContextMenuComponents.addToList(
-                      context,
-                      quote: quote,
-                      userId: userFirestore.id,
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-        if (quote.author.urls.image.isNotEmpty)
+    return Center(
+      child: CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
           SliverToBoxAdapter(
-            child: BetterAvatar(
-              onTap: onTapAuthor != null
-                  ? () => onTapAuthor?.call(quote.author)
-                  : null,
-              radius: 24.0,
-              imageProvider: NetworkImage(
-                quote.author.urls.image,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 24.0,
+                left: 42.0,
+                right: 52.0,
+                bottom: 24.0,
               ),
-              colorFilter: const ColorFilter.mode(
-                Colors.grey,
-                BlendMode.saturation,
-              ),
-            ).animate(delay: 250.ms).scale().fadeIn(),
-          ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-            ),
-            child: Center(
               child: ContextMenuWidget(
-                child: TextButton(
-                  onPressed: onTapAuthor != null
-                      ? () => onTapAuthor?.call(quote.author)
-                      : null,
-                  style: TextButton.styleFrom(
-                    foregroundColor: foregroundColor,
-                  ),
-                  child: Text(
-                    quote.author.name,
-                    textAlign: TextAlign.center,
-                    style: Utils.calligraphy.body(),
+                child: GestureDetector(
+                  onDoubleTap: onDoubleTapQuote,
+                  child: AnimatedTextKit(
+                    isRepeatingAnimation: false,
+                    displayFullTextOnTap: true,
+                    pause: const Duration(milliseconds: 0),
+                    animatedTexts: [
+                      FadeAnimatedText("", duration: 250.ms),
+                      TypewriterAnimatedText(
+                        quote.name,
+                        textStyle: textWrapSolution.style,
+                      ),
+                    ],
                   ),
                 ),
                 menuProvider: (MenuRequest request) {
                   return Menu(
                     children: [
                       MenuAction(
-                        title: "author.copy.name".tr(),
+                        title: "quote.copy.name".tr(),
                         image: MenuImage.icon(TablerIcons.copy),
-                        callback: () => onCopyAuthor?.call(),
+                        callback: () => onCopyQuote?.call(),
                       ),
                       MenuAction(
-                        title: "author.copy.url".tr(),
+                        title: "quote.copy.url".tr(),
                         image: MenuImage.icon(TablerIcons.link),
-                        callback: () => onCopyAuthorUrl?.call(),
+                        callback: () => onCopyQuoteUrl?.call(),
+                      ),
+                      ContextMenuComponents.addToList(
+                        context,
+                        quote: quote,
+                        userId: userFirestore.id,
                       ),
                     ],
                   );
                 },
               ),
             ),
-          ).animate(delay: 350.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
-        ),
-        if (quote.reference.id.isNotEmpty)
+          ),
+          if (quote.author.urls.image.isNotEmpty)
+            SliverToBoxAdapter(
+              child: BetterAvatar(
+                onTap: onTapAuthor != null
+                    ? () => onTapAuthor?.call(quote.author)
+                    : null,
+                radius: 24.0,
+                imageProvider: NetworkImage(
+                  quote.author.urls.image,
+                ),
+                colorFilter: const ColorFilter.mode(
+                  Colors.grey,
+                  BlendMode.saturation,
+                ),
+              ).animate(delay: 250.ms).scale().fadeIn(),
+            ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 0.0,
+                top: 8.0,
               ),
               child: Center(
                 child: ContextMenuWidget(
                   child: TextButton(
-                    onPressed: onTapReference != null
-                        ? () => onTapReference?.call(quote.reference)
+                    onPressed: onTapAuthor != null
+                        ? () => onTapAuthor?.call(quote.author)
                         : null,
                     style: TextButton.styleFrom(
                       foregroundColor: foregroundColor,
                     ),
                     child: Text(
-                      quote.reference.name,
+                      quote.author.name,
                       textAlign: TextAlign.center,
                       style: Utils.calligraphy.body(),
                     ),
@@ -214,23 +175,65 @@ class QuotePageBody extends StatelessWidget {
                     return Menu(
                       children: [
                         MenuAction(
-                          title: "reference.copy.name".tr(),
+                          title: "author.copy.name".tr(),
                           image: MenuImage.icon(TablerIcons.copy),
-                          callback: () => onCopyReference?.call(),
+                          callback: () => onCopyAuthor?.call(),
                         ),
                         MenuAction(
-                          title: "reference.copy.url".tr(),
+                          title: "author.copy.url".tr(),
                           image: MenuImage.icon(TablerIcons.link),
-                          callback: () => onCopyReferenceUrl?.call(),
+                          callback: () => onCopyAuthorUrl?.call(),
                         ),
                       ],
                     );
                   },
                 ),
               ),
-            ).animate(delay: 600.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+            ).animate(delay: 350.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
           ),
-      ],
+          if (quote.reference.id.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 0.0,
+                ),
+                child: Center(
+                  child: ContextMenuWidget(
+                    child: TextButton(
+                      onPressed: onTapReference != null
+                          ? () => onTapReference?.call(quote.reference)
+                          : null,
+                      style: TextButton.styleFrom(
+                        foregroundColor: foregroundColor,
+                      ),
+                      child: Text(
+                        quote.reference.name,
+                        textAlign: TextAlign.center,
+                        style: Utils.calligraphy.body(),
+                      ),
+                    ),
+                    menuProvider: (MenuRequest request) {
+                      return Menu(
+                        children: [
+                          MenuAction(
+                            title: "reference.copy.name".tr(),
+                            image: MenuImage.icon(TablerIcons.copy),
+                            callback: () => onCopyReference?.call(),
+                          ),
+                          MenuAction(
+                            title: "reference.copy.url".tr(),
+                            image: MenuImage.icon(TablerIcons.link),
+                            callback: () => onCopyReferenceUrl?.call(),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ).animate(delay: 600.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+            ),
+        ],
+      ),
     );
   }
 }

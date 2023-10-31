@@ -4,24 +4,29 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/types/enums/enum_search_entity.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 
 /// Search input for a search page.
 class SearchInput extends StatelessWidget {
   const SearchInput({
     super.key,
-    this.searchEntity = EnumSearchEntity.quote,
+    this.searchCategory = EnumSearchCategory.quote,
     this.inputController,
     this.onChangedTextField,
     this.focusNode,
     this.padding = const EdgeInsets.only(left: 12.0),
+    this.isMobileSize = false,
   });
+
+  /// True if this is a mobile size.
+  /// Used to determine the size of the search input.
+  final bool isMobileSize;
 
   /// Padding of this widget.
   final EdgeInsets padding;
 
-  /// What type of entity we are searching.
-  final EnumSearchEntity searchEntity;
+  /// What type of category we are searching.
+  final EnumSearchCategory searchCategory;
 
   /// Search focus node.
   final FocusNode? focusNode;
@@ -34,12 +39,13 @@ class SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String hintText = "${"search.${searchEntity.name}s".tr()}...";
+    final String hintText = "${"search.${searchCategory.name}s".tr()}...";
+    final Color backgroundColor =
+        Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7);
 
     return SliverAppBar(
       primary: false,
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+      backgroundColor: backgroundColor,
       stretch: false,
       pinned: true,
       toolbarHeight: 66.0,
@@ -52,7 +58,9 @@ class SearchInput extends StatelessWidget {
           sigmaY: 5,
         ),
         child: Padding(
-          padding: padding.subtract(const EdgeInsets.only(left: 28.0)),
+          padding: isMobileSize
+              ? EdgeInsets.zero
+              : padding.subtract(const EdgeInsets.only(left: 28.0)),
           child: TextField(
             maxLines: null,
             autofocus: true,
@@ -63,8 +71,8 @@ class SearchInput extends StatelessWidget {
             textCapitalization: TextCapitalization.sentences,
             onChanged: onChangedTextField,
             style: Utils.calligraphy.body(
-              textStyle: const TextStyle(
-                fontSize: 54.0,
+              textStyle: TextStyle(
+                fontSize: isMobileSize ? 24.0 : 54.0,
                 fontWeight: FontWeight.w600,
               ),
             ),

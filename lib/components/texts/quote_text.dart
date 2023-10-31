@@ -10,9 +10,13 @@ class QuoteText extends StatefulWidget {
   const QuoteText({
     super.key,
     required this.quote,
+    this.tiny = false,
     this.margin = EdgeInsets.zero,
     this.onTap,
   });
+
+  /// Reduce font size if true.
+  final bool tiny;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -83,7 +87,7 @@ class _QuoteTextState extends State<QuoteText> {
           quoteName,
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: 42.0,
+              fontSize: widget.tiny ? 24.0 : 42.0,
               fontWeight: FontWeight.w200,
               color: color,
               fontStyle: fontStyle,

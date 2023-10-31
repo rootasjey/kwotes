@@ -52,9 +52,7 @@ class _UsernamePageState extends State<UsernamePage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    const EdgeInsets margin = EdgeInsets.only(
-      left: 48.0,
-    );
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     return BasicShortcuts(
       autofocus: false,
@@ -62,13 +60,15 @@ class _UsernamePageState extends State<UsernamePage> with UiLoggy {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            const ApplicationBar(),
+            ApplicationBar(
+              isMobileSize: isMobileSize,
+            ),
             UsernamePageHeader(
-              margin: margin,
+              isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
             ),
             UsernamePageBody(
-              margin: margin,
+              isMobileSize: isMobileSize,
               usernameController: _usernameTextController,
               passwordFocusNode: _passwordFocusNode,
               pageState: _pageState,

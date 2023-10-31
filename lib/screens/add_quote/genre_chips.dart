@@ -10,6 +10,7 @@ class GenreChips extends StatefulWidget {
   /// An input chip for selecting main genre of a reference.
   const GenreChips({
     super.key,
+    this.show = false,
     this.margin = EdgeInsets.zero,
     this.onPrimaryGenreChanged,
     this.onSecondaryGenreChanged,
@@ -18,6 +19,9 @@ class GenreChips extends StatefulWidget {
     this.selectedPrimaryGenre = "",
     this.selectedSecondaryGenre = "",
   });
+
+  /// Show this widget if true.
+  final bool show;
 
   /// Margin to be applied on the chip relative to its parent.
   final EdgeInsets margin;
@@ -64,8 +68,9 @@ class _GenreChipsState extends State<GenreChips> {
   @override
   initState() {
     _primaryGenreString = widget.selectedPrimaryGenre;
-    _primaryGenreTextController.text =
-        _primaryGenreString.isEmpty ? "" : "genres.$_primaryGenreString".tr();
+    _primaryGenreTextController.text = _primaryGenreString.isEmpty
+        ? ""
+        : "genre.primary.$_primaryGenreString".tr();
     _secondaryGenreTextController.text = widget.selectedSecondaryGenre;
     super.initState();
   }
@@ -79,6 +84,10 @@ class _GenreChipsState extends State<GenreChips> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.show) {
+      return const SizedBox();
+    }
+
     const double width = 160.0;
 
     final Brightness brightness = Theme.of(context).brightness;
@@ -157,7 +166,7 @@ class _GenreChipsState extends State<GenreChips> {
                     child: ActionChip(
                       elevation: 2.0,
                       pressElevation: 0.0,
-                      label: Text("genres.${genre.name}".tr()),
+                      label: Text("genre.primary.${genre.name}".tr()),
                       backgroundColor: backgroundColor,
                       labelStyle: TextStyle(
                         color: labelColor,
@@ -197,7 +206,7 @@ class _GenreChipsState extends State<GenreChips> {
   /// Called when a (primary genre) chip is tapped.
   void onPrimaryGenreChipTapped(EnumMainGenre genre) {
     _primaryGenreString = genre.name;
-    _primaryGenreTextController.text = "genres.${genre.name}".tr();
+    _primaryGenreTextController.text = "genre.primary.${genre.name}".tr();
     widget.onPrimaryGenreChanged?.call(genre.name);
   }
 
@@ -214,21 +223,31 @@ class _GenreChipsState extends State<GenreChips> {
 
     setState(() {
       _genres = EnumMainGenre.values
-          .where((x) => x.name.contains(value.toLowerCase()))
+          .where(
+            (EnumMainGenre genre) =>
+                genre.name.contains(value.toLowerCase()) ||
+                "genre.primary.${genre.name}"
+                    .tr()
+                    .toLowerCase()
+                    .contains(value.toLowerCase()),
+          )
           .toList();
     });
   }
 
   void onPrimaryGenreSubmitted(String value) {
     final EnumMainGenre genre = _genres.firstWhere(
-      (x) => x.name.toLowerCase().contains(
-            value.toLowerCase(),
-          ),
+      (x) =>
+          x.name.toLowerCase().contains(value.toLowerCase()) ||
+          "genre.primary.${x.name}"
+              .tr()
+              .toLowerCase()
+              .contains(value.toLowerCase()),
       orElse: () => EnumMainGenre.other,
     );
 
     _primaryGenreString = genre.name;
-    _primaryGenreTextController.text = "genres.${genre.name}".tr();
+    _primaryGenreTextController.text = "genre.primary.${genre.name}".tr();
     widget.onPrimaryGenreChanged?.call(genre.name);
   }
 }

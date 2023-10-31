@@ -5,6 +5,7 @@ import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/application_bar.dart";
@@ -16,6 +17,7 @@ import "package:kwotes/router/locations/author_location.dart";
 import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/screens/search/search_category_selector.dart";
 import "package:kwotes/screens/search/search_input.dart";
 import "package:kwotes/screens/search/search_page_body.dart";
 import "package:kwotes/screens/search/showcase.dart";
@@ -23,7 +25,7 @@ import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_app_bar_mode.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
-import "package:kwotes/types/enums/enum_search_entity.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
@@ -57,6 +59,12 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// True if more results can be loaded.
   bool _hasMoreResults = true;
+
+  /// [Mobile] Show entity selector if true.
+  bool _showEntitySelector = true;
+
+  /// [Mobile] Save previous offset on scroll to show/hide entity selector.
+  double _prevOffset = 0.0;
 
   /// List of quotes results for a specific search (algolia).
   final List<Quote> _quoteResults = [];
@@ -101,8 +109,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
 
-  /// What type of entity we are searching.
-  EnumSearchEntity _searchEntity = EnumSearchEntity.quote;
+  /// What type of category we are searching.
+  EnumSearchCategory _searchCategory = EnumSearchCategory.quote;
 
   /// Scroll controller.
   final ScrollController _scrollController = ScrollController();
@@ -133,6 +141,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     const EdgeInsets padding = EdgeInsets.only(
       top: 0.0,
       left: 48.0,
@@ -149,97 +158,124 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       autofocus: false,
       onCancel: context.beamBack,
       child: Scaffold(
-        body: ImprovedScrolling(
-          onScroll: _onScroll,
-          scrollController: _scrollController,
-          child: ScrollConfiguration(
-            behavior: const CustomScrollBehavior(),
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                ApplicationBar(
-                  elevation: 0.0,
-                  mode: EnumAppBarMode.search,
-                  searchEntitySelected: _searchEntity,
-                  onSelectSearchEntity: onSelectSearchEntity,
-                  onTapTitle: onTapAppBarTitle,
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6.0),
-                        child: TextButton(
-                          onPressed: onTapAppBarTitle,
-                          child: Text(
-                            Constants.appName,
-                            style: Utils.calligraphy.body(
-                              textStyle: TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.w600,
-                                color: foregroundColor?.withOpacity(0.8),
+        body: Stack(
+          children: [
+            ImprovedScrolling(
+              onScroll: onScroll,
+              scrollController: _scrollController,
+              child: ScrollConfiguration(
+                behavior: const CustomScrollBehavior(),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    ApplicationBar(
+                      elevation: 0.0,
+                      isMobileSize: isMobileSize,
+                      mode: EnumAppBarMode.search,
+                      searchCategorySelected: _searchCategory,
+                      onSelectSearchEntity: onSelectSearchEntity,
+                      onTapTitle: onTapAppBarTitle,
+                      title: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6.0),
+                            child: TextButton(
+                              onPressed: onTapAppBarTitle,
+                              child: Text(
+                                Constants.appName,
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: foregroundColor?.withOpacity(0.8),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      if (showResultCount)
-                        Text(
-                          "• ${"search.result_count".plural(_resultCount)} •",
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              color: foregroundColor?.withOpacity(0.6),
+                          if (showResultCount)
+                            Text(
+                              "• ${"search.result_count".plural(_resultCount)} •",
+                              style: Utils.calligraphy.body(
+                                textStyle: TextStyle(
+                                  color: foregroundColor?.withOpacity(0.6),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      if (showResultCount)
-                        IconButton(
-                          onPressed: onClearInput,
-                          tooltip: "search.clear".tr(),
-                          color: foregroundColor?.withOpacity(0.6),
-                          icon: const Icon(TablerIcons.square_rounded_x),
-                        ),
-                    ],
-                  ),
+                          if (showResultCount)
+                            IconButton(
+                              onPressed: onClearInput,
+                              tooltip: "search.clear".tr(),
+                              color: foregroundColor?.withOpacity(0.6),
+                              icon: const Icon(TablerIcons.square_rounded_x),
+                            ),
+                        ],
+                      ),
+                    ),
+                    SearchInput(
+                      inputController: _searchInputController,
+                      onChangedTextField: onSearchInputChanged,
+                      focusNode: _searchFocusNode,
+                      padding: padding,
+                      searchCategory: _searchCategory,
+                      isMobileSize: isMobileSize,
+                    ),
+                    SearchPageBody(
+                      margin: padding,
+                      pageState: _pageState,
+                      quoteResults: _quoteResults,
+                      searchCategory: _searchCategory,
+                      authorResults: _authorResults,
+                      referenceResults: _referenceResults,
+                      onTapQuote: onTapQuote,
+                      onTapAuthor: onTapAuthor,
+                      onTapReference: onTapReference,
+                      isQueryEmpty: _searchInputController.text.isEmpty,
+                    ),
+                    Showcase(
+                      authors: _authorList,
+                      isMobileSize: isMobileSize,
+                      margin: EdgeInsets.only(
+                        top: isMobileSize ? 0.0 : 24.0,
+                        bottom: 54.0,
+                        left: isMobileSize ? 24.0 : 24.0,
+                        right: isMobileSize ? 24.0 : 24.0,
+                      ),
+                      pageState: _pageState,
+                      onTapTopicColor: onTapTopicColor,
+                      onTapAuthor: onTapAuthor,
+                      onTapReference: onTapReference,
+                      references: _referenceList,
+                      searchCategory: _searchCategory,
+                      show: _searchInputController.text.isEmpty,
+                      topicColors: Constants.colors.topics,
+                    ),
+                  ],
                 ),
-                SearchInput(
-                  inputController: _searchInputController,
-                  onChangedTextField: onSearchInputChanged,
-                  focusNode: _searchFocusNode,
-                  padding: padding,
-                  searchEntity: _searchEntity,
-                ),
-                SearchPageBody(
-                  margin: padding,
-                  pageState: _pageState,
-                  quoteResults: _quoteResults,
-                  searchEntity: _searchEntity,
-                  authorResults: _authorResults,
-                  referenceResults: _referenceResults,
-                  onTapQuote: onTapQuote,
-                  onTapAuthor: onTapAuthor,
-                  onTapReference: onTapReference,
-                  isQueryEmpty: _searchInputController.text.isEmpty,
-                ),
-                Showcase(
-                  authors: _authorList,
-                  references: _referenceList,
-                  topicColors: Constants.colors.topics,
-                  pageState: _pageState,
-                  searchEntity: _searchEntity,
-                  show: _searchInputController.text.isEmpty,
-                  onTapTopicColor: onTapTopicColor,
-                  onTapAuthor: onTapAuthor,
-                  onTapReference: onTapReference,
-                  margin: const EdgeInsets.only(
-                    top: 24.0,
-                    bottom: 54.0,
-                    left: 24.0,
-                    right: 24.0,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            if (_showEntitySelector)
+              Positioned(
+                bottom: 12.0,
+                left: 0.0,
+                right: 0.0,
+                child: Center(
+                  child: SearchCategorySelector(
+                    categorySelected: _searchCategory,
+                    onSelectCategory: onSelectSearchEntity,
+                  ),
+                )
+                    .animate()
+                    .slideY(
+                      begin: 0.4,
+                      end: 0.0,
+                      duration: 150.ms,
+                      curve: Curves.decelerate,
+                    )
+                    .fadeIn(),
+              ),
+          ],
         ),
       ),
     );
@@ -251,14 +287,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     final String text = removeSpecialKeywords(_searchInputController.text);
 
-    switch (_searchEntity) {
-      case EnumSearchEntity.quote:
+    switch (_searchCategory) {
+      case EnumSearchCategory.quote:
         preSearchQuotes(text);
         break;
-      case EnumSearchEntity.author:
+      case EnumSearchCategory.author:
         preSearchAuthors(text);
         break;
-      case EnumSearchEntity.reference:
+      case EnumSearchCategory.reference:
         preSearchReferences(text);
         break;
       default:
@@ -271,14 +307,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     final String text = removeSpecialKeywords(_searchInputController.text);
 
-    switch (_searchEntity) {
-      case EnumSearchEntity.quote:
+    switch (_searchCategory) {
+      case EnumSearchCategory.quote:
         preSearchMoreQuotes(text);
         break;
-      case EnumSearchEntity.author:
+      case EnumSearchCategory.author:
         preSearchMoreAuthors(text);
         break;
-      case EnumSearchEntity.reference:
+      case EnumSearchCategory.reference:
         preSearchMoreReferences(text);
         break;
       default:
@@ -483,12 +519,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   void tryFetchShowcaseData({bool reinit = false}) async {
-    if (_searchEntity == EnumSearchEntity.author) {
+    if (_searchCategory == EnumSearchCategory.author) {
       tryFetchAuthors(reinit: reinit);
       return;
     }
 
-    if (_searchEntity == EnumSearchEntity.reference) {
+    if (_searchCategory == EnumSearchCategory.reference) {
       tryFetchReferences(reinit: reinit);
       return;
     }
@@ -624,11 +660,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     );
   }
 
-  void onSelectSearchEntity(EnumSearchEntity searchEntity) {
-    Utils.vault.saveLastSearchType(searchEntity);
+  void onSelectSearchEntity(EnumSearchCategory searchEntity) {
+    Utils.vault.saveLastSearchCategory(searchEntity);
 
     setState(() {
-      _searchEntity = searchEntity;
+      _searchCategory = searchEntity;
     });
 
     _searchFocusNode.requestFocus();
@@ -680,13 +716,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (text.startsWith("quote:") || text.startsWith("q:")) {
-      onSelectSearchEntity(EnumSearchEntity.quote);
+      onSelectSearchEntity(EnumSearchCategory.quote);
     }
     if (text.startsWith("author:") || text.startsWith("a:")) {
-      onSelectSearchEntity(EnumSearchEntity.author);
+      onSelectSearchEntity(EnumSearchCategory.author);
     }
     if (text.startsWith("reference:") || text.startsWith("r:")) {
-      onSelectSearchEntity(EnumSearchEntity.reference);
+      onSelectSearchEntity(EnumSearchCategory.reference);
     }
   }
 
@@ -702,7 +738,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   Future<void> initializeData() async {
-    _searchEntity = await Utils.vault.getLastSearchType();
+    _searchCategory = await Utils.vault.getLastSearchCategory();
     setState(() {});
   }
 
@@ -739,13 +775,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   void manualSelectSearchEntity(String value) {
     switch (value) {
       case "quote":
-        onSelectSearchEntity(EnumSearchEntity.quote);
+        onSelectSearchEntity(EnumSearchCategory.quote);
         break;
       case "author":
-        onSelectSearchEntity(EnumSearchEntity.author);
+        onSelectSearchEntity(EnumSearchCategory.author);
         break;
       case "reference":
-        onSelectSearchEntity(EnumSearchEntity.reference);
+        onSelectSearchEntity(EnumSearchCategory.reference);
         break;
       default:
     }
@@ -782,7 +818,30 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
-  void _onScroll(double offset) {
+  void autoHideEntitySelector(double offset) {
+    if (_scrollController.position.atEdge && offset == 0.0) {
+      _showEntitySelector ? null : setState(() => _showEntitySelector = true);
+      return;
+    }
+
+    if (_scrollController.position.atEdge && offset > 0.0) {
+      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
+      return;
+    }
+
+    if (_prevOffset < offset) {
+      _prevOffset = offset;
+      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
+      return;
+    }
+
+    _prevOffset = offset;
+    _showEntitySelector ? null : setState(() => _showEntitySelector = true);
+  }
+
+  void onScroll(double offset) {
+    autoHideEntitySelector(offset);
+
     if (!_hasMoreResults) {
       return;
     }

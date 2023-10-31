@@ -42,9 +42,31 @@ class ColorPalette {
     Colors.pink.shade50,
   ];
 
-  Color getRandomFromPalette() {
-    return foregroundPalette
-        .elementAt(Random().nextInt(foregroundPalette.length));
+  Color getRandomFromPalette({bool withGoodContrast = false}) {
+    if (!withGoodContrast) {
+      return foregroundPalette
+          .elementAt(Random().nextInt(foregroundPalette.length));
+    }
+
+    const defaultColor = Colors.deepPurpleAccent;
+    const int maxTries = 12;
+    int tries = 0;
+
+    Color foundColor = foregroundPalette.elementAt(
+      Random().nextInt(foregroundPalette.length),
+    );
+
+    while (foundColor.computeLuminance() > 0.4 && (tries < maxTries)) {
+      foundColor =
+          foregroundPalette[Random().nextInt(foregroundPalette.length)];
+      tries++;
+    }
+
+    if (foundColor.computeLuminance() > 0.4) {
+      return defaultColor;
+    }
+
+    return foundColor;
   }
 
   List<Topic> topics = [];

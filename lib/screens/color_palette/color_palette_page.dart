@@ -14,10 +14,15 @@ class ColorPalettePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     return Scaffold(
       body: CustomScrollView(slivers: [
-        const ApplicationBar(),
+        ApplicationBar(
+          isMobileSize: isMobileSize,
+        ),
         ColorPalettePageBody(
+          isMobileSize: isMobileSize,
           onCopyHex: (Topic topic) => onCopyHex(context, topic),
           onCopyRGBA: (Topic topic) => onCopyRGBA(context, topic),
           onCopyValue: (Topic topic) => onCopyValue(context, topic),

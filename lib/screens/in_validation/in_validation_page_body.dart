@@ -14,11 +14,19 @@ class InValidationPageBody extends StatelessWidget {
   const InValidationPageBody({
     super.key,
     required this.quotes,
+    this.animateList = false,
+    this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.onTap,
     this.onDelete,
     this.onValidate,
   });
+
+  /// Animate list's items if true.
+  final bool animateList;
+
+  /// Adapt UI for mobile size if true.
+  final bool isMobileSize;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -45,42 +53,50 @@ class InValidationPageBody extends StatelessWidget {
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 48.0, right: 72.0),
+      padding: isMobileSize
+          ? const EdgeInsets.only(left: 24.0, right: 24.0)
+          : const EdgeInsets.only(left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            height: 54.0,
-          );
+          return const Divider(height: 54.0);
         },
         itemBuilder: (BuildContext context, int index) {
           final DraftQuote quote = quotes[index];
           return ContextMenuWidget(
             child: DraftQuoteText(
               draftQuote: quote,
-              margin: const EdgeInsets.only(bottom: 0.0),
+              tiny: isMobileSize,
               onTap: onTap,
             )
                 .animate()
                 .slideY(
-                    begin: 0.8,
-                    end: 0.0,
-                    curve: Curves.decelerate,
-                    duration: 80.ms)
+                  begin: 0.8,
+                  end: 0.0,
+                  curve: Curves.decelerate,
+                  duration: animateList ? 150.ms : 0.ms,
+                )
                 .fadeIn(),
             menuProvider: (MenuRequest menuRequest) {
               return Menu(
                 children: [
+                  MenuAction(
+                    callback: () => onTap?.call(quote),
+                    title: "quote.edit.name".tr(),
+                    image: MenuImage.icon(UniconsLine.edit_alt),
+                    attributes: const MenuActionAttributes(),
+                  ),
                   MenuAction(
                     callback: () => onDelete?.call(quote),
                     title: "quote.delete.name".tr(),
                     image: MenuImage.icon(UniconsLine.trash),
                     attributes: const MenuActionAttributes(destructive: true),
                   ),
-                  MenuAction(
-                    callback: () => onValidate?.call(quote),
-                    title: "quote.validate.name".tr(),
-                    image: MenuImage.icon(UniconsLine.check),
-                  ),
+                  if (onValidate != null)
+                    MenuAction(
+                      callback: () => onValidate?.call(quote),
+                      title: "quote.validate.name".tr(),
+                      image: MenuImage.icon(UniconsLine.check),
+                    ),
                 ],
               );
             },

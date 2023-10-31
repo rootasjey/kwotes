@@ -1,20 +1,36 @@
+import "package:adaptive_theme/adaptive_theme.dart";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/components/application_bar.dart";
+import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/screens/settings/about.dart";
+import "package:kwotes/screens/settings/about_settings.dart";
 import "package:kwotes/screens/settings/account_settings.dart";
 import "package:kwotes/screens/settings/app_language_selection.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/screens/settings/theme_switcher.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/user/user_firestore.dart";
+import "package:url_launcher/url_launcher.dart";
 
 /// Settings page.
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({
+    super.key,
+    this.selfPageShortcutsActive = false,
+  });
+
+  /// Whether to activate the shortcut on the settings page.
+  /// Set to `true` only if this page is not wrapped in a `Shortcuts`.
+  final bool selfPageShortcutsActive;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -31,34 +47,79 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final String? currentLanguageCode =
         EasyLocalization.of(context)?.currentLocale?.languageCode;
 
-    return Scaffold(
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final Widget scaffold = Scaffold(
       body: CustomScrollView(
         slivers: [
-          const ApplicationBar(),
-          const SettingsPageHeader(),
-          const ThemeSwitcher(),
-          AccountSettings(
-            enumAccountDisplayed: _enumAccountDisplayed,
-            onTapUpdateEmail: onTapUpdateEmail,
-            onTapUpdatePassword: onTapUpdatePassword,
-            onTapUpdateUsername: onTapUpdateUsername,
-            onTapLogout: onTapLogout,
-            onTapDeleteAccount: onTapDeleteAccount,
-            onTapAccountDisplayedValue: onTapAccountDisplayedValue,
+          ApplicationBar(isMobileSize: isMobileSize),
+          SettingsPageHeader(isMobileSize: isMobileSize),
+          ThemeSwitcher(
+            isMobileSize: isMobileSize,
+            onTapLightTheme: onTapLightTheme,
+            onTapDarkTheme: onTapDarkTheme,
+            onTapSystemTheme: onTapSystemTheme,
+            onToggleThemeMode: onToggleThemeMode,
+          ),
+          SignalBuilder(
+            signal: signalUserFirestore,
+            builder: (
+              BuildContext context,
+              UserFirestore userFirestore,
+              Widget? child,
+            ) {
+              if (userFirestore.id.isEmpty) {
+                return SliverToBoxAdapter(child: Container());
+              }
+
+              return AccountSettings(
+                enumAccountDisplayed: _enumAccountDisplayed,
+                isMobileSize: isMobileSize,
+                onTapUpdateEmail: onTapUpdateEmail,
+                onTapUpdatePassword: onTapUpdatePassword,
+                onTapUpdateUsername: onTapUpdateUsername,
+                onTapLogout: onTapLogout,
+                onTapDeleteAccount: onTapDeleteAccount,
+                onTapAccountDisplayedValue: onTapAccountDisplayedValue,
+                userFirestore: userFirestore,
+              );
+            },
           ),
           AppLanguageSelection(
             currentLanguageCode: currentLanguageCode,
+            isMobileSize: isMobileSize,
             onSelectLanguage: onSelectLanguage,
           ),
-          About(
+          AboutSettings(
+            isMobileSize: isMobileSize,
             onTapColorPalette: onTapColorPalette,
+            onTapTermsOfService: onTapTermsOfService,
+            onTapGitHub: onTapGitHub,
+            onTapThePurpose: onTapThePurpose,
           ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 200.0)),
         ],
       ),
     );
+
+    if (!widget.selfPageShortcutsActive) {
+      return scaffold;
+    }
+
+    return BasicShortcuts(
+      onCancel: Beamer.of(context).beamBack,
+      child: scaffold,
+    );
+  }
+
+  void onSelectLanguage(EnumLanguageSelection locale) {
+    Utils.vault.setLanguage(locale);
+    EasyLocalization.of(context)?.setLocale(Locale(locale.name));
   }
 
   void onTapAccountDisplayedValue() {
@@ -77,9 +138,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void onTapLogout() async {
     final bool success = await Utils.state.logout();
-    if (!mounted || !success) {
-      return;
-    }
+    if (!success) return;
+    if (!mounted) return;
 
     Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
   }
@@ -108,8 +168,77 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void onSelectLanguage(String locale) {
-    Utils.vault.setLanguage(locale);
-    EasyLocalization.of(context)?.setLocale(Locale(locale));
+  void onTapTermsOfService() {
+    Beamer.of(context).beamToNamed(
+      "terms-of-service/",
+    );
+  }
+
+  void onTapGitHub() {
+    launchUrl(Uri.parse(Constants.githubUrl));
+  }
+
+  void onTapThePurpose() {
+    Beamer.of(context).beamToNamed(
+      "the-purpose/",
+    );
+  }
+
+  void onTapLightTheme() {
+    AdaptiveTheme.of(context).setLight();
+    Utils.vault.setBrightness(Brightness.light);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Constants.colors.lightBackground,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
+  }
+
+  void onTapDarkTheme() {
+    AdaptiveTheme.of(context).setDark();
+    Utils.vault.setBrightness(Brightness.dark);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Constants.colors.dark,
+        systemNavigationBarColor: Colors.black26,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
+  }
+
+  void onTapSystemTheme() {
+    AdaptiveTheme.of(context).setSystem();
+    updateUiBrightness();
+  }
+
+  void onToggleThemeMode() {
+    AdaptiveTheme.of(context).toggleThemeMode();
+    updateUiBrightness();
+  }
+
+  void updateUiBrightness() {
+    final Brightness brightness =
+        AdaptiveTheme.of(context).brightness ?? Brightness.light;
+    Utils.vault.setBrightness(brightness);
+
+    final bool isDark = brightness == Brightness.dark;
+
+    final SystemUiOverlayStyle overlayStyle = isDark
+        ? SystemUiOverlayStyle(
+            statusBarColor: Constants.colors.dark,
+            systemNavigationBarColor: Colors.black26,
+            systemNavigationBarDividerColor: Colors.transparent,
+          )
+        : SystemUiOverlayStyle(
+            statusBarColor: Constants.colors.lightBackground,
+            systemNavigationBarColor: Colors.white,
+            systemNavigationBarDividerColor: Colors.transparent,
+          );
+
+    SystemChrome.setSystemUIOverlayStyle(overlayStyle);
   }
 }

@@ -1,6 +1,8 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
+import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/screens/color_palette/color_detail_page.dart";
 import "package:kwotes/screens/color_palette/color_palette_page.dart";
 import "package:kwotes/screens/add_quote/add_quote_page.dart";
@@ -13,18 +15,37 @@ import "package:kwotes/screens/in_validation/in_validation_page.dart";
 import "package:kwotes/screens/list/list_page.dart";
 import "package:kwotes/screens/lists/lists_page.dart";
 import "package:kwotes/screens/published/published_page.dart";
+import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
+import "package:kwotes/screens/settings/about/the_purpose_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
 import "package:kwotes/screens/settings/email/email_page.dart";
 import "package:kwotes/screens/settings/password/password_page.dart";
 import "package:kwotes/screens/settings/settings_page.dart";
 import "package:kwotes/screens/settings/username/username_page.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 
 class DashboardLocation extends BeamLocation<BeamState> {
   static const String route = "/dashboard";
   static const String routeWildCard = "/dashboard/*";
 
   @override
-  List<String> get pathPatterns => [routeWildCard];
+  List<String> get pathPatterns => [
+        routeWildCard,
+      ];
+
+  @override
+  List<BeamGuard> get guards => [
+        BeamGuard(
+          pathPatterns: [route, routeWildCard],
+          beamToNamed: (origin, target) => SigninLocation.route,
+          check: (BuildContext context, location) {
+            final Signal<UserFirestore> currentUser =
+                context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+            return currentUser.value.id.isNotEmpty;
+          },
+        )
+      ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
@@ -40,6 +61,7 @@ class DashboardLocation extends BeamLocation<BeamState> {
 }
 
 class DashboardContentLocation extends BeamLocation<BeamState> {
+  /// Main root value for this location.
   static const String route = "/dashboard";
 
   static const String addQuoteRoute = "$route/add-quote";
@@ -56,6 +78,8 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String publishedRoute = "$route/published";
   static const String publishedQuoteRoute = "$publishedRoute/:quoteId";
   static const String settingsRoute = "$route/settings";
+  static const String settingsTosRoute = "$settingsRoute/terms-of-service";
+  static const String settingsThePurposeRoute = "$settingsRoute/the-purpose";
   static const String updateEmailRoute = "$settingsRoute/email";
   static const String updatePasswordRoute = "$settingsRoute/password";
   static const String updateUsernameRoute = "$settingsRoute/username";
@@ -75,6 +99,8 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         publishedRoute,
         inValidationRoute,
         settingsRoute,
+        settingsTosRoute,
+        settingsThePurposeRoute,
         publishedQuoteRoute,
         updateEmailRoute,
         updatePasswordRoute,
@@ -176,6 +202,23 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           child: const DeleteAccountPage(),
           key: const ValueKey(deleteAccountRoute),
           title: "page_title.delete_account".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments.contains(settingsRoute.split("/").last) &&
+          state.pathPatternSegments.contains(settingsTosRoute.split("/").last))
+        BeamPage(
+          child: const TermsOfServicePage(),
+          key: const ValueKey(settingsTosRoute),
+          title: "page_title.terms_of_service".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments.contains(settingsRoute.split("/").last) &&
+          state.pathPatternSegments
+              .contains(settingsThePurposeRoute.split("/").last))
+        BeamPage(
+          child: const ThePurposePage(),
+          key: const ValueKey(settingsThePurposeRoute),
+          title: "page_title.the_purpose".tr(),
           type: BeamPageType.fadeTransition,
         ),
       if (state.pathPatternSegments.contains(addQuoteRoute.split("/").last))

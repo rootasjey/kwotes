@@ -127,7 +127,7 @@ class _DashboardSideMenuState extends State<DashboardSideMenu> {
         Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
 
     final bool pathMatch =
-        context.currentBeamLocation.state.routeInformation.location ==
+        context.currentBeamLocation.state.routeInformation.uri.toString() ==
             menuItem.routePath;
 
     final Color color =

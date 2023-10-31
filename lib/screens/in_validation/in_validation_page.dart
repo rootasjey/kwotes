@@ -5,8 +5,9 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
+import "package:kwotes/components/page_app_bar.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -14,9 +15,13 @@ import "package:kwotes/screens/in_validation/in_validation_page_body.dart";
 import "package:kwotes/screens/in_validation/in_validation_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/draft_quote.dart";
+import "package:kwotes/types/enums/enum_data_ownership.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/document_map.dart";
+import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
@@ -34,8 +39,8 @@ class InValidationPage extends StatefulWidget {
 }
 
 class _InValidationPageState extends State<InValidationPage> with UiLoggy {
-  /// Page's state.
-  EnumPageState _pageState = EnumPageState.idle;
+  /// Animate list's items if true.
+  bool _animateList = true;
 
   /// True if more results can be loaded.
   bool _hasNextPage = true;
@@ -43,23 +48,40 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
   /// True if the order is the most recent first.
   final bool _descending = true;
 
-  /// Last document.
-  QueryDocSnapMap? _lastDocument;
+  /// Show page options (e.g. language) if true.
+  bool _showPageOptions = true;
 
-  /// List of draft quotes in validation.
-  final List<DraftQuote> _quotes = [];
+  /// Color of selected widgets (e.g. for filter chips).
+  Color _selectedColor = Colors.amber.shade200;
+
+  /// Selected tab index (owned | all).
+  EnumDataOwnership _selectedOwnership = EnumDataOwnership.owned;
+
+  /// Current selected language to fetch quotes in validation.
+  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
+
+  /// Page's state.
+  EnumPageState _pageState = EnumPageState.idle;
 
   /// Result count limit.
   final int _limit = 20;
 
+  /// List of draft quotes in validation.
+  final List<DraftQuote> _quotes = [];
+
+  /// Last document.
+  QueryDocSnapMap? _lastDocument;
+
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
 
+  /// Page collection name.
   final String _collectionName = "drafts";
 
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
@@ -71,6 +93,10 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
     return Scaffold(
       body: ImprovedScrolling(
         scrollController: _pageScrollController,
@@ -80,41 +106,58 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
           child: CustomScrollView(
             controller: _pageScrollController,
             slivers: [
-              const ApplicationBar(),
-              const InValidationPageHeader(),
-              InValidationPageBody(
-                pageState: _pageState,
-                quotes: _quotes,
-                onTap: onTapDraftQuote,
-                onDelete: onDeleteDraftQuote,
-                onValidate: onValidateDraftQuote,
+              SignalBuilder(
+                signal: signalUserFirestore,
+                builder: (
+                  BuildContext context,
+                  UserFirestore userFirestore,
+                  Widget? child,
+                ) {
+                  final UserRights userRights = userFirestore.rights;
+                  final bool canManage = userRights.canManageQuotes;
+
+                  return PageAppBar(
+                    isMobileSize: isMobileSize,
+                    childTitle: InValidationPageHeader(
+                      onSelectedOwnership:
+                          canManage ? onSelectedOnwership : null,
+                      onSelectLanguage: onSelectedLanguage,
+                      onTapTitle: onTapTitle,
+                      selectedColor: _selectedColor,
+                      selectedLanguage: _selectedLanguage,
+                      selectedOwnership: _selectedOwnership,
+                      show: _showPageOptions,
+                      isMobileSize: isMobileSize,
+                    ),
+                  );
+                },
+              ),
+              SignalBuilder(
+                signal: signalUserFirestore,
+                builder: (
+                  BuildContext context,
+                  UserFirestore userFirestore,
+                  Widget? child,
+                ) {
+                  final UserRights userRights = userFirestore.rights;
+                  final bool canManage = userRights.canManageQuotes;
+
+                  return InValidationPageBody(
+                    animateList: _animateList,
+                    isMobileSize: isMobileSize,
+                    pageState: _pageState,
+                    quotes: _quotes,
+                    onTap: onTapDraftQuote,
+                    onDelete: onDeleteDraftQuote,
+                    onValidate: canManage ? onValidateDraftQuote : null,
+                  );
+                },
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  /// Returns firestore query according to the last fetched document.
-  QueryMap getQuery(String userId) {
-    final QueryDocSnapMap? lastDocument = _lastDocument;
-
-    if (lastDocument == null) {
-      return FirebaseFirestore.instance
-          .collection(_collectionName)
-          .where("user.id", isEqualTo: userId)
-          .orderBy("created_at", descending: _descending)
-          .limit(_limit);
-    }
-
-    return FirebaseFirestore.instance
-        .collection(_collectionName)
-        .where("user.id", isEqualTo: userId)
-        .orderBy("created_at", descending: _descending)
-        .limit(_limit)
-        // .where("language", isEqualTo: lang)
-        .startAfterDocument(lastDocument);
   }
 
   /// Fetch draft quotes.
@@ -161,6 +204,45 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     }
   }
 
+  /// Returns firestore query according to the last fetched document.
+  QueryMap getQuery(String userId) {
+    final QueryDocSnapMap? lastDocument = _lastDocument;
+
+    QueryMap baseQuery = FirebaseFirestore.instance
+        .collection(_collectionName)
+        .limit(_limit)
+        .orderBy("created_at", descending: _descending);
+
+    if (_selectedOwnership == EnumDataOwnership.owned) {
+      baseQuery = baseQuery.where("user.id", isEqualTo: userId);
+    }
+
+    if (_selectedLanguage != EnumLanguageSelection.all) {
+      baseQuery =
+          baseQuery.where("language", isEqualTo: _selectedLanguage.name);
+    }
+
+    if (lastDocument == null) {
+      return baseQuery;
+    }
+
+    return baseQuery.startAfterDocument(lastDocument);
+  }
+
+  /// Initialize page properties.
+  void initProps() async {
+    _showPageOptions = await Utils.vault.geShowtHeaderOptions();
+    _selectedColor = Constants.colors.getRandomFromPalette().withOpacity(0.6);
+    setState(() {});
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {
+        _animateList = false;
+      });
+    });
+  }
+
   /// Callback fired when the page is scrolled.
   void onScroll(double offset) {
     if (!_hasNextPage) {
@@ -198,6 +280,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
           .delete();
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
 
       setState(() {
         _quotes.insert(index, quote);
@@ -208,6 +291,45 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
         message: "quote.delete.failed".tr(),
       );
     }
+  }
+
+  /// Callback to select a language.
+  void onSelectedLanguage(EnumLanguageSelection language) {
+    if (_selectedLanguage == language) {
+      return;
+    }
+
+    setState(() {
+      _selectedLanguage = language;
+      _quotes.clear();
+      _lastDocument = null;
+    });
+
+    Utils.vault.setPageLanguage(language);
+    fetch();
+  }
+
+  /// Callback to filter published quotes (owned | all).
+  void onSelectedOnwership(EnumDataOwnership ownership) {
+    if (_selectedOwnership == ownership) {
+      return;
+    }
+
+    setState(() {
+      _selectedOwnership = ownership;
+      _quotes.clear();
+      _lastDocument = null;
+    });
+
+    Utils.vault.setDataOwnership(ownership);
+    fetch();
+  }
+
+  /// Callback to show/hide page options.
+  void onTapTitle() {
+    final bool newShowPageOptions = !_showPageOptions;
+    Utils.vault.setShowHeaderOptions(newShowPageOptions);
+    setState(() => _showPageOptions = newShowPageOptions);
   }
 
   /// Callback fired when a draft quote is validated.
@@ -246,12 +368,21 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     });
 
     try {
-      await FirebaseFirestore.instance.collection("quotes").add(
-            draft.toMap(
-              userId: userFirestoreSignal.value.id,
-              operation: EnumQuoteOperation.validate,
-            ),
-          );
+      final DocumentMap addedQuoteDoc =
+          await FirebaseFirestore.instance.collection("quotes").add(draft.toMap(
+                userId: userFirestoreSignal.value.id,
+                operation: EnumQuoteOperation.validate,
+              ));
+
+      final DocumentSnapshotMap snapshot = await addedQuoteDoc.get();
+      if (!snapshot.exists) {
+        if (!mounted) return;
+        Utils.graphic.showSnackbar(
+          context,
+          message: "quote.validate.failed".tr(),
+        );
+        return;
+      }
 
       // Delete draft.
       await FirebaseFirestore.instance
@@ -260,6 +391,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
           .delete();
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
+
       Utils.graphic.showSnackbar(
         context,
         message: "quote.validate.failed".tr(),

@@ -5,8 +5,9 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
+import "package:kwotes/components/page_app_bar.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -14,6 +15,7 @@ import "package:kwotes/screens/drafts/drafts_page_body.dart";
 import "package:kwotes/screens/drafts/drafts_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/draft_quote.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -31,8 +33,8 @@ class DraftsPage extends StatefulWidget {
 }
 
 class _DraftsPageState extends State<DraftsPage> with UiLoggy {
-  /// Page's state.
-  EnumPageState _pageState = EnumPageState.idle;
+  /// Animate list's items if true.
+  bool _animateList = true;
 
   /// True if more results can be loaded.
   bool _hasNextPage = true;
@@ -40,14 +42,26 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   /// True if the order is the most recent first.
   final bool _descending = true;
 
-  /// Last document.
-  QueryDocSnapMap? _lastDocument;
+  /// Show page options (e.g. language) if true.
+  bool _showPageOptions = true;
+
+  /// Color of selected widgets (e.g. for filter chips).
+  Color _selectedColor = Colors.amber.shade200;
+
+  /// Current selected language to fetch draft quotes.
+  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
+
+  /// Page's state.
+  EnumPageState _pageState = EnumPageState.idle;
+
+  /// Result count limit.
+  final int _limit = 20;
 
   /// List of drafts quotes.
   final List<DraftQuote> _quotes = [];
 
-  /// Result count limit.
-  final int _limit = 20;
+  /// Last document.
+  QueryDocSnapMap? _lastDocument;
 
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
@@ -55,6 +69,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
@@ -66,6 +81,8 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     return Scaffold(
       body: ImprovedScrolling(
         scrollController: _pageScrollController,
@@ -73,10 +90,22 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
         child: ScrollConfiguration(
           behavior: const CustomScrollBehavior(),
           child: CustomScrollView(
+            controller: _pageScrollController,
             slivers: [
-              const ApplicationBar(),
-              const DraftsPageHeader(),
+              PageAppBar(
+                isMobileSize: isMobileSize,
+                childTitle: DraftsPageHeader(
+                  isMobileSize: isMobileSize,
+                  onSelectLanguage: onSelectedLanguage,
+                  onTapTitle: onTapTitle,
+                  selectedColor: _selectedColor,
+                  selectedLanguage: _selectedLanguage,
+                  show: _showPageOptions,
+                ),
+              ),
               DraftsPageBody(
+                animateList: _animateList,
+                isMobileSize: isMobileSize,
                 pageState: _pageState,
                 draftQuotes: _quotes,
                 onTap: onTapDraftQuote,
@@ -92,28 +121,6 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
         ),
       ),
     );
-  }
-
-  QueryMap getQuery(String userId) {
-    final QueryDocSnapMap? lastDocument = _lastDocument;
-
-    if (lastDocument == null) {
-      return FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection("drafts")
-          .orderBy("created_at", descending: _descending)
-          .limit(_limit);
-    }
-
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(userId)
-        .collection("drafts")
-        .orderBy("created_at", descending: _descending)
-        .limit(_limit)
-        // .where("language", isEqualTo: lang)
-        .startAfterDocument(lastDocument);
   }
 
   void fetch() async {
@@ -157,6 +164,45 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     }
   }
 
+  QueryMap getQuery(String userId) {
+    final QueryDocSnapMap? lastDocument = _lastDocument;
+
+    QueryMap baseQuery = FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("drafts")
+        .orderBy("created_at", descending: _descending)
+        .limit(_limit);
+
+    if (_selectedLanguage != EnumLanguageSelection.all) {
+      baseQuery = baseQuery.where(
+        "language",
+        isEqualTo: _selectedLanguage.name,
+      );
+    }
+
+    if (lastDocument == null) {
+      return baseQuery;
+    }
+
+    return baseQuery.startAfterDocument(lastDocument);
+  }
+
+  /// Initialize page properties.
+  void initProps() async {
+    _showPageOptions = await Utils.vault.geShowtHeaderOptions();
+    _selectedColor = Constants.colors.getRandomFromPalette().withOpacity(0.6);
+
+    setState(() {});
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {
+        _animateList = false;
+      });
+    });
+  }
+
   void onScroll(double offset) {
     if (!_hasNextPage) {
       return;
@@ -198,6 +244,8 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     } catch (error) {
       loggy.error(error);
 
+      if (!mounted) return;
+
       setState(() {
         _quotes.insert(index, quote);
       });
@@ -215,8 +263,32 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
   }
 
+  /// Create a new quote from an existing draft.
   void onCopyFromDraftQuote(DraftQuote quote) {
     NavigationStateHelper.quote = quote.copyDraftWith(id: "");
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
+  }
+
+  /// Callback to select a language.
+  void onSelectedLanguage(EnumLanguageSelection language) {
+    if (_selectedLanguage == language) {
+      return;
+    }
+
+    setState(() {
+      _selectedLanguage = language;
+      _quotes.clear();
+      _lastDocument = null;
+    });
+
+    Utils.vault.setPageLanguage(language);
+    fetch();
+  }
+
+  /// Callback to show/hide page options.
+  void onTapTitle() {
+    final bool newShowPageOptions = !_showPageOptions;
+    Utils.vault.setShowHeaderOptions(newShowPageOptions);
+    setState(() => _showPageOptions = newShowPageOptions);
   }
 }

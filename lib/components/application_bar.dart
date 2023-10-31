@@ -7,6 +7,7 @@ import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
+import "package:kwotes/components/dot_indicator.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/letter_avatar.dart";
 import "package:kwotes/globals/constants.dart";
@@ -16,7 +17,7 @@ import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/types/enums/enum_app_bar_mode.dart";
-import "package:kwotes/types/enums/enum_search_entity.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -33,7 +34,7 @@ class ApplicationBar extends StatelessWidget {
     this.isMobileSize = false,
     this.mode = EnumAppBarMode.home,
     this.onSelectSearchEntity,
-    this.searchEntitySelected = EnumSearchEntity.quote,
+    this.searchCategorySelected = EnumSearchCategory.quote,
     this.onTapIcon,
     this.onTapTitle,
     this.elevation,
@@ -44,8 +45,7 @@ class ApplicationBar extends StatelessWidget {
   /// Whether the app bar should remain visible at the start of the scroll view.
   final bool pinned;
 
-  /// True if the screen's width is smaller than 600px.
-  /// Back behavior is different if this is true.
+  /// Adapt the user interface to small screens if true.
   final bool isMobileSize;
 
   /// The background color of the app bar.
@@ -65,10 +65,10 @@ class ApplicationBar extends StatelessWidget {
 
   /// The selected search entity.
   /// Useful only on search page.
-  final EnumSearchEntity searchEntitySelected;
+  final EnumSearchCategory searchCategorySelected;
 
   /// Callback fired when a different search entity is selected (e.g. author).
-  final void Function(EnumSearchEntity searchEntity)? onSelectSearchEntity;
+  final void Function(EnumSearchCategory searchEntity)? onSelectSearchEntity;
 
   /// Callback fired when app bar icon is tapped.
   final void Function()? onTapIcon;
@@ -92,18 +92,23 @@ class ApplicationBar extends StatelessWidget {
     final Signal<UserFirestore> userFirestoreSignal =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
-    final String? location = Beamer.of(context)
+    final String location = Beamer.of(context)
         .beamingHistory
         .last
         .history
         .last
         .routeInformation
-        .location;
+        .uri
+        .toString();
 
     final bool hasHistory = location != HomeLocation.route;
     final Color foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8) ??
             Colors.black;
+
+    final EdgeInsets localPadding = padding.copyWith(
+      left: isMobileSize ? 0.0 : padding.left,
+    );
 
     return SliverAppBar(
       floating: true,
@@ -120,7 +125,7 @@ class ApplicationBar extends StatelessWidget {
           sigmaY: 5,
         ),
         child: Padding(
-          padding: padding,
+          padding: localPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
@@ -153,14 +158,14 @@ class ApplicationBar extends StatelessWidget {
               Wrap(
                 spacing: 12.0,
                 children: [
-                  // getRightChildren(),
                   ...rightChildren,
-                  ...iconChildren(context),
-                  DualSignalBuilder(
-                    firstSignal: userAuthSignal,
-                    secondSignal: userFirestoreSignal,
-                    builder: authButtonBuilder,
-                  ),
+                  if (!isMobileSize) ...iconChildren(context),
+                  if (!isMobileSize)
+                    DualSignalBuilder(
+                      firstSignal: userAuthSignal,
+                      secondSignal: userFirestoreSignal,
+                      builder: authButtonBuilder,
+                    ),
                 ],
               ),
             ],
@@ -187,22 +192,25 @@ class ApplicationBar extends StatelessWidget {
       ];
     }
 
-    final bool quoteSelected = searchEntitySelected == EnumSearchEntity.quote;
-    final bool authorSelected = searchEntitySelected == EnumSearchEntity.author;
+    final bool quoteSelected =
+        searchCategorySelected == EnumSearchCategory.quote;
+    final bool authorSelected =
+        searchCategorySelected == EnumSearchCategory.author;
     final bool referenceSelected =
-        searchEntitySelected == EnumSearchEntity.reference;
+        searchCategorySelected == EnumSearchCategory.reference;
 
     return [
       Column(
         children: [
           IconButton(
             isSelected: quoteSelected,
-            onPressed: () => onSelectSearchEntity?.call(EnumSearchEntity.quote),
+            onPressed: () =>
+                onSelectSearchEntity?.call(EnumSearchCategory.quote),
             tooltip: "search.quotes".tr(),
             color: quoteSelected ? Colors.pink : defaultColor,
             icon: const Icon(UniconsLine.chat),
           ),
-          dotIndicator(
+          DotIndicator(
             color: quoteSelected ? Colors.pink : Colors.transparent,
           ),
         ],
@@ -210,17 +218,16 @@ class ApplicationBar extends StatelessWidget {
       Column(
         children: [
           IconButton(
-            isSelected: searchEntitySelected == EnumSearchEntity.author,
+            isSelected: searchCategorySelected == EnumSearchCategory.author,
             onPressed: () =>
-                onSelectSearchEntity?.call(EnumSearchEntity.author),
+                onSelectSearchEntity?.call(EnumSearchCategory.author),
             tooltip: "search.authors".tr(),
-            color: searchEntitySelected == EnumSearchEntity.author
+            color: searchCategorySelected == EnumSearchCategory.author
                 ? Colors.amber
                 : defaultColor,
-            // icon: const Icon(UniconsLine.user),
             icon: const Icon(TablerIcons.users),
           ),
-          dotIndicator(
+          DotIndicator(
             color: authorSelected ? Colors.amber : Colors.transparent,
           ),
         ],
@@ -228,32 +235,21 @@ class ApplicationBar extends StatelessWidget {
       Column(
         children: [
           IconButton(
-            isSelected: searchEntitySelected == EnumSearchEntity.reference,
+            isSelected: searchCategorySelected == EnumSearchCategory.reference,
             onPressed: () =>
-                onSelectSearchEntity?.call(EnumSearchEntity.reference),
+                onSelectSearchEntity?.call(EnumSearchCategory.reference),
             tooltip: "search.references".tr(),
-            color: searchEntitySelected == EnumSearchEntity.reference
+            color: searchCategorySelected == EnumSearchCategory.reference
                 ? Colors.blue
                 : defaultColor,
             icon: const Icon(UniconsLine.book_alt),
           ),
-          dotIndicator(
+          DotIndicator(
             color: referenceSelected ? Colors.blue : Colors.transparent,
           ),
         ],
       ),
     ];
-  }
-
-  Widget dotIndicator({required Color color}) {
-    return Container(
-      width: 8.0,
-      height: 8.0,
-      foregroundDecoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: color,
-      ),
-    );
   }
 
   Widget appBarTitle(BuildContext context) {

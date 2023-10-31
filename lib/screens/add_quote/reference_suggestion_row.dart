@@ -6,7 +6,8 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/reference.dart";
 
 class ReferenceSuggestionRow extends StatelessWidget {
-  /// A component for displaying reference suggestions.
+  /// An horizontal component for displaying reference suggestions
+  /// when typing characters.
   const ReferenceSuggestionRow({
     super.key,
     required this.selectedReference,
@@ -14,9 +15,6 @@ class ReferenceSuggestionRow extends StatelessWidget {
     this.onTapSuggestion,
     this.references = const [],
   });
-
-  /// Currently selected reference.
-  final Reference selectedReference;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -26,6 +24,9 @@ class ReferenceSuggestionRow extends StatelessWidget {
 
   /// Callback fired when a suggestion is tapped.
   final void Function(Reference reference)? onTapSuggestion;
+
+  /// Currently selected reference.
+  final Reference selectedReference;
 
   @override
   Widget build(BuildContext context) {

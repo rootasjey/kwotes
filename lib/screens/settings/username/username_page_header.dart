@@ -8,12 +8,12 @@ import "package:kwotes/globals/utils.dart";
 class UsernamePageHeader extends StatelessWidget {
   const UsernamePageHeader({
     super.key,
-    this.margin = EdgeInsets.zero,
+    this.isMobileSize = false,
     this.onTapLeftPartHeader,
   });
 
-  /// Space around this widget.
-  final EdgeInsets margin;
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -25,22 +25,27 @@ class UsernamePageHeader extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        // padding: margin,
-        padding: const EdgeInsets.only(
-          top: 42.0,
-        ),
+        padding: isMobileSize
+            ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+            : const EdgeInsets.only(top: 42.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: isMobileSize
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             Text.rich(
               TextSpan(
                 text: "${"settings.name".tr()}: ",
                 children: [
                   TextSpan(
-                      text: "username.name".tr(),
+                      text: isMobileSize
+                          ? "\n${"username.name".tr()}"
+                          : "username.name".tr(),
                       style: Utils.calligraphy.body(
                         textStyle: TextStyle(
-                          color: Constants.colors.getRandomFromPalette(),
+                          color: Constants.colors.getRandomFromPalette(
+                            withGoodContrast: true,
+                          ),
                           fontWeight: FontWeight.w400,
                         ),
                       )),
@@ -55,15 +60,20 @@ class UsernamePageHeader extends StatelessWidget {
                 ),
               ),
             ),
-            FractionallySizedBox(
-              widthFactor: 0.6,
-              child: Text(
-                "username.update.tips".tr(),
-                textAlign: TextAlign.center,
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    fontSize: 16.0,
-                    color: foregroundColor?.withOpacity(0.4),
+            Padding(
+              padding: isMobileSize
+                  ? const EdgeInsets.only(top: 8.0)
+                  : EdgeInsets.zero,
+              child: FractionallySizedBox(
+                widthFactor: isMobileSize ? 0.9 : 0.6,
+                child: Text(
+                  "username.update.tips".tr(),
+                  textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: 16.0,
+                      color: foregroundColor?.withOpacity(0.4),
+                    ),
                   ),
                 ),
               ),

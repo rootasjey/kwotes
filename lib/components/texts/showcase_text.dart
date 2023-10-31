@@ -6,11 +6,15 @@ class ShowcaseText extends StatefulWidget {
   const ShowcaseText({
     super.key,
     required this.textValue,
+    this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.foregroundColor,
     this.onTap,
     this.docId = "",
   });
+
+  /// Adapt UI to mobile size.
+  final bool isMobileSize;
 
   /// Text color.
   final Color? foregroundColor;
@@ -65,8 +69,9 @@ class _ShowcaseTextState extends State<ShowcaseText> {
             widget.textValue,
             style: Utils.calligraphy.body(
               textStyle: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.w400,
+                fontSize: widget.isMobileSize ? 28.0 : 24.0,
+                fontWeight:
+                    widget.isMobileSize ? FontWeight.w300 : FontWeight.w400,
                 color: _foregroundColor,
               ),
             ),

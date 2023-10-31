@@ -8,10 +8,14 @@ import "package:kwotes/types/topic.dart";
 class ShowcaseQuotes extends StatelessWidget {
   const ShowcaseQuotes({
     super.key,
+    this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.topicColors = const [],
     this.onTapTopicColor,
   });
+
+  /// Adapt UI to mobile size.
+  final bool isMobileSize;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -27,11 +31,14 @@ class ShowcaseQuotes extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
+    final double spacing = isMobileSize ? 0.0 : 12.0;
+
     return SliverPadding(
-      padding: margin.add(const EdgeInsets.only(left: 24.0)),
+      // padding: margin.add(const EdgeInsets.only(left: 24.0)),
+      padding: margin.add(const EdgeInsets.only(left: 0.0)),
       sliver: SliverList.list(children: [
         Text(
-          "${"search.some_topics".tr()}...",
+          "...${"search.some_topics".tr()}".toLowerCase(),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
               fontSize: 16.0,
@@ -41,8 +48,8 @@ class ShowcaseQuotes extends StatelessWidget {
           ),
         ),
         Wrap(
-          spacing: 12.0,
-          runSpacing: 12.0,
+          spacing: spacing,
+          runSpacing: spacing,
           children: topicColors
               .map(
                 (Topic topicColor) {
@@ -50,6 +57,7 @@ class ShowcaseQuotes extends StatelessWidget {
                     topic: topicColor,
                     foregroundColor: foregroundColor,
                     onTapTopicColor: onTapTopicColor,
+                    isTiny: isMobileSize,
                   );
                 },
               )

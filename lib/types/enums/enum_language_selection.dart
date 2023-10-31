@@ -1,5 +1,8 @@
 /// An enum for language selection.
 enum EnumLanguageSelection {
+  /// All languages.
+  all,
+
   /// Auto detect language.
   autoDetect,
 

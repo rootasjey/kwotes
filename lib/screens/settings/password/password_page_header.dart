@@ -10,9 +10,13 @@ class PasswordPageHeader extends StatelessWidget {
   const PasswordPageHeader({
     super.key,
     required this.passwordChecks,
+    this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.onTapLeftPartHeader,
   });
+
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -30,18 +34,22 @@ class PasswordPageHeader extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 42.0,
-        ),
+        padding: isMobileSize
+            ? const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0)
+            : const EdgeInsets.only(top: 42.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: isMobileSize
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             Text.rich(
               TextSpan(
                 text: "${"settings.name".tr()}: ",
                 children: [
                   TextSpan(
-                    text: "password.name".tr(),
+                    text: isMobileSize
+                        ? "\n${"password.name".tr()}"
+                        : "password.name".tr(),
                     style: Utils.calligraphy.body(
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.w400,
@@ -60,59 +68,64 @@ class PasswordPageHeader extends StatelessWidget {
               ),
             ),
             FractionallySizedBox(
-              widthFactor: 0.6,
+              widthFactor: isMobileSize ? 0.9 : 0.6,
               child: Text.rich(
-                TextSpan(children: [
-                  TextSpan(
-                    text: "password.update.tips.minimum_length".tr(args: ["6"]),
-                    style: TextStyle(
-                      color: passwordChecks.hasMinimumLength
-                          ? Constants.colors.foregroundPalette.first
-                          : null,
-                      fontWeight: passwordChecks.hasMinimumLength
-                          ? FontWeight.w800
-                          : null,
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text:
+                          "password.update.tips.minimum_length".tr(args: ["6"]),
+                      style: TextStyle(
+                        color: passwordChecks.hasMinimumLength
+                            ? Constants.colors.foregroundPalette.first
+                            : null,
+                        fontWeight: passwordChecks.hasMinimumLength
+                            ? FontWeight.w800
+                            : null,
+                      ),
                     ),
-                  ),
-                  const TextSpan(text: ", "),
-                  TextSpan(
-                    text: "password.update.tips.lower_case".tr(),
-                    children: const [TextSpan(text: ", ")],
-                    style: TextStyle(
-                      color: passwordChecks.hasLowercase
-                          ? Constants.colors.foregroundPalette.elementAt(1)
-                          : null,
-                      fontWeight:
-                          passwordChecks.hasLowercase ? FontWeight.w800 : null,
+                    const TextSpan(text: ", "),
+                    TextSpan(
+                      text: "password.update.tips.lower_case".tr(),
+                      children: const [TextSpan(text: ", ")],
+                      style: TextStyle(
+                        color: passwordChecks.hasLowercase
+                            ? Constants.colors.foregroundPalette.elementAt(1)
+                            : null,
+                        fontWeight: passwordChecks.hasLowercase
+                            ? FontWeight.w800
+                            : null,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: "password.update.tips.upper_case".tr(),
-                    children: const [TextSpan(text: ", ")],
-                    style: TextStyle(
-                      color: passwordChecks.hasUppercase
-                          ? Constants.colors.foregroundPalette.elementAt(2)
-                          : null,
-                      fontWeight:
-                          passwordChecks.hasUppercase ? FontWeight.w800 : null,
+                    TextSpan(
+                      text: "password.update.tips.upper_case".tr(),
+                      children: const [TextSpan(text: ", ")],
+                      style: TextStyle(
+                        color: passwordChecks.hasUppercase
+                            ? Constants.colors.foregroundPalette.elementAt(2)
+                            : null,
+                        fontWeight: passwordChecks.hasUppercase
+                            ? FontWeight.w800
+                            : null,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: "password.update.tips.and".tr(),
-                    children: const [TextSpan(text: " ")],
-                  ),
-                  TextSpan(
-                    text: "password.update.tips.number".tr(),
-                    children: const [TextSpan(text: ".")],
-                    style: TextStyle(
-                      color: passwordChecks.hasDigit
-                          ? Constants.colors.foregroundPalette.elementAt(3)
-                          : null,
-                      fontWeight:
-                          passwordChecks.hasDigit ? FontWeight.w600 : null,
+                    TextSpan(
+                      text: "password.update.tips.and".tr(),
+                      children: const [TextSpan(text: " ")],
                     ),
-                  ),
-                ]),
+                    TextSpan(
+                      text: "password.update.tips.number".tr(),
+                      children: const [TextSpan(text: ".")],
+                      style: TextStyle(
+                        color: passwordChecks.hasDigit
+                            ? Constants.colors.foregroundPalette.elementAt(3)
+                            : null,
+                        fontWeight:
+                            passwordChecks.hasDigit ? FontWeight.w600 : null,
+                      ),
+                    ),
+                  ],
+                ),
                 style: Utils.calligraphy.body(
                   textStyle: TextStyle(
                     fontSize: 16.0,

@@ -4,16 +4,21 @@ import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/settings/theme_chip.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 
 class AppLanguageSelection extends StatelessWidget {
   const AppLanguageSelection({
     super.key,
+    this.isMobileSize = false,
     this.onSelectLanguage,
     this.currentLanguageCode,
   });
 
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
+
   /// Callback fired when a language is selected.
-  final void Function(String locale)? onSelectLanguage;
+  final void Function(EnumLanguageSelection locale)? onSelectLanguage;
 
   /// Current language code.
   final String? currentLanguageCode;
@@ -23,12 +28,16 @@ class AppLanguageSelection extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final Color accentColor = Constants.colors.getRandomFromPalette();
+    final Color accentColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
     final Color foregroundAccentColor =
         accentColor.computeLuminance() > 0.4 ? Colors.black : Colors.white;
 
     return SliverPadding(
-      padding: const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
+      padding: isMobileSize
+          ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+          : const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
       sliver: SliverList.list(children: [
         Text.rich(
           TextSpan(text: "${"language.name".tr()}: ", children: [
@@ -44,7 +53,7 @@ class AppLanguageSelection extends StatelessWidget {
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: 72.0,
+              fontSize: isMobileSize ? 42.0 : 72.0,
               fontWeight: FontWeight.w100,
               color: foregroundColor?.withOpacity(0.6),
             ),
@@ -60,10 +69,10 @@ class AppLanguageSelection extends StatelessWidget {
               .available()
               .map(
                 (locale) => ThemeChip(
-                  textLabel: "language.locale.$locale".tr(),
-                  selected: currentLanguageCode == locale,
+                  textLabel: "language.locale.${locale.name}".tr(),
+                  selected: currentLanguageCode == locale.name,
                   accentColor: accentColor,
-                  foregroundColor: currentLanguageCode == locale
+                  foregroundColor: currentLanguageCode == locale.name
                       ? foregroundAccentColor
                       : foregroundColor?.withOpacity(0.6),
                   onTap: () => onSelectLanguage?.call(locale),

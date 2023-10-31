@@ -9,11 +9,15 @@ import "package:flutter/services.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/globals/utils/snack.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/screens/signup/signup_page_body.dart";
+import "package:kwotes/screens/signup/signup_page_header.dart";
+import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
+import "package:loggy/loggy.dart";
 
 class SignupPage extends StatefulWidget {
   final void Function(bool isAuthenticated)? onSignupResult;
@@ -24,27 +28,20 @@ class SignupPage extends StatefulWidget {
   createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  /// True if checking the server for email availability.
-  bool _checkingEmail = false;
-
-  /// True if checking the server for username availability.
-  bool _checkingUsername = false;
-
-  /// True if the server is creating the user account.
-  bool _creatingAccount = false;
+class _SignupPageState extends State<SignupPage> with UiLoggy {
+  EnumPageState _pageState = EnumPageState.idle;
 
   /// Time to wait before checking an input value against the backend.
   final Duration _debounceDuration = const Duration(seconds: 1);
 
   /// Used to focus confirm password input.
-  final _confirmPasswordNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
 
-  /// Used to focus password input.
-  final _passwordNode = FocusNode();
+  /// Used to focus email input.
+  final FocusNode _emailFocusNode = FocusNode();
 
   /// Used to focus username input.
-  final _usernameNode = FocusNode();
+  final FocusNode _usernameFocusNode = FocusNode();
 
   /// Error message to display next to the email input.
   /// If this is empty, there's no error for this specific input.
@@ -80,22 +77,29 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void dispose() {
     super.dispose();
-    _usernameNode.dispose();
-    _passwordNode.dispose();
-    _confirmPasswordNode.dispose();
+    _emailFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    _usernameFocusNode.dispose();
     _emailController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _emailTimer?.cancel();
+    _usernameTimer?.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_creatingAccount) {
+    if (_pageState == EnumPageState.creatingAccount) {
       return LoadingView.scaffold(
-        message: "accunt_creating".tr(),
+        message: "account.creating".tr(),
       );
     }
+
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Color randomColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
 
     const shortcuts = <SingleActivator, Intent>{
       SingleActivator(LogicalKeyboardKey.escape): EscapeIntent(),
@@ -114,25 +118,35 @@ class _SignupPageState extends State<SignupPage> {
         child: Scaffold(
           body: CustomScrollView(
             slivers: [
-              const ApplicationBar(),
-              SignupPageBody(
-                checkingEmail: _checkingEmail,
-                checkingUsername: _checkingUsername,
-                usernameController: _usernameController,
-                passwordController: _passwordController,
-                onEmailChanged: onEmailChanged,
-                onUsernameChanged: onUsernameChanged,
-                emailErrorMessage: _emailErrorMessage,
-                usernameErrorMessage: _usernameErrorMessage,
-                onConfirmPasswordChanged: onConfirmPasswordChanged,
-                confirmPasswordErrorMessage: _confirmPasswordErrorMessage,
-                confirmPasswordController: _confirmPasswordController,
-                emailController: _emailController,
-                onSubmit: tryCreateAccount,
-                onCancel: onCancel,
-                onNavigateToSignin: onNavigateToSignin,
+              ApplicationBar(
+                isMobileSize: isMobileSize,
               ),
-              const SliverPadding(padding: EdgeInsets.only(bottom: 200.0)),
+              SignupPageHeader(
+                isMobileSize: isMobileSize,
+                onNavigateToSignin: onNavigateToSignin,
+                randomColor: randomColor,
+              ),
+              SignupPageBody(
+                confirmPasswordController: _confirmPasswordController,
+                confirmPasswordErrorMessage: _confirmPasswordErrorMessage,
+                confirmPasswordFocusNode: _confirmPasswordFocusNode,
+                emailController: _emailController,
+                emailErrorMessage: _emailErrorMessage,
+                emailFocusNode: _emailFocusNode,
+                isMobileSize: isMobileSize,
+                pageState: _pageState,
+                passwordController: _passwordController,
+                onCancel: onCancel,
+                onEmailChanged: onEmailChanged,
+                onConfirmPasswordChanged: onConfirmPasswordChanged,
+                onNavigateToSignin: onNavigateToSignin,
+                onSubmit: tryCreateAccount,
+                onUsernameChanged: onUsernameChanged,
+                randomColor: randomColor,
+                usernameController: _usernameController,
+                usernameErrorMessage: _usernameErrorMessage,
+                usernameFocusNode: _usernameFocusNode,
+              ),
             ],
           ),
         ),
@@ -152,8 +166,8 @@ class _SignupPageState extends State<SignupPage> {
       password,
       confirmPassword,
     );
-    final bool usernameOk = await checkUsername(username);
     final bool emailOk = await checkEmail(email);
+    final bool usernameOk = await checkUsername(username);
 
     return usernameOk && emailOk && passwordOk;
   }
@@ -165,9 +179,10 @@ class _SignupPageState extends State<SignupPage> {
   bool checkConfirmPassword(String password, String confirmPassword) {
     if (confirmPassword.isEmpty) {
       setState(() {
-        _confirmPasswordErrorMessage = "password_confirm_empty_forbidden".tr();
+        _confirmPasswordErrorMessage = "password.error.current_empty".tr();
       });
 
+      _confirmPasswordFocusNode.requestFocus();
       return false;
     }
 
@@ -176,6 +191,7 @@ class _SignupPageState extends State<SignupPage> {
         _confirmPasswordErrorMessage = "password_error.mismatch".tr();
       });
 
+      _confirmPasswordFocusNode.requestFocus();
       return false;
     }
 
@@ -193,8 +209,10 @@ class _SignupPageState extends State<SignupPage> {
 
     if (email.isEmpty) {
       setState(() {
-        _emailErrorMessage = "email_error.empty".tr();
+        _emailErrorMessage = "email.error.empty".tr();
       });
+
+      _emailFocusNode.requestFocus();
       return false;
     }
 
@@ -202,28 +220,30 @@ class _SignupPageState extends State<SignupPage> {
 
     if (!isWellFormatted) {
       setState(() {
-        _checkingEmail = false;
-        _emailErrorMessage = "email_error.format".tr();
+        _pageState = EnumPageState.idle;
+        _emailErrorMessage = "email.error.not_valid".tr();
       });
 
+      _emailFocusNode.requestFocus();
       return false;
     }
 
-    setState(() => _checkingEmail = true);
+    setState(() => _pageState = EnumPageState.checkingEmail);
 
     final bool isAvailable = await UserActions.checkEmailAvailability(email);
 
     if (!isAvailable) {
       setState(() {
-        _checkingEmail = false;
+        _pageState = EnumPageState.idle;
         _emailErrorMessage = "input.error.username_not_available".tr();
       });
 
+      _emailFocusNode.requestFocus();
       return false;
     }
 
     setState(() {
-      _checkingEmail = false;
+      _pageState = EnumPageState.idle;
       _emailErrorMessage = "";
     });
 
@@ -238,29 +258,32 @@ class _SignupPageState extends State<SignupPage> {
 
     if (username.isEmpty) {
       setState(() {
-        _usernameErrorMessage = "username_error.empty".tr();
+        _usernameErrorMessage = "username.error.empty".tr();
       });
 
+      _usernameFocusNode.requestFocus();
       return false;
     }
 
     if (username.length < 3) {
       setState(() {
-        _usernameErrorMessage = "username_error.minimum".tr();
+        _usernameErrorMessage = "username.error.minimum_length".tr();
       });
 
+      _usernameFocusNode.requestFocus();
       return false;
     }
 
     if (!UserActions.checkUsernameFormat(username)) {
       setState(() {
-        _usernameErrorMessage = "username_error.format".tr();
+        _usernameErrorMessage = "username_error.invalid".tr();
       });
 
+      _usernameFocusNode.requestFocus();
       return false;
     }
 
-    setState(() => _checkingUsername = true);
+    setState(() => _pageState = EnumPageState.checkingUsername);
 
     final bool isAvailable = await UserActions.checkUsernameAvailability(
       _usernameController.text,
@@ -268,16 +291,18 @@ class _SignupPageState extends State<SignupPage> {
 
     if (!isAvailable) {
       setState(() {
-        _checkingUsername = false;
-        _usernameErrorMessage = "username_not_available_args".tr(
+        _pageState = EnumPageState.idle;
+        _usernameErrorMessage = "username.error.already_taken".tr(
           args: [username],
         );
       });
+
+      _usernameFocusNode.requestFocus();
       return false;
     }
 
     setState(() {
-      _checkingUsername = false;
+      _pageState = EnumPageState.idle;
       _usernameErrorMessage = "";
     });
 
@@ -296,6 +321,7 @@ class _SignupPageState extends State<SignupPage> {
 
   /// React to email changes and call `checkEmail(email)` method.
   void onEmailChanged(String email) async {
+    setState(() => _emailErrorMessage = "");
     _emailTimer?.cancel();
     _emailTimer = Timer(_debounceDuration, () => checkEmail(email));
   }
@@ -303,6 +329,7 @@ class _SignupPageState extends State<SignupPage> {
   /// React to confirm password changes
   /// and call `checkUsername(username)` method.
   void onConfirmPasswordChanged(String password, String confirmPassword) {
+    setState(() => _confirmPasswordErrorMessage = "");
     checkConfirmPassword(password, confirmPassword);
   }
 
@@ -315,6 +342,7 @@ class _SignupPageState extends State<SignupPage> {
   /// Check for input validity: emptyness, format, availability.
   /// Poppulate username error message if there's an error in one of those steps.
   void onUsernameChanged(String username) async {
+    setState(() => _usernameErrorMessage = "");
     _usernameTimer?.cancel();
     _usernameTimer = Timer(_debounceDuration, () => checkUsername(username));
   }
@@ -326,7 +354,7 @@ class _SignupPageState extends State<SignupPage> {
     String password,
     String confirmPassword,
   ) async {
-    setState(() => _creatingAccount = true);
+    setState(() => _pageState = EnumPageState.creatingAccount);
 
     final bool inputsAreOk = await checkAllInputs(
       username: username,
@@ -336,7 +364,7 @@ class _SignupPageState extends State<SignupPage> {
     );
 
     if (!inputsAreOk) {
-      setState(() => _creatingAccount = false);
+      setState(() => _pageState = EnumPageState.idle);
       return;
     }
 
@@ -351,7 +379,7 @@ class _SignupPageState extends State<SignupPage> {
       //   password: password,
       // );
 
-      setState(() => _creatingAccount = false);
+      setState(() => _pageState = EnumPageState.idle);
 
       // if (createAccountResponse.success) {
       //   if (!mounted) return;
@@ -370,19 +398,17 @@ class _SignupPageState extends State<SignupPage> {
         return;
       }
 
-      setState(() => _creatingAccount = false);
       // Snack.error(context, message: message);
     } catch (error) {
-      setState(() => _creatingAccount = false);
+      if (!mounted) return;
+      loggy.error(error);
 
-      if (!mounted) {
-        return;
-      }
-
-      Snack.error(
+      Utils.graphic.showSnackbar(
         context,
         message: "account_create_error".tr(),
       );
+    } finally {
+      setState(() => _pageState = EnumPageState.idle);
     }
   }
 }

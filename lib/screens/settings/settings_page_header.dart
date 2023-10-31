@@ -4,7 +4,13 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class SettingsPageHeader extends StatelessWidget {
-  const SettingsPageHeader({super.key});
+  const SettingsPageHeader({
+    super.key,
+    this.isMobileSize = false,
+  });
+
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +19,12 @@ class SettingsPageHeader extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 24.0,
-          left: 48.0,
-        ),
+        padding: isMobileSize
+            ? const EdgeInsets.only(top: 24.0, left: 24.0)
+            : const EdgeInsets.only(
+                top: 24.0,
+                left: 48.0,
+              ),
         child: Hero(
           tag: "settings",
           child: Material(
@@ -32,7 +40,7 @@ class SettingsPageHeader extends StatelessWidget {
               ]),
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontSize: 26.0,
+                  fontSize: isMobileSize ? 16.0 : 26.0,
                   fontWeight: FontWeight.w500,
                   color: foregroundColor?.withOpacity(0.6),
                 ),

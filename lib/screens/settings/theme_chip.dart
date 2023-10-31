@@ -34,7 +34,7 @@ class ThemeChip extends StatelessWidget {
       labelStyle: Utils.calligraphy.body(
         textStyle: TextStyle(
           fontWeight: FontWeight.w500,
-          color: selected ? Colors.black : foregroundColor?.withOpacity(0.6),
+          color: foregroundColor,
         ),
       ),
       onPressed: onTap,

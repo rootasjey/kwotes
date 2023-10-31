@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart" as firebase_auth;
@@ -10,6 +12,7 @@ import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/cloud_fun_response.dart";
 import "package:kwotes/types/create_account_response.dart";
 import "package:kwotes/types/credentials.dart";
+import "package:kwotes/types/firestore/doc_snapshot_stream_subscription.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -18,13 +21,13 @@ import "package:loggy/loggy.dart";
 
 class AppState with UiLoggy {
   AppState() {
-    userAuth.update((value) {
-      return firebase_auth.FirebaseAuth.instance.currentUser;
-    });
+    // userAuth.update((value) {
+    //   return firebase_auth.FirebaseAuth.instance.currentUser;
+    // });
 
-    if (firebase_auth.FirebaseAuth.instance.currentUser != null) {
-      signIn();
-    }
+    // if (firebase_auth.FirebaseAuth.instance.currentUser != null) {
+    //   signIn();
+    // }
   }
 
   /// Firebase auth signal instance.
@@ -34,6 +37,10 @@ class AppState with UiLoggy {
   final Signal<UserFirestore> userFirestore = createSignal(
     UserFirestore.empty(),
   );
+
+  StreamSubscription<firebase_auth.User?>? userAuthSubscription;
+
+  DocSnapshotStreamSubscription? userFirestoreSubscription;
 
   /// Whether the user is authenticated.
   bool get userAuthenticated => userAuth.value != null;
@@ -282,7 +289,8 @@ class AppState with UiLoggy {
   void _listenToAuthChanges() {
     final firebaseAuthInstance = firebase_auth.FirebaseAuth.instance;
 
-    firebaseAuthInstance.userChanges().listen(
+    userAuthSubscription?.cancel();
+    userAuthSubscription = firebaseAuthInstance.userChanges().listen(
       (newUserAuth) {
         userAuth.update((value) => newUserAuth);
       },
@@ -290,6 +298,7 @@ class AppState with UiLoggy {
         loggy.error(error);
       },
       onDone: () {
+        userAuthSubscription?.cancel();
         loggy.error("Connection to firebase auth closed.");
         userAuth.update((value) => null);
       },
@@ -303,7 +312,8 @@ class AppState with UiLoggy {
       return;
     }
 
-    FirebaseFirestore.instance
+    userFirestoreSubscription?.cancel();
+    userFirestoreSubscription = FirebaseFirestore.instance
         .collection("users")
         .doc(userAuth.value?.uid)
         .snapshots()
@@ -321,6 +331,7 @@ class AppState with UiLoggy {
         loggy.error(error);
       },
       onDone: () {
+        userFirestoreSubscription?.cancel();
         loggy.error("Connection to firestore closed.");
         userFirestore.update((value) => UserFirestore.empty());
       },

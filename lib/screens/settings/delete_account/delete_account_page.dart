@@ -3,6 +3,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page_body.dart";
@@ -38,8 +39,9 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    const EdgeInsets margin = EdgeInsets.only(
-      left: 48.0,
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Color randomColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
     );
 
     return BasicShortcuts(
@@ -48,16 +50,19 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            const ApplicationBar(),
+            ApplicationBar(
+              isMobileSize: isMobileSize,
+            ),
             DeleteAccountPageHeader(
-              margin: margin,
+              isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
+              randomColor: randomColor,
             ),
             DeleteAccountPageBody(
-              margin: margin,
+              errorMessage: _errorMessage,
+              isMobileSize: isMobileSize,
               passwordController: _passwordTextController,
               pageState: _pageState,
-              errorMessage: _errorMessage,
               onTapUpdateButton: tryDeleteAccount,
             ),
           ],
@@ -87,6 +92,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
 
   void tryDeleteAccount() async {
     if (!isPasswordInCorrectFormat(_passwordTextController.text)) {
+      Utils.graphic.showSnackbar(context, message: _errorMessage);
       setState(() {});
       return;
     }

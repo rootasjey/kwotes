@@ -7,10 +7,14 @@ import "package:kwotes/types/author.dart";
 class ShowcaseAuthors extends StatelessWidget {
   const ShowcaseAuthors({
     super.key,
+    this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.authors = const [],
     this.onTapAuthor,
   });
+
+  /// Adapt UI to mobile size.
+  final bool isMobileSize;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -41,6 +45,7 @@ class ShowcaseAuthors extends StatelessWidget {
                   return ShowcaseText(
                     docId: author.id,
                     textValue: author.name,
+                    isMobileSize: isMobileSize,
                     foregroundColor: index % 2 == 0
                         ? foregroundColor?.withOpacity(0.1)
                         : foregroundColor?.withOpacity(0.2),

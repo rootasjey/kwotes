@@ -59,9 +59,10 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    const EdgeInsets margin = EdgeInsets.only(
-      left: 48.0,
-    );
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final EdgeInsets margin = isMobileSize
+        ? const EdgeInsets.only(left: 24.0)
+        : const EdgeInsets.only(left: 48.0);
 
     return BasicShortcuts(
       autofocus: false,
@@ -69,13 +70,16 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            const ApplicationBar(),
+            ApplicationBar(
+              isMobileSize: isMobileSize,
+            ),
             EmailPageHeader(
-              margin: margin,
+              isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
             ),
             EmailPageBody(
               margin: margin,
+              isMobileSize: isMobileSize,
               emailController: _emailTextController,
               passwordFocusNode: _passwordFocusNode,
               pageState: _pageState,

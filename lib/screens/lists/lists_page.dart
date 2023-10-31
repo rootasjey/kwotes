@@ -7,14 +7,15 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
+import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/lists/lists_page_body.dart";
 import "package:kwotes/screens/lists/lists_page_create.dart";
+import "package:kwotes/screens/lists/lists_page_fab.dart";
 import "package:kwotes/screens/lists/lists_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -28,7 +29,6 @@ import "package:kwotes/types/intents/escape_intent.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
-import "package:unicons/unicons.dart";
 
 class ListsPage extends StatefulWidget {
   const ListsPage({super.key});
@@ -38,6 +38,9 @@ class ListsPage extends StatefulWidget {
 }
 
 class _ListsPageState extends State<ListsPage> with UiLoggy {
+  /// Animate list's items if true.
+  bool _animateList = true;
+
   /// True if the order is the most recent first.
   final bool _descending = true;
 
@@ -92,8 +95,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
-
     _accentColor = Constants.colors.getRandomFromPalette();
 
     final int hintIndex = Random().nextInt(9);
@@ -115,6 +118,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     final bool onCreateActive = _pageState != EnumPageState.creatingList &&
         _newQuoteList.name.isNotEmpty;
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
@@ -127,19 +132,12 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
             ),
         },
         child: Scaffold(
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: fabActive ? onToggleCreate : null,
-            splashColor: Colors.white,
-            foregroundColor: _accentColor.computeLuminance() > 0.4
-                ? Colors.black
-                : Colors.white,
-            backgroundColor: _accentColor,
-            label: _showCreate
-                ? Text("list.create.close".tr())
-                : Text("list.create.name".tr()),
-            icon: _showCreate
-                ? const Icon(UniconsLine.times)
-                : const Icon(UniconsLine.plus),
+          floatingActionButton: ListsPageFab(
+            fabActive: fabActive,
+            isMobileSize: isMobileSize,
+            showCreate: _showCreate,
+            accentColor: _accentColor,
+            onToggleCreate: onToggleCreate,
           ),
           body: ImprovedScrolling(
             scrollController: _pageScrollController,
@@ -148,10 +146,15 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
               behavior: const CustomScrollBehavior(),
               child: CustomScrollView(
                 slivers: [
-                  const ApplicationBar(),
-                  const ListsPageHeader(),
+                  PageAppBar(
+                    childTitle: ListsPageHeader(
+                      isMobileSize: isMobileSize,
+                    ),
+                    isMobileSize: isMobileSize,
+                  ),
                   ListsPageCreate(
                     show: _showCreate,
+                    isMobileSize: isMobileSize,
                     accentColor: _accentColor,
                     hintName: _hintListName,
                     hintDescription: _hintListDescription,
@@ -161,6 +164,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
                     onNameChanged: onListNameChanged,
                   ),
                   ListsPageBody(
+                    animateList: _animateList,
+                    isMobileSize: isMobileSize,
                     editingListId: _editingListId,
                     deletingListId: _deletingListId,
                     lists: _lists,
@@ -314,6 +319,15 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     });
   }
 
+  void initProps() async {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {
+        _animateList = false;
+      });
+    });
+  }
+
   /// Listen to changes of lists.
   void listenToDocumentChanges(String userId) {
     final lastDocument = _lastDocument;
@@ -462,6 +476,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
       onCancelCreate();
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
+
       setState(() {
         _pageState = EnumPageState.idle;
       });
@@ -496,6 +512,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
           .delete();
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
+
       setState(() {
         _lists.insert(index, quoteList);
       });
@@ -555,6 +573,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
       });
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
 
       setState(() {
         _lists[index] = listToUpdate.copyWith(

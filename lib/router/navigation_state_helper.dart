@@ -27,6 +27,12 @@ class NavigationStateHelper {
   /// Random quotes for home page.
   static List<Quote> randomQuotes = [];
 
+  /// Latest added authors.
+  static List<Author> latestAddedAuthors = [];
+
+  /// Latest added references.
+  static List<Reference> latestAddedReferences = [];
+
   /// Search value.
   /// This value will be passed to the search page on navigation.
   /// Thus keeping context when navigating back and forth result pages.

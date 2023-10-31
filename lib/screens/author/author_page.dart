@@ -2,11 +2,16 @@ import "dart:async";
 
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:easy_image_viewer/easy_image_viewer.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -24,6 +29,8 @@ import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
+import "package:text_wrap_auto_size/solution.dart";
+import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 
 class AuthorPage extends StatefulWidget {
   const AuthorPage({
@@ -41,6 +48,9 @@ class AuthorPage extends StatefulWidget {
 class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   /// Author page data.
   Author _author = Author.empty();
+
+  /// Show author metadata if true.
+  bool _metadataOpened = true;
 
   /// Firestore quote document reference.
   DocumentReference? _docRef;
@@ -60,6 +70,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
@@ -72,31 +83,65 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final Size windowSize = MediaQuery.of(context).size;
+    final bool isMobileSize =
+        windowSize.width < Utils.measurements.mobileWidthTreshold ||
+            windowSize.height < Utils.measurements.mobileWidthTreshold;
+
+    final Solution textWrapSolution = TextWrapAutoSize.solution(
+      Size(windowSize.width - 48.0, windowSize.height / 3),
+      Text(_author.name, style: Utils.calligraphy.title()),
+    );
+
     final Signal<UserFirestore> userFirestoreSignal =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
-    final bool canDeleteAuthor =
+    final bool canManageAuthor =
         userFirestoreSignal.value.rights.canManageAuthors;
+
+    final Color randomColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
 
     return BasicShortcuts(
       onCancel: context.beamBack,
       child: Scaffold(
-        body: CustomScrollView(slivers: [
-          ApplicationBar(
-            rightChildren: canDeleteAuthor
-                ? AuthorAppBarChildren.getChildren(
-                    context,
-                    tooltipController: _tooltipController,
-                    onDeleteAuthor: onDeleteAuthor,
-                  )
-                : [],
-          ),
-          AuthorPageBody(
-            author: _author,
-            pageState: _pageState,
-            onTapSeeQuotes: onTapSeeQuotes,
-          ),
-        ]),
+        floatingActionButton: canManageAuthor
+            ? FloatingActionButton(
+                onPressed: onEditAuthor,
+                backgroundColor: randomColor,
+                foregroundColor: randomColor.computeLuminance() < 0.5
+                    ? Colors.white
+                    : Colors.black,
+                child: const Icon(TablerIcons.pencil),
+              )
+            : null,
+        body: CustomScrollView(
+          slivers: [
+            ApplicationBar(
+              isMobileSize: isMobileSize,
+              rightChildren: canManageAuthor
+                  ? AuthorAppBarChildren.getChildren(
+                      context,
+                      tooltipController: _tooltipController,
+                      onDeleteAuthor: onDeleteAuthor,
+                    )
+                  : [],
+            ),
+            AuthorPageBody(
+              areMetadataOpen: _metadataOpened,
+              authorNameTextStyle: textWrapSolution.style,
+              author: _author,
+              isMobileSize: isMobileSize,
+              pageState: _pageState,
+              maxHeight: windowSize.height / 2,
+              onTapAuthorName: onTapAuthorName,
+              onTapSeeQuotes: onTapSeeQuotes,
+              onToggleMetadata: onToggleAuthorMetadata,
+              randomColor: randomColor,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -174,6 +219,11 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     }
   }
 
+  /// Initialize properties.
+  void initProps() async {
+    _metadataOpened = await Utils.vault.getAuthorMetadataOpened();
+  }
+
   void listenToAuthor(DocumentMap query) {
     _authorSubscription?.cancel();
     _authorSubscription =
@@ -214,6 +264,33 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     navigateBack();
   }
 
+  /// Callback fired to edit author.
+  void onEditAuthor() {
+    Beamer.of(context).beamToNamed("/dashboard/edit/author/${_author.id}");
+  }
+
+  /// Callback fired when the author name is tapped.
+  /// Opens an image viewer.
+  void onTapAuthorName() {
+    if (_author.urls.image.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "author.error.no_image".tr(),
+      );
+      return;
+    }
+
+    final ImageProvider imageProvider = Image.network(_author.urls.image).image;
+
+    showImageViewer(
+      context,
+      imageProvider,
+      swipeDismissible: true,
+      doubleTapZoomable: true,
+    );
+  }
+
+  /// Callback fired to see author's quotes.
   void onTapSeeQuotes() {
     Beamer.of(context).beamToNamed(
       SearchLocation.route,
@@ -222,5 +299,11 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
         "subjectName": _author.name,
       },
     );
+  }
+
+  /// Callback fired to toggle author metadata widget size.
+  void onToggleAuthorMetadata() {
+    Utils.vault.setAuthorMetadataOpened(!_metadataOpened);
+    setState(() => _metadataOpened = !_metadataOpened);
   }
 }

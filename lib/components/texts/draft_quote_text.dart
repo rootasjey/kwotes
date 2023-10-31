@@ -9,9 +9,13 @@ class DraftQuoteText extends StatelessWidget {
   const DraftQuoteText({
     super.key,
     required this.draftQuote,
-    required this.margin,
+    this.margin = EdgeInsets.zero,
     this.onTap,
+    this.tiny = false,
   });
+
+  /// Reduce font size if true.
+  final bool tiny;
 
   /// Main data.
   final DraftQuote draftQuote;
@@ -28,6 +32,7 @@ class DraftQuoteText extends StatelessWidget {
       key: key,
       quote: draftQuote,
       margin: margin,
+      tiny: tiny,
       onTap: (Quote quote) => onTap?.call(draftQuote),
     );
   }

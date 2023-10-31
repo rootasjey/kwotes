@@ -2,18 +2,20 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class DeleteAccountPageHeader extends StatelessWidget {
   const DeleteAccountPageHeader({
     super.key,
-    this.margin = EdgeInsets.zero,
+    this.isMobileSize = false,
+    this.randomColor = Colors.amber,
     this.onTapLeftPartHeader,
   });
 
-  /// Space around this widget.
-  final EdgeInsets margin;
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
+
+  final Color randomColor;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -25,25 +27,28 @@ class DeleteAccountPageHeader extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        // padding: margin,
-        padding: const EdgeInsets.only(
-          top: 42.0,
-        ),
+        padding: isMobileSize
+            ? const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0)
+            : const EdgeInsets.only(top: 42.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: isMobileSize
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             Text.rich(
               TextSpan(
                 text: "${"settings.name".tr()}: ",
                 children: [
+                  if (isMobileSize) const TextSpan(text: "\n"),
                   TextSpan(
-                      text: "account.delete.name".tr(),
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          color: Constants.colors.getRandomFromPalette(),
-                          fontWeight: FontWeight.w400,
-                        ),
-                      )),
+                    text: "account.delete.name".tr(),
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        color: randomColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                 ],
                 recognizer: TapGestureRecognizer()..onTap = onTapLeftPartHeader,
               ),
@@ -55,15 +60,19 @@ class DeleteAccountPageHeader extends StatelessWidget {
                 ),
               ),
             ),
-            FractionallySizedBox(
-              widthFactor: 0.6,
-              child: Text(
-                "account.delete.tips".tr(),
-                textAlign: TextAlign.center,
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    fontSize: 16.0,
-                    color: foregroundColor?.withOpacity(0.4),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: FractionallySizedBox(
+                alignment: isMobileSize ? Alignment.topLeft : Alignment.center,
+                widthFactor: isMobileSize ? 1.0 : 0.6,
+                child: Text(
+                  "account.delete.tips".tr(),
+                  textAlign: isMobileSize ? TextAlign.start : TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: 16.0,
+                      color: foregroundColor?.withOpacity(0.4),
+                    ),
                   ),
                 ),
               ),

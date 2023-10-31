@@ -10,19 +10,15 @@ class UsernamePageBody extends StatelessWidget {
     super.key,
     required this.usernameController,
     required this.passwordFocusNode,
+    this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.errorMessage = "",
     this.onUsernameChanged,
-    this.margin = EdgeInsets.zero,
-    this.isMobileSize = false,
     this.onTapUpdateButton,
   });
 
   /// True if the screen's size is narrow.
   final bool isMobileSize;
-
-  /// Space around this widget.
-  final EdgeInsets margin;
 
   /// Username text controller.
   final TextEditingController usernameController;
@@ -48,7 +44,9 @@ class UsernamePageBody extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(isMobileSize ? 12.0 : 40.0),
+        padding: isMobileSize
+            ? const EdgeInsets.all(24.0)
+            : const EdgeInsets.all(40.0),
         child: Column(
           children: [
             Container(
@@ -93,26 +91,27 @@ class UsernamePageBody extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black87,
               ),
-              child: SizedBox(
-                width: 320.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Text(
-                        "username.update.name".tr().toUpperCase(),
-                        style: Utils.calligraphy.body(
-                          textStyle: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: isMobileSize ? null : 320.0,
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text(
+                      "update.name".tr().toUpperCase(),
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ]

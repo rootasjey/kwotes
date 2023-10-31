@@ -8,7 +8,6 @@ import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/router/locations/signup_location.dart";
-import "package:kwotes/router/locations/tos_location.dart";
 
 final appLocationBuilder = BeamerDelegate(
   locationBuilder: BeamerLocationBuilder(
@@ -22,7 +21,6 @@ final appLocationBuilder = BeamerDelegate(
       SearchLocation(),
       SigninLocation(),
       SignupLocation(),
-      TosLocation(),
     ],
   ),
 );

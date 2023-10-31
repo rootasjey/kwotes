@@ -8,7 +8,28 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/settings/theme_chip.dart";
 
 class ThemeSwitcher extends StatelessWidget {
-  const ThemeSwitcher({super.key});
+  const ThemeSwitcher({
+    super.key,
+    this.isMobileSize = false,
+    this.onTapLightTheme,
+    this.onTapDarkTheme,
+    this.onTapSystemTheme,
+    this.onToggleThemeMode,
+  });
+
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
+
+  /// Callback fired when light theme is selected.
+  final void Function()? onTapLightTheme;
+
+  /// Callback fired when dark theme is selected.
+  final void Function()? onTapDarkTheme;
+
+  /// Callback fired when system theme is selected.
+  final void Function()? onTapSystemTheme;
+
+  final void Function()? onToggleThemeMode;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +44,17 @@ class ThemeSwitcher extends StatelessWidget {
     final bool systemSelected =
         AdaptiveTheme.of(context).mode == AdaptiveThemeMode.system;
 
-    final Color accentColor = Constants.colors.getRandomFromPalette();
+    final Color accentColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
+
     final Color foregroundAccentColor =
-        accentColor.computeLuminance() > 0.4 ? Colors.black : Colors.white;
+        accentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
     return SliverPadding(
-      padding: const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
+      padding: isMobileSize
+          ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+          : const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
       sliver: SliverList.list(children: [
         Text.rich(
           TextSpan(text: "${"theme".tr()}: ", children: [
@@ -40,15 +66,12 @@ class ThemeSwitcher extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  AdaptiveTheme.of(context).toggleThemeMode();
-                },
+              recognizer: TapGestureRecognizer()..onTap = onToggleThemeMode,
             ),
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: 72.0,
+              fontSize: isMobileSize ? 42.0 : 72.0,
               fontWeight: FontWeight.w100,
               color: foregroundColor?.withOpacity(0.6),
             ),
@@ -68,7 +91,7 @@ class ThemeSwitcher extends StatelessWidget {
               foregroundColor: lightSelected
                   ? foregroundAccentColor
                   : foregroundColor?.withOpacity(0.6),
-              onTap: AdaptiveTheme.of(context).setLight,
+              onTap: onTapLightTheme,
             ),
             ThemeChip(
               textLabel: "dark".tr(),
@@ -77,7 +100,7 @@ class ThemeSwitcher extends StatelessWidget {
               foregroundColor: darkSelected
                   ? foregroundAccentColor
                   : foregroundColor?.withOpacity(0.6),
-              onTap: AdaptiveTheme.of(context).setDark,
+              onTap: onTapDarkTheme,
             ),
             ThemeChip(
               textLabel: "system".tr(),
@@ -86,7 +109,7 @@ class ThemeSwitcher extends StatelessWidget {
               foregroundColor: systemSelected
                   ? foregroundAccentColor
                   : foregroundColor?.withOpacity(0.6),
-              onTap: AdaptiveTheme.of(context).setSystem,
+              onTap: onTapSystemTheme,
             ),
           ]
               .animate(interval: 150.ms)

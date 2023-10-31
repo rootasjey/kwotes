@@ -5,6 +5,11 @@ import "package:kwotes/router/locations/home_location.dart";
 class Passage {
   const Passage();
 
+  /// Current home page index (useful on mobile screen size).
+  /// 0: home, 1: search, 2: dashboard.
+  /// This will avoid having delay when retrieving value from local storage.
+  static int homePageTabIndex = 0;
+
   /// Better navigate back to the previous page.
   /// Takes care of the following cases:
   /// - There's no history but we're not on home page -> back to home.
@@ -23,9 +28,10 @@ class Passage {
     }
 
     final history = Beamer.of(context).beamingHistory;
-    final String? stringLocation = history.last.state.routeInformation.location;
+    final String stringLocation =
+        history.last.state.routeInformation.uri.toString();
     final RegExp slashRegex = RegExp(r"(/)");
-    final slashMatches = slashRegex.allMatches(stringLocation ?? "");
+    final slashMatches = slashRegex.allMatches(stringLocation);
 
     if (history.length == 1 && slashMatches.length == 1) {
       Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
@@ -47,13 +53,13 @@ class Passage {
 
   bool handleMobileBack(BuildContext context) {
     final String location = Beamer.of(context)
-            .beamingHistory
-            .last
-            .history
-            .last
-            .routeInformation
-            .location ??
-        "";
+        .beamingHistory
+        .last
+        .history
+        .last
+        .routeInformation
+        .uri
+        .toString();
 
     final bool containsAtelier = location.contains("atelier");
     final List<String> locationParts = location.split("/");

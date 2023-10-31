@@ -12,7 +12,7 @@ class DashboardCard extends StatefulWidget {
     this.noSizeConstraints = false,
     this.backgroundColor,
     this.hoverColor = Colors.pink,
-    this.elevation = 2.0,
+    this.elevation = 0.0,
     this.onTap,
     this.heroKey = "",
   }) : super(key: key);
@@ -39,6 +39,7 @@ class DashboardCard extends StatefulWidget {
   /// Icon's data which will be displayed before text.
   final IconData iconData;
 
+  /// Hero animation key.
   final String heroKey;
 
   /// Primary card's text.
@@ -56,8 +57,13 @@ class DashboardCard extends StatefulWidget {
 
 class _DashboardCardState extends State<DashboardCard> {
   /// Card's current elevation.
-  double _elevation = 2.0;
+  double _elevation = 0.0;
+
+  /// Card's end elevation.
   double _endElevation = 0.0;
+
+  /// Card's start elevation.
+  double _startElevation = 0.0;
 
   /// Card's current icon color.
   Color? _iconColor;
@@ -65,24 +71,33 @@ class _DashboardCardState extends State<DashboardCard> {
   @override
   void initState() {
     super.initState();
-    _elevation = widget.elevation;
-    _endElevation = widget.elevation > 0.0 ? widget.elevation * 3.0 : 6.0;
+    _startElevation = widget.compact ? 6.0 : widget.elevation;
+    _endElevation = _startElevation / 2;
+    _elevation = _startElevation;
   }
 
   @override
   Widget build(BuildContext context) {
-    final Widget card = Card(
+    if (widget.compact) {
+      return compactLayout();
+    }
+
+    return largeLayout();
+  }
+
+  Widget compactLayout() {
+    return Card(
       elevation: _elevation,
-      color: widget.backgroundColor,
       child: InkWell(
         onTap: widget.onTap,
         splashColor: widget.hoverColor,
         onHover: onHover,
         onTapDown: onTapDown,
         onTapUp: onTapUp,
+        borderRadius: BorderRadius.circular(4.0),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -93,29 +108,47 @@ class _DashboardCardState extends State<DashboardCard> {
         ),
       ),
     );
+  }
 
-    if (widget.noSizeConstraints) {
-      return card;
-    }
-
-    double width = widget.compact ? 200.0 : 180.0;
-    if (widget.isWide) {
-      width = 360.0;
-    }
-
+  Widget largeLayout() {
     return SizedBox(
-      width: width,
-      height: widget.isWide ? 96.0 : 170.0,
-      child: card,
+      width: 180.0,
+      height: 170.0,
+      child: Card(
+        elevation: _elevation,
+        color: widget.backgroundColor,
+        child: InkWell(
+          onTap: widget.onTap,
+          splashColor: widget.hoverColor,
+          onHover: onHover,
+          onTapDown: onTapDown,
+          onTapUp: onTapUp,
+          child: Padding(
+            padding: widget.compact
+                ? const EdgeInsets.all(12.0)
+                : const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                icon(),
+                texts(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget icon() {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 12.0,
-        bottom: 12.0,
-      ),
+      padding: widget.compact
+          ? const EdgeInsets.only(right: 12.0)
+          : const EdgeInsets.only(
+              top: 12.0,
+              bottom: 12.0,
+            ),
       child: Opacity(
         opacity: 0.6,
         child: Icon(
@@ -128,7 +161,8 @@ class _DashboardCardState extends State<DashboardCard> {
 
   Widget texts() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment:
+          widget.compact ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         Hero(
           tag: widget.heroKey,
@@ -178,7 +212,7 @@ class _DashboardCardState extends State<DashboardCard> {
     }
 
     setState(() {
-      _elevation = widget.elevation;
+      _elevation = _startElevation;
       _iconColor = null;
     });
   }
@@ -191,7 +225,7 @@ class _DashboardCardState extends State<DashboardCard> {
 
   void onTapUp(TapUpDetails details) {
     setState(() {
-      _elevation = widget.elevation;
+      _elevation = _startElevation;
     });
   }
 }

@@ -8,12 +8,12 @@ import "package:kwotes/globals/utils.dart";
 class EmailPageHeader extends StatelessWidget {
   const EmailPageHeader({
     super.key,
-    this.margin = EdgeInsets.zero,
+    this.isMobileSize = false,
     this.onTapLeftPartHeader,
   });
 
-  /// Space around this widget.
-  final EdgeInsets margin;
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -25,25 +25,29 @@ class EmailPageHeader extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        // padding: margin,
-        padding: const EdgeInsets.only(
-          top: 42.0,
-        ),
+        padding: isMobileSize
+            ? const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0)
+            : const EdgeInsets.only(top: 42.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: isMobileSize
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             Text.rich(
               TextSpan(
                 text: "${"settings.name".tr()}: ",
                 children: [
                   TextSpan(
-                      text: "email.name".tr(),
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          color: Constants.colors.getRandomFromPalette(),
-                          fontWeight: FontWeight.w400,
+                    text: "email.name".tr(),
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        color: Constants.colors.getRandomFromPalette(
+                          withGoodContrast: true,
                         ),
-                      )),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                 ],
                 recognizer: TapGestureRecognizer()..onTap = onTapLeftPartHeader,
               ),
@@ -56,10 +60,10 @@ class EmailPageHeader extends StatelessWidget {
               ),
             ),
             FractionallySizedBox(
-              widthFactor: 0.6,
+              widthFactor: isMobileSize ? 0.9 : 0.6,
               child: Text(
                 "email.update_tips".tr(),
-                textAlign: TextAlign.center,
+                textAlign: isMobileSize ? TextAlign.start : TextAlign.center,
                 style: Utils.calligraphy.body(
                   textStyle: TextStyle(
                     fontSize: 16.0,
