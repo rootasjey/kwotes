@@ -4,115 +4,6 @@ import { adminApp } from './adminApp';
 const firestore = adminApp.firestore();
 const METRICS_COLLECTION_NAME = "metrics";
 
-export const configUpdateCollection = functions
-  .region('europe-west3')
-  .https
-  .onRequest(async ({ }, resp) => {
-    const appDoc = await firestore
-      .collection('stats')
-      .doc('apps')
-      .get();
-
-    const authorDoc = await firestore
-      .collection('stats')
-      .doc('authors')
-      .get();
-
-    const commentDoc = await firestore
-      .collection('stats')
-      .doc('comments')
-      .get();
-
-    const draftDoc = await firestore
-      .collection('stats')
-      .doc('drafts')
-      .get();
-
-    const listDoc = await firestore
-      .collection('stats')
-      .doc('lists')
-      .get();
-
-    const quoteDoc = await firestore
-      .collection('stats')
-      .doc('quotes')
-      .get();
-
-    const referenceDoc = await firestore
-      .collection('stats')
-      .doc('references')
-      .get();
-
-    const tempquoteDoc = await firestore
-      .collection('stats')
-      .doc('tempquotes')
-      .get();
-
-    const topicDoc = await firestore
-      .collection('stats')
-      .doc('topics')
-      .get();
-
-    const userDoc = await firestore
-      .collection('stats')
-      .doc('users')
-      .get();
-
-    await firestore
-      .collection("metrics")
-      .doc('apps')
-      .set(appDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('authors')
-      .set(authorDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('comments')
-      .set(commentDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('drafts')
-      .set(draftDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('lists')
-      .set(listDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('quotes')
-      .set(quoteDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('references')
-      .set(referenceDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('tempquotes')
-      .set(tempquoteDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('topics')
-      .set(topicDoc.data() ?? {});
-
-    await firestore
-      .collection("metrics")
-      .doc('users')
-      .set(userDoc.data() ?? {});
-
-    resp.send({
-      "updated metrics": true
-    });
-  });
-
 // -----
 // Apps
 // -----
@@ -508,7 +399,7 @@ export const onDeleteQuote = functions
     if (!userData) { return; }
     const userPub: number = userData.metrics.published ?? 0;
     await userSnap.ref.update(
-      'metics.quotes.published', 
+      'metrics.quotes.published', 
       Math.max(0, userPub - 1),
     );
     return true;
