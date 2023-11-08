@@ -47,8 +47,8 @@ class ShowcaseReferences extends StatelessWidget {
                     textValue: reference.name,
                     isMobileSize: isMobileSize,
                     foregroundColor: index % 2 == 0
-                        ? foregroundColor?.withOpacity(0.1)
-                        : foregroundColor?.withOpacity(0.2),
+                        ? foregroundColor?.withOpacity(0.4)
+                        : foregroundColor?.withOpacity(0.8),
                     onTap: onTapReference != null
                         ? () => onTapReference?.call(reference)
                         : null,

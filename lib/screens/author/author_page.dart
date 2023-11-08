@@ -103,6 +103,8 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
       withGoodContrast: true,
     );
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BasicShortcuts(
       onCancel: context.beamBack,
       child: Scaffold(
@@ -119,7 +121,9 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
         body: CustomScrollView(
           slivers: [
             ApplicationBar(
+              pinned: false,
               isMobileSize: isMobileSize,
+              title: const SizedBox.shrink(),
               rightChildren: canManageAuthor
                   ? AuthorAppBarChildren.getChildren(
                       context,
@@ -132,6 +136,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
               areMetadataOpen: _metadataOpened,
               authorNameTextStyle: textWrapSolution.style,
               author: _author,
+              isDark: isDark,
               isMobileSize: isMobileSize,
               pageState: _pageState,
               maxHeight: windowSize.height / 2,

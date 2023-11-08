@@ -16,6 +16,7 @@ class SearchInput extends StatelessWidget {
     this.focusNode,
     this.padding = const EdgeInsets.only(left: 12.0),
     this.isMobileSize = false,
+    this.bottom,
   });
 
   /// True if this is a mobile size.
@@ -37,6 +38,9 @@ class SearchInput extends StatelessWidget {
   /// Search input controller.
   final TextEditingController? inputController;
 
+  /// Widget to display at the bottom.
+  final Widget? bottom;
+
   @override
   Widget build(BuildContext context) {
     final String hintText = "${"search.${searchCategory.name}s".tr()}...";
@@ -47,11 +51,14 @@ class SearchInput extends StatelessWidget {
       primary: false,
       backgroundColor: backgroundColor,
       stretch: false,
-      pinned: true,
-      toolbarHeight: 66.0,
+      floating: true,
+      pinned: false,
+      snap: true,
+      elevation: 0.0,
+      toolbarHeight: 140.0,
       automaticallyImplyLeading: false,
-      collapsedHeight: 66.0,
-      expandedHeight: 100.0,
+      collapsedHeight: 140.0,
+      expandedHeight: 140.0,
       title: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: 5,
@@ -61,25 +68,32 @@ class SearchInput extends StatelessWidget {
           padding: isMobileSize
               ? EdgeInsets.zero
               : padding.subtract(const EdgeInsets.only(left: 28.0)),
-          child: TextField(
-            maxLines: null,
-            autofocus: true,
-            cursorColor: Constants.colors.primary,
-            focusNode: focusNode,
-            controller: inputController,
-            keyboardType: TextInputType.multiline,
-            textCapitalization: TextCapitalization.sentences,
-            onChanged: onChangedTextField,
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: isMobileSize ? 24.0 : 54.0,
-                fontWeight: FontWeight.w600,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              TextField(
+                maxLines: null,
+                autofocus: true,
+                cursorColor: Constants.colors.primary,
+                focusNode: focusNode,
+                controller: inputController,
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
+                onChanged: onChangedTextField,
+                textAlign: TextAlign.center,
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    fontSize: isMobileSize ? 32.0 : 54.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  border: const OutlineInputBorder(borderSide: BorderSide.none),
+                ),
               ),
-            ),
-            decoration: InputDecoration(
-              hintText: hintText,
-              border: const OutlineInputBorder(borderSide: BorderSide.none),
-            ),
+              bottom ?? const SizedBox.shrink(),
+            ],
           ),
         ),
       ),

@@ -40,7 +40,9 @@ class SearchReferenceResultsPage extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: 54.0,
                     fontWeight: FontWeight.w300,
-                    color: Constants.colors.getRandomFromPalette(),
+                    color: Constants.colors.getRandomFromPalette(
+                      withGoodContrast: true,
+                    ),
                   ),
                 ),
               ),

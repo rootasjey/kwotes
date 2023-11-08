@@ -58,8 +58,8 @@ class LatestAddedAuthors extends StatelessWidget {
                 if (author.urls.image.isEmpty) {
                   return BetterAvatar(
                     colorFilter: Utils.graphic.greyColorFilter,
-                    imageProvider:
-                        const AssetImage("assets/images/autoportrait.png"),
+                    imageProvider: const AssetImage(
+                        "assets/images/profile-picture-avocado.png"),
                     margin: const EdgeInsets.symmetric(horizontal: 4.0),
                     onTap: () => onTapAuthor?.call(author),
                     radius: 24.0,

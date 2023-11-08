@@ -33,6 +33,10 @@ class NavigationStateHelper {
   /// Latest added references.
   static List<Reference> latestAddedReferences = [];
 
+  /// Last random quote language.
+  /// Useful for fetching new random quotes after a language change.
+  static String lastRandomQuoteLanguage = "en";
+
   /// Search value.
   /// This value will be passed to the search page on navigation.
   /// Thus keeping context when navigating back and forth result pages.

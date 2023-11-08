@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:flutter/material.dart";
 import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/globals/constants.dart";
@@ -8,17 +6,33 @@ import "package:kwotes/types/author.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
 
-class HomePageHeroQuote extends StatelessWidget {
-  const HomePageHeroQuote({
+class HeroQuote extends StatelessWidget {
+  const HeroQuote({
     super.key,
-    this.randomQuotes = const [],
+    required this.quote,
+    this.isDark = false,
+    this.isBig = false,
     this.textColor,
     this.onTapAuthor,
     this.onTapQuote,
+    this.margin = EdgeInsets.zero,
+    this.backgroundColor,
   });
+
+  /// Whether to use dark theme.
+  final bool isDark;
+
+  /// Whether to display a big quote.
+  final bool isBig;
+
+  /// Widget background color.
+  final Color? backgroundColor;
 
   /// Foreground text color.
   final Color? textColor;
+
+  /// Margin of the widget.
+  final EdgeInsets margin;
 
   /// Callback fired when author's name is tapped.
   final void Function(Author author)? onTapAuthor;
@@ -26,32 +40,25 @@ class HomePageHeroQuote extends StatelessWidget {
   /// Callback fired when author's avatar is tapped.
   final void Function(Quote quote)? onTapQuote;
 
-  /// Random quotes list.
-  final List<Quote> randomQuotes;
+  /// Data to display.
+  final Quote quote;
 
   @override
   Widget build(BuildContext context) {
-    if (randomQuotes.isEmpty) {
-      return const SliverToBoxAdapter();
-    }
-
-    final Quote quote = randomQuotes.elementAt(
-      Random().nextInt(randomQuotes.length),
-    );
-
     final Author author = quote.author;
     final Topic topic = Constants.colors.topics.firstWhere(
       (Topic x) => x.name == quote.topics.first,
       orElse: () => Topic.empty(),
     );
 
-    return SliverPadding(
-      padding: const EdgeInsets.only(
-        top: 16.0,
-        left: 54.0,
-        right: 54.0,
-      ),
-      sliver: SliverToBoxAdapter(
+    final Color accentColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: !isDark,
+    );
+
+    return SliverToBoxAdapter(
+      child: Container(
+        color: backgroundColor,
+        padding: margin,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,9 +70,19 @@ class HomePageHeroQuote extends StatelessWidget {
                     imageProvider: NetworkImage(author.urls.image),
                     radius: 24.0,
                   ),
-                TextButton(
-                  onPressed: () => onTapAuthor?.call(author),
-                  child: Text("— ${quote.author.name}"),
+                InkWell(
+                  onTap: () => onTapAuthor?.call(author),
+                  splashColor: accentColor,
+                  hoverColor: accentColor,
+                  highlightColor: accentColor,
+                  child: Text(
+                    "— ${quote.author.name}",
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        color: accentColor,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -79,8 +96,8 @@ class HomePageHeroQuote extends StatelessWidget {
                 quote.name,
                 style: Utils.calligraphy.body(
                   textStyle: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w400,
+                    fontSize: isBig ? 28.0 : 18.0,
+                    fontWeight: isBig ? FontWeight.w200 : FontWeight.w400,
                     color: textColor,
                   ),
                 ),

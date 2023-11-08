@@ -28,36 +28,49 @@ class ShowcaseQuotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double spacing = 12.0;
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final double spacing = isMobileSize ? 0.0 : 12.0;
+    final Brightness brightness = Theme.of(context).brightness;
+    final Color? backgroundColor =
+        brightness == Brightness.light ? Colors.white38 : null;
 
     return SliverPadding(
-      // padding: margin.add(const EdgeInsets.only(left: 24.0)),
-      padding: margin.add(const EdgeInsets.only(left: 0.0)),
+      padding: margin,
       sliver: SliverList.list(children: [
-        Text(
-          "...${"search.some_topics".tr()}".toLowerCase(),
-          style: Utils.calligraphy.body(
-            textStyle: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-              color: foregroundColor?.withOpacity(0.4),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            "topics".tr(),
+            textAlign: TextAlign.center,
+            style: Utils.calligraphy.body(
+              textStyle: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+                color: foregroundColor?.withOpacity(0.4),
+              ),
             ),
           ),
         ),
         Wrap(
           spacing: spacing,
           runSpacing: spacing,
+          alignment: WrapAlignment.center,
           children: topicColors
               .map(
                 (Topic topicColor) {
                   return TopicCard(
                     topic: topicColor,
+                    backgroundColor: backgroundColor,
                     foregroundColor: foregroundColor,
-                    onTapTopicColor: onTapTopicColor,
-                    isTiny: isMobileSize,
+                    onTap: onTapTopicColor,
+                    size: isMobileSize
+                        ? const Size(90.0, 90.0)
+                        : const Size(100.0, 100.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                   );
                 },
               )

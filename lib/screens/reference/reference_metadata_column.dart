@@ -44,102 +44,92 @@ class ReferenceMetadaColumn extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    const EdgeInsets padding = EdgeInsets.all(6.0);
     final List<Widget> children = [];
+
+    final Color iconColor = foregroundColor.withOpacity(0.6);
+    const double iconSize = 24.0;
+    const EdgeInsets iconPadding = EdgeInsets.only(right: 8.0);
+
+    final TextStyle textStyle = Utils.calligraphy.body(
+      textStyle: TextStyle(
+        color: iconColor,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+        height: 1.6,
+      ),
+    );
 
     if (reference.type.primary.isNotEmpty) {
       children.add(
-        Padding(
-          padding: padding,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  TablerIcons.triangle,
-                  color: foregroundColor.withOpacity(0.6),
-                ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: iconPadding,
+              child: Icon(
+                TablerIcons.triangle,
+                color: iconColor,
+                size: iconSize,
               ),
-              Expanded(
-                child: Text(
-                  "genre.primary.${reference.type.primary}".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      color: foregroundColor.withOpacity(0.6),
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+            ),
+            Expanded(
+              child: Text(
+                "genre.primary.${reference.type.primary}".tr(),
+                style: textStyle,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     }
 
     if (reference.type.secondary.isNotEmpty) {
       children.add(
-        Padding(
-          padding: padding,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  TablerIcons.hexagon,
-                  color: foregroundColor.withOpacity(0.6),
-                ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: iconPadding,
+              child: Icon(
+                TablerIcons.hexagon,
+                color: iconColor,
+                size: iconSize,
               ),
-              Expanded(
-                  child: Text(
-                "genre.secondary.${reference.type.secondary.toLowerCase()}"
-                    .tr(),
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    color: foregroundColor.withOpacity(0.6),
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              )),
-            ],
-          ),
+            ),
+            Expanded(
+              child: Text(
+                reference.type.secondary,
+                // "genre.secondary.${reference.type.secondary.toLowerCase()}"
+                //     .tr(),
+                style: textStyle,
+              ),
+            ),
+          ],
         ),
       );
     }
 
     if (!reference.release.dateEmpty) {
       children.add(
-        Padding(
-          padding: padding,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  TablerIcons.jetpack,
-                  color: foregroundColor.withOpacity(0.6),
-                ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: iconPadding,
+              child: Icon(
+                TablerIcons.jetpack,
+                color: iconColor,
+                size: iconSize,
               ),
-              Text(
-                Jiffy.parseFromDateTime(reference.release.original).yMMMMd,
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    color: foregroundColor.withOpacity(0.6),
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+            Text(
+              Jiffy.parseFromDateTime(reference.release.original).yMMMMd,
+              style: textStyle,
+            ),
+          ],
         ),
       );
     }
@@ -178,15 +168,22 @@ class ReferenceMetadaColumn extends StatelessWidget {
               height: isOpen ? null : 0.0,
               child: Card(
                 elevation: 8.0,
+                color: Colors.grey.shade100,
                 margin: EdgeInsets.zero,
                 child: InkWell(
                   onTap: onToggleOpen,
+                  borderRadius: BorderRadius.circular(4.0),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(24.0),
                     child: ListView.separated(
                       shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, index) {
-                        return children[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2.0),
+                          child: children[index],
+                        );
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return const Divider();

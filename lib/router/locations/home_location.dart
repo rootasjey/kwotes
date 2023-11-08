@@ -3,18 +3,22 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:kwotes/screens/home/quote_page.dart";
 import "package:kwotes/screens/home/responsive_app_container.dart";
+import "package:kwotes/screens/home/topic_page.dart";
 
 class HomeLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
   static const String route = "/";
 
   /// Quote route location for home.
-  static const String quoteRoute = "/r/:quoteId";
+  static const String quoteRoute = "/q/:quoteId";
+
+  static const String topicRoute = "/t/:topicName";
 
   @override
   List<Pattern> get pathPatterns => [
         route,
         quoteRoute,
+        topicRoute,
       ];
 
   @override
@@ -32,6 +36,17 @@ class HomeLocation extends BeamLocation<BeamState> {
             quoteId: state.pathParameters["quoteId"] ?? "",
           ),
           key: const ValueKey(quoteRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains(":topicName"))
+        BeamPage(
+          child: TopicPage(
+            topic: state.pathParameters["topicName"] ?? "",
+          ),
+          key: const ValueKey(topicRoute),
           title: "page_title.any".tr(),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,

@@ -33,7 +33,7 @@ class ColorPalette {
     // const Color.fromRGBO(182, 227, 136, 1),
   ];
 
-  final List<Color> backgroundPalette = [
+  final List<Color> pastelPalette = [
     Colors.blue.shade50,
     const Color.fromRGBO(253, 239, 245, 1),
     Colors.amber.shade50,
@@ -41,6 +41,10 @@ class ColorPalette {
     Colors.lightGreen.shade50,
     Colors.pink.shade50,
   ];
+
+  Color getRandomPastel() {
+    return pastelPalette.elementAt(Random().nextInt(pastelPalette.length));
+  }
 
   Color getRandomFromPalette({bool withGoodContrast = false}) {
     if (!withGoodContrast) {

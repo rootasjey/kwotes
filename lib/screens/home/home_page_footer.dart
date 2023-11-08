@@ -11,6 +11,7 @@ class HomePageFooter extends StatelessWidget {
     required this.userFirestoreSignal,
     this.isMobileSize = false,
     this.iconColor,
+    this.margin = EdgeInsets.zero,
     this.onAddQuote,
     this.onFetchRandomQuotes,
     this.onTapGitHub,
@@ -23,6 +24,9 @@ class HomePageFooter extends StatelessWidget {
 
   /// Icon color.
   final Color? iconColor;
+
+  /// Margin of the widget.
+  final EdgeInsets margin;
 
   /// Callback fired to add a new quote.
   final void Function()? onAddQuote;
@@ -71,12 +75,7 @@ class HomePageFooter extends StatelessWidget {
     );
 
     return SliverPadding(
-      padding: const EdgeInsets.only(
-        left: 48.0,
-        right: 48.0,
-        top: 24.0,
-        bottom: 120.0,
-      ),
+      padding: margin,
       sliver: SliverList.list(
         children: [
           if (!isMobileSize) ...[
@@ -111,6 +110,7 @@ class HomePageFooter extends StatelessWidget {
             child: Wrap(
               spacing: 4.0,
               runSpacing: 16.0,
+              alignment: WrapAlignment.center,
               children: [
                 if (isMobileSize) ...[
                   openRandomButton,

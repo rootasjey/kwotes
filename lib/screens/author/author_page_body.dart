@@ -2,6 +2,7 @@ import "package:animated_text_kit/animated_text_kit.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/author/author_metadata_column.dart";
@@ -14,6 +15,7 @@ class AuthorPageBody extends StatelessWidget {
     super.key,
     required this.author,
     this.areMetadataOpen = true,
+    this.isDark = false,
     this.isMobileSize = false,
     this.randomColor,
     this.maxHeight = double.infinity,
@@ -29,6 +31,9 @@ class AuthorPageBody extends StatelessWidget {
 
   /// Expand this widget if true.
   final bool areMetadataOpen;
+
+  /// Dark mode.
+  final bool isDark;
 
   /// Adapt UI for mobile size.
   final bool isMobileSize;
@@ -65,10 +70,11 @@ class AuthorPageBody extends StatelessWidget {
       );
     }
 
+    final double leftPadding = isMobileSize ? 24.0 : 48.0;
+    const double rightPadding = 24.0;
+
     return SliverPadding(
-      padding: EdgeInsets.only(
-        left: isMobileSize ? 24.0 : 48.0,
-        right: 24.0,
+      padding: const EdgeInsets.only(
         bottom: 190.0,
       ),
       sliver: SliverList(
@@ -77,7 +83,11 @@ class AuthorPageBody extends StatelessWidget {
             onTap: onTapAuthorName,
             child: Padding(
               padding: isMobileSize
-                  ? const EdgeInsets.only(bottom: 24.0)
+                  ? EdgeInsets.only(
+                      left: leftPadding,
+                      right: rightPadding,
+                      bottom: 24.0,
+                    )
                   : EdgeInsets.zero,
               child: Hero(
                 tag: author.id,
@@ -95,51 +105,80 @@ class AuthorPageBody extends StatelessWidget {
           ),
           AuthorMetadaColumn(
             author: author,
+            isDark: isDark,
             foregroundColor: foregroundColor,
             isOpen: areMetadataOpen,
             onToggleOpen: onToggleMetadata,
-            margin: const EdgeInsets.only(bottom: 24.0),
+            margin: EdgeInsets.only(
+              bottom: 24.0,
+              left: leftPadding - 6.0,
+              right: rightPadding,
+            ),
             show: isMobileSize,
           ),
-          AnimatedTextKit(
-            isRepeatingAnimation: false,
-            displayFullTextOnTap: true,
-            animatedTexts: [
-              TypewriterAnimatedText(
-                author.summary,
-                speed: const Duration(milliseconds: 10),
-                curve: Curves.decelerate,
-                textStyle: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    fontSize: isMobileSize ? 16.0 : 24.0,
-                    color: foregroundColor.withOpacity(0.6),
+          Padding(
+            padding: EdgeInsets.only(
+              left: leftPadding,
+              right: rightPadding,
+            ),
+            child: AnimatedTextKit(
+              isRepeatingAnimation: false,
+              displayFullTextOnTap: true,
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  author.summary,
+                  speed: const Duration(milliseconds: 10),
+                  curve: Curves.decelerate,
+                  textStyle: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 24.0,
+                      color: foregroundColor.withOpacity(0.6),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           AuthorMetadaRow(
             author: author,
             foregroundColor: foregroundColor,
-            margin: const EdgeInsets.only(top: 24.0),
+            margin: EdgeInsets.only(
+              top: 24.0,
+              left: leftPadding,
+              right: rightPadding,
+            ),
             show: !isMobileSize,
           ),
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: const EdgeInsets.only(top: 32.0),
+              padding: EdgeInsets.only(
+                top: 32.0,
+                left: leftPadding,
+                right: rightPadding,
+              ),
               child: TextButton(
                 onPressed: onTapSeeQuotes,
                 style: TextButton.styleFrom(
                   foregroundColor: randomColor,
+                  backgroundColor: randomColor?.withOpacity(0.1),
                 ),
-                child: Text(
-                  "see_related_quotes".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: isMobileSize ? 16.0 : 24.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "see_related_quotes".tr(),
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: isMobileSize ? 16.0 : 24.0,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 6.0),
+                      child: Icon(TablerIcons.arrow_right, size: 16.0),
+                    ),
+                  ],
                 ),
               ),
             ),

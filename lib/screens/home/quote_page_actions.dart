@@ -13,18 +13,18 @@ class QuotePageActions extends StatelessWidget {
     required this.copyIcon,
     required this.quote,
     this.direction = Axis.vertical,
+    this.authenticated = false,
     this.onCopyQuote,
     this.onToggleFavourite,
     this.onAddToList,
     this.copyTooltip = "",
-    this.isAuthenticated = false,
   });
 
   /// The direction to use as the main axis.
   final Axis direction;
 
   /// Whether user is authenticated.
-  final bool isAuthenticated;
+  final bool authenticated;
 
   /// Callback fired to copy quote's content.
   final Function()? onCopyQuote;
@@ -66,23 +66,13 @@ class QuotePageActions extends StatelessWidget {
           icon: Icon(copyIcon),
           tooltip: copyTooltip,
         ),
-        if (isAuthenticated) ...[
+        if (authenticated) ...[
           LikeButton(
             initialLiked: quote.starred,
             tooltip: quote.starred
                 ? "quote.unlike.name".tr()
                 : "quote.like.name".tr(),
           ),
-          //   IconButton(
-          //   color: iconColor,
-          //   onPressed: onToggleFavourite,
-          //   icon: quote.starred
-          //       ? const Icon(TablerIcons.heart_filled)
-          //       : const Icon(UniconsLine.heart),
-          //   tooltip: quote.starred
-          //       ? "quote.unlike.name".tr()
-          //       : "quote.like.name".tr(),
-          // ),
           IconButton(
             color: iconColor,
             onPressed: onAddToList,
@@ -90,24 +80,6 @@ class QuotePageActions extends StatelessWidget {
             tooltip: "list.add.to".plural(1),
           ),
         ],
-        // if (isAuthenticated)
-        //   IconButton(
-        //     color: iconColor,
-        //     onPressed: onToggleFavourite,
-        //     icon: quote.starred
-        //         ? const Icon(TablerIcons.heart_filled)
-        //         : const Icon(UniconsLine.heart),
-        //     tooltip: quote.starred
-        //         ? "quote.unlike.name".tr()
-        //         : "quote.like.name".tr(),
-        //   ),
-        // if (isAuthenticated)
-        //   IconButton(
-        //     color: iconColor,
-        //     onPressed: onAddToList,
-        //     icon: const Icon(TablerIcons.playlist_add),
-        //     tooltip: "list.add.to".plural(1),
-        //   ),
       ],
     );
   }

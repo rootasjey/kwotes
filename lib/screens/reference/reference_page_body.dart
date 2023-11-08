@@ -2,8 +2,8 @@ import "package:animated_text_kit/animated_text_kit.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/reference/reference_metadata_column.dart";
 import "package:kwotes/screens/reference/reference_metadata_row.dart";
@@ -66,10 +66,11 @@ class ReferencePageBody extends StatelessWidget {
       );
     }
 
+    final double leftPadding = isMobileSize ? 24.0 : 48.0;
+    const double rightPadding = 24.0;
+
     return SliverPadding(
-      padding: EdgeInsets.only(
-        left: isMobileSize ? 24.0 : 48.0,
-        right: 24.0,
+      padding: const EdgeInsets.only(
         bottom: 190.0,
       ),
       sliver: SliverList(
@@ -78,7 +79,11 @@ class ReferencePageBody extends StatelessWidget {
             onTap: onTapReferenceName,
             child: Padding(
               padding: isMobileSize
-                  ? const EdgeInsets.only(bottom: 24.0)
+                  ? EdgeInsets.only(
+                      left: leftPadding,
+                      right: rightPadding,
+                      bottom: 24.0,
+                    )
                   : EdgeInsets.zero,
               child: Hero(
                 tag: reference.id,
@@ -99,54 +104,87 @@ class ReferencePageBody extends StatelessWidget {
             foregroundColor: foregroundColor,
             isOpen: areMetadataOpen,
             onToggleOpen: onToggleMetadata,
-            margin: const EdgeInsets.only(bottom: 24.0),
+            margin: EdgeInsets.only(
+              left: leftPadding - 6.0,
+              right: rightPadding,
+              bottom: 24.0,
+            ),
             show: isMobileSize,
           ),
-          AnimatedTextKit(
-            isRepeatingAnimation: false,
-            displayFullTextOnTap: true,
-            animatedTexts: [
-              TypewriterAnimatedText(
-                reference.summary,
-                speed: const Duration(milliseconds: 10),
-                curve: Curves.decelerate,
-                textStyle: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    fontSize: isMobileSize ? 16.0 : 24.0,
-                    color: foregroundColor.withOpacity(0.6),
+          Padding(
+            padding: EdgeInsets.only(
+              left: leftPadding,
+              right: rightPadding,
+            ),
+            child: AnimatedTextKit(
+              isRepeatingAnimation: false,
+              displayFullTextOnTap: true,
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  reference.summary,
+                  speed: const Duration(milliseconds: 10),
+                  curve: Curves.decelerate,
+                  textStyle: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 24.0,
+                      color: foregroundColor.withOpacity(0.6),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           ReferenceMetadaRow(
             reference: reference,
             foregroundColor: foregroundColor,
-            margin: const EdgeInsets.only(top: 24.0),
+            margin: EdgeInsets.only(
+              left: leftPadding,
+              right: rightPadding,
+              top: 24.0,
+            ),
             show: !isMobileSize,
           ),
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: const EdgeInsets.only(top: 32.0),
+              padding: EdgeInsets.only(
+                left: leftPadding,
+                right: rightPadding,
+                top: 32.0,
+              ),
               child: TextButton(
                 onPressed: onTapSeeQuotes,
                 style: TextButton.styleFrom(
-                  foregroundColor: Constants.colors.getRandomFromPalette(
-                    withGoodContrast: true,
-                  ),
+                  backgroundColor: randomColor?.withOpacity(0.1),
+                  foregroundColor: randomColor,
                 ),
-                child: Text(
-                  "see_related_quotes".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: isMobileSize ? 16.0 : 24.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "see_related_quotes".tr(),
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: isMobileSize ? 16.0 : 24.0,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 6.0),
+                      child: Icon(TablerIcons.arrow_right, size: 16.0),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ).animate().slideY(begin: 0.8, end: 0.0, duration: 250.ms).fadeIn(),
+          )
+              .animate()
+              .slideY(
+                begin: 0.8,
+                end: 0.0,
+                duration: 250.ms,
+              )
+              .fadeIn(),
         ]),
       ),
     );

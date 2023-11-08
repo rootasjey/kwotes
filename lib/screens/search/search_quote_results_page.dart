@@ -5,10 +5,15 @@ import "package:kwotes/types/quote.dart";
 class SearchQuoteResultsPage extends StatelessWidget {
   const SearchQuoteResultsPage({
     super.key,
+    this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.quoteResults = const [],
     this.onTapQuote,
   });
+
+  /// True if this is a mobile size.
+  /// Used to determine the size of the search input.
+  final bool isMobileSize;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -29,6 +34,8 @@ class SearchQuoteResultsPage extends StatelessWidget {
           return SearchQuoteText(
             quote: quote,
             onTapQuote: onTapQuote,
+            tiny: isMobileSize,
+            margin: const EdgeInsets.only(bottom: 16.0),
           );
         },
         itemCount: quoteResults.length,

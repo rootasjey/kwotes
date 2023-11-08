@@ -86,8 +86,11 @@ class _AppState extends State<App> {
             localizationsDelegates: [
               ...context.localizationDelegates,
             ],
-            routerDelegate: appLocationBuilder,
+            routerDelegate: appBeamerDelegate,
             routeInformationParser: BeamerParser(),
+            backButtonDispatcher: BeamerBackButtonDispatcher(
+              delegate: appBeamerDelegate,
+            ),
           );
         },
       ),
@@ -102,9 +105,6 @@ class _AppState extends State<App> {
 
     Constants.colors.fillForegroundPalette();
     Constants.colors.foregroundPalette.shuffle();
-    // AdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
-    //   setState(() {});
-    // });
 
     setState(() => _pageState = EnumPageState.idle);
   }

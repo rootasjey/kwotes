@@ -1,7 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
+import "package:kwotes/components/search_empty_view.dart";
 import "package:kwotes/screens/search/search_author_results_page.dart";
 import "package:kwotes/screens/search/search_quote_results_page.dart";
 import "package:kwotes/screens/search/search_reference_results_page.dart";
@@ -14,17 +14,23 @@ import "package:kwotes/types/reference.dart";
 class SearchPageBody extends StatelessWidget {
   const SearchPageBody({
     super.key,
+    this.isQueryEmpty = true,
+    this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.quoteResults = const [],
     this.margin = EdgeInsets.zero,
-    this.isQueryEmpty = true,
     this.searchCategory = EnumSearchCategory.quote,
     this.authorResults = const [],
+    this.onReinitSearch,
     this.onTapAuthor,
     this.onTapReference,
     this.onTapQuote,
     this.referenceResults = const [],
   });
+
+  /// True if this is a mobile size.
+  /// Used to determine the size of the search input.
+  final bool isMobileSize;
 
   /// True if the search query is empty.
   /// Don't show empty result message if this is true.
@@ -48,6 +54,9 @@ class SearchPageBody extends StatelessWidget {
   /// The specific category we are searching.
   final EnumSearchCategory searchCategory;
 
+  /// Callback fired to reinit the search.
+  final void Function()? onReinitSearch;
+
   /// Callback fired when author name is tapped.
   final void Function(Author author)? onTapAuthor;
 
@@ -70,14 +79,16 @@ class SearchPageBody extends StatelessWidget {
         authorResults.isEmpty &&
         referenceResults.isEmpty &&
         !isQueryEmpty) {
-      return EmptyView(
+      return SearchEmptyView(
         margin: margin,
-        description: "search.empty_quotes".tr(),
+        description: "search.empty.${searchCategory.name}".tr(),
+        onReinitSearch: onReinitSearch,
       );
     }
 
     if (searchCategory == EnumSearchCategory.quote) {
       return SearchQuoteResultsPage(
+        isMobileSize: isMobileSize,
         margin: margin,
         quoteResults: quoteResults,
         onTapQuote: onTapQuote,

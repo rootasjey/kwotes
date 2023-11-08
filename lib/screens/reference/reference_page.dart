@@ -117,6 +117,8 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
         body: CustomScrollView(
           slivers: [
             ApplicationBar(
+              pinned: false,
+              title: const SizedBox.shrink(),
               isMobileSize: isMobileSize,
               rightChildren: canManageReference
                   ? ReferenceAppBarChildren.getChildren(

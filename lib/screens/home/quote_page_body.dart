@@ -21,6 +21,7 @@ class QuotePageBody extends StatelessWidget {
     required this.quote,
     required this.textWrapSolution,
     required this.userFirestore,
+    this.authenticated = false,
     this.pageState = EnumPageState.idle,
     this.onCopyQuote,
     this.onTapAuthor,
@@ -32,6 +33,9 @@ class QuotePageBody extends StatelessWidget {
     this.onCopyAuthorUrl,
     this.onCopyReferenceUrl,
   });
+
+  /// Whether user is authenticated.
+  final bool authenticated;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -80,9 +84,6 @@ class QuotePageBody extends StatelessWidget {
       );
     }
 
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
     return Center(
       child: CustomScrollView(
         shrinkWrap: true,
@@ -124,11 +125,12 @@ class QuotePageBody extends StatelessWidget {
                         image: MenuImage.icon(TablerIcons.link),
                         callback: () => onCopyQuoteUrl?.call(),
                       ),
-                      ContextMenuComponents.addToList(
-                        context,
-                        quote: quote,
-                        userId: userFirestore.id,
-                      ),
+                      if (authenticated)
+                        ContextMenuComponents.addToList(
+                          context,
+                          quote: quote,
+                          userId: userFirestore.id,
+                        ),
                     ],
                   );
                 },
@@ -152,59 +154,48 @@ class QuotePageBody extends StatelessWidget {
               ).animate(delay: 250.ms).scale().fadeIn(),
             ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 8.0,
-              ),
-              child: Center(
-                child: ContextMenuWidget(
-                  child: TextButton(
-                    onPressed: onTapAuthor != null
-                        ? () => onTapAuthor?.call(quote.author)
-                        : null,
-                    style: TextButton.styleFrom(
-                      foregroundColor: foregroundColor,
-                    ),
+            child: Center(
+              child: ContextMenuWidget(
+                child: InkWell(
+                  onTap: () => onTapAuthor?.call(quote.author),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       quote.author.name,
                       textAlign: TextAlign.center,
                       style: Utils.calligraphy.body(),
                     ),
                   ),
-                  menuProvider: (MenuRequest request) {
-                    return Menu(
-                      children: [
-                        MenuAction(
-                          title: "author.copy.name".tr(),
-                          image: MenuImage.icon(TablerIcons.copy),
-                          callback: () => onCopyAuthor?.call(),
-                        ),
-                        MenuAction(
-                          title: "author.copy.url".tr(),
-                          image: MenuImage.icon(TablerIcons.link),
-                          callback: () => onCopyAuthorUrl?.call(),
-                        ),
-                      ],
-                    );
-                  },
                 ),
+                menuProvider: (MenuRequest request) {
+                  return Menu(
+                    children: [
+                      MenuAction(
+                        title: "author.copy.name".tr(),
+                        image: MenuImage.icon(TablerIcons.copy),
+                        callback: () => onCopyAuthor?.call(),
+                      ),
+                      MenuAction(
+                        title: "author.copy.url".tr(),
+                        image: MenuImage.icon(TablerIcons.link),
+                        callback: () => onCopyAuthorUrl?.call(),
+                      ),
+                    ],
+                  );
+                },
               ),
             ).animate(delay: 350.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
           ),
           if (quote.reference.id.isNotEmpty)
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 0.0,
-                ),
-                child: Center(
-                  child: ContextMenuWidget(
-                    child: TextButton(
-                      onPressed: onTapReference != null
-                          ? () => onTapReference?.call(quote.reference)
-                          : null,
-                      style: TextButton.styleFrom(
-                        foregroundColor: foregroundColor,
+              child: Center(
+                child: ContextMenuWidget(
+                  child: InkWell(
+                    onTap: () => onTapReference?.call(quote.reference),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 2.0,
                       ),
                       child: Text(
                         quote.reference.name,
@@ -212,23 +203,23 @@ class QuotePageBody extends StatelessWidget {
                         style: Utils.calligraphy.body(),
                       ),
                     ),
-                    menuProvider: (MenuRequest request) {
-                      return Menu(
-                        children: [
-                          MenuAction(
-                            title: "reference.copy.name".tr(),
-                            image: MenuImage.icon(TablerIcons.copy),
-                            callback: () => onCopyReference?.call(),
-                          ),
-                          MenuAction(
-                            title: "reference.copy.url".tr(),
-                            image: MenuImage.icon(TablerIcons.link),
-                            callback: () => onCopyReferenceUrl?.call(),
-                          ),
-                        ],
-                      );
-                    },
                   ),
+                  menuProvider: (MenuRequest request) {
+                    return Menu(
+                      children: [
+                        MenuAction(
+                          title: "reference.copy.name".tr(),
+                          image: MenuImage.icon(TablerIcons.copy),
+                          callback: () => onCopyReference?.call(),
+                        ),
+                        MenuAction(
+                          title: "reference.copy.url".tr(),
+                          image: MenuImage.icon(TablerIcons.link),
+                          callback: () => onCopyReferenceUrl?.call(),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ).animate(delay: 600.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
             ),

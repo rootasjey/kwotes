@@ -5,6 +5,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/screens/dashboard/dashboard_page.dart";
+import "package:kwotes/screens/home/better_home_page.dart";
 import "package:kwotes/screens/home/home_page.dart";
 import "package:kwotes/screens/search/search_page.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
@@ -25,7 +26,8 @@ class _ResponsiveAppContainerState extends State<ResponsiveAppContainer> {
 
   /// List of widget children.
   final widgetChildren = [
-    const HomePage(isMobileSize: true),
+    const BetterHomePage(isMobileSize: true),
+    // const HomePage(isMobileSize: true),
     const SearchPage(),
     const DashboardPage(),
   ];

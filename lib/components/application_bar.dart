@@ -27,9 +27,11 @@ import "package:unicons/unicons.dart";
 class ApplicationBar extends StatelessWidget {
   const ApplicationBar({
     Key? key,
+    this.hideIcon = false,
     this.pinned = true,
     this.bottom,
     this.backgroundColor,
+    this.toolbarHeight = 90.0,
     this.padding = const EdgeInsets.only(left: 24.0, top: 16.0, right: 24.0),
     this.isMobileSize = false,
     this.mode = EnumAppBarMode.home,
@@ -42,6 +44,9 @@ class ApplicationBar extends StatelessWidget {
     this.rightChildren = const [],
   }) : super(key: key);
 
+  /// Hide the app bar icon if true.
+  final bool hideIcon;
+
   /// Whether the app bar should remain visible at the start of the scroll view.
   final bool pinned;
 
@@ -53,6 +58,8 @@ class ApplicationBar extends StatelessWidget {
 
   /// The elevation of the app bar.
   final double? elevation;
+
+  final double toolbarHeight;
 
   /// The padding of the app bar.
   final EdgeInsets padding;
@@ -115,7 +122,7 @@ class ApplicationBar extends StatelessWidget {
       snap: true,
       pinned: pinned,
       elevation: elevation,
-      toolbarHeight: 90.0,
+      toolbarHeight: toolbarHeight,
       backgroundColor: backgroundColor ??
           Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6),
       automaticallyImplyLeading: false,
@@ -148,10 +155,11 @@ class ApplicationBar extends StatelessWidget {
                         ),
                       ),
                     ),
-                  AppIcon(
-                    size: 36.0,
-                    onTap: onTapIcon,
-                  ),
+                  if (!hideIcon)
+                    AppIcon(
+                      size: 36.0,
+                      onTap: onTapIcon,
+                    ),
                   appBarTitle(context),
                 ],
               ),

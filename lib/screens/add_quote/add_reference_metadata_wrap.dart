@@ -52,7 +52,8 @@ class AddReferenceMetadataWrap extends StatelessWidget {
           tooltip: "quote.add.reference.avatar".tr(),
           avatar: CircleAvatar(
             radius: 14.0,
-            backgroundImage: const AssetImage("assets/images/autoportrait.png"),
+            backgroundImage:
+                const AssetImage("assets/images/reference-picture-0.png"),
             foregroundImage: reference.urls.image.isNotEmpty
                 ? NetworkImage(reference.urls.image)
                 : null,

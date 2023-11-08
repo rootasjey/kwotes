@@ -10,6 +10,7 @@ import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -20,6 +21,7 @@ import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/search/search_category_selector.dart";
 import "package:kwotes/screens/search/search_input.dart";
 import "package:kwotes/screens/search/search_page_body.dart";
+import "package:kwotes/screens/search/search_result_meta.dart";
 import "package:kwotes/screens/search/showcase.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
@@ -142,9 +144,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
-    const EdgeInsets padding = EdgeInsets.only(
+    final EdgeInsets padding = EdgeInsets.only(
       top: 0.0,
-      left: 48.0,
+      left: isMobileSize ? 28.0 : 48.0,
       right: 24,
     );
 
@@ -154,128 +156,151 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final bool showResultCount =
         removeSpecialKeywords(_searchInputController.text).isNotEmpty;
 
+    final beamingHistory = Beamer.of(context).beamingHistory;
+
     return BasicShortcuts(
       autofocus: false,
       onCancel: context.beamBack,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            ImprovedScrolling(
-              onScroll: onScroll,
-              scrollController: _scrollController,
-              child: ScrollConfiguration(
-                behavior: const CustomScrollBehavior(),
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    ApplicationBar(
-                      elevation: 0.0,
-                      isMobileSize: isMobileSize,
-                      mode: EnumAppBarMode.search,
-                      searchCategorySelected: _searchCategory,
-                      onSelectSearchEntity: onSelectSearchEntity,
-                      onTapTitle: onTapAppBarTitle,
-                      title: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: TextButton(
-                              onPressed: onTapAppBarTitle,
-                              child: Text(
-                                Constants.appName,
-                                style: Utils.calligraphy.body(
-                                  textStyle: TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: foregroundColor?.withOpacity(0.8),
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              ImprovedScrolling(
+                onScroll: onScroll,
+                scrollController: _scrollController,
+                child: ScrollConfiguration(
+                  behavior: const CustomScrollBehavior(),
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      if (!isMobileSize)
+                        ApplicationBar(
+                          elevation: 0.0,
+                          isMobileSize: isMobileSize,
+                          mode: EnumAppBarMode.search,
+                          searchCategorySelected: _searchCategory,
+                          onSelectSearchEntity: onSelectSearchEntity,
+                          onTapTitle: onScrollToTop,
+                          onTapIcon: onScrollToTop,
+                          toolbarHeight: 42.0,
+                          title: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (showResultCount) ...[
+                                Text(
+                                  "• ${"search.result_count".plural(_resultCount)} •",
+                                  style: Utils.calligraphy.body(
+                                    textStyle: TextStyle(
+                                      color: foregroundColor?.withOpacity(0.6),
+                                    ),
                                   ),
+                                ),
+                                IconButton(
+                                  onPressed: onClearInput,
+                                  tooltip: "search.clear".tr(),
+                                  color: foregroundColor?.withOpacity(0.6),
+                                  icon:
+                                      const Icon(TablerIcons.square_rounded_x),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      if (beamingHistory.length > 1)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 24.0, top: 24.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: CircleButton(
+                                radius: 16.0,
+                                onTap: Beamer.of(context).beamBack,
+                                icon: Icon(
+                                  TablerIcons.arrow_left,
+                                  color: foregroundColor,
+                                  size: 18.0,
                                 ),
                               ),
                             ),
                           ),
-                          if (showResultCount)
-                            Text(
-                              "• ${"search.result_count".plural(_resultCount)} •",
-                              style: Utils.calligraphy.body(
-                                textStyle: TextStyle(
-                                  color: foregroundColor?.withOpacity(0.6),
-                                ),
-                              ),
-                            ),
-                          if (showResultCount)
-                            IconButton(
-                              onPressed: onClearInput,
-                              tooltip: "search.clear".tr(),
-                              color: foregroundColor?.withOpacity(0.6),
-                              icon: const Icon(TablerIcons.square_rounded_x),
-                            ),
-                        ],
+                        ),
+                      SearchInput(
+                        inputController: _searchInputController,
+                        onChangedTextField: onSearchInputChanged,
+                        focusNode: _searchFocusNode,
+                        padding: padding,
+                        searchCategory: _searchCategory,
+                        isMobileSize: isMobileSize,
+                        bottom: SearchResultMeta(
+                          isMobileSize: isMobileSize,
+                          foregroundColor: foregroundColor,
+                          onClearInput: onClearInput,
+                          padding: padding,
+                          pageState: _pageState,
+                          resultCount: _resultCount,
+                          show: showResultCount,
+                        ),
                       ),
-                    ),
-                    SearchInput(
-                      inputController: _searchInputController,
-                      onChangedTextField: onSearchInputChanged,
-                      focusNode: _searchFocusNode,
-                      padding: padding,
-                      searchCategory: _searchCategory,
-                      isMobileSize: isMobileSize,
-                    ),
-                    SearchPageBody(
-                      margin: padding,
-                      pageState: _pageState,
-                      quoteResults: _quoteResults,
-                      searchCategory: _searchCategory,
-                      authorResults: _authorResults,
-                      referenceResults: _referenceResults,
-                      onTapQuote: onTapQuote,
-                      onTapAuthor: onTapAuthor,
-                      onTapReference: onTapReference,
-                      isQueryEmpty: _searchInputController.text.isEmpty,
-                    ),
-                    Showcase(
-                      authors: _authorList,
-                      isMobileSize: isMobileSize,
-                      margin: EdgeInsets.only(
-                        top: isMobileSize ? 0.0 : 24.0,
-                        bottom: 54.0,
-                        left: isMobileSize ? 24.0 : 24.0,
-                        right: isMobileSize ? 24.0 : 24.0,
+                      SearchPageBody(
+                        authorResults: _authorResults,
+                        isMobileSize: isMobileSize,
+                        isQueryEmpty: _searchInputController.text.isEmpty,
+                        margin: padding,
+                        onReinitSearch: onClearInput,
+                        onTapQuote: onTapQuote,
+                        onTapAuthor: onTapAuthor,
+                        onTapReference: onTapReference,
+                        pageState: _pageState,
+                        quoteResults: _quoteResults,
+                        referenceResults: _referenceResults,
+                        searchCategory: _searchCategory,
                       ),
-                      pageState: _pageState,
-                      onTapTopicColor: onTapTopicColor,
-                      onTapAuthor: onTapAuthor,
-                      onTapReference: onTapReference,
-                      references: _referenceList,
-                      searchCategory: _searchCategory,
-                      show: _searchInputController.text.isEmpty,
-                      topicColors: Constants.colors.topics,
-                    ),
-                  ],
+                      Showcase(
+                        authors: _authorList,
+                        isMobileSize: isMobileSize,
+                        margin: EdgeInsets.only(
+                          top: isMobileSize ? 0.0 : 24.0,
+                          bottom: 54.0,
+                          left: isMobileSize ? 24.0 : 24.0,
+                          right: isMobileSize ? 24.0 : 24.0,
+                        ),
+                        pageState: _pageState,
+                        onTapTopicColor: onTapTopicColor,
+                        onTapAuthor: onTapAuthor,
+                        onTapReference: onTapReference,
+                        references: _referenceList,
+                        searchCategory: _searchCategory,
+                        show: _searchInputController.text.isEmpty,
+                        topicColors: Constants.colors.topics,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (_showEntitySelector)
-              Positioned(
-                bottom: 12.0,
-                left: 0.0,
-                right: 0.0,
-                child: Center(
-                  child: SearchCategorySelector(
-                    categorySelected: _searchCategory,
-                    onSelectCategory: onSelectSearchEntity,
-                  ),
-                )
-                    .animate()
-                    .slideY(
-                      begin: 0.4,
-                      end: 0.0,
-                      duration: 150.ms,
-                      curve: Curves.decelerate,
-                    )
-                    .fadeIn(),
-              ),
-          ],
+              if (_showEntitySelector)
+                Positioned(
+                  bottom: 12.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: Center(
+                    child: SearchCategorySelector(
+                      categorySelected: _searchCategory,
+                      onSelectCategory: onSelectSearchEntity,
+                    ),
+                  )
+                      .animate()
+                      .slideY(
+                        begin: 0.4,
+                        end: 0.0,
+                        duration: 150.ms,
+                        curve: Curves.decelerate,
+                      )
+                      .fadeIn(),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -518,20 +543,32 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
-  void tryFetchShowcaseData({bool reinit = false}) async {
+  void tryFetchShowcaseData({
+    bool reinit = false,
+    bool fetchMore = false,
+  }) async {
     if (_searchCategory == EnumSearchCategory.author) {
-      tryFetchAuthors(reinit: reinit);
+      tryFetchAuthors(
+        reinit: reinit,
+        fetchMore: fetchMore,
+      );
       return;
     }
 
     if (_searchCategory == EnumSearchCategory.reference) {
-      tryFetchReferences(reinit: reinit);
+      tryFetchReferences(
+        reinit: reinit,
+        fetchMore: fetchMore,
+      );
       return;
     }
   }
 
   /// Try to fetch authors alphabetically in Firestore.
-  void tryFetchAuthors({bool reinit = false}) async {
+  void tryFetchAuthors({
+    bool reinit = false,
+    bool fetchMore = false,
+  }) async {
     if (!reinit && _authorList.isNotEmpty) {
       return;
     }
@@ -581,7 +618,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   /// Try to fetch references alphabetically in Firestore.
-  void tryFetchReferences({bool reinit = false}) async {
+  void tryFetchReferences({
+    bool reinit = false,
+    bool fetchMore = false,
+  }) async {
     if (!reinit && _referenceList.isNotEmpty) {
       return;
     }
@@ -665,9 +705,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     setState(() {
       _searchCategory = searchEntity;
+      _resultCount = 0;
     });
 
-    _searchFocusNode.requestFocus();
+    // _searchFocusNode.requestFocus();
     search();
     tryFetchShowcaseData(reinit: true);
   }
@@ -812,7 +853,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _quoteResults.add(Quote.fromMap(data));
       }
 
-      setState(() => _pageState = EnumPageState.idle);
+      setState(() {
+        _pageState = EnumPageState.idle;
+        _resultCount = _quoteResults.length;
+      });
     } catch (error) {
       loggy.error(error);
     }
@@ -858,7 +902,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (_searchInputController.text.isEmpty) {
-      tryFetchShowcaseData();
+      tryFetchShowcaseData(
+        fetchMore: true,
+      );
       return;
     }
 
@@ -867,7 +913,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
-  void onTapAppBarTitle() {
+  void onScrollToTop() {
     _scrollController.animateTo(
       0.0,
       duration: const Duration(milliseconds: 500),
@@ -877,7 +923,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   void onTapTopicColor(Topic topicColor) {
-    loggy.info(topicColor.name);
     _searchInputController.text = topicColor.name;
 
     onSearchInputChanged(
@@ -890,10 +935,17 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _searchInputController.text = "";
 
     setState(() {
+      _resultCount = 0;
+      _prevSearchTextValue = "";
+      NavigationStateHelper.searchValue = "";
+      _hasMoreResults = true;
+      _pageState = EnumPageState.idle;
       _quoteResults.clear();
       _authorResults.clear();
       _referenceResults.clear();
       _searchFocusNode.requestFocus();
     });
+
+    tryFetchShowcaseData();
   }
 }

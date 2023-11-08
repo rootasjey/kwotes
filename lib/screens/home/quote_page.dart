@@ -129,6 +129,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
               return Stack(
                 children: [
                   QuotePageBody(
+                    authenticated: userFirestore.id.isNotEmpty,
                     pageState: _pageState,
                     quote: _quote,
                     onDoubleTapQuote: onCopyQuote,
@@ -151,7 +152,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     child: QuotePageActions(
                       copyIcon: copyIcon,
                       direction: isMobileSize ? Axis.horizontal : Axis.vertical,
-                      isAuthenticated: userFirestore.id.isNotEmpty,
+                      authenticated: userFirestore.id.isNotEmpty,
                       quote: _quote,
                       copyTooltip: copyTooltip,
                       onCopyQuote: onCopyQuote,

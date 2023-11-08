@@ -1,14 +1,18 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:rive/rive.dart";
 
-class EmptyView extends StatelessWidget {
+class SearchEmptyView extends StatelessWidget {
   /// A sliver component to display when data is not ready yet.
-  const EmptyView({
+  const SearchEmptyView({
     Key? key,
     this.description = "",
     this.icon,
     this.onRefresh,
     this.onTapDescription,
+    this.onReinitSearch,
     this.title = "",
     this.margin = EdgeInsets.zero,
   }) : super(key: key);
@@ -21,6 +25,9 @@ class EmptyView extends StatelessWidget {
 
   /// Callback fired when the description is tapped.
   final void Function()? onTapDescription;
+
+  /// Callback fired to reinit the search.
+  final void Function()? onReinitSearch;
 
   /// Icon to display on top.
   final Icon? icon;
@@ -44,10 +51,19 @@ class EmptyView extends StatelessWidget {
             return onRefresh?.call();
           },
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               icon ?? Container(),
+              const SizedBox(
+                width: 200.0,
+                height: 200.0,
+                child: RiveAnimation.network(
+                  // "https://public.rive.app/community/runtime-files/4597-9318-no-results-found.riv",
+                  "https://public.rive.app/community/runtime-files/4523-9190-moving-car.riv",
+                  fit: BoxFit.cover,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(
                   bottom: 10.0,
@@ -77,6 +93,37 @@ class EmptyView extends StatelessWidget {
                         fontSize: 20.0,
                       ),
                     ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 32.0),
+                child: TextButton(
+                  onPressed: onReinitSearch != null
+                      ? () => onReinitSearch?.call()
+                      : null,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.pink,
+                    backgroundColor: Colors.pink.shade50,
+                    textStyle: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("search.reinitialize".tr()),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          TablerIcons.refresh,
+                          size: 18.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -91,7 +91,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
             CircleAvatar(
               radius: 14.0,
               backgroundImage:
-                  const AssetImage("assets/images/autoportrait.png"),
+                  const AssetImage("assets/images/profile-picture-avocado.png"),
               foregroundImage: author.urls.image.isNotEmpty
                   ? NetworkImage(author.urls.image)
                   : null,

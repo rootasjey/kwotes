@@ -75,7 +75,8 @@ class AddAuthorMetadaWrap extends StatelessWidget {
           tooltip: "quote.add.author.avatar".tr(),
           avatar: CircleAvatar(
             radius: 14.0,
-            backgroundImage: const AssetImage("assets/images/autoportrait.png"),
+            backgroundImage:
+                const AssetImage("assets/images/profile-picture-avocado.png"),
             foregroundImage: author.urls.image.isNotEmpty
                 ? NetworkImage(author.urls.image)
                 : null,

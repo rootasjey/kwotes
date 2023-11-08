@@ -10,12 +10,20 @@ class SearchQuoteText extends StatefulWidget {
   const SearchQuoteText({
     super.key,
     required this.quote,
+    this.tiny = false,
+    this.margin = EdgeInsets.zero,
     this.onTapQuote,
     this.textColor,
   });
 
+  /// True if this is a mobile size.
+  final bool tiny;
+
   /// Text color.
   final Color? textColor;
+
+  /// Space around this widget.
+  final EdgeInsets margin;
 
   /// Quote to display.
   final Quote quote;
@@ -50,7 +58,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
     final bool darkBrightness = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: widget.margin,
       child: InkWell(
         hoverColor: Colors.transparent,
         onTap: onTapQuote != null ? () => onTapQuote.call(quote) : null,
@@ -73,7 +81,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
             textAlign: TextAlign.start,
             style: Utils.calligraphy.body(
               textStyle: TextStyle(
-                fontSize: 42.0,
+                fontSize: widget.tiny ? 24.0 : 42.0,
                 fontWeight: FontWeight.w300,
                 color: widget.textColor,
                 backgroundColor:

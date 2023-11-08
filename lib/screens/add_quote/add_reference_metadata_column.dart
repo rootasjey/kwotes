@@ -84,7 +84,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
             CircleAvatar(
               radius: 14.0,
               backgroundImage:
-                  const AssetImage("assets/images/autoportrait.png"),
+                  const AssetImage("assets/images/reference-picture-0.png"),
               foregroundImage: reference.urls.image.isNotEmpty
                   ? NetworkImage(reference.urls.image)
                   : null,
