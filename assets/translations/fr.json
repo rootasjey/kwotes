@@ -728,7 +728,8 @@
         "failed": "Une erreur est survenue lors de la récupéreration du brouillon"
       },
       "failed": "Une erreur est survenue lors de la récupéreration de la citation",
-      "name": "Recuperer la citation"
+      "name": "Recuperer la citation",
+      "random": "Recuperer de nouvelles citations au hasard"
     },
     "language": {
       "change": "Changer la langue"
@@ -813,6 +814,11 @@
     "authors": "Recherche d'auteurs",
     "clear": "Effacer",
     "empty_quotes": "Aucune citation trouvée pour votre recherche.",
+    "empty": {
+      "author": "Aucun auteur trouvé pour votre recherche.",
+      "quote": "Aucune citation trouvée pour votre recherche.",
+      "reference": "Aucune référence trouvée pour votre recherche."
+    },
     "ing": "En recherche",
     "name": "Recherche",
     "quotes": "Recherche de citations",
@@ -831,6 +837,7 @@
       "10": "musique",
       "11": "philosophie"
     },
+    "reinitialize": "Réinitialiser la recherche",
     "result_count": {
       "zero": "Aucun résultat trouvé",
       "one": "1 résultat trouvé",
@@ -856,6 +863,10 @@
   "system": "Système",
   "theme": "Thème",
   "title": "Titre",
+  "topic": {
+    "home_description": "Cliquez sur un thème pour voir les citations liées"
+  },
+  "topics": "Thèmes",
   "tos": {
     "name": "Conditions générales d'utilisation",
     "title": "Contrat Général d'Utilisation",

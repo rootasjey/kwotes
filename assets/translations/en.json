@@ -714,7 +714,8 @@
         "failed": "Failed to fetch draft"
       },
       "failed": "Failed to fetch quote",
-      "name": "Fetch quote"
+      "name": "Fetch quote",
+      "random": "Fetch new random quotes"
     },
     "language": {
       "change": "Change language"
@@ -799,6 +800,11 @@
     "authors": "Search authors",
     "clear": "Clear",
     "empty_quotes": "No quote found for your search.",
+    "empty": {
+      "author": "No author found for your search.",
+      "quote": "No quote found for your search.",
+      "reference": "No reference found for your search."
+    },
     "ing": "Searching",
     "name": "Search",
     "quotes": "Search quotes",
@@ -817,6 +823,7 @@
       "10": "music",
       "11": "philosophy"
     },
+    "reinitialize": "Reinitialize search",
     "result_count": {
       "zero": "No result found",
       "one": "1 result found",
@@ -842,6 +849,10 @@
   "system": "System",
   "theme": "Theme",
   "title": "Title",
+  "topic": {
+    "home_description": "Tap on a topic to open related quotes"
+  },
+  "topics": "Topics",
   "tos": {
     "name": "Terms of service",
     "title": "Terms of service",
