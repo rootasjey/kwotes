@@ -102,6 +102,7 @@ class ReferencePosters extends StatelessWidget {
                   final bool selected = index == scrollController.selectedItem;
 
                   return ReferencePoster(
+                    accentColor: backgroundColor,
                     selected: selected,
                     margin: EdgeInsets.only(
                       top: selected ? 0.0 : (diff / carouselRatio).abs(),

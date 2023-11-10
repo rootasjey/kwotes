@@ -12,6 +12,7 @@ class SearchQuoteText extends StatefulWidget {
     required this.quote,
     this.tiny = false,
     this.margin = EdgeInsets.zero,
+    this.padding = const EdgeInsets.all(4.0),
     this.onTapQuote,
     this.textColor,
   });
@@ -24,6 +25,9 @@ class SearchQuoteText extends StatefulWidget {
 
   /// Space around this widget.
   final EdgeInsets margin;
+
+  /// Space around quote's text.
+  final EdgeInsets padding;
 
   /// Quote to display.
   final Quote quote;
@@ -61,6 +65,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
       padding: widget.margin,
       child: InkWell(
         hoverColor: Colors.transparent,
+        borderRadius: BorderRadius.circular(4.0),
         onTap: onTapQuote != null ? () => onTapQuote.call(quote) : null,
         onHover: (bool isHover) {
           if (isHover) {
@@ -76,23 +81,27 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
         },
         child: Align(
           alignment: Alignment.topLeft,
-          child: Text(
-            quote.name,
-            textAlign: TextAlign.start,
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: widget.tiny ? 24.0 : 42.0,
-                fontWeight: FontWeight.w300,
-                color: widget.textColor,
-                backgroundColor:
-                    darkBrightness ? null : _topicColor.color.withOpacity(0.2),
-                shadows: [
-                  Shadow(
-                    blurRadius: 0.0,
-                    offset: const Offset(-1.0, 1.0),
-                    color: _textShadowColor,
-                  ),
-                ],
+          child: Padding(
+            padding: widget.padding,
+            child: Text(
+              quote.name,
+              textAlign: TextAlign.start,
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: widget.tiny ? 24.0 : 42.0,
+                  fontWeight: FontWeight.w300,
+                  color: widget.textColor,
+                  backgroundColor: darkBrightness
+                      ? null
+                      : _topicColor.color.withOpacity(0.2),
+                  shadows: [
+                    Shadow(
+                      blurRadius: 0.0,
+                      offset: const Offset(-1.0, 1.0),
+                      color: _textShadowColor,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

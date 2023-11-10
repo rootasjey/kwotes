@@ -101,6 +101,8 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
       withGoodContrast: true,
     );
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BasicShortcuts(
       onCancel: context.beamBack,
       child: Scaffold(
@@ -130,6 +132,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
             ),
             ReferencePageBody(
               areMetadataOpen: _metadataOpened,
+              isDark: isDark,
               isMobileSize: isMobileSize,
               maxHeight: windowSize.height / 2,
               onTapSeeQuotes: onTapSeeQuotes,
@@ -291,12 +294,28 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   }
 
   void onTapSeeQuotes() {
-    Beamer.of(context).beamToNamed(
-      SearchLocation.route,
-      routeState: {
-        "query": "quotes:reference:${_reference.id}",
-        "subjectName": _reference.name,
-      },
+    final BeamerDelegate beamer = Beamer.of(context);
+
+    final bool hasSearch = beamer
+        .beamingHistory.last.state.routeInformation.uri.pathSegments
+        .contains("search");
+
+    if (hasSearch) {
+      beamer.beamToNamed(
+        SearchLocation.route,
+        routeState: {
+          "query": "quotes:reference:${_reference.id}",
+          "subjectName": _reference.name,
+        },
+      );
+      return;
+    }
+
+    beamer.beamToNamed(
+      HomeContentLocation.referenceQuotesRoute.replaceFirst(
+        ":referenceId",
+        _reference.id,
+      ),
     );
   }
 

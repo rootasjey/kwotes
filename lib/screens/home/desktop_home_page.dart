@@ -37,8 +37,8 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:url_launcher/url_launcher.dart";
 
-class HomePage extends StatefulWidget {
-  const HomePage({
+class DesktopHomePage extends StatefulWidget {
+  const DesktopHomePage({
     super.key,
     this.isMobileSize = false,
   });
@@ -47,10 +47,10 @@ class HomePage extends StatefulWidget {
   final bool isMobileSize;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<DesktopHomePage> createState() => _DesktopHomePageState();
 }
 
-class _HomePageState extends State<HomePage> with UiLoggy {
+class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -385,7 +385,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   void onTapQuote(Quote quote) {
     NavigationStateHelper.quote = quote;
     context.beamToNamed(
-      HomeLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+      HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
       data: {
         "quoteId": quote.id,
       },

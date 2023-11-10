@@ -1,4 +1,3 @@
-import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -14,9 +13,10 @@ class QuotePageActions extends StatelessWidget {
     required this.quote,
     this.direction = Axis.vertical,
     this.authenticated = false,
-    this.onCopyQuote,
-    this.onToggleFavourite,
     this.onAddToList,
+    this.onCopyQuote,
+    this.onNavigateBack,
+    this.onToggleFavourite,
     this.copyTooltip = "",
   });
 
@@ -28,6 +28,9 @@ class QuotePageActions extends StatelessWidget {
 
   /// Callback fired to copy quote's content.
   final Function()? onCopyQuote;
+
+  /// Callback fired to return to the previous page.
+  final Function()? onNavigateBack;
 
   /// Callback fired to toggle quote's favourite status.
   final Function()? onToggleFavourite;
@@ -57,7 +60,7 @@ class QuotePageActions extends StatelessWidget {
       children: [
         IconButton(
           color: iconColor,
-          onPressed: context.beamBack,
+          onPressed: onNavigateBack,
           icon: const Icon(UniconsLine.times),
         ),
         IconButton(

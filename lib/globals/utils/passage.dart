@@ -41,6 +41,22 @@ class Passage {
     Beamer.of(context).popRoute();
   }
 
+  void deepBack(BuildContext context) {
+    final BeamerDelegate beamer = Beamer.of(context);
+
+    if (beamer.canBeamBack) {
+      beamer.beamBack();
+      return;
+    }
+
+    if (beamer.canPopBeamLocation) {
+      beamer.popBeamLocation();
+      return;
+    }
+
+    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
+  }
+
   /// Return hero tag stored as a string from `routeState` map if any.
   String getHeroTag(Object? routeState) {
     if (routeState == null) {

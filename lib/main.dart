@@ -59,7 +59,10 @@ void main() async {
       final SystemUiOverlayStyle overlayStyle = isDark
           ? SystemUiOverlayStyle(
               statusBarColor: Constants.colors.dark,
-              systemNavigationBarColor: Colors.black26,
+              systemNavigationBarColor: Color.alphaBlend(
+                Colors.black26,
+                Constants.colors.dark,
+              ),
               systemNavigationBarDividerColor: Colors.transparent,
               statusBarIconBrightness: Brightness.light,
             )

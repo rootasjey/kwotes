@@ -9,6 +9,8 @@ import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
@@ -73,74 +75,81 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
     }
 
     if (_quotes.isEmpty) {
-      return EmptyView.scaffold(context);
+      return EmptyView.scaffold(
+        context,
+        title: "empty_quote.home".tr(),
+      );
     }
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
-    return Scaffold(
-      body: ImprovedScrolling(
-        onScroll: onScroll,
-        scrollController: _pageScrollController,
-        child: ScrollConfiguration(
-          behavior: const CustomScrollBehavior(),
-          child: CustomScrollView(
-            controller: _pageScrollController,
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 24.0,
-                    top: 42.0,
-                    right: 24.0,
-                    bottom: 42.0,
-                  ),
-                  child: Column(
-                    children: [
-                      CircleButton(
-                        radius: 16.0,
-                        icon: const Icon(TablerIcons.arrow_left, size: 18.0),
-                        onTap: Beamer.of(context).beamBack,
-                        margin: const EdgeInsets.only(bottom: 6.0),
-                        tooltip: "back".tr(),
-                      ),
-                      Hero(
-                        tag: widget.topic,
-                        child: Text(
-                          widget.topic,
-                          style: Utils.calligraphy.body(
-                            textStyle: const TextStyle(
-                              fontSize: 32.0,
-                              fontWeight: FontWeight.w600,
+    return Focus(
+      autofocus: true,
+      child: Scaffold(
+        body: ImprovedScrolling(
+          onScroll: onScroll,
+          scrollController: _pageScrollController,
+          child: ScrollConfiguration(
+            behavior: const CustomScrollBehavior(),
+            child: CustomScrollView(
+              controller: _pageScrollController,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 24.0,
+                      top: 42.0,
+                      right: 24.0,
+                      bottom: 42.0,
+                    ),
+                    child: Column(
+                      children: [
+                        CircleButton(
+                          radius: 16.0,
+                          icon: const Icon(TablerIcons.arrow_left, size: 18.0),
+                          onTap: () => Utils.passage.deepBack(context),
+                          // onTap: Beamer.of(context).beamBack,
+                          margin: const EdgeInsets.only(bottom: 6.0),
+                          tooltip: "back".tr(),
+                        ),
+                        Hero(
+                          tag: widget.topic,
+                          child: Text(
+                            getTopic(),
+                            style: Utils.calligraphy.body(
+                              textStyle: const TextStyle(
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.only(
-                  left: 24.0,
-                  right: 24.0,
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                    left: 24.0,
+                    right: 24.0,
+                  ),
+                  sliver: SliverList.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      final Quote quote = _quotes[index];
+                      return SearchQuoteText(
+                        quote: quote,
+                        onTapQuote: onTapQuote,
+                        tiny: isMobileSize,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 12.0,
+                        ),
+                      );
+                    },
+                    itemCount: _quotes.length,
+                  ),
                 ),
-                sliver: SliverList.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    final Quote quote = _quotes[index];
-                    return SearchQuoteText(
-                      quote: quote,
-                      onTapQuote: onTapQuote,
-                      tiny: isMobileSize,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 12.0,
-                      ),
-                    );
-                  },
-                  itemCount: _quotes.length,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -160,9 +169,11 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
   QueryMap getQuery({String language = "en"}) {
     final QueryDocSnapMap? lastDocument = _lastDocument;
 
+    final String topic = getTopic();
+
     final QueryMap query = FirebaseFirestore.instance
         .collection("quotes")
-        .where("topics.${widget.topic}", isEqualTo: true)
+        .where("topics.$topic", isEqualTo: true)
         .where("language", isEqualTo: language)
         .orderBy("created_at", descending: _descending)
         .limit(_limit);
@@ -172,6 +183,12 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
     }
 
     return query.startAfterDocument(lastDocument);
+  }
+
+  String getTopic() {
+    return widget.topic != HomeContentLocation.topicRoute.split("/").last
+        ? widget.topic
+        : NavigationStateHelper.lastTopicName;
   }
 
   /// Fetch quotes.
@@ -216,7 +233,12 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
     }
   }
 
-  void onTapQuote(Quote quote) {}
+  void onTapQuote(Quote quote) {
+    NavigationStateHelper.lastTopicName = widget.topic;
+    Beamer.of(context).beamToNamed(
+      HomeContentLocation.topicQuoteRoute.replaceFirst(":quoteId", quote.id),
+    );
+  }
 
   void onScroll(double offset) {
     if (!_hasMoreResults) {

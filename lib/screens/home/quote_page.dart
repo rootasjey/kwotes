@@ -11,8 +11,6 @@ import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/author_location.dart";
-import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/home/quote_page_actions.dart";
 import "package:kwotes/screens/home/quote_page_body.dart";
@@ -100,7 +98,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
     return BasicShortcuts(
-      onCancel: context.beamBack,
+      onCancel: () => Utils.passage.deepBack(context),
       additionalShortcuts: _shortcuts,
       additionalActions: {
         CopyIntent: CallbackAction<CopyIntent>(
@@ -118,7 +116,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
           borderColor: getTopicColor(),
           heroTag: widget.quoteId,
           isMobileSize: isMobileSize,
-          onTapOutsideChild: context.beamBack,
+          onTapOutsideChild: () => Utils.passage.deepBack(context),
           child: SignalBuilder(
             signal: signalUserFirestore,
             builder: (
@@ -157,6 +155,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                       copyTooltip: copyTooltip,
                       onCopyQuote: onCopyQuote,
                       onToggleFavourite: onToggleFavourite,
+                      onNavigateBack: () => Utils.passage.deepBack(context),
                       onAddToList: onAddToList,
                     ),
                   ),
@@ -336,6 +335,17 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     return heightPadding;
   }
 
+  /// Returns navigation route for the given suffix.
+  /// This is necessary to keep the navigation context (e.g. home, search).
+  /// E.g.: author/123 -> /h/author/123
+  String getRoute(String suffix) {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+    return "/$prefix/$suffix";
+  }
+
   /// Returns quote first topic color, if any.
   Color getTopicColor() {
     if (_quote.topics.isEmpty) {
@@ -360,25 +370,15 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to navigate to author page.
   void onTapAuthor(Author author) {
     NavigationStateHelper.author = author;
-
-    final route = AuthorLocation.route.replaceFirst(
-      ":authorId",
-      author.id,
-    );
-
-    Beamer.of(context).beamToNamed(route);
+    final String suffix = "author/${author.id}";
+    Beamer.of(context).beamToNamed(getRoute(suffix));
   }
 
   /// Callback fired to navigate to reference page.
   void onTapReference(Reference reference) {
     NavigationStateHelper.reference = reference;
-
-    final route = ReferenceLocation.route.replaceFirst(
-      ":referenceId",
-      reference.id,
-    );
-
-    Beamer.of(context).beamToNamed(route);
+    final String suffix = "/reference/${reference.id}";
+    Beamer.of(context).beamToNamed(getRoute(suffix));
   }
 
   /// Callback fired to copy quote's name.

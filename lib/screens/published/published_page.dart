@@ -47,7 +47,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   final bool _descending = true;
 
   /// Show page options (e.g. language) if true.
-  bool _showPageOptions = true;
+  bool _showPageOptions = false;
 
   /// Color of selected widgets (e.g. for filter chips).
   Color chipSelectedColor = Colors.amber;
@@ -101,16 +101,18 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
             slivers: [
               PageAppBar(
                 isMobileSize: isMobileSize,
-                childTitle: PublishedPageHeader(
-                  selectedColor: chipSelectedColor,
-                  onSelectedOwnership: onSelectedOnwership,
-                  onSelectLanguage: onSelectedLanguage,
-                  onTapTitle: onTapTitle,
-                  selectedLanguage: _selectedLanguage,
-                  selectedOwnership: _selectedOwnership,
-                  show: _showPageOptions,
-                  isMobileSize: isMobileSize,
-                ),
+                children: [
+                  PublishedPageHeader(
+                    selectedColor: chipSelectedColor,
+                    onSelectedOwnership: onSelectedOnwership,
+                    onSelectLanguage: onSelectedLanguage,
+                    onTapTitle: onTapTitle,
+                    selectedLanguage: _selectedLanguage,
+                    selectedOwnership: _selectedOwnership,
+                    show: _showPageOptions,
+                    isMobileSize: isMobileSize,
+                  ),
+                ],
               ),
               SignalBuilder(
                 signal: signalUserFirestore,

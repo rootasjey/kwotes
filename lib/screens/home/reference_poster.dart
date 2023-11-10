@@ -8,12 +8,16 @@ class ReferencePoster extends StatefulWidget {
     required this.reference,
     this.selected = false,
     this.margin = EdgeInsets.zero,
+    this.accentColor = Colors.transparent,
     this.onTap,
   });
 
   /// Selected if true.
   /// Display image in full color. Otherwise it will be grayscale.
   final bool selected;
+
+  /// Accent color.
+  final Color? accentColor;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -49,7 +53,7 @@ class _ReferencePosterState extends State<ReferencePoster> {
               BlendMode.saturation,
             ),
       child: InkWell(
-        splashColor: Colors.deepPurple,
+        splashColor: widget.accentColor?.withOpacity(0.6),
         onTap: () => widget.onTap?.call(widget.reference),
         onHover: (value) => setState(() => _titleOpacity = value ? 1.0 : 0.0),
       ),
@@ -80,11 +84,12 @@ class _ReferencePosterState extends State<ReferencePoster> {
                   child: Text(
                     reference.name,
                     style: Utils.calligraphy.body(
-                        textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 32.0,
-                    )),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 32.0,
+                      ),
+                    ),
                   ),
                 ),
               ),

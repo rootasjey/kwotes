@@ -15,9 +15,7 @@ import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/author_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/home/home_page_footer.dart";
 import "package:kwotes/screens/home/hero_quote.dart";
@@ -27,7 +25,6 @@ import "package:kwotes/screens/home/random_quote_text.dart";
 import "package:kwotes/screens/home/reference_posters.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
-import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
@@ -41,20 +38,20 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:url_launcher/url_launcher.dart";
 
-class BetterHomePage extends StatefulWidget {
-  const BetterHomePage({
+class MobileHomePage extends StatefulWidget {
+  const MobileHomePage({
     super.key,
-    this.isMobileSize = false,
+    this.isMobileSize = true,
   });
 
   /// Adapt user interface to small screens.
   final bool isMobileSize;
 
   @override
-  State<BetterHomePage> createState() => _BetterHomePageState();
+  State<MobileHomePage> createState() => _MobileHomePageState();
 }
 
-class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
+class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -106,23 +103,19 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
       );
     }
 
-    // final Size screenSize = MediaQuery.of(context).size;
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
 
     final Signal<UserFirestore> userFirestoreSignal =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
-    // final Color randomColor = Constants.colors.getRandomFromPalette();
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color topBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final Color topBackgroundColor = isDark
+        ? Colors.black.withAlpha(100)
+        : Theme.of(context).scaffoldBackgroundColor;
 
-    // final Color backgroundColor = Constants.colors.getRandomPastel();
     final Color backgroundColor =
         isDark ? Colors.black26 : Constants.colors.getRandomPastel();
-
-    // final Color backgroundColor =
-    //     isDark ? Colors.black26 : Constants.colors.clairPink.withOpacity(0.8);
 
     return BasicShortcuts(
       child: Scaffold(
@@ -172,7 +165,8 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
                   return RandomQuoteText(
                     quote: quote,
                     foregroundColor: iconColor,
-                    onTap: onTapQuote,
+                    onTapQuote: onTapQuote,
+                    onTapAuthor: onTapAuthor,
                   );
                 },
                 itemCount: _maxQuoteCount - 1,
@@ -243,15 +237,6 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
         ),
       ),
     );
-  }
-
-  Future<String> getLanguage() async {
-    final EnumLanguageSelection savedLanguage = await Utils.vault.getLanguage();
-    if (Utils.linguistic.available().contains(savedLanguage)) {
-      return savedLanguage.name;
-    }
-
-    return "en";
   }
 
   Future<Author?> fetchAuthor(String authorId) async {
@@ -342,7 +327,7 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
   }
 
   void fetchRandomQuotes({bool forceRefresh = false}) async {
-    final String currentLanguage = await getLanguage();
+    final String currentLanguage = await Utils.linguistic.getLanguage();
     final bool hasLanguageChanged =
         NavigationStateHelper.lastRandomQuoteLanguage != currentLanguage;
 
@@ -359,7 +344,7 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
     });
 
     try {
-      final String language = await getLanguage();
+      final String language = await Utils.linguistic.getLanguage();
       final QuerySnapMap randomSnapshot = await FirebaseFirestore.instance
           .collection("randoms")
           .where("language", isEqualTo: language)
@@ -456,7 +441,7 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
   void onTapQuote(Quote quote) {
     NavigationStateHelper.quote = quote;
     context.beamToNamed(
-      HomeLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+      HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
       data: {
         "quoteId": quote.id,
       },
@@ -484,7 +469,7 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
 
   void onTapAuthor(Author author) {
     Beamer.of(context).beamToNamed(
-      AuthorLocation.route.replaceFirst(
+      HomeContentLocation.authorRoute.replaceFirst(
         ":authorId",
         author.id,
       ),
@@ -493,7 +478,7 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
 
   void onTapReference(Reference reference) {
     Beamer.of(context).beamToNamed(
-      ReferenceLocation.route.replaceFirst(
+      HomeContentLocation.referenceRoute.replaceFirst(
         ":referenceId",
         reference.id,
       ),
@@ -502,7 +487,7 @@ class _BetterHomePageState extends State<BetterHomePage> with UiLoggy {
 
   void onTapTopic(Topic topic) {
     Beamer.of(context).beamToNamed(
-      HomeLocation.topicRoute.replaceFirst(
+      HomeContentLocation.topicRoute.replaceFirst(
         ":topicName",
         topic.name,
       ),

@@ -14,6 +14,7 @@ class ReferencePageBody extends StatelessWidget {
   const ReferencePageBody({
     super.key,
     required this.reference,
+    this.isDark = false,
     this.isMobileSize = false,
     this.areMetadataOpen = true,
     this.randomColor,
@@ -27,6 +28,9 @@ class ReferencePageBody extends StatelessWidget {
 
   /// Expand this widget if true.
   final bool areMetadataOpen;
+
+  /// Dark mode.
+  final bool isDark;
 
   /// Adapt UI for mobile size.
   final bool isMobileSize;
@@ -100,6 +104,7 @@ class ReferencePageBody extends StatelessWidget {
             ),
           ),
           ReferenceMetadaColumn(
+            isDark: isDark,
             reference: reference,
             foregroundColor: foregroundColor,
             isOpen: areMetadataOpen,

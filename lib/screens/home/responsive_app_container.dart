@@ -5,9 +5,9 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/screens/dashboard/dashboard_page.dart";
-import "package:kwotes/screens/home/better_home_page.dart";
-import "package:kwotes/screens/home/home_page.dart";
-import "package:kwotes/screens/search/search_page.dart";
+import "package:kwotes/screens/home/desktop_home_page.dart";
+import "package:kwotes/screens/home/home_navigation_page.dart";
+import "package:kwotes/screens/search/search_navigation_page.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:unicons/unicons.dart";
 
@@ -26,9 +26,11 @@ class _ResponsiveAppContainerState extends State<ResponsiveAppContainer> {
 
   /// List of widget children.
   final widgetChildren = [
-    const BetterHomePage(isMobileSize: true),
+    const HomeNavigationPage(),
+    // const BetterHomePage(isMobileSize: true),
     // const HomePage(isMobileSize: true),
-    const SearchPage(),
+    // const SearchPage(),
+    const SearchNavigationPage(),
     const DashboardPage(),
   ];
 
@@ -43,7 +45,7 @@ class _ResponsiveAppContainerState extends State<ResponsiveAppContainer> {
     final bool isMobile = Utils.measurements.isMobileSize(context);
 
     if (!isMobile) {
-      return const HomePage();
+      return const DesktopHomePage();
     }
 
     final bool isDarkTheme = Theme.of(context).brightness == Brightness.dark;

@@ -1,3 +1,4 @@
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 
 class Linguistic {
@@ -21,6 +22,16 @@ class Linguistic {
       EnumLanguageSelection.en,
       EnumLanguageSelection.fr,
     ];
+  }
+
+  /// Get the current language.
+  Future<String> getLanguage() async {
+    final EnumLanguageSelection savedLanguage = await Utils.vault.getLanguage();
+    if (available().contains(savedLanguage)) {
+      return savedLanguage.name;
+    }
+
+    return "en";
   }
 
   // List<String> available() {

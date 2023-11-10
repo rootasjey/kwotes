@@ -99,11 +99,11 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     final bool canManageAuthor =
         userFirestoreSignal.value.rights.canManageAuthors;
 
-    final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
-
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final Color randomColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: !isDark,
+    );
 
     return BasicShortcuts(
       onCancel: context.beamBack,
@@ -297,12 +297,28 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
   /// Callback fired to see author's quotes.
   void onTapSeeQuotes() {
-    Beamer.of(context).beamToNamed(
-      SearchLocation.route,
-      routeState: {
-        "query": "quotes:author:${_author.id}",
-        "subjectName": _author.name,
-      },
+    final BeamerDelegate beamer = Beamer.of(context);
+
+    final bool hasSearch = beamer
+        .beamingHistory.last.state.routeInformation.uri.pathSegments
+        .contains("s");
+
+    if (hasSearch) {
+      beamer.beamToNamed(
+        SearchContentLocation.route,
+        routeState: {
+          "query": "quotes:author:${_author.id}",
+          "subjectName": _author.name,
+        },
+      );
+      return;
+    }
+
+    beamer.beamToNamed(
+      HomeContentLocation.authorQuotesRoute.replaceFirst(
+        ":authorId",
+        _author.id,
+      ),
     );
   }
 

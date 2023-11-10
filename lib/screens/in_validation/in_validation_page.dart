@@ -118,17 +118,19 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
                   return PageAppBar(
                     isMobileSize: isMobileSize,
-                    childTitle: InValidationPageHeader(
-                      onSelectedOwnership:
-                          canManage ? onSelectedOnwership : null,
-                      onSelectLanguage: onSelectedLanguage,
-                      onTapTitle: onTapTitle,
-                      selectedColor: _selectedColor,
-                      selectedLanguage: _selectedLanguage,
-                      selectedOwnership: _selectedOwnership,
-                      show: _showPageOptions,
-                      isMobileSize: isMobileSize,
-                    ),
+                    children: [
+                      InValidationPageHeader(
+                        onSelectedOwnership:
+                            canManage ? onSelectedOnwership : null,
+                        onSelectLanguage: onSelectedLanguage,
+                        onTapTitle: onTapTitle,
+                        selectedColor: _selectedColor,
+                        selectedLanguage: _selectedLanguage,
+                        selectedOwnership: _selectedOwnership,
+                        show: _showPageOptions,
+                        isMobileSize: isMobileSize,
+                      ),
+                    ],
                   );
                 },
               ),

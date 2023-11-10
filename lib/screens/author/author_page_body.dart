@@ -61,15 +61,14 @@ class AuthorPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
-
     if (pageState == EnumPageState.loading) {
       return LoadingView(
         message: "${"author.loading".tr()}...",
       );
     }
 
+    final Color foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
     final double leftPadding = isMobileSize ? 24.0 : 48.0;
     const double rightPadding = 24.0;
 

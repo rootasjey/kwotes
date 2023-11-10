@@ -1,9 +1,9 @@
 import "dart:ui";
 
 import "package:adaptive_theme/adaptive_theme.dart";
-import "package:beamer/beamer.dart";
 import "package:dismissible_page/dismissible_page.dart";
 import "package:flutter/material.dart";
+import "package:kwotes/globals/utils.dart";
 
 class QuotePageContainer extends StatelessWidget {
   /// Quote page container (wrapper).
@@ -55,7 +55,7 @@ class QuotePageContainer extends StatelessWidget {
               child: Hero(
                 tag: heroTag,
                 child: DismissiblePage(
-                  onDismissed: context.beamBack,
+                  onDismissed: () => Utils.passage.deepBack(context),
                   backgroundColor: Colors.transparent,
                   child: Material(
                     elevation: 8.0,

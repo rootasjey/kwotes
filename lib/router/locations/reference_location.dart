@@ -14,16 +14,17 @@ class ReferenceLocation extends BeamLocation<BeamState> {
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     return [
-      BeamPage(
-        child: ReferencePage(
-          referenceId: state.pathParameters["referenceId"] ?? "",
+      if (state.pathPatternSegments.contains(route.split("/").last))
+        BeamPage(
+          child: ReferencePage(
+            referenceId: state.pathParameters["referenceId"] ?? "",
+          ),
+          key: const ValueKey(route),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
         ),
-        key: const ValueKey(route),
-        title: "page_title.any".tr(),
-        type: BeamPageType.fadeTransition,
-        fullScreenDialog: false,
-        opaque: false,
-      ),
     ];
   }
 }

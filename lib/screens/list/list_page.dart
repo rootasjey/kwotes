@@ -117,6 +117,9 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     final Signal<UserFirestore> currentUser =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
+    final void Function()? onSave =
+        _nameController.text.isEmpty ? null : trySaveList;
+
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
@@ -136,22 +139,24 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                 slivers: [
                   PageAppBar(
                     isMobileSize: isMobileSize,
-                    childTitle: ListPageHeader(
-                      accentColor: _accentColor,
-                      createMode: _createMode,
-                      isMobileSize: isMobileSize,
-                      description: _quoteList.description,
-                      descriptionHintText: _descriptionHintText,
-                      descriptionController: _descriptionController,
-                      focusName: _focusNameInput,
-                      listId: widget.listId,
-                      nameController: _nameController,
-                      onEnterCreateMode: onEnterCreateMode,
-                      onNameChanged: onNameChanged,
-                      onSave: _nameController.text.isEmpty ? null : trySaveList,
-                      onCancelCreateMode: onCancelCreateMode,
-                      title: _quoteList.name,
-                    ),
+                    children: [
+                      ListPageHeader(
+                        accentColor: _accentColor,
+                        createMode: _createMode,
+                        isMobileSize: isMobileSize,
+                        description: _quoteList.description,
+                        descriptionHintText: _descriptionHintText,
+                        descriptionController: _descriptionController,
+                        focusName: _focusNameInput,
+                        listId: widget.listId,
+                        nameController: _nameController,
+                        onEnterCreateMode: onEnterCreateMode,
+                        onNameChanged: onNameChanged,
+                        onSave: onSave,
+                        onCancelCreateMode: onCancelCreateMode,
+                        title: _quoteList.name,
+                      ),
+                    ],
                   ),
                   ListPageBody(
                     animateList: _animateList,

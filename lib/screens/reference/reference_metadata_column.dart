@@ -13,11 +13,15 @@ class ReferenceMetadaColumn extends StatelessWidget {
     super.key,
     required this.reference,
     required this.foregroundColor,
+    this.isDark = false,
+    this.isOpen = true,
     this.show = true,
     this.margin = EdgeInsets.zero,
     this.onToggleOpen,
-    this.isOpen = true,
   });
+
+  /// Dark mode.
+  final bool isDark;
 
   /// Expand this widget if true.
   final bool isOpen;
@@ -75,7 +79,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "genre.primary.${reference.type.primary}".tr(),
+                "genre.primary".tr(gender: reference.type.primary),
                 style: textStyle,
               ),
             ),
@@ -168,7 +172,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
               height: isOpen ? null : 0.0,
               child: Card(
                 elevation: 8.0,
-                color: Colors.grey.shade100,
+                color: isDark ? null : Colors.grey.shade100,
                 margin: EdgeInsets.zero,
                 child: InkWell(
                   onTap: onToggleOpen,

@@ -23,17 +23,17 @@ class SearchCategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color? defaultColor = Theme.of(context).textTheme.bodyMedium?.color;
-
     final bool quoteSelected = categorySelected == EnumSearchCategory.quote;
     final bool authorSelected = categorySelected == EnumSearchCategory.author;
     final bool referenceSelected =
         categorySelected == EnumSearchCategory.reference;
 
     return Material(
-      elevation: 4.0,
-      // color: Colors.black,
+      elevation: 8.0,
+      color: Colors.black87,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24.0),
+        side: BorderSide(color: getSelectedColor(categorySelected), width: 1.0),
       ),
       child: Container(
         padding: const EdgeInsets.only(
@@ -51,6 +51,7 @@ class SearchCategorySelector extends StatelessWidget {
               indicatorType: IndicatorType.pill,
               onSelectEntity: onSelectCategory,
               selected: quoteSelected,
+              selectedColor: Colors.pink,
               tooltip: "search.quotes".tr(),
             ),
             CategoryItemButton(
@@ -58,9 +59,9 @@ class SearchCategorySelector extends StatelessWidget {
               category: EnumSearchCategory.author,
               iconData: TablerIcons.users,
               indicatorType: IndicatorType.pill,
-              selectedColor: Colors.amber,
               onSelectEntity: onSelectCategory,
               selected: authorSelected,
+              selectedColor: Colors.amber,
               tooltip: "search.authors".tr(),
             ),
             CategoryItemButton(
@@ -68,14 +69,27 @@ class SearchCategorySelector extends StatelessWidget {
               category: EnumSearchCategory.reference,
               iconData: UniconsLine.book_alt,
               indicatorType: IndicatorType.pill,
-              selectedColor: Colors.blue,
               onSelectEntity: onSelectCategory,
               selected: referenceSelected,
+              selectedColor: Colors.blue,
               tooltip: "search.references".tr(),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Color getSelectedColor(EnumSearchCategory categorySelected) {
+    switch (categorySelected) {
+      case EnumSearchCategory.quote:
+        return Colors.pink;
+      case EnumSearchCategory.author:
+        return Colors.amber;
+      case EnumSearchCategory.reference:
+        return Colors.blue;
+      default:
+        return Colors.transparent;
+    }
   }
 }

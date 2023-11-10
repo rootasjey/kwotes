@@ -37,6 +37,9 @@ class NavigationStateHelper {
   /// Useful for fetching new random quotes after a language change.
   static String lastRandomQuoteLanguage = "en";
 
+  /// Last topic name.
+  static String lastTopicName = "";
+
   /// Search value.
   /// This value will be passed to the search page on navigation.
   /// Thus keeping context when navigating back and forth result pages.

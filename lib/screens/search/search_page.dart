@@ -10,12 +10,9 @@ import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
-import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/author_location.dart";
-import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/search/search_category_selector.dart";
@@ -156,8 +153,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final bool showResultCount =
         removeSpecialKeywords(_searchInputController.text).isNotEmpty;
 
-    final beamingHistory = Beamer.of(context).beamingHistory;
-
     return BasicShortcuts(
       autofocus: false,
       onCancel: context.beamBack,
@@ -205,25 +200,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                                 ),
                               ],
                             ],
-                          ),
-                        ),
-                      if (beamingHistory.length > 1)
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 24.0, top: 24.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: CircleButton(
-                                radius: 16.0,
-                                onTap: Beamer.of(context).beamBack,
-                                icon: Icon(
-                                  TablerIcons.arrow_left,
-                                  color: foregroundColor,
-                                  size: 18.0,
-                                ),
-                              ),
-                            ),
                           ),
                         ),
                       SearchInput(
@@ -717,7 +693,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   void onTapQuote(Quote quote) {
     NavigationStateHelper.quote = quote;
 
-    final String route = SearchLocation.quoteRoute.replaceFirst(
+    final String route = SearchContentLocation.quoteRoute.replaceFirst(
       ":quoteId",
       quote.id,
     );
@@ -729,7 +705,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   void onTapAuthor(Author author) {
     NavigationStateHelper.author = author;
 
-    final String route = AuthorLocation.route.replaceFirst(
+    final String route = SearchContentLocation.authorRoute.replaceFirst(
       ":authorId",
       author.id,
     );
@@ -741,7 +717,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   void onTapReference(Reference reference) {
     NavigationStateHelper.reference = reference;
 
-    final String route = ReferenceLocation.route.replaceFirst(
+    final String route = SearchContentLocation.referenceRoute.replaceFirst(
       ":referenceId",
       reference.id,
     );
@@ -830,24 +806,24 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Directly fetch data from Firestore.
   void findDirectResults(String query) async {
-    final strings = query.split(":");
-    final collectionName = strings[0];
-    final subjectCategory = strings[1];
-    final id = strings[2];
+    final List<String> strings = query.split(":");
+    final String collectionName = strings[0];
+    final String subjectCategory = strings[1];
+    final String id = strings[2];
 
     try {
       setState(() => _pageState = EnumPageState.searching);
 
-      final query = FirebaseFirestore.instance
+      final QueryMap query = FirebaseFirestore.instance
           .collection(collectionName)
           .where("$subjectCategory.id", isEqualTo: id);
 
-      final snapshot = await query.get();
+      final QuerySnapMap snapshot = await query.get();
       if (snapshot.docs.isEmpty) {
         return;
       }
 
-      for (final doc in snapshot.docs) {
+      for (final QueryDocSnapMap doc in snapshot.docs) {
         final Json data = doc.data();
         data["id"] = doc.id;
         _quoteResults.add(Quote.fromMap(data));
@@ -933,6 +909,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   void onClearInput() {
     _searchInputController.text = "";
+    Beamer.of(context).updateRouteInformation(
+      RouteInformation(uri: Uri(path: SearchLocation.route)),
+    );
 
     setState(() {
       _resultCount = 0;

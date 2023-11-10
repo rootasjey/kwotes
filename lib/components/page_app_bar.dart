@@ -10,15 +10,23 @@ import "package:unicons/unicons.dart";
 class PageAppBar extends StatelessWidget {
   const PageAppBar({
     super.key,
-    required this.childTitle,
+    this.axis = Axis.vertical,
     this.isMobileSize = false,
+    this.toolbarHeight = 200.0,
+    this.children = const [],
   });
+
+  /// Page's axis.
+  final Axis axis;
 
   /// Adapt the user interface to small screens if true.
   final bool isMobileSize;
 
-  /// Page's title.
-  final Widget childTitle;
+  /// Page's toolbar height.
+  final double toolbarHeight;
+
+  // /// Page's title children.
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +45,40 @@ class PageAppBar extends StatelessWidget {
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8) ??
             Colors.black;
 
+    final List<Widget> childrenLayout = [
+      if (hasHistory)
+        CircleButton.outlined(
+          borderColor: Colors.transparent,
+          onTap: () => Utils.passage.back(
+            context,
+            isMobile: isMobileSize,
+          ),
+          child: Icon(
+            UniconsLine.arrow_left,
+            color: foregroundColor,
+          ),
+        ),
+      ...children,
+    ];
+
+    final Flex layoutChild = axis == Axis.vertical
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: childrenLayout,
+          )
+        : Row(children: childrenLayout);
+
+    final Color backgroundColor =
+        Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6);
+
     return SliverAppBar(
       floating: true,
       snap: true,
       pinned: false,
       elevation: 6.0,
-      toolbarHeight: 200.0,
+      toolbarHeight: toolbarHeight,
       centerTitle: false,
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6),
+      backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
       title: BackdropFilter(
         filter: ImageFilter.blur(
@@ -53,30 +86,10 @@ class PageAppBar extends StatelessWidget {
           sigmaY: 5,
         ),
         child: Padding(
-            padding: const EdgeInsets.only(left: 0.0, top: 42.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (hasHistory)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 0.0),
-                    child: CircleButton.outlined(
-                      borderColor: Colors.transparent,
-                      onTap: () => Utils.passage.back(
-                        context,
-                        isMobile: isMobileSize,
-                      ),
-                      child: Icon(
-                        UniconsLine.arrow_left,
-                        color: foregroundColor,
-                      ),
-                    ),
-                  ),
-                childTitle,
-              ],
-            )),
+          padding: const EdgeInsets.only(left: 0.0, top: 42.0),
+          child: layoutChild,
+        ),
       ),
-      // bottom: bottom,
     );
   }
 }

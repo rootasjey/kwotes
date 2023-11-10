@@ -102,7 +102,7 @@ class ColorPalette {
   /// Color for contests.
   final Color inValidation = Colors.indigo;
 
-  final Color dark = const Color(0xFF303030);
+  final Color dark = const Color(0xFF161616);
 
   final Color drafts = Colors.amber.shade600;
 

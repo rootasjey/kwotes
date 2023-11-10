@@ -16,16 +16,17 @@ class AuthorLocation extends BeamLocation<BeamState> {
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     return [
-      BeamPage(
-        child: AuthorPage(
-          authorId: state.pathParameters["authorId"] ?? "",
+      if (state.pathPatternSegments.contains(route.split("/").last))
+        BeamPage(
+          child: AuthorPage(
+            authorId: state.pathParameters["authorId"] ?? "",
+          ),
+          key: const ValueKey(route),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
         ),
-        key: const ValueKey(route),
-        title: "page_title.any".tr(),
-        type: BeamPageType.fadeTransition,
-        fullScreenDialog: false,
-        opaque: false,
-      ),
     ];
   }
 }

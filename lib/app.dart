@@ -53,6 +53,7 @@ class _AppState extends State<App> {
       scaffoldBackgroundColor: Constants.colors.dark,
       primaryColor: Constants.colors.primary,
       secondaryHeaderColor: Constants.colors.secondary,
+      cardColor: Colors.black26,
       colorScheme: ColorScheme.dark(
         background: Constants.colors.dark,
       ),

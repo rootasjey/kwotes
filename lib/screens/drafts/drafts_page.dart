@@ -94,14 +94,16 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
             slivers: [
               PageAppBar(
                 isMobileSize: isMobileSize,
-                childTitle: DraftsPageHeader(
-                  isMobileSize: isMobileSize,
-                  onSelectLanguage: onSelectedLanguage,
-                  onTapTitle: onTapTitle,
-                  selectedColor: _selectedColor,
-                  selectedLanguage: _selectedLanguage,
-                  show: _showPageOptions,
-                ),
+                children: [
+                  DraftsPageHeader(
+                    isMobileSize: isMobileSize,
+                    onSelectLanguage: onSelectedLanguage,
+                    onTapTitle: onTapTitle,
+                    selectedColor: _selectedColor,
+                    selectedLanguage: _selectedLanguage,
+                    show: _showPageOptions,
+                  ),
+                ],
               ),
               DraftsPageBody(
                 animateList: _animateList,

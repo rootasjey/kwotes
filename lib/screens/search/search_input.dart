@@ -90,6 +90,7 @@ class SearchInput extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   border: const OutlineInputBorder(borderSide: BorderSide.none),
+                  hintMaxLines: 2,
                 ),
               ),
               bottom ?? const SizedBox.shrink(),

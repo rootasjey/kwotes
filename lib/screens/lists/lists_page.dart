@@ -147,10 +147,12 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
               child: CustomScrollView(
                 slivers: [
                   PageAppBar(
-                    childTitle: ListsPageHeader(
-                      isMobileSize: isMobileSize,
-                    ),
                     isMobileSize: isMobileSize,
+                    children: [
+                      ListsPageHeader(
+                        isMobileSize: isMobileSize,
+                      ),
+                    ],
                   ),
                   ListsPageCreate(
                     show: _showCreate,
