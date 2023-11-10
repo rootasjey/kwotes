@@ -701,6 +701,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  liquid_pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: liquid_pull_to_refresh
+      sha256: "11e4cd8c5460085a31b479ec4e1cd063eb8e599f35684d57a44dafa1fd1f67f3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   logger:
     dependency: transitive
     description:

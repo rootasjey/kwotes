@@ -66,6 +66,7 @@ dependencies:
   infinite_carousel: ^1.0.3
   jiffy: ^6.2.1
   just_the_tooltip: ^0.0.12
+  liquid_pull_to_refresh: ^3.0.1
   loggy: ^2.0.3
   lottie: ^2.5.0
   modal_bottom_sheet: 3.0.0-pre
