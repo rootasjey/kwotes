@@ -35,6 +35,7 @@ import "package:kwotes/types/random_quote_document.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
+import "package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart";
 import "package:loggy/loggy.dart";
 import "package:url_launcher/url_launcher.dart";
 
@@ -120,120 +121,124 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
     return BasicShortcuts(
       child: Scaffold(
         backgroundColor: isDark ? Colors.black26 : Colors.white,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Container(
-                color: topBackgroundColor,
-                child: const Align(
-                  alignment: Alignment.topLeft,
-                  child: AppIcon(
-                    margin: EdgeInsets.only(top: 54.0, left: 32.0),
+        body: LiquidPullToRefresh(
+          showChildOpacityTransition: false,
+          onRefresh: refetchRandomQuotes,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  color: topBackgroundColor,
+                  child: const Align(
+                    alignment: Alignment.topLeft,
+                    child: AppIcon(
+                      margin: EdgeInsets.only(top: 54.0, left: 32.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-            HeroQuote(
-              isBig: true,
-              backgroundColor: topBackgroundColor,
-              quote: NavigationStateHelper.randomQuotes.first,
-              textColor: iconColor,
-              onTapAuthor: onTapAuthor,
-              onTapQuote: onTapQuote,
-              margin: const EdgeInsets.only(
-                top: 16.0,
-                left: 26.0,
-                right: 26.0,
-                bottom: 16.0,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                left: 26.0,
-                right: 26.0,
-              ),
-              sliver: SliverList.separated(
-                separatorBuilder: (context, index) {
-                  return const Divider();
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  final int nextIndex = index + 1;
-                  final Quote quote =
-                      NavigationStateHelper.randomQuotes[nextIndex];
-
-                  return RandomQuoteText(
-                    quote: quote,
-                    foregroundColor: iconColor,
-                    onTapQuote: onTapQuote,
-                    onTapAuthor: onTapAuthor,
-                  );
-                },
-                itemCount: _maxQuoteCount - 1,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: Row(
-                  children: [
-                    const Expanded(child: Divider()),
-                    IconButton(
-                      tooltip: "quote.fetch.random".tr(),
-                      onPressed: refetchRandomQuotes,
-                      color: iconColor,
-                      icon: const Icon(TablerIcons.arrows_shuffle),
-                    ),
-                    const Expanded(child: Divider()),
-                  ],
+              HeroQuote(
+                isBig: true,
+                backgroundColor: topBackgroundColor,
+                quote: NavigationStateHelper.randomQuotes.first,
+                textColor: iconColor,
+                onTapAuthor: onTapAuthor,
+                onTapQuote: onTapQuote,
+                margin: const EdgeInsets.only(
+                  top: 16.0,
+                  left: 26.0,
+                  right: 26.0,
+                  bottom: 16.0,
                 ),
               ),
-            ),
-            HomeTopics(
-              isDark: isDark,
-              topics: Constants.colors.topics,
-              onTapTopic: onTapTopic,
-              cardBackgroundColor: backgroundColor,
-            ),
-            ReferencePosters(
-              backgroundColor: backgroundColor,
-              isDark: isDark,
-              margin: const EdgeInsets.only(
-                top: 42.0,
-                bottom: 24.0,
+              SliverPadding(
+                padding: const EdgeInsets.only(
+                  top: 16.0,
+                  left: 26.0,
+                  right: 26.0,
+                ),
+                sliver: SliverList.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider();
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    final int nextIndex = index + 1;
+                    final Quote quote =
+                        NavigationStateHelper.randomQuotes[nextIndex];
+
+                    return RandomQuoteText(
+                      quote: quote,
+                      foregroundColor: iconColor,
+                      onTapQuote: onTapQuote,
+                      onTapAuthor: onTapAuthor,
+                    );
+                  },
+                  itemCount: _maxQuoteCount - 1,
+                ),
               ),
-              onTapReference: onTapReference,
-              references: NavigationStateHelper.latestAddedReferences,
-              textColor: iconColor,
-              scrollController: _carouselScrollController,
-              onIndexChanged: (int index) => setState(() {}),
-            ),
-            LatestAuthors(
-              authors: NavigationStateHelper.latestAddedAuthors,
-              margin: const EdgeInsets.only(
-                top: 42.0,
-                left: 26.0,
-                right: 26.0,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      IconButton(
+                        tooltip: "quote.fetch.random".tr(),
+                        onPressed: refetchRandomQuotes,
+                        color: iconColor,
+                        icon: const Icon(TablerIcons.arrows_shuffle),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                ),
               ),
-              onTapAuthor: onTapAuthor,
-            ),
-            HomePageFooter(
-              iconColor: iconColor,
-              isMobileSize: widget.isMobileSize,
-              margin: const EdgeInsets.only(
-                left: 24.0,
-                right: 24.0,
-                top: 24.0,
-                bottom: 120.0,
+              HomeTopics(
+                isDark: isDark,
+                topics: Constants.colors.topics,
+                onTapTopic: onTapTopic,
+                cardBackgroundColor: backgroundColor,
               ),
-              onAddQuote: onAddQuote,
-              onFetchRandomQuotes: fetchRandomQuotes,
-              onTapGitHub: onTapGitHub,
-              onTapSettings: onTapSettings,
-              onTapOpenRandomQuote: onTapOpenRandomQuote,
-              userFirestoreSignal: userFirestoreSignal,
-            ),
-          ],
+              ReferencePosters(
+                backgroundColor: backgroundColor,
+                isDark: isDark,
+                margin: const EdgeInsets.only(
+                  top: 42.0,
+                  bottom: 24.0,
+                ),
+                onTapReference: onTapReference,
+                references: NavigationStateHelper.latestAddedReferences,
+                textColor: iconColor,
+                scrollController: _carouselScrollController,
+                onIndexChanged: (int index) => setState(() {}),
+              ),
+              LatestAuthors(
+                authors: NavigationStateHelper.latestAddedAuthors,
+                margin: const EdgeInsets.only(
+                  top: 42.0,
+                  left: 26.0,
+                  right: 26.0,
+                ),
+                onTapAuthor: onTapAuthor,
+              ),
+              HomePageFooter(
+                iconColor: iconColor,
+                isMobileSize: widget.isMobileSize,
+                margin: const EdgeInsets.only(
+                  left: 24.0,
+                  right: 24.0,
+                  top: 24.0,
+                  bottom: 120.0,
+                ),
+                onAddQuote: onAddQuote,
+                onFetchRandomQuotes: fetchRandomQuotes,
+                onTapGitHub: onTapGitHub,
+                onTapSettings: onTapSettings,
+                onTapOpenRandomQuote: onTapOpenRandomQuote,
+                userFirestoreSignal: userFirestoreSignal,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -322,11 +327,13 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
     }
   }
 
-  void refetchRandomQuotes() {
-    fetchRandomQuotes(forceRefresh: true);
+  /// Refetches random quotes.
+  Future<void> refetchRandomQuotes() {
+    return fetchRandomQuotes(forceRefresh: true);
   }
 
-  void fetchRandomQuotes({bool forceRefresh = false}) async {
+  /// Fetches random quotes.
+  Future<void> fetchRandomQuotes({bool forceRefresh = false}) async {
     final String currentLanguage = await Utils.linguistic.getLanguage();
     final bool hasLanguageChanged =
         NavigationStateHelper.lastRandomQuoteLanguage != currentLanguage;
