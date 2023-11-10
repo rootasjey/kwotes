@@ -3,8 +3,10 @@ import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_footer.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_header.dart";
-import "package:kwotes/globals/utils.dart";
+import "package:kwotes/components/dialogs/add_to_list/add_to_list_item.dart";
+import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
 
 class AddToListMobile extends StatelessWidget {
@@ -13,9 +15,11 @@ class AddToListMobile extends StatelessWidget {
     super.key,
     required this.pageScrollController,
     this.quoteLists = const [],
-    this.selectedLists = const [],
+    this.selectedQuoteLists = const [],
+    this.onTapListItem,
     this.asBottomSheet = false,
     this.pageState = EnumPageState.idle,
+    this.quotes = const [],
     this.onScroll,
     this.onValidate,
     this.showCreationInputs,
@@ -31,11 +35,14 @@ class AddToListMobile extends StatelessWidget {
   /// On scroll callback.
   final void Function(double)? onScroll;
 
+  /// List of quotes to add to a list.
+  final List<Quote> quotes;
+
   /// List of user's quote lists.
   final List<QuoteList> quoteLists;
 
-  /// List of selected lists.
-  final List<QuoteList> selectedLists;
+  /// Selected quote lists to add quote(s) to.
+  final List<QuoteList> selectedQuoteLists;
 
   /// Trigger when the user tap on validation button
   final void Function(List<QuoteList> selectedLists)? onValidate;
@@ -43,32 +50,18 @@ class AddToListMobile extends StatelessWidget {
   /// Callback fired to show creation inputs.
   final void Function()? showCreationInputs;
 
+  /// Callback fired when a quote list is tapped.
+  final void Function(QuoteList quoteList)? onTapListItem;
+
   /// Scroll controller.
   final ScrollController pageScrollController;
 
   @override
   Widget build(BuildContext context) {
     if (pageState == EnumPageState.loading) {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(26.0),
-          child: Column(
-            children: [
-              Opacity(
-                opacity: 0.8,
-                child: Text(
-                  "loading".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-              const LinearProgressIndicator(),
-            ],
-          ),
-        ),
+      return LoadingView(
+        useSliver: false,
+        message: "loading".tr(),
       );
     }
 
@@ -83,13 +76,11 @@ class AddToListMobile extends StatelessWidget {
               SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    const AddToListHeader(
-                      margin: EdgeInsets.all(12.0),
+                    AddToListHeader(
+                      quoteLength: quotes.length,
+                      margin: const EdgeInsets.all(12.0),
                     ),
-                    Divider(
-                      thickness: 2.0,
-                      color: Theme.of(context).secondaryHeaderColor,
-                    ),
+                    const Divider(thickness: 2.0),
                   ],
                 ),
               ),
@@ -99,13 +90,11 @@ class AddToListMobile extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       final QuoteList quoteList = quoteLists.elementAt(index);
-                      return Text(quoteList.name);
-
-                      // return BookTile(
-                      //   book: book,
-                      //   onTapBook: onTapBook,
-                      //   selected: _selectedLists.contains(book),
-                      // );
+                      return AddToListItem(
+                        quoteList: quoteList,
+                        onTap: onTapListItem,
+                        selected: selectedQuoteLists.contains(quoteList),
+                      );
                     },
                     childCount: quoteLists.length,
                   ),
@@ -123,9 +112,10 @@ class AddToListMobile extends StatelessWidget {
           right: 0.0,
           child: AddToListFooter(
             asBottomSheet: asBottomSheet,
-            selectedLists: selectedLists,
+            elevation: 6.0,
+            selectedLists: selectedQuoteLists,
             showCreationInputs: showCreationInputs,
-            onValidate: selectedLists.isEmpty ? null : onValidate,
+            onValidate: selectedQuoteLists.isEmpty ? null : onValidate,
             pageState: pageState,
           ),
         ),

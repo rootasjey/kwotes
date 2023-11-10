@@ -153,6 +153,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final bool showResultCount =
         removeSpecialKeywords(_searchInputController.text).isNotEmpty;
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BasicShortcuts(
       autofocus: false,
       onCancel: context.beamBack,
@@ -235,6 +237,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       ),
                       Showcase(
                         authors: _authorList,
+                        isDark: isDark,
                         isMobileSize: isMobileSize,
                         margin: EdgeInsets.only(
                           top: isMobileSize ? 0.0 : 24.0,
@@ -263,6 +266,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                   child: Center(
                     child: SearchCategorySelector(
                       categorySelected: _searchCategory,
+                      isDark: isDark,
                       onSelectCategory: onSelectSearchEntity,
                     ),
                   )
@@ -545,7 +549,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     bool reinit = false,
     bool fetchMore = false,
   }) async {
-    if (!reinit && _authorList.isNotEmpty) {
+    if (!reinit && _authorList.isNotEmpty && !fetchMore) {
       return;
     }
 
@@ -553,6 +557,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       _authorList.clear();
       _hasMoreResults = true;
       _pageState = EnumPageState.loading;
+    }
+
+    if (fetchMore) {
+      _pageState = EnumPageState.loadingMore;
     }
 
     try {
@@ -598,7 +606,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     bool reinit = false,
     bool fetchMore = false,
   }) async {
-    if (!reinit && _referenceList.isNotEmpty) {
+    if (!reinit && _referenceList.isNotEmpty && !fetchMore) {
       return;
     }
 
@@ -606,6 +614,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       _referenceList.clear();
       _hasMoreResults = true;
       _pageState = EnumPageState.loading;
+    }
+
+    if (fetchMore) {
+      _pageState = EnumPageState.loadingMore;
     }
 
     try {

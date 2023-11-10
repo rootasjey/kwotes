@@ -20,7 +20,7 @@ class HomeTopics extends StatelessWidget {
   /// Background color.
   final Color? backgroundColor;
 
-  /// Foreground text color.
+  /// Card's background color.
   final Color? cardBackgroundColor;
 
   /// Callback fired when topic is tapped.

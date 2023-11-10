@@ -38,169 +38,171 @@ class DashboardWelcomePage extends StatelessWidget {
       return const SigninPage();
     }
 
-    return Scaffold(
-      floatingActionButton: DashboardFab(
-        isMobileSize: isMobileSize,
-        onGoToAddQuotePage: onGoToAddQuotePage,
-        randomColor: randomColor,
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate.fixed([
-              const Align(
-                alignment: Alignment.topLeft,
-                child: AppIcon(
-                  margin: EdgeInsets.only(top: 24.0, left: 12.0),
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: DashboardFab(
+          isMobileSize: isMobileSize,
+          onGoToAddQuotePage: onGoToAddQuotePage,
+          randomColor: randomColor,
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: AppIcon(
+                    margin: EdgeInsets.only(top: 24.0, left: 12.0),
+                  ),
                 ),
-              ),
-              Padding(
-                  padding: isMobileSize
-                      ? const EdgeInsets.only(top: 12.0, left: 24.0)
-                      : const EdgeInsets.only(
-                          top: 12.0,
-                          left: 48.0,
-                        ),
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "${"welcome_back".tr()},",
-                          style: TextStyle(
-                            color: foregroundColor?.withOpacity(0.4),
-                            fontWeight: FontWeight.w100,
-                            fontSize: isMobileSize ? 16.0 : 24.0,
+                Padding(
+                    padding: isMobileSize
+                        ? const EdgeInsets.only(top: 12.0, left: 24.0)
+                        : const EdgeInsets.only(
+                            top: 12.0,
+                            left: 48.0,
                           ),
-                        ),
-                        TextSpan(
-                          text: "\n${userFirestore.name}",
-                          style: TextStyle(
-                            color: foregroundColor?.withOpacity(0.7),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ".",
-                          style: Utils.calligraphy.title(
-                            textStyle: TextStyle(
-                              color: randomColor,
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "${"welcome_back".tr()},",
+                            style: TextStyle(
+                              color: foregroundColor?.withOpacity(0.4),
+                              fontWeight: FontWeight.w100,
+                              fontSize: isMobileSize ? 16.0 : 24.0,
                             ),
                           ),
+                          TextSpan(
+                            text: "\n${userFirestore.name}",
+                            style: TextStyle(
+                              color: foregroundColor?.withOpacity(0.7),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ".",
+                            style: Utils.calligraphy.title(
+                              textStyle: TextStyle(
+                                color: randomColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      style: Utils.calligraphy.title(
+                        textStyle: TextStyle(
+                          fontSize: isMobileSize ? 42.0 : 54.0,
+                          height: 1.0,
                         ),
-                      ],
-                    ),
-                    style: Utils.calligraphy.title(
-                      textStyle: TextStyle(
-                        fontSize: isMobileSize ? 42.0 : 54.0,
-                        height: 1.0,
                       ),
-                    ),
-                  )),
-              Padding(
-                padding: isMobileSize
-                    ? const EdgeInsets.only(
-                        top: 36.0,
-                        left: 12.0,
-                        right: 12.0,
-                        bottom: 192.0,
-                      )
-                    : const EdgeInsets.only(
-                        top: 24.0,
-                        left: 48.0,
-                        right: 48.0,
-                        bottom: 92.0,
+                    )),
+                Padding(
+                  padding: isMobileSize
+                      ? const EdgeInsets.only(
+                          top: 36.0,
+                          left: 12.0,
+                          right: 12.0,
+                          bottom: 192.0,
+                        )
+                      : const EdgeInsets.only(
+                          top: 24.0,
+                          left: 48.0,
+                          right: 48.0,
+                          bottom: 92.0,
+                        ),
+                  child: Wrap(
+                    spacing: 12.0,
+                    runSpacing: 12.0,
+                    children: [
+                      DashboardCard(
+                        compact: isMobileSize,
+                        iconData: UniconsLine.heart,
+                        hoverColor: Constants.colors.likes,
+                        textSubtitle: "favourites.description".tr(),
+                        textTitle: "favourites.name".tr(),
+                        heroKey: "favourites",
+                        onTap: () {
+                          context.beamToNamed(
+                            DashboardContentLocation.favouritesRoute,
+                          );
+                        },
                       ),
-                child: Wrap(
-                  spacing: 12.0,
-                  runSpacing: 12.0,
-                  children: [
-                    DashboardCard(
-                      compact: isMobileSize,
-                      iconData: UniconsLine.heart,
-                      hoverColor: Constants.colors.likes,
-                      textSubtitle: "favourites.description".tr(),
-                      textTitle: "favourites.name".tr(),
-                      heroKey: "favourites",
-                      onTap: () {
-                        context.beamToNamed(
-                          DashboardContentLocation.favouritesRoute,
-                        );
-                      },
-                    ),
-                    DashboardCard(
-                      compact: isMobileSize,
-                      hoverColor: Constants.colors.lists,
-                      iconData: UniconsLine.list_ul,
-                      textSubtitle: "lists.description".tr(),
-                      textTitle: "lists.name".tr(),
-                      heroKey: "lists",
-                      onTap: () {
-                        context.beamToNamed(
-                          DashboardContentLocation.listsRoute,
-                        );
-                      },
-                    ),
-                    DashboardCard(
-                      compact: isMobileSize,
-                      hoverColor: Constants.colors.inValidation,
-                      iconData: UniconsLine.clock,
-                      textSubtitle: "in_validation.description".tr(),
-                      textTitle: "in_validation.name".tr(),
-                      heroKey: "in_validation",
-                      onTap: () {
-                        context.beamToNamed(
-                          DashboardContentLocation.inValidationRoute,
-                        );
-                      },
-                    ),
-                    DashboardCard(
-                      compact: isMobileSize,
-                      hoverColor: Constants.colors.published,
-                      iconData: TablerIcons.send,
-                      textSubtitle: "published.description".tr(),
-                      textTitle: "published.name".tr(),
-                      heroKey: "published",
-                      onTap: () {
-                        context.beamToNamed(
-                          DashboardContentLocation.publishedRoute,
-                        );
-                      },
-                    ),
-                    DashboardCard(
-                      compact: isMobileSize,
-                      hoverColor: Constants.colors.drafts,
-                      iconData: TablerIcons.note,
-                      textSubtitle: "drafts.description".tr(),
-                      textTitle: "drafts.name".tr(),
-                      heroKey: "drafts",
-                      onTap: () {
-                        context.beamToNamed(
-                          DashboardContentLocation.draftsRoute,
-                        );
-                      },
-                    ),
-                    DashboardCard(
-                      compact: isMobileSize,
-                      iconData: TablerIcons.settings,
-                      hoverColor: Constants.colors.settings,
-                      textSubtitle: "settings.description".tr(),
-                      textTitle: "settings.name".tr(),
-                      heroKey: "settings",
-                      onTap: () {
-                        context.beamToNamed(
-                          DashboardContentLocation.settingsRoute,
-                        );
-                      },
-                    ),
-                  ]
-                      .animate(interval: 25.ms)
-                      .fadeIn(duration: 200.ms, curve: Curves.decelerate)
-                      .slideY(begin: 0.2, end: 0.0),
+                      DashboardCard(
+                        compact: isMobileSize,
+                        hoverColor: Constants.colors.lists,
+                        iconData: UniconsLine.list_ul,
+                        textSubtitle: "lists.description".tr(),
+                        textTitle: "lists.name".tr(),
+                        heroKey: "lists",
+                        onTap: () {
+                          context.beamToNamed(
+                            DashboardContentLocation.listsRoute,
+                          );
+                        },
+                      ),
+                      DashboardCard(
+                        compact: isMobileSize,
+                        hoverColor: Constants.colors.inValidation,
+                        iconData: UniconsLine.clock,
+                        textSubtitle: "in_validation.description".tr(),
+                        textTitle: "in_validation.name".tr(),
+                        heroKey: "in_validation",
+                        onTap: () {
+                          context.beamToNamed(
+                            DashboardContentLocation.inValidationRoute,
+                          );
+                        },
+                      ),
+                      DashboardCard(
+                        compact: isMobileSize,
+                        hoverColor: Constants.colors.published,
+                        iconData: TablerIcons.send,
+                        textSubtitle: "published.description".tr(),
+                        textTitle: "published.name".tr(),
+                        heroKey: "published",
+                        onTap: () {
+                          context.beamToNamed(
+                            DashboardContentLocation.publishedRoute,
+                          );
+                        },
+                      ),
+                      DashboardCard(
+                        compact: isMobileSize,
+                        hoverColor: Constants.colors.drafts,
+                        iconData: TablerIcons.note,
+                        textSubtitle: "drafts.description".tr(),
+                        textTitle: "drafts.name".tr(),
+                        heroKey: "drafts",
+                        onTap: () {
+                          context.beamToNamed(
+                            DashboardContentLocation.draftsRoute,
+                          );
+                        },
+                      ),
+                      DashboardCard(
+                        compact: isMobileSize,
+                        iconData: TablerIcons.settings,
+                        hoverColor: Constants.colors.settings,
+                        textSubtitle: "settings.description".tr(),
+                        textTitle: "settings.name".tr(),
+                        heroKey: "settings",
+                        onTap: () {
+                          context.beamToNamed(
+                            DashboardContentLocation.settingsRoute,
+                          );
+                        },
+                      ),
+                    ]
+                        .animate(interval: 25.ms)
+                        .fadeIn(duration: 200.ms, curve: Curves.decelerate)
+                        .slideY(begin: 0.2, end: 0.0),
+                  ),
                 ),
-              ),
-            ]),
-          ),
-        ],
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

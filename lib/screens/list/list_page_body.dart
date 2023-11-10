@@ -66,8 +66,8 @@ class ListPageBody extends StatelessWidget {
 
     return SliverPadding(
       padding: isMobileSize
-          ? const EdgeInsets.only(left: 24.0, right: 24.0)
-          : const EdgeInsets.only(left: 48.0, right: 72.0),
+          ? const EdgeInsets.only(top: 6.0, left: 24.0, right: 24.0)
+          : const EdgeInsets.only(top: 6.0, left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return const Divider(

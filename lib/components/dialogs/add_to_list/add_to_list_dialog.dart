@@ -117,10 +117,12 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         asBottomSheet: widget.asBottomSheet,
         onScroll: onScroll,
         quoteLists: _quoteLists,
-        selectedLists: _selectedLists,
+        selectedQuoteLists: _selectedLists,
         onValidate: onAddToLists,
         pageState: _pageState,
         pageScrollController: _pageScrollController,
+        quotes: widget.quotes,
+        onTapListItem: onTapListItem,
         showCreationInputs: showCreationInputs,
       );
     }

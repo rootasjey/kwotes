@@ -7,11 +7,15 @@ import "package:kwotes/types/author.dart";
 class ShowcaseAuthors extends StatelessWidget {
   const ShowcaseAuthors({
     super.key,
+    this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.authors = const [],
     this.onTapAuthor,
   });
+
+  /// Whether dark theme is active.
+  final bool isDark;
 
   /// Adapt UI to mobile size.
   final bool isMobileSize;
@@ -39,22 +43,21 @@ class ShowcaseAuthors extends StatelessWidget {
           horizontalSpacing: 6.0,
           verticalSpacing: 6.0,
           children: authors
-              .map(
-                (Author author) {
-                  index++;
-                  return ShowcaseText(
-                    docId: author.id,
-                    textValue: author.name.toLowerCase(),
-                    isMobileSize: isMobileSize,
-                    foregroundColor: index % 2 == 0
-                        ? foregroundColor?.withOpacity(0.4)
-                        : foregroundColor?.withOpacity(0.8),
-                    onTap: onTapAuthor != null
-                        ? () => onTapAuthor?.call(author)
-                        : null,
-                  );
-                },
-              )
+              .map((Author author) {
+                index++;
+                return ShowcaseText(
+                  docId: author.id,
+                  isDark: isDark,
+                  textValue: author.name.toLowerCase(),
+                  isMobileSize: isMobileSize,
+                  foregroundColor: index % 2 == 0
+                      ? foregroundColor?.withOpacity(0.4)
+                      : foregroundColor?.withOpacity(0.8),
+                  onTap: onTapAuthor != null
+                      ? () => onTapAuthor?.call(author)
+                      : null,
+                );
+              })
               .toList()
               .animate(interval: 7.ms)
               .fadeIn(duration: 125.ms)

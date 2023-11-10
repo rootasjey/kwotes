@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_item.dart";
-import "package:kwotes/globals/utils.dart";
+import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote_list.dart";
 
@@ -48,26 +48,8 @@ class AddToListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (pageState == EnumPageState.loading) {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(26.0),
-          child: Column(
-            children: [
-              Opacity(
-                opacity: 0.8,
-                child: Text(
-                  "loading".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-              const LinearProgressIndicator(),
-            ],
-          ),
-        ),
+      return LoadingView(
+        message: "loading".tr(),
       );
     }
 
@@ -88,20 +70,11 @@ class AddToListBody extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     final QuoteList quoteList = quoteLists.elementAt(index);
-                    // return Text(quoteList.name);
                     return AddToListItem(
                       quoteList: quoteList,
                       onTap: onTapListItem,
                       selected: selectedQuoteLists.contains(quoteList),
                     );
-
-                    // final Book book = _books.elementAt(index);
-
-                    // return BookTile(
-                    //   book: book,
-                    //   onTapBook: onTapBook,
-                    //   selected: _selectedBooks.contains(book),
-                    // );
                   },
                   childCount: quoteLists.length,
                 ),

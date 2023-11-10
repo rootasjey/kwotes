@@ -10,6 +10,7 @@ class SigninPageHeader extends StatelessWidget {
     this.isMobileSize = false,
     this.randomColor = Colors.amber,
     this.onNavigateToCreateAccount,
+    this.margin = EdgeInsets.zero,
   });
 
   /// True if the screen's width is smaller than 600px.
@@ -19,53 +20,59 @@ class SigninPageHeader extends StatelessWidget {
   /// A random accent color.
   final Color randomColor;
 
+  /// Spacing around this widget.
+  final EdgeInsets margin;
+
   /// Callback fired to navigate to signup page.
   final void Function()? onNavigateToCreateAccount;
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
-            child: Icon(
-              TablerIcons.air_balloon,
-              color: randomColor,
-              size: 42.0,
-            ),
-          ),
-          Text(
-            "signin".tr(),
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: isMobileSize ? 24.0 : 54.0,
-                fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: margin,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
+              child: Icon(
+                TablerIcons.air_balloon,
+                color: randomColor,
+                size: 42.0,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 6.0),
-            child: TextButton(
-              onPressed: onNavigateToCreateAccount,
-              style: TextButton.styleFrom(
-                backgroundColor: randomColor.withOpacity(0.1),
+            Text(
+              "signin".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: isMobileSize ? 24.0 : 54.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              child: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  "account.dont_own".tr(),
-                  style: Utils.calligraphy.code(
-                    textStyle: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 6.0),
+              child: TextButton(
+                onPressed: onNavigateToCreateAccount,
+                style: TextButton.styleFrom(
+                  backgroundColor: randomColor.withOpacity(0.1),
+                ),
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    "account.dont_own".tr(),
+                    style: Utils.calligraphy.code(
+                      textStyle: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ].animate().slideY(begin: 0.8, end: 0.0).fadeIn(),
+          ].animate().slideY(begin: 0.8, end: 0.0).fadeIn(),
+        ),
       ),
     );
   }

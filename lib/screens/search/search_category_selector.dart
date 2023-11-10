@@ -12,7 +12,11 @@ class SearchCategorySelector extends StatelessWidget {
     super.key,
     required this.categorySelected,
     required this.onSelectCategory,
+    this.isDark = false,
   });
+
+  /// Whether dark theme is active.
+  final bool isDark;
 
   /// Selected search category.
   final EnumSearchCategory categorySelected;
@@ -30,7 +34,7 @@ class SearchCategorySelector extends StatelessWidget {
 
     return Material(
       elevation: 8.0,
-      color: Colors.black87,
+      color: isDark ? Colors.black87 : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24.0),
         side: BorderSide(color: getSelectedColor(categorySelected), width: 1.0),

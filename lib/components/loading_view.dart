@@ -6,34 +6,44 @@ class LoadingView extends StatelessWidget {
   const LoadingView({
     super.key,
     this.message = "loading...",
+    this.useSliver = true,
   });
 
   /// Message value to display as a loading message.
   final String message;
 
+  /// If true, it will display a sliver.
+  final bool useSliver;
+
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/app_icon/animation.gif",
-              width: 100.0,
-            ),
-            Text(
-              message,
-              style: Utils.calligraphy.body2(
-                textStyle: const TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                ),
+    final Widget child = Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/images/app_icon/animation.gif",
+            width: 100.0,
+          ),
+          Text(
+            message,
+            style: Utils.calligraphy.body2(
+              textStyle: const TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+
+    if (!useSliver) {
+      return child;
+    }
+
+    return SliverToBoxAdapter(
+      child: child,
     );
   }
 

@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/services.dart";
 import "package:kwotes/actions/user_actions.dart";
+import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/forgot_password_location.dart";
@@ -12,7 +13,6 @@ import "package:kwotes/types/enums/enum_app_bar_mode.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:loggy/loggy.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/signup_location.dart";
@@ -84,11 +84,13 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
               ApplicationBar(
                 mode: EnumAppBarMode.signin,
                 isMobileSize: isMobileSize,
+                title: const SizedBox.shrink(),
               ),
               SigninPageHeader(
                 isMobileSize: isMobileSize,
                 onNavigateToCreateAccount: onNavigateToCreateAccount,
                 randomColor: randomColor,
+                margin: const EdgeInsets.only(top: 42.0),
               ),
               SigninPageBody(
                 isMobileSize: isMobileSize,

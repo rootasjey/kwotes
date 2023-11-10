@@ -40,6 +40,7 @@ class AddQuoteTopicPage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(slivers: [
         ApplicationBar(
+          title: const SizedBox.shrink(),
           isMobileSize: isMobileSize,
           rightChildren: appBarRightChildren,
         ),
@@ -110,9 +111,11 @@ class AddQuoteTopicPage extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: TextButton(
                   onPressed: onClearTopic,
-                  child: Text(
-                    "quote.clear_topics".tr(),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.pink.shade100,
+                    foregroundColor: Colors.pink,
                   ),
+                  child: Text("quote.clear_topics".tr()),
                 ),
               ),
             ),

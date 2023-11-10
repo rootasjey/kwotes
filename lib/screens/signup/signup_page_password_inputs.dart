@@ -102,6 +102,7 @@ class SignupPagePasswordInputs extends StatelessWidget {
                         controller: passwordController,
                         obscureText: true,
                         textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.visiblePassword,
                         onChanged: onPasswordChanged,
                         decoration: InputDecoration(
                           hintText: "•••••••••••",
@@ -147,6 +148,7 @@ class SignupPagePasswordInputs extends StatelessWidget {
                         focusNode: confirmPasswordFocusNode,
                         obscureText: true,
                         textInputAction: TextInputAction.go,
+                        keyboardType: TextInputType.visiblePassword,
                         onSubmitted: (String confirmPassword) {
                           onSubmit?.call(
                             usernameController.text,

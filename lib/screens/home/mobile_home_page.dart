@@ -122,6 +122,7 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
       child: Scaffold(
         backgroundColor: isDark ? Colors.black26 : Colors.white,
         body: LiquidPullToRefresh(
+          color: backgroundColor,
           showChildOpacityTransition: false,
           onRefresh: refetchRandomQuotes,
           child: CustomScrollView(

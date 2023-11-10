@@ -147,6 +147,7 @@
       "music": "Music",
       "name": "Primary genre",
       "news": "News",
+      "Movie": "movie",
       "novel": "Novel",
       "other": "Other",
       "painting": "Painting",
@@ -690,7 +691,7 @@
         "empty": "Quote's content cannot be empty. You must enter a quote.",
         "minimum_length": "Quote's content must be at least 3 characters long."
       },
-      "topics": {
+      "topic": {
         "empty": "You must select at least one topic."
       },
       "user": {

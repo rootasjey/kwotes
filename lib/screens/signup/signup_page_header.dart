@@ -50,7 +50,7 @@ class SignupPageHeader extends StatelessWidget {
                 onPressed: onNavigateToSignin,
                 style: TextButton.styleFrom(
                   backgroundColor: randomColor.withOpacity(0.3),
-                  foregroundColor: Colors.black,
+                  // foregroundColor: Colors.black,
                 ),
                 child: Opacity(
                   opacity: 0.8,

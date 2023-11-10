@@ -149,6 +149,7 @@
       "music": "Musique",
       "name": "Genre principal",
       "news": "Actualités",
+      "Movie": "Film",
       "novel": "Roman",
       "other": "Autre",
       "painting": "Peinture",
@@ -704,7 +705,7 @@
         "empty": "Le contenu d'une citation ne peut pas être vide. Vous devez saisir une citation.",
         "minimum_length": "Votre citation doit contenir au moins 3 caractères."
       },
-      "topics": {
+      "topic": {
         "empty": "Vous devez sélectionner au moins un sujet de catégorisation."
       },
       "user": {

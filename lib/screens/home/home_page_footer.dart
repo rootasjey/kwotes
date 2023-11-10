@@ -2,7 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/screens/home/home_text_button.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class HomePageFooter extends StatelessWidget {
@@ -48,7 +48,7 @@ class HomePageFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget openRandomButton = HomeTextButton(
+    final Widget openRandomButton = ColoredTextButton(
       icon: const Icon(TablerIcons.hand_finger),
       iconOnly: isMobileSize,
       onPressed: onTapOpenRandomQuote,
@@ -56,7 +56,7 @@ class HomePageFooter extends StatelessWidget {
       tooltip: isMobileSize ? "quote.open_random".tr() : "",
     );
 
-    final Widget shuffleButton = HomeTextButton(
+    final Widget shuffleButton = ColoredTextButton(
       icon: const Icon(TablerIcons.arrows_shuffle),
       iconOnly: isMobileSize,
       margin: isMobileSize ? EdgeInsets.zero : const EdgeInsets.only(top: 6.0),
@@ -65,7 +65,7 @@ class HomePageFooter extends StatelessWidget {
       tooltip: isMobileSize ? "quote.shuffle".tr() : "",
     );
 
-    final Widget addQuoteButton = HomeTextButton(
+    final Widget addQuoteButton = ColoredTextButton(
       icon: const Icon(TablerIcons.plus),
       iconOnly: isMobileSize,
       margin: isMobileSize ? EdgeInsets.zero : const EdgeInsets.only(top: 6.0),
@@ -130,14 +130,14 @@ class HomePageFooter extends StatelessWidget {
                     },
                   ),
                 ],
-                HomeTextButton(
+                ColoredTextButton(
                   icon: const Icon(TablerIcons.settings),
                   iconOnly: true,
                   onPressed: onTapSettings,
                   textValue: "settings.name".tr(),
                   tooltip: "settings.name".tr(),
                 ),
-                HomeTextButton(
+                ColoredTextButton(
                   icon: const Icon(TablerIcons.brand_github),
                   iconOnly: true,
                   onPressed: onTapGitHub,

@@ -6,12 +6,17 @@ class ShowcaseText extends StatefulWidget {
   const ShowcaseText({
     super.key,
     required this.textValue,
+    this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
+    this.padding = const EdgeInsets.all(2.0),
     this.foregroundColor,
     this.onTap,
     this.docId = "",
   });
+
+  /// Whether to adapt UI to dark theme.
+  final bool isDark;
 
   /// Adapt UI to mobile size.
   final bool isMobileSize;
@@ -19,8 +24,11 @@ class ShowcaseText extends StatefulWidget {
   /// Text color.
   final Color? foregroundColor;
 
-  /// Space around this widget.
+  /// Spacing around this widget.
   final EdgeInsets margin;
+
+  /// Padding around the text.
+  final EdgeInsets padding;
 
   // Callback fired when text is tapped.
   final void Function()? onTap;
@@ -47,14 +55,17 @@ class _ShowcaseTextState extends State<ShowcaseText> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0.0),
+      padding: widget.margin,
       child: InkWell(
         onTap: widget.onTap,
         hoverColor: Colors.transparent,
+        borderRadius: BorderRadius.circular(4.0),
         onHover: (bool isHover) {
           if (isHover) {
             setState(() {
-              _foregroundColor = Constants.colors.getRandomFromPalette();
+              _foregroundColor = Constants.colors.getRandomFromPalette(
+                withGoodContrast: !widget.isDark,
+              );
             });
             return;
           }
@@ -63,16 +74,19 @@ class _ShowcaseTextState extends State<ShowcaseText> {
             _foregroundColor = widget.foregroundColor;
           });
         },
-        child: Hero(
-          tag: widget.docId,
-          child: Text(
-            widget.textValue,
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: widget.isMobileSize ? 32.0 : 24.0,
-                fontWeight:
-                    widget.isMobileSize ? FontWeight.w300 : FontWeight.w400,
-                color: _foregroundColor,
+        child: Padding(
+          padding: widget.padding,
+          child: Hero(
+            tag: widget.docId,
+            child: Text(
+              widget.textValue,
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: widget.isMobileSize ? 32.0 : 24.0,
+                  fontWeight:
+                      widget.isMobileSize ? FontWeight.w300 : FontWeight.w400,
+                  color: _foregroundColor,
+                ),
               ),
             ),
           ),

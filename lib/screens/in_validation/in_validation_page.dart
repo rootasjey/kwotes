@@ -115,13 +115,14 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
                 ) {
                   final UserRights userRights = userFirestore.rights;
                   final bool canManage = userRights.canManageQuotes;
+                  final onSelectOwnership =
+                      canManage ? onSelectedOnwership : null;
 
                   return PageAppBar(
                     isMobileSize: isMobileSize,
                     children: [
                       InValidationPageHeader(
-                        onSelectedOwnership:
-                            canManage ? onSelectedOnwership : null,
+                        onSelectedOwnership: onSelectOwnership,
                         onSelectLanguage: onSelectedLanguage,
                         onTapTitle: onTapTitle,
                         selectedColor: _selectedColor,

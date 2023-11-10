@@ -98,7 +98,6 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
               ),
               const SliverPadding(
                 padding: EdgeInsets.only(bottom: 90.0),
-                sliver: SliverToBoxAdapter(),
               ),
             ],
           ),

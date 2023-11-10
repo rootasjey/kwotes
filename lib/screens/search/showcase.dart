@@ -16,13 +16,17 @@ class Showcase extends StatelessWidget {
     this.topicColors = const [],
     this.pageState = EnumPageState.idle,
     this.searchCategory = EnumSearchCategory.quote,
+    this.isDark = false,
+    this.isMobileSize = false,
     this.show = true,
     this.margin = EdgeInsets.zero,
     this.onTapAuthor,
     this.onTapReference,
     this.onTapTopicColor,
-    this.isMobileSize = false,
   });
+
+  /// Whether dark theme is active.
+  final bool isDark;
 
   /// Adapt UI to mobile size.
   final bool isMobileSize;
@@ -66,6 +70,7 @@ class Showcase extends StatelessWidget {
     if (searchCategory == EnumSearchCategory.author) {
       return ShowcaseAuthors(
         authors: authors,
+        isDark: isDark,
         isMobileSize: isMobileSize,
         margin: margin,
         onTapAuthor: onTapAuthor,
@@ -74,6 +79,7 @@ class Showcase extends StatelessWidget {
 
     if (searchCategory == EnumSearchCategory.reference) {
       return ShowcaseReferences(
+        isDark: isDark,
         isMobileSize: isMobileSize,
         margin: margin,
         references: references,

@@ -7,11 +7,15 @@ import "package:kwotes/types/reference.dart";
 class ShowcaseReferences extends StatelessWidget {
   const ShowcaseReferences({
     super.key,
+    this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.references = const [],
     this.onTapReference,
   });
+
+  /// Whether dark theme is active.
+  final bool isDark;
 
   /// Adapt UI to mobile size.
   final bool isMobileSize;
@@ -44,6 +48,7 @@ class ShowcaseReferences extends StatelessWidget {
                   index++;
                   return ShowcaseText(
                     docId: reference.id,
+                    isDark: isDark,
                     textValue: reference.name,
                     isMobileSize: isMobileSize,
                     foregroundColor: index % 2 == 0

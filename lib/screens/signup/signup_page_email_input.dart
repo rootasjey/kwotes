@@ -63,6 +63,7 @@ class SignupPageEmailInput extends StatelessWidget {
           focusNode: focusNode,
           onChanged: onEmailChanged,
           textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: "steven@universe.galaxy",
             border: OutlineInputBorder(

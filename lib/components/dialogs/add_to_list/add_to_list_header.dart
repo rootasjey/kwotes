@@ -33,8 +33,9 @@ class AddToListHeader extends StatelessWidget {
             "lists.name".tr().toUpperCase(),
             style: Utils.calligraphy.body(
               textStyle: TextStyle(
-                color: foregroundColor?.withOpacity(0.8),
-                fontWeight: FontWeight.w700,
+                fontSize: 18.0,
+                color: foregroundColor?.withOpacity(0.6),
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -48,8 +49,9 @@ class AddToListHeader extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
+                  fontSize: 14.0,
                   color: foregroundColor?.withOpacity(0.4),
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),

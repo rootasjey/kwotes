@@ -5,7 +5,7 @@ import "package:jiffy/jiffy.dart";
 import "package:kwotes/components/better_action_chip.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/screens/home/home_text_button.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/author.dart";
 
 class AddAuthorMetadaColumn extends StatelessWidget {
@@ -130,7 +130,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
-              child: HomeTextButton(
+              child: ColoredTextButton(
                 icon: Icon(TablerIcons.cake, color: iconColor),
                 margin: const EdgeInsets.only(right: 8.0),
                 onPressed: onTapBirthDate,
@@ -160,7 +160,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: HomeTextButton(
+              child: ColoredTextButton(
                 icon: Icon(TablerIcons.skull, color: iconColor),
                 margin: const EdgeInsets.only(right: 8.0),
                 onPressed: onTapDeathDate,
@@ -185,7 +185,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
           ],
         ),
       ),
-      HomeTextButton(
+      ColoredTextButton(
         onPressed: onToggleIsFictional,
         tooltip: "quote.add.author"
                 ".fictional.explanation.${author.isFictional}"
@@ -201,7 +201,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isOpen)
-            HomeTextButton(
+            ColoredTextButton(
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "see_metadata".tr(),
@@ -212,7 +212,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
               ),
             ),
           if (isOpen)
-            HomeTextButton(
+            ColoredTextButton(
               icon: const Icon(TablerIcons.x, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "close".tr(),
@@ -241,6 +241,7 @@ class AddAuthorMetadaColumn extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.separated(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return children[index];
                     },

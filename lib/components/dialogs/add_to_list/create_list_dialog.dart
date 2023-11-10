@@ -2,10 +2,12 @@ import "dart:math";
 
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/buttons/dark_elevated_button.dart";
+import "package:flutter_animate/flutter_animate.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_header.dart";
 import "package:kwotes/components/dialogs/input/input_dialog.dart";
 import "package:kwotes/components/texts/outlined_text_field.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/quote.dart";
 
 class CreateListDialog extends StatelessWidget {
@@ -41,6 +43,9 @@ class CreateListDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color buttonBackgroundColor = Constants.colors.getRandomPastel();
+    // final Color buttonBackgroundColor = Theme.of(context).primaryColor;
+
     if (asBottomSheet) {
       return Material(
         child: SafeArea(
@@ -60,29 +65,43 @@ class CreateListDialog extends StatelessWidget {
                 ),
                 OutlinedTextField(
                   controller: nameController,
-                  label: "list.name".tr(),
-                  hintText: "list.names.${Random().nextInt(13)}".tr(),
+                  label: "name".tr(),
+                  hintText:
+                      "list.create.hints.names.${Random().nextInt(9)}".tr(),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: OutlinedTextField(
                     autofocus: false,
                     controller: descriptionController,
-                    label: "book_description".tr(),
-                    hintText: "list.descriptions.${Random().nextInt(13)}".tr(),
+                    label: "description.name".tr(),
+                    hintText:
+                        "list.create.hints.descriptions.${Random().nextInt(9)}"
+                            .tr(),
                   ),
                 ),
-                DarkElevatedButton.large(
-                  child: Text(
-                      "book_create_and_add_illustration".plural(quotes.length)),
-                  margin: const EdgeInsets.only(top: 24.0, bottom: 16.0),
+                ColoredTextButton(
+                  textValue: "list.create.name".tr(),
                   onPressed: onValidate,
-                  // onPressed: () {
-                  //   // createBookAndAddIllustrations();
-                  //   Beamer.of(context).popRoute();
-                  // },
+                  textAlign: TextAlign.center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 12.0,
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: buttonBackgroundColor,
+                  ),
+                  margin: const EdgeInsets.only(top: 24.0, bottom: 16.0),
                 ),
-              ],
+              ]
+                  .animate(interval: 25.ms)
+                  .slideY(
+                    begin: 0.8,
+                    end: 0.0,
+                    duration: 150.ms,
+                    curve: Curves.decelerate,
+                  )
+                  .fadeIn(),
             ),
           ),
         ),

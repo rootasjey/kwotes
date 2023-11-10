@@ -47,6 +47,7 @@ class AddQuoteContent extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(slivers: [
         ApplicationBar(
+          title: const SizedBox.shrink(),
           rightChildren: appBarRightChildren,
           isMobileSize: isMobileSize,
         ),

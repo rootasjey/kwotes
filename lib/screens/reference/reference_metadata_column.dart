@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:jiffy/jiffy.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/screens/home/home_text_button.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/reference.dart";
 
 class ReferenceMetadaColumn extends StatelessWidget {
@@ -144,7 +144,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isOpen)
-            HomeTextButton(
+            ColoredTextButton(
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "see_metadata".tr(),
@@ -155,7 +155,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
               ),
             ),
           if (isOpen)
-            HomeTextButton(
+            ColoredTextButton(
               icon: const Icon(TablerIcons.x, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "close".tr(),

@@ -1,7 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/buttons/dark_outlined_button.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote_list.dart";
 
@@ -10,6 +11,7 @@ class AddToListFooter extends StatelessWidget {
   const AddToListFooter({
     super.key,
     this.asBottomSheet = false,
+    this.elevation = 0.0,
     this.pageState = EnumPageState.idle,
     this.onValidate,
     this.showCreationInputs,
@@ -19,6 +21,9 @@ class AddToListFooter extends StatelessWidget {
   /// If true, this widget will take a suitable layout for bottom sheet.
   /// Otherwise, it will have a dialog layout.
   final bool asBottomSheet;
+
+  /// Elevation of the widget.
+  final double elevation;
 
   /// Page's state.
   final EnumPageState pageState;
@@ -35,7 +40,7 @@ class AddToListFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 0.0,
+      elevation: elevation,
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -49,28 +54,31 @@ class AddToListFooter extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: Tooltip(
-                  message: selectedLists.isEmpty ? "list.add.hint".tr() : "",
-                  child: DarkOutlinedButton(
-                    onPressed: selectedLists.isEmpty
-                        ? null
-                        : () => onValidate?.call(selectedLists),
-                    child: Text(
-                      "${"list.add.to".plural(selectedLists.length)} "
-                      "(${selectedLists.length})",
-                    ),
+                child: ColoredTextButton(
+                  textAlign: TextAlign.center,
+                  style: TextButton.styleFrom(
+                    backgroundColor: selectedLists.isEmpty
+                        ? Theme.of(context).scaffoldBackgroundColor
+                        : Theme.of(context).primaryColor.withOpacity(0.1),
                   ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4.0,
+                    vertical: 8.0,
+                  ),
+                  tooltip: selectedLists.isEmpty ? "list.add.hint".tr() : "",
+                  onPressed: selectedLists.isEmpty
+                      ? null
+                      : () => onValidate?.call(selectedLists),
+                  textValue: "${"list.add.to".plural(selectedLists.length)} "
+                      "(${selectedLists.length})",
                 ),
               ),
             ),
-            Tooltip(
-              message: "list.create.name".tr(),
-              child: IconButton(
-                onPressed: pageState == EnumPageState.loading
-                    ? null
-                    : showCreationInputs,
-                icon: const Icon(TablerIcons.playlist_add),
-              ),
+            CircleButton(
+              icon: const Icon(TablerIcons.playlist_add),
+              onTap: pageState == EnumPageState.loading
+                  ? null
+                  : showCreationInputs,
             ),
           ],
         ),

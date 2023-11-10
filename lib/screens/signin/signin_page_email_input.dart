@@ -57,6 +57,7 @@ class SigninPageEmailInput extends StatelessWidget {
             focusNode: focusNode,
             controller: emailController,
             textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: "steven@universe.galaxy",
               border: OutlineInputBorder(
@@ -81,10 +82,11 @@ class SigninPageEmailInput extends StatelessWidget {
           ),
         ),
       ]
-          .animate(delay: 75.ms)
+          .animate(delay: 15.ms, interval: 25.ms)
           .slideY(
             begin: 0.8,
             end: 0.0,
+            duration: const Duration(milliseconds: 100),
           )
           .fadeIn(),
     );

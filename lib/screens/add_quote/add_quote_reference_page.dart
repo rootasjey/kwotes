@@ -113,6 +113,7 @@ class AddQuoteReferencePage extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           ApplicationBar(
+            title: const SizedBox.shrink(),
             isMobileSize: isMobileSize,
             rightChildren: appBarRightChildren,
           ),

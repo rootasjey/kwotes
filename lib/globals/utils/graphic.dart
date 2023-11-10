@@ -367,10 +367,14 @@ class Graphic {
     BuildContext context, {
     required Quote quote,
     required String userId,
+    bool isMobileSize = false,
   }) {
     Utils.graphic.showAdaptiveDialog(
       context,
+      isMobileSize: isMobileSize,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (BuildContext context) => AddToListDialog(
+        asBottomSheet: isMobileSize,
         autoFocus: true,
         startInCreate: false,
         userId: userId,

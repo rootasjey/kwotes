@@ -61,7 +61,7 @@ class SignupPageFooter extends StatelessWidget {
         confirmPasswordController.text,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.black : Colors.white,
+        backgroundColor: isDark ? Colors.white : Colors.black,
         elevation: 0.0,
         foregroundColor: randomColor,
         padding: const EdgeInsets.symmetric(

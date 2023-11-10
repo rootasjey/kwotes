@@ -318,7 +318,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Returns the height padding for this widget according to available data
   /// (e.g. author, reference).
   double getHeightPadding() {
-    double heightPadding = 148.0;
+    double heightPadding = 158.0;
 
     if (_quote.author.name.isNotEmpty) {
       heightPadding += 24.0;
@@ -481,8 +481,11 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     final String userId =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     Utils.graphic.showAddToListDialog(
       context,
+      isMobileSize: isMobileSize,
       quote: _quote,
       userId: userId,
     );

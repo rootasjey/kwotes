@@ -49,7 +49,14 @@ class ForgotPasswordButton extends StatelessWidget {
             ),
           ),
         ),
-      ].animate(delay: 160.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+      ]
+          .animate(delay: 75.ms, interval: 25.ms)
+          .slideY(
+            begin: 0.8,
+            end: 0.0,
+            duration: const Duration(milliseconds: 100),
+          )
+          .fadeIn(),
     );
   }
 }

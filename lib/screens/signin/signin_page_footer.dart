@@ -47,7 +47,8 @@ class SigninPageFooter extends StatelessWidget {
         passwordController.text,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.black : Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor: isDark ? Colors.white : Colors.black,
         elevation: 0.0,
         foregroundColor: randomColor,
         padding: const EdgeInsets.symmetric(
@@ -82,7 +83,14 @@ class SigninPageFooter extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(top: 36.0),
         child: submitButton,
-      ).animate(delay: 180.ms).slideY(begin: 0.8, end: 0.0).fadeIn();
+      )
+          .animate(delay: 100.ms)
+          .slideY(
+            begin: 0.8,
+            end: 0.0,
+            duration: const Duration(milliseconds: 100),
+          )
+          .fadeIn();
     }
 
     return Padding(
@@ -102,7 +110,14 @@ class SigninPageFooter extends StatelessWidget {
             minimumSize: const Size(250.0, 60.0),
           ),
           submitButton,
-        ].animate(delay: 180.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+        ]
+            .animate(delay: 100.ms, interval: 25.ms)
+            .slideY(
+              begin: 0.8,
+              end: 0.0,
+              duration: const Duration(milliseconds: 100),
+            )
+            .fadeIn(),
       ),
     );
   }

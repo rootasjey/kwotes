@@ -2,24 +2,30 @@ import "package:flutter/material.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
-class HomeTextButton extends StatefulWidget {
+class ColoredTextButton extends StatefulWidget {
   /// A stylized text button.
-  const HomeTextButton({
+  const ColoredTextButton({
     super.key,
     required this.textValue,
     this.icon,
     this.iconOnly = false,
     this.margin = EdgeInsets.zero,
+    this.padding = EdgeInsets.zero,
+    this.style,
     this.onPressed,
     this.tooltip = "",
     this.textStyle,
+    this.textAlign,
   });
 
   /// Only show icon for this button if true.
   final bool iconOnly;
 
-  /// Space around this widget.
+  /// Spacing around this widget.
   final EdgeInsets margin;
+
+  /// Spacing around the text.
+  final EdgeInsets padding;
 
   /// Callback fired when user taps this button.
   final void Function()? onPressed;
@@ -30,6 +36,12 @@ class HomeTextButton extends StatefulWidget {
   /// Tooltip for this button.
   final String tooltip;
 
+  /// Style for this button.
+  final ButtonStyle? style;
+
+  /// Text alignment for this button.
+  final TextAlign? textAlign;
+
   /// Text style for this button.
   final TextStyle? textStyle;
 
@@ -37,10 +49,10 @@ class HomeTextButton extends StatefulWidget {
   final Widget? icon;
 
   @override
-  State<HomeTextButton> createState() => _HomeTextButtonState();
+  State<ColoredTextButton> createState() => _ColoredTextButtonState();
 }
 
-class _HomeTextButtonState extends State<HomeTextButton> {
+class _ColoredTextButtonState extends State<ColoredTextButton> {
   /// True if the button is hovered by a cursor.
   bool _isHover = false;
 
@@ -78,30 +90,34 @@ class _HomeTextButtonState extends State<HomeTextButton> {
             foregroundColor: _isHover
                 ? _hoverForegroundColor
                 : foregroundColor?.withOpacity(0.6),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.icon != null)
-                Padding(
-                  padding: widget.iconOnly
-                      ? EdgeInsets.zero
-                      : const EdgeInsets.only(right: 8.0),
-                  child: widget.icon,
-                ),
-              if (!widget.iconOnly)
-                Expanded(
-                  child: Text(
-                    widget.textValue,
-                    style: Utils.calligraphy.body(
-                      textStyle: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                      ).merge(widget.textStyle),
+          ).merge(widget.style),
+          child: Padding(
+            padding: widget.padding,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.icon != null)
+                  Padding(
+                    padding: widget.iconOnly
+                        ? EdgeInsets.zero
+                        : const EdgeInsets.only(right: 8.0),
+                    child: widget.icon,
+                  ),
+                if (!widget.iconOnly)
+                  Expanded(
+                    child: Text(
+                      widget.textValue,
+                      textAlign: widget.textAlign,
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                        ).merge(widget.textStyle),
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -13,7 +13,6 @@ import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/settings/about_settings.dart";
 import "package:kwotes/screens/settings/account_settings.dart";
 import "package:kwotes/screens/settings/app_language_selection.dart";
-import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/screens/settings/theme_switcher.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
@@ -57,8 +56,26 @@ class _SettingsPageState extends State<SettingsPage> {
     final Widget scaffold = Scaffold(
       body: CustomScrollView(
         slivers: [
-          ApplicationBar(isMobileSize: isMobileSize),
-          SettingsPageHeader(isMobileSize: isMobileSize),
+          ApplicationBar(
+            isMobileSize: isMobileSize,
+            title: Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Hero(
+                tag: "settings",
+                child: Text(
+                  "settings.name".tr(),
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // SettingsPageHeader(isMobileSize: isMobileSize),
           ThemeSwitcher(
             isMobileSize: isMobileSize,
             onTapLightTheme: onTapLightTheme,

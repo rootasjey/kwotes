@@ -67,6 +67,7 @@ class SigninPagePasswordInput extends StatelessWidget {
             focusNode: focusNode,
             controller: passwordController,
             textInputAction: TextInputAction.go,
+            keyboardType: TextInputType.visiblePassword,
             onSubmitted: (String password) => onSubmit?.call(
               nameController.text,
               password,
@@ -93,7 +94,14 @@ class SigninPagePasswordInput extends StatelessWidget {
             ),
           ),
         ),
-      ].animate(delay: 150.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+      ]
+          .animate(delay: 50.ms, interval: 25.ms)
+          .slideY(
+            begin: 0.8,
+            end: 0.0,
+            duration: const Duration(milliseconds: 100),
+          )
+          .fadeIn(),
     );
   }
 }

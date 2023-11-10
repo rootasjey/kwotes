@@ -120,6 +120,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
             slivers: [
               ApplicationBar(
                 isMobileSize: isMobileSize,
+                title: const SizedBox.shrink(),
               ),
               SignupPageHeader(
                 isMobileSize: isMobileSize,

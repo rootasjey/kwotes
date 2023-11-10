@@ -6,7 +6,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/add_quote/primary_genre_input.dart";
 import "package:kwotes/screens/add_quote/secondary_genre_input.dart";
-import "package:kwotes/screens/home/home_text_button.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/reference.dart";
 
 class AddReferenceMetadaColumn extends StatelessWidget {
@@ -122,7 +122,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: HomeTextButton(
+              child: ColoredTextButton(
                 icon: Icon(TablerIcons.rocket, color: iconColor),
                 margin: const EdgeInsets.only(right: 8.0),
                 onPressed: onTapReleaseDate,
@@ -174,7 +174,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isOpen)
-            HomeTextButton(
+            ColoredTextButton(
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "see_metadata".tr(),
@@ -185,7 +185,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
               ),
             ),
           if (isOpen)
-            HomeTextButton(
+            ColoredTextButton(
               icon: const Icon(TablerIcons.x, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "close".tr(),
@@ -214,6 +214,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.separated(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return children[index];
                     },

@@ -9,6 +9,7 @@ class ForgotPasswordPageHeader extends StatelessWidget {
     super.key,
     this.randomColor = Colors.amber,
     this.isMobileSize = false,
+    this.margin = EdgeInsets.zero,
   });
 
   /// True if the screen's width is smaller than 600px.
@@ -18,42 +19,48 @@ class ForgotPasswordPageHeader extends StatelessWidget {
   /// Random accent color.
   final Color randomColor;
 
+  /// Spacing around this widget.
+  final EdgeInsets margin;
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
-            child: Icon(
-              TablerIcons.egg_cracked,
-              size: 42.0,
-              color: randomColor,
-            ),
-          ),
-          Text(
-            "password.forgot".tr(),
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: isMobileSize ? 24.0 : 54.0,
-                fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: margin,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
+              child: Icon(
+                TablerIcons.egg_cracked,
+                size: 42.0,
+                color: randomColor,
               ),
             ),
-          ),
-          Opacity(
-            opacity: 0.4,
-            child: Text(
-              "password.forgot_reset_process".tr(),
-              textAlign: TextAlign.center,
-              style: Utils.calligraphy.body4(
-                textStyle: const TextStyle(
-                  fontSize: 16.0,
+            Text(
+              "password.forgot".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: isMobileSize ? 24.0 : 54.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-          ),
-        ].animate().slideY(begin: 0.8, end: 0.0).fadeIn(),
+            Opacity(
+              opacity: 0.4,
+              child: Text(
+                "password.forgot_reset_process".tr(),
+                textAlign: TextAlign.center,
+                style: Utils.calligraphy.body4(
+                  textStyle: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          ].animate().slideY(begin: 0.8, end: 0.0).fadeIn(),
+        ),
       ),
     );
   }

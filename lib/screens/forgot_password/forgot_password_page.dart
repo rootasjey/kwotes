@@ -3,6 +3,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/snack.dart";
@@ -10,7 +11,6 @@ import "package:kwotes/screens/forgot_password/forgot_password_page_header.dart"
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:loggy/loggy.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page_body.dart";
@@ -84,10 +84,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
         child: Scaffold(
           body: CustomScrollView(slivers: [
             ApplicationBar(
+              title: const SizedBox.shrink(),
               isMobileSize: isMobileSize,
             ),
             ForgotPasswordPageHeader(
               isMobileSize: isMobileSize,
+              margin: const EdgeInsets.only(top: 42.0, left: 12.0, right: 12.0),
               randomColor: randomColor,
             ),
             ForgotPasswordPageBody(

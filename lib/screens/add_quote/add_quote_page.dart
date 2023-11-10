@@ -398,8 +398,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
               ),
               Positioned(
                 bottom: isMobileSize ? 0.0 : 12.0,
-                // bottom: isMobileSize ? null : 12.0,
-                // top: isMobileSize ? 84.0 : null,
                 left: 0.0,
                 right: 0.0,
                 child: MouseRegion(
