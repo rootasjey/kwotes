@@ -3,7 +3,7 @@ import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/screens/home/reference_poster.dart";
+import "package:kwotes/components/reference_poster.dart";
 import "package:kwotes/types/reference.dart";
 
 class ReferencePosters extends StatelessWidget {

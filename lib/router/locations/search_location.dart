@@ -2,7 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:kwotes/screens/author/author_page.dart";
-import "package:kwotes/screens/home/quote_page.dart";
+import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/reference_page.dart";
 import "package:kwotes/screens/search/search_page.dart";
 import "package:kwotes/screens/search/search_navigation_page.dart";

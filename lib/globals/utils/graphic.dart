@@ -5,6 +5,7 @@ import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_color_value_type.dart";
 import "package:kwotes/types/enums/enum_main_genre.dart";
+import "package:kwotes/types/enums/enum_snackbar_type.dart";
 import "package:kwotes/types/enums/enum_topic.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
@@ -48,6 +49,26 @@ class Graphic {
   /// Where to start the fade in Y animation.
   double getBeginY() {
     return 60.0;
+  }
+
+  /// Return the color based on the content type.
+  Color getSnackbarColorType(SnackbarType type) {
+    switch (type) {
+      case SnackbarType.info:
+        return Colors.blue.shade100;
+
+      case SnackbarType.success:
+        return Colors.green.shade100;
+
+      case SnackbarType.error:
+        return Colors.red.shade100;
+
+      case SnackbarType.warning:
+        return Colors.yellow.shade100;
+
+      default:
+        return Colors.blue.shade100;
+    }
   }
 
   int getNextAnimationDelay({String animationName = "", bool reset = false}) {
@@ -265,6 +286,7 @@ class Graphic {
   void showCopyColorSnackbar(
     BuildContext context, {
     required Topic topic,
+    bool isMobileSize = false,
     EnumColorValueType valueType = EnumColorValueType.value,
   }) {
     final Color? foregroundColor =
@@ -276,8 +298,12 @@ class Graphic {
     final String suffix = getColorValueTypeSuffix(valueType);
     final String successMessage =
         " ${"color.copy.success.$suffix".tr().toLowerCase()}";
-    final int stringLength = topicName.length + successMessage.length;
-    final double? width = getSnackWidthFromLength(stringLength);
+    double? width;
+
+    if (!isMobileSize) {
+      final int stringLength = topicName.length + successMessage.length;
+      width = getSnackWidthFromLength(stringLength);
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -299,7 +325,7 @@ class Graphic {
           ),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: 16.0,
+              fontSize: 14.0,
               color: topic.color.computeLuminance() > 0.4
                   ? Colors.black
                   : Colors.white,
@@ -309,34 +335,49 @@ class Graphic {
           ),
         ),
         width: width,
-        showCloseIcon: true,
+        showCloseIcon: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2.0),
+          side: BorderSide(color: topic.color, width: 4.0),
+        ),
         backgroundColor: backgroundColor,
         closeIconColor: foregroundColor?.withOpacity(0.6),
-        behavior: SnackBarBehavior.floating,
+        behavior:
+            isMobileSize ? SnackBarBehavior.fixed : SnackBarBehavior.floating,
       ),
     );
   }
 
   /// Show a snackbar.
-  void showSnackbar(BuildContext context, {required String message}) {
+  void showSnackbar(
+    BuildContext context, {
+    required String message,
+    Color? backgroundColor,
+    SnackbarType type = SnackbarType.error,
+  }) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
-    final Color backgroundColor = Theme.of(context).dialogBackgroundColor;
+    final Color defaultBackgroundColor =
+        Theme.of(context).dialogBackgroundColor;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           message,
-          textAlign: TextAlign.center,
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: 16.0,
+              fontSize: 14.0,
               color: foregroundColor,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
-        showCloseIcon: true,
-        backgroundColor: backgroundColor,
+        elevation: 12.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2.0),
+          side: BorderSide(color: getSnackbarColorType(type), width: 4.0),
+        ),
+        backgroundColor: backgroundColor ?? defaultBackgroundColor,
         closeIconColor: foregroundColor?.withOpacity(0.6),
         behavior: SnackBarBehavior.fixed,
       ),

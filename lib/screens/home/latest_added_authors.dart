@@ -7,79 +7,100 @@ import "package:kwotes/types/author.dart";
 class LatestAddedAuthors extends StatelessWidget {
   const LatestAddedAuthors({
     super.key,
-    required this.authors,
+    this.margin = EdgeInsets.zero,
     this.onTapAuthor,
-    this.textColor,
+    this.authors = const [],
   });
 
-  /// Foreground text color.
-  final Color? textColor;
+  /// Space around this widget.
+  final EdgeInsets margin;
 
-  /// Callback fired when author is tapped.
+  /// Callback fired when an author is tapped.
   final void Function(Author author)? onTapAuthor;
 
-  /// List of authors (main data).
+  /// Authors to display.
   final List<Author> authors;
 
   @override
   Widget build(BuildContext context) {
     if (authors.isEmpty) {
       return const SliverToBoxAdapter(
-        child: SizedBox(),
+        child: SizedBox.shrink(),
       );
     }
 
-    return SliverToBoxAdapter(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              "author.latest_added".tr(),
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: textColor,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
+    final List<Widget> children = [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Text(
+          "author.latest_added".tr(),
+          style: Utils.calligraphy.body(
+            textStyle: TextStyle(
+              color: foregroundColor?.withOpacity(0.4),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    ];
+
+    for (Author author in authors) {
+      final image = author.urls.image.isNotEmpty
+          ? NetworkImage(author.urls.image)
+          : const AssetImage("assets/images/profile-picture-avocado.png");
+
+      children.add(
+        Row(
+          children: [
+            BetterAvatar(
+              imageProvider: image as ImageProvider,
+              radius: 24.0,
+              margin: const EdgeInsets.only(right: 8.0),
+              onTap: () => onTapAuthor?.call(author),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () => onTapAuthor?.call(author),
+                borderRadius: BorderRadius.circular(6.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    author.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 64.0,
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              itemBuilder: (BuildContext context, int index) {
-                final Author author = authors[index];
+          ],
+        ),
+      );
+    }
 
-                if (author.urls.image.isEmpty) {
-                  return BetterAvatar(
-                    colorFilter: Utils.graphic.greyColorFilter,
-                    imageProvider: const AssetImage(
-                        "assets/images/profile-picture-avocado.png"),
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    onTap: () => onTapAuthor?.call(author),
-                    radius: 24.0,
-                  );
-                }
+    children.add(
+      const Padding(
+        padding: EdgeInsets.only(top: 24.0),
+        child: Divider(),
+      ),
+    );
 
-                return BetterAvatar(
-                  colorFilter: Utils.graphic.greyColorFilter,
-                  imageProvider: NetworkImage(author.urls.image),
-                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                  onTap: () => onTapAuthor?.call(author),
-                  radius: 24.0,
-                );
-              },
-              itemCount: authors.length,
-              scrollDirection: Axis.horizontal,
-            ),
-          ),
-          const Divider(),
-        ],
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: margin,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        ),
       ),
     );
   }

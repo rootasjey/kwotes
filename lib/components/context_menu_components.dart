@@ -4,6 +4,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:super_context_menu/super_context_menu.dart";
@@ -72,6 +73,32 @@ class ContextMenuComponents {
           },
         ),
       ],
+    );
+  }
+
+  /// A menu for changing a quote's language.
+  static changeLanguage(
+    BuildContext context, {
+    required Quote quote,
+    void Function(Quote quote, String language)? onChangeLanguage,
+  }) {
+    return Menu(
+      title: "quote.language.change".tr(),
+      image: MenuImage.icon(TablerIcons.language),
+      children: Utils.linguistic.available().map(
+        (EnumLanguageSelection locale) {
+          return MenuAction(
+            title: "language.locale.${locale.name}".tr(),
+            image: quote.language == locale.name
+                ? MenuImage.icon(TablerIcons.check)
+                : null,
+            callback: () => onChangeLanguage?.call(
+              quote,
+              locale.name,
+            ),
+          );
+        },
+      ).toList(),
     );
   }
 }

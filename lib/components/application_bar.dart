@@ -59,6 +59,7 @@ class ApplicationBar extends StatelessWidget {
   /// The elevation of the app bar.
   final double? elevation;
 
+  /// The height of the app bar.
   final double toolbarHeight;
 
   /// The padding of the app bar.

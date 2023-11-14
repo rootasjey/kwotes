@@ -12,9 +12,9 @@ import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/home/quote_page_actions.dart";
-import "package:kwotes/screens/home/quote_page_body.dart";
-import "package:kwotes/screens/home/quote_page_container.dart";
+import "package:kwotes/screens/quote_page/quote_page_actions.dart";
+import "package:kwotes/screens/quote_page/quote_page_body.dart";
+import "package:kwotes/screens/quote_page/quote_page_container.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -27,6 +27,7 @@ import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
+import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
@@ -133,21 +134,28 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
               UserFirestore userFirestore,
               Widget? child,
             ) {
+              final UserRights userRights = userFirestore.rights;
+              final bool canManageQuotes = userRights.canManageQuotes;
+              final void Function(Quote quote, String language)?
+                  onChangeLanguage =
+                  canManageQuotes ? onChangeQuoteLanguage : null;
+
               return Stack(
                 children: [
                   QuotePageBody(
                     authenticated: userFirestore.id.isNotEmpty,
-                    pageState: _pageState,
-                    quote: _quote,
-                    onDoubleTapQuote: onCopyQuote,
+                    onChangeLanguage: onChangeLanguage,
                     onCopyQuote: onCopyQuote,
                     onCopyAuthor: onCopyAuthorName,
+                    onCopyAuthorUrl: onCopyAuthorUrl,
+                    onCopyQuoteUrl: onCopyQuoteUrl,
                     onCopyReference: onCopyReference,
+                    onCopyReferenceUrl: onCopyReferenceUrl,
+                    onDoubleTapQuote: onCopyQuote,
                     onTapAuthor: onTapAuthor,
                     onTapReference: onTapReference,
-                    onCopyQuoteUrl: onCopyQuoteUrl,
-                    onCopyAuthorUrl: onCopyAuthorUrl,
-                    onCopyReferenceUrl: onCopyReferenceUrl,
+                    pageState: _pageState,
+                    quote: _quote,
                     textWrapSolution: textWrapSolution,
                     userFirestore: userFirestore,
                   ),
@@ -395,18 +403,51 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     }
   }
 
-  /// Callback fired to navigate to author page.
-  void onTapAuthor(Author author) {
-    NavigationStateHelper.author = author;
-    final String suffix = "author/${author.id}";
-    Beamer.of(context).beamToNamed(getRoute(suffix));
+  /// Callback fired to add quote to list.
+  /// Opens the add to list dialog.
+  void onAddToList() {
+    final String userId =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
+    Utils.graphic.showAddToListDialog(
+      context,
+      isMobileSize: isMobileSize,
+      quote: _quote,
+      userId: userId,
+    );
   }
 
-  /// Callback fired to navigate to reference page.
-  void onTapReference(Reference reference) {
-    NavigationStateHelper.reference = reference;
-    final String suffix = "reference/${reference.id}";
-    Beamer.of(context).beamToNamed(getRoute(suffix));
+  /// Callback to update a quote's language.
+  void onChangeQuoteLanguage(Quote quote, String language) async {
+    final Signal<UserFirestore> currentUser =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final UserRights userRights = currentUser.value.rights;
+    final bool canManageQuotes = userRights.canManageQuotes;
+
+    if (!canManageQuotes) {
+      return;
+    }
+
+    if (language == quote.language) {
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection("quotes")
+          .doc(quote.id)
+          .update({"language": language});
+    } catch (error) {
+      loggy.error(error);
+      if (!mounted) return;
+      Utils.graphic.showSnackbar(
+        context,
+        message: "quote.update.failed".tr(),
+      );
+    }
   }
 
   /// Callback fired to copy quote's name.
@@ -428,6 +469,49 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         });
       },
     );
+  }
+
+  /// Callback fired to copy reference's name.
+  void onCopyReference() {
+    Clipboard.setData(ClipboardData(text: _quote.reference.name));
+  }
+
+  /// Callback fired to copy author name.
+  void onCopyAuthorName() {
+    Clipboard.setData(ClipboardData(text: _quote.author.name));
+  }
+
+  /// Callback fired to author url.
+  void onCopyAuthorUrl() {
+    Clipboard.setData(
+        ClipboardData(text: "${Constants.authorUrl}/${_quote.author.id}"));
+  }
+
+  /// Callback fired to copy quote url.
+  void onCopyQuoteUrl() {
+    Clipboard.setData(
+      ClipboardData(text: "${Constants.quoteUrl}/${_quote.id}"),
+    );
+  }
+
+  /// Callback fired to copy reference url.
+  void onCopyReferenceUrl() {
+    Clipboard.setData(ClipboardData(
+        text: "${Constants.referenceUrl}/${_quote.reference.id}"));
+  }
+
+  /// Callback fired to navigate to author page.
+  void onTapAuthor(Author author) {
+    NavigationStateHelper.author = author;
+    final String suffix = "author/${author.id}";
+    Beamer.of(context).beamToNamed(getRoute(suffix));
+  }
+
+  /// Callback fired to navigate to reference page.
+  void onTapReference(Reference reference) {
+    NavigationStateHelper.reference = reference;
+    final String suffix = "reference/${reference.id}";
+    Beamer.of(context).beamToNamed(getRoute(suffix));
   }
 
   /// Callback fired to toggle quote's favourite status
@@ -473,49 +557,5 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         _quote = _quote.copyWith(starred: false);
       });
     }
-  }
-
-  /// Callback fired to copy reference's name.
-  void onCopyReference() {
-    Clipboard.setData(ClipboardData(text: _quote.reference.name));
-  }
-
-  /// Callback fired to copy author name.
-  void onCopyAuthorName() {
-    Clipboard.setData(ClipboardData(text: _quote.author.name));
-  }
-
-  /// Callback fired to author url.
-  void onCopyAuthorUrl() {
-    Clipboard.setData(
-        ClipboardData(text: "${Constants.authorUrl}/${_quote.author.id}"));
-  }
-
-  /// Callback fired to copy quote url.
-  void onCopyQuoteUrl() {
-    Clipboard.setData(
-        ClipboardData(text: "${Constants.quoteUrl}/${_quote.id}"));
-  }
-
-  /// Callback fired to copy reference url.
-  void onCopyReferenceUrl() {
-    Clipboard.setData(ClipboardData(
-        text: "${Constants.referenceUrl}/${_quote.reference.id}"));
-  }
-
-  /// Callback fired to add quote to list.
-  /// Opens the add to list dialog.
-  void onAddToList() {
-    final String userId =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
-
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
-
-    Utils.graphic.showAddToListDialog(
-      context,
-      isMobileSize: isMobileSize,
-      quote: _quote,
-      userId: userId,
-    );
   }
 }

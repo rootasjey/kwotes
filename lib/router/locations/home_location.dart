@@ -4,9 +4,9 @@ import "package:flutter/widgets.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/author_quotes_page.dart";
 import "package:kwotes/screens/home/mobile_home_page.dart";
-import "package:kwotes/screens/home/quote_page.dart";
 import "package:kwotes/screens/home/responsive_app_container.dart";
-import "package:kwotes/screens/home/topic_page.dart";
+import "package:kwotes/screens/quote_page/quote_page.dart";
+import "package:kwotes/screens/topic_page/topic_page.dart";
 import "package:kwotes/screens/reference/reference_page.dart";
 import "package:kwotes/screens/reference/reference_quotes_page.dart";
 

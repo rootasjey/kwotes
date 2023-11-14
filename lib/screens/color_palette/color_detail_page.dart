@@ -70,8 +70,10 @@ class ColorDetailPage extends StatelessWidget {
   void onCopy32bitValue(BuildContext context, Color color) {
     Clipboard.setData(ClipboardData(text: "${color.value}"));
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     Utils.graphic.showCopyColorSnackbar(
       context,
+      isMobileSize: isMobileSize,
       topic: Topic(color: color, name: topicName),
       valueType: EnumColorValueType.value,
     );
@@ -86,8 +88,10 @@ class ColorDetailPage extends StatelessWidget {
       ),
     );
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     Utils.graphic.showCopyColorSnackbar(
       context,
+      isMobileSize: isMobileSize,
       topic: Topic(color: color, name: topicName),
       valueType: EnumColorValueType.rgba,
     );
@@ -100,8 +104,10 @@ class ColorDetailPage extends StatelessWidget {
       ),
     );
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     Utils.graphic.showCopyColorSnackbar(
       context,
+      isMobileSize: isMobileSize,
       topic: Topic(color: color, name: topicName),
       valueType: EnumColorValueType.hex,
     );

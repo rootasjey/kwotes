@@ -1,10 +1,9 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_text.dart";
-import "package:kwotes/globals/utils.dart";
-import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
@@ -95,23 +94,10 @@ class PublishedPageBody extends StatelessWidget {
                     image: MenuImage.icon(UniconsLine.edit_alt),
                   ),
                 if (onChangeLanguage != null)
-                  Menu(
-                    title: "quote.language.change".tr(),
-                    image: MenuImage.icon(TablerIcons.language),
-                    children: Utils.linguistic.available().map(
-                      (EnumLanguageSelection locale) {
-                        return MenuAction(
-                          title: "language.locale.$locale".tr(),
-                          image: quote.language == locale.name
-                              ? MenuImage.icon(TablerIcons.check)
-                              : null,
-                          callback: () => onChangeLanguage?.call(
-                            quote,
-                            locale.name,
-                          ),
-                        );
-                      },
-                    ).toList(),
+                  ContextMenuComponents.changeLanguage(
+                    context,
+                    quote: quote,
+                    onChangeLanguage: onChangeLanguage,
                   ),
               ]);
             },

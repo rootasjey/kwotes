@@ -49,8 +49,11 @@ class ColorPalettePage extends StatelessWidget {
   /// Callback fired to copy color's 32-bit value.
   void onCopyValue(BuildContext context, Topic topic) {
     Clipboard.setData(ClipboardData(text: topic.color.value.toString()));
+
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     Utils.graphic.showCopyColorSnackbar(
       context,
+      isMobileSize: isMobileSize,
       topic: topic,
       valueType: EnumColorValueType.value,
     );
@@ -67,8 +70,10 @@ class ColorPalettePage extends StatelessWidget {
       ),
     );
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     Utils.graphic.showCopyColorSnackbar(
       context,
+      isMobileSize: isMobileSize,
       topic: topic,
       valueType: EnumColorValueType.rgba,
     );
@@ -83,8 +88,10 @@ class ColorPalettePage extends StatelessWidget {
       ),
     );
 
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     Utils.graphic.showCopyColorSnackbar(
       context,
+      isMobileSize: isMobileSize,
       topic: topic,
       valueType: EnumColorValueType.hex,
     );

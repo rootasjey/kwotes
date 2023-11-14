@@ -5,28 +5,26 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/components/empty_view.dart";
+import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
+import "package:kwotes/components/texts/random_quote_text.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/home/home_page_footer.dart";
-import "package:kwotes/screens/home/hero_quote.dart";
 import "package:kwotes/screens/home/home_topics.dart";
-import "package:kwotes/screens/home/latest_authors.dart";
-import "package:kwotes/screens/home/random_quote_text.dart";
+import "package:kwotes/screens/home/latest_added_authors.dart";
 import "package:kwotes/screens/home/reference_posters.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
-import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
@@ -34,9 +32,9 @@ import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/random_quote_document.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
-import "package:kwotes/types/user/user_firestore.dart";
 import "package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart";
 import "package:loggy/loggy.dart";
+import "package:super_context_menu/super_context_menu.dart";
 import "package:url_launcher/url_launcher.dart";
 
 class MobileHomePage extends StatefulWidget {
@@ -107,9 +105,6 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
 
-    final Signal<UserFirestore> userFirestoreSignal =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color topBackgroundColor = isDark
         ? Colors.black.withAlpha(100)
@@ -167,11 +162,27 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                     final Quote quote =
                         NavigationStateHelper.randomQuotes[nextIndex];
 
-                    return RandomQuoteText(
-                      quote: quote,
-                      foregroundColor: iconColor,
-                      onTapQuote: onTapQuote,
-                      onTapAuthor: onTapAuthor,
+                    return ContextMenuWidget(
+                      child: RandomQuoteText(
+                        quote: quote,
+                        foregroundColor: iconColor,
+                        onTapQuote: onTapQuote,
+                        onTapAuthor: onTapAuthor,
+                      ),
+                      menuProvider: (MenuRequest menuRequest) {
+                        return Menu(children: [
+                          MenuAction(
+                            callback: () => onCopyQuote.call(quote),
+                            title: "quote.copy.name".tr(),
+                            image: MenuImage.icon(TablerIcons.copy),
+                          ),
+                          MenuAction(
+                            callback: () => onCopyQuoteUrl.call(quote),
+                            title: "quote.copy.url".tr(),
+                            image: MenuImage.icon(TablerIcons.link),
+                          ),
+                        ]);
+                      },
                     );
                   },
                   itemCount: _maxQuoteCount - 1,
@@ -213,7 +224,7 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                 scrollController: _carouselScrollController,
                 onIndexChanged: (int index) => setState(() {}),
               ),
-              LatestAuthors(
+              LatestAddedAuthors(
                 authors: NavigationStateHelper.latestAddedAuthors,
                 margin: const EdgeInsets.only(
                   top: 42.0,
@@ -221,22 +232,6 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                   right: 26.0,
                 ),
                 onTapAuthor: onTapAuthor,
-              ),
-              HomePageFooter(
-                iconColor: iconColor,
-                isMobileSize: widget.isMobileSize,
-                margin: const EdgeInsets.only(
-                  left: 24.0,
-                  right: 24.0,
-                  top: 24.0,
-                  bottom: 120.0,
-                ),
-                onAddQuote: onAddQuote,
-                onFetchRandomQuotes: fetchRandomQuotes,
-                onTapGitHub: onTapGitHub,
-                onTapSettings: onTapSettings,
-                onTapOpenRandomQuote: onTapOpenRandomQuote,
-                userFirestoreSignal: userFirestoreSignal,
               ),
             ],
           ),
@@ -433,9 +428,7 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
 
   void onAddQuote() {
     NavigationStateHelper.quote = Quote.empty();
-    Beamer.of(context).beamToNamed(
-      "/dashboard/add-quote",
-    );
+    Beamer.of(context).beamToNamed(DashboardContentLocation.addQuoteRoute);
   }
 
   void onCopyQuote(Quote quote) {

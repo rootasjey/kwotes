@@ -10,18 +10,19 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/components/empty_view.dart";
+import "package:kwotes/components/grid_letter.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
+import "package:kwotes/components/texts/random_hero_quote.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/author_location.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/home/grid_letter.dart";
 import "package:kwotes/screens/home/home_page_footer.dart";
 import "package:kwotes/screens/home/latest_added_references.dart";
-import "package:kwotes/screens/home/random_hero_quote.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
@@ -369,9 +370,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
 
   void onAddQuote() {
     NavigationStateHelper.quote = Quote.empty();
-    Beamer.of(context).beamToNamed(
-      "/dashboard/add-quote",
-    );
+    Beamer.of(context).beamToNamed(DashboardContentLocation.addQuoteRoute);
   }
 
   void onCopyQuote(Quote quote) {

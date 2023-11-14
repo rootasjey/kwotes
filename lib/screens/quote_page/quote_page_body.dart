@@ -23,15 +23,16 @@ class QuotePageBody extends StatelessWidget {
     required this.userFirestore,
     this.authenticated = false,
     this.pageState = EnumPageState.idle,
+    this.onChangeLanguage,
     this.onCopyQuote,
-    this.onTapAuthor,
-    this.onTapReference,
-    this.onCopyAuthor,
-    this.onCopyReference,
-    this.onDoubleTapQuote,
     this.onCopyQuoteUrl,
     this.onCopyAuthorUrl,
     this.onCopyReferenceUrl,
+    this.onCopyAuthor,
+    this.onCopyReference,
+    this.onDoubleTapQuote,
+    this.onTapAuthor,
+    this.onTapReference,
   });
 
   /// Whether user is authenticated.
@@ -40,11 +41,14 @@ class QuotePageBody extends StatelessWidget {
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
 
+  /// Callback fired when a new language is selected the quote.
+  final void Function(Quote quote, String language)? onChangeLanguage;
+
   /// Callback fired to copy quote's author content.
   final void Function()? onCopyAuthor;
 
-  /// Callback fired to copy quote's reference content.
-  final void Function()? onCopyReference;
+  /// Callback fired when author's url is copied.
+  final void Function()? onCopyAuthorUrl;
 
   /// Callback fired to copy quote's name.
   final void Function()? onCopyQuote;
@@ -52,20 +56,20 @@ class QuotePageBody extends StatelessWidget {
   /// Callback fired to copy quote's url.
   final void Function()? onCopyQuoteUrl;
 
-  /// Callback fired when author's url is copied.
-  final void Function()? onCopyAuthorUrl;
+  /// Callback fired to copy quote's reference content.
+  final void Function()? onCopyReference;
 
   /// Callback fired when reference's url is copied.
   final void Function()? onCopyReferenceUrl;
+
+  /// Callback fired when quote's name is double tapped.
+  final void Function()? onDoubleTapQuote;
 
   /// Callback fired when author's avatar or name is tapped.
   final void Function(Author author)? onTapAuthor;
 
   /// Callback fired when reference (if any) is tapped.
   final void Function(Reference reference)? onTapReference;
-
-  /// Callback fired when quote's name is double tapped.
-  final void Function()? onDoubleTapQuote;
 
   /// Quote data for this component.
   final Quote quote;
@@ -107,6 +111,7 @@ class QuotePageBody extends StatelessWidget {
                       FadeAnimatedText("", duration: 250.ms),
                       TypewriterAnimatedText(
                         quote.name,
+                        speed: 10.ms,
                         textStyle: textWrapSolution.style,
                       ),
                     ],
@@ -130,6 +135,12 @@ class QuotePageBody extends StatelessWidget {
                           context,
                           quote: quote,
                           userId: userFirestore.id,
+                        ),
+                      if (onChangeLanguage != null)
+                        ContextMenuComponents.changeLanguage(
+                          context,
+                          quote: quote,
+                          onChangeLanguage: onChangeLanguage,
                         ),
                     ],
                   );

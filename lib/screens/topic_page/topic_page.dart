@@ -3,8 +3,6 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -12,6 +10,7 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
+import "package:kwotes/screens/topic_page/topic_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -43,6 +42,7 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
   /// Whether there is a next page.
   bool _hasMoreResults = true;
 
+  /// Last fetched document.
   QueryDocSnapMap? _lastDocument;
 
   /// Page's state (e.g. loading, idle, ...).
@@ -54,6 +54,7 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
   /// List of quotes.
   final List<Quote> _quotes = [];
 
+  /// Page scroll controller (used to fetch more data).
   final ScrollController _pageScrollController = ScrollController();
 
   @override
@@ -94,44 +95,13 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
             child: CustomScrollView(
               controller: _pageScrollController,
               slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 24.0,
-                      top: 42.0,
-                      right: 24.0,
-                      bottom: 42.0,
-                    ),
-                    child: Column(
-                      children: [
-                        CircleButton(
-                          radius: 16.0,
-                          icon: const Icon(TablerIcons.arrow_left, size: 18.0),
-                          onTap: () => Utils.passage.deepBack(context),
-                          // onTap: Beamer.of(context).beamBack,
-                          margin: const EdgeInsets.only(bottom: 6.0),
-                          tooltip: "back".tr(),
-                        ),
-                        Hero(
-                          tag: widget.topic,
-                          child: Text(
-                            getTopic(),
-                            style: Utils.calligraphy.body(
-                              textStyle: const TextStyle(
-                                fontSize: 32.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                TopicPageHeader(
+                  topic: getTopic(),
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.only(
-                    left: 24.0,
-                    right: 24.0,
+                    left: 16.0,
+                    right: 16.0,
                   ),
                   sliver: SliverList.builder(
                     itemBuilder: (BuildContext context, int index) {
