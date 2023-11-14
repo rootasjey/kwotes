@@ -243,6 +243,15 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
       return;
     }
 
+    if (language == quote.language) {
+      return;
+    }
+
+    if (_selectedLanguage != EnumLanguageSelection.all &&
+        _selectedLanguage.name != language) {
+      setState(() => _quotes.removeAt(index));
+    }
+
     try {
       await FirebaseFirestore.instance
           .collection(_collectionName)
@@ -250,6 +259,11 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
           .update({"language": language});
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
+      Utils.graphic.showSnackbar(
+        context,
+        message: "quote.update.failed".tr(),
+      );
     }
   }
 
