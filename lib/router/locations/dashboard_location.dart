@@ -10,11 +10,11 @@ import "package:kwotes/screens/dashboard/dashboard_page.dart";
 import "package:kwotes/screens/dashboard/dashboard_welcome_page.dart";
 import "package:kwotes/screens/drafts/drafts_page.dart";
 import "package:kwotes/screens/favourites/favourites_page.dart";
-import "package:kwotes/screens/home/quote_page.dart";
 import "package:kwotes/screens/in_validation/in_validation_page.dart";
 import "package:kwotes/screens/list/list_page.dart";
 import "package:kwotes/screens/lists/lists_page.dart";
 import "package:kwotes/screens/published/published_page.dart";
+import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/the_purpose_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
@@ -26,8 +26,8 @@ import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class DashboardLocation extends BeamLocation<BeamState> {
-  static const String route = "/dashboard";
-  static const String routeWildCard = "/dashboard/*";
+  static const String route = "/d";
+  static const String routeWildCard = "/d/*";
 
   @override
   List<String> get pathPatterns => [
@@ -63,7 +63,7 @@ class DashboardLocation extends BeamLocation<BeamState> {
 
 class DashboardContentLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
-  static const String route = "/dashboard";
+  static const String route = "/d";
 
   /// Add quote route location.
   static const String addQuoteRoute = "$route/add-quote";
@@ -71,6 +71,8 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String colorDetailRoute = "$colorPaletteRoute/:topicName";
   static const String deleteAccountRoute = "$settingsRoute/delete-account";
   static const String draftsRoute = "$route/drafts";
+  static const String editAuthor = "$route/edit/author/:authorId";
+  static const String editReference = "$route/edit/reference/:referenceId";
   static const String favouritesRoute = "$route/favourites";
   static const String favouritesQuoteRoute = "$favouritesRoute/:quoteId";
   static const String inValidationRoute = "$route/in-validation";
