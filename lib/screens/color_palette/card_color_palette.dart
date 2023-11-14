@@ -69,9 +69,10 @@ class _CardColorPaletteState extends State<CardColorPalette> {
                   ? () => widget.onTap?.call(widget.topic)
                   : null,
               onHover: (bool isHover) {
-                setState(() {
-                  _elevation = isHover ? 4.0 : 0.0;
-                });
+                setState(() => _elevation = isHover ? 4.0 : 0.0);
+              },
+              onTapDown: (details) {
+                setState(() => _elevation = 0.0);
               },
               onLongPress: widget.onLongPress != null
                   ? () => widget.onLongPress?.call(widget.topic)
