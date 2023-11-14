@@ -10,12 +10,16 @@ import "package:kwotes/screens/settings/theme_chip.dart";
 class ThemeSwitcher extends StatelessWidget {
   const ThemeSwitcher({
     super.key,
+    this.animateElements = false,
     this.isMobileSize = false,
     this.onTapLightTheme,
     this.onTapDarkTheme,
     this.onTapSystemTheme,
     this.onToggleThemeMode,
   });
+
+  /// Animate elements on settings page if true.
+  final bool animateElements;
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
@@ -29,6 +33,7 @@ class ThemeSwitcher extends StatelessWidget {
   /// Callback fired when system theme is selected.
   final void Function()? onTapSystemTheme;
 
+  /// Callback fired when theme mode is toggled.
   final void Function()? onToggleThemeMode;
 
   @override
@@ -78,8 +83,8 @@ class ThemeSwitcher extends StatelessWidget {
           ),
         )
             .animate()
-            .fadeIn(duration: 250.ms)
-            .slideY(begin: 0.8, end: 0.0, duration: 250.ms),
+            .fadeIn(duration: animateElements ? 250.ms : 0.ms)
+            .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
           runSpacing: 12.0,
@@ -112,16 +117,16 @@ class ThemeSwitcher extends StatelessWidget {
               onTap: onTapSystemTheme,
             ),
           ]
-              .animate(interval: 150.ms)
-              .fadeIn(duration: 250.ms)
-              .slideY(begin: 0.8, end: 0.0, duration: 150.ms),
+              .animate(interval: animateElements ? 150.ms : 0.ms)
+              .fadeIn(duration: animateElements ? 250.ms : 0.ms)
+              .slideY(begin: 0.8, end: 0.0),
         ),
         const Divider(
           height: 48.0,
         )
-            .animate(delay: 250.ms)
-            .fadeIn(duration: 250.ms)
-            .slideY(begin: 0.8, end: 0.0, duration: 250.ms),
+            .animate(delay: animateElements ? 250.ms : 0.ms)
+            .fadeIn(duration: animateElements ? 250.ms : 0.ms)
+            .slideY(begin: 0.8, end: 0.0),
       ]),
     );
   }

@@ -12,6 +12,7 @@ class AccountSettings extends StatelessWidget {
   const AccountSettings({
     super.key,
     required this.userFirestore,
+    this.animateElements = false,
     this.isMobileSize = false,
     this.onTapUpdateEmail,
     this.onTapUpdatePassword,
@@ -21,6 +22,9 @@ class AccountSettings extends StatelessWidget {
     this.onTapAccountDisplayedValue,
     this.enumAccountDisplayed = EnumAccountDisplayed.name,
   });
+
+  /// Animate elements on settings page if true.
+  final bool animateElements;
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
@@ -46,6 +50,7 @@ class AccountSettings extends StatelessWidget {
   /// Callback fired when the account displayed value is tapped.
   final void Function()? onTapAccountDisplayedValue;
 
+  /// User account.
   final UserFirestore userFirestore;
 
   @override
@@ -85,9 +90,9 @@ class AccountSettings extends StatelessWidget {
             ),
           ),
         )
-            .animate(delay: 150.ms)
-            .fadeIn(duration: 150.ms)
-            .slideY(begin: 0.8, end: 0.0, duration: 150.ms),
+            .animate(delay: animateElements ? 150.ms : 0.ms)
+            .fadeIn(duration: animateElements ? 150.ms : 0.ms)
+            .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
           runSpacing: 12.0,
@@ -143,16 +148,19 @@ class AccountSettings extends StatelessWidget {
               ),
             ),
           ]
-              .animate(delay: 250.ms, interval: 50.ms)
-              .fadeIn(duration: 150.ms)
+              .animate(
+                delay: animateElements ? 250.ms : 0.ms,
+                interval: animateElements ? 50.ms : 0.ms,
+              )
+              .fadeIn(duration: animateElements ? 150.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         ),
         const Divider(
           height: 48.0,
         )
-            .animate(delay: 300.ms)
-            .fadeIn(duration: 250.ms)
-            .slideY(begin: 0.8, end: 0.0, duration: 250.ms),
+            .animate(delay: animateElements ? 300.ms : 0.ms)
+            .fadeIn(duration: animateElements ? 250.ms : 0.ms)
+            .slideY(begin: 0.8, end: 0.0),
       ]),
     );
   }

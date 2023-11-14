@@ -38,12 +38,16 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  /// Animate elements on settings page if true.
+  bool _animateElements = true;
+
   /// An enum representing the account displayed text value on settings page.
   EnumAccountDisplayed _enumAccountDisplayed = EnumAccountDisplayed.name;
 
   @override
   void initState() {
     super.initState();
+    initProps();
   }
 
   @override
@@ -78,6 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ThemeSwitcher(
+            animateElements: _animateElements,
             isMobileSize: isMobileSize,
             onTapLightTheme: onTapLightTheme,
             onTapDarkTheme: onTapDarkTheme,
@@ -96,6 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
               }
 
               return AccountSettings(
+                animateElements: _animateElements,
                 enumAccountDisplayed: _enumAccountDisplayed,
                 isMobileSize: isMobileSize,
                 onTapUpdateEmail: onTapUpdateEmail,
@@ -109,16 +115,19 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           AppLanguageSelection(
+            animateElements: _animateElements,
             currentLanguageCode: currentLanguageCode,
             isMobileSize: isMobileSize,
             onSelectLanguage: onSelectLanguage,
           ),
           AppBehaviourSettings(
+            animateElements: _animateElements,
             isMobileSize: isMobileSize,
             isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
             onToggleFullscreen: onToggleFullscreen,
           ),
           AboutSettings(
+            animateElements: _animateElements,
             isMobileSize: isMobileSize,
             onTapColorPalette: onTapColorPalette,
             onTapTermsOfService: onTapTermsOfService,
@@ -138,6 +147,13 @@ class _SettingsPageState extends State<SettingsPage> {
       onCancel: Beamer.of(context).beamBack,
       child: scaffold,
     );
+  }
+
+  void initProps() async {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() => _animateElements = false);
+    });
   }
 
   /// Apply the new selected language.

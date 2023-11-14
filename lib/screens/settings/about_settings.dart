@@ -10,12 +10,16 @@ class AboutSettings extends StatefulWidget {
   /// About section on settings page.
   const AboutSettings({
     super.key,
+    this.animateElements = false,
     this.isMobileSize = false,
     this.onTapColorPalette,
     this.onTapTermsOfService,
     this.onTapGitHub,
     this.onTapThePurpose,
   });
+
+  /// Animate elements on settings page if true.
+  final bool animateElements;
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
@@ -76,9 +80,9 @@ class _AboutSettingsState extends State<AboutSettings> {
             ),
           ),
         )
-            .animate(delay: 350.ms)
-            .fadeIn(duration: 150.ms)
-            .slideY(begin: 0.8, end: 0.0, duration: 150.ms),
+            .animate(delay: widget.animateElements ? 350.ms : 0.ms)
+            .fadeIn(duration: widget.animateElements ? 150.ms : 0.ms)
+            .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
           runSpacing: 12.0,
@@ -121,8 +125,11 @@ class _AboutSettingsState extends State<AboutSettings> {
               label: Text("${"version".tr()}: ${Constants.appVersion}"),
             ),
           ]
-              .animate(delay: 300.ms, interval: 50.ms)
-              .fadeIn(duration: 150.ms)
+              .animate(
+                delay: widget.animateElements ? 300.ms : 0.ms,
+                interval: widget.animateElements ? 50.ms : 0.ms,
+              )
+              .fadeIn(duration: widget.animateElements ? 150.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         )
       ]),
