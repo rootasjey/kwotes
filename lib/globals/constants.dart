@@ -16,9 +16,9 @@ class Constants {
   static final DateTime termsOfServiceLastUpdated = DateTime(2020, 12, 12);
 
   static const domainUrl = "https://kwotes.fr";
-  static const authorUrl = "$domainUrl/authors";
-  static const quoteUrl = "$domainUrl/quotes";
-  static const referenceUrl = "$domainUrl/references";
+  static const authorUrl = "$domainUrl/h/authors";
+  static const quoteUrl = "$domainUrl/h/quotes";
+  static const referenceUrl = "$domainUrl/h/references";
   static const githubUrl = "https://github.com/rootasjey/kwotes";
 
   /// Allowed image file extension for illustrations.
