@@ -230,7 +230,15 @@ class _DashboardPageState extends State<DashboardPage> {
 
   /// Callback fired to navigate to previous location.
   Object? onEscapeShortcut(EscapeIntent intent) {
-    Utils.passage.back(context);
+    final BeamerDelegate? beamerDelegate =
+        _beamerKey.currentState?.routerDelegate;
+
+    if (beamerDelegate?.canBeamBack ?? false) {
+      beamerDelegate?.beamBack();
+      return null;
+    }
+
+    Beamer.of(context).beamBack();
     return null;
   }
 
