@@ -232,6 +232,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
       listenToDocumentChanges(userId);
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
       setState(() {
         _pageState = EnumPageState.idle;
       });
