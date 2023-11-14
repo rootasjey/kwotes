@@ -43,7 +43,9 @@ class ColorDetailPageBody extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: Stack(
+      child: ListView(
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
         children: [
           Column(
             mainAxisSize: MainAxisSize.min,
