@@ -2,11 +2,14 @@ import "package:beamer/beamer.dart";
 import "package:flutter/material.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/services.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/application_bar.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/forgot_password_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/screens/signin/signin_page_body.dart";
 import "package:kwotes/screens/signin/signin_page_header.dart";
 import "package:kwotes/types/enums/enum_app_bar_mode.dart";
@@ -85,6 +88,13 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
                 mode: EnumAppBarMode.signin,
                 isMobileSize: isMobileSize,
                 title: const SizedBox.shrink(),
+                rightChildren: [
+                  CircleButton(
+                    onTap: onGoToSettings,
+                    backgroundColor: Colors.transparent,
+                    icon: const Icon(TablerIcons.settings),
+                  ),
+                ],
               ),
               SigninPageHeader(
                 isMobileSize: isMobileSize,
@@ -200,5 +210,10 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
     }
 
     Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
+  }
+
+  /// Navigate to the settings page.
+  void onGoToSettings() {
+    Beamer.of(context, root: true).beamToNamed(SettingsLocation.route);
   }
 }

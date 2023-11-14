@@ -18,6 +18,11 @@ class NavigationStateHelper {
   /// Selected author and passed through author page.
   static Author author = Author.empty();
 
+  /// Show quote page in fullscreen (hiding the navigation bar) if true.
+  /// We need this property on top of the local storage
+  /// in order to syncronously know where to navigate (with the router).
+  static bool fullscreenQuotePage = true;
+
   /// Selected reference and passed through reference page.
   static Reference reference = Reference.empty();
 

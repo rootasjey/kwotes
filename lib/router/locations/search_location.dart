@@ -10,6 +10,8 @@ import "package:kwotes/screens/search/search_navigation_page.dart";
 class SearchLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
   static const String route = "/s";
+
+  /// Alternate home location for deep navigation.
   static const String routeWildCard = "/s/*";
 
   @override
@@ -35,18 +37,16 @@ class SearchContentLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
   static const String route = "/s";
 
-  /// Quote route location for search.
+  /// Quote route location.
   static const String quoteRoute = "$route/quote/:quoteId";
 
-  /// Navigate to the author's page.
-  // static const String authorVanillaRoute = "author/:authorId";
+  /// Author route location.
   static const String authorRoute = "$route/author/:authorId";
 
-  /// Reference route location for home.
+  /// Reference route location.
   static const String referenceRoute = "$route/reference/:referenceId";
-  // static const String referenceVanillaRoute = "reference/:referenceId";
 
-  /// Topic route location for home.
+  /// Topic route location.
   static const String topicRoute = "$route/topic/:topicName";
 
   /// Quote route location on top of topic page.
@@ -57,9 +57,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
         route,
         quoteRoute,
         authorRoute,
-        // authorVanillaRoute,
         referenceRoute,
-        // referenceVanillaRoute,
         topicRoute,
         topicQuoteRoute,
       ];

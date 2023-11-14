@@ -704,13 +704,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// Callback fired when quote is tapped.
   void onTapQuote(Quote quote) {
     NavigationStateHelper.quote = quote;
-
-    final String route = SearchContentLocation.quoteRoute.replaceFirst(
-      ":quoteId",
-      quote.id,
+    Beamer.of(context).beamToNamed(
+      SearchContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
     );
-
-    Beamer.of(context).beamToNamed(route);
   }
 
   /// Callback fired when author is tapped.

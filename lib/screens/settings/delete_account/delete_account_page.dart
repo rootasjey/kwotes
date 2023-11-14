@@ -140,7 +140,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
         afterTimeExecute: () {},
       );
 
-      Utils.state.logout();
+      Utils.state.signOut();
       context.beamBack();
     } catch (error) {
       loggy.error(error);

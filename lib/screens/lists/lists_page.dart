@@ -119,14 +119,14 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
         _newQuoteList.name.isNotEmpty;
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final bool allowEscapeIntent =
+        _showCreate || _editingListId.isNotEmpty || _deletingListId.isNotEmpty;
 
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
         actions: {
-          if (_showCreate ||
-              _editingListId.isNotEmpty ||
-              _deletingListId.isNotEmpty)
+          if (allowEscapeIntent)
             EscapeIntent: CallbackAction<EscapeIntent>(
               onInvoke: onEscapeShortcut,
             ),

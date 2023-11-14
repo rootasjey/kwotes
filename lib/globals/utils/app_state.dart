@@ -38,8 +38,14 @@ class AppState with UiLoggy {
     UserFirestore.empty(),
   );
 
+  /// Whether the app should show the navigation bar
+  /// (e.g. when displaying quote page).
+  final Signal<bool> showNavigationBar = createSignal(true);
+
+  /// Firebase auth stream subscription.
   StreamSubscription<firebase_auth.User?>? userAuthSubscription;
 
+  /// Firestore stream subscription.
   DocSnapshotStreamSubscription? userFirestoreSubscription;
 
   /// Whether the user is authenticated.
@@ -53,7 +59,7 @@ class AppState with UiLoggy {
       password = password ?? credentials.password;
 
       if (email.isEmpty || password.isEmpty) {
-        logout();
+        signOut();
         return null;
       }
 
@@ -80,7 +86,7 @@ class AppState with UiLoggy {
   }
 
   /// Sign out the user.
-  Future<bool> logout() async {
+  Future<bool> signOut() async {
     try {
       await Utils.vault.clearCredentials();
       await firebase_auth.FirebaseAuth.instance.signOut();
@@ -152,7 +158,7 @@ class AppState with UiLoggy {
         return returnValue;
       }
 
-      logout();
+      signOut();
       return ActionReturnValue(success: true);
     } on FirebaseFunctionsException catch (exception) {
       loggy.error("[code: ${exception.code}] - ${exception.message}");

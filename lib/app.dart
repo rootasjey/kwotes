@@ -71,6 +71,7 @@ class _AppState extends State<App> {
       signals: {
         EnumSignalId.userAuth: () => Utils.state.userAuth,
         EnumSignalId.userFirestore: () => Utils.state.userFirestore,
+        EnumSignalId.navigationBar: () => Utils.state.showNavigationBar,
       },
       child: AdaptiveTheme(
         light: lightTheme,

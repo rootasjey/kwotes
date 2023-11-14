@@ -448,14 +448,8 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
 
   void onTapQuote(Quote quote) {
     NavigationStateHelper.quote = quote;
-    context.beamToNamed(
+    Beamer.of(context).beamToNamed(
       HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
-      data: {
-        "quoteId": quote.id,
-      },
-      routeState: {
-        "quoteId": quote.id,
-      },
     );
   }
 

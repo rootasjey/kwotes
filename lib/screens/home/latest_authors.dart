@@ -69,6 +69,8 @@ class LatestAuthors extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     author.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Utils.calligraphy.body(
                       textStyle: const TextStyle(
                         fontSize: 32.0,

@@ -59,7 +59,7 @@ class ListPageBody extends StatelessWidget {
 
     if (quotes.isEmpty) {
       return EmptyView(
-        margin: const EdgeInsets.only(left: 48.0, right: 72.0),
+        margin: const EdgeInsets.only(right: 24.0),
         title: "list.empty".tr(),
       );
     }

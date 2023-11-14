@@ -15,14 +15,12 @@ class HomeLocation extends BeamLocation<BeamState> {
   static const String route = "/";
 
   /// Alternate home location for deep navigation.
-  static const String routeHomeWildCard = "/h/*";
-  // static const String routeWildCard = "/*";
+  static const String routeWildCard = "/h/*";
 
   @override
   List<Pattern> get pathPatterns => [
         route,
-        routeHomeWildCard,
-        // routeWildCard,
+        routeWildCard,
       ];
 
   @override

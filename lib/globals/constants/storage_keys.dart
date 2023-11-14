@@ -10,6 +10,9 @@ class StorageKeys {
   static const String drafts = "drafts";
   static const String email = "email";
   static const String firstLaunch = "first_launch";
+
+  /// Show quote page in full screen, hiding the navigation bar.
+  static const String fullscreenQuotePage = "fullscreen_quote_page";
   static const String heroImageControlVivisible = "hero_image_control_visible";
   static const String homePageTabIndex = "home_page_tab_index";
   static const String imageShareColor = "image_share_color";

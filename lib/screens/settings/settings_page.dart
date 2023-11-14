@@ -10,8 +10,10 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/settings/about_settings.dart";
 import "package:kwotes/screens/settings/account_settings.dart";
+import "package:kwotes/screens/settings/app_behaviour_settings.dart";
 import "package:kwotes/screens/settings/app_language_selection.dart";
 import "package:kwotes/screens/settings/theme_switcher.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
@@ -75,7 +77,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
-          // SettingsPageHeader(isMobileSize: isMobileSize),
           ThemeSwitcher(
             isMobileSize: isMobileSize,
             onTapLightTheme: onTapLightTheme,
@@ -100,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTapUpdateEmail: onTapUpdateEmail,
                 onTapUpdatePassword: onTapUpdatePassword,
                 onTapUpdateUsername: onTapUpdateUsername,
-                onTapLogout: onTapLogout,
+                onTapLogout: onTapSignOut,
                 onTapDeleteAccount: onTapDeleteAccount,
                 onTapAccountDisplayedValue: onTapAccountDisplayedValue,
                 userFirestore: userFirestore,
@@ -111,6 +112,11 @@ class _SettingsPageState extends State<SettingsPage> {
             currentLanguageCode: currentLanguageCode,
             isMobileSize: isMobileSize,
             onSelectLanguage: onSelectLanguage,
+          ),
+          AppBehaviourSettings(
+            isMobileSize: isMobileSize,
+            isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
+            onToggleFullscreen: onToggleFullscreen,
           ),
           AboutSettings(
             isMobileSize: isMobileSize,
@@ -134,11 +140,13 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  /// Apply the new selected language.
   void onSelectLanguage(EnumLanguageSelection locale) {
     Utils.vault.setLanguage(locale);
     EasyLocalization.of(context)?.setLocale(Locale(locale.name));
   }
 
+  /// Circle between name and email to display.
   void onTapAccountDisplayedValue() {
     setState(() {
       _enumAccountDisplayed = _enumAccountDisplayed == EnumAccountDisplayed.name
@@ -147,60 +155,70 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  /// Navigate to the delete account page.
   void onTapDeleteAccount() {
     Beamer.of(context).beamToNamed(
       DashboardContentLocation.deleteAccountRoute,
     );
   }
 
-  void onTapLogout() async {
-    final bool success = await Utils.state.logout();
+  /// Logout the user.
+  void onTapSignOut() async {
+    final bool success = await Utils.state.signOut();
     if (!success) return;
     if (!mounted) return;
 
     Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
   }
 
+  /// Navigate to the update email page.
   void onTapUpdateEmail() {
     Beamer.of(context).beamToNamed(
       DashboardContentLocation.updateEmailRoute,
     );
   }
 
+  /// Navigate to the update password page.
   void onTapUpdatePassword() {
     Beamer.of(context).beamToNamed(
       DashboardContentLocation.updatePasswordRoute,
     );
   }
 
+  /// Navigate to the update username page.
   void onTapUpdateUsername() {
     Beamer.of(context).beamToNamed(
       DashboardContentLocation.updateUsernameRoute,
     );
   }
 
+  /// Navigate to the color palette page.
   void onTapColorPalette() {
     Beamer.of(context).beamToNamed(
       DashboardContentLocation.colorPaletteRoute,
     );
   }
 
+  /// Navigate to the terms of service page.
   void onTapTermsOfService() {
     Beamer.of(context).beamToNamed(
       "terms-of-service/",
     );
   }
 
+  /// Open the project's GitHub page.
   void onTapGitHub() {
     launchUrl(Uri.parse(Constants.githubUrl));
   }
 
+  /// Navigate to the purpose page.
   void onTapThePurpose() {
     Beamer.of(context).beamToNamed(
       "the-purpose/",
     );
   }
 
+  /// Apply light theme.
   void onTapLightTheme() {
     AdaptiveTheme.of(context).setLight();
     Utils.vault.setBrightness(Brightness.light);
@@ -214,6 +232,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  /// Apply dark theme.
   void onTapDarkTheme() {
     AdaptiveTheme.of(context).setDark();
     Utils.vault.setBrightness(Brightness.dark);
@@ -231,16 +250,30 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  /// Apply system theme.
   void onTapSystemTheme() {
     AdaptiveTheme.of(context).setSystem();
     updateUiBrightness();
   }
 
+  /// Turn on/off fullscreen mode on quote page.
+  void onToggleFullscreen() {
+    final bool newValue = !NavigationStateHelper.fullscreenQuotePage;
+    Utils.vault.setFullscreenQuotePage(newValue);
+
+    setState(() {
+      NavigationStateHelper.fullscreenQuotePage = newValue;
+    });
+  }
+
+  /// Circle through light, dark and system theme.
   void onToggleThemeMode() {
     AdaptiveTheme.of(context).toggleThemeMode();
     updateUiBrightness();
   }
 
+  /// Save the current brightness to the vault and
+  /// update the system UI overlay style.
   void updateUiBrightness() {
     final Brightness brightness =
         AdaptiveTheme.of(context).brightness ?? Brightness.light;

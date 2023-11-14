@@ -106,28 +106,6 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     );
   }
 
-  /// Return firebase query.
-  QueryMap getQuery(String userId) {
-    final QueryDocSnapMap? lastDocument = _lastDocument;
-
-    if (lastDocument == null) {
-      return FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection("favourites")
-          .orderBy("created_at", descending: _descending)
-          .limit(_limit);
-    }
-
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(userId)
-        .collection("favourites")
-        .orderBy("created_at", descending: _descending)
-        .limit(_limit)
-        .startAfterDocument(lastDocument);
-  }
-
   /// Fetch quotes from firebase.
   void fetch() async {
     final Signal<UserFirestore> currentUser =
@@ -172,6 +150,35 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
         _pageState = EnumPageState.idle;
       });
     }
+  }
+
+  /// Return firebase query.
+  QueryMap getQuery(String userId) {
+    final QueryDocSnapMap? lastDocument = _lastDocument;
+
+    if (lastDocument == null) {
+      return FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection("favourites")
+          .orderBy("created_at", descending: _descending)
+          .limit(_limit);
+    }
+
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("favourites")
+        .orderBy("created_at", descending: _descending)
+        .limit(_limit)
+        .startAfterDocument(lastDocument);
+  }
+
+  void initProps() async {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() => _animateList = false);
+    });
   }
 
   /// Copy a quote's.
@@ -235,20 +242,11 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   /// Navigate to quote page when a quote is tapped.
   void onTap(Quote quote) {
     NavigationStateHelper.quote = quote;
-    context.beamToNamed(
+    Beamer.of(context).beamToNamed(
       DashboardContentLocation.favouritesQuoteRoute.replaceFirst(
         ":quoteId",
         quote.id,
       ),
     );
-  }
-
-  void initProps() async {
-    Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return;
-      setState(() {
-        _animateList = false;
-      });
-    });
   }
 }

@@ -61,6 +61,13 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     LogicalKeySet(LogicalKeyboardKey.keyL): const LikeIntent(),
   };
 
+  /// Signal for navigation bar.
+  /// This is used to hide/show the navigation bar.
+  /// We store the variable on initialization because
+  /// we'll need to access it on dispose
+  /// (and we can't access context on dispoe).
+  Signal<bool>? _signalNavigationBar;
+
   /// Copy icon tooltip.
   String copyTooltip = "quote.copy.name".tr();
 
@@ -70,12 +77,14 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
   @override
   void dispose() {
     _timerCopyIcon?.cancel();
+    clean();
     super.dispose();
   }
 
@@ -166,6 +175,14 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         ),
       ),
     );
+  }
+
+  /// Clean up resources.
+  void clean() {
+    if (!mounted) return;
+    if (NavigationStateHelper.fullscreenQuotePage) {
+      _signalNavigationBar?.update((value) => true);
+    }
   }
 
   /// Fetch page data.
@@ -367,6 +384,17 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     return topic.color;
   }
 
+  /// Initialize props.
+  void initProps() {
+    if (NavigationStateHelper.fullscreenQuotePage) {
+      _signalNavigationBar = context.get<Signal<bool>>(
+        EnumSignalId.navigationBar,
+      );
+
+      _signalNavigationBar?.update((value) => false);
+    }
+  }
+
   /// Callback fired to navigate to author page.
   void onTapAuthor(Author author) {
     NavigationStateHelper.author = author;
@@ -377,7 +405,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to navigate to reference page.
   void onTapReference(Reference reference) {
     NavigationStateHelper.reference = reference;
-    final String suffix = "/reference/${reference.id}";
+    final String suffix = "reference/${reference.id}";
     Beamer.of(context).beamToNamed(getRoute(suffix));
   }
 

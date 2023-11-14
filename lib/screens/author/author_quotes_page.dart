@@ -94,17 +94,19 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                     avatarMargin: EdgeInsets.zero,
                     margin: const EdgeInsets.only(left: 6.0, right: 12.0),
                   ),
-                  Text(
-                    _author.name,
-                    style: Utils.calligraphy.title(
-                      textStyle: TextStyle(
-                        fontSize: isMobileSize ? 32.0 : 42.0,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.color
-                            ?.withOpacity(0.8),
+                  Expanded(
+                    child: Text(
+                      _author.name,
+                      style: Utils.calligraphy.title(
+                        textStyle: TextStyle(
+                          fontSize: isMobileSize ? 32.0 : 42.0,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.color
+                              ?.withOpacity(0.8),
+                        ),
                       ),
                     ),
                   ),

@@ -298,7 +298,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
 
     final bool hasSearch = beamer
         .beamingHistory.last.state.routeInformation.uri.pathSegments
-        .contains("search");
+        .contains("s");
 
     if (hasSearch) {
       beamer.beamToNamed(

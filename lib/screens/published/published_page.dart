@@ -341,7 +341,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   /// Navigate to quote page when a quote is tapped.
   void onTap(Quote quote) {
     NavigationStateHelper.quote = quote;
-    context.beamToNamed(
+    Beamer.of(context).beamToNamed(
       DashboardContentLocation.publishedQuoteRoute.replaceFirst(
         ":quoteId",
         quote.id,

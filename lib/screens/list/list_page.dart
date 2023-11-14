@@ -45,7 +45,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   bool _animateList = true;
 
   /// Page's state.
-  EnumPageState _pageState = EnumPageState.idle;
+  EnumPageState _pageState = EnumPageState.loading;
 
   /// Show text inputs (to edit list's name & description) if this true.
   bool _createMode = false;

@@ -10,7 +10,7 @@ class Constants {
   static const appVersion = "3.0.0";
 
   /// App build number.
-  static const appBuildNumber = 1;
+  static const appBuildNumber = 15;
 
   /// Last time terms of service was updated.
   static final DateTime termsOfServiceLastUpdated = DateTime(2020, 12, 12);
@@ -32,35 +32,6 @@ class Constants {
 
   /// All necessary colors for the app.
   static final colors = ColorPalette();
-
-  static List<String> letters = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-  ];
 
   /// App external links.
   static const links = Links();

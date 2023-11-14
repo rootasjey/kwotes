@@ -31,6 +31,7 @@ class DashboardLocation extends BeamLocation<BeamState> {
 
   @override
   List<String> get pathPatterns => [
+        route,
         routeWildCard,
       ];
 
@@ -64,6 +65,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
   static const String route = "/dashboard";
 
+  /// Add quote route location.
   static const String addQuoteRoute = "$route/add-quote";
   static const String colorPaletteRoute = "$settingsRoute/color-palette";
   static const String colorDetailRoute = "$colorPaletteRoute/:topicName";

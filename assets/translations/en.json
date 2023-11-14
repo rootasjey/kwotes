@@ -329,6 +329,8 @@
   "name": "Name",
   "next": "Next",
   "new_quote": "New quote",
+  "off": "Off",
+  "on": "On",
   "on_boarding_come": "Come on board if it's your first time.",
   "page_title": {
     "about": "@:kwotes_leading About",
@@ -837,6 +839,13 @@
   "see_metadata": "See metadata",
   "see_related_quotes": "See related quotes",
   "settings": {
+    "behaviour": {
+      "name": "Behaviour"
+    },
+    "fullscreen_quote_page": {
+      "name": "Fullscreen quote page",
+      "description": "Open quote page in fullscreen mode"
+    },
     "description": "Customize your experience",
     "name": "Settings"
   },

@@ -9,6 +9,7 @@ import "package:flutter/services.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
 import "package:kwotes/globals/utils/passage.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:loggy/loggy.dart";
 import "package:url_strategy/url_strategy.dart";
 import "package:window_manager/window_manager.dart";
@@ -31,12 +32,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  setPathUrlStrategy();
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: "var.env");
 
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
   Passage.homePageTabIndex = await Utils.vault.getHomePageTabIndex();
-  setPathUrlStrategy();
+
+  NavigationStateHelper.fullscreenQuotePage =
+      await Utils.vault.getFullscreenQuotePage();
 
   if (!kIsWeb) {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {

@@ -81,7 +81,7 @@ class ListsPageCreate extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextField(
-                        autofocus: true,
+                        autofocus: show ? true : false,
                         keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.words,
                         onChanged: onNameChanged,

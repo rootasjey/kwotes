@@ -196,4 +196,17 @@ class Vault {
 
     return Brightness.values[index];
   }
+
+  /// Saves fullscreen quote page state.
+  void setFullscreenQuotePage(bool isActive) {
+    Glutton.eat(StorageKeys.fullscreenQuotePage, isActive);
+  }
+
+  /// Retrieves fullscreen quote page state.
+  Future<bool> getFullscreenQuotePage() async {
+    return await Glutton.vomit(
+      StorageKeys.fullscreenQuotePage,
+      true,
+    );
+  }
 }

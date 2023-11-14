@@ -381,7 +381,7 @@ class ApplicationBar extends StatelessWidget {
         title: "logout.name".tr(),
         image: MenuImage.icon(UniconsLine.signout),
         callback: () {
-          Utils.state.logout();
+          Utils.state.signOut();
           Beamer.of(context, root: true)
               .beamToReplacementNamed(HomeLocation.route);
         },
