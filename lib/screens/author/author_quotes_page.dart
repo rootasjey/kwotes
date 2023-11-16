@@ -1,15 +1,17 @@
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:easy_image_viewer/easy_image_viewer.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
-import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/components/page_app_bar.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/search/search_quote_text.dart";
+import "package:kwotes/screens/author/author_quotes_page_body.dart";
+import "package:kwotes/screens/author/author_quotes_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -71,10 +73,6 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
-    final Object imageProvider = _author.urls.image.isNotEmpty
-        ? NetworkImage(_author.urls.image)
-        : const AssetImage("assets/images/profile-picture-avocado.png");
-
     return Scaffold(
       body: ImprovedScrolling(
         onScroll: onScroll,
@@ -84,55 +82,20 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
           child: CustomScrollView(
             controller: _pageScrollController,
             slivers: [
-              PageAppBar(
-                axis: Axis.horizontal,
-                toolbarHeight: 120.0,
-                children: [
-                  BetterAvatar(
-                    imageProvider: imageProvider as ImageProvider,
-                    radius: 16.0,
-                    avatarMargin: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(left: 6.0, right: 12.0),
-                  ),
-                  Expanded(
-                    child: Text(
-                      _author.name,
-                      style: Utils.calligraphy.title(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 32.0 : 42.0,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.color
-                              ?.withOpacity(0.8),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              AuthorQuotesPageHeader(
+                author: _author,
+                isMobileSize: isMobileSize,
+                onTapName: onTapAuthorName,
+                onTapAvatar: onTapAuthorAvatar,
               ),
-              SliverPadding(
-                padding: const EdgeInsets.only(
-                  top: 24.0,
-                  left: 18.0,
-                  right: 18.0,
-                  bottom: 54.0,
+              AuthorQuotesPageBody(
+                accentColor: Constants.colors.getRandomFromPalette(
+                  withGoodContrast: true,
                 ),
-                sliver: SliverList.separated(
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Divider(height: 64.0);
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    final Quote quote = _quotes[index];
-                    return SearchQuoteText(
-                      quote: quote,
-                      onTapQuote: onTapQuote,
-                      tiny: isMobileSize,
-                    );
-                  },
-                  itemCount: _quotes.length,
-                ),
+                quotes: _quotes,
+                isMobileSize: isMobileSize,
+                onTapQuote: onTapQuote,
+                onTapBackButton: Beamer.of(context).beamBack,
               ),
             ],
           ),
@@ -141,6 +104,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     );
   }
 
+  /// Fetch page's data.
   void fetch() async {
     if (widget.authorId == NavigationStateHelper.author.id) {
       _author = NavigationStateHelper.author;
@@ -158,6 +122,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     setState(() => _pageState = EnumPageState.idle);
   }
 
+  /// Fetch author's data if not in cache.
   Future<void> fetchAuthor() async {
     if (widget.authorId.isEmpty) {
       return;
@@ -181,6 +146,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     }
   }
 
+  /// Fetch author's quotes.
   Future<void> fetchQuotes() async {
     if (widget.authorId.isEmpty) {
       return;
@@ -213,6 +179,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     }
   }
 
+  /// Return quote's query (according the current language).
   QueryMap getQuotesQuery({String language = "en"}) {
     final QueryMap query = FirebaseFirestore.instance
         .collection("quotes")
@@ -229,15 +196,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     return query;
   }
 
-  void onTapQuote(Quote quote) {
-    Beamer.of(context).beamToNamed(
-      HomeContentLocation.authorQuoteRoute.replaceFirst(
-        ":quoteId",
-        quote.id,
-      ),
-    );
-  }
-
+  /// Callback fired when the user scrolls.
   void onScroll(double offset) {
     if (!_hasMoreResults) {
       return;
@@ -253,5 +212,46 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     if (_pageScrollController.position.maxScrollExtent - offset <= 200) {
       fetchQuotes();
     }
+  }
+
+  /// Callback fired when the author avatar is tapped.
+  /// Open author's avatar in the image viewer.
+  void onTapAuthorAvatar() {
+    if (_author.urls.image.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "author.error.no_image".tr(),
+      );
+      return;
+    }
+
+    final ImageProvider imageProvider = Image.network(_author.urls.image).image;
+
+    showImageViewer(
+      context,
+      imageProvider,
+      swipeDismissible: true,
+      doubleTapZoomable: true,
+    );
+  }
+
+  /// Callback fired when the author name is tapped.
+  /// Scrolls to the top of the page.
+  void onTapAuthorName() {
+    _pageScrollController.animateTo(
+      0.0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
+
+  /// Callback fired when a quote is tapped.
+  void onTapQuote(Quote quote) {
+    Beamer.of(context).beamToNamed(
+      HomeContentLocation.authorQuoteRoute.replaceFirst(
+        ":quoteId",
+        quote.id,
+      ),
+    );
   }
 }
