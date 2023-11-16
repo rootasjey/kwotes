@@ -1,16 +1,17 @@
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:easy_image_viewer/easy_image_viewer.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/components/reference_poster.dart";
-import "package:kwotes/screens/search/search_quote_text.dart";
+import "package:kwotes/screens/reference/reference_quotes_page_body.dart";
+import "package:kwotes/screens/reference/reference_quotes_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
@@ -74,10 +75,6 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
-    // final Object imageProvider = _reference.urls.image.isNotEmpty
-    //     ? NetworkImage(_reference.urls.image)
-    //     : const AssetImage("assets/images/reference-picture-0.png");
-
     return Scaffold(
       body: ImprovedScrolling(
         onScroll: onScroll,
@@ -87,51 +84,20 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
           child: CustomScrollView(
             controller: _pageScrollController,
             slivers: [
-              PageAppBar(
-                axis: Axis.horizontal,
-                toolbarHeight: 120.0,
-                children: [
-                  SizedBox(
-                    height: 40.0,
-                    width: 40.0,
-                    child: ReferencePoster(
-                      reference: _reference,
-                      accentColor: Constants.colors.getRandomPastel(),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      _reference.name,
-                      style: Utils.calligraphy.title(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 32.0 : 42.0,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black.withOpacity(0.8),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              ReferenceQuotesPageHeader(
+                isMobileSize: isMobileSize,
+                reference: _reference,
+                onTapName: onTapReferenceName,
+                onTapPoster: onTapReferencePoster,
               ),
-              SliverPadding(
-                padding: const EdgeInsets.only(
-                  top: 24.0,
-                  left: 24.0,
-                  right: 24.0,
-                  bottom: 54.0,
+              ReferenceQuotesPageBody(
+                accentColor: Constants.colors.getRandomFromPalette(
+                  withGoodContrast: true,
                 ),
-                sliver: SliverList.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    final Quote quote = _quotes[index];
-                    return SearchQuoteText(
-                      quote: quote,
-                      onTapQuote: onTapQuote,
-                      tiny: isMobileSize,
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                    );
-                  },
-                  itemCount: _quotes.length,
-                ),
+                isMobileSize: isMobileSize,
+                quotes: _quotes,
+                onTapBackButton: Beamer.of(context).beamBack,
+                onTapQuote: onTapQuote,
               ),
             ],
           ),
@@ -228,15 +194,6 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     return query;
   }
 
-  void onTapQuote(Quote quote) {
-    Beamer.of(context).beamToNamed(
-      HomeContentLocation.referenceQuoteRoute.replaceFirst(
-        ":quoteId",
-        quote.id,
-      ),
-    );
-  }
-
   void onScroll(double offset) {
     if (!_hasMoreResults) {
       return;
@@ -252,5 +209,42 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     if (_pageScrollController.position.maxScrollExtent - offset <= 200) {
       fetchQuotes();
     }
+  }
+
+  void onTapQuote(Quote quote) {
+    Beamer.of(context).beamToNamed(
+      HomeContentLocation.referenceQuoteRoute.replaceFirst(
+        ":quoteId",
+        quote.id,
+      ),
+    );
+  }
+
+  void onTapReferenceName() {
+    _pageScrollController.animateTo(
+      0.0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void onTapReferencePoster(Reference reference) {
+    if (reference.urls.image.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "author.error.no_image".tr(),
+      );
+      return;
+    }
+
+    final ImageProvider imageProvider =
+        Image.network(reference.urls.image).image;
+
+    showImageViewer(
+      context,
+      imageProvider,
+      swipeDismissible: true,
+      doubleTapZoomable: true,
+    );
   }
 }
