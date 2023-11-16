@@ -65,7 +65,11 @@ class _ReferencePosterState extends State<ReferencePoster> {
       padding: widget.margin,
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(2.0),
+          side: BorderSide(
+            color: widget.accentColor ?? Colors.transparent,
+            width: 2.0,
+          ),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(

@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/components/reference_poster.dart";
 import "package:kwotes/types/reference.dart";
@@ -102,7 +103,7 @@ class ReferencePosters extends StatelessWidget {
                   final bool selected = index == scrollController.selectedItem;
 
                   return ReferencePoster(
-                    accentColor: backgroundColor,
+                    accentColor: Constants.colors.getRandomFromPalette(),
                     selected: selected,
                     margin: EdgeInsets.only(
                       top: selected ? 0.0 : (diff / carouselRatio).abs(),
