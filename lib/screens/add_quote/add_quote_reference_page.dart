@@ -135,7 +135,7 @@ class AddQuoteReferencePage extends StatelessWidget {
               children: [
                 TextField(
                   maxLines: null,
-                  autofocus: true,
+                  autofocus: false,
                   controller: nameController,
                   focusNode: nameFocusNode,
                   onChanged: onNameChanged,

@@ -135,7 +135,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
               children: [
                 TextFormField(
                   maxLines: null,
-                  autofocus: true,
+                  autofocus: false,
                   focusNode: nameFocusNode,
                   onChanged: onNameChanged,
                   controller: nameController,
