@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/utils.dart";
 
 class EmptyView extends StatelessWidget {
@@ -44,42 +46,44 @@ class EmptyView extends StatelessWidget {
             return onRefresh?.call();
           },
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               icon ?? Container(),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 10.0,
-                ),
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 30.0,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
+              if (title.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 10.0,
                   ),
-                ),
-              ),
-              Opacity(
-                opacity: 0.6,
-                child: TextButton(
-                  onPressed: onTapDescription != null
-                      ? () => onTapDescription?.call()
-                      : null,
                   child: Text(
-                    description,
+                    title,
                     textAlign: TextAlign.center,
                     style: Utils.calligraphy.body(
-                      textStyle: const TextStyle(
-                        fontSize: 20.0,
+                      textStyle: TextStyle(
+                        fontSize: 30.0,
+                        color: foregroundColor?.withOpacity(0.6),
                       ),
                     ),
                   ),
                 ),
-              ),
+              if (description.isNotEmpty)
+                Opacity(
+                  opacity: 0.6,
+                  child: TextButton(
+                    onPressed: onTapDescription != null
+                        ? () => onTapDescription?.call()
+                        : null,
+                    child: Text(
+                      description,
+                      textAlign: TextAlign.center,
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -134,6 +138,72 @@ class EmptyView extends StatelessWidget {
                         ),
                       )),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Return a Scaffold widget displaying an empty view.
+  static Widget quotes(
+    BuildContext context, {
+    Color? foregroundColor,
+    Color? accentColor,
+    String title = "",
+    String description = "",
+    void Function()? onTapBackButton,
+    String buttonTextValue = "Back",
+  }) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0, bottom: 8.0),
+              child: Icon(
+                TablerIcons.quote_off,
+                size: 42.0,
+                color: accentColor,
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                text: "",
+                children: [
+                  TextSpan(
+                    text: title,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w800,
+                      color: foregroundColor?.withOpacity(0.6),
+                    ),
+                  ),
+                  TextSpan(text: description),
+                ],
+              ),
+              textAlign: TextAlign.center,
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
+                  color: foregroundColor?.withOpacity(0.4),
+                ),
+              ),
+            ),
+            ColoredTextButton(
+              onPressed: onTapBackButton,
+              textValue: buttonTextValue,
+              textAlign: TextAlign.center,
+              margin: const EdgeInsets.only(top: 24.0),
+              style: TextButton.styleFrom(
+                backgroundColor: accentColor?.withOpacity(0.2),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 24.0,
+                ),
               ),
             ),
           ],

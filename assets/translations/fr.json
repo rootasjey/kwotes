@@ -222,7 +222,8 @@
       "sk": "Slovenčina",
       "sv": "Svenska"
     },
-    "name": "Language"
+    "name": "Language",
+    "this_parenthesis": "(dans cette langue)"
   },
   "light": "Clair",
   "link": {
@@ -699,7 +700,10 @@
     },
     "edit": "Modifier la citation",
     "empty": {
-      "name": "Aucun texte."
+      "author": "Pas de citation pour cet auteur pour le moment",
+      "name": "Aucun texte.",
+      "reference": "Pas de citation pour cette réference pour le moment",
+      "there": "Aucune citation pour le moment"
     },
     "erase_all": "Effacer tout",
     "error": {

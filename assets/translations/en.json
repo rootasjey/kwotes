@@ -220,7 +220,8 @@
       "sk": "Slovenčina",
       "sv": "Svenska"
     },
-    "name": "Language"
+    "name": "Language",
+    "this_parenthesis": "(in this language)"
   },
   "light": "Light",
   "link": {
@@ -685,7 +686,10 @@
     },
     "edit": "Edit quote",
     "empty": {
-      "name": "No text yet."
+      "author": "No quotes for this author yet",
+      "name": "No text yet.",
+      "reference": "No quotes for this reference yet",
+      "there": "No quote there"
     },
     "erase_all": "Erase all",
     "error": {
