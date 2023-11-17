@@ -21,7 +21,7 @@ class ExpandInputChip extends StatefulWidget {
     this.hintText,
     this.open,
     this.hideCloseIcon = false,
-    this.autofocus = true,
+    this.autofocus = false,
     this.margin = EdgeInsets.zero,
     this.width,
     this.borderSide,

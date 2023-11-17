@@ -124,19 +124,20 @@ class EmptyView extends StatelessWidget {
                     ),
                   ),
                   Opacity(
-                      opacity: 0.6,
-                      child: TextButton(
-                        onPressed: () {
-                          onTapDescription?.call();
-                        },
-                        child: Text(
-                          description,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                          ),
+                    opacity: 0.6,
+                    child: TextButton(
+                      onPressed: () {
+                        onTapDescription?.call();
+                      },
+                      child: Text(
+                        description,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20.0,
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
