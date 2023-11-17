@@ -38,6 +38,10 @@
   "apps": "Applications",
   "are_you_sure": "Êtes-vous sûr(e) ?",
   "author": {
+    "copy": {
+      "name": "Copier le nom de l'auteur",
+      "url": "Copier le lien de l'auteur"
+    },
     "delete": {
       "confirm": "Confirmer la suppression ?",
       "error": "Une erreur s'est produite lors de la suppression de l'auteur",
@@ -45,14 +49,22 @@
       "success": "L'auteur a été supprimé"
     },
     "error": {
+      "id": "Nous navons pas pu récupérer l'auteur car son identifiant est invalide ou vide.",
       "no_image": "Cet auteur n'a pas d'image."
     },
     "latest_added": "Derniers auteurs ajoutés",
     "loading": "Chargement de l'auteur",
     "name": "Auteur",
-    "copy": {
-      "name": "Copier le nom de l'auteur",
-      "url": "Copier le lien de l'auteur"
+    "no": "Pas d'auteur",
+    "reset": "Reinitialiser l'auteur",
+    "save": {
+      "done": "Toutes les modifications sont terminées",
+      "name_required": "Le nom de l'auteur est obligatoire"
+    },
+    "update": {
+      "error": "Une erreur s'est produite lors de la mise à jour de l'auteur",
+      "name": "Mettre à jour l'auteur",
+      "success": "L'auteur a été mis à jour"
     }
   },
   "back": "Retour",
@@ -101,6 +113,7 @@
   },
   "developers": "Développeurs",
   "discover": "Explorer",
+  "done": "Terminer",
   "drafts": {
     "description": "Mes ébauches",
     "name": "Brouillons"
@@ -797,6 +810,10 @@
   "recent_dot": "Récent...",
   "recent_none": "Il n'y a pas de citations récentes",
   "reference": {
+    "copy": {
+      "name": "Copier le nom de la référence",
+      "url": "Copier le lien de la référence"
+    },
     "delete": {
       "a": "Supprimer une référence",
       "confirm": "Confirmer la suppression ?",
@@ -804,16 +821,18 @@
       "name": "Supprimer la référence",
       "success": "La référence a été supprimée !"
     },
-    "copy": {
-      "name": "Copier le nom de la référence",
-      "url": "Copier le lien de la référence"
-    },
     "error": {
       "no_image": "Cette référence n'a pas d'image."
     },
     "latest_added":"Dernières références ajoutées",
     "loading":"Chargement de la référence",
-    "name": "Référence"
+    "name": "Référence",
+    "reset": "Reinitialiser la référence",
+    "update": {
+      "failed": "Une erreur est survenue lors de la mise à jour de la référence.",
+      "name": "Mettre à jour la référence",
+      "success": "La référence a été mise à jour !"
+    }
   },
   "release_date": "Date de sortie",
   "report_bug": "Signaler a bug",

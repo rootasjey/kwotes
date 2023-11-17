@@ -38,6 +38,10 @@
   "apps": "Apps",
   "are_you_sure": "Are you sure?",
   "author": {
+    "copy": {
+      "name": "Copy author's name",
+      "url": "Copy author's url"
+    },
     "delete": {
       "confirm": "Confirm delete?",
       "error": "An error occurred while deleting author",
@@ -45,14 +49,22 @@
       "success": "Author has been deleted"
     },
     "error": {
+      "id": "Couldn't fetch the author's because the id is invalid or empty",
       "no_image": "This author has no image."
     },
     "latest_added": "Latest added authors",
     "loading": "Loading author",
     "name": "Author",
-    "copy": {
-      "name": "Copy author's name",
-      "url": "Copy author's url"
+    "no": "No author",
+    "reset": "Reset author",
+    "save": {
+      "done": "All edits are done",
+      "name_required": "An author's name is required"
+    },
+    "update": {
+      "error": "An error occurred while updating author",
+      "name": "Update author",
+      "success": "Author has been updated"
     }
   },
   "back": "Back",
@@ -98,6 +110,7 @@
   },
   "developers": "Developers",
   "discover": "Discover",
+  "done": "Done",
   "drafts": {
     "description": "Unfinished work",
     "name": "Drafts"
@@ -783,6 +796,10 @@
   "recent_dot": "Recent...",
   "recent_none": "There's no recent quotes",
   "reference": {
+    "copy": {
+      "name": "Copy reference's name",
+      "url": "Copy reference's URL"
+    },
     "delete": {
       "a": "Delete a reference",
       "confirm": "Confirm deletion?",
@@ -790,16 +807,18 @@
       "name": "Delete reference",
       "success": "Reference successfully deleted!"
     },
-    "copy": {
-      "name": "Copy reference's name",
-      "url": "Copy reference's URL"
-    },
     "error": {
       "no_image": "This reference has no image."
     },
     "latest_added": "Latest added references",
     "loading": "Loading reference",
-    "name": "Reference"
+    "name": "Reference",
+    "reset": "Reset reference",
+    "update": {
+      "error": "An error occurred while updating reference",
+      "name": "Update reference",
+      "success": "Reference has been updated"
+    }
   },
   "release_date": "Release date",
   "report_bug": "Report a bug",
