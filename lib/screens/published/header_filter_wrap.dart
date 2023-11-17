@@ -12,8 +12,11 @@ class HeaderFilterWrap extends StatelessWidget {
   const HeaderFilterWrap({
     super.key,
     this.show = true,
+    this.showAllLanguage = true,
     this.showLanguageSelector = true,
     this.showOwnershipSelector = true,
+    this.useSliver = false,
+    this.margin = EdgeInsets.zero,
     this.chipBackgroundColor = Colors.white,
     this.chipBorderColor = Colors.transparent,
     this.chipSelectedColor = Colors.amber,
@@ -27,9 +30,17 @@ class HeaderFilterWrap extends StatelessWidget {
   /// Show this widget if true.
   final bool show;
 
+  /// Show "all language" selector if true.
+  /// Default to true.
+  final bool showAllLanguage;
+
   /// Show language selector if true.
   /// Default to true.
   final bool showLanguageSelector;
+
+  /// Wrap this widget in a [SliverToBoxAdapter] if true.
+  /// Default to false.
+  final bool useSliver;
 
   /// Show ownership selector if true.
   /// Default to true.
@@ -46,6 +57,9 @@ class HeaderFilterWrap extends StatelessWidget {
 
   /// Icon color of the filter chips.
   final Color? iconColor;
+
+  /// Space around this widget.
+  final EdgeInsets margin;
 
   /// Selected quotes ownership (owned | all).
   final EnumDataOwnership? selectedOwnership;
@@ -102,12 +116,13 @@ class HeaderFilterWrap extends StatelessWidget {
     if (showLanguageSelector) {
       languageChips.addAll(
         [
-          LanguageFilterData(
-            labelString: "",
-            tooltipString: "language.all".tr(),
-            language: EnumLanguageSelection.all,
-            iconData: TablerIcons.world_longitude,
-          ),
+          if (showAllLanguage)
+            LanguageFilterData(
+              labelString: "",
+              tooltipString: "language.all".tr(),
+              language: EnumLanguageSelection.all,
+              iconData: TablerIcons.world_longitude,
+            ),
           ...Utils.linguistic.available().map(
                 (locale) => LanguageFilterData(
                   labelString: "language.locale.${locale.name}".tr(),
@@ -139,13 +154,24 @@ class HeaderFilterWrap extends StatelessWidget {
       );
     }
 
-    return Wrap(
-      spacing: 8.0,
-      runSpacing: 8.0,
-      children: [
-        ...ownershipChips,
-        ...languageChips,
-      ],
+    final Widget mainWidget = Padding(
+      padding: margin,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 8.0,
+        children: [
+          ...ownershipChips,
+          ...languageChips,
+        ],
+      ),
+    );
+
+    if (!useSliver) {
+      return mainWidget;
+    }
+
+    return SliverToBoxAdapter(
+      child: mainWidget,
     );
   }
 }
